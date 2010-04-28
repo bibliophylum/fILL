@@ -1,0 +1,29 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_info_contacts");
+  //-->
+</script>
+
+<h1>Library Contact Information</h1>
+<table border=1>
+  <tr>
+    <td>Library</td><td>Symbol</td><td>Email</td><td>Mailing Address</td>
+  </tr>
+  <TMPL_LOOP NAME="libraries">
+    <tr>
+      <td><TMPL_VAR NAME="library"></td>
+      <td><TMPL_VAR NAME="name"></td>
+      <td><TMPL_VAR NAME="email_address"></td>
+      <td>
+	<TMPL_VAR NAME="mailing_address_line1"><br>
+	<TMPL_VAR NAME="mailing_address_line2"><br>
+	<TMPL_VAR NAME="mailing_address_line3">
+      </td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

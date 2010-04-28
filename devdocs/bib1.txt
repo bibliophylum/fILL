@@ -1,0 +1,99 @@
+Title 	4
+Author 	1003
+Subject heading 	21
+Personal name  	1
+Corporate name 	2
+Conference name 	3
+Title series 	5
+Title uniform 	6
+ISBN 	7
+ISSN 	8
+LC card number 	9
+BNB card no. 	10
+BGF number 	11
+Local number 	12
+Dewey classification 	13
+UDC classification 	14
+Bliss classification 	15
+LC call number 	16
+NLM call number 	17
+NAL call number 	18
+MOS call number 	19
+Local classification 	20
+Subject Rameau 	22
+BDI index subject 	23
+INSPEC subject 	24
+MESH subject 	25
+PA subject 	26
+LC subject heading 	27
+RVM subject heading 	28
+Local subject index 	29
+Date 	30
+Date of publication 	31
+Date of acquisition 	32
+Title key 	33
+Title collective 	34
+Title parallel 	35
+Title cover 	36
+Title added title page 	37
+Title caption 	38
+Title running 	39
+Title spine 	40
+Title other variant 	41
+Title former 	42
+Title abbreviated 	43
+Title expanded 	44
+Subject precis 	45
+Subject rswk 	46
+Subject subdivision 	47
+No. nat'l biblio. 	48
+No. legal deposit 	49
+No. govt pub. 	50
+No. music publisher 	51
+Number db 	52
+Number local call 	53
+Code--language 	54
+Code--geographic area 	55
+Code--institution 	56
+Name and title * 	57
+Name geographic 	58
+Place publication 	59
+CODEN 	60
+Microform generation 	61
+Abstract 	62
+Note 	63
+Author-title 	1000
+Record type 	1001
+Name 	1002
+Author-name personal 	1004
+Author-name corporate 	1005
+Author-name conference 	1006
+Identifier--standard 	1007
+Subject--LC children's 	1008
+Subject name -- personal 	1009
+Body of text 	1010
+Date/time added to db 	1011
+Date/time last modified 	1012
+Authority/format id 	1013
+Concept-text 	1014
+Concept-reference 	1015
+Any 	1016
+Server-choice 	1017
+Publisher 	1018
+Record-source 	1019
+Editor 	1020
+Bib-level 	1021
+Geographic-class 	1022
+Indexed-by 	1023
+Map-scale 	1024
+Music-key 	1025
+Related-periodical 	1026
+Report-number 	1027
+Stock-number 	1028
+Thematic-number 	1030
+Material-type 	1031
+Doc-id 	1032
+Host-item 	1033
+Content-type 	1034
+Anywhere 	1035
+Author-Title-Subject 	1036

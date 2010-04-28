@@ -1,0 +1,224 @@
+<targets>
+	<server id="1">
+		<name>PLS Union Catalogue</name>
+		<z3950_connection_string>library.gov.mb.ca:210/maplin</z3950_connection_string>
+		<preferredrecordsyntax>opac</preferredrecordsyntax>
+	</server>
+
+	<server id="2">
+		<name>Parkland Regional Library</name>
+		<z3950_connection_string>207.161.70.145:5666/LSPacZ</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="3">
+		<name>Red River North Regional Library</name>
+		<z3950_connection_string>24.76.72.252:210/Main</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="4">
+		<name>Southwestern Manitoba Regional Library</name>
+		<z3950_connection_string>216.130.92.141:210/Melita_ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="5">
+		<name>Western Manitoba Regional Library</name>
+		<z3950_connection_string>216.36.147.26:210/horizon</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="9">
+		<name>Border Regional Library</name>
+		<z3950_connection_string>216.36.186.84:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="10">
+		<name>Thompson Public Library</name>
+		<z3950_connection_string>206.45.111.14:210/ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="11">
+		<name>Northwest Regional Library - Swan River</name>
+		<z3950_connection_string>206.45.96.178:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="12">
+		<name>South Central Regional Library</name>
+		<z3950_connection_string>206.45.116.103:210/ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="13">
+		<name>The Pas Regional Library</name>
+		<z3950_connection_string>206.45.107.244:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="14">
+		<name>Legislative Library</name>
+		<z3950_connection_string>library.gov.mb.ca:211/legislative</z3950_connection_string>
+		<preferredrecordsyntax>opac</preferredrecordsyntax>
+	</server>
+
+	<server id="15">
+		<name>Portage la Prairie Regional Library</name>
+		<z3950_connection_string>24.79.32.253:210/Destiny</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="16">
+		<name>Jake Epp Library</name>
+		<z3950_connection_string>jakeepp.gotdns.com:210/ils</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="18">
+		<name>Lakeland Regional Library</name>
+		<z3950_connection_string>206.45.118.101:210/InsigniaLibrary</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="19">
+		<name>South Interlake Regional Library</name>
+		<z3950_connection_string>206.45.182.133:210/Stonewall_ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="20">
+		<name>Northwest Regional Library - Benito</name>
+		<z3950_connection_string>206.45.217.109:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="21">
+		<name>Jolys Regional Library</name>
+		<z3950_connection_string>66.244.209.14:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="22">
+		<name>Pinawa Public Library</name>
+		<z3950_connection_string>206.45.117.102:210/Pinawa_ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="23">
+		<name>Bibliothèque Saint-Claude</name>
+		<z3950_connection_string>207.161.134.96:210/sclils</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="24">
+		<name>Boyne Regional Library</name>
+		<z3950_connection_string>206.45.105.104:210/ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="25">
+		<name>Minnedosa Regional Library</name>
+		<z3950_connection_string>206.45.123.128:210/minnedosa_ils</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="28">
+		<name>Winnipeg Public Library</name>
+		<z3950_connection_string>198.163.53.31:210/horizon</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="29">
+		<name>Wikipedia</name>
+		<z3950_connection_string>econtent.indexdata.com:210/wikipedia</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="30">
+		<name>Project Gutenberg</name>
+		<z3950_connection_string>econtent.indexdata.com:210/gutenberg</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="31">
+		<name>Open Content Alliance - Canadian Libraries</name>
+		<z3950_connection_string>econtent.indexdata.com:210/oca-toronto</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="32">
+		<name>Open Content Alliance - American Libraries</name>
+		<z3950_connection_string>econtent.indexdata.com:210/oca-americana</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="33">
+		<name>Open Directory Project</name>
+		<z3950_connection_string>econtent.indexdata.com:210/dmoz</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="34">
+		<name>Glenwood and Souris Regional Library</name>
+		<z3950_connection_string>206.45.123.156:210/ILS</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="35">
+		<name>Bette Winner Public Library</name>
+		<z3950_connection_string>bettewinner.commstream.net:210/L4U_Agent</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="36">
+		<name>Bibliothèque Ste. Anne</name>
+		<z3950_connection_string>72.2.10.68:210/steanne_ils</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="37">
+		<name>Bibliotheque Allard</name>
+		<z3950_connection_string>24.76.92.231:210/biblioall</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="38">
+		<name>Bibliotheque Allard - Beaches</name>
+		<z3950_connection_string>24.76.92.231:210/bibliobeaches</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="39">
+		<name>Brokenhead River</name>
+		<z3950_connection_string>24.76.92.231:210/broken</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="40">
+		<name>Eriksdale Public</name>
+		<z3950_connection_string>24.76.92.231:210/eriksdale</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="41">
+		<name>Headingly Municipal</name>
+		<z3950_connection_string>24.76.92.231:210/headmun</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="42">
+		<name>Reston District</name>
+		<z3950_connection_string>24.76.92.231:210/reston</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+	<server id="43">
+		<name>Springfield Public</name>
+		<z3950_connection_string>24.76.92.231:210/spring</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
+</targets>

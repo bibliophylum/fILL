@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head><title>MAPLIN3</title>
+<link type="text/css" rel="stylesheet" href="/maplin3styles.1.7.css">
+
+<script language="JavaScript">
+
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+</script>
+
+</head>
+<body>
+
+<div id="header">
+  <div id="logo">
+    <div id="logo_title">MAPLIN-3</div>
+    <div id="logo_slogan">Request books from Manitoba libraries</div>
+  </div>
+  <div id="header_quick_access">
+    <ul>
+      <li><a href="?rm=logged_out">Log out</a></li>
+      <li><TMPL_VAR NAME=username></li>
+    </ul>
+  </div>
+</div>
+
+<div id="csstabs">
+  <ul>
+    <li id="menu_public_welcome">
+      <a href=/cgi-bin/public.cgi?rm=welcome_form>
+      Welcome
+      </a>
+    </li>
+
+    <li id="menu_public_search">
+      <a href=/cgi-bin/public.cgi?rm=search_form>
+      Search
+      </a>
+    </li>
+
+    <li id="menu_public_myaccount">
+      <a href=/cgi-bin/public.cgi?rm=myaccount_form>
+      My Account
+      </a>
+    </li>
+
+  </ul>
+
+</div>
+

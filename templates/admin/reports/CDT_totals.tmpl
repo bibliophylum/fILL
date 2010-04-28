@@ -1,0 +1,42 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<h1>Collection Development Tool Totals</h1>
+<hr>
+<h3>Total claimed: <TMPL_VAR NAME="total_claimed"></h3>
+<hr>
+<h3>By library:</h3>
+<table>
+  <tr>
+    <td>Library</td><td>Count</td>
+  </tr>
+  <TMPL_LOOP NAME="by_library">
+    <tr>
+      <td><TMPL_VAR NAME="claimed_by"></td>
+      <td><TMPL_VAR NAME="count"></td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+<hr>
+<h3>By collection:</h3>
+<table>
+  <tr>
+    <td>Collection</td><td>Count</td><td>Total</td><td align=right>% claimed</td>
+  </tr>
+  <TMPL_LOOP NAME="by_collection">
+    <tr>
+      <td><TMPL_VAR NAME="collection"></td>
+      <td><TMPL_VAR NAME="claimed"></td>
+      <td>of <TMPL_VAR NAME="total"></td>
+      <td align=right><TMPL_VAR NAME="percent"></td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

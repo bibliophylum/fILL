@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <link rel=stylesheet href="maplin3.css" type="text/css">
+<head>
+<title><TMPL_VAR NAME=PQF></title>
+</head>
+<body>
+<b><TMPL_VAR NAME=SEARCHED_FOR></b>
+<p><TMPL_VAR NAME=RESULT_SET_SIZE> records found.</p>
+<p>Displaying record #<TMPL_VAR NAME=RECNUM>.</p>
+<p><pre><TMPL_VAR NAME=RESULT_STRING></pre></p>
+
+<TMPL_IF NAME=CAN_GO_PREVIOUS>
+<form>
+  <input TYPE="hidden" NAME="recnum" VALUE="<TMPL_VAR NAME=PREV_RECORD>">
+  <input TYPE="hidden" NAME="pqf" VALUE="<TMPL_VAR NAME=PQF>">
+  <input TYPE="hidden" NAME="rm" VALUE="results">
+  <input type="submit" name="submit" value="Previous" />
+</form>
+</TMPL_IF>
+
+<TMPL_IF NAME=CAN_GO_NEXT>
+<form>
+  <input TYPE="hidden" NAME="recnum" VALUE="<TMPL_VAR NAME=NEXT_RECORD>">
+  <input TYPE="hidden" NAME="pqf" VALUE="<TMPL_VAR NAME=PQF>">
+  <input TYPE="hidden" NAME="rm" VALUE="results">
+  <input type="submit" name="submit" value="Next" />
+</form>
+</TMPL_IF>
+
+<form METHOD=POST ACTION="">
+  Search again:
+  <input TYPE="text"   NAME="title" SIZE="40" MAXLENGTH="40">
+  <input TYPE="hidden" NAME="recnum" VALUE="0">
+  <input TYPE="hidden" NAME="rm" VALUE="results">
+  <input type="submit" name="submit" value="Submit" />
+</form>
+</body>
+</html>

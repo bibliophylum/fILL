@@ -1,0 +1,132 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_supplemental.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_supplemental_worldlanguages");
+  //-->
+</script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div id="main">
+
+  <div id="centeredDiv">
+
+    <h1>World Languages</h1>
+
+    <p>Through a cooperative arrangement with the Winnipeg Public Library world languages are available to municipal and regional library systems to supplement local collections.  Supplemental loans in world languages are available in blocks of up to 25 books in each language at either adult or juvenile reading levels.</p>
+    <br />
+    <p>Specific title or author requests are not available as these books are not catalogued.  Patrons must contact their local library staff to request world language material.</p>
+    <br />
+
+    <TMPL_IF name="ask">
+      <form method=post action="">
+	<h3>Select:</h3>
+	<p>
+	  Language: <input type="text" name="language" size="10" maxlength="20">
+	  Reading level: <select name="level">
+	    <optgroup label="Level">
+	      <option>Adult</option>
+	      <option>Juvenile</option>
+	    </optgroup>
+	  </select>
+	  Block type: <select name="blocktype">
+	    <optgroup label="Type of material">
+	      <option>Fiction</option>
+	      <option>Non-fiction</option>
+	      <option>Mixed</option>
+	    </optgroup>
+	  </select>
+	</p>
+	<br />
+	<p>Additional information:<br />
+	  <textarea name="additional_information" rows=4 cols=80></textarea>
+	</p>
+	<br />
+	<a href="javascript:toggleLayer('circulationPolicy');" title="Circulation Policy">
+	  Circulation Policy (click to read)
+	</a>
+	<br /><br />
+	<input type="hidden" name="do_request" value=1>
+	<input type="hidden" name="rm" value="worldlanguages_form">
+	<input type="submit" value="Submit">
+      </form>
+    <TMPL_ELSE>
+
+      <TMPL_IF NAME=error_sendmail>
+	<br />
+	<h2>We've had a problem sending the email automatically</h2>
+	<p>Maplin has encountered a problem sending this request.</p>
+	<p>You can send this request to Winnipeg Public Library manually by using your
+	  own email program (eg: GMail, Outlook, Hotmail, etc).</p><br />
+	<ol>
+	  <li>Create a new email to Winnipeg Public Library (you can copy the email address from the "To:" field, below)</li>
+	  <li>Copy the information in the "Subject:" line, below, into the subject of your new email.</li>
+	  <li>Copy everything between the "--- copy from here ---" and "--- copy to here ---" lines, and paste that into the body of your new email.</li>
+	</ol><br />
+	<p>When you send that email, Winnipeg Public Library will have everything they need to process your request.</p><br />
+	<hr>
+      </TMPL_IF>
+
+      <p><TMPL_VAR NAME="to"></p>
+
+      <TMPL_UNLESS NAME=error_sendmail>
+	<p><TMPL_VAR NAME="cc"></p>
+	<p><TMPL_VAR NAME="reply_to"></p>
+      </TMPL_UNLESS>
+      
+      <p><TMPL_VAR NAME="subject"></p>
+      <hr>
+      <p><pre><TMPL_VAR NAME="content"></pre></p>
+      <p />
+
+      <TMPL_UNLESS NAME=ask>
+	<TMPL_IF NAME=error_sendmail>
+	  <!-- anything else we want to say here? -->
+	  <TMPL_ELSE>
+	    <div id="email_sent">
+	      <h2>Email has been sent.</h2>
+	    </div>
+	</TMPL_IF>
+      </TMPL_UNLESS>
+      
+      
+    </TMPL_IF>
+
+    <div id="circulationPolicy">
+      <br /><br />
+      <h3>Circulation Policy</h3>
+      <p>
+	<ol>
+	  <li>Libraries may request as many concurrent blocks as would be useful.  However, WPL reserves the right to limit the number of blocks sent to a library based on supply and demand for that language.</li>
+	  <li>Blocks are circulated for a 6-month loan period with the possibility of an extension if needed.</li>
+	  <li>If a particular language or reading level is not available at the time of the request, a hold will be placed on the next available block and the material will be sent accordingly.</li>
+	  <li>Each block contains 25 books of the same language and at the same reading level (adult or juvenile).</li>
+	  <li>Each block will be sent with an instruction sheet indicating the proper procedures for handling the enclosed material.  Please follow these instructions.</li>
+	  <li>Returning supplemental blocks: Borrowing libraries must make every effort to return the complete contents of the supplemental block. If you are unable to retrieve outstanding block items from your patrons after several attempts to do so, please return the remainder of the block contents to Winnipeg Public Library with a note indicating any missing items.  The borrowing library will need to return all outstanding items to WPL individually as able, at the borrowing library's own cost.</li>
+	</ol>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

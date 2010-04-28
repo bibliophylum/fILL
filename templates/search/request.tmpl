@@ -1,0 +1,61 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<div id="main">
+
+  <div id="leftcontent">
+  </div>
+
+  <div id="middlecontent">
+    <form METHOD=POST ACTION="">
+      <p><TMPL_VAR NAME="from"></p>
+      <p><TMPL_VAR NAME="to"></p>
+      <p><TMPL_VAR NAME="cc"></p>
+      <p><TMPL_VAR NAME="reply_to"></p>
+      <p><TMPL_VAR NAME="subject"></p>
+      <hr>
+      <p><pre><TMPL_VAR NAME="content"></pre></p>
+      <p />
+      <TMPL_UNLESS NAME=sent>
+	<p>
+	  Patron name or number: 
+	  <input TYPE="text" NAME="patron" SIZE="40" MAXLENGTH="80">
+	</p>
+	<p>
+	  Notes: 
+	  <input TYPE="text" NAME="notes" SIZE="80" MAXLENGTH="160">
+	</p>
+	<hr>
+	<p><TMPL_VAR NAME="library"></p>
+	<p><TMPL_VAR NAME="mail1"></p>
+	<p><TMPL_VAR NAME="mail2"></p>
+	<p><TMPL_VAR NAME="mail3"></p>
+	<TMPL_ELSE>
+	  <input TYPE="hidden" NAME="patron" value=<TMPL_VAR NAME=patron>>
+	  <input TYPE="hidden" NAME="notes" value=<TMPL_VAR NAME=notes>>
+      </TMPL_UNLESS>
+      <p>Found at server: <TMPL_VAR NAME="fas"></p>
+      <input type="hidden" name="rm" value="send_email_form">
+      <input type="hidden" name="zid" value=<TMPL_VAR NAME=zid>>
+      <input type="hidden" name="id" value=<TMPL_VAR NAME=record_id>>
+      <input type="hidden" name="loc" value="<TMPL_VAR NAME=loc>">
+      <input type="hidden" name="callno" value="<TMPL_VAR NAME=callno>">
+      <input type="hidden" name="collection" value="<TMPL_VAR NAME=collection>">
+      <input type="hidden" name="pubdate" value="<TMPL_VAR NAME=pubdate>">
+      <TMPL_IF NAME=sent>
+	<div id="email_sent">
+	  <h2>Email has been sent.</h2>
+	</div>
+	<TMPL_ELSE>
+	  <input type="submit" name="submit" value="Send it!">
+      </TMPL_IF>
+      <p><a href="?rm=results_form">Return to search results</a></p>
+    </form>
+  </div>
+
+  <div id="rightcontent">
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,0 +1,25 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<h1>User's last login times</h1>
+<table>
+  <tr>
+    <td>uid</td><td>name</td><td>library</td><td>last_login</td>
+  </tr>
+  <TMPL_LOOP NAME="last_logins">
+    <tr>
+      <td><TMPL_VAR NAME="uid"></td>
+      <td><TMPL_VAR NAME="name"></td>
+      <td><TMPL_VAR NAME="library"></td>
+      <td><TMPL_VAR NAME="last_login"></td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,0 +1,49 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<!--
+
+<h1>Administration Reports</h1>
+
+<form METHOD=POST ACTION="">
+     <p>A bunch of radio-buttons for canned reports.</p>
+     <input type="radio" name="group1" value="Milk"> Milk<br>
+     <input type="radio" name="group1" value="Butter" checked> Butter<br>
+     <input TYPE="hidden" NAME="rm" VALUE="admin_reports_results_form">
+     <br />
+     <input type="submit" name="submit" value="Submit" />
+</form>
+-->
+<h2>Statistics</h2>
+<a href="http://mblib.net:8088/awstats/awstats.pl?config=maplin3">Statistics</a>
+
+<h2>Report generators</h2>
+<p>
+<h5>Interlibrary Loan Stats</h5>
+<a href="?rm=admin_reports_ILL_pie_form">Total interlibrary loans - Pie charts</a><br>
+<a href="?rm=admin_reports_ILL_graphs_form">Interlibrary loan graphs</a><br>
+<br>
+<a href="?rm=admin_reports_ILL_requests_form">NEW Interlibrary loan statistics</a><br>
+<a href="?rm=admin_reports_ILL_stats_form">Old Interlibrary loan statistics</a><br>
+<br>
+<h5>System maintenance reports</h5>
+<a href="?rm=admin_reports_table_stats_form">High-usage table stats</a><br>
+<br>
+<a href="?rm=admin_reports_zServers_down_form">List of zServers which are down</a><br>
+<a href="?rm=reports_home_zServers_form">List of users' home zServers</a><br>
+<br>
+<a href="?rm=admin_reports_last_logins_form">List users' last login times</a><br>
+<a href="?rm=admin_reports_never_logged_in_form">List users who have never logged in</a><br>
+<br>
+<a href="?rm=admin_CDT_select_form">Collection Development Tool pull lists</a><br>
+<a href="?rm=admin_reports_CDT_totals_form">Collection Development Tool totals by library</a><br>
+<a href="?rm=admin_CDT_select_unclaimed_form">Collection Development Tool "unclaimed" pull lists</a><br>
+<br>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

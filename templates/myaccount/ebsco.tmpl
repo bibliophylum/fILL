@@ -1,0 +1,57 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_ebsco");
+  //-->
+</script>
+
+<div id="middlecontent">
+  <h2>Ebscohost settings</h2>
+
+  <p>This is the username and password that allows your library to access Ebscohost.</p>
+  <p>If you update these on the Ebscohost site, you'll need to update them here as well.</p>
+  <br />
+
+  <TMPL_IF NAME="edit">
+
+    <form METHOD=POST ACTION="">
+      <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=lid>">
+      <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=name>">
+      <table>
+	<tr>
+	  <td>Username</td>
+	  <td>
+	    <input TYPE="text" NAME="ebsco_user" SIZE="40" VALUE="<TMPL_VAR NAME=ebsco_user>">
+	  </td>
+	</tr><tr>
+	  <td>Password</td>
+	  <td>
+	    <input TYPE="text" NAME="ebsco_pass" SIZE="40" VALUE="<TMPL_VAR NAME=ebsco_pass>">
+	  </td>
+	</tr>
+      </table>
+      <input TYPE="hidden" NAME="rm" VALUE="myaccount_ebsco_form">
+      <br />
+      <input type="submit" name="submit" value="Update" />
+    </form>
+
+  <TMPL_ELSE>
+
+    <table>
+      <tr>
+	<td>Username</td>
+	<td><TMPL_VAR NAME=ebsco_user></td>
+      </tr><tr>
+	<td>Password</td>
+	<td><TMPL_VAR NAME=ebsco_pass></td>
+      </tr>
+    </table>
+    <p><br />Updated.</p>
+
+  </TMPL_IF>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

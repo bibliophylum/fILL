@@ -1,0 +1,49 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<div id="middlecontent">
+  <h1>zServer Owners</h1>
+  <table cellpadding=20 cellspacing=5 border=1>
+    <tr>
+      <td><p style="color: gray">id</p></td>
+      <td>zServer Name</td>
+      <td>uid</td>
+      <td>Owner</td>
+      <td>Owner (Library name)</td>
+    </tr>
+    <TMPL_LOOP NAME="zServers">
+      <tr>
+	<td><p style="color: gray"><TMPL_VAR NAME="id"></p></td>
+	<td><p style="background: #FFFFF0"><TMPL_VAR NAME="name"></p></td>
+	<td><p style="background: #FFFFF0"><TMPL_VAR NAME="uid"></p></td>
+	<td><p style="background: #FFFFF0"><TMPL_VAR NAME="owner"></p></td>
+	<td><p style="background: #FFFFF0"><TMPL_VAR NAME="library"></p></td>
+	<td></td>
+	<td>
+
+	  <form action="" method=post>
+	    <select name="setowner">
+	      <option value="">Select the owner...
+		<TMPL_LOOP NAME="users">
+		  <option value="<TMPL_VAR NAME=user_id>">
+		    <TMPL_VAR NAME="user_library">
+		</TMPL_LOOP>
+	    </SELECT>
+	    <input type="hidden" name="setOwnerForZserver" value=<TMPL_VAR NAME="id">
+	    <input type="hidden" name="rm" value="admin_config_zServer_owners_form">
+	    <input type=submit value="Set">
+	  </form>
+
+	</td>
+
+      </tr>
+    </TMPL_LOOP>
+    
+  </table>
+
+</div>
+
+<div id="rightcontent">
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,0 +1,155 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_supplemental.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_supplemental_audiovisual");
+  //-->
+</script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div id="main">
+
+  <div id="centeredDiv">
+
+    <h1>Audio/Visual Blocks</h1>
+
+    <TMPL_IF name="ask">
+      <form method=post action="">
+
+	<p>Audio/Visual blocks contain up to a maximum of 25 items, depending on availability.</p>
+	<p>To request multiple blocks, return to this page for each new block.</p>
+	<br />
+
+	<h3>Select:</h3>
+	<table>
+	  <tr>
+	    <td>DVD</td>
+	    <td>VHS</td>
+	    <td>CD</td>
+	    <td>Cassette</td>
+	  </tr>
+
+	  <tr>
+	    <td width=25% valign=top>
+	      <p>
+		<input type="radio" name="blocktype" value="pre1960-DVD"> pre-1960<br>
+		<input type="radio" name="blocktype" value="post1960-DVD"> post-1960<br>
+		<input type="radio" name="blocktype" value="bw-DVD"> b&amp;w<br>
+		<input type="radio" name="blocktype" value="nfb-DVD"> NFB<br>
+		<input type="radio" name="blocktype" value="childrens-DVD"> children's<br>
+		<input type="radio" name="blocktype" value="biography-DVD"> biographys<br>
+		<input type="radio" name="blocktype" value="howto-DVD"> how-to<br>
+		<input type="radio" name="blocktype" value="history-DVD"> history<br>
+		<input type="radio" name="blocktype" value="ae-DVD"> A&amp;E<br>
+		<input type="radio" name="blocktype" value="travel-DVD"> travel<br>
+	      </p>
+	    </td>
+
+	    <td width=25% valign=top>
+	      <p>
+		<input type="radio" name="blocktype" value="pre1960-VHS"> pre-1960<br>
+		<input type="radio" name="blocktype" value="post1960-VHS"> post-1960<br>
+		<input type="radio" name="blocktype" value="bw-VHS"> b&amp;w<br>
+		<input type="radio" name="blocktype" value="nfb-VHS"> NFB<br>
+		<input type="radio" name="blocktype" value="childrens-VHS"> children's<br>
+		<input type="radio" name="blocktype" value="biography-VHS"> biographys<br>
+		<input type="radio" name="blocktype" value="howto-VHS"> how-to<br>
+		<input type="radio" name="blocktype" value="history-VHS"> history<br>
+		<input type="radio" name="blocktype" value="ae-VHS"> A&amp;E<br>
+		<input type="radio" name="blocktype" value="travel-VHS"> travel<br>
+	      </p>
+	    </td>
+
+	    <td width=25% valign=top>
+	      <p>
+		<input type="radio" name="blocktype" value="adultfic-CD"> adult fiction<br>
+		<input type="radio" name="blocktype" value="adultnonfic-CD"> adult nonfiction<br>
+		<input type="radio" name="blocktype" value="junior-CD"> junior<br>
+	      </p>
+	    </td>
+
+	    <td width=25% valign=top>
+	      <p>
+		<input type="radio" name="blocktype" value="adultfic-CASS"> adult fiction<br>
+		<input type="radio" name="blocktype" value="adultnonfic-CASS"> adult nonfiction<br>
+		<input type="radio" name="blocktype" value="juniorfic-CASS"> junior fiction<br>
+		<input type="radio" name="blocktype" value="juniornonfic-CASS"> junior nonfiction<br>
+	      </p>
+	    </td>
+	  </tr>
+	</table>
+
+	<br />
+	<p>Additional information:<br />
+	  <textarea name="additional_information" rows=4 cols=80></textarea>
+	</p>
+	<br />
+	<input type="hidden" name="do_request" value=1>
+	<input type="hidden" name="rm" value="audiovisual_form"> 
+	<input type="submit" value="Submit"> 
+      </form>
+    <TMPL_ELSE>
+
+      <TMPL_IF NAME=error_sendmail>
+	<br />
+	<h2>We've had a problem sending the email automatically</h2>
+	<p>Maplin has encountered a problem sending this request.</p>
+	<p>You can send this request to the Focal library manually by using your
+	  own email program (eg: GMail, Outlook, Hotmail, etc).</p><br />
+	<ol>
+	  <li>Create a new email to the Focal library (you can copy the email address from the "To:" field, below)</li>
+	  <li>Copy the information in the "Subject:" line, below, into the subject of your new email.</li>
+	  <li>Copy everything between the "--- copy from here ---" and "--- copy to here ---" lines, and paste that into the body of your new email.</li>
+	</ol><br />
+	<p>When you send that email, the Focal library will have everything they need to process your request.</p><br />
+	<hr>
+      </TMPL_IF>
+
+      <p><TMPL_VAR NAME="to"> </p>
+
+      <TMPL_UNLESS NAME=error_sendmail>
+	<p><TMPL_VAR NAME="cc"> </p>
+	<p><TMPL_VAR NAME="reply_to"> </p>
+      </TMPL_UNLESS>
+      
+      <p><TMPL_VAR NAME="subject"> </p>
+      <hr>
+      <p><pre><TMPL_VAR NAME="content"> </pre></p>
+      <p />
+
+      <TMPL_UNLESS NAME=ask>
+	<TMPL_IF NAME=error_sendmail>
+	  <!-- anything else we want to say here? -->
+	  <TMPL_ELSE>
+	    <div id="email_sent"> 
+	      <h2>Email has been sent.</h2>
+	    </div>
+	</TMPL_IF>
+      </TMPL_UNLESS>
+      
+      
+    </TMPL_IF>
+
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl"> 

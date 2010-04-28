@@ -1,0 +1,360 @@
+/*----------------------------------------------------*/
+
+body,p,div,th,td,dd,ul,ol
+{
+  font-weight: 400;
+  font-size: 95%;
+  line-height: normal;
+  color: #000000;
+  font-family: arial, helvetica, sans-serif;
+  Font-style: normal;
+}
+
+b,strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 95%;
+  color: #000000;
+}
+
+h1
+{
+  font-weight: 700;
+  font-size: 160%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h2
+{
+  font-weight: 700;
+  font-size: 150%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h3
+{
+  font-weight: 700;
+  font-size: 130%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h4
+{
+  font-weight: 700;
+  font-size: 120%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h5
+{
+  font-weight: 700;
+  font-size: 110%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h6
+{
+  font-weight: 700;
+  font-size: 105%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+div.header
+{
+  border: 1px dotted gray;
+}
+
+p.header
+{
+  font-weight: 700;
+  font-size: 170%;
+  font-family: arial, helvetica, sans-serif;
+  color: #aacc66;
+  background: #408040;
+  margin-bottom: 0em;
+  margin-top: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+#nav1
+{
+  margin-top: -1.0em;
+  m\argin-top: -1.5em;
+  margin-bottom: 0.5em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+#nav1 ul
+{
+  background-color: #408040;
+  text-align: center;
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: 1px solid gray;
+}
+
+#nav1 li
+{
+  list-style-type: none;
+  padding: 0.25em 1 em;
+  border-left: 1px solid white;
+  display: inline;
+  font-weight: 700;
+  font-size: 140%;
+}
+
+#nav1 li:first-child
+{
+  border: none;
+}
+
+#nav1 li A:link    { color: white; text-decoration:none }
+#nav1 li A:active  { color: white; text-decoration:none }
+#nav1 li A:visited { color: white; text-decoration:none }
+#nav1 li.current_tab A:link    { color: #000000; background: #aacc66; text-decoration:none }
+#nav1 li.current_tab A:active  { color: #000000; background: #aacc66; text-decoration:none }
+#nav1 li.current_tab A:visited { color: #000000; background: #aacc66; text-decoration:none }
+
+#submenu
+{
+  margin-top: -1.0em;
+  margin-bottom: 0.5em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+#submenu ul
+{
+  background-color: #aacc66;
+  text-align: center;
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: 1px solid gray;
+}
+
+#submenu li
+{
+  list-style-type: none;
+  padding: 0.25em 1 em;
+  border-left: 1px solid white;
+  display: inline;
+  font-wight: 700;
+  font-size: 120%;
+}
+
+#submenu li:first-child
+{
+  border: none;
+}
+
+#submenu li A:link    { color: #408040; text-decoration:none }
+#submenu li A:active  { color: #408040; text-decoration:none }
+#submenu li A:visited { color: #408040; text-decoration:none }
+#submenu li.current_tab A:link    { color: #000000; background: white; text-decoration:none }
+#submenu li.current_tab A:active  { color: #000000; background: white; text-decoration:none }
+#submenu li.current_tab A:visited { color: #000000; background: white; text-decoration:none }
+
+
+#undo_limits {
+  background-color: #408040;
+  color: white;
+  font-weight: 400;
+  font-size:100%;
+}
+
+#undo_limits A:link    {color:white;}
+#undo_limits A:visited {color:white;}
+#undo_limits A:active  {color:white;}
+#undo_limits A:hover   {color:white; font-size:110%;}
+
+
+
+#leftcontent {
+  float:left;
+  width: 15%;
+  background: #aacc66;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin-right: 15px;
+  padding-bottom: 20px;
+}
+
+#middlecontent {
+  float:left;
+  width:70%;
+}
+
+#rightcontent {
+  float:left;
+  width:10%;
+}
+
+
+#nav2
+{
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  clear: both;
+}
+
+#nav2 ul
+{
+  background-color: #408040;
+  text-align: center;
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: 1px solid gray;
+}
+
+#nav2 li
+{
+  list-style-type: none;
+  padding: 0.25em 1 em;
+  border-left: 1px solid white;
+  display: inline;
+  font-wight: 700;
+  font-size: 90%;
+}
+
+#nav2 li:first-child
+{
+  border: none;
+}
+
+#nav2 li A:link    { color: white }
+#nav2 li A:active  { color: white }
+#nav2 li A:visited { color: white }
+
+/*------------------------------------------------------*/
+
+#searching {  display: none; }
+#debug-1   {  display: none; }
+
+
+/*------------------------------------------------------*/
+
+#search_results
+{
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+.search_results_title,
+.search_results_author,
+.search_results_pubdate,
+.search_results_subject,
+.search_results_subject_heading
+{
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+.search_results_title {
+  font-size:120%;
+  font-weight:700;
+  color: white;
+  background: #408040;
+  margin-top: 15px;
+}
+
+.search_results_author {
+  color: #408040;
+}
+
+.search_results_subject {
+  font-size:90%;
+  color: black;
+  padding-left: 25px;
+}
+
+.search_results_subject_heading {
+  color: black;
+}
+
+p.debuginfo {
+  font-family:arial;
+  font-size:8pt;
+  font-style:italic;
+  color: grey;
+}
+
+/*------------------------------------------------------*/
+
+.target_available,
+.target_unavailable
+{
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  font-size: 75%;
+  font-family:arial;
+}
+
+.target_unavailable
+{
+  color:grey;
+  font-style:italic
+}
+
+/*------------------------------------------------------*/
+
+.zServers_name,
+.zServers_conn,
+.zServers_other
+{
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+.zServers_conn
+{
+  font-size: 75%;
+}
+
+.zServers_other
+{
+  font-size: 75%;
+  display: none;
+}
+
+.short_instruction
+{
+  font-size: 75%;
+  font-family:arial;
+  font-style:italic;
+  color: grey;
+  display: inline;
+}
+
+/*------------------------------------------------------*/
+
+.user_name,
+.user_library,
+.user_other
+{
+  margin-top: 0em;
+  margin-bottom: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+.user_library
+{
+  font-size: 75%;
+}
+
+.user_other
+{
+  font-size: 75%;
+  display: none;
+}
+

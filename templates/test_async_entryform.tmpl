@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <link rel=stylesheet href="/maplin3.css" type="text/css">
+<head>
+</head>
+<body>
+<b>test_async_entryform</b>
+<form METHOD=POST ACTION="">
+     <input TYPE="text" NAME="title" SIZE="40" MAXLENGTH="40">
+     <input TYPE="hidden" NAME="rm" VALUE="async_results">
+     <input TYPE="hidden" NAME="newsearch" VALUE="1">
+     <br />
+     <input type="submit" name="submit" value="Submit" />
+</form>
+
+<p>
+  <a href="?authen_logout=1">Log out</a>
+</p>
+
+<hr />
+<form METHOD=POST ACTION="">
+  <input type="hidden" NAME="rm" VALUE="dbtest">
+  <input type="submit" name="submit" value="dbtest" />
+</form>
+
+<form METHOD=POST ACTION="">
+  <input type="hidden" NAME="rm" VALUE="emailtest">
+  <input type="submit" name="submit" value="email test" />
+</form>
+
+<p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+<p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+<p class="debuginfo">SQL: <TMPL_VAR NAME="sql"></p>
+
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_users");
+  //-->
+</script>
+
+<div id="leftcontent">
+  <h2>Z39.50 Servers</h2>
+  <TMPL_LOOP NAME="users">
+    <p class="user_name">
+      <a href="?rm=admin_users_form&u=<TMPL_VAR NAME=lid>">
+	<TMPL_VAR NAME="name">
+      </a>
+    </p>
+    <p class="user_library"><TMPL_VAR NAME="library"></p>
+    <!-- These are hidden by the CSS -->
+    <!-- Every field in the user table MUST be here... -->
+    <p class="user_other"><TMPL_VAR NAME="password"></p>
+    <p class="user_other"><TMPL_VAR NAME="active"></p>
+    <p class="user_other"><TMPL_VAR NAME="email_address"></p>
+    <p class="user_other"><TMPL_VAR NAME="admin"></p>
+    <p class="user_other"><TMPL_VAR NAME="mailing_address_line1"></p>
+    <p class="user_other"><TMPL_VAR NAME="mailing_address_line2"></p>
+    <p class="user_other"><TMPL_VAR NAME="mailing_address_line3"></p>
+    <p class="user_other"><TMPL_VAR NAME="ILL_sent"></p>
+    <p class="user_other"><TMPL_VAR NAME="home_zserver_id"></p>
+    <p class="user_other"><TMPL_VAR NAME="home_zserver_location"></p>
+    <br />
+  </TMPL_LOOP>
+</div>
+
+<div id="middlecontent">
+  <h4><TMPL_VAR NAME="status"></h4>
+  <form METHOD=POST ACTION="">
+    <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
+    <table>
+      <tr>
+	<td>Login name:</td>
+	<td>
+	  <input TYPE="text" NAME="name" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editName>">
+	</td>
+      </tr><tr>
+	<td>Password:</td>
+	<td>
+	  <input TYPE="text" NAME="password" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editPassword>">
+	</td>
+      </tr><tr>
+	<td>Email address:</td>
+	<td>
+	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
+	</td>
+      </tr><tr>
+	<td>Active?</td>
+	<td>
+	  <input TYPE="text" NAME="active" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editActive>"> <p class="short_instruction">('1' - enabled, '0' - disabled)</p>
+	</td>
+      </tr><tr>
+	<td>Admin?</td>
+	<td>
+	  <input TYPE="text" NAME="admin" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editAdmin>"> <p class="short_instruction">('0' - not an admin, '1'..'3' - admin level)</p>
+	</td>
+      </tr><tr>
+	<td>Library:</td>
+	<td>
+	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
+	</td>
+      </tr><tr>
+	<td>Mailing address</td>
+	<td>
+	  <table>
+	    <tr>
+	      <td>Line 1:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
+	      </td>
+	    </tr><tr>
+	      <td>Line 2:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line2" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine2>">
+	      </td>
+	    </tr><tr>
+	      <td>Line 3:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line3" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine3>">
+	      </td>
+	    </tr>
+	  </table>
+	</td>
+      </tr><tr>
+	<td>Home Zserver id:</td>
+	<td>
+	  <input TYPE="text" NAME="home_zserver_id" SIZE="10" MAXLENGTH="10" VALUE="<TMPL_VAR NAME=editHomeZserverID>">
+	</td>
+      </tr><tr>
+	<td>Home Zserver location:</td>
+	<td>
+	  <input TYPE="text" NAME="home_zserver_location" SIZE="30" MAXLENGTH="30" VALUE="<TMPL_VAR NAME=editHomeZserverLocation>">
+	</td>
+      </tr>
+    </table>
+    <input TYPE="hidden" NAME="rm" VALUE="admin_users_form">
+    <br />
+    <input type="submit" name="submit" value="Update" />
+  </form>
+
+  <TMPL_IF NAME=editID>
+    <form METHOD=POST ACTION="">
+      <input TYPE="hidden" NAME="rm" VALUE="admin_users_form">
+      <input TYPE="hidden" NAME="delete_id" VALUE="<TMPL_VAR NAME=editLID>">
+      <input type="submit" name="submit" value="Delete" />
+    </form>
+  </TMPL_IF>
+
+  <h4>Or add a new user:</h4>
+
+  <form METHOD=POST ACTION="">
+    <table>
+      <tr>
+	<td>Name:</td>
+	<td>
+	  <input TYPE="text" NAME="name" SIZE="80" MAXLENGTH="120">
+	</td>
+      </tr><tr>
+	<td>Password:</td>
+	<td>
+	  <input TYPE="text" NAME="password" SIZE="80" MAXLENGTH="120">
+	</td>
+      </tr>
+    </table>
+    <input TYPE="hidden" NAME="rm" VALUE="admin_users_form">
+    <input TYPE="hidden" NAME="new_user" VALUE="1">
+    <br />
+    <input type="submit" name="submit" value="Add new user" />
+  </form>
+
+</div>
+
+<div id="rightcontent">
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

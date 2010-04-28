@@ -1,0 +1,79 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<div id="middlecontent">
+  Back to <a href="?rm=admin_config_zServers_form">config zServers</a>
+  <table>
+    <tr>
+      <td>Zserver ID</td>
+      <td>Tag</td>
+      <td>Subfield</td>
+      <td>Text</td>
+      <td>Where in subfield?</td>
+      <td> </td>
+    </tr>
+    <TMPL_LOOP NAME="notforloan">
+      <tr>
+	<td><TMPL_VAR NAME="zid"></td>
+	<td><TMPL_VAR NAME="tag"></td>
+	<td><TMPL_VAR NAME="subfield"></td>
+	<td><TMPL_VAR NAME="text"></td>
+	<td>
+	  <TMPL_IF name="atstart">
+	    Start of field
+	  <TMPL_ELSE>
+	    Anywhere in field
+	  </TMPL_IF>
+	</td>
+	<td>
+	  <form method=post action="">
+	    <input TYPE="hidden" NAME="tag" VALUE="<TMPL_VAR NAME=tag>">
+	    <input TYPE="hidden" NAME="subfield" VALUE="<TMPL_VAR NAME=subfield>">
+	    <input TYPE="hidden" NAME="text" VALUE="<TMPL_VAR NAME=text>">
+	    <input TYPE="hidden" NAME="rm" VALUE="admin_config_zServer_NotForLoan_form">
+	    <input TYPE="hidden" NAME="zid" VALUE="<TMPL_VAR NAME=zid>">
+	    <input TYPE="hidden" NAME="delete" VALUE="1">
+	    <input type="submit" name="submit" value="delete" />
+	  </form>
+	</td>
+      </tr>
+    </TMPL_LOOP>
+
+    <form METHOD=POST ACTION="">
+      <tr>
+	<td> </td><td> </td><td> </td><td> </td>
+      </tr>
+      <tr>
+	<td>Zserver ID</td>
+	<td>Tag</td>
+	<td>Subfield</td>
+	<td>Text</td>
+	<td>Where in subfield?</td>
+      </tr>
+      <tr>
+	<td><TMPL_VAR NAME="zid"></td>
+	<td>
+	  <input TYPE="text" NAME="tag" SIZE="3" MAXLENGTH="3" VALUE="<TMPL_VAR NAME=tag>">
+	</td><td>
+	  <input TYPE="text" NAME="subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=subfield>">
+	</td><td>
+	  <input TYPE="text" NAME="text" SIZE="15" MAXLENGTH="15" VALUE="<TMPL_VAR NAME=text>">
+	</td><td>
+	  <input TYPE="checkbox" NAME="atstart" VALUE="1">
+	  Only at start?
+	</td>
+      </tr>
+    </table>
+    <input TYPE="hidden" NAME="rm" VALUE="admin_config_zServer_NotForLoan_form">
+    <input TYPE="hidden" NAME="zid" VALUE="<TMPL_VAR NAME=zid>">
+    <input TYPE="hidden" NAME="add" VALUE="1">
+    <br />
+    <input type="submit" name="submit" value="Add this!" />
+  </form>
+
+</div>
+
+<div id="rightcontent">
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

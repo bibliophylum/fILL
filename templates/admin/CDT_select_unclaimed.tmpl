@@ -1,0 +1,33 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<div id="main">
+
+<div id="middlecontent">
+  <form method=post action="">
+    <h4>Collections</h4>
+    Generate the "unclaimed" report for:
+    
+    <SELECT name="collection">
+      <option>All collections
+	<TMPL_LOOP NAME="collections">
+	  <option><TMPL_VAR NAME="collection">
+	</TMPL_LOOP>
+    </SELECT>
+
+    <br>Pub date greater than or equal to:
+    <input TYPE="text" NAME="pd" SIZE="4" MAXLENGTH="4">
+    <p>
+    <input type="hidden" name="rm" value="admin_CDT_unclaimed_pull_form">
+    <input type="submit" name="submit" value="Submit" />
+  </form>
+
+</div>
+
+
+<div id="rightcontent">
+</div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
