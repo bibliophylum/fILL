@@ -1,0 +1,33 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_patrons.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_patrons_verify");
+  //-->
+</script>
+
+<div id="main">
+
+    <table border="0">
+      <tr>
+	<td>Name</td>
+	<td>Card</td>
+	<td>Email</td>
+	<td> </td>
+      </tr>
+
+    <TMPL_LOOP NAME="patronloop">
+      <tr>
+	<td><TMPL_VAR NAME="name"></td>
+	<td><TMPL_VAR NAME="card"></td>
+	<td><TMPL_VAR NAME="email_address"></td>
+	<td><a href="?rm=patrons_verify_form&pid=<TMPL_VAR NAME=pid>">Verify!</a></td>
+      </tr>
+    </TMPL_LOOP>
+
+    </table>
+</div>
+
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,0 +1,21 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<h1><TMPL_VAR NAME=library> ILL Requests Graph for <TMPL_VAR NAME=period></h1>
+<p>
+  <img src=<TMPL_VAR NAME=filename>>
+</p>
+<p>
+  <strong>Total loaned for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_loaned></strong><br>
+  <strong>Total borrowed for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_borrowed></strong>
+</p>
+
+</table>
+<p>Report generated at <TMPL_VAR NAME=gendate></p>
+<TMPL_INCLUDE NAME="footer.tmpl">

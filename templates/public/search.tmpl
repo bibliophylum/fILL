@@ -1,0 +1,95 @@
+<TMPL_INCLUDE NAME="header_public.tmpl">
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+
+<script type="text/javascript">
+  <!--
+  set_primary_tab("menu_public_search");
+  // -->
+</script>
+
+
+
+<form METHOD=POST ACTION="" name="search">
+  <div id="searchBoxDiv">
+
+    <h1>Search</h1>
+
+    <p>Enter keywords in any or all of the following:</p>
+    <table border="1" class="common_search_table">
+      <tr>
+	<td>Title keywords</td>
+	<td>
+	  <input TYPE="text" NAME="title_keywords" SIZE="50" MAXLENGTH="80">
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Author keywords</td>
+	<td>
+	  <input TYPE="text" NAME="author_keywords" SIZE="50" MAXLENGTH="80">
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Subject keywords</td>
+	<td>
+	  <input TYPE="text" NAME="subject_keywords" SIZE="50" MAXLENGTH="80">
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Anywhere in the record</td>
+	<td>
+	  <input TYPE="text" NAME="any_keywords" SIZE="50" MAXLENGTH="80">
+	</td>
+      </tr>
+      
+      <tr>
+	<td colspan="2">
+	  <table border="1" class="common_search_table">
+	    <tr>
+	      <td>Where to search:</td>
+	      <td><input type="checkbox" name="inclSR" CHECKED>Libraries</td>
+	      <td><input type="checkbox" name="inclDB" CHECKED>Databases</td>
+	      <td><input type="checkbox" name="inclER" CHECKED>Other digital</td>
+	      <td><input type="checkbox" name="inclWR">Reference websites</td>
+	    </tr>
+	  </table>
+	</td>
+      </tr>
+
+    </table>
+
+    <input TYPE="hidden" NAME="rm" VALUE="search_form">
+    <input TYPE="hidden" NAME="newsearch" VALUE=1>
+    <br />
+    <input type="submit" name="submit" value="Submit" />
+  </div>
+</form>
+
+
+<!-- this must come *after* the form, so the form loads first -->
+<script type="text/javascript" language="JavaScript">
+  document.forms['search'].elements['title_keywords'].focus();
+</script>
+
+<TMPL_INCLUDE NAME="footer_public.tmpl">

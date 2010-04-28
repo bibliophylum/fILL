@@ -1,0 +1,79 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_info_allzservers");
+  //-->
+</script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+
+<h1>Current status of Manitoba libraries' zServers</h1>
+
+<p>Determine the status of all standard (ILL) zServers.</p>
+<br />
+<p class="short_instruction">This process is exactly the same as the scheduled testing that Maplin does.  It can take up to 5 minutes to run, as it tests each zServer individually.</p>
+<br /><br />
+<p><TMPL_VAR NAME="test_description"></p>
+<p class="short_instruction"><TMPL_VAR NAME="current_time"></p>
+
+<TMPL_UNLESS NAME="do_test">
+  <form method=post action="" name="starttest" onSubmit="toggleLayer( 'run_zserver_test' ); return true;">
+    <input type="hidden" name="do_test" value=1>
+    <input type="hidden" name="rm" value="info_all_zservers_form">
+    <input type="submit" value="Start the status check">
+  </form>
+</TMPL_UNLESS>
+
+<div id="run_zserver_test" class="wait">
+  <img src="/img/progressbar_green.gif">
+  <p>Running the all-systems status check...</p>
+</div>
+
+<p><br /></p>
+
+<TMPL_LOOP NAME="status">
+    <TMPL_IF NAME="available">
+      <TMPL_IF NAME="alive">
+	<TMPL_IF NAME="count">
+	  <p class="info_zserver_ok">
+        <TMPL_ELSE>
+	  <p class="info_zserver_zero_recs">
+	</TMPL_IF>
+      <TMPL_ELSE>
+	<p class="info_zserver_not_alive">
+      </TMPL_IF>
+    <TMPL_ELSE>
+      <p class="info_zserver_not_available">
+    </TMPL_IF>
+
+    <TMPL_VAR NAME="name"> - <TMPL_VAR NAME="ils"> - <TMPL_VAR NAME="msg">
+    <TMPL_IF NAME="count">
+      (Found <TMPL_VAR NAME="count"> records)
+    </TMPL_IF>
+    </p>
+<!--    <p class="short_instruction"> - <TMPL_VAR NAME="serverImplementationName"></p> -->
+    <br />
+
+</TMPL_LOOP>    
+
+<TMPL_INCLUDE NAME="footer.tmpl">

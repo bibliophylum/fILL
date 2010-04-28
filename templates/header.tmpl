@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head><title>MAPLIN3</title>
+<link type="text/css" rel="stylesheet" href="/maplin3styles.1.7.css">
+<link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
+
+<script language="JavaScript">
+
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+</script>
+
+</head>
+<body>
+
+<DIV id="header">
+  <div id="logo">
+    <div id="logo_title">MAPLIN-3</div>
+    <div id="logo_slogan">Manitoba Public Library Z39.50 search and request</div>
+  </div>
+  <div id="header_quick_access">
+    <ul>
+      <li><TMPL_VAR NAME="username"> </li>
+      <li><a href="?authen_logout=1">Log out</a></li>
+    </ul>
+    <a href="/Librarian_Guide.pdf">Librarian's Guide (PDF)...</a>
+  </div>
+</DIV>
+
+<!-- div id="nav1" -->
+<div id="csstabs">
+  <ul>
+    <li id="menu_search">
+      <a href=/cgi-bin/maplin3.cgi?rm=search_simple_ajax_form>
+      Search
+      </a>
+    </li>
+
+    <li id="menu_myaccount">
+      <a href=/cgi-bin/myaccount.cgi?rm=myaccount_settings_form>
+      My Account
+      </a>
+    </li>
+
+<!--
+    <li id="menu_zerocirc">
+      <a href=/cgi-bin/zerocirc.cgi?rm=browse_form>
+      Collection Development Tool
+      </a>
+    </li>
+-->
+
+    <li id="menu_info">
+      <a href=/cgi-bin/info.cgi?rm=info_contacts_form>
+      Info
+      </a>
+    </li>
+
+    <li id="menu_patrons">
+      <a href=/cgi-bin/patrons.cgi?rm=patrons_verify_form>
+      Patrons
+      </a>
+    </li>
+<!--
+    <li id="menu_supplemental">
+      <a href=/cgi-bin/supplemental.cgi?rm=worldlanguages_form>
+      Supplemental blocks
+      </a>
+    </li>
+-->
+    <li id="menu_admin">
+      <a href=/cgi-bin/admin.cgi?rm=admin_reports_form>
+      Admin
+      </a>
+    </li>
+
+  </ul>
+
+</div>
+
+<script language="JavaScript">
+
+  var uname = '<TMPL_VAR NAME="username">';
+
+  if ((uname == 'admin') || (uname == 'ADMIN')) {
+    document.getElementById('menu_admin').style.display="inline";
+  } else {
+    document.getElementById('menu_admin').style.display="none";
+  }
+
+</script>      

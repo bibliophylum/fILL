@@ -1,0 +1,83 @@
+<html>
+<head>
+  <link rel=stylesheet href="/maplin3.css" type="text/css">
+</head>
+<body>
+  <a href="/cgi-bin/hmmMaplin3.cgi?rm=async&newsearch=1">New search...</a>
+  <a href="/cgi-bin/hmmMaplin3.cgi?rm=async_results">Reload</a>
+
+  <div id="undo_limits">
+    Undo a limit:
+    <TMPL_LOOP NAME="UNDO_LIMITS">
+      [<a href="?rm=async_results&unlimit=<TMPL_VAR ESCAPE=URL NAME=undo_limit>">
+	<TMPL_VAR NAME=unlimit>
+      </a>]
+    </TMPL_LOOP>
+  </div>
+
+  <div id="main">
+
+    <div id="left">
+      Left
+      <p><b>Subjects</b></p>
+      <div id="subjects">
+	<TMPL_LOOP NAME="SUBJECTS">
+	  <br>
+	  <a class="limits" href="?rm=async_results&limit=<TMPL_VAR ESCAPE=URL NAME=s_limit>">
+	    <TMPL_VAR NAME="subject">
+	  </a> 
+	</TMPL_LOOP>
+      </div>
+
+      <p><b>Authors</b></p>
+      <div id="authors">
+	<TMPL_LOOP NAME="AUTHORS">
+	  <br>
+	  <a class="limits" href="?rm=async_results&limit=<TMPL_VAR ESCAPE=URL NAME=a_limit>">
+	    <TMPL_VAR NAME="author">
+	  </a>
+	</TMPL_LOOP>
+      </div>
+
+      <p><b>Publish Date</b></p>
+      <div id="pubdate">
+	<TMPL_LOOP NAME="PUBDATES">
+	  <br>
+	  <a class="limits" href="?rm=async_results&limit=<TMPL_VAR ESCAPE=URL NAME=pd_limit>">
+	    <TMPL_VAR NAME="pubdate">
+	  </a>
+	</TMPL_LOOP>
+      </div>
+
+      
+    </div>
+
+    <div id="middle">
+      Middle
+      <div id="search_results">
+	<TMPL_LOOP NAME="bibs">
+	  <p class="search_results_title"><TMPL_VAR NAME="title"></p>
+	  <p class="search_results_author">Author: <TMPL_VAR NAME="author"></p>
+	  <p class="search_results_pubdate">Published: <TMPL_VAR NAME="pubdate"></p>
+	  <p class="search_results_subject_heading">Subjects:</p>
+	  <TMPL_LOOP NAME="search_results_subjects">
+	    <p class="search_results_subject"><TMPL_VAR NAME="subject"></p>
+	  </TMPL_LOOP>
+	</TMPL_LOOP>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="right">
+    Right
+    <p class="debuginfo">Status: [<TMPL_VAR NAME="STATUS">]</p>
+    <p class="debuginfo">Search string: [<TMPL_VAR NAME="PQFSTRING">]</p>
+    <p class="debuginfo">Debug... Limits: [<TMPL_VAR NAME="LIMITS">]</p>
+  </div>
+
+</div>
+
+</body>
+</html>

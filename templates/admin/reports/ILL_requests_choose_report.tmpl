@@ -1,0 +1,53 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<h1>Generate an ILL Requests Report</h1>
+<table>
+  <tr>
+    <td colspan="2"><strong>Borrower reports</strong></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=today">Today</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=yesterday">Yesterday</a></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=thisweek">This week</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=lastweek">Last week</a></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=thismonth">This month</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=lastmonth">Last month</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=borrower&period=all">Since Inception</a></td>
+  </tr>
+</table>
+<p />
+<table>
+  <tr>
+    <td colspan="2"><strong>Lender reports</strong></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=today">Today</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=yesterday">Yesterday</a></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=thisweek">This week</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=lastweek">Last week</a></td>
+  </tr>
+  <tr>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=thismonth">This month</a></td>
+    <td><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=lastmonth">Last month</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"><a href="?rm=admin_reports_ILL_requests_form&gen=1&report=lender&period=all">Since Inception</a></td>
+  </tr>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

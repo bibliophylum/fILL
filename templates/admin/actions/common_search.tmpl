@@ -1,0 +1,137 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_actions");
+  //-->
+</script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<h1>Common Search</h1>
+
+<form METHOD=POST ACTION="" name="search">
+  Resources:<br>
+  <input TYPE=CHECKBOX NAME="inclSR" CHECKED >Standard (ILL)<br>
+  <input TYPE=CHECKBOX NAME="inclER" CHECKED >eBook<br>
+  <input TYPE=CHECKBOX NAME="inclWR" >Web-based<br>
+  <p>
+
+  <table border="1" class="simple_search_table">
+    <tr>
+      <td>Title keywords</td>
+      <td>
+	<input TYPE="text" NAME="title_keywords" SIZE="50" MAXLENGTH="80">
+      </td>
+    </tr>
+
+    <tr>
+      <td>Author keywords</td>
+      <td>
+	<input TYPE="text" NAME="author_keywords" SIZE="50" MAXLENGTH="80">
+      </td>
+    </tr>
+
+    <tr>
+      <td>Subject keywords</td>
+      <td>
+	<input TYPE="text" NAME="subject_keywords" SIZE="50" MAXLENGTH="80">
+      </td>
+    </tr>
+  </table>
+  <input TYPE="hidden" NAME="rm" VALUE="admin_actions_test_search_form">
+  <input TYPE="hidden" NAME="newsearch" VALUE=1>
+  <br />
+
+  <a href="javascript:toggleLayer('selectTargets');" title="Show/Hide Z39.50 target selection">
+    Show/Hide targets
+  </a>
+  <div id="selectTargets">
+    <br />
+    <h4>Select the targets to search</h4>
+    <p class="target_unavailable">Targets in this format are temporarily unavailable.</p><br />
+    <table>
+      <tr>
+	<th>Standard (ILL)</th>
+	<th>eBook</th>
+	<th>Web</th>
+      </tr>
+      <tr>
+	<td valign="top">
+	  <TMPL_LOOP NAME=SRtargets>
+	    <TMPL_IF NAME=available>
+	      <p class="target_available">
+		<input TYPE="checkbox" NAME=cb_<TMPL_VAR NAME="id"> VALUE=<TMPL_VAR NAME="id">>
+	    <TMPL_ELSE>
+	      <p class="target_unavailable">
+		<input TYPE="hidden" NAME=cb_<TMPL_VAR NAME="id">>
+	    </TMPL_IF>
+	    <TMPL_VAR NAME="name">
+            </p>
+          </TMPL_LOOP>
+        </td>
+
+        <td valign="top">
+	  <TMPL_LOOP NAME=ERtargets>
+	    <TMPL_IF NAME=available>
+	      <p class="target_available">
+		<input TYPE="checkbox" NAME=cb_<TMPL_VAR NAME="id"> VALUE=<TMPL_VAR NAME="id">>
+            <TMPL_ELSE>
+	      <p class="target_unavailable">
+		<input TYPE="hidden" NAME=cb_<TMPL_VAR NAME="id">>
+            </TMPL_IF>
+            <TMPL_VAR NAME="name">
+            </p>
+          </TMPL_LOOP>
+        </td>
+
+        <td valign="top">
+	  <TMPL_LOOP NAME=WRtargets>
+	    <TMPL_IF NAME=available>
+	      <p class="target_available">
+		<input TYPE="checkbox" NAME=cb_<TMPL_VAR NAME="id"> VALUE=<TMPL_VAR NAME="id">>
+            <TMPL_ELSE>
+	      <p class="target_unavailable">
+		<input TYPE="hidden" NAME=cb_<TMPL_VAR NAME="id">>
+            </TMPL_IF>
+            <TMPL_VAR NAME="name">
+            </p>
+          </TMPL_LOOP>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br />
+  <input type="submit" name="submit" value="Submit" />
+</form>
+
+<!-- this must come *after* the form, so the form loads first -->
+<script type="text/javascript" language="JavaScript">
+  document.forms['search'].elements['keywords'].focus();
+</script>
+
+<div id="debug-1">
+     <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+     <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

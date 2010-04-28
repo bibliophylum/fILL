@@ -1,0 +1,76 @@
+<TMPL_INCLUDE NAME="header_public.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_public_myaccount");
+  //-->
+</script>
+
+<div id="middlecontent">
+  <h4><TMPL_VAR NAME="status"></h4>
+  <form METHOD=POST ACTION="">
+    <input TYPE="hidden" NAME="pid" VALUE="<TMPL_VAR NAME=pid>">
+    <table>
+      <tr>
+	<td>Login name:</td>
+	<td>
+	  <TMPL_VAR NAME=username>
+	</td>
+      </tr><tr>
+	<td>Name:</td>
+	<TMPL_IF NAME=new_password>
+	  <td><TMPL_VAR NAME=name></td>
+        <TMPL_ELSE>
+	  <td><input TYPE="text" NAME="name" SIZE="60" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=name>"></td>
+	</TMPL_IF>
+      </tr><tr>
+	<td>Barcode:</td>
+	<td>
+	  <TMPL_VAR NAME=card>
+	</td>
+
+      </tr><tr>
+	<TMPL_IF NAME=new_password>
+	  <td><em>Enter a new password:</em></td>
+	  <td><input type="text" name="passwd"></td>
+	  </tr><tr>
+	  <td><em>Retype password:</em></td>
+	  <td><input type="text" name="passwd2"></td>
+	  <TMPL_ELSE>
+	    <td><em>Passwords are hidden.</em></td>
+	    <td><em><a href="?rm=myaccount_form&pid=<TMPL_VAR NAME=pid>&action=new_password">Assign new password</a></em><br /><em>(Save any changes before doing this!)</em></td>
+	</TMPL_IF>
+
+
+      </tr><tr>
+	<td>Email address:</td>
+        <TMPL_IF NAME=new_password>
+	  <td><TMPL_VAR NAME=email_address></td>
+	<TMPL_ELSE>
+	  <td><input TYPE="text" NAME="email_address" SIZE="60" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=email_address>"></td>
+	</TMPL_IF>
+      </tr><tr>
+	<td>Last login:</td>
+	<td>
+	  <TMPL_VAR NAME=last_login>
+	</td>
+      </tr><tr>
+	<td>Your library:</td>
+	<td>
+	  <TMPL_VAR NAME=library>
+	</td>
+      </tr><tr>
+	<td># Interlibrary loan requests:</td>
+	<td>
+	  <TMPL_VAR NAME=ill_requests>
+	</td>
+      </tr>
+    </table>
+    <input TYPE="hidden" NAME="rm" VALUE="myaccount_form">
+    <br />
+    <input type="submit" name="submit" value="Save changes" />
+  </form>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer_public.tmpl">

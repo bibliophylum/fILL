@@ -1,0 +1,146 @@
+<TMPL_INCLUDE NAME="header_public.tmpl">
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<script type="text/javascript">
+
+  var request = false;
+  try {
+    request = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      request = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        request = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        request = false;
+      }
+    }
+  }
+
+  if (!request)
+    alert("Error initializing XMLHttpRequest.");
+
+  var timerID;
+  var debugCount = 0;
+  
+  timerID = setInterval( "getStatus()", 1000);    
+
+  function getStatus() {
+    var sessionid = document.getElementById("sessionid").value;
+    // to prevent caching....
+    var t = new Date();
+    var url = "/cgi-bin/maplin3-getStatus.cgi?showstatus=1&sessionid=" + sessionid + "&t=" + t.getTime();
+    request.open("GET", url, true);
+    request.onreadystatechange = updatePage;
+    request.send(null);
+  }
+
+  function updatePage() {
+    if (request.readyState == 4) {
+      if (request.status == 200) {
+
+        var response = request.responseText.split("|");
+
+        if (response[0] == "done") {
+          clearInterval( timerID );
+
+          //alert("Server is done");
+          //alert(request.responseText);
+
+          toggleLayer("statusDiv");
+          document.getElementById("searchFinishedDiv").innerHTML = "Saving results... <img src=\"/wait.gif\">";
+          setTimeout('window.location = "public.cgi?rm=results_form"', 1000)
+        }
+        document.getElementById("statusDetailsDiv").innerHTML = response[1];
+      }
+    }
+  }
+
+
+</script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div>
+  <h2>Searching....</h2>
+  <p>
+    We are searching the remote systems, which may take a while.
+    <br>When the records are returned, they are stored locally (which means that
+    further operations will be much faster!).
+  </p>
+  <p>
+    <br>To speed up searches like this one, try entering more keywords.
+    <br>(More keywords will give a narrower focus and get a faster response from
+    the remote systems)
+    <br><br>
+  </p>
+  <hr>
+
+  <div id="statusDiv" class="wait">
+    Searching all available or selected libraries in Manitoba...<br><img src='/img/progressbar_green.gif'>
+  </div>
+
+  <div class="wait">
+    <p><strong>Searches can take up to two minutes.</strong></p>
+    <p><em>This depends on the number of results and the speed of the various library catalogues.</em></p>
+    <p>
+      <a href="javascript:toggleLayer('statusDetailsDiv');" title="Show/Hide search details">
+	Show/Hide search details
+      </a>
+    </p>
+  </div>
+
+  <div id="statusDetailsDiv">
+  </div>
+
+  <div id="searchFinishedDiv" class="wait">
+  </div>
+
+  <form>
+    <!-- <input type="button" name="hmm" value="Get status" onclick="getStatus()"> -->
+    <!-- <p>sessionid=<TMPL_VAR NAME="sessionid"></p> -->
+    <input type="hidden" name="sessionid" value=<TMPL_VAR NAME="sessionid"> id="sessionid" size=120>
+    <input type="hidden" name="cancel" value=1>
+    <input type="hidden" name="rm" value="search_form">
+    <input type="submit" name="cancel" value="Cancel search">
+  </form>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer_public.tmpl">

@@ -1,0 +1,53 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_zerocirc.tmpl">
+
+<div id="main">
+
+<a href="?rm=browse_form">Get new list...</a>
+<input class="noPrint" type="button" value="Print this list" onclick="window.print()">
+Collection: <TMPL_VAR NAME=collection>, Call # range <TMPL_VAR NAME=call_start> <TMPL_VAR NAME=call_end>
+<TMPL_VAR NAME=collection>
+<br>Sort by: 
+[<a href="?rm=browse_results_form&collection=<TMPL_VAR NAME=collection>&call_start=<TMPL_VAR NAME=call_start>&call_end=<TMPL_VAR NAME=call_end>">Call#, Title</a>]
+[<a href="?rm=browse_results_form&collection=<TMPL_VAR NAME=collection>&call_start=<TMPL_VAR NAME=call_start>&call_end=<TMPL_VAR NAME=call_end>&sort_pubdate=1">PubDate, Call#, Title</a>]
+[<a href="?rm=browse_results_form&collection=<TMPL_VAR NAME=collection>&call_start=<TMPL_VAR NAME=call_start>&call_end=<TMPL_VAR NAME=call_end>&sort_author=1">Author, Call#, Title</a>]
+[<a href="?rm=browse_results_form&collection=<TMPL_VAR NAME=collection>&call_start=<TMPL_VAR NAME=call_start>&call_end=<TMPL_VAR NAME=call_end>&sort_title=1">Title, Call#</a>]
+
+<div id="middlecontent">
+  <table cellpadding=20 cellspacing=5 border=0>
+    <tr>
+      <th>id</th>
+      <th><!-- Claim! --> </th>
+      <th>Call #</th>
+      <th>PubDate</th>
+      <th>Author</th>
+      <th width="40%">Title</th>
+      <!-- <th>claimed by</th> -->
+    </tr>
+
+
+    <TMPL_LOOP NAME="browselist">
+      <TMPL_UNLESS NAME="claimed_by">
+	<tr>
+ 	  <td><p style="color: gray"><TMPL_VAR NAME="id"></p></td>
+	  <!-- <td align=right><p><input type="checkbox" name=chk<TMPL_VAR NAME="id">></p></td> --><td><p /></td>
+	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="callno"></p></td>
+	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="pubdate"></p></td>
+	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="author"></p></td>
+	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="title"></p></td>
+	  <!-- <td><p style="background: #FFFFF0"><TMPL_VAR NAME="claimed_by"></p></td> -->
+	</tr>
+      </TMPL_UNLESS>
+    </TMPL_LOOP>
+
+
+  </table>
+</div>
+
+
+<div id="rightcontent">
+</div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

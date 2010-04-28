@@ -1,0 +1,15 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <link rel=stylesheet href="maplin3.css" type="text/css">
+<head>
+</head>
+<body>
+  <!-- Note that the var names here must match the database table's
+       field names (unless you want to do some extra work in the app -->
+   <TMPL_LOOP NAME=ZINFO>
+      Name: <TMPL_VAR NAME=Name> <br>
+      Connection:  <TMPL_VAR NAME=Z3950_connection_string>  <p>
+   </TMPL_LOOP>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<div id="middlecontent">
+  <form METHOD=POST ACTION="">
+    <table>
+      <tr>
+	<td>Name:</td>
+	<td>
+	  <input TYPE="text" NAME="name" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=name>">
+	</td>
+      </tr><tr>
+	<td>Connection:</td>
+	<td>
+	  <input TYPE="text" NAME="z3950_connection_string" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=z3950_connection_string>">
+	</td>
+      </tr><tr>
+	<td>Email address:</td>
+	<td>
+	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=email_address>">
+	</td>
+      </tr><tr>
+	<td>Available:</td>
+	<td>
+	  <input TYPE="text" NAME="available" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=available>"> <p class="short_instruction">('1' - available, '0' - not available)</p>
+	</td>
+      </tr><tr>
+	<td>Holdings</td>
+	<td>
+	  <table>
+	    <tr>
+	      <td>Tag:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_tag" SIZE="3" MAXLENGTH="3" VALUE="<TMPL_VAR NAME=holdings_tag>">
+	      </td>
+	    </tr><tr>
+	      <td>Location subfield:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_location" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=holdings_location>">
+	      </td>
+	    </tr><tr>
+	      <td>Collection subfield:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_collection" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=holdings_collection>">
+	      </td>
+	    </tr><tr>
+	      <td>Callno subfield:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_callno" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=holdings_callno>">
+	      </td>
+	    </tr><tr>
+	      <td>Availability subfield:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_avail" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=holdings_avail>">
+	      </td>
+	    </tr><tr>
+	      <td>Due date subfield:</td>
+	      <td>
+		<input TYPE="text" NAME="holdings_due" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=holdings_due>">
+	      </td>
+	    </tr>
+	  </table>
+	</td>
+      </tr><tr>
+	<td>Handles holdings improperly?</td>
+	<td>
+	  <input TYPE="text" NAME="handles_holdings_improperly" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=handles_holdings_improperly>"> <p class="short_instruction">('1' - bad/missing, '0' - good)</p>
+	</td>
+      </tr>
+      <tr>
+	<td>ILS:</td>
+	<td>
+	  <input TYPE="text" NAME="ils" SIZE="25" MAXLENGTH="25" VALUE="<TMPL_VAR NAME=ils>">
+	</td>
+      </tr>
+      <tr>
+	<td>Type of resource</td>
+	<td>
+	  <TMPL_IF NAME="isstandardresource">
+	    <input type="radio" name="tor" value="std" checked > Standard<br>
+          <TMPL_ELSE>
+	    <input type="radio" name="tor" value="std"> Standard<br>
+	  </TMPL_IF>
+
+	  <TMPL_IF NAME="iselectronicresource">
+	    <input type="radio" name="tor" value="ele" checked > Electronic<br>
+          <TMPL_ELSE>
+	    <input type="radio" name="tor" value="ele"> Electronic<br>
+	  </TMPL_IF>
+
+	  <TMPL_IF NAME="isdatabase">
+	    <input type="radio" name="tor" value="dat" checked > Database
+          <TMPL_ELSE>
+	    <input type="radio" name="tor" value="dat"> Database
+	  </TMPL_IF>
+
+	  <TMPL_IF NAME="iswebresource">
+	    <input type="radio" name="tor" value="web" checked > Web
+          <TMPL_ELSE>
+	    <input type="radio" name="tor" value="web"> Web
+	  </TMPL_IF>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  Owning library:
+	</td><td>
+	  <select name="owner_lid">
+	    <TMPL_LOOP NAME="possible_owners">
+	      <TMPL_IF NAME="isowner">
+		<option value="<TMPL_VAR NAME=lid>" selected="yes"><TMPL_VAR NAME="library"></option>
+	      <TMPL_ELSE>
+		<option value="<TMPL_VAR NAME=lid>"><TMPL_VAR NAME="library"></option>
+	      </TMPL_IF>
+	    </TMPL_LOOP>
+	  </select>
+	</td>
+      </tr>
+    </table>
+    <input TYPE="hidden" NAME="rm" VALUE="admin_config_zServer_edit_form">
+    <input TYPE="hidden" NAME="id" VALUE="<TMPL_VAR NAME=id>">
+    <input TYPE="hidden" NAME="update" VALUE="1">
+    <br />
+    <input type="submit" name="submit" value="Update" />
+  </form>
+
+</div>
+
+<div id="rightcontent">
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

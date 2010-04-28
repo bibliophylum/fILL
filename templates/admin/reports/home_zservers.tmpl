@@ -1,0 +1,23 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_admin.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_admin_reports");
+  //-->
+</script>
+
+<h1>Home zServers</h1>
+<table>
+  <tr>
+    <td>zServer</td><td>User</td>
+  </tr>
+  <TMPL_LOOP NAME="by_library">
+    <tr>
+      <td><TMPL_VAR NAME="zserver"></td>
+      <td><TMPL_VAR NAME="user"></td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

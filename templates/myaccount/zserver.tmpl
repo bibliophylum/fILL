@@ -1,0 +1,101 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_zserver");
+  //-->
+</script>
+
+<div id="middlecontent">
+  <form METHOD=POST ACTION="">
+    <TMPL_IF NAME="has_zserver">
+      <h4>zServer configuration</h4>
+      <p><TMPL_VAR NAME="status"></p>
+      <input TYPE="hidden" NAME="id" VALUE="<TMPL_VAR NAME=editID>">
+      <table>
+	<tr>
+	  <td>Name:</td>
+	  <td>
+	    <p class="short_instruction">
+	      This will appear on search results as the "found at server"
+	    </p>
+	    <input TYPE="text" NAME="name" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editName>">
+	  </td>
+	</tr><tr>
+	  <td>Connection:</td>
+	  <td>
+	    <p class="short_instruction">
+	      IP-address:port/dbname (eg: library.gov.mb.ca:210/maplin)
+	    </p>
+	    <input TYPE="text" NAME="z3950_connection_string" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editConn>">
+	  </td>
+	</tr><tr>
+	  <td>Email address:</td>
+	  <td>
+	    <p class="short_instruction">
+	      Your "default" ILL email address.
+	    </p>
+	    <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
+	  </td>
+	</tr><tr>
+	  <td>Available:</td>
+	  <td>
+	    <p class="short_instruction">
+	      If your server is temporarily down, change this to '0'
+	    </p><br />
+	    <input TYPE="text" NAME="available" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editAvailable>"> <p class="short_instruction">('1' - available, '0' - not available)</p>
+	  </td>
+	</tr><tr>
+	  <td>Holdings</td>
+	  <td>
+	    <table>
+	      <tr>
+		<td>Tag:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_tag" SIZE="3" MAXLENGTH="3" VALUE="<TMPL_VAR NAME=editHoldingsTag>">
+		</td>
+	      </tr><tr>
+		<td>Location subfield:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_location" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editHoldingsLocation>">
+		</td>
+	      </tr><tr>
+		<td>Collection subfield:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_collection" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editHoldingsCollection>">
+		</td>
+	      </tr><tr>
+		<td>Callno subfield:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_callno" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editHoldingsCallno>">
+		</td>
+	      </tr><tr>
+		<td>Availability subfield:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_avail" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editHoldingsAvail>">
+		</td>
+	      </tr><tr>
+		<td>Due date subfield:</td>
+		<td>
+		  <input TYPE="text" NAME="holdings_due" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=editHoldingsDue>">
+		</td>
+	      </tr>
+	    </table>
+	  </td>
+	</tr>
+      </table>
+      <input TYPE="hidden" NAME="rm" VALUE="myaccount_zserver_form">
+      <br />
+      <input type="submit" name="submit" value="Update" />
+    <TMPL_ELSE>
+      <p>Please contact your region's head library to make any changes to the way Maplin-3 understands your system's z39.50 server.</p>
+      <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
+      <br />
+      <input type="submit" name="submit" value="Ok" />
+    </TMPL_IF>
+  </form>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

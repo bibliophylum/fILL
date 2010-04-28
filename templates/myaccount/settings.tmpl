@@ -1,0 +1,106 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_settings");
+  //-->
+</script>
+
+<div id="middlecontent">
+  <h4><TMPL_VAR NAME="status"></h4>
+  <form METHOD=POST ACTION="">
+    <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
+    <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
+    <table>
+      <tr>
+	<td>Login name:</td>
+	<td>
+	  <TMPL_VAR NAME=editName>
+	</td>
+      </tr><tr>
+	<td>Password:</td>
+	<td>
+	  <input TYPE="text" NAME="password" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editPassword>">
+	</td>
+      </tr><tr>
+	<td>Email address:</td>
+	<td>
+	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
+	</td>
+      </tr><tr>
+	<td>Library:</td>
+	<td>
+	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
+	</td>
+      </tr><tr>
+	<td>Mailing address</td>
+	<td>
+	  <table>
+	    <tr>
+	      <td>Line 1:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
+	      </td>
+	    </tr><tr>
+	      <td>Line 2:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line2" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine2>">
+	      </td>
+	    </tr><tr>
+	      <td>Line 3:</td>
+	      <td>
+		<input TYPE="text" NAME="mailing_address_line3" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine3>">
+	      </td>
+	    </tr>
+	  </table>
+	</td>
+      </tr>
+    </table>
+
+    <h5>Search these resources by default</h5>
+    <table>
+      <tr>
+	<td>
+	  <TMPL_IF NAME="use_standardresource">
+	    <input type="checkbox" name="standard" checked="yes" > Standard, 
+          <TMPL_ELSE>
+	    <input type="checkbox" name="standard"> Standard, 
+	  </TMPL_IF>
+	</td>
+
+	<td>
+	  <TMPL_IF NAME="use_electronicresource">
+	    <input type="checkbox" name="ebook" checked="yes" > Electronic, 
+          <TMPL_ELSE>
+	    <input type="checkbox" name="ebook"> Electronic, 
+	  </TMPL_IF>
+	</td>
+
+	<td>
+	  <TMPL_IF NAME="use_databaseresource">
+	    <input type="checkbox" name="database" checked="yes" > Database, 
+          <TMPL_ELSE>
+	    <input type="checkbox" name="database"> Database, 
+	  </TMPL_IF>
+	</td>
+
+	<td>
+	  <TMPL_IF NAME="use_webresource">
+	    <input type="checkbox" name="web" checked="no" > Web
+          <TMPL_ELSE>
+	    <input type="checkbox" name="web"> Web
+	  </TMPL_IF>
+	</td>
+      </tr>
+    </table>
+
+
+    <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
+    <br />
+    <input type="submit" name="submit" value="Update" />
+  </form>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
