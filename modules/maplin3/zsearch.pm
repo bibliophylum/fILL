@@ -127,7 +127,7 @@ sub search_simple_ajax_process {
 		    sleep 3;
 		} else {
 		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
-		    print FAKELOCK "x";
+		    print FAKELOCK "$$\n";
 		    close FAKELOCK;
 		    $system_busy = 0;
 		    last;
@@ -377,7 +377,7 @@ sub search_common_process {
 		    sleep 3;
 		} else {
 		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
-		    print FAKELOCK "x";
+		    print FAKELOCK "$$\n";
 		    close FAKELOCK;
 		    $system_busy = 0;
 		    last;
