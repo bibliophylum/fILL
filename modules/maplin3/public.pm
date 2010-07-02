@@ -92,20 +92,46 @@ sub search_process {
 	    # Clear the status_check table
 	    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$session);
 	    
-	    if (my $pid = fork) {            # parent does
-		use POSIX qw( strftime );
+	    # simple, but may allow multiple instances to run (which is ok, if there are not too many....
+	    my $system_busy = 0;
+	    for (my $i=1; $i<10; $i++) {
+		if (-e '/tmp/maplin.zsearch') {
+		    $system_busy = 1;
+		    sleep 3;
+		} else {
+		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
+		    print FAKELOCK "$$\n";
+		    close FAKELOCK;
+		    $system_busy = 0;
+		    last;
+		}
+		
+	    }
+	
+	    if ($system_busy) {
+		my $template = $self->load_tmpl('search/busy.tmpl');	
+		$template->param( username => $self->authen->username,
+#				  sessionid => $session,
+		    );
+		return $template->output;
 
-		$self->header_add(
-		    # date in the past
-		    #-expires       => 'Sat, 26 Jul 1997 05:00:00 GMT',
-		    #-expires       => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
-		    -expires => 0,
-		    # always modified
-		    -Last_Modified => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
-		    # HTTP/1.0
-		    -Pragma        => 'no-cache',
-		    # HTTP/1.1
-		    -Cache_Control => join(', ', qw(
+	    } else {
+		# system is not (very) busy
+
+		if (my $pid = fork) {            # parent does
+		    use POSIX qw( strftime );
+		    
+		    $self->header_add(
+			# date in the past
+			#-expires       => 'Sat, 26 Jul 1997 05:00:00 GMT',
+			#-expires       => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
+			-expires => 0,
+			# always modified
+			-Last_Modified => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
+			# HTTP/1.0
+			-Pragma        => 'no-cache',
+			# HTTP/1.1
+			-Cache_Control => join(', ', qw(
                         no-store
                         no-cache
                         must-revalidate
@@ -113,81 +139,81 @@ sub search_process {
                         pre-check=0
                         max-age=0
                         )),
-		    );
-
-		$SIG{CHLD} = 'IGNORE';
-
-		my $template = $self->load_tmpl('public/searching.tmpl');
-#		my $template = $self->load_tmpl('public/huh.tmpl');
-		$template->param( USERNAME => $self->authen->username,
-				  sessionid => $session );
-		return $template->output;
-		
-	    } elsif (defined $pid) {         # child does
-		close STDOUT;  # so parent can go on
-
-		{
-		    #Stop the annoying (and log-filling)
-		    #"Name "maplin3::zsearch::F" used only once: possible typo"
-		    no warnings;
-		    #local $^W = 0;
-
-		    # Need the patron's home-library id in order to look up zserver credentials....
-		    my $patronhref = $self->dbh->selectrow_hashref("SELECT home_library_id FROM patrons WHERE username=?", {}, $self->authen->username);
-
-		    # Create the zservers list
-		    my @selectedZservers;
-		    my $sqlZserversList = "SELECT id FROM zservers WHERE (available=1 and alive=1)";
-
-		    my $sqlPhrase = "";
-		    if ($includeStandardResources) {
-			$sqlPhrase .= " OR isstandardresource=1";
-		    }
-
-		    if ($includeElectronicResources) {
-			$sqlPhrase .= " OR iselectronicresource=1";
-		    }
-
-		    if ($includeDatabaseResources) {
-			$sqlPhrase .= " OR isdatabase=1";
-		    }
-
-		    if ($includeWebResources) {
-			$sqlPhrase .= " OR iswebresource=1";
-		    }
-
-		    $sqlPhrase =~ s/^ OR (.*)/$1/; # remove the initial " OR "
-		    $sqlZserversList .= " AND ($sqlPhrase)";
-
-		    my $ar_ids = $self->dbh->selectall_arrayref(
-			$sqlZserversList
 			);
-		    foreach my $ar_id (@$ar_ids) {
-			push @selectedZservers, $ar_id->[0];
-		    }
+		    
+		    $SIG{CHLD} = 'IGNORE';
+		    
+		    my $template = $self->load_tmpl('public/searching.tmpl');
+		    $template->param( USERNAME => $self->authen->username,
+				      sessionid => $session );
+		    return $template->output;
+		    
+		} elsif (defined $pid) {         # child does
+		    close STDOUT;  # so parent can go on
+		    
+		    {
+			#Stop the annoying (and log-filling)
+			#"Name "maplin3::zsearch::F" used only once: possible typo"
+			no warnings;
+			#local $^W = 0;
+			
+			# Need the patron's home-library id in order to look up zserver credentials....
+			my $patronhref = $self->dbh->selectrow_hashref("SELECT home_library_id FROM patrons WHERE username=?", {}, $self->authen->username);
+			
+			# Create the zservers list
+			my @selectedZservers;
+			my $sqlZserversList = "SELECT id FROM zservers WHERE (available=1 and alive=1)";
+			
+			my $sqlPhrase = "";
+			if ($includeStandardResources) {
+			    $sqlPhrase .= " OR isstandardresource=1";
+			}
+			
+			if ($includeElectronicResources) {
+			    $sqlPhrase .= " OR iselectronicresource=1";
+			}
+			
+			if ($includeDatabaseResources) {
+			    $sqlPhrase .= " OR isdatabase=1";
+			}
+			
+			if ($includeWebResources) {
+			    $sqlPhrase .= " OR iswebresource=1";
+			}
+			
+			$sqlPhrase =~ s/^ OR (.*)/$1/; # remove the initial " OR "
+			$sqlZserversList .= " AND ($sqlPhrase)";
+			
+			my $ar_ids = $self->dbh->selectall_arrayref(
+			    $sqlZserversList
+			    );
+			foreach my $ar_id (@$ar_ids) {
+			    push @selectedZservers, $ar_id->[0];
+			}
 #sleep(10);
-		    unless (open F, "-|") {
-			open STDERR, ">&=1";
-			exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $patronhref->{home_library_id}, $session, $pqf, @selectedZservers;
-			die "Cannot execute /opt/maplin3/externals/maplin3-zsearch-pqf.pl";
+			unless (open F, "-|") {
+			    open STDERR, ">&=1";
+			    exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $patronhref->{home_library_id}, $session, $pqf, @selectedZservers;
+			    die "Cannot execute /opt/maplin3/externals/maplin3-zsearch-pqf.pl";
+			}
+			
+			# buf will contain STDOUT/STDERR of the command exec'd
+			#my $buf = "";
+			#while (<F>) {
+			#	$buf .= $_;
+			#}
+			# do something with buf, if you like :-)
+			
+			# In our case, we just want to let maplin3-zsearch.pl go off
+			# and do it's thing. (It updates the db table status_check,
+			# and we really don't want to wait for it - parent is checking
+			# the db and refreshing itself)
 		    }
-
-		    # buf will contain STDOUT/STDERR of the command exec'd
-		    #my $buf = "";
-		    #while (<F>) {
-		    #	$buf .= $_;
-		    #}
-		    # do something with buf, if you like :-)
-
-		    # In our case, we just want to let maplin3-zsearch.pl go off
-		    # and do it's thing. (It updates the db table status_check,
-		    # and we really don't want to wait for it - parent is checking
-		    # the db and refreshing itself)
+		    exit 0;
+		    
+		} else {
+		    die "Cannot fork: $!";
 		}
-		exit 0;
-		
-	    } else {
-		die "Cannot fork: $!";
 	    }
 	}
 
