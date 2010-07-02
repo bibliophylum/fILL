@@ -123,6 +123,12 @@ sub search_simple_ajax_process {
 	    my $system_busy = 0;
 	    for (my $i=1; $i<10; $i++) {
 		if (-e '/tmp/maplin.zsearch') {
+		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
+		    if (time() - $mtime > 180) {
+			# delete the fakelock if it's more than 3 minutes old
+			# (it didn't get cleaned up... don't know why yet)
+			unlink '/tmp/maplin.zsearch';
+		    }
 		    $system_busy = 1;
 		    sleep 3;
 		} else {
@@ -374,6 +380,12 @@ sub search_common_process {
 	    my $system_busy = 0;
 	    for (my $i=1; $i<10; $i++) {
 		if (-e '/tmp/maplin.zsearch') {
+		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
+		    if (time() - $mtime > 180) {
+			# delete the fakelock if it's more than 3 minutes old
+			# (it didn't get cleaned up... don't know why yet)
+			unlink '/tmp/maplin.zsearch';
+		    }
 		    $system_busy = 1;
 		    sleep 3;
 		} else {
