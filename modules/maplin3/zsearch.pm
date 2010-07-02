@@ -129,6 +129,7 @@ sub search_simple_ajax_process {
 		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
 		    print FAKELOCK "$$\n";
 		    close FAKELOCK;
+		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
 		    $system_busy = 0;
 		    last;
 		}
@@ -379,6 +380,7 @@ sub search_common_process {
 		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
 		    print FAKELOCK "$$\n";
 		    close FAKELOCK;
+		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
 		    $system_busy = 0;
 		    last;
 		}
