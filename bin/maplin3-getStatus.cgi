@@ -41,3 +41,4 @@ if ($query->param('showstatus')) {
 # Send it out
 print $response;
 
+$dbh->disconnect;
