@@ -137,7 +137,9 @@ $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 # Disconnect from the database.
 $dbh->disconnect();
 
-
+if (-e '/tmp/maplin.zsearch') {
+    unlink '/tmp/maplin.zsearch';
+}
 
 #---- end --------
 
