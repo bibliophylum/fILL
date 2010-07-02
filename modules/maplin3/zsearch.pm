@@ -138,7 +138,7 @@ sub search_simple_ajax_process {
 	    if ($system_busy) {
 		my $template = $self->load_tmpl('search/busy.tmpl');	
 		$template->param( username => $self->authen->username,
-				  sessionid => $session,
+#				  sessionid => $session,
 		    );
 		return $template->output;
 
@@ -388,7 +388,7 @@ sub search_common_process {
 	    if ($system_busy) {
 		my $template = $self->load_tmpl('search/busy.tmpl');	
 		$template->param( username => $self->authen->username,
-				  sessionid => $session,
+#				  sessionid => $session,
 		    );
 		return $template->output;
 
