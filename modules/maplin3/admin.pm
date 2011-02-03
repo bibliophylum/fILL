@@ -1721,6 +1721,7 @@ sub admin_reports_ILL_graphs_process {
 	open(IMG, '>', $filename) or die $!;
 	binmode IMG;
 	print IMG $gd->png;
+	close IMG;
 
 
 	my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
@@ -1855,6 +1856,7 @@ sub admin_reports_ILL_pie_process {
 	open(IMG, '>', $filename_loaned) or die $!;
 	binmode IMG;
 	print IMG $gd->png;
+	close IMG;
 
 	$graph = GD::Graph::pie->new(800,600);
 	$graph->set(
@@ -1867,6 +1869,7 @@ sub admin_reports_ILL_pie_process {
 	open(IMG, '>', $filename_borrowed) or die $!;
 	binmode IMG;
 	print IMG $gd->png;
+	close IMG;
 
 #	$graph = GD::Graph::pie->new(600,400);
 #	$gd = $graph->plot(\@dataNet) or die $graph->error;
@@ -1874,6 +1877,7 @@ sub admin_reports_ILL_pie_process {
 #	open(IMG, '>', $filename_net) or die $!;
 #	binmode IMG;
 #	print IMG $gd->png;
+#	close IMG;
 
 
 	my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
