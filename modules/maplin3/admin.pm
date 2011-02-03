@@ -6,10 +6,10 @@ use MARC::Record;
 use POSIX qw(strftime);
 use DateTime;
 use Data::Dumper;
-# Until I resolve the libgd issues on Kubuntu 8.10
-#use GD::Graph;
-#use GD::Graph::lines;
-#use GD::Graph::pie;
+use GD;
+use GD::Graph;
+use GD::Graph::lines;
+use GD::Graph::pie;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes

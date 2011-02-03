@@ -106,50 +106,37 @@ sub search_simple_ajax_process {
 	    # Clear the status_check table
 	    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$session);
 	    
-#	    # Highlander - there can be only one
-#	    open HIGHLANDER, ">>", '/tmp/maplin.zsearch' or die "Cannot open highlander: $!";
-#	    {
-#		my $count = 0;
-#		{
-#		    flock HIGHLANDER, LOCK_EX | LOCK_NB and last;
-#		    sleep 10;
-#		    redo if ++$count < 9;
-#		    ## couldn't get it after 90 seconds
-#		    # ..do something..
-#		}
-#	    }
-	    
 	    # simple, but may allow multiple instances to run (which is ok, if there are not too many....
-	    my $system_busy = 0;
-	    for (my $i=1; $i<10; $i++) {
-		if (-e '/tmp/maplin.zsearch') {
-		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
-		    if (time() - $mtime > 180) {
-			# delete the fakelock if it's more than 3 minutes old
-			# (it didn't get cleaned up... don't know why yet)
-			unlink '/tmp/maplin.zsearch';
-		    }
-		    $system_busy = 1;
-		    sleep 3;
-		} else {
-		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
-		    print FAKELOCK "$$\n";
-		    close FAKELOCK;
-		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
-		    $system_busy = 0;
-		    last;
-		}
-		
-	    }
-	
-	    if ($system_busy) {
-		my $template = $self->load_tmpl('search/busy.tmpl');	
-		$template->param( username => $self->authen->username,
-#				  sessionid => $session,
-		    );
-		return $template->output;
-
-	    } else {
+#	    my $system_busy = 0;
+#	    for (my $i=1; $i<10; $i++) {
+#		if (-e '/tmp/maplin.zsearch') {
+#		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
+#		    if (time() - $mtime > 180) {
+#			# delete the fakelock if it's more than 3 minutes old
+#			# (it didn't get cleaned up... don't know why yet)
+#			unlink '/tmp/maplin.zsearch';
+#		    }
+#		    $system_busy = 1;
+#		    sleep 3;
+#		} else {
+#		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
+#		    print FAKELOCK "$$\n";
+#		    close FAKELOCK;
+#		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
+#		    $system_busy = 0;
+#		    last;
+#		}
+#		
+#	    }
+#	
+#	    if ($system_busy) {
+#		my $template = $self->load_tmpl('search/busy.tmpl');	
+#		$template->param( username => $self->authen->username,
+##				  sessionid => $session,
+#		    );
+#		return $template->output;
+#
+#	    } else {
 		# system is not (very) busy
 
 		if (my $pid = fork) {            # parent does
@@ -238,7 +225,7 @@ sub search_simple_ajax_process {
 			
 			unless (open F, "-|") {
 			    open STDERR, ">&=1";
-			    exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $userhref->{lid}, $session, $pqf, @selectedZservers;
+			    exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $userhref->{lid}, $session, 'library', $pqf, @selectedZservers;
 			    die "Cannot execute /opt/maplin3/externals/maplin3-zsearch-pqf.pl";
 			}
 			
@@ -259,7 +246,7 @@ sub search_simple_ajax_process {
 		} else {
 		    die "Cannot fork: $!";
 		}
-	    }
+#	    }
 	}
 
     } else {
@@ -376,37 +363,37 @@ sub search_common_process {
 	    # Clear the status_check table
 	    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$session);
 	    
-	    # simple, but may allow multiple instances to run (which is ok, if there are not too many....
-	    my $system_busy = 0;
-	    for (my $i=1; $i<10; $i++) {
-		if (-e '/tmp/maplin.zsearch') {
-		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
-		    if (time() - $mtime > 180) {
-			# delete the fakelock if it's more than 3 minutes old
-			# (it didn't get cleaned up... don't know why yet)
-			unlink '/tmp/maplin.zsearch';
-		    }
-		    $system_busy = 1;
-		    sleep 3;
-		} else {
-		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
-		    print FAKELOCK "$$\n";
-		    close FAKELOCK;
-		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
-		    $system_busy = 0;
-		    last;
-		}
-		
-	    }
-	
-	    if ($system_busy) {
-		my $template = $self->load_tmpl('search/busy.tmpl');	
-		$template->param( username => $self->authen->username,
-#				  sessionid => $session,
-		    );
-		return $template->output;
-
-	    } else {
+#	    # simple, but may allow multiple instances to run (which is ok, if there are not too many....
+#	    my $system_busy = 0;
+#	    for (my $i=1; $i<10; $i++) {
+#		if (-e '/tmp/maplin.zsearch') {
+#		    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat('/tmp/maplin.zsearch');
+#		    if (time() - $mtime > 180) {
+#			# delete the fakelock if it's more than 3 minutes old
+#			# (it didn't get cleaned up... don't know why yet)
+#			unlink '/tmp/maplin.zsearch';
+#		    }
+#		    $system_busy = 1;
+#		    sleep 3;
+#		} else {
+#		    open FAKELOCK, ">>", '/tmp/maplin.zsearch' or die "Cannot open lock file: $!";
+#		    print FAKELOCK "$$\n";
+#		    close FAKELOCK;
+#		    chmod 0666, "/tmp/maplin.zsearch"; # world-readable, world-writable, so cron can clean up
+#		    $system_busy = 0;
+#		    last;
+#		}
+#		
+#	    }
+#	
+#	    if ($system_busy) {
+#		my $template = $self->load_tmpl('search/busy.tmpl');	
+#		$template->param( username => $self->authen->username,
+##				  sessionid => $session,
+#		    );
+#		return $template->output;
+#
+#	    } else {
 		# system is not (very) busy
 
 		if (my $pid = fork) {            # parent does
@@ -495,7 +482,7 @@ sub search_common_process {
 			
 			unless (open F, "-|") {
 			    open STDERR, ">&=1";
-			    exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $userhref->{lid}, $session, $pqf, @selectedZservers;
+			    exec "/opt/maplin3/externals/maplin3-zsearch-pqf.pl", $userhref->{lid}, $session, 'library', $pqf, @selectedZservers;
 			    die "Cannot execute /opt/maplin3/externals/maplin3-zsearch-pqf.pl";
 			}
 			
@@ -516,7 +503,7 @@ sub search_common_process {
 		} else {
 		    die "Cannot fork: $!";
 		}
-	    }
+#	    }
 	}
 
     } else {
