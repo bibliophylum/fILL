@@ -112,7 +112,7 @@ sub test_my_zserver_process {
     $status{show} = 0;
     $status{stage} = "Ready to begin test";
     $status{error} = "Ok.";
-    $status{timeout} = "60";
+    $status{timeout} = "30";
     $status{search_terms} = "";
     $status{search_string} = "";
     $status{result_count} = 0;
@@ -141,7 +141,7 @@ sub test_my_zserver_process {
 		$optionset->option(preferredRecordSyntax => "usmarc");
 		$optionset->option(async => 0);
 		$optionset->option(count => 1);
-		$optionset->option(timeout => 60);
+		$optionset->option(timeout => 30);
 		my $conn = create ZOOM::Connection($optionset);
 		$conn->connect($zserver_href->{z3950_connection_string}, 0);
 		

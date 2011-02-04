@@ -30,10 +30,11 @@ use Log::Dispatch::File;
 use Data::Dumper;
 
 use constant RESULTS_LIMIT => 100;
-
+use constant DEBUG => 0;
 
 my $lid = shift;
 my $sessionid = shift;
+my $searcher = shift;
 my $pqf = shift;
 # @ARGV will hold zservers
 
@@ -47,23 +48,25 @@ $log->add( Log::Dispatch::File->new
 	   )
     );
 
-if ($lid == 36) { # special for Jolys -- WARNING: this fills up really quickly!
-    $log->add( Log::Dispatch::File->new
-	       ( name      => 'file2',
-		 min_level => 'debug',  # debug, info, notice, warning, error, critical, alert, emergency
-		 filename  => '/opt/maplin3/logs/jolys.log',
-		 mode      => 'append',
-		 newline   => 1
-	       )
-	);    
+if (DEBUG) {
+    # log in as Flin Flon to search
+    if ($lid == 32) { # special for Flin Flon -- WARNING: this fills up really quickly!
+	$log->add( Log::Dispatch::File->new
+		   ( name      => 'file2',
+		     min_level => 'debug',  # debug, info, notice, warning, error, critical, alert, emergency
+		     filename  => '/opt/maplin3/logs/flinflon.log',
+		     mode      => 'append',
+		     newline   => 1
+		   )
+	    );    
+    }
 }
-
 
 #my $enable_WPL_duplicate_filter = 0;  # turned off
 
 $pqf =~ s/^\'(.*)\'$/$1/;
 
-$log->log( level => 'notice', message => timestamp() . "lid [$lid], pqf [$pqf]\n");
+$log->log( level => 'notice', message => timestamp() . "lid [$lid], searcher [$searcher], pqf [$pqf]\n");
 
 my $dbh;
 eval {
@@ -230,9 +233,10 @@ sub spray_search {
     
     my $options = new ZOOM::Options();
     $options->option(async => 1);
-    $options->option(count => 1);
+#    $options->option(count => 1);
+    $options->option(count => RESULTS_LIMIT);
     $options->option(preferredRecordSyntax => $ar_conn->[$i]{preferredrecordsyntax});
-    $options->option(timeout => 180);
+    $options->option(timeout => 30);
     if ($ar_conn->[$i]{requires_credentials}) {
 	my $SQLgetcredentials = "SELECT username, password FROM library_zserver_credentials WHERE lid=? AND zid=?";
 	my $h = $dbh->selectrow_hashref( $SQLgetcredentials, undef, $lid, $ar_conn->[$i]{id});
@@ -775,10 +779,12 @@ sub store_result_set {
 		}
 	    }
 	} else {
-	    $log->log( level => 'debug', message => timestamp() . "Not a real record: [$raw]\n");
+	    $log->log( level => 'debug', message => timestamp() . "Not a real record.  Result set size [" . $rs->size() . "]  Rec " . ($j - 1) . " [" . $rs->record($j-1)->raw() . "]\n");
+	    $log->log( level => 'debug', message => timestamp() . $rs->record($j-1)->render() );
 	}
     }
     $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], stored: $stored\n");
+    $rs->destroy();  # clean up after ourselves.
 }
 
 

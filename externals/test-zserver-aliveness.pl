@@ -45,7 +45,7 @@ for (my $i = 0; $i < @$ar_conn; $i++) {
 	$optionset->option(preferredRecordSyntax => "usmarc");
 	$optionset->option(async => 0);
 	$optionset->option(count => 1);
-	$optionset->option(timeout => 60);
+	$optionset->option(timeout => 30);
 	my $conn = create ZOOM::Connection($optionset);
 	$conn->connect($ar_conn->[$i]{z3950_connection_string}, 0);
 

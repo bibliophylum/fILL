@@ -221,4 +221,10 @@
 		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
 	</server>
 
+	<server id="44">
+		<name>Flin Flon Public Library</name>
+		<z3950_connection_string>206.45.107.155:210/Default</z3950_connection_string>
+		<preferredrecordsyntax>usmarc</preferredrecordsyntax>
+	</server>
+
 </targets>

@@ -24,6 +24,7 @@ if (($opts{help}) || ((not defined $opts{connectString}) && (not defined $opts{t
 
 # Some sample zservers
 my @zservers = ( { name => 'thepas', connection => '206.45.107.244:210/Default' },
+		 { name => 'flinflon', connection => '206.45.107.155:210/Default' },
 		{ name => 'winnipeg', connection => '198.163.53.31:210/horizon' },
 		{ name => 'loc', connection => 'z3950.loc.gov:7090/Voyager' },
 		{ name => 'oca', connection => 'econtent.indexdata.com:210/oca-toronto' },
