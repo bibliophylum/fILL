@@ -19,6 +19,7 @@ CGI::Application::Plugin::DBH
 CGI::Application::Plugin::Authentication
 CGI::Application::Plugin::Authorization
 CGI::Application::Plugin::LogDispatch
+CGI::Application::Plugin::Stream
 ZOOM
 DateTime
 GD
