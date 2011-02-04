@@ -11,10 +11,14 @@ sudo chown david:david /opt/maplin3
 echo Copying from checked-out svn repository...
 cp -R * /opt/maplin3
 echo Allowing write to message logs...
+sudo chmod ugo+w /opt/maplin3/logs/graphing.log
 sudo chmod ugo+w /opt/maplin3/logs/messages.log
 sudo chmod ugo+w /opt/maplin3/logs/messages_public.log
 sudo chmod ugo+w /opt/maplin3/logs/zsearch.log
 sudo chmod ugo+w /opt/maplin3/logs/zserver_alive.log
+echo Allowing web server to write to htdocs/tmp
+sudo chgrp www-data /opt/maplin3/htdocs/tmp
+sudo chmod g+w /opt/maplin3/htdocs/tmp
 echo Creating symlink to apache sites-available
 sudo ln -s /opt/maplin3/conf/maplin3.conf /etc/apache2/sites-available/maplin3.conf
 echo Enabling site...

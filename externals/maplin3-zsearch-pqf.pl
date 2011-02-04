@@ -25,22 +25,40 @@ use DBI;
 use MARC::Record;
 use MARC::File::XML;
 use XML::Simple;
+use Log::Dispatch;
+use Log::Dispatch::File;
 use Data::Dumper;
 
-use constant DEBUG => 0;
 use constant RESULTS_LIMIT => 100;
+use constant DEBUG => 0;
 
 my $lid = shift;
 my $sessionid = shift;
+my $searcher = shift;
 my $pqf = shift;
 # @ARGV will hold zservers
 
+my $log = Log::Dispatch->new();
+$log->add( Log::Dispatch::File->new
+	   ( name      => 'file1',
+	     min_level => 'notice',  # debug, info, notice, warning, error, critical, alert, emergency
+	     filename  => '/opt/maplin3/logs/z3950.log',
+	     mode      => 'append',
+	     newline   => 1
+	   )
+    );
+
 if (DEBUG) {
-    open(LOG,">>","/opt/maplin3/logs/zsearch.log");
-    # make the file handle 'hot'
-    { my $ofh = select LOG;
-      $| = 1;
-      select $ofh;
+    # log in as Flin Flon to search
+    if ($lid == 32) { # special for Flin Flon -- WARNING: this fills up really quickly!
+	$log->add( Log::Dispatch::File->new
+		   ( name      => 'file2',
+		     min_level => 'debug',  # debug, info, notice, warning, error, critical, alert, emergency
+		     filename  => '/opt/maplin3/logs/flinflon.log',
+		     mode      => 'append',
+		     newline   => 1
+		   )
+	    );    
     }
 }
 
@@ -48,16 +66,23 @@ if (DEBUG) {
 
 $pqf =~ s/^\'(.*)\'$/$1/;
 
-print LOG "$sessionid [$pqf]\n" if DEBUG;
+$log->log( level => 'notice', message => timestamp() . "lid [$lid], searcher [$searcher], pqf [$pqf]\n");
 
-my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
-		       "mapapp",
-		       "maplin3db",
-		       {AutoCommit => 1, 
-			RaiseError => 1, 
-			PrintError => 0,
-		       }
-    ) or die;
+my $dbh;
+eval {
+    $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
+			"mapapp",
+			"maplin3db",
+			{AutoCommit => 1, 
+			 RaiseError => 1, 
+			 PrintError => 0,
+			}
+	);
+};
+if ($@) {
+    $log->log( level => 'error', message => "could not connect to database: " . $@ );
+    exit(1);
+}
 
 # Store the sessionid/pid
 $dbh->do("INSERT INTO search_pid (sessionid, pid) VALUES (?,?)",
@@ -89,8 +114,6 @@ foreach my $target (@ARGV) {
     push(@search_serially, $target) if     exists $lookup_sync_searchers{$target};
 }
 
-print LOG Dumper( \@search_parallel ) if DEBUG;
-
 my $sequential_record_id = 1;
 
 parallel_search($sessionid, $pqf, \@search_parallel, $lid) if (@search_parallel);
@@ -108,7 +131,7 @@ serial_search(  $sessionid, $pqf, \@search_serially) if (@search_serially);
 
 
 # Toast the sessionid/pid db entry
-print LOG "$sessionid - toast sessionid/pid\n" if DEBUG;
+$log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in search_pid table\n" );
 $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 	 undef,
 	 $sessionid,
@@ -117,10 +140,9 @@ $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 # Disconnect from the database.
 $dbh->disconnect();
 
-if (DEBUG) {
-    close LOG;
+if (-e '/tmp/maplin.zsearch') {
+    unlink '/tmp/maplin.zsearch';
 }
-
 
 #---- end --------
 
@@ -130,7 +152,7 @@ if (DEBUG) {
 sub parallel_search {
     my ($sessionid, $pqf, $aref_zservers, $lid) = @_;
 
-    print LOG "in parallel_search\n" if DEBUG;
+    $log->log( level => 'debug', message => timestamp() . "in parallel_search\n" );
 
     my $ar_conn = get_list_of_available_servers( $aref_zservers );
     return undef unless @$ar_conn;
@@ -147,7 +169,7 @@ sub parallel_search {
     prefetch(\@r);
     store_all_result_sets( $sessionid, $ar_conn, \@r);
 
-    clean_up_and_move_on( $sessionid, $ar_conn );
+    clean_up_and_move_on( $sessionid, $ar_conn, \@z );
 
 }
 
@@ -171,7 +193,7 @@ sub serial_search {
 	    );
     }
 
-    clean_up_and_move_on( $sessionid, $ar_conn );
+    clean_up_and_move_on( $sessionid, $ar_conn, \@z );
 
 }
 
@@ -211,9 +233,10 @@ sub spray_search {
     
     my $options = new ZOOM::Options();
     $options->option(async => 1);
-    $options->option(count => 1);
+#    $options->option(count => 1);
+    $options->option(count => RESULTS_LIMIT);
     $options->option(preferredRecordSyntax => $ar_conn->[$i]{preferredrecordsyntax});
-    $options->option(timeout => 180);
+    $options->option(timeout => 30);
     if ($ar_conn->[$i]{requires_credentials}) {
 	my $SQLgetcredentials = "SELECT username, password FROM library_zserver_credentials WHERE lid=? AND zid=?";
 	my $h = $dbh->selectrow_hashref( $SQLgetcredentials, undef, $lid, $ar_conn->[$i]{id});
@@ -222,12 +245,13 @@ sub spray_search {
 	    $options->option(password => $h->{password});
 	}
     }
+    $log->log( level => 'info', message => timestamp() . "creating z39.50 connection [$i] for [$ar_conn->[$i]{name}]\n");
     $z->[$i] = create ZOOM::Connection($options);
     $z->[$i]->connect($ar_conn->[$i]{z3950_connection_string}, 0); # Uses the specified username and password
 
     if ($z->[$i]->errcode() != 0) {
 	# something went wrong
-	print LOG "\tsomething went wrong!\n" if DEBUG;
+	$log->log( level => 'warning', message => timestamp() . zoom_error_string( $z->[$i] ) );
 	$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		 undef,
 		 $z->[$i]->errcode(),
@@ -237,6 +261,7 @@ sub spray_search {
 	    );
 	
     } else {
+	$log->log( level => 'debug', message => timestamp() . "connection created for [$ar_conn->[$i]{name}]\n");
 	# Let's try a search
 	$r->[$i] = $z->[$i]->search_pqf( $pqf );
     }
@@ -253,7 +278,7 @@ sub handle_spray_events {
 
 	my $ev = $z->[$i-1]->last_event();
 
-	print LOG "\t\t", ZOOM::event_str($ev), "\n" if DEBUG;
+	$log->log( level => 'debug', message => timestamp() . "[$ar_conn->[$i-1]{name}] " . ZOOM::event_str($ev) . "\n" );
 	$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		 undef,
 		 $ev,
@@ -265,7 +290,8 @@ sub handle_spray_events {
 	if ($ev == ZOOM::Event::ZEND) {
 	    $size = $r->[$i-1]->size();
 	    $ar_conn->[$i-1]{hits} = $size;
-	    print LOG "\t\tZOOM::Event::ZEND, $ar_conn->[$i-1]{name}, $size hits.\n" if DEBUG;
+
+	    $log->log( level => 'info', message => timestamp() . "[$ar_conn->[$i-1]{name}] $size hits.\n" );
 	    $dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		     undef,
 		     $ev,
@@ -285,12 +311,11 @@ sub handle_spray_events {
 sub prefetch {
     my $r = shift;
 
-    print LOG "prefetch\n" if DEBUG;
-
     my $max_prefetch;
     for (my $i = 0; $i < @$r; $i++) {
 	$max_prefetch = $r->[$i]->size();
 	$max_prefetch = RESULTS_LIMIT if ($max_prefetch > RESULTS_LIMIT);
+	$log->log( level => 'debug', message => timestamp() . "prefetching $max_prefetch from result set [$i]\n" );
 	$r->[$i]->records(0, $max_prefetch, 0);
     }
 
@@ -302,8 +327,7 @@ sub prefetch {
 sub store_all_result_sets {
     my ($sessionid, $ar_conn, $r) = @_;
 
-    print LOG "store_all_result_sets\n" if DEBUG;
-
+    $log->log( level => 'debug', message => timestamp() . "store_all_result_sets\n");
     my $id = 1;
     for (my $i = 0; $i < @$r; $i++) {       # for each result set...
 
@@ -319,6 +343,8 @@ sub get_opac_record {
     my ($xml, $ar_conn) = @_;
     my $marc;
     
+    $log->log( level => 'debug', message => timestamp() . "get_opac_record\n" );    
+
     eval {
 	# a common problem with bad records:
 	my @leader = ( $xml =~ /^.*<leader>(.*)<\/leader>.*$/ms );
@@ -328,7 +354,7 @@ sub get_opac_record {
     };
     if ($@) {
 	# couldn't convert to marc
-	print LOG "$sessionid [Couldn't convert to MARC]\n" if DEBUG;
+	$log->log( level => 'debug', message => timestamp() . "Could not convert to MARC [$xml]\n");
 	return undef;
     } else {
 	
@@ -365,8 +391,6 @@ sub get_opac_record {
 							   $email
 			    );
 			
-			print LOG "m3 loc is [" . $m3loc[0] . "]\n" if DEBUG;
-
 			if ($m3loc[0]) {
 			    $holding_href->{localLocation} = $m3loc[0];
 			}
@@ -386,6 +410,9 @@ sub get_opac_record {
 	    }
 	}
 	return undef unless $marc->field('949');
+	$log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record\n");
+	$log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding() . "\n");
+	$log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title() . "\n");
     }
     return $marc;
 }
@@ -396,12 +423,11 @@ sub get_opac_record {
 sub get_marc_record {
     my $raw = shift;
     my $marc;
-    print LOG "get_marc_record\n" if DEBUG;
-    
+    $log->log( level => 'debug', message => timestamp() . "get_marc_record\n" );    
     if (defined $raw) {
 	if (length($raw) > 5) {
 	    if (length($raw) < substr($raw,0,5)) {
-		print LOG "$sessionid [Length of record in leader is a lie: [$raw]]\n" if DEBUG;
+		$log->log( level => 'debug', message => timestamp() . "$sessionid [Length of record in leader is a lie: [$raw]]\n");
 	    } else {
 
 		eval {
@@ -412,16 +438,16 @@ sub get_marc_record {
 
 		if ($@) {
 		    # record blew up
-		    print LOG "$sessionid [Record blew up]\n" if DEBUG;
+		    $log->log( level => 'debug', message => timestamp() . "Could not convert to MARC::Record [$raw]\n");
 		} else {
 		    # successfully converted to MARC::Record
-		    print LOG "successfully converted to MARC::Record\n" if DEBUG;
-		    print LOG "  encoding is: " . $marc->encoding() . "\n" if DEBUG;
-		    if (DEBUG) {
-			my @warnings = $marc->warnings();
-			foreach my $warning (@warnings) {
-			    print LOG "\twarning: $warning\n";
-			}
+		    $log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record\n");
+		    $log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding() . "\n");
+		    $log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title() . "\n");
+
+		    my @warnings = $marc->warnings();
+		    foreach my $warning (@warnings) {
+			$log->log( level => 'debug', message => timestamp() . "MARC conversion warning: $warning\n");
 		    }
 		}
 	    }
@@ -483,9 +509,9 @@ sub check_if_not_loanable {
 sub clean_up_and_move_on {
     my $sessionid = shift;
     my $ar_conn = shift;
+    my $z = shift;
 
-    print LOG "clean up and move on\n" if DEBUG;
-
+    $log->log( level => 'debug', message => timestamp() . "clean up and move on\n");
     for (my $i = 0; $i < @$ar_conn; $i++) {
 	my $h = $dbh->selectrow_hashref("SELECT event, msg FROM status_check WHERE ((sessionid=?) AND (zid=?))",
 					undef,
@@ -535,10 +561,13 @@ sub clean_up_and_move_on {
 		close(SENDMAIL);
 	    };
 	    if ($@) {
-		print LOG "zServer $ar_conn->[i]{id} timed out, but I couldn't send an email about it!" if DEBUG;
+		$log->log( level => 'debug', message => timestamp() . "zServer $ar_conn->[i]{id} timed out, but I couldn't send an email about it!");
 	    }
 	    
 	}
+	# explicitly close connections
+	$z->[$i]->destroy();
+	$log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
     }
 }
 
@@ -592,7 +621,7 @@ sub serialized_search {
     };
 
     if ($@) {
-	print LOG  "Error " . $@->code() . ": " . $@->message() . "\n" if (DEBUG);
+	$log->log( level => 'warning', message => timestamp() . zoom_error_string( $conn ));
 	$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		 undef,
 		 $conn->errcode(),
@@ -626,7 +655,7 @@ sub serialized_search {
 	    }
 	};
 	if ($@) {
-	    print LOG  "Error " . $@->code() . ": " . $@->message() . "\n" if (DEBUG);
+	    $log->log( level => 'warning', message => timestamp() . zoom_error_string( $conn ));
 	}
     }
     return $s;
@@ -639,18 +668,19 @@ sub serialized_search {
 sub store_result_set {
     my ($rs, $conn_info) = @_;
 
+    my $stored = 0;
     my $size = $rs->size();	
     $size = RESULTS_LIMIT if ($size > RESULTS_LIMIT);
-    print LOG "store_result_set for $conn_info->{name}, size: $size\n" if DEBUG;
+    $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], size: $size\n");
     
     for (my $j=1; $j <= $size; $j++) {        # for each record within the result set...
-	print LOG "\nrecord $j\n" if DEBUG;
+	$log->log( level => 'debug', message => timestamp() . "record $j\n");
 	
 	if ($rs->record($j-1)) {
 	    if ($rs->record($j-1)->error()) {
 		my($code, $msg, $addinfo, $dset) = $rs->record($j-1)->error();
 		# log this stuff...
-		print LOG "\t$sessionid [$code $msg $addinfo $dset]\n" if DEBUG;
+		$log->log( level => 'warning', message => timestamp() . "[$code $msg $addinfo $dset]\n");
 		
 	    } else {
 		
@@ -658,20 +688,18 @@ sub store_result_set {
 		my $raw;
 		
 		if ($conn_info->{preferredrecordsyntax} eq 'opac') {           # server returns "opac" records
-		    print LOG "\tneed to get OPAC record\n" if DEBUG;
 		    my $xml = $rs->record($j-1)->get("opac");
 		    $marc = get_opac_record( $xml, $ar_conn );
 		    
 		} else {                                                       # server returns marc records
-		    print LOG "\tneed to get MARC record\n" if DEBUG;
 		    $raw = $rs->record($j-1)->raw();
 		    $marc = get_marc_record( $raw );
 		}
 		
 		if ($marc) {
 		    
-#		    my $isNFL = check_if_not_loanable( $conn_info->{id}, $marc );
-		    my $isNFL = 0;  # just for debugging, assume everything is loanable....!!!
+		    my $isNFL = check_if_not_loanable( $conn_info->{id}, $marc );
+#		    my $isNFL = 0;  # just for debugging, assume everything is loanable....!!!
 		    
 		    unless ($isNFL) {
 			
@@ -694,15 +722,7 @@ sub store_result_set {
 			$isbn =~ s/[^0-9X]//g;
 
 			# hook for mid-stream processing of records
-			print LOG "\tMIDSTREAM PROCESSING...\n" if DEBUG;
 			if (_process($marc, $conn_info)) { undef $raw };
-			print LOG "\t...DONE MIDSTREAM PROCESSING\n" if DEBUG;
-
-			print LOG "\tinsert into marc:\n\n" if DEBUG;
-			print LOG "\t\tsequential_record_id [" . $sequential_record_id . "]\n" if DEBUG;
-			print LOG "\t\tfound_at_server [$conn_info->{name}]\n" if DEBUG;
-			print LOG "\t\ttitle [$title]\n" if DEBUG;
-			print LOG "\n" if DEBUG;
 
 			# The underlying postgres tables are UTF-8.  Postgres is smart enough to translate, 
 			#   as long as it knows what to expect.
@@ -715,7 +735,7 @@ sub store_result_set {
 			    $dbh->do("SET CLIENT_ENCODING TO Latin1");
 			}
 
-			print LOG "\tinserting into marc table...\n";
+			$log->log( level => 'debug', message => timestamp() . "inserting into marc table\n");
 			my $rv;
 			eval {
 			    $rv = $dbh->do("INSERT INTO marc (sessionid, id, marc, zid, found_at_server,title,author,isbn) VALUES (?,?,?,?,?,?,?,?)",
@@ -731,11 +751,14 @@ sub store_result_set {
          		    );
 			};
 			if ($@) {
-			    print LOG "\teval failed.\n" if DEBUG;
+			    $log->log( level => 'warning', message => timestamp() . "eval failed - insert into marc table, connection [$conn_info->{id}, $conn_info->{name}], title [$title], " . $@ . "\n");
 			} else {
-			    print LOG "\treturn value from insert into marc, rv=[" . $rv . "]\n" if DEBUG;
+			    $log->log( level => 'debug', message => timestamp() . "return value from insert into marc, rv=[$rv]\n");
+			    $stored++;
+
+			    # this should never happen:
 			    unless ($rv) {
-				print LOG "\tinsert into marc returned undef: $DBI::errstr\n" if DEBUG;
+				$log->log( level => 'error', message => timestamp() . "insert into marc returned undef: $DBI::errstr\n");
 			    }
 			}
 		    }
@@ -756,9 +779,12 @@ sub store_result_set {
 		}
 	    }
 	} else {
-	    print LOG "\t$sessionid [Not a real record: [$raw]]\n" if DEBUG;
+	    $log->log( level => 'debug', message => timestamp() . "Not a real record.  Result set size [" . $rs->size() . "]  Rec " . ($j - 1) . " [" . $rs->record($j-1)->raw() . "]\n");
+	    $log->log( level => 'debug', message => timestamp() . $rs->record($j-1)->render() );
 	}
     }
+    $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], stored: $stored\n");
+    $rs->destroy();  # clean up after ourselves.
 }
 
 
@@ -774,11 +800,9 @@ sub _process {
     my $marc = shift;
     my $conn_info = shift;
 
-    print LOG "in _process, $conn_info->{name}\n" if DEBUG;
     if ($conn_info->{name} =~ /^EBSCOhost/) {
 	my $db = $conn_info->{z3950_connection_string};
 	$db =~ s/.*\/(.*)$/$1/;
-	print LOG "EBSCOizing $conn_info->{name}, database is [$db]\n" if DEBUG;
 	_EBSCOize($marc,$db,$conn_info->{z3950_connection_string});
 	return 1;
     }
@@ -796,7 +820,6 @@ sub _EBSCOize {
     my $user = $ebsco_href->{ebsco_user};
     my $pass = $ebsco_href->{ebsco_pass};
 
-    print LOG "Processing record from $description\n" if DEBUG;
     my @f856 = $marc->field('856');
     foreach my $fld (@f856) {
 	$marc->delete_field( $fld );
@@ -808,6 +831,26 @@ sub _EBSCOize {
 	'z' => "link to article on $description"
 	);
     my $numFldsAppended = $marc->append_fields( $field );
-    print LOG "$numFldsAppended fields appended.\n" if DEBUG;
 }
 
+#-----------------------------------------------------------------------
+#
+#
+sub zoom_error_string {
+    $conn = shift;
+
+    ($errcode, $errmsg, $addinfo, $diagset) = $conn->error_x();
+    return "ZOOM error $errcode: $errmsg, $addinfo, $diagset\n";
+}
+
+#-----------------------------------------------------------------------
+#
+#
+sub timestamp {
+    #  0    1    2     3     4    5     6     7     8
+    ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+    return sprintf("%04d-%02d-%02d %02d:%02d:%02d %-35s", 
+		   $year + 1900, $mon + 1, $mday, $hour, $min, $sec,
+		   $sessionid
+	);
+}
