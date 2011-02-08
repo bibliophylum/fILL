@@ -32,7 +32,7 @@
 
     <h1>World Languages</h1>
 
-    <p>Through a cooperative arrangement with the Winnipeg Public Library world languages are available to municipal and regional library systems to supplement local collections.  Supplemental loans in world languages are available in blocks of up to 25 books in each language at either adult or juvenile reading levels.</p>
+    <p>Through a cooperative arrangement with the Winnipeg Public Library, world languages are available to municipal and regional library systems to supplement local collections.  Supplemental loans in world languages are available in blocks of 30 books in each language, depending on availability.</p>
     <br />
     <p>Specific title or author requests are not available as these books are not catalogued.  Patrons must contact their local library staff to request world language material.</p>
     <br />
@@ -41,7 +41,49 @@
       <form method=post action="">
 	<h3>Select:</h3>
 	<p>
-	  Language: <input type="text" name="language" size="10" maxlength="20">
+	  Language: <select name="language">
+	    <optgroup label="Language">
+	      <option>Albanian</option>
+	      <option>Amharic</option>
+	      <option>Arabic</option>
+	      <option>Bengali</option>
+	      <option>Bosnian</option>
+	      <option>Chinese</option>
+	      <option>Croatian</option>
+	      <option>Czech</option>
+	      <option>Danish</option>
+	      <option>Dutch</option>
+	      <option>Farsi</option>
+	      <option>Filipino</option>
+	      <option>Finnish</option>
+	      <option>German</option>
+	      <option>Greek</option>
+	      <option>Gujarati</option>
+	      <option>Hebrew</option>
+	      <option>Hindi</option>
+	      <option>Hungarian</option>
+	      <option>Icelandic</option>
+	      <option>Italian</option>
+	      <option>Japanese</option>
+	      <option>Korean</option>
+	      <option>Oromo</option>
+	      <option>Panjabi</option>
+	      <option>Polish</option>
+	      <option>Portuguese</option>
+	      <option>Russian</option>
+	      <option>Serbian</option>
+	      <option>Slovak</option>
+	      <option>Somali</option>
+	      <option>Spanish</option>
+	      <option>Tamil</option>
+	      <option>Thai</option>
+	      <option>Tigrinya</option>
+	      <option>Ukrainian</option>
+	      <option>Urdu</option>
+	      <option>Vietnamese</option>
+	    </optgroup>
+	  </select>
+	  <!--
 	  Reading level: <select name="level">
 	    <optgroup label="Level">
 	      <option>Adult</option>
@@ -52,12 +94,12 @@
 	    <optgroup label="Type of material">
 	      <option>Fiction</option>
 	      <option>Non-fiction</option>
-	      <option>Mixed</option>
 	    </optgroup>
 	  </select>
+	  -->
 	</p>
 	<br />
-	<p>Additional information:<br />
+	<p>Add any additional information that you would like to appear in the email:<br />
 	  <textarea name="additional_information" rows=4 cols=80></textarea>
 	</p>
 	<br />
@@ -116,11 +158,12 @@
       <h3>Circulation Policy</h3>
       <p>
 	<ol>
-	  <li>Libraries may request as many concurrent blocks as would be useful.  However, WPL reserves the right to limit the number of blocks sent to a library based on supply and demand for that language.</li>
-	  <li>Blocks are circulated for a 6-month loan period with the possibility of an extension if needed.</li>
-	  <li>If a particular language or reading level is not available at the time of the request, a hold will be placed on the next available block and the material will be sent accordingly.</li>
-	  <li>Each block contains 25 books of the same language and at the same reading level (adult or juvenile).</li>
+	  <li>Libraries may request a maximum of 2 blocks at a time.</li>
+	  <li>Blocks are circulated for a 6-month loan period.</li>
+	  <li>If a particular language is not available at the time of the request, a hold will be placed on the next available block and the material will be sent accordingly.</li>
+	  <li>Each block contains 30 books of the same language with a mix of fiction and non-fiction.</li>
 	  <li>Each block will be sent with an instruction sheet indicating the proper procedures for handling the enclosed material.  Please follow these instructions.</li>
+	  <li>A customer comment form may be included with the block; if so, please fill it out and return it with the block.</li>
 	  <li>Returning supplemental blocks: Borrowing libraries must make every effort to return the complete contents of the supplemental block. If you are unable to retrieve outstanding block items from your patrons after several attempts to do so, please return the remainder of the block contents to Winnipeg Public Library with a note indicating any missing items.  The borrowing library will need to return all outstanding items to WPL individually as able, at the borrowing library's own cost.</li>
 	</ol>
       </p>

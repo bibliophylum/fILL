@@ -1,0 +1,49 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_institutioncards");
+  //-->
+</script>
+
+<div id="middlecontent">
+  <h2>Winnipeg Public Library institution card</h2>
+
+  <p>This is the institution card number given to you by WPL when you applied to WPL</p>
+  <p>for access to the World Languages block lending program.</p>
+  <br />
+
+  <TMPL_IF NAME="edit">
+
+    <form METHOD=POST ACTION="">
+      <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=lid>">
+      <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=name>">
+      <table>
+	<tr>
+	  <td>Card #</td>
+	  <td>
+	    <input TYPE="text" NAME="wpl_institution_card" SIZE="40" VALUE="<TMPL_VAR NAME=wpl_institution_card>">
+	  </td>
+	</tr>
+      </table>
+      <input TYPE="hidden" NAME="rm" VALUE="myaccount_institutioncards_form">
+      <br />
+      <input type="submit" name="submit" value="Update" />
+    </form>
+
+  <TMPL_ELSE>
+
+    <table>
+      <tr>
+	<td>Card #</td>
+	<td><TMPL_VAR NAME=wpl_institution_card></td>
+      </tr>
+    </table>
+    <p><br />Updated.</p>
+
+  </TMPL_IF>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

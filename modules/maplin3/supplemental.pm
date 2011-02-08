@@ -35,7 +35,7 @@ sub worldlanguages_process {
 	$email_href->{from} = "From: plslib1\@mts.net\n";
 	$email_href->{to} = "To: David.Christensen\@gov.mb.ca\n";  # WPL email address goes here
 	
-	my $sql = "SELECT email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE name=?";
+	my $sql = "SELECT email_address, library, wpl_institution_card, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE name=?";
 	my $library_href = $self->dbh->selectrow_hashref($sql, undef, $self->authen->username);
 
 	$email_href->{reply_to} = "Reply-to: " . $library_href->{email_address} . "\n";
@@ -43,7 +43,8 @@ sub worldlanguages_process {
 	$email_href->{subject} = "Subject: Block request from $library_href->{library}\n";
 	
 	my $content = "This is a supplementary block request generated from MAPLIN\n\n";
-	$content .= $library_href->{library} . " would like to request a World Languages block:\n\n";
+	$content .= $library_href->{library} . " (institution card #: " . $library_href->{wpl_institution_card} . ")";
+	$content .= " would like to request a World Languages block:\n\n";
 	$content .= "Language: " . $q->param("language") . "\n";
 	$content .= "Reading level: " . $q->param("level") . "\n";
 	$content .= "Type of material: " . $q->param("blocktype") . "\n";

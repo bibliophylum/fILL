@@ -21,6 +21,7 @@ sub setup {
 	'myaccount_status_form'      => 'myaccount_status_process',
 	'myaccount_LocalUse_form'    => 'myaccount_LocalUse_process',
 	'myaccount_ebsco_form'       => 'myaccount_ebsco_process',
+	'myaccount_institutioncards_form' => 'myaccount_institutioncards_process',
 	);
 }
 
@@ -478,6 +479,55 @@ sub myaccount_ebsco_process {
 }
 
 
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_institutioncards_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $SQL_getUser = "SELECT lid, name, wpl_institution_card from libraries WHERE name=?";
+
+    my $edit = 1;
+
+    # Get any parameter data (ie - user is submitting a change)
+    my $lid = $q->param("lid");
+    my $name = $q->param("name");
+    my $wpl_institution_card = $q->param("wpl_institution_card");
+
+    # If the user has clicked the 'update' button, $lid will be defined
+    # (the user is submitting a change)
+    if (defined $lid) {
+
+	$self->dbh->do("UPDATE libraries SET wpl_institution_card=? WHERE lid=?",
+		       undef,
+		       $wpl_institution_card,
+		       $lid
+	    );
+	$edit = 0;
+	$self->_set_header_to_get_fresh_page();
+    }
+
+    # Get the form data
+    my $href = $self->dbh->selectrow_hashref(
+	$SQL_getUser,
+	{},
+	$self->authen->username,
+	);
+    
+
+    my $template = $self->load_tmpl('myaccount/institutioncards.tmpl');
+    $template->param(username   => $self->authen->username,
+		     edit       => $edit,
+		     lid        => $href->{lid},
+		     wpl_institution_card => $href->{wpl_institution_card},
+	);
+    return $template->output;
+}
+
+#
+#
+#
 sub _set_header_to_get_fresh_page {
     my $self = shift;
 

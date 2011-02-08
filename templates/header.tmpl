@@ -105,8 +105,14 @@
 
   if ((uname == 'admin') || (uname == 'ADMIN')) {
     document.getElementById('menu_admin').style.display="inline";
+    document.getElementById('menu_supplemental').style.display="inline";
   } else {
     document.getElementById('menu_admin').style.display="none";
+    if ((uname == 'mw') || (uname == 'MW')) {
+      document.getElementById('menu_supplemental').style.display="inline";
+    } else {
+      document.getElementById('menu_supplemental').style.display="none";
+    }
   }
 
 </script>      
