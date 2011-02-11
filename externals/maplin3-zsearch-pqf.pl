@@ -17,8 +17,8 @@
 # Notes:   Need tweaked MARC::File::XML - add the line: $parser->_cleanup();  before $parser->{ tagStack } = [];
 #            in decode() subroutine.
 #          Need to add column preferredRecordSyntax to zservers table.  Set every row to 'usmarc', then PLS to 'opac'
-# Calling: ./maplin3-zsearch-pqf.pl libraryid session 'pqf string' zserverid [ another_zserverid...]
-#      Eg: ./maplin3-zsearch-pqf.pl 101 thisisatest '@attr 1=4 @attr 2=3 @attr 4=2 "ducks geese"' 17 22 25 36
+# Calling: ./maplin3-zsearch-pqf.pl libraryid session ['library'|'public']'pqf string' zserverid [ another_zserverid...]
+#      Eg: ./maplin3-zsearch-pqf.pl 101 thisisatest library '@attr 1=4 @attr 2=3 @attr 4=2 "ducks geese"' 17 22 25 36
 
 use ZOOM;
 use DBI;
@@ -66,7 +66,7 @@ if (DEBUG) {
 
 $pqf =~ s/^\'(.*)\'$/$1/;
 
-$log->log( level => 'notice', message => timestamp() . "lid [$lid], searcher [$searcher], pqf [$pqf]\n");
+$log->log( level => 'notice', message => timestamp() . "lid [$lid], searcher [$searcher], pqf [$pqf]");
 
 my $dbh;
 eval {
@@ -131,7 +131,7 @@ serial_search(  $sessionid, $pqf, \@search_serially) if (@search_serially);
 
 
 # Toast the sessionid/pid db entry
-$log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in search_pid table\n" );
+$log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in search_pid table" );
 $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 	 undef,
 	 $sessionid,
@@ -140,9 +140,9 @@ $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 # Disconnect from the database.
 $dbh->disconnect();
 
-if (-e '/tmp/maplin.zsearch') {
-    unlink '/tmp/maplin.zsearch';
-}
+#if (-e '/tmp/maplin.zsearch') {
+#    unlink '/tmp/maplin.zsearch';
+#}
 
 #---- end --------
 
@@ -152,7 +152,7 @@ if (-e '/tmp/maplin.zsearch') {
 sub parallel_search {
     my ($sessionid, $pqf, $aref_zservers, $lid) = @_;
 
-    $log->log( level => 'debug', message => timestamp() . "in parallel_search\n" );
+    $log->log( level => 'debug', message => timestamp() . "in parallel_search" );
 
     my $ar_conn = get_list_of_available_servers( $aref_zservers );
     return undef unless @$ar_conn;
@@ -245,7 +245,7 @@ sub spray_search {
 	    $options->option(password => $h->{password});
 	}
     }
-    $log->log( level => 'info', message => timestamp() . "creating z39.50 connection [$i] for [$ar_conn->[$i]{name}]\n");
+    $log->log( level => 'info', message => timestamp() . "creating z39.50 connection [$i] for [$ar_conn->[$i]{name}]");
     $z->[$i] = create ZOOM::Connection($options);
     $z->[$i]->connect($ar_conn->[$i]{z3950_connection_string}, 0); # Uses the specified username and password
 
@@ -261,7 +261,7 @@ sub spray_search {
 	    );
 	
     } else {
-	$log->log( level => 'debug', message => timestamp() . "connection created for [$ar_conn->[$i]{name}]\n");
+	$log->log( level => 'debug', message => timestamp() . "connection created for [$ar_conn->[$i]{name}]");
 	# Let's try a search
 	$r->[$i] = $z->[$i]->search_pqf( $pqf );
     }
@@ -278,7 +278,7 @@ sub handle_spray_events {
 
 	my $ev = $z->[$i-1]->last_event();
 
-	$log->log( level => 'debug', message => timestamp() . "[$ar_conn->[$i-1]{name}] " . ZOOM::event_str($ev) . "\n" );
+	$log->log( level => 'debug', message => timestamp() . "[$ar_conn->[$i-1]{name}] " . ZOOM::event_str($ev) );
 	$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		 undef,
 		 $ev,
@@ -291,7 +291,7 @@ sub handle_spray_events {
 	    $size = $r->[$i-1]->size();
 	    $ar_conn->[$i-1]{hits} = $size;
 
-	    $log->log( level => 'info', message => timestamp() . "[$ar_conn->[$i-1]{name}] $size hits.\n" );
+	    $log->log( level => 'info', message => timestamp() . "[$ar_conn->[$i-1]{name}] $size hits." );
 	    $dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		     undef,
 		     $ev,
@@ -315,7 +315,7 @@ sub prefetch {
     for (my $i = 0; $i < @$r; $i++) {
 	$max_prefetch = $r->[$i]->size();
 	$max_prefetch = RESULTS_LIMIT if ($max_prefetch > RESULTS_LIMIT);
-	$log->log( level => 'debug', message => timestamp() . "prefetching $max_prefetch from result set [$i]\n" );
+	$log->log( level => 'debug', message => timestamp() . "prefetching $max_prefetch from result set [$i]" );
 	$r->[$i]->records(0, $max_prefetch, 0);
     }
 
@@ -327,7 +327,7 @@ sub prefetch {
 sub store_all_result_sets {
     my ($sessionid, $ar_conn, $r) = @_;
 
-    $log->log( level => 'debug', message => timestamp() . "store_all_result_sets\n");
+    $log->log( level => 'debug', message => timestamp() . "store_all_result_sets");
     my $id = 1;
     for (my $i = 0; $i < @$r; $i++) {       # for each result set...
 
@@ -343,7 +343,7 @@ sub get_opac_record {
     my ($xml, $ar_conn) = @_;
     my $marc;
     
-    $log->log( level => 'debug', message => timestamp() . "get_opac_record\n" );    
+    $log->log( level => 'debug', message => timestamp() . "get_opac_record" );    
 
     eval {
 	# a common problem with bad records:
@@ -354,7 +354,7 @@ sub get_opac_record {
     };
     if ($@) {
 	# couldn't convert to marc
-	$log->log( level => 'debug', message => timestamp() . "Could not convert to MARC [$xml]\n");
+	$log->log( level => 'debug', message => timestamp() . "Could not convert to MARC [$xml]");
 	return undef;
     } else {
 	
@@ -410,9 +410,9 @@ sub get_opac_record {
 	    }
 	}
 	return undef unless $marc->field('949');
-	$log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record\n");
-	$log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding() . "\n");
-	$log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title() . "\n");
+	$log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record");
+	$log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding());
+	$log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title());
     }
     return $marc;
 }
@@ -423,11 +423,11 @@ sub get_opac_record {
 sub get_marc_record {
     my $raw = shift;
     my $marc;
-    $log->log( level => 'debug', message => timestamp() . "get_marc_record\n" );    
+    $log->log( level => 'debug', message => timestamp() . "get_marc_record" );    
     if (defined $raw) {
 	if (length($raw) > 5) {
 	    if (length($raw) < substr($raw,0,5)) {
-		$log->log( level => 'debug', message => timestamp() . "$sessionid [Length of record in leader is a lie: [$raw]]\n");
+		$log->log( level => 'debug', message => timestamp() . "$sessionid [Length of record in leader is a lie: [$raw]]");
 	    } else {
 
 		eval {
@@ -438,16 +438,16 @@ sub get_marc_record {
 
 		if ($@) {
 		    # record blew up
-		    $log->log( level => 'debug', message => timestamp() . "Could not convert to MARC::Record [$raw]\n");
+		    $log->log( level => 'debug', message => timestamp() . "Could not convert to MARC::Record [$raw]");
 		} else {
 		    # successfully converted to MARC::Record
-		    $log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record\n");
-		    $log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding() . "\n");
-		    $log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title() . "\n");
+		    $log->log( level => 'debug', message => timestamp() . "successfully converted to MARC::Record");
+		    $log->log( level => 'debug', message => timestamp() . "encoding is: " . $marc->encoding());
+		    $log->log( level => 'debug', message => timestamp() . "title is: " . $marc->title());
 
 		    my @warnings = $marc->warnings();
 		    foreach my $warning (@warnings) {
-			$log->log( level => 'debug', message => timestamp() . "MARC conversion warning: $warning\n");
+			$log->log( level => 'debug', message => timestamp() . "MARC conversion warning: $warning");
 		    }
 		}
 	    }
@@ -511,7 +511,7 @@ sub clean_up_and_move_on {
     my $ar_conn = shift;
     my $z = shift;
 
-    $log->log( level => 'debug', message => timestamp() . "clean up and move on\n");
+    $log->log( level => 'debug', message => timestamp() . "clean up and move on");
     for (my $i = 0; $i < @$ar_conn; $i++) {
 	my $h = $dbh->selectrow_hashref("SELECT event, msg FROM status_check WHERE ((sessionid=?) AND (zid=?))",
 					undef,
@@ -567,7 +567,7 @@ sub clean_up_and_move_on {
 	}
 	# explicitly close connections
 	$z->[$i]->destroy();
-	$log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
+	$log->log( level => 'info', message => timestamp() . "connection [$i] closed");
     }
 }
 
@@ -671,116 +671,139 @@ sub store_result_set {
     my $stored = 0;
     my $size = $rs->size();	
     $size = RESULTS_LIMIT if ($size > RESULTS_LIMIT);
-    $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], size: $size\n");
+    $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], size: $size");
     
-    for (my $j=1; $j <= $size; $j++) {        # for each record within the result set...
-	$log->log( level => 'debug', message => timestamp() . "record $j\n");
+#    $log->log( level => 'debug', Dumper($rs) );
 	
-	if ($rs->record($j-1)) {
-	    if ($rs->record($j-1)->error()) {
-		my($code, $msg, $addinfo, $dset) = $rs->record($j-1)->error();
-		# log this stuff...
-		$log->log( level => 'warning', message => timestamp() . "[$code $msg $addinfo $dset]\n");
-		
-	    } else {
-		
-		my $marc;
-		my $raw;
-		
-		if ($conn_info->{preferredrecordsyntax} eq 'opac') {           # server returns "opac" records
-		    my $xml = $rs->record($j-1)->get("opac");
-		    $marc = get_opac_record( $xml, $ar_conn );
+    for (my $j=1; $j <= $size; $j++) {        # for each record within the result set...
+	$log->log( level => 'debug', message => timestamp() . "record $j");
+
+	eval {
+	    local $SIG{ALRM} = sub { die "alarm!\n" }; # # NB: \n required
+	    alarm 10;
+
+	    if ($rs->record($j-1)) {
+		$log->log( level => 'debug', message => timestamp() . "checking for errors");
+		if ($rs->record($j-1)->error()) {
+		    my($code, $msg, $addinfo, $dset) = $rs->record($j-1)->error();
+		    # log this stuff...
+		    $log->log( level => 'warning', message => timestamp() . "[$code $msg $addinfo $dset]");
 		    
-		} else {                                                       # server returns marc records
-		    $raw = $rs->record($j-1)->raw();
-		    $marc = get_marc_record( $raw );
-		}
-		
-		if ($marc) {
+		} else {
+		    $log->log( level => 'debug', message => timestamp() . "no errors (yet)");
 		    
-		    my $isNFL = check_if_not_loanable( $conn_info->{id}, $marc );
+		    my $marc;
+		    my $raw;
+		    
+		    if ($conn_info->{preferredrecordsyntax} eq 'opac') {           # server returns "opac" records
+			my $xml = $rs->record($j-1)->get("opac");
+			$marc = get_opac_record( $xml, $ar_conn );
+			
+		    } else {                                                       # server returns marc records
+			$raw = $rs->record($j-1)->raw();
+			$marc = get_marc_record( $raw );
+		    }
+		    
+		    if ($marc) {
+			
+			my $isNFL = check_if_not_loanable( $conn_info->{id}, $marc );
 #		    my $isNFL = 0;  # just for debugging, assume everything is loanable....!!!
-		    
-		    unless ($isNFL) {
 			
-			# For proper sorting of titles...
-			my $title;
-			my $fld = $marc->field("245");
-			if ($fld) {
-			    my $chars_to_ignore = $fld->indicator(2);
-			    $title = substr($fld->subfield('a'),$chars_to_ignore);
-			} else {
-			    $title = "";
-			}
-			
-			# Clean up garbage in author
-			my $author = $marc->author();
-			$author =~ s/[^a-zA-Z ]//g;
+			unless ($isNFL) {
+			    
+			    # For proper sorting of titles...
+			    my $title;
+			    my $fld = $marc->field("245");
+			    if ($fld) {
+				my $chars_to_ignore = $fld->indicator(2);
+				$title = substr($fld->subfield('a'),$chars_to_ignore);
+			    } else {
+				$title = "";
+			    }
+			    
+			    # Clean up garbage in author
+			    my $author = $marc->author();
+			    $author =~ s/[^a-zA-Z ]//g;
+			    
+			    # Clean up isbn
+			    my $isbn = $marc->subfield('020','a');
+			    $isbn =~ s/[^0-9X]//g;
+			    
+			    # hook for mid-stream processing of records
+			    if (_process($marc, $conn_info)) { undef $raw };
+			    
+			    # The underlying postgres tables are UTF-8.  Postgres is smart enough to translate, 
+			    #   as long as it knows what to expect.
+			    # If the MARC record lies, there's not much we can do about it.
+			    # Without specifically setting the client encoding (even thought it's not perfect),
+			    #   we would often hang on the 'insert into marc' line.
+			    if ($marc->encoding() eq 'UTF-8') {
+				$dbh->do("SET CLIENT_ENCODING TO Unicode");
+			    } else {
+				$dbh->do("SET CLIENT_ENCODING TO Latin1");
+			    }
 
-			# Clean up isbn
-			my $isbn = $marc->subfield('020','a');
-			$isbn =~ s/[^0-9X]//g;
-
-			# hook for mid-stream processing of records
-			if (_process($marc, $conn_info)) { undef $raw };
-
-			# The underlying postgres tables are UTF-8.  Postgres is smart enough to translate, 
-			#   as long as it knows what to expect.
-			# If the MARC record lies, there's not much we can do about it.
-			# Without specifically setting the client encoding (even thought it's not perfect),
-			#   we would often hang on the 'insert into marc' line.
-			if ($marc->encoding() eq 'UTF-8') {
-			    $dbh->do("SET CLIENT_ENCODING TO Unicode");
-			} else {
-			    $dbh->do("SET CLIENT_ENCODING TO Latin1");
-			}
-
-			$log->log( level => 'debug', message => timestamp() . "inserting into marc table\n");
-			my $rv;
-			eval {
-			    $rv = $dbh->do("INSERT INTO marc (sessionid, id, marc, zid, found_at_server,title,author,isbn) VALUES (?,?,?,?,?,?,?,?)",
-					  undef,
-					  $sessionid,
-					  $sequential_record_id++,
-					  $raw ? $raw : $marc->as_usmarc(),
-					  $conn_info->{id},
-					  $conn_info->{name},
-					  sprintf("%.254s",$title),
-					  sprintf("%.254s",$author),
-					  $isbn
-         		    );
-			};
-			if ($@) {
-			    $log->log( level => 'warning', message => timestamp() . "eval failed - insert into marc table, connection [$conn_info->{id}, $conn_info->{name}], title [$title], " . $@ . "\n");
-			} else {
-			    $log->log( level => 'debug', message => timestamp() . "return value from insert into marc, rv=[$rv]\n");
-			    $stored++;
-
-			    # this should never happen:
-			    unless ($rv) {
-				$log->log( level => 'error', message => timestamp() . "insert into marc returned undef: $DBI::errstr\n");
+			    $log->log( level => 'debug', message => timestamp() . "inserting into marc table");
+			    my $rv;
+			    eval {
+				$rv = $dbh->do("INSERT INTO marc (sessionid, id, marc, zid, found_at_server,title,author,isbn) VALUES (?,?,?,?,?,?,?,?)",
+					       undef,
+					       $sessionid,
+					       $sequential_record_id++,
+					       $raw ? $raw : $marc->as_usmarc(),
+					       $conn_info->{id},
+					       $conn_info->{name},
+					       sprintf("%.254s",$title),
+					       sprintf("%.254s",$author),
+					       $isbn
+				    );
+			    };
+			    if ($@) {
+				$log->log( level => 'warning', message => timestamp() . "eval failed - insert into marc table, connection [$conn_info->{id}, $conn_info->{name}], title [$title], " . $@ );
+			    } else {
+				$log->log( level => 'debug', message => timestamp() . "return value from insert into marc, rv=[$rv]");
+				$stored++;
+				
+				# this should never happen:
+				unless ($rv) {
+				    $log->log( level => 'error', message => timestamp() . "insert into marc returned undef: $DBI::errstr");
+				}
 			    }
 			}
+			
+			if (exists $conn_info->{acquiring}) {
+			    $conn_info->{acquiring} += 1;
+			} else {
+			    $conn_info->{acquiring} = 1;
+			}
+			$dbh->do("UPDATE status_check SET msg=? WHERE ((sessionid=?) AND (zid=?))",
+				 undef,
+				 $conn_info->{hits} . " hits.  Saving record " . $conn_info->{acquiring},
+				 $sessionid,
+				 $conn_info->{id},
+			    );
+			
+			$id++;
 		    }
-		    
-		    if (exists $conn_info->{acquiring}) {
-			$conn_info->{acquiring} += 1;
-		    } else {
-			$conn_info->{acquiring} = 1;
-		    }
-		    $dbh->do("UPDATE status_check SET msg=? WHERE ((sessionid=?) AND (zid=?))",
-			     undef,
-			     $conn_info->{hits} . " hits.  Saving record " . $conn_info->{acquiring},
-			     $sessionid,
-			     $conn_info->{id},
-			);
-		    
-		    $id++;
 		}
+	    } else {
+		$log->log( level => 'debug', message => timestamp() . "Not a real record.  Result set size reported as [" . $rs->size() . "]");
+		#$log->log( level => 'debug', message => timestamp() . $rs->record($j-1)->render() );
 	    }
+
+	    alarm 0; # turn off alarm
+	}; # end of eval
+
+	if ($@) {
+	    $log->log( level => 'debug', message => timestamp() . "error: " . $@ );
+	    if ($@ eq "alarm\n") {
+		# timed out
+		$log->log( level => 'debug', message => timestamp() . "Record was taking too long, so bailed." );
+	    }
+	    #die unless $@ eq "alarm\n"; # propagate unexpected errors
 	} else {
-	    $log->log( level => 'debug', message => timestamp() . "Not a real record.  Result set size [" . $rs->size() . "]  Rec " . ($j - 1) . " [" . $rs->record($j-1)->raw() . "]\n");
-	    $log->log( level => 'debug', message => timestamp() . $rs->record($j-1)->render() );
+	    # didn't
+	    $log->log( level => 'debug', message => timestamp() . "Finished processing record.");
 	}
     }
     $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], stored: $stored\n");
