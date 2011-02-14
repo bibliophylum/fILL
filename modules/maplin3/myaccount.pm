@@ -4,6 +4,13 @@ use base 'maplin3base';
 use ZOOM;
 use MARC::Record;
 use Data::Dumper;
+use POSIX qw(strftime);
+use DateTime;
+use Data::Dumper;
+use GD;
+use GD::Graph;
+use GD::Graph::lines;
+use GD::Graph::pie;
 
 
 #--------------------------------------------------------------------------------
@@ -21,6 +28,7 @@ sub setup {
 	'myaccount_status_form'      => 'myaccount_status_process',
 	'myaccount_LocalUse_form'    => 'myaccount_LocalUse_process',
 	'myaccount_ebsco_form'       => 'myaccount_ebsco_process',
+	'myaccount_reports_form'     => 'myaccount_reports_process',
 	);
 }
 
@@ -477,6 +485,168 @@ sub myaccount_ebsco_process {
     return $template->output;
 }
 
+
+#--------------------------------------------------------------------------------
+# Taken verbatim from admin_reports_process, and then limited to
+# current user.
+sub myaccount_reports_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $user   = $self->authen->username,
+    #my $user   = $q->param('user') || 'MWPL';
+    my $period = $q->param('period') || 'thisweek';
+    my $cumulative = $q->param('cumulative');
+    my $gen    = $q->param('gen');
+
+    my $template;
+
+    if ($gen) {
+	my @data;
+	my $dt = DateTime->now;
+	my $dt_start;
+	my $dt_end;
+
+	my $SQL_selectPhrase_loaned = "select DATE(i.ts) as d, COUNT(DATE(i.ts)) as c from ill_stats i, libraries l where l.name=? and i.zid=l.home_zserver_id and l.home_zserver_location=i.location ";
+	my $SQL_selectPhrase_borrowed = "select DATE(i.ts) as d, COUNT(DATE(i.ts)) as c from ill_stats i, libraries l where l.name=? and i.lid=l.lid ";
+	my $SQL_groupPhrase = " group by DATE(i.ts)";
+	my $SQL_periodPhrase;
+
+	if ($period eq 'thisweek') {
+	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from current_date) ";
+	    $dt_start = $dt->clone->subtract( days => $dt->day_of_week );
+	    $dt_end   = $dt_start->clone->add( days => 7 );
+	} elsif ($period eq 'lastweek') {
+	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from (current_date - interval '7 days')) ";
+	    $dt_start = $dt->clone->subtract( days => 7 + $dt->day_of_week );
+	    $dt_end   = $dt_start->clone->add( days => 7 );
+	} elsif ($period eq 'thismonth') {
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(month from i.ts) = extract(month from current_date) ";
+	    $dt_start = $dt->clone->subtract( days => $dt->day );
+	    $dt_end   = $dt_start->clone->add( months => 1 )->subtract( days => 1 );
+	} elsif ($period eq 'lastmonth') {
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(month from i.ts) = extract(month from (current_date - interval '1 month')) ";
+	    $dt_start = $dt->clone->subtract( months => 1, days => $dt->day );
+	    $dt_end   = $dt_start->clone->add( months => 1 )->subtract( days => 1 );
+	} elsif ($period eq 'all') {
+	    # since inception
+	    $SQL_periodPhrase = "";
+	} else {
+	    # since inception
+	    $SQL_periodPhrase = "";
+	}
+
+	my $SQL_loaned   = $SQL_selectPhrase_loaned . $SQL_periodPhrase . $SQL_groupPhrase;
+	my $SQL_borrowed = $SQL_selectPhrase_borrowed . $SQL_periodPhrase . $SQL_groupPhrase;
+
+	my $rows_loaned   = $self->dbh->selectall_hashref( $SQL_loaned, "d", undef, $user );
+	my $rows_borrowed = $self->dbh->selectall_hashref( $SQL_borrowed, "d", undef, $user );
+
+	my $SQL_total_loaned = "select COUNT(i.ts) as total from ill_stats i, libraries l where l.name=? and i.zid=l.home_zserver_id and l.home_zserver_location=i.location ";
+	my $SQL_total_borrowed = "select COUNT(i.ts) as total from ill_stats i, libraries l where l.name=? and i.lid=l.lid ";
+
+	$SQL_total_loaned   = $SQL_total_loaned   . $SQL_periodPhrase;
+	$SQL_total_borrowed = $SQL_total_borrowed . $SQL_periodPhrase;
+	my $total_loaned   = $self->dbh->selectrow_arrayref( $SQL_total_loaned, undef, $user );
+	my $total_borrowed = $self->dbh->selectrow_arrayref( $SQL_total_borrowed, undef, $user );
+	
+#	# debug
+#	open(LOG,'>','/opt/maplin3/logs/graphing.log') or die $!;
+#	print LOG $SQL_borrowed . "\n";
+#	foreach my $key ( sort keys %$rows_borrowed ) {
+#	    print LOG "$key: $rows_borrowed->{$key}->{c}\n";
+#	}
+#	close LOG;
+	
+	$period =~ s/this/this /;
+	$period =~ s/last/last /;
+
+	my $range_start_string = $dt_start->strftime( "%F" );
+	my $range_end_string   = $dt_end->strftime( "%F" );
+	my @xaxis;
+	my @dataset_loaned;
+	my @dataset_borrowed;
+	my @dataset_net;
+	my $max_loan = 0;
+	my $max_borr = 0;
+	my $cumulative_loan = 0;
+	my $cumulative_borr = 0;
+	while ($dt_start <= $dt_end) {
+	    my $loan = $rows_loaned->{   $dt_start->strftime( "%F" ) }->{c} || 0;
+	    my $borr = $rows_borrowed->{ $dt_start->strftime( "%F" ) }->{c} || 0;
+
+	    $cumulative_loan += $loan;
+	    $cumulative_borr += $borr;
+
+	    push @xaxis, $dt_start->strftime( "%F" );
+	    if ($cumulative) {
+		push @dataset_loaned, $cumulative_loan;
+		push @dataset_borrowed, 0 - $cumulative_borr;
+		push @dataset_net, $cumulative_loan - $cumulative_borr;
+	    } else {
+		push @dataset_loaned, $loan;
+		push @dataset_borrowed, 0 - $borr;
+		push @dataset_net, $loan - $borr;
+	    }
+
+	    if ($loan > $max_loan) {
+		$max_loan = $loan;
+	    }
+	    if ($borr > $max_borr) {
+		$max_borr = $borr;
+	    }
+	    $dt_start = $dt_start->add( days => 1 );
+	}
+	push @data, [ @xaxis ];
+	push @data, [ @dataset_loaned ];
+	push @data, [ @dataset_borrowed ];
+	push @data, [ @dataset_net ];
+
+	my $graph = GD::Graph::lines->new(600,400);
+	my $y_label_skip = int(($cumulative ? ($cumulative_loan + $cumulative_borr) : ($max_loan + $max_borr)) / 10);
+	$graph->set(
+	    x_label       => $period,
+	    y_label       => 'transactions',
+	    title         => $cumulative ? 'Cumulative Interlibrary Loan Requests' : 'Interlibrary Loan Requests',
+	    y_max_value   => $cumulative ? $cumulative_loan : $max_loan,
+	    y_min_value   => $cumulative ? ( 0 - $cumulative_borr ) : (0 - $max_borr),
+	    y_tick_number => $cumulative ? ($cumulative_loan + $cumulative_borr) : ($max_loan + $max_borr),
+	    y_label_skip  => $y_label_skip,
+	    x_labels_vertical => 1,
+	    zero_axis     => 1,
+	    ) or die $graph->error;
+	my @legend_keys = qw/loaned borrowed net/;
+	$graph->set_legend( @legend_keys );
+
+	my $gd = $graph->plot(\@data) or die $graph->error;
+	my $filename = "/opt/maplin3/htdocs/tmp/graph$$";
+	$gd->can('png') ? $filename .= '.png' : $filename .= '.gif';
+	open(IMG, '>', $filename) or die $!;
+	binmode IMG;
+	my $image = $gd->can('png') ? $gd->png : $gd->gif; 
+	print IMG $image;
+	close IMG;
+
+
+	my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
+	$filename =~ s|/opt/maplin3/htdocs||;
+	$template = $self->load_tmpl('myaccount/reports/ILL_graphs_report.tmpl');
+	$template->param(
+	    library => $user,
+	    period => $period,
+	    filename => $filename,
+	    total_loaned   => $total_loaned->[0],
+	    total_borrowed => $total_borrowed->[0],
+	    gendate => $now_string,
+	    );
+
+    } else {
+	# just show the selection form
+	$template = $self->load_tmpl('myaccount/reports.tmpl');
+    }
+
+    return $template->output;
+}
 
 #--------------------------------------------------------------------------------
 # DEPRECATED - this is now done in maplin3base.pm's cgiapp_prerun, so

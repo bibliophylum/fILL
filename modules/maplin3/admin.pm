@@ -1270,13 +1270,13 @@ sub admin_reports_ILL_requests_process {
 
 	if ($report eq 'borrower') {
 	    # borrower report
-	    $SQL_selectPhrase = "select l.library as source, z.name as zserver, i.location, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
-	    $SQL_groupPhrase  = "group by l.library, z.name, i.location";
+	    $SQL_selectPhrase = "select l.library as source, z.name as target, i.location, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
+	    $SQL_groupPhrase  = "group by l.library, z.name, i.location order by l.library, z.name, i.location";
 	    $template = $self->load_tmpl('admin/reports/ILL_borrowers_report.tmpl');
 	} else {
 	    # lender report
-	    $SQL_selectPhrase = "select z.name as zserver, i.location, l.library as source, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
-	    $SQL_groupPhrase  = "group by z.name, i.location, l.library";
+	    $SQL_selectPhrase = "select z.name as target, i.location, l.library as source, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
+	    $SQL_groupPhrase  = "group by z.name, i.location, l.library order by z.name, i.location, l.library";
 	    $template = $self->load_tmpl('admin/reports/ILL_lenders_report.tmpl');
 	}
 	
@@ -1649,7 +1649,7 @@ sub admin_reports_ILL_graphs_process {
 #	foreach my $key ( sort keys %$rows ) {
 #	    print LOG "$key: $rows->{$key}->{c}\n";
 #	}
-	close LOG;
+#	close LOG;
 	
 	$period =~ s/this/this /;
 	$period =~ s/last/last /;
@@ -1682,11 +1682,11 @@ sub admin_reports_ILL_graphs_process {
 		push @dataset_net, $loan - $borr;
 	    }
 
-	    if ($rows_loaned->{ $dt_start->strftime( "%F" ) }->{c} > $max_loan) {
-		$max_loan = $rows_loaned->{ $dt_start->strftime( "%F" ) }->{c};
+	    if ($loan > $max_loan) {
+		$max_loan = $loan;
 	    }
-	    if ($rows_borrowed->{ $dt_start->strftime( "%F" ) }->{c} > $max_borr) {
-		$max_borr = $rows_borrowed->{ $dt_start->strftime( "%F" ) }->{c};
+	    if ($borr > $max_borr) {
+		$max_borr = $borr;
 	    }
 	    $dt_start = $dt_start->add( days => 1 );
 	}
@@ -1696,9 +1696,9 @@ sub admin_reports_ILL_graphs_process {
 	push @data, [ @dataset_net ];
 
 	# debug
-	open(LOG,'>','/opt/maplin3/logs/graphing.log') or die $!;
-	print LOG Dumper(@data);
-	close LOG;
+#	open(LOG,'>','/opt/maplin3/logs/graphing.log') or die $!;
+#	print LOG Dumper(@data);
+#	close LOG;
 
 	my $graph = GD::Graph::lines->new(600,400);
 	my $y_label_skip = int(($cumulative ? ($cumulative_loan + $cumulative_borr) : ($max_loan + $max_borr)) / 10);
@@ -1717,10 +1717,12 @@ sub admin_reports_ILL_graphs_process {
 	$graph->set_legend( @legend_keys );
 
 	my $gd = $graph->plot(\@data) or die $graph->error;
-	my $filename = "/opt/maplin3/htdocs/tmp/graph$$.png";
+	my $filename = "/opt/maplin3/htdocs/tmp/graph$$";
+	$gd->can('png') ? $filename .= '.png' : $filename .= '.gif';
 	open(IMG, '>', $filename) or die $!;
 	binmode IMG;
-	print IMG $gd->png;
+	my $image = $gd->can('png') ? $gd->png : $gd->gif; 
+	print IMG $image;
 	close IMG;
 
 
@@ -1852,10 +1854,12 @@ sub admin_reports_ILL_pie_process {
 	    label => "Slices less than 5 degrees are not labeled",
 	    ) or die $graph->error;
 	my $gd = $graph->plot(\@dataLoan) or die $graph->error . "<br>\n$SQL_loaned";
-	my $filename_loaned = "/opt/maplin3/htdocs/tmp/graph_pieLoan$$.png";
+	my $filename_loaned = "/opt/maplin3/htdocs/tmp/graph_pieLoan$$";
+	$gd->can('png') ? $filename_loaned .= '.png' : $filename_loaned .= '.gif';
 	open(IMG, '>', $filename_loaned) or die $!;
 	binmode IMG;
-	print IMG $gd->png;
+	my $image = $gd->can('png') ? $gd->png : $gd->gif; 
+	print IMG $image;
 	close IMG;
 
 	$graph = GD::Graph::pie->new(800,600);
@@ -1865,10 +1869,12 @@ sub admin_reports_ILL_pie_process {
 	    label => "Slices less than 5 degrees are not labeled",
 	    ) or die $graph->error;
 	$gd = $graph->plot(\@dataBorr) or die $graph->error;
-	my $filename_borrowed = "/opt/maplin3/htdocs/tmp/graph_pieBorr$$.png";
+	my $filename_borrowed = "/opt/maplin3/htdocs/tmp/graph_pieBorr$$";
+	$gd->can('png') ? $filename_borrowed .= '.png' : $filename_borrowed .= '.gif';
 	open(IMG, '>', $filename_borrowed) or die $!;
 	binmode IMG;
-	print IMG $gd->png;
+	$image = $gd->can('png') ? $gd->png : $gd->gif; 
+	print IMG $image;
 	close IMG;
 
 #	$graph = GD::Graph::pie->new(600,400);
