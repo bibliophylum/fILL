@@ -1602,22 +1602,18 @@ sub admin_reports_ILL_graphs_process {
 	my $SQL_periodPhrase;
 
 	if ($period eq 'thisweek') {
-	    #$SQL_periodPhrase = "and yearweek(ts) = yearweek(current_date()) ";
-	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from current_date) ";
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(week from i.ts) = extract(week from current_date) ";
 	    $dt_start = $dt->clone->subtract( days => $dt->day_of_week );
 	    $dt_end   = $dt_start->clone->add( days => 7 );
 	} elsif ($period eq 'lastweek') {
-	    #$SQL_periodPhrase = "and yearweek(ts) = yearweek(current_date() - interval 7 day) ";
-	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from (current_date - interval '7 days')) ";
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(week from i.ts) = extract(week from (current_date - interval '7 days')) ";
 	    $dt_start = $dt->clone->subtract( days => 7 + $dt->day_of_week );
 	    $dt_end   = $dt_start->clone->add( days => 7 );
 	} elsif ($period eq 'thismonth') {
-	    #$SQL_periodPhrase = "and year(ts) = year(current_date()) and month(ts) = month(current_date()) ";
 	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(month from i.ts) = extract(month from current_date) ";
 	    $dt_start = $dt->clone->subtract( days => $dt->day );
 	    $dt_end   = $dt_start->clone->add( months => 1 )->subtract( days => 1 );
 	} elsif ($period eq 'lastmonth') {
-	    #$SQL_periodPhrase = "and year(ts) = year(current_date()) and month(ts) = month(current_date() - interval 1 month) ";
 	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(month from i.ts) = extract(month from (current_date - interval '1 month')) ";
 	    $dt_start = $dt->clone->subtract( months => 1, days => $dt->day );
 	    $dt_end   = $dt_start->clone->add( months => 1 )->subtract( days => 1 );

@@ -513,11 +513,11 @@ sub myaccount_reports_process {
 	my $SQL_periodPhrase;
 
 	if ($period eq 'thisweek') {
-	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from current_date) ";
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(week from i.ts) = extract(week from current_date) ";
 	    $dt_start = $dt->clone->subtract( days => $dt->day_of_week );
 	    $dt_end   = $dt_start->clone->add( days => 7 );
 	} elsif ($period eq 'lastweek') {
-	    $SQL_periodPhrase = "and extract(week from i.ts) = extract(week from (current_date - interval '7 days')) ";
+	    $SQL_periodPhrase = "and extract(year from i.ts) = extract(year from current_date) and extract(week from i.ts) = extract(week from (current_date - interval '7 days')) ";
 	    $dt_start = $dt->clone->subtract( days => 7 + $dt->day_of_week );
 	    $dt_end   = $dt_start->clone->add( days => 7 );
 	} elsif ($period eq 'thismonth') {
