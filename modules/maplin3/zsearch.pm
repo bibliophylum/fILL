@@ -1066,8 +1066,6 @@ sub send_email_process {
     $self->_update_ILL_stats($lid, $zid, $loc, $callno, $pubdate);
 
     $sql = "SELECT marc, found_at_server FROM marc WHERE sessionid=? AND id=?";
-#    $sql .= $self->dbh->quote($self->session->id());
-#    $sql .= " AND id=$record_id";
     my $marc_aref = $self->dbh->selectrow_arrayref($sql,
 						   undef,
 						   $self->session->id(),
@@ -1075,12 +1073,6 @@ sub send_email_process {
 	);
     my $marc_string = $marc_aref->[0];
     my $fas = $marc_aref->[1];
-
-#    $sql = "SELECT marc FROM marc WHERE sessionid=";
-#    $sql .= $self->dbh->quote($self->session->id());
-#    $sql .= " AND id=$record_id";
-#    my $marc_aref = $self->dbh->selectrow_arrayref($sql);
-#    my $marc_string = $marc_aref->[0];
 
     my $marc = new_from_usmarc MARC::Record($marc_string);
     my $subject = "Subject: ILL Request: " . $marc->title() . "\n";
@@ -1104,12 +1096,12 @@ sub send_email_process {
     $content .= "Requesting library: " . $self->authen->username . "\n";
     $content .= "\n$library\n$mail1\n$mail2\n$mail3\n";
 
-    if ($self->authen->username eq "TEST") {
-	$content .= "\nTHIS IS A TEST ACCOUNT - NO EMAIL HAS BEEN SENT.\n";
-    } else {
-	my $sendmail = "/usr/sbin/sendmail -t";
+    my $error_sendmail = 0;
+    my $sendmail = "/usr/sbin/sendmail -t";
+
+    eval {
 	open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
-#    print SENDMAIL $from;
+	#    print SENDMAIL $from;
 	print SENDMAIL $reply_to;
 	print SENDMAIL $to;
 	print SENDMAIL $cc;
@@ -1117,6 +1109,15 @@ sub send_email_process {
 	print SENDMAIL "Content-type: text/plain\n\n";
 	print SENDMAIL $content;
 	close(SENDMAIL);
+    };
+    if ($@) {
+	# sendmail blew up
+	$self->log->debug("sendmail blew up");
+	$error_sendmail = 1;
+	$content =~ s/This is an automatically generated request from MAPLIN-3/MAPLIN had a problem sending email.\nThis is a MANUAL request./;
+	$content = "--- copy from here ---\n" . $content . "\n--- copy to here ---\n";
+    } else {
+	$self->log->debug("sendmail sent request");
     }
     
     my $template = $self->load_tmpl('search/request.tmpl');
@@ -1128,19 +1129,20 @@ sub send_email_process {
 		     REPLY_TO => $reply_to,
 		     SUBJECT => $subject,
 		     CONTENT => $content,
-		     PATRON  => $patron,
-		     NOTES   => $notes,
+		     PATRON => $patron,
+		     NOTES => $notes,
 		     LIBRARY => $library,
-		     MAIL1   => $mail1,
-		     MAIL2   => $mail2,
-		     MAIL3   => $mail3,
-		     ZID     => $zid,
+		     MAIL1 => $mail1,
+		     MAIL2 => $mail2,
+		     MAIL3 => $mail3,
+		     ZID => $zid,
 		     RECORD_ID => $record_id,
-		     LOC       => $loc,
-		     CALLNO    => $callno,
+		     LOC => $loc,
+		     CALLNO => $callno,
 		     COLLECTION => $collection,
-		     FAS        => $fas,
-		     SENT    => 1
+		     FAS => $fas,
+		     SENT => 1,
+		     ERROR_SENDMAIL => $error_sendmail,
 	);
 
     return $template->output;
