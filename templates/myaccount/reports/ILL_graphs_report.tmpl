@@ -12,11 +12,13 @@
   <img src=<TMPL_VAR NAME=filename>>
 </p>
 <p>
-  <strong>Total loaned for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_loaned></strong><br>
-  <strong>Total borrowed for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_borrowed></strong>
+  <strong>Total requests from other libraries (loaned) for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_loaned></strong><br>
+  <strong>Total requests to other libraries (borrowed) for <TMPL_VAR NAME=period>: <TMPL_VAR NAME=total_borrowed></strong>
 </p>
 
 </table>
+<p>Note that Maplin can only track the number of requests made, not whether those requests were filled.</p>
+<br>
 <p>Report generated at <TMPL_VAR NAME=gendate></p>
 <p>Return to <a href="?rm=myaccount_reports_form">report selection</a>.</p>
 <TMPL_INCLUDE NAME="footer.tmpl">
