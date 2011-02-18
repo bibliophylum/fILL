@@ -38,6 +38,11 @@ my $searcher = shift;
 my $pqf = shift;
 # @ARGV will hold zservers
 
+my %statistics = {};
+$statistics{sessionid} = $sessionid . '-' . $$;
+$statistics{pqf} = $pqf;
+my $stats_start = time;
+
 my $log = Log::Dispatch->new();
 $log->add( Log::Dispatch::File->new
 	   ( name      => 'file1',
@@ -91,6 +96,15 @@ $dbh->do("INSERT INTO search_pid (sessionid, pid) VALUES (?,?)",
 	 $$
     );
 
+# initial statistics row
+$dbh->do("INSERT INTO search_statistics (sessionid, pqf) VALUES (?,?)",
+	 undef,
+	 $statistics{sessionid},
+	 $statistics{pqf}
+    );
+
+
+
 # Get ebsco information
 my $ebsco_href = $dbh->selectrow_hashref( "SELECT ebsco_user, ebsco_pass FROM libraries WHERE lid=?",
 					  undef,
@@ -135,6 +149,14 @@ $log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in se
 $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 	 undef,
 	 $sessionid,
+    );
+
+my $stats_end = time;
+$statistics{duration} = $stats_end - $stats_start;
+$dbh->do("UPDATE search_statistics SET duration=? WHERE sessionid=?",
+	 undef,
+	 $statistics{duration},
+	 $statistics{sessionid}
     );
 
 # Disconnect from the database.
@@ -807,6 +829,14 @@ sub store_result_set {
 	}
     }
     $log->log( level => 'info', message => timestamp() . "store_result_set for [$conn_info->{name}], stored: $stored\n");
+
+    # statistics
+    $dbh->do("UPDATE search_statistics SET records=records+? WHERE sessionid=?",
+	     undef,
+	     $stored,
+	     $sessionid . '-' . $$
+	);
+
     $rs->destroy();  # clean up after ourselves.
 }
 
