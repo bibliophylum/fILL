@@ -3,7 +3,7 @@ use strict;
 use base 'maplin3base';
 use CGI::Application::Plugin::Stream (qw/stream_file/);
 use ZOOM;
-
+use Net::Ping;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
@@ -135,6 +135,21 @@ sub test_my_zserver_process {
 	    
 	    $status{stage} = "Attempting to open a connection and search your system";
 	    $status{show} = 1;
+
+	    # Check if the z39.50 port is open on the remote machine
+	    my $host = $zserver_href->{z3950_connection_string};
+	    $host =~ s/^(.*):.*$/$1/;
+	    my $port = $zserver_href->{z3950_connection_string};
+	    $port =~ s/^.*:(.*)\/.*$/$1/;
+	    my $porttester = Net::Ping->new("tcp");
+	    $porttester->port_number($port);
+	    if ($porttester->ping($host)) {
+		$status{porttest} = "$host is reachable on port $port.";
+	    } else {
+		$status{porttest} = "$host is NOT reachable on port $port.";
+	    }
+	    $porttester->close();
+
 	    eval {
 		my $optionset = new ZOOM::Options();
 		$optionset->option(implementationName => "Maplin connection tester");

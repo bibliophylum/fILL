@@ -115,6 +115,7 @@
 <h2>Status</h2>
 <TMPL_LOOP NAME="status">
   <p>Stage: <TMPL_VAR NAME="stage"></p>
+  <p><strong>Port check: <TMPL_VAR NAME="porttest"></strong></p>
   <TMPL_IF NAME="show">
     <p>Status: <TMPL_VAR NAME="error"></p>
     <p>Timeout limit: <TMPL_VAR NAME="timeout"> seconds.</p>
