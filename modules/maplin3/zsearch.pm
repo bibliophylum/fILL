@@ -1275,9 +1275,14 @@ sub _get_ILL_stats_net_count {
     my $self = shift;
     my ($zid,$loc) = @_;
 
+    if (($zid == 1) && ($loc eq 'PUBLIC LIB. SERVICES pls@gov.mb.ca')) {
+	# PLS is special... we want it to always be neutral.
+	return 0;
+    }
+
     # Get number of ILL requests received
     my $r_href = $self->dbh->selectrow_hashref(
-	"SELECT ill_received FROM locations WHERE zid=? AND location=?",
+	"SELECT count(*) as ill_received FROM ill_stats WHERE (ts > (current_date - interval '3 years')) and zid=? AND location=?",
 	{},
 	$zid,
 	$loc
@@ -1287,7 +1292,7 @@ sub _get_ILL_stats_net_count {
     } else {
 	# no data for this zserver+location, default to zserver's count
 	$r_href = $self->dbh->selectrow_hashref(
-	    "SELECT ill_received FROM zservers WHERE id=?",
+	    "SELECT count(*) as ill_received FROM ill_stats WHERE (ts > (current_date - interval '3 years')) and zid=?",
 	    {},
 	    $zid
 	    );
@@ -1298,42 +1303,31 @@ sub _get_ILL_stats_net_count {
 	    $r_href->{ill_received} = 0;
 	}
     }
-    
-    # Get number of ILL requests sent by all users who call this their
-    # home zserver / home zserver location
-    my $s_href = $self->dbh->selectrow_hashref(
-	"SELECT sum(ill_sent) as ill_sent from libraries WHERE home_zserver_id=? AND home_zserver_location=?",
+
+    # Find the library id that owns this zserver+location
+    my $lid_href = $self->dbh->selectrow_hashref(
+	"SELECT lid FROM libraries WHERE home_zserver_id=? AND home_zserver_location=?",
 	{},
 	$zid,
 	$loc
 	);
-    if (defined $s_href->{ill_sent}) {
-	# this home_zserver + home_zserver_location has a count
+    
+    if (defined $lid_href->{lid}) {
+	# found the library
     } else {
-	if ($zid == 1) {
-	    # PLS is special... union catalogue.
-	    $s_href->{ill_sent} = 0;
-	} else {
-	    
-	    $s_href = $self->dbh->selectrow_hashref(
-		"SELECT sum(ill_sent) as ill_sent from libraries WHERE home_zserver_id=?",
-		{},
-		$zid,
-		);
-	    if ($s_href) {
-		if (defined $s_href->{ill_sent}) {
-		    # ok
-		} else {
-		    # s_href->{ill_sent} is still not defined.
-		    # defaulting it to 0
-		    $s_href->{ill_sent} = 0;
-		}
-	    } else {
-		# s_href still not defined!  creating, and setting s_href->{ill_sent} = 0
-		$s_href->{ill_sent} = 0;
-	    }
-	}
+	# no library for zserver+location... just use zserver
+	$lid_href = $self->dbh->selectrow_hashref(
+	    "SELECT lid FROM libraries WHERE home_zserver_id=?",
+	    {},
+	    $zid,
+	    );
     }
+
+    my $s_href = $self->dbh->selectrow_hashref(
+	"SELECT count(*) as ill_sent FROM ill_stats WHERE (ts > (current_date - interval '3 years')) and lid=?",
+	{},
+	$lid_href->{lid}
+	);
     
 #    my $s_debug = "Net: sent (" . $s_href->{ill_sent} . ") - received (" . $r_href->{ill_received} . ") = " . ($s_href->{ill_sent} - $r_href->{ill_received});
 #    $self->log->debug($s_debug);
