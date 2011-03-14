@@ -79,7 +79,8 @@ sub worldlanguages_process {
     }
 
     my $template = $self->load_tmpl('supplemental/blocks.tmpl');
-    $template->param(USERNAME  => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 Supplemental Blocks",
+		     USERNAME  => $self->authen->username,
 		     ASK => $ask,
 		     #FROM => $email_href->{from},
 		     TO => $email_href->{to},

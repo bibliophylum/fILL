@@ -60,7 +60,8 @@ sub admin_reports_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('admin/reports.tmpl');
-    $template->param(username => $self->authen->username);
+    $template->param(pagetitle => 'Maplin-3 Admin Reports',
+		     username => $self->authen->username);
     return $template->output;
 }
 
@@ -106,7 +107,8 @@ sub admin_logs_process {
 
     my $template = $self->load_tmpl('admin/logs.tmpl');
 
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Logs',
+		     username => $self->authen->username,
 		     log => $log,
 		     accessLogs => \@loopAccessSorted,
 		     errorLogs => \@loopErrorSorted,
@@ -123,7 +125,8 @@ sub admin_config_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('admin/config.tmpl');
-    $template->param(username => $self->authen->username);
+    $template->param(pagetitle => 'Maplin-3 Admin Config',
+		     username => $self->authen->username);
     return $template->output;
 }
 
@@ -208,8 +211,9 @@ sub admin_config_zServers_process {
     my @sorted_connections = sort { $a->{name} cmp $b->{name} } @$ar_conn;
 
     my $template = $self->load_tmpl('admin/config/zServers.tmpl');
-    $template->param(username => $self->authen->username,
-		     zServers             => \@sorted_connections,
+    $template->param(pagetitle => 'Maplin-3 Admin Config zServers',
+		     username => $self->authen->username,
+		     zServers => \@sorted_connections,
 	);
     return $template->output;
 }
@@ -302,7 +306,8 @@ sub admin_config_zServer_edit_process {
     }
 
     my $template = $self->load_tmpl('admin/config/zServer_edit.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Config zServer Edit',
+		     username => $self->authen->username,
 		     id                      => $hr_conn->{id},
 		     name                    => $hr_conn->{name},
 		     z3950_connection_string => $hr_conn->{z3950_connection_string},
@@ -334,7 +339,8 @@ sub admin_config_zServer_add_process {
     my $hr_conn;
 
     my $template = $self->load_tmpl('admin/config/zServer_add.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Config zServer Add',
+		     username => $self->authen->username,
 	);
     return $template->output;
 }
@@ -407,7 +413,8 @@ sub admin_config_zServer_NotForLoan_process {
     }
 
     my $template = $self->load_tmpl('admin/config/zServer_NotForLoan.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Config zServer NotForLoan',
+		     username => $self->authen->username,
 		     notforloan => $ar_nfl,
 		     zserver => $q->param('zid'),
 	);
@@ -473,7 +480,8 @@ sub admin_config_zServer_owners_process {
 
 
     my $template = $self->load_tmpl('admin/config/zServer_owners.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Config zServer Owners',
+		     username => $self->authen->username,
 		     zServers => \@sorted_zServers,
 	);
     return $template->output;
@@ -609,7 +617,8 @@ sub admin_users_process {
     my @sorted_users = sort { $a->{name} cmp $b->{name} } @$ar_conn;
 
     my $template = $self->load_tmpl('admin/libraries.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Users',
+		     username => $self->authen->username,
 		     users        => \@sorted_users,
 		     status       => $status,
 		     editLID      => $edit{lid},
@@ -636,7 +645,8 @@ sub admin_actions_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('admin/actions.tmpl');
-    $template->param(username => $self->authen->username);
+    $template->param(pagetitle => 'Maplin-3 Admin Actions',
+		     username => $self->authen->username);
     return $template->output;
 }
 
@@ -696,7 +706,8 @@ sub admin_test_zserver_process {
     }
 
     my $template = $self->load_tmpl('admin/test_zserver.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Test zServer',
+		     username => $self->authen->username,
 		     zservers => $ar_conn,
 		     conn => $conn,
 		     pqf => $pqf,
@@ -893,7 +904,8 @@ sub admin_status_process {
 	}
 
     } else {
-	$template->param(username => $self->authen->username);
+	$template->param(pagetitle => 'Maplin-3 Admin Status',
+			 username => $self->authen->username);
 	return $template->output;
     }
 }
@@ -919,7 +931,8 @@ sub admin_CDT_select_process {
 	);
 
     my $template = $self->load_tmpl('admin/CDT_select.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin CDT Select',
+		     username => $self->authen->username,
 		     date_start => $date_start,
 		     date_end => $date_end,
 		     libraries => $ar_libraries,
@@ -969,7 +982,8 @@ sub admin_CDT_pull_process {
     }
 
     my $template = $self->load_tmpl('admin/CDT_pull.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin CDT Pull',
+		     username => $self->authen->username,
 		     library => $library,
 		     date_start => $date_start,
 		     date_end => $date_end,
@@ -1002,7 +1016,8 @@ sub admin_CDT_select_unclaimed_process {
     my $ar_collections = \@ar_coll;
 
     my $template = $self->load_tmpl('admin/CDT_select_unclaimed.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin CDT Select unclaimed',
+		     username => $self->authen->username,
 		     collections => $ar_collections,
 	             );
     return $template->output;
@@ -1062,7 +1077,8 @@ sub admin_CDT_unclaimed_pull_process {
     }
 
     my $template = $self->load_tmpl('admin/CDT_unclaimed.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin CDT unclaimed',
+		     username => $self->authen->username,
 		     collection => $collection,
 		     num_items => $#{ @$ar_pullList } + 1,
 		     pull_list => $ar_pullList
@@ -1118,7 +1134,8 @@ sub admin_reports_CDT_totals_process {
 	 });
 
     my $template = $self->load_tmpl('admin/reports/CDT_totals.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports CDT totals',
+		     username => $self->authen->username,
 		     total_claimed => $hr_counts->{count},
 		     by_library => $ar_counts_by_library,
 		     by_collection => \@counts_by_collection,
@@ -1236,7 +1253,8 @@ sub admin_reports_ILL_stats_process {
     $self->log->debug(Dumper(@z));
 
     my $template = $self->load_tmpl('admin/reports/ILL_stats.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports ILL stats',
+		     username => $self->authen->username,
 		     sent => $hr_sum_of_sent->{sent},
 		     by_user => $ar_user,
 		     received => $hr_sum_of_received->{received},
@@ -1262,6 +1280,7 @@ sub admin_reports_ILL_requests_process {
     my $gen    = $q->param('gen');
 
     my $template;
+    my $pagetitle;
 
     if ($gen) {
 	my $SQL_selectPhrase;
@@ -1273,11 +1292,13 @@ sub admin_reports_ILL_requests_process {
 	    $SQL_selectPhrase = "select l.library as source, z.name as target, i.location, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
 	    $SQL_groupPhrase  = "group by l.library, z.name, i.location order by l.library, z.name, i.location";
 	    $template = $self->load_tmpl('admin/reports/ILL_borrowers_report.tmpl');
+	    $pagetitle = 'Maplin-3 Admin Reports ILL Borrowers';
 	} else {
 	    # lender report
 	    $SQL_selectPhrase = "select z.name as target, i.location, l.library as source, count(i.ts) as num_req from libraries l, zservers z, ill_stats i where l.lid = i.lid and z.id = i.zid ";
 	    $SQL_groupPhrase  = "group by z.name, i.location, l.library order by z.name, i.location, l.library";
 	    $template = $self->load_tmpl('admin/reports/ILL_lenders_report.tmpl');
+	    $pagetitle = 'Maplin-3 Admin Reports ILL Lenders';
 	}
 	
 	my $SQL_periodPhrase;
@@ -1315,6 +1336,7 @@ sub admin_reports_ILL_requests_process {
 	$period =~ s/this/this /;
 
 	$template->param(
+	    pagetitle => $pagetitle,
 	    period => $period,
 	    rows => $rows,
 	    total_reqs => $total->[0],
@@ -1324,7 +1346,7 @@ sub admin_reports_ILL_requests_process {
     } else {
 	# just show the selection form
 	$template = $self->load_tmpl('admin/reports/ILL_requests_choose_report.tmpl');
-	#$template->param();
+	$template->param(pagetitle => 'Maplin-3 Admin Reports ILL Requests Choose');
     }
 
     return $template->output;
@@ -1343,7 +1365,8 @@ sub admin_reports_zServers_down_process {
 	);
 
     my $template = $self->load_tmpl('admin/reports/zServers_down.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports zServers down',
+		     username => $self->authen->username,
 		     zServers_down => $ar_zServers_down,
 	);
     return $template->output;
@@ -1377,7 +1400,8 @@ sub reports_home_zServers_process {
 	);
     
     my $template = $self->load_tmpl('admin/reports/home_zservers.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports home zServers',
+		     username => $self->authen->username,
 		     by_library => $ar_home_zservers,
 	);
     return $template->output;
@@ -1395,7 +1419,8 @@ sub admin_reports_last_logins_process {
 	);
     
     my $template = $self->load_tmpl('admin/reports/last_logins.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports last logins',
+		     username => $self->authen->username,
 		     last_logins => $ar_last_logins,
 	);
     return $template->output;
@@ -1414,7 +1439,8 @@ sub admin_reports_never_logged_in_process {
 	);
     
     my $template = $self->load_tmpl('admin/reports/never_logged_in.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports never logged in',
+		     username => $self->authen->username,
 		     never_logged_in => $ar_never_logged_in,
 	);
     return $template->output;
@@ -1446,7 +1472,8 @@ sub admin_reports_table_stats_process {
     }
     
     my $template = $self->load_tmpl('admin/reports/table_stats.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => 'Maplin-3 Admin Reports table stats',
+		     username => $self->authen->username,
 		     table_stats => \@tblstats,
 	);
     return $template->output;
@@ -1473,7 +1500,8 @@ sub admin_CDT_find_process {
 	    $q->param('barcode')
 	    );
     }
-    $template->param( username => $self->authen->username,
+    $template->param( pagetitle => 'Maplin-3 Admin CDT Find',
+		      username => $self->authen->username,
 		      callno => $href->{callno},
 		      pubdate => $href->{pubdate},
 		      author => $href->{author},
@@ -1543,7 +1571,8 @@ sub admin_CDT_ClaimByBarcode_process {
 	
     }
 
-    $template->param( username => $self->authen->username,
+    $template->param( pagetitle => 'Maplin-3 Admin CDT ClaimByBarcode',
+		      username => $self->authen->username,
 		      ok => $ok,
 		      name => $name,
 		      callno => $href->{callno},
@@ -1726,6 +1755,7 @@ sub admin_reports_ILL_graphs_process {
 	$filename =~ s|/opt/maplin3/htdocs||;
 	$template = $self->load_tmpl('admin/reports/ILL_graphs_report.tmpl');
 	$template->param(
+	    pagetitle => 'Maplin-3 Admin Reports ILL Graphs',
 	    library => $user,
 	    period => $period,
 	    filename => $filename,
@@ -1743,6 +1773,7 @@ sub admin_reports_ILL_graphs_process {
 
 	$template = $self->load_tmpl('admin/reports/ILL_graphs_choose_report.tmpl');
 	$template->param(
+	    pagetitle => 'Maplin-3 Admin Reports ILL Graphs Choose',
 	    users => $ar_users
 	    );
     }
@@ -1890,6 +1921,7 @@ sub admin_reports_ILL_pie_process {
 
 	$template = $self->load_tmpl('admin/reports/ILL_pie_report.tmpl');
 	$template->param(
+	    pagetitle => 'Maplin-3 Admin Reports ILL Pie',
 	    period => $period,
 	    filename_loaned => $filename_loaned,
 	    filename_borrowed => $filename_borrowed,
@@ -1901,6 +1933,7 @@ sub admin_reports_ILL_pie_process {
     } else {
 	# just show the selection form
 	$template = $self->load_tmpl('admin/reports/ILL_pie_choose_report.tmpl');
+	$template->param( pagetitle => 'Maplin-3 Admin Reports ILL Pie Choose' );
     }
 
     return $template->output;

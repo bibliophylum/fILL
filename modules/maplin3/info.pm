@@ -42,7 +42,8 @@ sub info_contacts_process {
 	);
     
     my $template = $self->load_tmpl('info/contacts.tmpl');
-    $template->param(username  => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 Info Contacts",
+		     username  => $self->authen->username,
 		     libraries => $aref);
     return $template->output;
 }
@@ -55,7 +56,8 @@ sub info_documents_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('info/documents.tmpl');
-    $template->param(username => $self->authen->username);
+    $template->param(pagetitle => "Maplin-3 Info Documents",
+		     username => $self->authen->username);
     return $template->output;
 }
 
@@ -67,7 +69,8 @@ sub info_feeds_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('info/feeds.tmpl');
-    $template->param(username => $self->authen->username);
+    $template->param(pagetitle => "Maplin-3 Info Feeds",
+		     username => $self->authen->username);
     return $template->output;
 }
 
@@ -182,6 +185,7 @@ sub test_my_zserver_process {
     push( @status_data, \%status );
     my $template = $self->load_tmpl('info/myzserverstatus.tmpl');
     $template->param(
+	pagetitle => "Maplin-3 Info My zServer Status",
 	username => $self->authen->username,
 	showserver => $showserver,
 	zserver => \@zserver_data, 
@@ -207,7 +211,8 @@ sub info_all_zservers_process_DEPRECATED {
 	);
     
     my $template = $self->load_tmpl('info/allzservers.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 Info All zServers Status",
+		     username => $self->authen->username,
 		     zservers => $aref);
     return $template->output;
 }
@@ -282,7 +287,8 @@ sub info_all_zservers_process {
     }
 
     my $template = $self->load_tmpl('info/allzservers.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 Info All zServers Status",
+		     username => $self->authen->username,
 		     test_description => $test_description,
 		     current_time => $current_time,
 		     do_test => $q->param('do_test') ? 1 : 0,

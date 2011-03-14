@@ -96,7 +96,8 @@ sub myaccount_settings_process {
     $status = "Editing in process." unless $status;
 
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
-    $template->param(username     => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 MyAccount Settings",
+		     username     => $self->authen->username,
 	             status       => $status,
 		     editLID      => $href->{lid},
 		     editName     => $href->{name},
@@ -175,7 +176,8 @@ sub myaccount_zserver_process {
     $status = "Editing in process." unless $status;
 
     my $template = $self->load_tmpl('myaccount/zserver.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 MyAccount zServer",
+		     username => $self->authen->username,
 		     status               => $status,
 		     has_zserver          => $href->{id} ? 1 : 0,
 		     editID               => $href->{id},
@@ -334,7 +336,8 @@ sub myaccount_locations_process {
 
     my $template = $self->load_tmpl('myaccount/locations.tmpl');
     # note - the has_zserver bit resolves to TRUE if there was *anything* returned.
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 MyAccount Locations",
+		     username => $self->authen->username,
 		     has_zserver  => $ar_locs->[0]->{zid} ? 1 : 0,
 		     locSelected  => $locSelected,
 		     locations    => \@locations,
@@ -427,7 +430,8 @@ sub myaccount_LocalUse_process {
     }
 
     my $template = $self->load_tmpl('myaccount/LocalUse.tmpl');
-    $template->param(username => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 MyAccount LocalUse",
+		     username => $self->authen->username,
 		     has_zserver => $has_zserver,
 		     localuse => $ar_nfl,
 		     zid => $href->{'zid'},
@@ -476,7 +480,8 @@ sub myaccount_ebsco_process {
     
 
     my $template = $self->load_tmpl('myaccount/ebsco.tmpl');
-    $template->param(username   => $self->authen->username,
+    $template->param(pagetitle => "Maplin-3 MyAccount EBSCO",
+		     username   => $self->authen->username,
 		     edit       => $edit,
 		     lid        => $href->{lid},
 		     ebsco_user => $href->{ebsco_user},
@@ -632,6 +637,7 @@ sub myaccount_reports_process {
 	$filename =~ s|/opt/maplin3/htdocs||;
 	$template = $self->load_tmpl('myaccount/reports/ILL_graphs_report.tmpl');
 	$template->param(
+	    pagetitle => "Maplin-3 MyAccount Reports ILL Graphs",
 	    library => $user,
 	    period => $period,
 	    filename => $filename,
@@ -643,6 +649,7 @@ sub myaccount_reports_process {
     } else {
 	# just show the selection form
 	$template = $self->load_tmpl('myaccount/reports.tmpl');
+	$template->param(pagetitle => "Maplin-3 MyAccount Reports");
     }
 
     return $template->output;
