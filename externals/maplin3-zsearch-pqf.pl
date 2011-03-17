@@ -119,7 +119,8 @@ my $nfl = $dbh->selectall_arrayref( "select zid,tag,subfield,text,atstart from n
 # some must by done synchronously....
 #my @sync_master_list = qw( 40 41 42 43 44 45 46 );
 #my @sync_master_list = qw( 37 38 39 40 41 42 43 22 ); # test box
-my @sync_master_list = ();
+my @sync_master_list = qw( 64 );  # Something weird with Flin Flon - only works if searched by itself...?
+                                  # (perhaps zServer doesn't keep recordset?)
 my %lookup_sync_searchers = map { $_ => 1 } @sync_master_list;
 my @search_parallel;
 my @search_serially;
@@ -809,7 +810,7 @@ sub store_result_set {
 		    }
 		}
 	    } else {
-		$log->log( level => 'debug', message => timestamp() . "Not a real record.  Result set size reported as [" . $rs->size() . "]\n");
+		$log->log( level => 'debug', message => timestamp() . "Result set record $j does not exit???  Result set size reported as [" . $rs->size() . "]\n");
 		#$log->log( level => 'debug', message => timestamp() . $rs->record($j-1)->render() );
 	    }
 
