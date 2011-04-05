@@ -152,7 +152,7 @@
 	  <TMPL_LOOP NAME="holdings">
 	    <p class="search_results_holdings">Location: <TMPL_VAR NAME="location">
 		(<TMPL_VAR NAME="callno">,<TMPL_VAR NAME="collection">)
-		  <em>Availablility: <TMPL_VAR NAME="available"></em>
+		  <em>Availability: <TMPL_VAR NAME="available"></em>
 		  <a href="?rm=request_form&zid=<TMPL_VAR NAME=zid>&id=<TMPL_VAR NAME=record_id>&loc=<TMPL_VAR NAME=location>&callno=<TMPL_VAR NAME=callno>&collection=<TMPL_VAR NAME=collection>">Request this item</a>
 	    </p>
 	    <TMPL_IF NAME="is_net_borrower">
