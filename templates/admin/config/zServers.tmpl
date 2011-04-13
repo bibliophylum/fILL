@@ -30,6 +30,9 @@
 	      <td>Avail?</td>
 	      <td><p style="background: #FFFFF0"><TMPL_VAR NAME="available"></p></td>
 	    </tr><tr>
+	      <td>Alive?</td>
+	      <td><p style="background: #FFFFF0"><TMPL_VAR NAME="alive"></p></td>
+	    </tr><tr>
 	      <td>Holdings</td>
 	      <td>
 		<p style="background: #FFFFF0">
@@ -73,6 +76,14 @@
 	    <input type="hidden" name="disable" value="1">
 	    <input type="submit" name="submit" value="Disable zServer" />
 	  </form>
+
+	  <form METHOD=POST ACTION="">
+	    <input type="hidden" name="rm" value="admin_config_zServers_form">
+	    <input type="hidden" name="id" value="<TMPL_VAR name=id>">
+	    <input type="hidden" name="alive" value="1">
+	    <input type="submit" name="submit" value="Make alive" />
+	  </form>
+
 	  <p>----------------------</p>
 	  <form METHOD=POST ACTION="">
 	    <input type="hidden" name="rm" value="admin_config_zServers_form">

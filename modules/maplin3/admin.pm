@@ -139,22 +139,17 @@ sub admin_config_zServers_process {
 
     if (($q->param('enable')) && ($q->param('id'))) {
 	my $SQL = "UPDATE zservers SET available=1 WHERE id=?";
-
-	$self->dbh->do($SQL,
-		       undef,
-		       $q->param('id')
-	    );
-
+	$self->dbh->do($SQL, undef, $q->param('id'));
     }
 
     if (($q->param('disable')) && ($q->param('id'))) {
 	my $SQL = "UPDATE zservers SET available=0 WHERE id=?";
+	$self->dbh->do($SQL, undef, $q->param('id'));
+    }
 
-	$self->dbh->do($SQL,
-		       undef,
-		       $q->param('id')
-	    );
-
+    if (($q->param('alive')) && ($q->param('id'))) {
+	my $SQL = "UPDATE zservers SET alive=1 WHERE id=?";
+	$self->dbh->do($SQL, undef, $q->param('id'));
     }
 
     if ($q->param('add')) {
@@ -201,7 +196,7 @@ sub admin_config_zServers_process {
 
     }
 
-    my $SQL_getServersList = "SELECT id, name, z3950_connection_string, email_address, available, holdings_tag, holdings_location, holdings_collection, holdings_callno, holdings_avail, holdings_due, handles_holdings_improperly FROM zservers";
+    my $SQL_getServersList = "SELECT id, name, z3950_connection_string, email_address, available, holdings_tag, holdings_location, holdings_collection, holdings_callno, holdings_avail, holdings_due, handles_holdings_improperly, alive FROM zservers";
 
     my $ar_conn = $self->dbh->selectall_arrayref(
 	$SQL_getServersList,
