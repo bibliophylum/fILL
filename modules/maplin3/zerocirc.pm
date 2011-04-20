@@ -149,7 +149,8 @@ sub find_process {
     if ($q->param('id')) {
 #	my $timestamp = $self->dbh->do("SELECT CURRENT_TIMESTAMP");
 	# In MySQL, setting a timestamp field to NULL actually sets it to the current timestamp
-	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=NULL WHERE id=? and claimed_by is null",
+#	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=NULL WHERE id=? and claimed_by is null",
+	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=(SELECT LOCALTIMESTAMP) WHERE id=? and claimed_by is null",
 			     undef,
 			     $self->authen->username,
 			     $q->param('id')
