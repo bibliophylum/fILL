@@ -975,14 +975,14 @@ sub admin_CDT_pull_process {
 	    $date_end,
 	    );
     }
-
+#    print STDERR Dumper($SQL);
     my $template = $self->load_tmpl('admin/CDT_pull.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin CDT Pull',
 		     username => $self->authen->username,
 		     library => $library,
 		     date_start => $date_start,
 		     date_end => $date_end,
-		     num_items => $#{ @$ar_pullList } + 1,
+		     num_items => scalar @$ar_pullList,
 		     pull_list => $ar_pullList
 	);
     return $template->output;
@@ -1053,7 +1053,7 @@ sub admin_CDT_unclaimed_pull_process {
 		);
 	} else {
 	    # Combine NF and T lists
-	    $SQL .= " WHERE (claimed_by is null AND (collection=? or collection=?) AND left(pubdate,4) >= ?)";
+	    $SQL .= " WHERE (claimed_by is null AND (collection=? or collection=?) AND pubdate >= ?)";
 	    $SQL .= " ORDER BY callno, author, title";
 	    $ar_pullList = $self->dbh->selectall_arrayref(
 		$SQL,
@@ -1063,19 +1063,19 @@ sub admin_CDT_unclaimed_pull_process {
 		);
 	}
     } else {
-	$SQL .= " WHERE claimed_by is null AND left(pubdate,4) >= ? ORDER BY collection, callno, author, title";
+	$SQL .= " WHERE claimed_by is null AND pubdate >= ? ORDER BY collection, callno, author, title";
 	$ar_pullList = $self->dbh->selectall_arrayref(
 	    $SQL,
 	    { Slice => {} },
 	    $pd,
 	    );
     }
-
+#    print STDERR Dumper($SQL);
     my $template = $self->load_tmpl('admin/CDT_unclaimed.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin CDT unclaimed',
 		     username => $self->authen->username,
 		     collection => $collection,
-		     num_items => $#{ @$ar_pullList } + 1,
+		     num_items => scalar @$ar_pullList,
 		     pull_list => $ar_pullList
 	);
     return $template->output;
