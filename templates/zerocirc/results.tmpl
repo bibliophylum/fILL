@@ -32,8 +32,9 @@ Collection: <TMPL_VAR NAME=collection>, Call # range <TMPL_VAR NAME=call_start> 
 	<tr>
  	  <td><p style="color: gray"><TMPL_VAR NAME="id"></p></td>
 	  <!-- <td align=right><p><input type="checkbox" name=chk<TMPL_VAR NAME="id">></p></td> --><td><p /></td>
-	  <TMPL_IF NAME="olid">
-	    <td><img src="http://covers.openlibrary.org/b/olid/<TMPL_VAR NAME="olid">-S.jpg"></td>
+	  <TMPL_IF NAME="cover">
+	    <!-- <td><img src="<TMPL_VAR NAME="olid">"></td> -->
+	    <td><img src="<TMPL_VAR NAME="cover">"></td>
 	  <TMPL_ELSE>
 	    <td></td>
 	  </TMPL_IF>

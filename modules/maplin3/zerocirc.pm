@@ -114,6 +114,17 @@ sub browse_results_process {
 	    );
     }
 
+    foreach my $aref_row (@$aref_browselist) {
+	if (defined $aref_row->{olid}) {
+	    # old locally-stored method:
+	    #my $imageFileName = "/img/covers/" . $aref_row->{olid} . ".jpg";
+	    #$aref_row->{cover} = $imageFileName;
+	    
+	    # new direct-to-OpenLibrary method:
+	    $aref_row->{cover} = "http://covers.openlibrary.org/b/olid/" . $aref_row->{olid} . "-S.jpg";
+	}
+    }
+
     my $template = $self->load_tmpl(	    
 	                      'zerocirc/results.tmpl',
 			      cache => 0,
