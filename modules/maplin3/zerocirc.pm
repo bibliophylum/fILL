@@ -91,7 +91,7 @@ sub browse_results_process {
     }
 
     if ($q->param('call_start') && $q->param('call_end')) {
-	$SQL = "select id, callno, pubdate, author, title, claimed_by from zerocirc";
+	$SQL = "select id, callno, pubdate, author, title, olid, claimed_by from zerocirc";
 	$SQL .= " where collection=?";
 	$SQL .= " and callno >= ? and callno <= ?";
 	$SQL .= $order_by;
@@ -104,7 +104,7 @@ sub browse_results_process {
 	    );
 	
     } else {
-	$SQL = "select id, callno, pubdate, author, title, claimed_by from zerocirc";
+	$SQL = "select id, callno, pubdate, author, title, olid, claimed_by from zerocirc";
 	$SQL .= " where collection=?";
 	$SQL .= $order_by;
 	$aref_browselist = $self->dbh->selectall_arrayref(

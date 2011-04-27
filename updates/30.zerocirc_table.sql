@@ -8,6 +8,8 @@ create table zerocirc (
     callno character varying(40),
     title character varying(1024),
     author character varying(1024),
+    isbn character varying(20),
+    olid character varying(50),
     claimed_by character varying(15),
     claimed_timestamp timestamp without time zone
 );

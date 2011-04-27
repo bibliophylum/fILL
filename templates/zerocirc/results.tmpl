@@ -18,6 +18,7 @@ Collection: <TMPL_VAR NAME=collection>, Call # range <TMPL_VAR NAME=call_start> 
     <tr>
       <th>id</th>
       <th><!-- Claim! --> </th>
+      <th>Cover</th>
       <th>Call #</th>
       <th>PubDate</th>
       <th>Author</th>
@@ -31,6 +32,11 @@ Collection: <TMPL_VAR NAME=collection>, Call # range <TMPL_VAR NAME=call_start> 
 	<tr>
  	  <td><p style="color: gray"><TMPL_VAR NAME="id"></p></td>
 	  <!-- <td align=right><p><input type="checkbox" name=chk<TMPL_VAR NAME="id">></p></td> --><td><p /></td>
+	  <TMPL_IF NAME="olid">
+	    <td><img src="http://covers.openlibrary.org/b/olid/<TMPL_VAR NAME="olid">-S.jpg"></td>
+	  <TMPL_ELSE>
+	    <td></td>
+	  </TMPL_IF>
 	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="callno"></p></td>
 	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="pubdate"></p></td>
 	  <td><p style="background: #FFFFF0"><TMPL_VAR NAME="author"></p></td>
