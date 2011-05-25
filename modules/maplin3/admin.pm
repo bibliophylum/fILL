@@ -1092,8 +1092,13 @@ sub admin_reports_CDT_totals_process {
 	"select count(*) as count from zerocirc where claimed_by is not null",
 	);
 
+#    my $ar_counts_by_library = $self->dbh->selectall_arrayref(
+#	"select claimed_by, count(*) as count from zerocirc where claimed_by is not null group by claimed_by",
+#	{ Slice => {} },
+#	);
+
     my $ar_counts_by_library = $self->dbh->selectall_arrayref(
-	"select claimed_by, count(*) as count from zerocirc where claimed_by is not null group by claimed_by",
+	"select library, count(id) from zerocirc as z left join libraries as l on (z.claimed_by = l.name) where z.claimed_timestamp is not null group by l.library order by l.library",
 	{ Slice => {} },
 	);
 
