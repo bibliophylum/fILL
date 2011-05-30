@@ -1112,6 +1112,11 @@ sub admin_reports_CDT_totals_process {
 	'collection',
 	);
 
+    my $ar_counts_by_pubdate = $self->dbh->selectall_arrayref(
+	"select a.pubdate, count(a.id) as pubtotal, temp.selectedtotal from zerocirc as a left join (select pubdate, count(*) as selectedtotal from zerocirc where claimed_timestamp is not null group by pubdate) temp on a.pubdate = temp.pubdate group by a.pubdate, temp.selectedtotal order by a.pubdate desc",
+	{ Slice => {} },
+	);
+
     my @counts_by_collection = ();
     my $sum_claimed = 0;
     my $sum_totals = 0;
@@ -1139,6 +1144,7 @@ sub admin_reports_CDT_totals_process {
 		     total_claimed => $hr_counts->{count},
 		     by_library => $ar_counts_by_library,
 		     by_collection => \@counts_by_collection,
+		     by_pubdate => $ar_counts_by_pubdate,
 	);
     return $template->output;
 }
