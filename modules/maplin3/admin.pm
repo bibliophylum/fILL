@@ -1112,11 +1112,6 @@ sub admin_reports_CDT_totals_process {
 	'collection',
 	);
 
-    my $ar_counts_by_pubdate = $self->dbh->selectall_arrayref(
-	"select a.pubdate, count(a.id) as pubtotal, temp.selectedtotal from zerocirc as a left join (select pubdate, count(*) as selectedtotal from zerocirc where claimed_timestamp is not null group by pubdate) temp on a.pubdate = temp.pubdate group by a.pubdate, temp.selectedtotal order by a.pubdate desc",
-	{ Slice => {} },
-	);
-
     my @counts_by_collection = ();
     my $sum_claimed = 0;
     my $sum_totals = 0;
@@ -1137,6 +1132,14 @@ sub admin_reports_CDT_totals_process {
 				  total => $sum_totals,
 				  percent => sprintf("%3.1f",($sum_claimed / $sum_totals) * 100),
 	 });
+
+    my $ar_counts_by_pubdate = $self->dbh->selectall_arrayref(
+	"select a.pubdate, count(a.id) as pubtotal, temp.selectedtotal from zerocirc as a left join (select pubdate, count(*) as selectedtotal from zerocirc where claimed_timestamp is not null group by pubdate) temp on a.pubdate = temp.pubdate group by a.pubdate, temp.selectedtotal order by a.pubdate desc",
+	{ Slice => {} },
+	);
+    foreach my $pdhref ( @$ar_counts_by_pubdate ) {
+	$pdhref->{percent} = sprintf("%3.1f", (($pdhref->{selectedtotal} || 0) / $pdhref->{pubtotal}) * 100);
+    }
 
     my $template = $self->load_tmpl('admin/reports/CDT_totals.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin Reports CDT totals',

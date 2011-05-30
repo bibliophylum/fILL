@@ -42,13 +42,14 @@
 <h3>By publication date:</h3>
 <table>
   <tr>
-    <td>Date</td><td>Selected</td><td>Total</td>
+    <td>Publication</td><td>Selected</td><td>Total</td><td align=right>% claimed</td>
   </tr>
   <TMPL_LOOP NAME="by_pubdate">
     <tr>
       <td><TMPL_VAR NAME="pubdate"></td>
       <td align=right><TMPL_VAR NAME="selectedtotal"></td>
       <td align=right><TMPL_VAR NAME="pubtotal"></td>
+      <td align=right><TMPL_VAR NAME="percent"></td>
     </tr>
   </TMPL_LOOP>
 </table>
