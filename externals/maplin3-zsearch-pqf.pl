@@ -67,7 +67,7 @@ if (DEBUG) {
     }
 }
 
-#my $enable_WPL_duplicate_filter = 0;  # turned off
+my $enable_WPL_duplicate_filter = 1;  # turned on
 
 $pqf =~ s/^\'(.*)\'$/$1/;
 
@@ -136,13 +136,13 @@ serial_search(  $sessionid, $pqf, \@search_serially) if (@search_serially);
 
 # Back in the old days, we'd remove WPL items if a rural library had a copy...
 #
-#if ($enable_WPL_duplicate_filter) {
-#    # Remove WPL duplicates
-#    $SQL = "CREATE TEMPORARY TABLE wpl_duplicates SELECT isbn FROM marc where sessionid=? and char_length(isbn) > 0 and zid <> ?";
-#    my $rows = $dbh->do($SQL, undef, $sessionid, 28);
-#    $SQL = "DELETE FROM marc WHERE (sessionid=? and zid=? and isbn in (select isbn from wpl_duplicates))";
-#    $rows = $dbh->do($SQL, undef, $sessionid, 28);
-#}
+if ($enable_WPL_duplicate_filter) {
+    # Remove WPL duplicates
+    $SQL = "CREATE TEMPORARY TABLE wpl_duplicates SELECT isbn FROM marc where sessionid=? and char_length(isbn) > 0 and zid <> ?";
+    my $rows = $dbh->do($SQL, undef, $sessionid, 28);
+    $SQL = "DELETE FROM marc WHERE (sessionid=? and zid=? and isbn in (select isbn from wpl_duplicates))";
+    $rows = $dbh->do($SQL, undef, $sessionid, 28);
+}
 
 
 # Toast the sessionid/pid db entry
