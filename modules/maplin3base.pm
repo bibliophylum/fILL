@@ -22,6 +22,10 @@ my %config = (
     STORE          => 'Session',
     POST_LOGIN_RUNMODE => 'welcome',
     LOGOUT_RUNMODE => 'logged_out',
+    LOGIN_FORM => { 
+	TITLE => 'Sign in to Maplin',
+	COMMENT => 'Reminder: When placing a request please select the library that is the highest Net-Borrower.  This helps make the interlibrary loan workload fair for all libraries.',
+    }
     );
 
 maplin3base->authen->config(%config);
