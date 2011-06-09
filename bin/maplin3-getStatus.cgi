@@ -23,7 +23,7 @@ my $aref_status = $dbh->selectall_arrayref("select s.sessionid, s.zid, s.event, 
 my $html = "<table><tr><td><strong>zServer</strong></td><td><strong>Status</strong></td></tr>";
 my $is_still_processing = 0;
 foreach my $href (@$aref_status) {
-    $is_still_processing = 1 if (($href->{event} != 99) && ($href->{event} != 4));
+    $is_still_processing = 1 if (($href->{event} != 99) && ($href->{event} != 4) && ($href->{event} != 10000));
     $html .= "<tr><td>" . $href->{name} . "</td><td>" . $href->{msg} . "</td></tr>";
 }
 $html .= "</table>";

@@ -814,6 +814,14 @@ sub results_process {
 	};
     }
 
+
+    # sort each combined-record's holdings by net-borrower/net-lender status
+    foreach my $bib (@bibs) {
+	# do some magic with the $bib->{holdings} array
+	my @sorted = sort { $b->{ sortable_nbnl } <=> $a->{ sortable_nbnl } } @{$bib->{holdings}};
+	$bib->{holdings} = \@sorted;
+    }
+
     # cache control - some systems (UofW) seem to have a web cache system in place
     # which ends up showing old search results after new searches...
     use POSIX qw( strftime );
@@ -1460,6 +1468,7 @@ sub _build_holdings {
 		my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
 		$item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 		$item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
+		$item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
 		push @bibholdings, $item_record_href;
 	    }
@@ -1478,6 +1487,7 @@ sub _build_holdings {
 	    my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
 	    $item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 	    $item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
+	    $item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
 	    push @bibholdings, $item_record_href;
 	}
