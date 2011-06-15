@@ -1,0 +1,42 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div id="main">
+
+  <div id="leftcontent"></div>
+
+  <div id="middlecontent">
+    <h3>Due to the ongoing labour dispute at Canada Post, Maplin requesting has been temporarily suspended</h3>
+    <p><br />Public libraries are encouraged to continue to use the search and discovery features of Maplin;
+      in consultation with the Executive Council of the Manitoba Librarians' Advisory Groups, the Public
+      Library Services Branch has disabled the request functionality.</p>
+    <p><br />Once Canada Post services are restored the Public Library Services Branch will reactivate this feature.</p>
+    <br />
+    <p><a href="?rm=results_form">Return to search results</a></p>
+    
+  </div>
+
+  <div id="rightcontent"></div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

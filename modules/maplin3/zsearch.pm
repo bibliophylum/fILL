@@ -22,6 +22,7 @@ sub setup {
 	'show_marc_form'             => 'show_marc_process',
 	'request_form'               => 'request_process',
 	'send_email_form'            => 'send_email_process',
+	'canadapost_form'            => 'canadapost_process',
 	);
 }
 
@@ -1160,6 +1161,27 @@ sub send_email_process {
 		     FAS => $fas,
 		     SENT => 1,
 		     ERROR_SENDMAIL => $error_sendmail,
+	);
+
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+# Canada Post is on strike....
+#
+sub canadapost_process {
+    my $self = shift;
+    my $q          = $self->query;
+    my $zid        = $q->param("zid");
+    my $record_id  = $q->param("id");
+    my $loc        = $q->param("loc");
+    my $callno     = $q->param("callno");
+    my $collection = $q->param("collection");
+
+    my $template = $self->load_tmpl('search/canada_post.tmpl');  # CP has gone on strike....
+
+    $template->param(pagetitle => "Maplin-3 Request",
+		     username => $self->authen->username,
 	);
 
     return $template->output;
