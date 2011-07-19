@@ -119,8 +119,9 @@ my $nfl = $dbh->selectall_arrayref( "select zid,tag,subfield,text,atstart from n
 # some must by done synchronously....
 #my @sync_master_list = qw( 40 41 42 43 44 45 46 );
 #my @sync_master_list = qw( 37 38 39 40 41 42 43 22 ); # test box
-my @sync_master_list = qw( 64 );  # Something weird with Flin Flon - only works if searched by itself...?
-                                  # (perhaps zServer doesn't keep recordset?)
+my @sync_master_list = qw( 64 66 );  # Something weird with Flin Flon - only works if searched by itself...?
+                                     # (perhaps zServer doesn't keep recordset?)
+                                     # Border - Elkhorn as well.
 my %lookup_sync_searchers = map { $_ => 1 } @sync_master_list;
 my @search_parallel;
 my @search_serially;
@@ -589,8 +590,12 @@ sub clean_up_and_move_on {
 	    
 	}
 	# explicitly close connections
-	$z->[$i]->destroy();
-	$log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
+	if ($z->[$i]) {
+	    $z->[$i]->destroy();
+	    $log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
+	} else {
+	    $log->log( level => 'info', message => timestamp() . "can't destroy connection [$i] - doesn't exist!\n");
+	}	    
     }
 }
 
@@ -838,7 +843,13 @@ sub store_result_set {
 	     $sessionid . '-' . $$
 	);
 
-    $rs->destroy();  # clean up after ourselves.
+#    $rs->destroy();  # clean up after ourselves.
+    if ($rs) {
+	$rs->destroy();
+	$log->log( level => 'info', message => timestamp() . "result set removed\n");
+    } else {
+	$log->log( level => 'info', message => timestamp() . "can't remove result set - doesn't exist!\n");
+    }	    
 }
 
 
