@@ -120,8 +120,8 @@ my $nfl = $dbh->selectall_arrayref( "select zid,tag,subfield,text,atstart from n
 #my @sync_master_list = qw( 40 41 42 43 44 45 46 );
 #my @sync_master_list = qw( 37 38 39 40 41 42 43 22 ); # test box
 my @sync_master_list = qw( 64 66 );  # Something weird with Flin Flon - only works if searched by itself...?
-                                     # (perhaps zServer doesn't keep recordset?)
-                                     # Border - Elkhorn as well.
+                                  # (perhaps zServer doesn't keep recordset?)
+                                  # and Border - Elkhorn
 my %lookup_sync_searchers = map { $_ => 1 } @sync_master_list;
 my @search_parallel;
 my @search_serially;
@@ -148,13 +148,15 @@ if ($enable_WPL_duplicate_filter) {
 
 # Toast the sessionid/pid db entry
 $log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in search_pid table\n" );
-$dbh->do("DELETE FROM search_pid WHERE sessionid=?",
+my $rvToastPIDs = $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 	 undef,
 	 $sessionid,
     );
+$log->log( level => 'debug', message => timestamp() . "toast returned $rvToastPIDs (rows affected)\n" );
 
 my $stats_end = time;
 $statistics{duration} = $stats_end - $stats_start;
+$log->log( level => 'debug', message => timestamp() . "Update search_statistics: duration\n" );
 $dbh->do("UPDATE search_statistics SET duration=? WHERE sessionid=?",
 	 undef,
 	 $statistics{duration},
@@ -163,6 +165,8 @@ $dbh->do("UPDATE search_statistics SET duration=? WHERE sessionid=?",
 
 # Disconnect from the database.
 $dbh->disconnect();
+
+$log->log( level => 'debug', message => timestamp() . "done.\n" );
 
 #if (-e '/tmp/maplin.zsearch') {
 #    unlink '/tmp/maplin.zsearch';
@@ -843,13 +847,7 @@ sub store_result_set {
 	     $sessionid . '-' . $$
 	);
 
-#    $rs->destroy();  # clean up after ourselves.
-    if ($rs) {
-	$rs->destroy();
-	$log->log( level => 'info', message => timestamp() . "result set removed\n");
-    } else {
-	$log->log( level => 'info', message => timestamp() . "can't remove result set - doesn't exist!\n");
-    }	    
+    $rs->destroy();  # clean up after ourselves.
 }
 
 
