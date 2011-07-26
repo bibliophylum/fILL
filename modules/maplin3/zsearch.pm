@@ -22,6 +22,7 @@ sub setup {
 	'show_marc_form'             => 'show_marc_process',
 	'request_form'               => 'request_process',
 	'send_email_form'            => 'send_email_process',
+	'canadapost_form'            => 'canadapost_process',
 	);
 }
 
@@ -814,6 +815,14 @@ sub results_process {
 	};
     }
 
+
+#    # sort each combined-record's holdings by net-borrower/net-lender status
+#    foreach my $bib (@bibs) {
+#	# do some magic with the $bib->{holdings} array
+#	my @sorted = sort { $b->{ sortable_nbnl } <=> $a->{ sortable_nbnl } } @{$bib->{holdings}};
+#	$bib->{holdings} = \@sorted;
+#    }
+
     # cache control - some systems (UofW) seem to have a web cache system in place
     # which ends up showing old search results after new searches...
     use POSIX qw( strftime );
@@ -1157,6 +1166,27 @@ sub send_email_process {
     return $template->output;
 }
 
+#--------------------------------------------------------------------------------
+# Canada Post is on strike....
+#
+sub canadapost_process {
+    my $self = shift;
+    my $q          = $self->query;
+    my $zid        = $q->param("zid");
+    my $record_id  = $q->param("id");
+    my $loc        = $q->param("loc");
+    my $callno     = $q->param("callno");
+    my $collection = $q->param("collection");
+
+    my $template = $self->load_tmpl('search/canada_post.tmpl');  # CP has gone on strike....
+
+    $template->param(pagetitle => "Maplin-3 Request",
+		     username => $self->authen->username,
+	);
+
+    return $template->output;
+}
+
 
 #--------------------------------------------------------------------------------
 #
@@ -1460,6 +1490,7 @@ sub _build_holdings {
 		my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
 		$item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 		$item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
+		$item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
 		push @bibholdings, $item_record_href;
 	    }
@@ -1478,6 +1509,7 @@ sub _build_holdings {
 	    my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
 	    $item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 	    $item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
+	    $item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
 	    push @bibholdings, $item_record_href;
 	}

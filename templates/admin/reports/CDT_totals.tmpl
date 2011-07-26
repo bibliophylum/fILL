@@ -18,7 +18,7 @@
   </tr>
   <TMPL_LOOP NAME="by_library">
     <tr>
-      <td><TMPL_VAR NAME="claimed_by"></td>
+      <td><TMPL_VAR NAME="library"></td>
       <td><TMPL_VAR NAME="count"></td>
     </tr>
   </TMPL_LOOP>
@@ -32,8 +32,23 @@
   <TMPL_LOOP NAME="by_collection">
     <tr>
       <td><TMPL_VAR NAME="collection"></td>
-      <td><TMPL_VAR NAME="claimed"></td>
-      <td>of <TMPL_VAR NAME="total"></td>
+      <td align=right><TMPL_VAR NAME="claimed"></td>
+      <td align=right><TMPL_VAR NAME="total"></td>
+      <td align=right><TMPL_VAR NAME="percent"></td>
+    </tr>
+  </TMPL_LOOP>
+</table>
+<hr>
+<h3>By publication date:</h3>
+<table>
+  <tr>
+    <td>Publication</td><td>Selected</td><td>Total</td><td align=right>% claimed</td>
+  </tr>
+  <TMPL_LOOP NAME="by_pubdate">
+    <tr>
+      <td><TMPL_VAR NAME="pubdate"></td>
+      <td align=right><TMPL_VAR NAME="selectedtotal"></td>
+      <td align=right><TMPL_VAR NAME="pubtotal"></td>
       <td align=right><TMPL_VAR NAME="percent"></td>
     </tr>
   </TMPL_LOOP>

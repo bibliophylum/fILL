@@ -91,7 +91,7 @@ sub browse_results_process {
     }
 
     if ($q->param('call_start') && $q->param('call_end')) {
-	$SQL = "select id, callno, pubdate, author, title, claimed_by from zerocirc";
+	$SQL = "select id, callno, pubdate, author, title, olid, claimed_by from zerocirc";
 	$SQL .= " where collection=?";
 	$SQL .= " and callno >= ? and callno <= ?";
 	$SQL .= $order_by;
@@ -104,7 +104,7 @@ sub browse_results_process {
 	    );
 	
     } else {
-	$SQL = "select id, callno, pubdate, author, title, claimed_by from zerocirc";
+	$SQL = "select id, callno, pubdate, author, title, olid, claimed_by from zerocirc";
 	$SQL .= " where collection=?";
 	$SQL .= $order_by;
 	$aref_browselist = $self->dbh->selectall_arrayref(
@@ -112,6 +112,17 @@ sub browse_results_process {
 	    { Slice => {} },
 	    $q->param('collection')
 	    );
+    }
+
+    foreach my $aref_row (@$aref_browselist) {
+	if (defined $aref_row->{olid}) {
+	    # old locally-stored method:
+	    #my $imageFileName = "/img/covers/" . $aref_row->{olid} . ".jpg";
+	    #$aref_row->{cover} = $imageFileName;
+	    
+	    # new direct-to-OpenLibrary method:
+	    $aref_row->{cover} = "http://covers.openlibrary.org/b/olid/" . $aref_row->{olid} . "-S.jpg";
+	}
     }
 
     my $template = $self->load_tmpl(	    
@@ -149,7 +160,8 @@ sub find_process {
     if ($q->param('id')) {
 #	my $timestamp = $self->dbh->do("SELECT CURRENT_TIMESTAMP");
 	# In MySQL, setting a timestamp field to NULL actually sets it to the current timestamp
-	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=NULL WHERE id=? and claimed_by is null",
+#	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=NULL WHERE id=? and claimed_by is null",
+	$ok = $self->dbh->do("UPDATE zerocirc SET claimed_by=?, claimed_timestamp=(SELECT LOCALTIMESTAMP) WHERE id=? and claimed_by is null",
 			     undef,
 			     $self->authen->username,
 			     $q->param('id')

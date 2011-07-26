@@ -975,14 +975,14 @@ sub admin_CDT_pull_process {
 	    $date_end,
 	    );
     }
-
+#    print STDERR Dumper($SQL);
     my $template = $self->load_tmpl('admin/CDT_pull.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin CDT Pull',
 		     username => $self->authen->username,
 		     library => $library,
 		     date_start => $date_start,
 		     date_end => $date_end,
-		     num_items => $#{ @$ar_pullList } + 1,
+		     num_items => scalar @$ar_pullList,
 		     pull_list => $ar_pullList
 	);
     return $template->output;
@@ -1053,7 +1053,7 @@ sub admin_CDT_unclaimed_pull_process {
 		);
 	} else {
 	    # Combine NF and T lists
-	    $SQL .= " WHERE (claimed_by is null AND (collection=? or collection=?) AND left(pubdate,4) >= ?)";
+	    $SQL .= " WHERE (claimed_by is null AND (collection=? or collection=?) AND pubdate >= ?)";
 	    $SQL .= " ORDER BY callno, author, title";
 	    $ar_pullList = $self->dbh->selectall_arrayref(
 		$SQL,
@@ -1063,19 +1063,19 @@ sub admin_CDT_unclaimed_pull_process {
 		);
 	}
     } else {
-	$SQL .= " WHERE claimed_by is null AND left(pubdate,4) >= ? ORDER BY collection, callno, author, title";
+	$SQL .= " WHERE claimed_by is null AND pubdate >= ? ORDER BY collection, callno, author, title";
 	$ar_pullList = $self->dbh->selectall_arrayref(
 	    $SQL,
 	    { Slice => {} },
 	    $pd,
 	    );
     }
-
+#    print STDERR Dumper($SQL);
     my $template = $self->load_tmpl('admin/CDT_unclaimed.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin CDT unclaimed',
 		     username => $self->authen->username,
 		     collection => $collection,
-		     num_items => $#{ @$ar_pullList } + 1,
+		     num_items => scalar @$ar_pullList,
 		     pull_list => $ar_pullList
 	);
     return $template->output;
@@ -1092,8 +1092,13 @@ sub admin_reports_CDT_totals_process {
 	"select count(*) as count from zerocirc where claimed_by is not null",
 	);
 
+#    my $ar_counts_by_library = $self->dbh->selectall_arrayref(
+#	"select claimed_by, count(*) as count from zerocirc where claimed_by is not null group by claimed_by",
+#	{ Slice => {} },
+#	);
+
     my $ar_counts_by_library = $self->dbh->selectall_arrayref(
-	"select claimed_by, count(*) as count from zerocirc where claimed_by is not null group by claimed_by",
+	"select library, count(id) from zerocirc as z left join libraries as l on (z.claimed_by = l.name) where z.claimed_timestamp is not null group by l.library order by l.library",
 	{ Slice => {} },
 	);
 
@@ -1128,12 +1133,21 @@ sub admin_reports_CDT_totals_process {
 				  percent => sprintf("%3.1f",($sum_claimed / $sum_totals) * 100),
 	 });
 
+    my $ar_counts_by_pubdate = $self->dbh->selectall_arrayref(
+	"select a.pubdate, count(a.id) as pubtotal, temp.selectedtotal from zerocirc as a left join (select pubdate, count(*) as selectedtotal from zerocirc where claimed_timestamp is not null group by pubdate) temp on a.pubdate = temp.pubdate group by a.pubdate, temp.selectedtotal order by a.pubdate desc",
+	{ Slice => {} },
+	);
+    foreach my $pdhref ( @$ar_counts_by_pubdate ) {
+	$pdhref->{percent} = sprintf("%3.1f", (($pdhref->{selectedtotal} || 0) / $pdhref->{pubtotal}) * 100);
+    }
+
     my $template = $self->load_tmpl('admin/reports/CDT_totals.tmpl');
     $template->param(pagetitle => 'Maplin-3 Admin Reports CDT totals',
 		     username => $self->authen->username,
 		     total_claimed => $hr_counts->{count},
 		     by_library => $ar_counts_by_library,
 		     by_collection => \@counts_by_collection,
+		     by_pubdate => $ar_counts_by_pubdate,
 	);
     return $template->output;
 }
