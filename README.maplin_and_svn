@@ -1,0 +1,50 @@
+Setting up your Maplin development environment
+==============================================
+
+0. Subversion with SSH on Debian
+
+http://jimmyg.org/blog/2007/subversion-over-svnssh-on-debian.html
+
+
+1. To check out the Maplin repository:
+
+cd $HOME/prj
+svn co svn+ssh://david@svn-mintaka.gotdns.org/var/local/svn/maplin maplin
+
+This will check out the repo into $HOME/prj/maplin
+
+
+2. To update your working copy from the repo:
+
+cd $HOME/prj/maplin
+svn up
+
+
+3. Creating a branch (eg: "collection-development-tool")
+
+svn copy svn+ssh://david@svn-mintaka.gotdns.org/var/local/svn/maplin/trunk svn+ssh://david@svn-mintaka.gotdns.org/var/local/svn/maplin/branches/collection-development-tool -m 'Creating CDT branch of maplin/trunk'
+
+3.1 Checking out a branch (eg: "collection-development-tool")
+
+cd $HOME/prj/maplin/branches
+svn co svn+ssh://david@svn-mintaka.gotdns.org/var/local/svn/maplin/branches/collection-development-tool
+
+3.2 Merging changes back into trunk
+
+If you're working on a branch (say, 'branches/requesting-AV-blocks'), and need to merge any trunk changes into your branch:
+3.2.1. From your branch (eg: maplin/branches/requesting-AV-blocks):
+   svn log --stop-on-copy   
+   (displays the revision # for when the branch was created)
+   (in this example, it was copied from trunk at rev #3)
+
+3.2.2. From trunk, find out the current revision by doing:
+   svn update
+   (in this example, trunk is at rev #18)
+
+3.2.3. Merge the trunk changes into your branch:
+   ~/prj/maplin/branches/requesting-AV-blocks$ svn merge -r 3:18 svn+ssh://david@svn-mintaka.gotdns.org/var/local/svn/maplin/trunk
+
+3.2.4. Handle any problem merges.
+
+3.2.5. Check your (now-merged) branch in:
+   svn ci -m "Merged trunk changes r3:18 into my branch"
