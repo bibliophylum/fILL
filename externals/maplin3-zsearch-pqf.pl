@@ -67,7 +67,7 @@ if (DEBUG) {
     }
 }
 
-#my $enable_WPL_duplicate_filter = 0;  # turned off
+my $enable_WPL_duplicate_filter = 1;  # turned on
 
 $pqf =~ s/^\'(.*)\'$/$1/;
 
@@ -119,8 +119,9 @@ my $nfl = $dbh->selectall_arrayref( "select zid,tag,subfield,text,atstart from n
 # some must by done synchronously....
 #my @sync_master_list = qw( 40 41 42 43 44 45 46 );
 #my @sync_master_list = qw( 37 38 39 40 41 42 43 22 ); # test box
-my @sync_master_list = qw( 64 );  # Something weird with Flin Flon - only works if searched by itself...?
+my @sync_master_list = qw( 64 66 );  # Something weird with Flin Flon - only works if searched by itself...?
                                   # (perhaps zServer doesn't keep recordset?)
+                                  # and Border - Elkhorn
 my %lookup_sync_searchers = map { $_ => 1 } @sync_master_list;
 my @search_parallel;
 my @search_serially;
@@ -136,24 +137,26 @@ serial_search(  $sessionid, $pqf, \@search_serially) if (@search_serially);
 
 # Back in the old days, we'd remove WPL items if a rural library had a copy...
 #
-#if ($enable_WPL_duplicate_filter) {
-#    # Remove WPL duplicates
-#    $SQL = "CREATE TEMPORARY TABLE wpl_duplicates SELECT isbn FROM marc where sessionid=? and char_length(isbn) > 0 and zid <> ?";
-#    my $rows = $dbh->do($SQL, undef, $sessionid, 28);
-#    $SQL = "DELETE FROM marc WHERE (sessionid=? and zid=? and isbn in (select isbn from wpl_duplicates))";
-#    $rows = $dbh->do($SQL, undef, $sessionid, 28);
-#}
+if ($enable_WPL_duplicate_filter) {
+    # Remove WPL duplicates
+    $SQL = "CREATE TEMPORARY TABLE wpl_duplicates AS SELECT isbn FROM marc where sessionid=? and char_length(isbn) > 0 and zid <> ?";
+    my $rows = $dbh->do($SQL, undef, $sessionid, 28);
+    $SQL = "DELETE FROM marc WHERE (sessionid=? and zid=? and isbn in (select isbn from wpl_duplicates))";
+    $rows = $dbh->do($SQL, undef, $sessionid, 28);
+}
 
 
 # Toast the sessionid/pid db entry
 $log->log( level => 'debug', message => timestamp() . "toast sessionid/pid in search_pid table\n" );
-$dbh->do("DELETE FROM search_pid WHERE sessionid=?",
+my $rvToastPIDs = $dbh->do("DELETE FROM search_pid WHERE sessionid=?",
 	 undef,
 	 $sessionid,
     );
+$log->log( level => 'debug', message => timestamp() . "toast returned $rvToastPIDs (rows affected)\n" );
 
 my $stats_end = time;
 $statistics{duration} = $stats_end - $stats_start;
+$log->log( level => 'debug', message => timestamp() . "Update search_statistics: duration\n" );
 $dbh->do("UPDATE search_statistics SET duration=? WHERE sessionid=?",
 	 undef,
 	 $statistics{duration},
@@ -162,6 +165,8 @@ $dbh->do("UPDATE search_statistics SET duration=? WHERE sessionid=?",
 
 # Disconnect from the database.
 $dbh->disconnect();
+
+$log->log( level => 'debug', message => timestamp() . "done.\n" );
 
 #if (-e '/tmp/maplin.zsearch') {
 #    unlink '/tmp/maplin.zsearch';
@@ -589,8 +594,12 @@ sub clean_up_and_move_on {
 	    
 	}
 	# explicitly close connections
-	$z->[$i]->destroy();
-	$log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
+	if ($z->[$i]) {
+	    $z->[$i]->destroy();
+	    $log->log( level => 'info', message => timestamp() . "connection [$i] closed\n");
+	} else {
+	    $log->log( level => 'info', message => timestamp() . "can't destroy connection [$i] - doesn't exist!\n");
+	}	    
     }
 }
 
