@@ -319,11 +319,11 @@ sub handle_spray_events {
 	    $size = $r->[$i-1]->size();
 	    $ar_conn->[$i-1]{hits} = $size;
 
-	    $log->log( level => 'info', message => timestamp() . "[$ar_conn->[$i-1]{name}] $size hits.\n" );
+	    $log->log( level => 'info', message => timestamp() . "[$ar_conn->[$i-1]{name}] $size hits\n" );
 	    $dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 		     undef,
 		     $ev,
-		     "$size hits.",
+		     "$size hits",
 		     $sessionid,
 		     $ar_conn->[$i-1]{id},
 		     );
@@ -552,7 +552,7 @@ sub clean_up_and_move_on {
 		$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 			 undef,
 			 99,
-			 $ar_conn->[$i]{hits} . " hits.  Records acquired.",
+			 $ar_conn->[$i]{hits} . " hits.  Records acquired",
 			 $sessionid,
 			 $ar_conn->[$i]{id},
 		    );
@@ -678,7 +678,7 @@ sub serialized_search {
 		$dbh->do("UPDATE status_check SET event=?, msg=? WHERE ((sessionid=?) AND (zid=?))",
 			 undef,
 			 ZOOM::Event::ZEND,
-			 $conn_info->{hits} . " hits.",
+			 $conn_info->{hits} . " hits",
 			 $sessionid,
 			 $conn_info->{id},
 		    );

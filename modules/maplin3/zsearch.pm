@@ -160,7 +160,8 @@ sub search_simple_ajax_process {
                         )),
 			);
 		    
-		    my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
+		    #my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
+		    my $template = $self->load_tmpl('search/searching_with_status.tmpl');	
 		    $template->param( pagetitle => "Maplin-3 Searching...",
 			              username => $self->authen->username,
 				      sessionid => $session,
@@ -419,7 +420,8 @@ sub search_common_process {
                         )),
 			);
 		    
-		    my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
+#		    my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
+		    my $template = $self->load_tmpl('search/searching_with_status.tmpl');	
 		    $template->param( pagetitle => "Maplin-3 Searching...",
 				      username => $self->authen->username,
 				      sessionid => $session,
