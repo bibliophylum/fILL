@@ -377,6 +377,12 @@ function renderDetails(data, marker)
     if (data["location"][0]["@name"] != undefined)
         details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][0]["@name"] + " (" +data["location"][0]["@id"] + ")" + '</td></tr>';
 
+    if (data["location"][0]["@name"] == 'South Central Regional Library (Evergreen)')
+	details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&t=ducks&tp=keyword&l=102&d=2" target="_blank">South Central Regional Library</a>'  + '</td></tr>';
+
+//    if (data["location"][0]["@requestby"] == 'Login')
+//	details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
+
     details += '</table></div>';
     return details;
 }
