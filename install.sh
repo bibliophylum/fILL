@@ -22,6 +22,17 @@ sudo chgrp www-data /opt/maplin3/htdocs/tmp
 sudo chmod g+w /opt/maplin3/htdocs/tmp
 echo Creating symlink to apache sites-available
 sudo ln -s /opt/maplin3/conf/maplin3.conf /etc/apache2/sites-available/maplin3.conf
+echo Stopping pazpar2 daemon
+sudo kill `cat /var/run/pazpar2.pid`
+echo Removing old pazpar2 settings
+sudo rm /etc/pazpar2/settings/*
+echo Copying pazpar2 settings
+sudo cp /opt/maplin3/pazpar2_settings/* /etc/pazpar2/settings
+echo Clearing pazpar2 log
+sudo rm /var/log/pazpar2.log
+sudo touch /var/log/pazpar2.log
+echo Restarting pazpar2 daemon
+sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 echo Enabling site...
 sudo a2ensite maplin3.conf
 echo Reloading apache...
