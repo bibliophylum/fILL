@@ -372,16 +372,24 @@ function renderDetails(data, marker)
         details += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
-    if (data["location"][0]["md-subject"] != undefined)
-        details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][0]["md-subject"] + '</td></tr>';
-    if (data["location"][0]["@name"] != undefined)
-        details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][0]["@name"] + " (" +data["location"][0]["@id"] + ")" + '</td></tr>';
 
-    if (data["location"][0]["@name"] == 'South Central Regional Library (Evergreen)')
-	details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&t=ducks&tp=keyword&l=102&d=2" target="_blank">South Central Regional Library</a>'  + '</td></tr>';
+    var len=data["location"].length;
+    for (var i=0; i<len; i++) {
 
-//    if (data["location"][0]["@requestby"] == 'Login')
-//	details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
+	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
+	if (data["location"][i]["md-subject"] != undefined)
+            details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
+	if (data["location"][i]["@name"] != undefined)
+            details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
+
+	if (data["location"][i]["@name"] == 'South Central Regional Library (Evergreen)')
+	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&t=ducks&tp=keyword&l=102&d=2" target="_blank">South Central Regional Library</a>'  + '</td></tr>';
+
+// Doesn't work:
+//	if (data["location"][0]["@requestby"] == 'Login')
+//	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
+
+    }
 
     details += '</table></div>';
     return details;

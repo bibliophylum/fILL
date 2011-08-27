@@ -4,6 +4,37 @@ david@acer-laptop:/etc/pazpar2/services-available$ sudo kill `cat /var/run/pazpa
 Starting server:
 david@acer-laptop:/etc/pazpar2/services-available$ sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
+-----------------------------------------------------------------------------
+Installing pazpar2
+
+Which version of (k)ubuntu?
+$ cat /etc/issue
+Ubuntu 11.04 \n \l
+
+$ grep CODENAME /etc/lsb-release
+DISTRIB_CODENAME=natty
+
+Ubuntu users can add the following two lines in /etc/apt/sources.list
+and use Ubuntus own package management tools apt-get, aptitude, etc.
+Replace intrepid with your version of Ubuntu. Use 
+  grep CODENAME /etc/lsb-release
+to determine your Ubuntu release.
+
+deb http://ftp.indexdata.dk/ubuntu intrepid main
+deb-src http://ftp.indexdata.dk/ubuntu intrepid main
+
+These packages are signed with a key you can install as follows:
+ wget http://ftp.indexdata.dk/debian/indexdata.asc
+ sudo apt-key add indexdata.asc
+
+
+Then use your system's package management to install:
+pazpar2
+pazpar2-apache2
+pazpar2-doc
+pazpar2-js
+pazpar2-jsdemo
+pazpar2-test1
 
 -----------------------------------------------------------------------------
 targets:

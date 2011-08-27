@@ -27,10 +27,15 @@ sudo kill `cat /var/run/pazpar2.pid`
 echo Removing old pazpar2 settings
 sudo rm /etc/pazpar2/settings/*
 echo Copying pazpar2 settings
-sudo cp /opt/maplin3/pazpar2_settings/* /etc/pazpar2/settings
+sudo cp /opt/maplin3/pazpar2/settings/* /etc/pazpar2/settings
+echo Updating pazpar2 services
+sudo unlink /etc/pazpar2/services-enabled/maplin.xml
+sudo cp /opt/maplin3/pazpar2/maplin.xml /etc/pazpar2/services-available/maplin.xml
+sudo ln -s /etc/pazpar2/services-available/maplin.xml /etc/pazpar2/services-enabled/maplin.xml
 echo Clearing pazpar2 log
 sudo rm /var/log/pazpar2.log
 sudo touch /var/log/pazpar2.log
+sudo ln -s /var/log/pazpar2.log /opt/maplin3/logs/pazpar2.log
 echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 echo Enabling site...

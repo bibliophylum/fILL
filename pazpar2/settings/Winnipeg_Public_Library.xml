@@ -28,4 +28,9 @@
   <set name="pz:nativesyntax" value="iso2709"/>
   <set name="pz:xslt" value="marc21.xsl"/>
 
+  <!-- Maplin settings -->
+  <!-- just testing... David -->
+  <set name="maplin:requestby" value="Login"/>
+  <set name="maplin:requesturl" value="www.google.ca"/>
+
 </settings>
