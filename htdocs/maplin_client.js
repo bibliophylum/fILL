@@ -377,6 +377,8 @@ function renderDetails(data, marker)
     for (var i=0; i<len; i++) {
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
+	if (data["location"][i]["md-medium"] != undefined)
+	    details += '<tr><td><b>Medium</b></td><td><b>:</b> ' + data["location"][i]["md-medium"] + '</td></tr>';
 	if (data["location"][i]["md-subject"] != undefined)
             details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
 	if (data["location"][i]["@name"] != undefined)
