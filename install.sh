@@ -32,6 +32,8 @@ echo Updating pazpar2 services
 sudo unlink /etc/pazpar2/services-enabled/maplin.xml
 sudo cp /opt/maplin3/pazpar2/maplin.xml /etc/pazpar2/services-available/maplin.xml
 sudo ln -s /etc/pazpar2/services-available/maplin.xml /etc/pazpar2/services-enabled/maplin.xml
+echo Updating pazpar2 xslt
+sudo cp /opt/maplin3/pazpar2/maplin.xsl /etc/pazpar2/maplin.xsl
 echo Clearing pazpar2 log
 sudo rm /var/log/pazpar2.log
 sudo touch /var/log/pazpar2.log

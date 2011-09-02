@@ -391,6 +391,8 @@ function renderDetails(data, marker)
 //	if (data["location"][0]["@requestby"] == 'Login')
 //	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
 
+	if (data["location"][i]["md-requesturl"] != undefined)
+	    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '" target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
     }
 
     details += '</table></div>';

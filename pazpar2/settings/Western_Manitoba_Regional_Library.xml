@@ -26,10 +26,10 @@
   <!-- Result normalization settings -->
 
   <set name="pz:nativesyntax" value="iso2709"/>
-  <set name="pz:xslt" value="marc21.xsl"/>
+  <set name="pz:xslt" value="maplin.xsl"/>
 
   <!-- David testing settings -->
-  <set name="maplin:requestby" value="Login"/>
-  <set name="maplin:requesturl" value="http://www.google.ca"/>
+  <set name="requestby" value="Login"/>
+  <set name="requesturl" value="http://blogs.discovermagazine.com/cosmicvariance/2011/09/01/ten-things-everyone-should-know-about-time/"/>
 
 </settings>

@@ -101,6 +101,11 @@
   <metadata name="due"/>
   <metadata name="thumburl" brief="yes" merge="unique"/>
   <metadata name="score"/>
+
+  <!-- maplin -->
+  <metadata name="requestby" setting="postproc"/>
+  <metadata name="requesturl" setting="postproc"/>
+
 </service>
 <!-- Keep this comment at the end of the file
      Local variables:

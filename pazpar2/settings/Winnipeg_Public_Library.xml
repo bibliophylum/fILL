@@ -26,11 +26,12 @@
   <!-- Result normalization settings -->
 
   <set name="pz:nativesyntax" value="iso2709"/>
-  <set name="pz:xslt" value="marc21.xsl"/>
+  <!-- set name="pz:xslt" value="marc21.xsl"/ -->
+  <set name="pz:xslt" value="maplin.xsl"/>
 
   <!-- Maplin settings -->
   <!-- just testing... David -->
-  <set name="maplin:requestby" value="Login"/>
-  <set name="maplin:requesturl" value="www.google.ca"/>
+  <set name="requestby" value="Login"/>
+  <set name="requesturl" value="www.google.ca"/>
 
 </settings>
