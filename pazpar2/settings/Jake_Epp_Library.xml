@@ -5,6 +5,12 @@
 <set target="216.55.201.10:210/ils"
                   name="pz:name" value="Jake Epp Library (Insignia)"/>
 
+<!-- Maplin settings -->
+<set target="216.55.201.10:210/ils" name="requestby" value="Login"/>
+<set target="216.55.201.10:210/ils" name="requesturl" value="http://jakeepp.dotdns.com/library2/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
@@ -28,9 +34,5 @@
   <set name="pz:nativesyntax" value="iso2709"/>
   <set name="pz:xslt" value="marc21.xsl"/>
   <!-- set name="pz:xslt" value="maplin.xsl"/ -->
-
-  <!-- Maplin settings -->
-  <set name="requestby" value="Login"/>
-  <set name="requesturl" value="http://www.boingboing.net"/>
 
 </settings>

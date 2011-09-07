@@ -5,6 +5,12 @@
 <set target="216.130.92.141:210/Melita_ILS"
                   name="pz:name" value="Southwestern Manitoba Regional Library (Insignia)"/>
 
+<!-- Maplin settings -->
+<set target="216.130.92.141:210/Melita_ILS" name="requestby" value="Login"/>
+<set target="216.130.92.141:210/Melita_ILS" name="requesturl" value="http://216.130.92.141/Melita/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

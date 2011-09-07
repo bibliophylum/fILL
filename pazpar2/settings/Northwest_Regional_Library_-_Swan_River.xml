@@ -5,6 +5,12 @@
 <set target="206.45.96.178:210/Default"
                   name="pz:name" value="Northwest Regional Library - Swan River (L4U)"/>
 
+<!-- Maplin settings -->
+<set target="206.45.96.178:210/Default" name="requestby" value="Login"/>
+<set target="206.45.96.178:210/Default" name="requesturl" value="http://206.45.96.178/4DCGI/gen_2002/Lang=Def"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

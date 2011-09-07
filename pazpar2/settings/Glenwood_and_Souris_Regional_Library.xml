@@ -5,6 +5,12 @@
 <set target="206.45.123.156:210/ILS"
                   name="pz:name" value="Glenwood and Souris Regional Library (Insignia)"/>
 
+<!-- Maplin settings -->
+<set target="206.45.123.156:210/ILS" name="requestby" value="Login"/>
+<set target="206.45.123.156:210/ILS" name="requesturl" value="http://206.45.123.156/library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

@@ -5,6 +5,12 @@
 <set target="library.arborg.com:210/Default"
                   name="pz:name" value="Evergreen Regional Library - Arborg (L4U)"/>
 
+<!-- Maplin settings -->
+<set target="library.arborg.com:210/Default" name="requestby" value="Login"/>
+<set target="library.arborg.com:210/Default" name="requesturl" value="http://library.arborg.com/4DCGI/gen_2002/Lang=Def"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

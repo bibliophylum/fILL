@@ -5,6 +5,12 @@
 <set target="66.244.209.14:210/L4U_Agent"
                   name="pz:name" value="Jolys Regional Library (L4U)"/>
 
+<!-- Maplin settings -->
+<set target="66.244.209.14:210/L4U_Agent" name="requestby" value="Login"/>
+<set target="66.244.209.14:210/L4U_Agent" name="requesturl" value="http://66.244.209.14/4DCGI/gen_2002/Lang=Def"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

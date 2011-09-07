@@ -5,6 +5,12 @@
 <set target="142.132.30.217:210/boissevain"
                   name="pz:name" value="Boissevain and Morton Regional Library (Evergreen)"/>
 
+<!-- Maplin settings -->
+<set target="142.132.30.217:210/boissevain" name="requestby" value="Login"/>
+<set target="142.132.30.217:210/boissevain" name="requesturl" value="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=117&amp;l=117&amp;d=2"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

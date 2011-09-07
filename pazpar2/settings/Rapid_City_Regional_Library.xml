@@ -5,6 +5,12 @@
 <set target="216.130.92.162:210/ils"
                   name="pz:name" value="Rapid City Regional Library"/>
 
+<!-- Maplin settings -->
+<set target="216.130.92.162:210/ils" name="requestby" value="Login"/>
+<set target="216.130.92.162:210/ils" name="requesturl" value="http://216.130.92.162/library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

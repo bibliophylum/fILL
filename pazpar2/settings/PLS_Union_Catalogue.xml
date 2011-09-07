@@ -5,6 +5,12 @@
 <set target="library.gov.mb.ca:210/maplin"
                   name="pz:name" value="PLS Union Catalogue (Horizon)"/>
 
+<!-- Maplin settings -->
+<set target="library.gov.mb.ca:210/maplin" name="requestby" value="Login"/>
+<set target="library.gov.mb.ca:210/maplin" name="requesturl" value="http://library.gov.mb.ca:8080/ipac20/ipac.jsp?profile=mwpl&amp;auth=true&amp;submenu=subtab11"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

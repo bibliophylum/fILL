@@ -5,6 +5,12 @@
 <set target="stclib.dyndns-server.com:210/ils"
                   name="pz:name" value="Bibliotheque Saint-Claude"/>
 
+<!-- Maplin settings -->
+<set target="stclib.dyndns-server.com:210/ils" name="requestby" value="Login"/>
+<set target="stclib.dyndns-server.com:210/ils" name="requesturl" value="http://stclib.dyndns-server.com/library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

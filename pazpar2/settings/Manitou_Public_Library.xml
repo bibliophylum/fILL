@@ -5,6 +5,12 @@
 <set target="manitouregionallibrary.ca:210/ILS"
                   name="pz:name" value="Manitou Public Library"/>
 
+<!-- Maplin settings -->
+<set target="manitouregionallibrary.ca:210/ILS" name="requestby" value="Login"/>
+<set target="manitouregionallibrary.ca:210/ILS" name="requesturl" value="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=122&amp;l=122&amp;d=3"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

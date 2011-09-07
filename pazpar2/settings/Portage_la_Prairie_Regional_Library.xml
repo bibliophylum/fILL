@@ -5,6 +5,12 @@
 <set target="24.79.32.253:210/Destiny"
                   name="pz:name" value="Portage la Prairie Regional Library (Follet)"/>
 
+<!-- Maplin settings -->
+<set target="24.79.32.253:210/Destiny" name="requestby" value="Login"/>
+<set target="24.79.32.253:210/Destiny" name="requesturl" value="http://circ.portagelibrary.com/common/welcome.jsp?site=202"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

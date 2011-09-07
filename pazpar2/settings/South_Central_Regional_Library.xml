@@ -4,6 +4,11 @@
 
 <set target="142.132.30.217:210/spruce"
                   name="pz:name" value="South Central Regional Library (Evergreen)"/>
+<!-- Maplin settings -->
+<set target="142.132.30.217:210/spruce" name="requestby" value="Login"/>
+<set target="142.132.30.217:210/spruce" name="requesturl" value="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&amp;l=102&amp;d=2"/>
+<!-- end Maplin settings -->
+
 
   <!-- settings apply to all targets -->
 

@@ -5,6 +5,12 @@
 <set target="72.2.10.68:210/steanne_ils"
                   name="pz:name" value="Bibliotheque Ste. Anne"/>
 
+<!-- Maplin settings -->
+<set target="72.2.10.68:210/steanne_ils" name="requestby" value="Login"/>
+<set target="72.2.10.68:210/steanne_ils" name="requesturl" value="http://72.2.10.68/library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

@@ -5,6 +5,12 @@
 <set target="catalogue.thompsonlibrary.com:210/ILS"
                   name="pz:name" value="Thompson Public Library (Insignia)"/>
 
+<!-- Maplin settings -->
+<set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Login"/>
+<set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="http://catalogue.thompsonlibrary.com/library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

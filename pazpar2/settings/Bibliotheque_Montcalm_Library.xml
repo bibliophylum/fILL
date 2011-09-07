@@ -5,6 +5,12 @@
 <set target="216.73.71.158:210/biblionet"
                   name="pz:name" value="Bibliotheque Montcalm Library (Biblionet)"/>
 
+<!-- Maplin settings -->
+<set target="216.73.71.158:210/biblionet" name="requestby" value="Email"/>
+<set target="216.73.71.158:210/biblionet" name="requesturl" value="http://maps.google.com"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

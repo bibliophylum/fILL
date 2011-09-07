@@ -5,6 +5,12 @@
 <set target="library.gov.mb.ca:211/legislative"
                   name="pz:name" value="Legislative Library (Horizon)"/>
 
+<!-- Maplin settings -->
+<set target="library.gov.mb.ca:211/legislative" name="requestby" value="Login"/>
+<set target="library.gov.mb.ca:211/legislative" name="requesturl" value="http://library.gov.mb.ca/ipac20/ipac.jsp?profile=ab&amp;auth=true&amp;submenu=subtab11"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

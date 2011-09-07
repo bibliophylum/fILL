@@ -5,6 +5,12 @@
 <set target="216.36.147.26:210/horizon"
                   name="pz:name" value="Western Manitoba Regional Library (Horizon)"/>
 
+<!-- Maplin settings -->
+<set target="216.36.147.26:210/horizon" name="requestby" value="Login"/>
+<set target="216.36.147.26:210/horizon" name="requesturl" value="http://216.36.147.26/ipac20/ipac.jsp?profile=mbw&amp;auth=true&amp;submenu=subtab33"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
@@ -27,10 +33,5 @@
 
   <set name="pz:nativesyntax" value="iso2709"/>
   <set name="pz:xslt" value="marc21.xsl"/>
-  <!-- set name="pz:xslt" value="maplin.xsl"/ -->
-
-  <!-- David testing settings -->
-  <set name="requestby" value="Login"/>
-  <set name="requesturl" value="http://blogs.discovermagazine.com/cosmicvariance/2011/09/01/ten-things-everyone-should-know-about-time/"/>
 
 </settings>

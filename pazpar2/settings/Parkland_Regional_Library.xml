@@ -5,6 +5,12 @@
 <set target="207.161.70.145:5666/LSPacZ"
                   name="pz:name" value="Parkland Regional Library (Library Solutions)"/>
 
+<!-- Maplin settings -->
+<set target="207.161.70.145:5666/LSPacZ" name="requestby" value="Login"/>
+<set target="207.161.70.145:5666/LSPacZ" name="requesturl" value="http://207.161.70.145/TLCScripts/interpac.dll?PatronReview"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

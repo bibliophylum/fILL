@@ -5,6 +5,12 @@
 <set target="206.45.117.102:210/Pinawa_ILS"
                   name="pz:name" value="Pinawa Public Library (Insignia)"/>
 
+<!-- Maplin settings -->
+<set target="206.45.117.102:210/Pinawa_ILS" name="requestby" value="Login"/>
+<set target="206.45.117.102:210/Pinawa_ILS" name="requesturl" value="http://www.sdwhiteshell.mb.ca:88/Library/LoginPatron.aspx?App=MyAccount"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
