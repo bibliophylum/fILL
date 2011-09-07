@@ -5,6 +5,12 @@
 <set target="198.163.53.31:210/horizon"
                   name="pz:name" value="Winnipeg Public Library (Horizon)"/>
 
+<!-- Maplin settings -->
+<set target="198.163.53.31:210/horizon" name="requestby" value="Login"/>
+<set target="198.163.53.31:210/horizon" name="requesturl" value="http://maps.google.com"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
@@ -26,12 +32,7 @@
   <!-- Result normalization settings -->
 
   <set name="pz:nativesyntax" value="iso2709"/>
-  <!-- set name="pz:xslt" value="marc21.xsl"/ -->
-  <set name="pz:xslt" value="maplin.xsl"/>
-
-  <!-- Maplin settings -->
-  <!-- just testing... David -->
-  <set name="requestby" value="Login"/>
-  <set name="requesturl" value="www.google.ca"/>
+  <set name="pz:xslt" value="marc21.xsl"/>
+  <!-- set name="pz:xslt" value="maplin.xsl"/ -->
 
 </settings>

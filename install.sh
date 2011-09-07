@@ -33,7 +33,8 @@ sudo unlink /etc/pazpar2/services-enabled/maplin.xml
 sudo cp /opt/maplin3/pazpar2/maplin.xml /etc/pazpar2/services-available/maplin.xml
 sudo ln -s /etc/pazpar2/services-available/maplin.xml /etc/pazpar2/services-enabled/maplin.xml
 echo Updating pazpar2 xslt
-sudo cp /opt/maplin3/pazpar2/maplin.xsl /etc/pazpar2/maplin.xsl
+#sudo cp /opt/maplin3/pazpar2/maplin.xsl /etc/pazpar2/maplin.xsl
+sudo cp /opt/maplin3/pazpar2/marc21.xsl /etc/pazpar2/marc21.xsl
 echo Clearing pazpar2 log
 sudo rm /var/log/pazpar2.log
 sudo touch /var/log/pazpar2.log

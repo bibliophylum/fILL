@@ -9,6 +9,15 @@
 
   <xsl:import href="/etc/pazpar2/marc21.xsl"/>
 
+  <xsl:variable name="requestby">
+    <xsl:value-of select="$requestby">
+  </xsl:variable>
+
+  <xsl:variable name="requesturl">
+    <xsl:value-of select="$requesturl">
+  </xsl:variable>
+
+
   <pz:metadata type="requestby">
     <xsl:value-of select="$requestby"/>
   </pz:metadata>
