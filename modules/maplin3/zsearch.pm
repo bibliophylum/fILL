@@ -5,6 +5,7 @@ use base 'maplin3base';
 use ZOOM;
 use MARC::Record;
 use Data::Dumper;
+use Time::HiRes qw(gettimeofday tv_interval);
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
 #--------------------------------------------------------------------------------
@@ -589,6 +590,8 @@ sub results_process {
     my $self = shift;
     my $q = $self->query;
 
+#    my $t0 = [gettimeofday];
+
     my $limit;
 
     my $marc_aref;
@@ -617,7 +620,34 @@ sub results_process {
     my $DisplayableFields_href = $self->_adjust_displayed_fields(\@dispFieldList, \@hidden_fields, \@shown_fields);
     $DisplayableFields_href->{'Title'} = 1;
 
+    # We were re-searching the db to calculate these *for each item*.  Slightly more accurate (transactions may have happened)
+    # but slooow.  ~0.05 seconds/item spent in the _build_holdings sub (specifically, in _get_ILL_stats_net_count).
+    # This way:    ~0.001 seconds/item
+    my %stats;
+    $stats{received_haslocation} = $self->dbh->selectall_hashref(
+	"select zid, location, count(*) as ill_received from ill_stats where (ts > (current_date - interval '3 years')) group by zid, location",
+	[ "zid", "location" ]
+	);
+    $stats{received_nolocation} = $self->dbh->selectall_hashref(
+	"select zid, count(*) as ill_received from ill_stats where (ts > (current_date - interval '3 years')) group by zid",
+	"zid"
+	);
+    $stats{owner} = $self->dbh->selectall_hashref(
+	"select home_zserver_id, home_zserver_location, lid from libraries",
+	[ "home_zserver_id", "home_zserver_location" ]
+	);
+    $stats{sent} = $self->dbh->selectall_hashref(
+	"select lid, count(*) as ill_sent from ill_stats where (ts > (current_date - interval '3 years')) group by lid",
+	"lid"
+	);
+
+#    my $t1 = [gettimeofday];
+#    $self->log->debug("Benchmark results: initialization [" . tv_interval($t0,$t1) . "]");
+
     my $currentLimits = $self->_adjust_current_limits();
+
+#    my $t2 = [gettimeofday];
+#    $self->log->debug("Benchmark results: adjust limits [" . tv_interval($t1,$t2) . "]");
 
     # Get the list of zservers (and info on where in the MARC they keep their holdings data)
     my $ar_zservers = $self->dbh->selectall_arrayref(
@@ -625,6 +655,9 @@ sub results_process {
 	{ Slice => {} }
 	);
     
+#    my $t3 = [gettimeofday];
+#    $self->log->debug("Benchmark results: get zservers [" . tv_interval($t2,$t3) . "]");
+
     # Sorting
     my $sort_by = $q->param('sort');
     if (not defined $sort_by) {
@@ -650,10 +683,15 @@ sub results_process {
 	);
 #    $self->log->debug("Total of " . @$marc_aref . " rows from db");
     
+#    my $t4 = [gettimeofday];
+#    $self->log->debug("Benchmark results: get marc [" . tv_interval($t3,$t4) . "]");
+
     my %usedISBNs;
 
     my $i = 0;
     foreach my $row_array (@$marc_aref) {
+
+#	my $tpm0 = [gettimeofday];
 
 	my $rec_id = $row_array->[0];
 	my $marc_string = $row_array->[1];
@@ -674,11 +712,16 @@ sub results_process {
 	    next;
 	} else {
 	    # successfully converted to MARC::Record
-	    $self->log->debug("successfully converted to MARC::Record");
+	    #$self->log->debug("successfully converted to MARC::Record");
 	}
 
+#	my $tpm1 = [gettimeofday];
+#	$self->log->debug("\tBenchmark results: new_from_USMARC [" . tv_interval($tpm0,$tpm1) . "]");
 	
 	if ($self->_limitCheckOK($marcrec, $currentLimits)) {
+
+#	    my $tpm2 = [gettimeofday];
+#	    $self->log->debug("\tBenchmark results: _limitCheckOk [" . tv_interval($tpm1,$tpm2) . "]");
 
 	    my $bibinfo_href;
 
@@ -697,10 +740,18 @@ sub results_process {
 
 	    }
 
+#	    my $tpm3 = [gettimeofday];
+#	    $self->log->debug("\tBenchmark results: isbn check [" . tv_interval($tpm2,$tpm3) . "]");
+
 	    if (exists $usedISBNs{ $isbn }) {
 
+#		$self->log->debug("\tBenchmark results: existing ISBN");
+
 		# Build a holdings array for the new record
-		my $holdings_aref = $self->_build_holdings($rec_id, $zid, $ar_zservers, $marcrec);
+		my $holdings_aref = $self->_build_holdings($rec_id, $zid, $ar_zservers, $marcrec, \%stats);
+
+#		my $tpm4 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: _build_holdings [" . tv_interval($tpm3,$tpm4) . "]");
 
 		# Get a reference to the existing holdings array
 		my $bibholdings_aref = $bibs[ $usedISBNs{$isbn} ]->{holdings};
@@ -710,6 +761,9 @@ sub results_process {
 
 		# Update the holdings count
 		$bibinfo_href->{holdings_count} = scalar @{ $bibs[ $usedISBNs{$isbn} ]->{holdings} };
+
+#		my $tpm5 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: add holding [" . tv_interval($tpm4,$tpm5) . "]");
 		
 		# build subject list
 		my @subjlist = $marcrec->field("6..");
@@ -731,21 +785,32 @@ sub results_process {
 		my %seen;
 		@$primary_subjects_aref = grep { ! $seen{ $_->{subject} }++ } @$primary_subjects_aref;
 		
+#		my $tpm6 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: subjects [" . tv_interval($tpm5,$tpm6) . "]");
+		
 
 	    } else {
 		#
 		# This is a new ISBN
 		#
+#		$self->log->debug("\tBenchmark results: new ISBN");
+
 		$usedISBNs{ $isbn } = scalar @bibs;  # usedISBNs will hold the array index of the 'primary' MARC
 		$countRecords++;
 
 		# Build displayable fields from MARC record
 		$bibinfo_href = $self->_build_bibinfo( $rec_id, $zid, $marcrec, $isbn );
 
+#		my $tpm4 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: _build_bibinfo [" . tv_interval($tpm3,$tpm4) . "]");
+
 		# Build holdings array for this record
-		my $holdings_aref = $self->_build_holdings($rec_id, $zid, $ar_zservers, $marcrec);
+		my $holdings_aref = $self->_build_holdings($rec_id, $zid, $ar_zservers, $marcrec, \%stats);
 		$bibinfo_href->{holdings} = $holdings_aref;
 		$bibinfo_href->{holdings_count} = scalar @{ $bibinfo_href->{holdings} };
+
+#		my $tpm5 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: _build_holdings [" . tv_interval($tpm4,$tpm5) . "]");
 
 		# build subject list for display
 		my @subjlist = $marcrec->field("6..");
@@ -760,6 +825,9 @@ sub results_process {
 		# add subjects list to the things we can (potentially) display
 		$bibinfo_href->{search_results_subjects} = \@bibsubjects;
 
+#		my $tpm6 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: subjects [" . tv_interval($tpm5,$tpm6) . "]");
+
 		# Visibility info - this must go into each bib due to the way HTML::Template
 		# handles variables and loops (unless we wanted to make them global....)
 		$bibinfo_href->{isVisible_Title}    = $DisplayableFields_href->{ 'Title'    };
@@ -772,16 +840,26 @@ sub results_process {
 		$bibinfo_href->{isVisible_Link}     = $DisplayableFields_href->{ 'Link'     };
 		$bibinfo_href->{isVisible_Holdings} = $DisplayableFields_href->{ 'Holdings' };
 		
+#		my $tpm7 = [gettimeofday];
+#		$self->log->debug("\tBenchmark results: visibility [" . tv_interval($tpm6,$tpm7) . "]");
+
 		push @bibs, $bibinfo_href;
 
 	    }
 
-
+#	    my $tpm8 = [gettimeofday];
 	    $self->_add_to_limit_lists( $marcrec, \%limits_authors, \%limits_pubdate, \%limits_subjects );
+#	    my $tpm9 = [gettimeofday];
+#	    $self->log->debug("\tBenchmark results: _add_to_limit_lists [" . tv_interval($tpm8,$tpm9) . "]");
+#	    $self->log->debug("\tBenchmark results: process one record [" . tv_interval($tpm0,$tpm9) . "]");
 
 	    $i++;
 	}
     }
+
+    
+#    my $t5 = [gettimeofday];
+#    $self->log->debug("Benchmark results: process marc [" . tv_interval($t4,$t5) . "]");
 
 
     my @undo_limits = ();
@@ -816,6 +894,10 @@ sub results_process {
 			  s_limit => "s:$key",
 	};
     }
+
+    
+#    my $t6 = [gettimeofday];
+#    $self->log->debug("Benchmark results: limits [" . tv_interval($t5,$t6) . "]");
 
 
 #    # sort each combined-record's holdings by net-borrower/net-lender status
@@ -861,6 +943,10 @@ sub results_process {
 		      HIDDEN_FIELDS => \@hidden_fields,
 		      SHOWN_FIELDS => \@shown_fields,
 	);
+
+    
+#    my $t7 = [gettimeofday];
+#    $self->log->debug("Benchmark results: process template [" . tv_interval($t6,$t7) . "]");
 
     my $html_output = $template->output;
     return $html_output;
@@ -1314,6 +1400,49 @@ sub _update_ILL_stats {
 #
 sub _get_ILL_stats_net_count {
     my $self = shift;
+    my ($zid,$loc,$stats) = @_;
+
+    if (($zid == 1) && ($loc eq 'PUBLIC LIB. SERVICES pls@gov.mb.ca')) {
+	# PLS is special... we want it to always be neutral.
+	return 0;
+    }
+
+    # Get number of ILL requests received
+    my $received = 0;
+    if ((exists $stats->{received_haslocation}{$zid})
+	&& (exists $stats->{received_haslocation}{$zid}{$loc})
+	) {
+	$received = $stats->{received_haslocation}{$zid}{$loc}{'ill_received'};
+    } elsif (exists $stats->{received_nolocation}{$zid}) {
+	$received = $stats->{received_nolocation}{$zid}{'ill_received'};
+    }
+
+    # Find the library id that owns this zserver+location
+    my $owner;
+    if ((exists $stats->{owner}{$zid}) 
+	&& (exists $stats->{owner}{$zid}{$loc})
+	) {
+	$owner = $stats->{owner}{$zid}{$loc}{'lid'};
+    } elsif (exists $stats->{owner}{$zid}{''}) {
+	$owner = $stats->{owner}{$zid}{''}{'lid'};
+    }
+
+    my $sent = 0;
+    if ($owner) {
+	if (exists $stats->{sent}{$owner}) {
+	    $sent = $stats->{sent}{$owner}{'ill_sent'};
+	}
+    }
+
+    return $sent - $received;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub _get_ILL_stats_net_count_DEPRECATED {
+    my $self = shift;
     my ($zid,$loc) = @_;
 
     if (($zid == 1) && ($loc eq 'PUBLIC LIB. SERVICES pls@gov.mb.ca')) {
@@ -1421,6 +1550,7 @@ sub _build_holdings {
     my $zid = shift;
     my $ar_zservers = shift;
     my $marcrec = shift;
+    my $stats = shift;
 
     my @bibholdings;
     my $holdings_tag;
@@ -1431,6 +1561,8 @@ sub _build_holdings {
     my $holdings_due;
     my $handles_holdings_improperly;
 
+#    my $t0 = [gettimeofday];
+
     my @target_ary = $self->dbh->selectrow_array(
 	"SELECT name FROM zservers WHERE id=?",
 	undef,
@@ -1440,6 +1572,9 @@ sub _build_holdings {
     if (@target_ary) {
 	$default_location = $target_ary[0];
     }
+
+#    my $t1 = [gettimeofday];
+#    $self->log->debug("\t\t_build_holdings: get target array [" . tv_interval($t0,$t1) . "]");
 
     # Find the array element (hash) where zid matches {id}
     foreach my $href (@$ar_zservers) {
@@ -1454,11 +1589,17 @@ sub _build_holdings {
 	    last;
 	}
     }
+
+#    my $t2 = [gettimeofday];
+#    $self->log->debug("\t\t_build_holdings: find matching zid [" . tv_interval($t1,$t2) . "]");
+
     if (defined($holdings_tag)) {
 	my @holdings = $marcrec->field($holdings_tag);
 
 	if (@holdings) {
 	    foreach my $holding (@holdings) {
+#		my $th0 = [gettimeofday];
+
 		my %item_record;
 		my $item_record_href = \%item_record;
 
@@ -1470,16 +1611,25 @@ sub _build_holdings {
 		} 
 		$item_record_href->{location} = $default_location unless $item_record_href->{location};
 		
+#		my $th1 = [gettimeofday];
+#		$self->log->debug("\t\t\tlocation [" . tv_interval($th0,$th1) . "]");
+
 		if ($holdings_callno) {
 		    $item_record_href->{callno} = $holding->subfield($holdings_callno);
 		}
 		$item_record_href->{callno} = "???" unless $item_record_href->{callno};
 		
+#		my $th2 = [gettimeofday];
+#		$self->log->debug("\t\t\tcallno [" . tv_interval($th1,$th2) . "]");
+
 		if ($holdings_collection) {
 		    $item_record_href->{collection} = $holding->subfield($holdings_collection);
 		}
 		$item_record_href->{collection} = "???" unless $item_record_href->{collection};
 		
+#		my $th3 = [gettimeofday];
+#		$self->log->debug("\t\t\tcolection [" . tv_interval($th2,$th3) . "]");
+
 		if ($holdings_avail) {
 		    $item_record_href->{available} = $holding->subfield($holdings_avail);
 		    if ($holdings_due) {
@@ -1489,16 +1639,28 @@ sub _build_holdings {
 		}
 		$item_record_href->{available} = "No information" unless $item_record_href->{available};
 		
-		my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
+#		my $th4 = [gettimeofday];
+#		$self->log->debug("\t\t\tavailability [" . tv_interval($th3,$th4) . "]");
+
+		my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location}, $stats );
 		$item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 		$item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
 		$item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
+#		my $th5 = [gettimeofday];
+#		$self->log->debug("\t\t\tnet borrower/lender [" . tv_interval($th4,$th5) . "]");
+
 		push @bibholdings, $item_record_href;
+
+#		my $th6 = [gettimeofday];
+#		$self->log->debug("\t\t_build_holdings: process a holding [" . tv_interval($th0,$th6) . "]");
+
 	    }
 	    
 	} else {
 	    # no holdings information in record
+#	    my $th0 = [gettimeofday];
+
 	    my %item_record;
 	    my $item_record_href = \%item_record;
 
@@ -1508,12 +1670,16 @@ sub _build_holdings {
 	    $item_record_href->{ callno } = '???';
 	    $item_record_href->{ collection } = '???';
 	    $item_record_href->{ available } = '???';
-	    my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location} );
+	    my $net_borrower_or_lender = $self->_get_ILL_stats_net_count($zid, $item_record_href->{location}, $stats );
 	    $item_record_href->{ is_net_borrower } = $net_borrower_or_lender >= 0 ? 1 : 0,
 	    $item_record_href->{ net_borrower_or_lender } = abs($net_borrower_or_lender);
 	    $item_record_href->{ sortable_nbnl } = $net_borrower_or_lender;
 
 	    push @bibholdings, $item_record_href;
+
+#	    my $th1 = [gettimeofday];
+#	    $self->log->debug("\t\t_build_holdings: no holdings info, build fake [" . tv_interval($th0,$th1) . "]");
+
 	}
 
     }
