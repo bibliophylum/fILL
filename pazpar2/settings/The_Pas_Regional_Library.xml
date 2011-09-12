@@ -35,8 +35,4 @@
   <set name="pz:xslt" value="marc21.xsl"/>
   <!-- set name="pz:xslt" value="maplin.xsl"/ -->
 
-  <!-- Maplin settings -->
-  <set name="requestby" value="Login"/>
-  <set name="requesturl" value="http://www.boingboing.net"/>
-
 </settings>

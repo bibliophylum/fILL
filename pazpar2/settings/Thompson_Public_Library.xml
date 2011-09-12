@@ -7,7 +7,7 @@
 
 <!-- Maplin settings -->
 <set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Login"/>
-<set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="http://catalogue.thompsonlibrary.com/library/LoginPatron.aspx?App=MyAccount"/>
+<set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="http://catalogue.thompsonlibrary.com/library/Search.aspx"/>
 <!-- end Maplin settings -->
 
 
@@ -34,9 +34,5 @@
   <set name="pz:nativesyntax" value="iso2709"/>
   <set name="pz:xslt" value="marc21.xsl"/>
   <!-- set name="pz:xslt" value="maplin.xsl"/ -->
-
-  <!-- Maplin settings -->
-  <set name="requestby" value="Login"/>
-  <set name="requesturl" value="http://www.boingboing.net"/>
 
 </settings>

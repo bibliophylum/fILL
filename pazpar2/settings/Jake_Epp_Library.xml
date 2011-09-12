@@ -7,7 +7,7 @@
 
 <!-- Maplin settings -->
 <set target="216.55.201.10:210/ils" name="requestby" value="Login"/>
-<set target="216.55.201.10:210/ils" name="requesturl" value="http://jakeepp.dotdns.com/library2/LoginPatron.aspx?App=MyAccount"/>
+<set target="216.55.201.10:210/ils" name="requesturl" value="http://jakeepp.dotdns.com/library/Search.aspx"/>
 <!-- end Maplin settings -->
 
 

@@ -7,7 +7,7 @@
 
 <!-- Maplin settings -->
 <set target="206.45.182.133:210/ILS" name="requestby" value="Login"/>
-<set target="206.45.182.133:210/ILS" name="requesturl" value="http://206.45.182.133/library/LoginPatron.aspx?App=MyAccount"/>
+<set target="206.45.182.133:210/ILS" name="requesturl" value="http://206.45.182.133/library/Search.aspx"/>
 <!-- end Maplin settings -->
 
 

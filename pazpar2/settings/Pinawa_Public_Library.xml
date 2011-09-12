@@ -7,7 +7,7 @@
 
 <!-- Maplin settings -->
 <set target="206.45.117.102:210/Pinawa_ILS" name="requestby" value="Login"/>
-<set target="206.45.117.102:210/Pinawa_ILS" name="requesturl" value="http://www.sdwhiteshell.mb.ca:88/Library/LoginPatron.aspx?App=MyAccount"/>
+<set target="206.45.117.102:210/Pinawa_ILS" name="requesturl" value="http://www.sdwhiteshell.mb.ca:88/library/Search.aspx"/>
 <!-- end Maplin settings -->
 
 
