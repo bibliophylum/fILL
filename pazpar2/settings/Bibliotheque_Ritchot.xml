@@ -5,6 +5,12 @@
 <set target="24.77.96.250:210/Biblionet"
                   name="pz:name" value="Bibliotheque Ritchot (Biblionet)"/>
 
+<!-- Maplin settings -->
+<set target="24.77.96.250:210/Biblionet" name="requestby" value="Login"/>
+<set target="24.77.96.250:210/Biblionet" name="requesturl" value="http://maps.google.com"/>
+<!-- end Maplin settings -->
+
+
   <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

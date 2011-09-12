@@ -1,13 +1,13 @@
-<settings target="216.73.71.158:209/*">
+<settings target="206.45.117.102:210/*">
 
-  <!-- Bibliotheque Saint-Joachim targets -->
+  <!-- Valley Regional Library targets -->
 
-<set target="216.73.71.158:209/biblionet"
-                  name="pz:name" value="Bibliotheque Saint-Joachim (Biblionet)"/>
+<set target="206.45.206.163:210/ILS"
+                  name="pz:name" value="Valley Regional Library (Insignia)"/>
 
 <!-- Maplin settings -->
-<set target="216.73.71.158:209/biblionet" name="requestby" value="Login"/>
-<set target="216.73.71.158:209/biblionet" name="requesturl" value="http://maps.google.com"/>
+<set target="206.45.109.104:210/ILS" name="requestby" value="Login"/>
+<set target="206.45.109.104:210/ILS" name="requesturl" value="http://206.45.109.104/library/Search.aspx"/>
 <!-- end Maplin settings -->
 
 
