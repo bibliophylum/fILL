@@ -751,7 +751,7 @@ p.info_zserver_ok {
   display: inline;
 }
 
-p.info_zserver_not_alive {
+p.info_zserver_error {
   font-family:arial;
   font-size:10pt;
   color: red;
