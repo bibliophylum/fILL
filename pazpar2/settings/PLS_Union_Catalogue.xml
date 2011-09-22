@@ -6,8 +6,10 @@
                   name="pz:name" value="PLS Union Catalogue (Horizon)"/>
 
 <!-- Maplin settings -->
-<set target="library.gov.mb.ca:210/maplin" name="requestby" value="Login"/>
-<set target="library.gov.mb.ca:210/maplin" name="requesturl" value="http://library.gov.mb.ca:8080/ipac20/ipac.jsp?profile=mwpl&amp;auth=true&amp;submenu=subtab11"/>
+<!-- set target="library.gov.mb.ca:210/maplin" name="requestby" value="Login"/ -->
+<!-- set target="library.gov.mb.ca:210/maplin" name="requesturl" value="http://library.gov.mb.ca:8080/ipac20/ipac.jsp?profile=mwpl&amp;auth=true&amp;submenu=subtab11"/ -->
+<set target="library.gov.mb.ca:210/maplin" name="requestby" value="Maplin"/>
+<set target="library.gov.mb.ca:210/maplin" name="requesturl" value="http://localhost/cgi-bin/maplin3.cgi?rm=lightning_request"/>
 <!-- end Maplin settings -->
 
 
