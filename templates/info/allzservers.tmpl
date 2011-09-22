@@ -51,29 +51,43 @@
 
 <p><br /></p>
 
+<table border="1">
+  <tr>
+    <th>zServer</th>
+    <th>ILS</th>
+    <th>Alive?</th>
+    <th>Avail?</th>
+    <th>Error?</th>
+    <th>Message</th>
+    <th>Count</th>
+    <th>Implementation</th>
+  </tr>
+
 <TMPL_LOOP NAME="status">
-    <TMPL_IF NAME="available">
+    <tr>
+      <td><p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="name"></p></td>
+      <td><p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="ils"></p></td>
       <TMPL_IF NAME="alive">
-	<TMPL_IF NAME="count">
-	  <p class="info_zserver_ok">
-        <TMPL_ELSE>
-	  <p class="info_zserver_zero_recs">
-	</TMPL_IF>
-      <TMPL_ELSE>
-	<p class="info_zserver_not_alive">
+	<td>
+	  <TMPL_ELSE>
+	    <td bgcolor="#FFFF00">
       </TMPL_IF>
-    <TMPL_ELSE>
-      <p class="info_zserver_not_available">
-    </TMPL_IF>
-
-    <TMPL_VAR NAME="name"> - <TMPL_VAR NAME="ils"> - <TMPL_VAR NAME="msg">
-    <TMPL_IF NAME="count">
-      (Found <TMPL_VAR NAME="count"> records)
-    </TMPL_IF>
-    </p>
-<!--    <p class="short_instruction"> - <TMPL_VAR NAME="serverImplementationName"></p> -->
-    <br />
-
+      <p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="alive"></p></td>
+      <td><p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="available"></p></td>
+      <td><p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="error"></p></td>
+      <td><p class="<TMPL_VAR NAME="paraclass">"><TMPL_VAR NAME="msg"></p></td>
+      <td>
+	<TMPL_IF NAME="count">
+	  <p class="short_instruction">
+	    (Found <TMPL_VAR NAME="count"> records)
+	  </p>
+	</TMPL_IF>
+      </td>
+      <td>
+	<p class="short_instruction"><TMPL_VAR NAME="serverImplementationName"></p>
+      </td>
+    </tr>
 </TMPL_LOOP>    
+</table>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

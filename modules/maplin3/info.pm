@@ -246,6 +246,8 @@ sub info_all_zservers_process {
 	    $libstatus{ available } = $ar_conn->[$i]{available};
 	    $libstatus{ alive } = $ar_conn->[$i]{alive};
 	    $libstatus{ ils } = $ar_conn->[$i]{ils};
+	    $libstatus{ error } = 0;
+	    $libstatus{ paraclass } = 'info_zserver_ok';
 	    
 	    my $n;
 	    
@@ -268,11 +270,13 @@ sub info_all_zservers_process {
 		if ($@) {
 		    $libstatus{ msg } = $@->render();		
 		    $libstatus{ count } = 0;
-		    $libstatus{ alive } = 0;
+		    $libstatus{ error } = 1;
+		    $libstatus{ paraclass } = 'info_zserver_error';
 		} else {
 		    $libstatus{ count } = $n;
 		    if ($n == 0) {
 			$libstatus{ msg } = "Can connect, but returns 0 records.";
+			$libstatus{ paraclass } = 'info_zserver_zero_recs';
 		    } else {
 			$libstatus{ msg } = "ok";
 		    }
@@ -281,7 +285,9 @@ sub info_all_zservers_process {
 	    } else {
 		$libstatus{ msg } = "Library has marked itself unavailable.";
 		$libstatus{ count } = 0;
+		$libstatus{ paraclass } = 'info_zserver_not_available';
 	    }
+
 	    push @status, \%libstatus;
 	}
     }
