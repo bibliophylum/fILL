@@ -264,7 +264,7 @@ sub spray_search {
 #    $options->option(count => 1);
     $options->option(count => RESULTS_LIMIT);
     $options->option(preferredRecordSyntax => $ar_conn->[$i]{preferredrecordsyntax});
-    $options->option(timeout => 30);
+    $options->option(timeout => 10);
     if ($ar_conn->[$i]{requires_credentials}) {
 	my $SQLgetcredentials = "SELECT username, password FROM library_zserver_credentials WHERE lid=? AND zid=?";
 	my $h = $dbh->selectrow_hashref( $SQLgetcredentials, undef, $lid, $ar_conn->[$i]{id});
