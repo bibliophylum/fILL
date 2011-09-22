@@ -391,8 +391,21 @@ function renderDetails(data, marker)
 //	if (data["location"][0]["@requestby"] == 'Login')
 //	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
 
-	if (data["location"][i]["md-requesturl"] != undefined)
-	    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '" target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
+	if (data["location"][i]["md-requestby"] != undefined) {
+	    if (data["location"][i]["md-requestby"] == 'Login') {
+		if (data["location"][i]["md-requesturl"] != undefined) {
+		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '" target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
+		} else {
+		    details += '<tr><td><b>via email</b></td><td><b>:</b> ' + 'some.url.goes.here' + '</td></tr>';
+		}
+	    } else {  // Email
+		if (data["location"][i]["md-requesturl"] != undefined) {
+		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '?subject=ILL Request&amp;body=Library X would like to request the title:%0A%0A' + data["md-title"] + '%0A%0A from ' + data["location"][i]["@name"] + '." target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
+		} else {
+		    details += '<tr><td><b>via email</b></td><td><b>:</b> ' + 'some.url.goes.here' + '</td></tr>';
+		}
+	    }
+	} // end of request-by
     }
 
     details += '</table></div>';

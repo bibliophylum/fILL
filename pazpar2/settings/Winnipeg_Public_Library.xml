@@ -6,8 +6,10 @@
                   name="pz:name" value="Winnipeg Public Library (Horizon)"/>
 
 <!-- Maplin settings -->
-<set target="198.163.53.31:210/horizon" name="requestby" value="Login"/>
-<set target="198.163.53.31:210/horizon" name="requesturl" value="http://wpl-pac.winnipeg.ca/ipac20/ipac.jsp?profile=wpl&amp;menu=account"/>
+<!-- set target="198.163.53.31:210/horizon" name="requestby" value="Login"/ -->
+<!-- set target="198.163.53.31:210/horizon" name="requesturl" value="http://wpl-pac.winnipeg.ca/ipac20/ipac.jsp?profile=wpl&amp;menu=account"/ -->
+<set target="198.163.53.31:210/horizon" name="requestby" value="Email"/>
+<set target="198.163.53.31:210/horizon" name="requesturl" value="mailto:david.christensen@gov.mb.ca"/>
 <!-- end Maplin settings -->
 
 
