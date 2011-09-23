@@ -6,7 +6,7 @@
                   name="pz:name" value="Prairie Crocus Regional Library"/>
 
 <!-- Maplin settings -->
-<set target="prairiecrocuslibrary.ca:210/ils" name="requestby" value="Login"/>
+<set target="prairiecrocuslibrary.ca:210/ils" name="requestby" value="Maplin"/>
 <set target="prairiecrocuslibrary.ca:210/ils" name="requesturl" value="http://prairiecrocuslibrary.ca/library/Search.aspx"/>
 <!-- end Maplin settings -->
 

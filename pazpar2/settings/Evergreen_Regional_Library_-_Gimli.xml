@@ -6,7 +6,7 @@
                   name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
 
 <!-- Maplin settings -->
-<set target="206.45.206.184:210/Default" name="requestby" value="Login"/>
+<set target="206.45.206.184:210/Default" name="requestby" value="Maplin"/>
 <set target="206.45.206.184:210/Default" name="requesturl" value="http://206.45.206.184/4DCGI/gen_2002/Lang=Def"/>
 <!-- end Maplin settings -->
 

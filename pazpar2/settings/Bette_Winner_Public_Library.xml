@@ -5,7 +5,7 @@
 <set target="bettewinner.commstream.net:210/L4U_Agent"
                   name="pz:name" value="Bette Winner Public Library (L4U)"/>
 <!-- Maplin settings -->
-<set target="bettewinner.commstream.net:210/L4U_Agent" name="requestby" value="Login"/>
+<set target="bettewinner.commstream.net:210/L4U_Agent" name="requestby" value="Maplin"/>
 <set target="bettewinner.commstream.net:210/L4U_Agent" name="requesturl" value="http://72.2.14.132/4DCGI/gen_2002/Lang=Def"/>
 <!-- end Maplin settings -->
 

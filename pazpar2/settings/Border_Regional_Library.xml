@@ -6,7 +6,7 @@
                   name="pz:name" value="Border Regional Library (L4U)"/>
 
 <!-- Maplin settings -->
-<set target="74.113.178.216:210/Default" name="requestby" value="Login"/>
+<set target="74.113.178.216:210/Default" name="requestby" value="Maplin"/>
 <set target="74.113.178.216:210/Default" name="requesturl" value="http://74.113.178.216/4DCGI/gen_2002/Lang=Def"/>
 <!-- end Maplin settings -->
 

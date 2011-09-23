@@ -6,7 +6,7 @@
                   name="pz:name" value="Bibliotheque Allard"/>
 
 <!-- Maplin settings -->
-<set target="206.45.206.163:210/biblioall" name="requestby" value="Login"/>
+<set target="206.45.206.163:210/biblioall" name="requestby" value="Maplin"/>
 <set target="206.45.206.163:210/biblioall" name="requesturl" value="http://206.45.206.163/vopac/servlet/presentsearchform.do?site=100&amp;context=biblioall"/>
 <!-- end Maplin settings -->
 

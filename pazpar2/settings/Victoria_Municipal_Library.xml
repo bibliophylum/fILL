@@ -6,7 +6,7 @@
                   name="pz:name" value="Victoria Municipal Library (Insignia)"/>
 
 <!-- Maplin settings -->
-<set target="208.92.138.194:210/ILS" name="requestby" value="Login"/>
+<set target="208.92.138.194:210/ILS" name="requestby" value="Maplin"/>
 <set target="208.92.138.194:210/ILS" name="requesturl" value="http://208.92.138.194/library/Search.aspx"/>
 <!-- end Maplin settings -->
 

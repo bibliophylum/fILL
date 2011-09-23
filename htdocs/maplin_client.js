@@ -387,18 +387,23 @@ function renderDetails(data, marker)
 	if (data["location"][i]["@name"] == 'South Central Regional Library (Evergreen)')
 	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&t=ducks&tp=keyword&l=102&d=2" target="_blank">South Central Regional Library</a>'  + '</td></tr>';
 
-// Doesn't work:
-//	if (data["location"][0]["@requestby"] == 'Login')
-//	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="' + data["location"][0]["@requesturl"] + '" target="_blank">' + data["location"][0]["@name"] + '</a>'  + '</td></tr>';
-
 	if (data["location"][i]["md-requestby"] != undefined) {
 	    if (data["location"][i]["md-requestby"] == 'Login') {
+		// Login to target's OPAC
 		if (data["location"][i]["md-requesturl"] != undefined) {
 		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '" target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
 		} else {
 		    details += '<tr><td><b>via email</b></td><td><b>:</b> ' + 'some.url.goes.here' + '</td></tr>';
 		}
-	    } else {  // Email
+
+	    } else if (data["location"][i]["md-requestby"] == 'Maplin') {
+		// Let Maplin handle it
+		if (data["location"][i]["md-requesturl"] != undefined) {
+		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="/cgi-bin/lightning.cgi?rm=lightning_request_form' + '&amp;ztarget=' + data["location"][i]["@name"] + '&amp;title=' + data["md-title"] + '&amp;author=' + data["md-author"] + '&amp;medium=' + data["md-medium"] + '&amp;isbn=' + data["location"][i]["md-isbn"] + '&amp;callno=' + data["location"][i]["md-callnumber"] + '&amp;date=' + data["md-date"] + '" target="_blank">' + 'Open a Maplin request window' + '</a>'  + '</td></tr>';
+		}
+ 
+	    } else {  
+		// Start local Email client
 		if (data["location"][i]["md-requesturl"] != undefined) {
 		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '?subject=ILL Request&amp;body=Library X would like to request the title:%0A%0A' + data["md-title"] + '%0A%0A from ' + data["location"][i]["@name"] + '." target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
 		} else {
