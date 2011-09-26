@@ -80,21 +80,51 @@ function my_onshow(data) {
     replaceHtml(results, html.join(''));
 }
 
+//function my_onstat(data) {
+//    var stat = document.getElementById("stat");
+//    if (stat == null)
+//	return;
+//    
+//    stat.innerHTML = '<b> .:STATUS INFO</b> -- Active clients: '
+//                        + data.activeclients
+//                        + '/' + data.clients + ' -- </span>'
+//                        + '<span>Retrieved records: ' + data.records
+//                        + '/' + data.hits + ' :.</span>';
+//}
+
+// From Ohio Web Library, http://www.ohioweblibrary.org/
 function my_onstat(data) {
-    var stat = document.getElementById("stat");
-    if (stat == null)
-	return;
-    
-    stat.innerHTML = '<b> .:STATUS INFO</b> -- Active clients: '
-                        + data.activeclients
-                        + '/' + data.clients + ' -- </span>'
-                        + '<span>Retrieved records: ' + data.records
-                        + '/' + data.hits + ' :.</span>';
+    var stat = document.getElementById('stat');
+    if(stat != null){
+	if(data.activeclients != 0){
+	    stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
+	    stat.innerHTML += '<div id="progress_empty" style="position:relative;height:20px;width:150px;background-color:#cccccc;border:1px solid black;padding:0px;">';
+	    stat.innerHTML += '<div id="progress_filler" style="height:20px;width:'+(((data.clients - data.activeclients) / data.clients)*150)+'px;left:1px;background-color:#607D8B;padding-top:5px;padding:0px;position:relative;margin-right:200px;margin-top:-21px;"/>';
+	    stat.innerHTML += '</div></div><br />';
+	}else{
+	    stat.innerHTML = '';
+	    debug("Search Complete");
+	    if(data.hits[0] < 1){
+		var querybox = document.getElementById("query");
+		if(querybox.value != ""){
+		    var pager = document.getElementById("pager");
+		    var pager2 = document.getElementById("pager2");
+		    var results = document.getElementById("results");
+		    var termlist = document.getElementById("termlist");
+		    pager.innerHTML = "";
+		    pager2.innerHTML = "";
+		    results.innerHTML = "<br>" + querybox.value + " returned 0 results";
+		    termlist.innerHTML = '';
+		}
+	    }
+	}
+    }
 }
+
 
 function my_onterm(data) {
     var termlists = [];
-    termlists.push('<hr/><b>TERMLISTS:</b><hr/><div class="termtitle">.::Sources</div>');
+    termlists.push('<br><hr/><b>Refine your search by:</b><hr/><div class="termtitle">.::Sources</div>');
     for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
         termlists.push('<a href="#" target_id='+data.xtargets[i].id
             + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 

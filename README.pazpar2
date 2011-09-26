@@ -5,6 +5,13 @@ Starting server:
 david@acer-laptop:/etc/pazpar2/services-available$ sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
 -----------------------------------------------------------------------------
+Updating pazpar2
+
+When pazpar2 gets updated (through your package management system), make sure to copy the file
+     /usr/share/pazpar2/js/pz2.js
+to the htdocs directory.
+
+-----------------------------------------------------------------------------
 Installing pazpar2
 
 Which version of (k)ubuntu?

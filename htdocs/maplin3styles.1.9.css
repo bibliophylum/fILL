@@ -854,7 +854,7 @@ div.record {
 }
 
 div.details {
-    border: 3px dashed gray;
+    border: 1px solid #408040;
     color: gray;
     padding: 5px;
     margin: 4px;
@@ -885,6 +885,19 @@ div.details {
     text-align: center;
 }
 
+/*
 #stat {
     font-weight: bold;
+}
+*/
+
+/* from Ohio Web Library */
+#progress_empty {
+    float: left !important;
+}
+#progress_filler {
+    float: left !important;
+}
+#stat {
+    width: 250px;
 }
