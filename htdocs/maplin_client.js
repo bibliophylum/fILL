@@ -414,8 +414,8 @@ function renderDetails(data, marker)
 	if (data["location"][i]["@name"] != undefined)
             details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
 
-	if (data["location"][i]["@name"] == 'South Central Regional Library (Evergreen)')
-	    details += '<tr><td><b>Login</b></td><td><b>:</b> ' + '<a href="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=102&t=ducks&tp=keyword&l=102&d=2" target="_blank">South Central Regional Library</a>'  + '</td></tr>';
+	if (data["location"][i]["md-holding"] != undefined)
+	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
 
 	if (data["location"][i]["md-requestby"] != undefined) {
 	    if (data["location"][i]["md-requestby"] == 'Login') {
@@ -429,7 +429,7 @@ function renderDetails(data, marker)
 	    } else if (data["location"][i]["md-requestby"] == 'Maplin') {
 		// Let Maplin handle it
 		if (data["location"][i]["md-requesturl"] != undefined) {
-		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="/cgi-bin/lightning.cgi?rm=lightning_request_form' + '&amp;ztarget=' + data["location"][i]["@name"] + '&amp;title=' + data["md-title"] + '&amp;author=' + data["md-author"] + '&amp;medium=' + data["md-medium"] + '&amp;isbn=' + data["location"][i]["md-isbn"] + '&amp;callno=' + data["location"][i]["md-callnumber"] + '&amp;date=' + data["md-date"] + '" target="_blank">' + 'Open a Maplin request window' + '</a>'  + '</td></tr>';
+		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="/cgi-bin/lightning.cgi?rm=lightning_request_form' + '&amp;ztarget=' + data["location"][i]["@name"] + '&amp;title=' + data["md-title"] + '&amp;author=' + data["md-author"] + '&amp;medium=' + data["md-medium"] + '&amp;isbn=' + data["location"][i]["md-isbn"] + '&amp;callno=' + data["location"][i]["md-callnumber"] + '&amp;date=' + data["md-date"] + '&amp;holding=' + data["location"][i]["md-holding"] + '" target="_blank">' + 'Open a Maplin request window' + '</a>'  + '</td></tr>';
 		}
  
 	    } else {  

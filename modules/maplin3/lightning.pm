@@ -66,6 +66,7 @@ sub lightning_request_process {
     $content .= "Medium: " . $q->param('medium') . ", ";
     $content .= "PubDate " . $q->param('date') . ", ";
     $content .= "ISBN " . $q->param('isbn') . "\n";
+    $content .= "Holding:" . $q->param('holding') . "\n";
 
     $content .= "\n-------------------------------------\n";
     $content .= "Requesting library: " . $self->authen->username . "\n\n";

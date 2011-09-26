@@ -365,6 +365,30 @@
         </pz:metadata>
       </xsl:for-each>
 
+      <!-- Maplin - holdings info -->
+      <xsl:for-each select="marc:datafield[@tag='852']">
+        <pz:metadata type="holding">
+	  <xsl:for-each select="marc:subfield">
+	    <xsl:if test="position() > 1">
+	      <xsl:text> </xsl:text>
+	    </xsl:if>
+	    <xsl:value-of select="."/>
+	  </xsl:for-each>
+        </pz:metadata>
+      </xsl:for-each>
+
+      <xsl:for-each select="marc:datafield[@tag='949']">
+        <pz:metadata type="holding">
+	  <xsl:for-each select="marc:subfield">
+	    <xsl:if test="position() > 1">
+	      <xsl:text> </xsl:text>
+	    </xsl:if>
+	    <xsl:value-of select="."/>
+	  </xsl:for-each>
+        </pz:metadata>
+      </xsl:for-each>
+      <!-- end of holdings info for Maplin -->
+
       <!-- passthrough id data -->
       <xsl:for-each select="pz:metadata">
           <xsl:copy-of select="."/>
