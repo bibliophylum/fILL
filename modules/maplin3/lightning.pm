@@ -70,9 +70,13 @@ sub lightning_request_process {
     $content .= "\n-------------------------------------\n";
     $content .= "Requesting library: " . $self->authen->username . "\n\n";
     $content .= $hr_user->{'library'} . "\n";
-    $content .= $hr_user->{'mailing_address_line1'} . "\n" if (defined $hr_user->{'mailing_address_line1'});
-    $content .= $hr_user->{'mailing_address_line2'} . "\n" if (defined $hr_user->{'mailing_address_line2'});
-    $content .= $hr_user->{'mailing_address_line3'} . "\n" if (defined $hr_user->{'mailing_address_line3'});
+    $content .= $hr_user->{'mailing_address_line1'} . "\n" if ($hr_user->{'mailing_address_line1'});
+    $content .= $hr_user->{'mailing_address_line2'} . "\n" if ($hr_user->{'mailing_address_line2'});
+    $content .= $hr_user->{'mailing_address_line3'} . "\n" if ($hr_user->{'mailing_address_line3'});
+
+    $content .= "\n-------------------------------------\n";
+    $content .= "Patron #: " . $q->param('patron') . "\n" if ($q->param('patron'));
+    $content .= "Notes   : " . $q->param('notes') . "\n" if ($q->param('notes'));
 
     my $sent = $q->param('sent') || 0;
     my $error_sendmail = 0;

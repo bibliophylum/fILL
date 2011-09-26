@@ -6,10 +6,11 @@
                   name="pz:name" value="Thompson Public Library (Insignia)"/>
 
 <!-- Maplin settings -->
-<set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Login"/>
-<set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="http://catalogue.thompsonlibrary.com/library/Search.aspx"/>
+<!-- set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Login"/ -->
+<!-- set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="http://catalogue.thompsonlibrary.com/library/Search.aspx"/ -->
+<set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Maplin"/>
+<set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="/cgi-bin/lightning.cgi?rm=lightning_request_form"/>
 <!-- end Maplin settings -->
-
 
   <!-- settings apply to all targets -->
 
