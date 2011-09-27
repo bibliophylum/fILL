@@ -43,6 +43,9 @@ pazpar2-js
 pazpar2-jsdemo
 pazpar2-test1
 
+Important!  Now go to /etc/pazpar2/services-enabled, and (as root) unlink default.xml
+(or else you'll have problems starting the pazpar2 service later....)
+
 -----------------------------------------------------------------------------
 targets:
 /etc/pazpar2/settings
