@@ -44,92 +44,153 @@
 <p><br /></p>
 
 <TMPL_IF NAME="showserver">
-  <h2>Information from your MyAccount | zServer page</h2>
+  <div id="contain">
+    <div id="lcol">
+    <h2>Information from your MyAccount | zServer page</h2>
 
-  <TMPL_UNLESS zserver>
-    <p>This library does not have zServer information in Maplin.</p>
-  </TMPL_UNLESS>
+    <TMPL_UNLESS zserver>
+      <p>This library does not have zServer information in Maplin.</p>
+    </TMPL_UNLESS>
 
-  <TMPL_LOOP NAME="zserver">
-    <p>id: <TMPL_VAR NAME="id"></p>
-    <p>name: <TMPL_VAR NAME="name"></p>
-    <p>z3950: <TMPL_VAR NAME="z3950_connection_string"></p>
-    <p>record format: <TMPL_VAR NAME="preferredrecordsyntax"></p>
-    <p>You have marked your server as: 
-      <TMPL_IF NAME="available">
-	Available
-	<TMPL_ELSE>
-	  Not available at this time
-      </TMPL_IF>
-    </p>
-
-    <p>You have classified your system as 
-      <TMPL_IF NAME="isstandardresource">a <strong>standard</strong> resource (eg: Interlibrary loan searching)</TMPL_IF>
-      <TMPL_IF NAME="isdatabase">a <strong>database</strong> resource (eg: Ebscohost)</TMPL_IF>
-      <TMPL_IF NAME="iselectronicresource">an <strong>ebook</strong> resource (eg: Project Gutenberg)</TMPL_IF>
-      <TMPL_IF NAME="iswebresource">a <strong>web</strong> resource (eg: Wikipedia)</TMPL_IF>
-    </p>
-    <p><br />You have indicated that your system displays holdings information in Tag <TMPL_VAR NAME="holdings_tag"></p>
-    <p>Location in subfield: 
-      <TMPL_IF NAME="holdings_location">
-	<TMPL_VAR NAME="holdings_location">
+    <TMPL_LOOP NAME="zserver">
+      <p>id: <TMPL_VAR NAME="id"></p>
+      <p>name: <TMPL_VAR NAME="name"></p>
+      <p>z3950: <TMPL_VAR NAME="z3950_connection_string"></p>
+      <p>record format: <TMPL_VAR NAME="preferredrecordsyntax"></p>
+      <p>You have marked your server as: 
+	<TMPL_IF NAME="available">
+	  Available
 	  <TMPL_ELSE>
-	    Not set.
-      </TMPL_IF>
-    </p>
-    <p>Call # in subfield: 
-      <TMPL_IF NAME="holdings_callno">
-	<TMPL_VAR NAME="holdings_callno">
-	  <TMPL_ELSE>
-	    Not set.
-      </TMPL_IF>
-    </p>
-    <p>Collection in subfield: 
-      <TMPL_IF NAME="holdings_collection">
-	<TMPL_VAR NAME="holdings_collection">
-	  <TMPL_ELSE>
-	    Not set.
-      </TMPL_IF>
-    </p>
-    <p>Circ status in subfield: 
-      <TMPL_IF NAME="holdings_avail">
-	<TMPL_VAR NAME="holdings_avail">
-	  <TMPL_ELSE>
-	    Not set.
-      </TMPL_IF>
-    </p>
-    <p>Due date (if checked out) in subfield: 
-      <TMPL_IF NAME="holdings_due">
-	<TMPL_VAR NAME="holdings_due">
-	  <TMPL_ELSE>
-	    Not set.
-      </TMPL_IF>
-    </p>
-    <p><br />The default email address for this zserver is: <TMPL_VAR NAME="email_address"></p>
-    
-  </TMPL_LOOP>
-</TMPL_IF>
-
-<p><br /></p>
-
-<h2>Status</h2>
-<TMPL_LOOP NAME="status">
-  <p>Stage: <TMPL_VAR NAME="stage"></p>
-  <p><strong>Port check: <TMPL_VAR NAME="porttest"></strong></p>
-  <TMPL_IF NAME="show">
-    <p>Status: <TMPL_VAR NAME="error"></p>
-    <p>Timeout limit: <TMPL_VAR NAME="timeout"> seconds.</p>
-    <TMPL_IF NAME="search_terms">
-      <p>Searching for <TMPL_VAR NAME="search_terms"> using pqf string <TMPL_VAR NAME="search_string"></p>
-      <p>Result count: 
-	<TMPL_IF NAME="result_count">
-	  <TMPL_VAR NAME="result_count">
-	    <TMPL_ELSE>
-	      <strong>Your zServer says you have nothing matching <TMPL_VAR NAME="search_terms">.</strong>
+	    Not available at this time
 	</TMPL_IF>
       </p>
-    </TMPL_IF>
+
+      <p>You have classified your system as 
+	<TMPL_IF NAME="isstandardresource">a <strong>standard</strong> resource (eg: Interlibrary loan searching)</TMPL_IF>
+	<TMPL_IF NAME="isdatabase">a <strong>database</strong> resource (eg: Ebscohost)</TMPL_IF>
+	<TMPL_IF NAME="iselectronicresource">an <strong>ebook</strong> resource (eg: Project Gutenberg)</TMPL_IF>
+	<TMPL_IF NAME="iswebresource">a <strong>web</strong> resource (eg: Wikipedia)</TMPL_IF>
+      </p>
+      <p><br />You have indicated that your system displays holdings information in Tag <TMPL_VAR NAME="holdings_tag"></p>
+      <p>Location in subfield: 
+	<TMPL_IF NAME="holdings_location">
+	  <TMPL_VAR NAME="holdings_location">
+	    <TMPL_ELSE>
+	      Not set.
+	</TMPL_IF>
+      </p>
+      <p>Call # in subfield: 
+	<TMPL_IF NAME="holdings_callno">
+	  <TMPL_VAR NAME="holdings_callno">
+	    <TMPL_ELSE>
+	      Not set.
+	</TMPL_IF>
+      </p>
+      <p>Collection in subfield: 
+	<TMPL_IF NAME="holdings_collection">
+	  <TMPL_VAR NAME="holdings_collection">
+	    <TMPL_ELSE>
+	      Not set.
+	</TMPL_IF>
+      </p>
+      <p>Circ status in subfield: 
+	<TMPL_IF NAME="holdings_avail">
+	  <TMPL_VAR NAME="holdings_avail">
+	    <TMPL_ELSE>
+	      Not set.
+      </TMPL_IF>
+      </p>
+      <p>Due date (if checked out) in subfield: 
+	<TMPL_IF NAME="holdings_due">
+	  <TMPL_VAR NAME="holdings_due">
+	    <TMPL_ELSE>
+	      Not set.
+	</TMPL_IF>
+      </p>
+      <p><br />The default email address for this zserver is: <TMPL_VAR NAME="email_address"></p>
+      
+    </TMPL_LOOP>
   </TMPL_IF>
-</TMPL_LOOP>
+
+  <p><br /></p>
+
+  <h2>Status:</h2>
+  <TMPL_LOOP NAME="status">
+    <p>Stage: <TMPL_VAR NAME="stage"></p>
+    <p><strong>Port check: <TMPL_VAR NAME="porttest"></strong></p>
+    <TMPL_IF NAME="show">
+      <p>Status: <TMPL_VAR NAME="error"></p>
+      <p>Timeout limit: <TMPL_VAR NAME="timeout"> seconds.</p>
+      <TMPL_IF NAME="search_terms">
+	<p>Searching for <TMPL_VAR NAME="search_terms"> using pqf string <TMPL_VAR NAME="search_string"></p>
+	<p>Result count: 
+	  <TMPL_IF NAME="result_count">
+	    <TMPL_VAR NAME="result_count">
+	      <TMPL_ELSE>
+		<strong>Your zServer says you have nothing matching <TMPL_VAR NAME="search_terms">.</strong>
+	  </TMPL_IF>
+	</p>
+      </TMPL_IF>
+      <TMPL_IF NAME="is_ok">
+	<p id="status_ok">Your system is searchable.</p>
+	<TMPL_ELSE>
+	  <p id="status_not_ok">Your system is not searchable.</p>
+      </TMPL_IF>
+    </TMPL_IF>
+  </TMPL_LOOP>
+
+  </div> <!-- lcol -->
+
+    <TMPL_IF NAME="showserver">
+  <div id="rcol">
+
+      <H2>If there are problems</H2>
+    <br/>
+    <p>If Maplin is unable to search your system, please verify that your system is accessible and your z39.50 server is running.</p>
+    <br/>
+
+    <H3>To verify that your system is accessible:</H3>
+    <br/>
+    <p>
+      Check that the correct ports are open on your router.  Follow this link out of Maplin to the <a href="http://www.t1shopper.com/tools/port-scan/" target="_blank">T1 Shopper Online Port Scan</a> (it will open in a new browser tab).</p>
+    <br/>
+      <ol>
+	<li>In the "Host name or IPv4 address" field, enter <strong><TMPL_VAR NAME="host"></strong></li>
+	<li>In the "Scan this list of port numbers" field, enter "<strong>80 210</strong>"</li>
+	<li>Click the "Scan" button.</li>
+      </ol>
+    <br/>
+    <p>It should say: <br/>"<TMPL_VAR NAME="host"> is responding on port 80 (http)"<br/>"<TMPL_VAR NAME="host"> is responding on port 210 (z39.50)"</p>
+    <br/><p>If it does not, you need to have your local IT person open those ports on your router.</p>
+    <br/>
+    
+    <H3>To verify that your z39.50 server is running:</H3>
+    <br/>
+    <p>
+      Have the Library of Congress search your system.  Follow this link out of Maplin to the <a href="http://www.loc.gov/z3950/test.html" target="_blank">Library of Congress z39.50 server testing</a> page (it will open in a new browser tab).</p>
+    <br/>
+      <ol>
+	<li>In the "Address" field, enter <strong><TMPL_VAR NAME="host"></strong></li>
+	<li>In the "Port" field, enter <strong><TMPL_VAR NAME="port"></strong> (the default is 210)</li>
+	<li>In the "Database Name" field, enter <strong><TMPL_VAR NAME="dbname"></strong></li>
+	<li>In the "Enter Term 1" field, enter a search term (e.g. <strong>"ducks"</strong>)</li>
+	<li>Beside the "Enter Term 1" field, change the <strong>index being searched</strong> from "Personal Name" to "Title" by selecting it in the drop-down list</li>
+	<li>Click the "Submit Query" button at the bottom of the page</li>
+      </ol>
+    <br/>
+    <p>It should return a list of records.</p>
+    <br/>
+    <p>If the Library of Congress test times out, this likely means that your z39.50 server program is not running.  You will need to do one of the following:</p>
+    <br/>
+      <ul>
+	<li>Start your z39.50 server program.</li>
+	<li>Contact your vendor to have them start your z39.50 server program.</li>
+	<li>Shut down and reboot your server computer (if your z39.50 server program starts automatically when the system starts).</li>
+      </ul>
+    <br/>
+    <p>If the Library of Congress test returns an error other than "time out", contact PLSB and we will help you to determine the cause of the error.</p>
+    </div> <!-- rcol -->
+</div> <!-- contain -->
+  </TMPL_IF>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

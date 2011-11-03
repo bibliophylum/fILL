@@ -120,6 +120,10 @@ sub test_my_zserver_process {
     $status{search_string} = "";
     $status{result_count} = 0;
 
+    my $host;
+    my $port;
+    my $dbname;
+
     if ($q->param('getStatus')) {
     
 	# Need the user's zserver info
@@ -140,10 +144,12 @@ sub test_my_zserver_process {
 	    $status{show} = 1;
 
 	    # Check if the z39.50 port is open on the remote machine
-	    my $host = $zserver_href->{z3950_connection_string};
+	    $host = $zserver_href->{z3950_connection_string};
 	    $host =~ s/^(.*):.*$/$1/;
-	    my $port = $zserver_href->{z3950_connection_string};
+	    $port = $zserver_href->{z3950_connection_string};
 	    $port =~ s/^.*:(.*)\/.*$/$1/;
+	    $dbname = $zserver_href->{z3950_connection_string};
+	    $dbname =~ s|^.*/(.*)$|$1|;
 	    my $porttester = Net::Ping->new("tcp");
 	    $porttester->port_number($port);
 	    if ($porttester->ping($host)) {
@@ -168,6 +174,7 @@ sub test_my_zserver_process {
 		my $resultset = $conn->search_pqf('@attr 1=4 dinosaur');
 		my $n = $resultset->size();
 		$status{result_count} = $n;
+		$status{is_ok} = ($status{result_count} > 0) ? 1 : undef;
 	    };	
 	    if ($@) {
 		$status{error} = $@->render;
@@ -189,7 +196,10 @@ sub test_my_zserver_process {
 	username => $self->authen->username,
 	showserver => $showserver,
 	zserver => \@zserver_data, 
-	status => \@status_data
+	status => \@status_data,
+	host => $host,
+	port => $port,
+	dbname => $dbname
 	);
     return $template->output;
 }
