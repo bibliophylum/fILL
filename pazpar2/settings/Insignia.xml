@@ -1,0 +1,119 @@
+<settings target="*">
+
+<!-- Prairie Crocus Regional Library -->
+  <set target="prairiecrocuslibrary.ca:210/ils" name="pz:name" value="Prairie Crocus Regional Library"/>
+  <set target="prairiecrocuslibrary.ca:210/ils" name="requestby" value="Maplin"/>
+  <set target="prairiecrocuslibrary.ca:210/ils" name="requesturl" value="http://prairiecrocuslibrary.ca/library/Search.aspx"/>
+
+<!-- Rapid City Regional Library -->
+  <set target="216.130.92.162:210/ils" name="pz:name" value="Rapid City Regional Library"/>
+  <set target="216.130.92.162:210/ils" name="requestby" value="Maplin"/>
+  <set target="216.130.92.162:210/ils" name="requesturl" value="http://216.130.92.162/library/Search.aspx"/>
+
+<!-- Bren Del Win Centennial Library -->
+  <set target="206.45.127.185:210/ILS" name="pz:name" value="Bren Del Win Centennial Library"/>
+  <set target="206.45.127.185:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.127.185:210/ILS" name="requesturl" value="http://206.45.127.185/library/LoginPatron.aspx?App=MyAccount"/>
+
+<!-- Boyne Regional Library -->
+  <set target="206.45.105.104:210/ILS" name="pz:name" value="Boyne Regional Library (Insignia)"/>
+  <set target="206.45.105.104:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.105.104:210/ILS" name="requesturl" value="http://206.45.105.104/library/LoginPatron.aspx?App=MyAccount"/>
+
+<!-- Emerson Public Library -->
+  <set target="206.45.206.163:210/ILS" name="pz:name" value="Emerson Public Library (Insignia)"/>
+  <set target="206.45.206.163:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.206.163:210/ILS" name="requesturl" value="http://206.45.206.163/library/Search.aspx"/>
+
+<!-- Glenwood and Souris Regional Library -->
+  <set target="206.45.123.156:210/ILS" name="pz:name" value="Glenwood and Souris Regional Library (Insignia)"/>
+  <set target="206.45.123.156:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.123.156:210/ILS" name="requesturl" value="http://206.45.123.156/library/Search.aspx"/>
+
+<!-- Jake Epp Library -->
+  <set target="216.55.201.10:210/ils" name="pz:name" value="Jake Epp Library (Insignia)"/>
+  <set target="216.55.201.10:210/ils" name="requestby" value="Maplin"/>
+  <set target="216.55.201.10:210/ils" name="requesturl" value="http://jakeepp.dotdns.com/library/Search.aspx"/>
+
+<!-- Lakeland Regional Library -->
+  <set target="206.45.118.101:210/InsigniaLibrary" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
+  <set target="206.45.118.101:210/InsigniaLibrary" name="requestby" value="Maplin"/>
+  <set target="206.45.118.101:210/InsigniaLibrary" name="requesturl" value="http://206.45.118.101/library/LoginPatron.aspx?App=MyAccount"/>
+
+<!-- Minnedosa Regional Library -->
+  <set target="206.45.123.128:210/minnedosa_ils" name="pz:name" value="Minnedosa Regional Library (Insignia)"/>
+  <set target="206.45.123.128:210/minnedosa_ils" name="requestby" value="Maplin"/>
+  <set target="206.45.123.128:210/minnedosa_ils" name="requesturl" value="http://206.45.123.128/library/Search.aspx"/>
+
+<!-- North Norfolk MacGregor Library -->
+  <set target="206.45.206.163:210/ILS"
+                  name="pz:name" value="North Norfolk MacGregor Library (Insignia)"/>
+  <set target="206.45.94.71:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.94.71:210/ILS" name="requesturl" value="http://206.45.94.71/library/Search.aspx"/>
+
+<!-- Pauline Johnson Library -->
+  <set target="206.45.82.29:210/ILS"
+                  name="pz:name" value="Pauline Johnson Library (Insignia)"/>
+  <set target="206.45.82.29:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.82.29:210/ILS" name="requesturl" value="http://mlpj.mb.ca/Library/Search.aspx"/>
+
+<!-- Pinawa Public Library -->
+  <set target="206.45.117.102:210/Pinawa_ILS"
+                  name="pz:name" value="Pinawa Public Library (Insignia)"/>
+  <set target="206.45.117.102:210/Pinawa_ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.117.102:210/Pinawa_ILS" name="requesturl" value="http://www.sdwhiteshell.mb.ca:88/library/Search.aspx"/>
+
+<!-- South Interlake Regional Library -->
+  <set target="206.45.182.133:210/ILS"
+                  name="pz:name" value="South Interlake Regional Library (Insignia)"/>
+  <set target="206.45.182.133:210/ILS" name="requestby" value="Login"/>
+  <set target="206.45.182.133:210/ILS" name="requesturl" value="http://206.45.182.133/library/Search.aspx"/>
+
+<!-- Southwestern Manitoba Regional Library -->
+  <set target="216.130.92.141:210/Melita_ILS"
+                  name="pz:name" value="Southwestern Manitoba Regional Library (Insignia)"/>
+  <set target="216.130.92.141:210/Melita_ILS" name="requestby" value="Maplin"/>
+  <set target="216.130.92.141:210/Melita_ILS" name="requesturl" value="http://216.130.92.141/Melita/LoginPatron.aspx?App=MyAccount"/>
+
+<!-- Thompson Public Library -->
+  <set target="catalogue.thompsonlibrary.com:210/ILS"
+                  name="pz:name" value="Thompson Public Library (Insignia)"/>
+  <set target="catalogue.thompsonlibrary.com:210/ILS" name="requestby" value="Maplin"/>
+  <set target="catalogue.thompsonlibrary.com:210/ILS" name="requesturl" value="/cgi-bin/lightning.cgi?rm=lightning_request_form"/>
+
+<!-- Valley Regional Library -->
+  <set target="206.45.206.163:210/ILS"
+                  name="pz:name" value="Valley Regional Library (Insignia)"/>
+  <set target="206.45.109.104:210/ILS" name="requestby" value="Maplin"/>
+  <set target="206.45.109.104:210/ILS" name="requesturl" value="http://206.45.109.104/library/Search.aspx"/>
+
+<!-- Victoria Municipal Library -->
+  <set target="206.45.206.163:210/ILS"
+                  name="pz:name" value="Victoria Municipal Library (Insignia)"/>
+  <set target="208.92.138.194:210/ILS" name="requestby" value="Maplin"/>
+  <set target="208.92.138.194:210/ILS" name="requesturl" value="http://208.92.138.194/library/Search.aspx"/>
+
+<!-- settings apply to all targets -->
+
+  <!-- mapping for unqualified search -->
+  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+
+  <!-- field-specific mappings -->
+  <set name="pz:cclmap:au" value="u=1004 s=al"/>
+  <set name="pz:cclmap:ti" value="u=4 s=al 2=102"/>
+  <set name="pz:cclmap:su" value="u=21 s=al 2=102"/>
+  <set name="pz:cclmap:isbn" value="u=7 2=102"/>
+  <set name="pz:cclmap:issn" value="u=8 2=102"/>
+  <set name="pz:cclmap:date" value="u=30 r=r 2=102"/>
+
+  <!-- Retrieval settings -->
+
+  <set name="pz:requestsyntax" value="marc21"/>
+  <set name="pz:elements" value="F"/>
+
+  <!-- Result normalization settings -->
+
+  <set name="pz:nativesyntax" value="iso2709"/>
+  <set name="pz:xslt" value="marc21.xsl"/>
+
+</settings>
