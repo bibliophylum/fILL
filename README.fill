@@ -1,0 +1,6 @@
+Maplin-4
+ILL Management System
+
+Need to add a field to pazpar2/settings/*.xml: the library id (libraries(lid))
+Should probably write a script to pull this from the database, as the lid can change between dev/staging/production.
+
