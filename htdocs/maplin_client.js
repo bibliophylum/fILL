@@ -417,6 +417,9 @@ function renderDetails(data, marker)
 	if (data["location"][i]["md-holding"] != undefined)
 	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
 
+	if (data["location"][i]["md-symbol"] != undefined)
+	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
+
 	if (data["location"][i]["md-requestby"] != undefined) {
 	    if (data["location"][i]["md-requestby"] == 'Login') {
 		// Login to target's OPAC

@@ -56,18 +56,6 @@
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Maplin -->
-<!--
-    <xsl:variable name="requestby">
-      <xsl:value-of select="$requestby"/>
-    </xsl:variable>
-
-    <xsl:variable name="requesturl">
-      <xsl:value-of select="$requesturl"/>
-    </xsl:variable>
--->
-    <!-- end Maplin -->
-
     <pz:record>
       <xsl:for-each select="marc:controlfield[@tag='001']">
         <pz:metadata type="id">
@@ -395,6 +383,10 @@
       </xsl:for-each>
 
       <!-- Maplin -->
+      <pz:metadata type="symbol">
+	<xsl:value-of select="$symbol"/>
+      </pz:metadata>
+
       <pz:metadata type="requestby">
 	<xsl:value-of select="$requestby"/>
       </pz:metadata>

@@ -1,68 +1,68 @@
 <settings target="*">
 
 <!-- Northwest Regional Library - Benito -->
-  <set target="206.45.217.109:210/Default"
-                  name="pz:name" value="Northwest Regional Library - Benito"/>
+  <set target="206.45.217.109:210/Default" name="pz:name" value="Northwest Regional Library - Benito"/>
+  <set target="206.45.217.109:210/Default" name="symbol" value="MBB"/>
   <set target="206.45.217.109:210/Default" name="requestby" value="Maplin"/>
   <set target="206.45.217.109:210/Default" name="requesturl" value="http://206.45.217.109/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Bette Winner Public Library -->
-  <set target="bettewinner.commstream.net:210/L4U_Agent"
-                  name="pz:name" value="Bette Winner Public Library (L4U)"/>
+  <set target="bettewinner.commstream.net:210/L4U_Agent" name="pz:name" value="Bette Winner Public Library (L4U)"/>
+  <set target="bettewinner.commstream.net:210/L4U_Agent" name="symbol" value="MGI"/>
   <set target="bettewinner.commstream.net:210/L4U_Agent" name="requestby" value="Maplin"/>
   <set target="bettewinner.commstream.net:210/L4U_Agent" name="requesturl" value="http://72.2.14.132/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Border Regional Library - Elkhorn Branch -->
-  <set target="74.113.180.251:210/Default"
-                  name="pz:name" value="Border Regional Library - Elkhorn Branch (L4U)"/>
+  <set target="74.113.180.251:210/Default" name="pz:name" value="Border Regional Library - Elkhorn Branch (L4U)"/>
+  <set target="74.113.180.251:210/Default" name="symbol" value="ME"/>
   <set target="74.113.180.251:210/Default" name="requestby" value="Maplin"/>
   <set target="74.113.180.251:210/Default" name="requesturl" value="http://74.113.180.251/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Border Regional Library -->
-  <set target="74.113.178.216:210/Default"
-                  name="pz:name" value="Border Regional Library (L4U)"/>
+  <set target="74.113.178.216:210/Default" name="pz:name" value="Border Regional Library (L4U)"/>
+  <set target="74.113.178.216:210/Default" name="symbol" value="MVE"/>
   <set target="74.113.178.216:210/Default" name="requestby" value="Maplin"/>
   <set target="74.113.178.216:210/Default" name="requesturl" value="http://74.113.178.216/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Evergreen Regional Library - Arborg -->
-  <set target="library.arborg.com:210/Default"
-                  name="pz:name" value="Evergreen Regional Library - Arborg (L4U)"/>
+  <set target="library.arborg.com:210/Default" name="pz:name" value="Evergreen Regional Library - Arborg (L4U)"/>
+  <set target="library.arborg.com:210/Default" name="symbol" value="MAB"/>
   <set target="library.arborg.com:210/Default" name="requestby" value="Maplin"/>
   <set target="library.arborg.com:210/Default" name="requesturl" value="http://library.arborg.com/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Evergreen Regional Library - Gimli -->
-  <set target="206.45.206.184:210/Default"
-                  name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
+  <set target="206.45.206.184:210/Default" name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
+  <set target="206.45.206.184:210/Default" name="symbol" value="MGE"/>
   <set target="206.45.206.184:210/Default" name="requestby" value="Maplin"/>
   <set target="206.45.206.184:210/Default" name="requesturl" value="http://206.45.206.184/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Evergreen Regional Library - Riverton -->
-  <set target="206.45.204.145:210/Default"
-                  name="pz:name" value="Evergreen Regional Library - Riverton (L4U)"/>
+  <set target="206.45.204.145:210/Default" name="pz:name" value="Evergreen Regional Library - Riverton (L4U)"/>
+  <set target="206.45.204.145:210/Default" name="symbol" value="MRB"/>
   <set target="206.45.204.145:210/Default" name="requestby" value="Maplin"/>
   <set target="206.45.204.145:210/Default" name="requesturl" value="http://206.45.204.145/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Flin Flon Public Library -->
-  <set target="206.45.107.155:210/Default"
-                  name="pz:name" value="Flin Flon Public Library (L4U)"/>
+  <set target="206.45.107.155:210/Default" name="pz:name" value="Flin Flon Public Library (L4U)"/>
+  <set target="206.45.107.155:210/Default" name="symbol" value="MFF"/>
   <set target="206.45.107.155:210/Default" name="requestby" value="Maplin"/>
   <set target="206.45.107.155:210/Default" name="requesturl" value="http://206.45.107.155/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Jolys Regional Library -->
-  <set target="66.244.209.14:210/L4U_Agent"
-                  name="pz:name" value="Jolys Regional Library (L4U)"/>
+  <set target="66.244.209.14:210/L4U_Agent" name="pz:name" value="Jolys Regional Library (L4U)"/>
+  <set target="66.244.209.14:210/L4U_Agent" name="symbol" value="MSTP"/>
   <set target="66.244.209.14:210/L4U_Agent" name="requestby" value="Maplin"/>
   <set target="66.244.209.14:210/L4U_Agent" name="requesturl" value="http://66.244.209.14/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- Northwest Regional Library - Swan River -->
-  <set target="206.45.96.178:210/Default"
-                  name="pz:name" value="Northwest Regional Library - Swan River (L4U)"/>
+  <set target="206.45.96.178:210/Default" name="pz:name" value="Northwest Regional Library - Swan River (L4U)"/>
+  <set target="206.45.96.178:210/Default" name="symbol" value="MSRN"/>
   <set target="206.45.96.178:210/Default" name="requestby" value="Maplin"/>
   <set target="206.45.96.178:210/Default" name="requesturl" value="http://206.45.96.178/4DCGI/gen_2002/Lang=Def"/>
 
 <!-- The Pas Regional Library -->
-  <set target="206.45.107.244:210/L4U_Agent"
-                  name="pz:name" value="The Pas Regional Library (L4U)"/>
+  <set target="206.45.107.244:210/L4U_Agent" name="pz:name" value="The Pas Regional Library (L4U)"/>
+  <set target="206.45.107.244:210/L4U_Agent" name="symbol" value="MTP"/>
   <set target="206.45.107.244:210/L4U_Agent" name="requestby" value="Maplin"/>
   <set target="206.45.107.244:210/L4U_Agent" name="requesturl" value="http://206.45.107.244/4DCGI/gen_2002/Lang=Def"/>
 
