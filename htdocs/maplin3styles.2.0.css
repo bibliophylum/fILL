@@ -85,7 +85,7 @@ h6
 }
 
 #logo_slogan {
-  color:#efe642;
+  color:#ffd073;
   font-size:12px;
   font-family:tahoma, arial
 }
@@ -111,16 +111,16 @@ h6
   display: inline;
   font-weight: 500;
   font-size: 130%;
-  color: white;
+  color: #1240ab;
 }
 
-#header_quick_access li A:link    { color: white; text-decoration:underline }
-#header_quick_access li A:active  { color: white; text-decoration:underline }
-#header_quick_access li A:visited { color: white; text-decoration:underline }
+#header_quick_access li A:link    { color: #1240ab; text-decoration:underline }
+#header_quick_access li A:active  { color: #1240ab; text-decoration:underline }
+#header_quick_access li A:visited { color: #1240ab; text-decoration:underline }
 
-#header_quick_access A:link    { color: white; text-decoration:underline }
-#header_quick_access A:active  { color: white; text-decoration:underline }
-#header_quick_access A:visited { color: white; text-decoration:underline }
+#header_quick_access A:link    { color: #1240ab; text-decoration:underline }
+#header_quick_access A:active  { color: #1240ab; text-decoration:underline }
+#header_quick_access A:visited { color: #1240ab; text-decoration:underline }
 
 #nav1
 {
@@ -820,7 +820,7 @@ a.crossout:hover {
     float: left;
     padding:25px 10px 10px 12px;
     line-height: 40px;
-    border-top: 1px solid  #06266f;
+/*    border-top: 1px solid  #06266f; */
     color: #ffffff;
     font-size: large;
 }
@@ -839,7 +839,7 @@ input#button {
 }
 
 input#query {
-    border: 2px inset #34cc67;
+    border: 2px inset #6c8cd5;
     padding: 3px;
     font-size: 12px;
 }

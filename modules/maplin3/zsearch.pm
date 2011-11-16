@@ -162,7 +162,7 @@ sub search_simple_ajax_process {
 		    
 		    #my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
 		    my $template = $self->load_tmpl('search/searching_with_status.tmpl');	
-		    $template->param( pagetitle => "Maplin-3 Searching...",
+		    $template->param( pagetitle => "Maplin-4 Searching...",
 			              username => $self->authen->username,
 				      sessionid => $session,
 			);
@@ -261,7 +261,7 @@ sub search_simple_ajax_process {
 	my $userhref = $self->dbh->selectrow_hashref("SELECT use_standardresource, use_databaseresource, use_electronicresource, use_webresource from libraries WHERE name=?", {}, $self->authen->username);
 
 	my $template = $self->load_tmpl('search/simple_ajax.tmpl');	
-	$template->param( pagetitle => "Maplin-3 Search Simple",
+	$template->param( pagetitle => "Maplin-4 Search Simple",
 			  username => $self->authen->username,
 			  sessionid => $self->session->id(),
 			  use_standardresource   => $userhref->{use_standardresource} ? 1 : 0,
@@ -422,7 +422,7 @@ sub search_common_process {
 		    
 #		    my $template = $self->load_tmpl('search/searching_ajax.tmpl');	
 		    my $template = $self->load_tmpl('search/searching_with_status.tmpl');	
-		    $template->param( pagetitle => "Maplin-3 Searching...",
+		    $template->param( pagetitle => "Maplin-4 Searching...",
 				      username => $self->authen->username,
 				      sessionid => $session,
 				      from_common_search => 1,
@@ -522,7 +522,7 @@ sub search_common_process {
 	my $userhref = $self->dbh->selectrow_hashref("SELECT use_standardresource, use_databaseresource, use_electronicresource, use_webresource from libraries WHERE name=?", {}, $self->authen->username);
 
 	my $template = $self->load_tmpl('search/common_search.tmpl');	
-	$template->param( pagetitle => "Maplin-3 Search Common",
+	$template->param( pagetitle => "Maplin-4 Search Common",
 			  username => $self->authen->username,
 			  sessionid => $self->session->id(),
 			  use_standardresource   => $userhref->{use_standardresource} ? 1 : 0,
@@ -848,7 +848,7 @@ sub results_process {
 
     # Parse the template
     my $template = $self->load_tmpl('search/results.tmpl');
-    $template->param( pagetitle => "Maplin-3 Search Results",
+    $template->param( pagetitle => "Maplin-4 Search Results",
 		      USERNAME => $self->authen->username,
 #		      PQFSTRING => $pqf,
 		      COUNT  => $countRecords,
@@ -884,7 +884,7 @@ sub search_simple_process {
 	                      'search/simple.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => "Maplin-3 Search Simple",
+    $template->param( pagetitle => "Maplin-4 Search Simple",
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 		      sql => $sql,
@@ -918,7 +918,7 @@ sub show_marc_process {
     my $template = $self->load_tmpl(	    
 	                      'search/marc.tmpl'
 			     );	
-    $template->param( pagetitle => "Maplin-3 MARC",
+    $template->param( pagetitle => "Maplin-4 MARC",
 		      username => $self->authen->username,
 		      marc => $marc->as_formatted() );
 
@@ -1004,7 +1004,7 @@ sub request_process {
 
     my $template = $self->load_tmpl('search/request.tmpl');
 
-    $template->param(pagetitle => "Maplin-3 Request",
+    $template->param(pagetitle => "Maplin-4 Request",
 		     username => $self->authen->username,
 		     FROM => $from,
 		     TO => $to,
@@ -1141,7 +1141,7 @@ sub send_email_process {
     
     my $template = $self->load_tmpl('search/request.tmpl');
 
-    $template->param(pagetitle => "Maplin-3 Email sent",
+    $template->param(pagetitle => "Maplin-4 Email sent",
 		     username => $self->authen->username,
 		     FROM => $from,
 		     TO => $to,
@@ -1182,7 +1182,7 @@ sub canadapost_process {
 
     my $template = $self->load_tmpl('search/canada_post.tmpl');  # CP has gone on strike....
 
-    $template->param(pagetitle => "Maplin-3 Request",
+    $template->param(pagetitle => "Maplin-4 Request",
 		     username => $self->authen->username,
 	);
 

@@ -55,7 +55,7 @@ sub browse_process {
 	                      'zerocirc/browse.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => "Maplin-3 ZeroCirc Browse",
+    $template->param( pagetitle => "Maplin-4 ZeroCirc Browse",
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 		      collections => $aref_collections,
@@ -129,7 +129,7 @@ sub browse_results_process {
 	                      'zerocirc/results.tmpl',
 			      cache => 0,
 			     );	
-    $template->param( pagetitle => "Maplin-3 ZeroCirc Results",
+    $template->param( pagetitle => "Maplin-4 ZeroCirc Results",
 		      username => $self->authen->username,
 #		      hideclaimed => $hideclaimed,
 		      collection => $q->param('collection'),
@@ -180,7 +180,7 @@ sub find_process {
 	    $q->param('id')
 	    );
     }
-    $template->param( pagetitle => "Maplin-3 ZeroCirc Find",
+    $template->param( pagetitle => "Maplin-4 ZeroCirc Find",
 		      username => $self->authen->username,
 		      ok => $ok,
 		      callno => $href->{callno},
@@ -223,7 +223,7 @@ sub report_process {
 	                      'zerocirc/report.tmpl',
 			      cache => 0,
 			     );	
-    $template->param( pagetitle => "Maplin-3 ZeroCirc Report",
+    $template->param( pagetitle => "Maplin-4 ZeroCirc Report",
 		      username => $self->authen->username,
 		      count => $count,
 		      browselist => $aref_browselist,
@@ -261,7 +261,7 @@ sub show_marc_process {
 
     # Parse the template
     my $html_output = $template->output;
-    $template->param( pagetitle => "Maplin-3 ZeroCirc MARC",
+    $template->param( pagetitle => "Maplin-4 ZeroCirc MARC",
 		      username => $self->authen->username);
     return $html_output;
 }

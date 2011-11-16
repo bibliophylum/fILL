@@ -49,7 +49,7 @@ sub patrons_verify_process {
 	);
     
     my $template = $self->load_tmpl('patrons/verify.tmpl');
-    $template->param(pagetitle => "Maplin-3 Patrons Verify",
+    $template->param(pagetitle => "Maplin-4 Patrons Verify",
 		     username     => $self->authen->username,
 		     PATRONLOOP   => $aref
 	);
@@ -172,7 +172,7 @@ sub patrons_edit_process {
     
     
     my $template = $self->load_tmpl('patrons/edit.tmpl');
-    $template->param(pagetitle => "Maplin-3 Patrons Edit",
+    $template->param(pagetitle => "Maplin-4 Patrons Edit",
 		     username      => $self->authen->username,
 		     status        => $status,
 		     in_editing    => $in_editing,

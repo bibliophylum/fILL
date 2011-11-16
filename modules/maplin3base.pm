@@ -161,7 +161,7 @@ sub welcome_process {
 	                      'welcome.tmpl',
 			      cache => 0,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Welcome',
+    $template->param( pagetitle => 'Maplin-4 Welcome',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -193,7 +193,7 @@ sub show_logged_out_process {
 	                      'logged_out.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Logged Out',
+    $template->param( pagetitle => 'Maplin-4 Logged Out',
 		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
 	);
@@ -217,7 +217,7 @@ sub forbidden_process {
 	                      'forbidden.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Forbidden',
+    $template->param( pagetitle => 'Maplin-4 Forbidden',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -244,7 +244,7 @@ sub environment_process {
 	    );
 	push(@loop, \%row);
     }
-    $template->param(pagetitle => 'Maplin-3 Environment',
+    $template->param(pagetitle => 'Maplin-4 Environment',
 		     env_variable_loop => \@loop);
     return $template->output;
 }
