@@ -47,16 +47,34 @@ sub request_process {
 
     my @inParms = $q->param;
     my @parms;
+    my %sources;
     foreach my $parm_name (@inParms) {
 	my %p;
 	$p{parm_name} = $parm_name;
 	$p{parm_value} = $q->param($parm_name);
 	push @parms, \%p;
+
+	if ($parm_name =~ /_\d+/) {
+	    my ($pname,$num) = split /_/,$parm_name;
+	    $sources{$num}{$pname} = $q->param($parm_name);
+	}
     }
+
+    my @sources;
+    foreach my $num (sort keys %sources) {
+	my %src;
+	foreach my $pname (keys %{$sources{$num}}) {
+	    $src{$pname} = $sources{$num}{$pname};
+	}
+	push @sources, \%src;
+    }
+    $self->log->debug( Dumper(@sources) );
+
     my $template = $self->load_tmpl('search/lightning_request_test.tmpl');	
     $template->param( pagetitle => "Maplin-4 Lightning Request test",
 		      username => $self->authen->username,
-		      parms => \@parms
+		      parms => \@parms,
+		      sources => \@sources,
 	);
     return $template->output;
     

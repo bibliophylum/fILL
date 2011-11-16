@@ -7,7 +7,7 @@ body,p,div,th,td,dd,ul,ol
   font-weight: 400;
   font-size: 95%;
   line-height: normal;
-  color: #000000;
+/*   color: #000000; */
   font-family: arial, helvetica, sans-serif;
   Font-style: normal;
 }
@@ -16,7 +16,7 @@ b,strong {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   font-size: 95%;
-  color: #000000;
+/*   color: #000000; */
 }
 
 h1
@@ -246,6 +246,7 @@ h6
   border-bottom: 2px solid #000;
   margin-right: 15px;
   padding-bottom: 20px;
+  color: white;
 }
 
 #middlecontent {
@@ -261,6 +262,7 @@ h6
   border-bottom: 2px solid #000;
   margin-left: 15px;
   padding-bottom: 20px;
+  color: white;
 }
 
 
