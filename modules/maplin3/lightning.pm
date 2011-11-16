@@ -18,6 +18,7 @@ sub setup {
     $self->run_modes(
 	'lightning_search_form'    => 'lightning_search_process',
 	'lightning_request_form'   => 'lightning_request_process',
+	'request'                  => 'request_process',
 	);
 }
 
@@ -36,6 +37,30 @@ sub lightning_search_process {
     return $template->output;
 }
 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub request_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my @inParms = $q->param;
+    my @parms;
+    foreach my $parm_name (@inParms) {
+	my %p;
+	$p{parm_name} = $parm_name;
+	$p{parm_value} = $q->param($parm_name);
+	push @parms, \%p;
+    }
+    my $template = $self->load_tmpl('search/lightning_request_test.tmpl');	
+    $template->param( pagetitle => "Maplin-4 Lightning Request test",
+		      username => $self->authen->username,
+		      parms => \@parms
+	);
+    return $template->output;
+    
+}
 
 #--------------------------------------------------------------------------------
 #

@@ -61,17 +61,18 @@ function my_onshow(data) {
     var html = [];
     for (var i = 0; i < data.hits.length; i++) {
         var hit = data.hits[i];
-	      html.push('<div class="record" id="recdiv_'+hit.recid+'" >'
-            +'<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>'
-            +'<a href="#" id="rec_'+hit.recid
-            +'" onclick="showDetails(this.id);return false;"><b>' 
-            + hit["md-title"] +' </b></a>'); 
-	      if (hit["md-title-remainder"] !== undefined) {
-	        html.push('<span>' + hit["md-title-remainder"] + ' </span>');
-	      }
-	      if (hit["md-title-responsibility"] !== undefined) {
+	html.push('<div class="record" id="recdiv_'+hit.recid+'" >'
+		  +'<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>'
+		  +'<a href="#" id="rec_'+hit.recid
+		  +'" onclick="showDetails(this.id);return false;"><b>' 
+		  + hit["md-title"] +' </b></a>'); 
+	if (hit["md-title-remainder"] !== undefined) {
+	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
+	}
+	if (hit["md-title-responsibility"] !== undefined) {
     	    html.push('<span><i>'+hit["md-title-responsibility"]+'</i></span>');
       	}
+
         if (hit.recid == curDetRecId) {
             html.push(renderDetails(curDetRecData));
         }
@@ -403,7 +404,9 @@ function renderDetails(data, marker)
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
 
+    var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post"><input type="hidden" name="rm" value="request">';
     var len=data["location"].length;
+    details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
@@ -413,13 +416,17 @@ function renderDetails(data, marker)
             details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
 	if (data["location"][i]["@name"] != undefined)
             details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
+	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
 
 	if (data["location"][i]["md-holding"] != undefined)
 	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
+	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
 
 	if (data["location"][i]["md-symbol"] != undefined)
 	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
+	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
 
+/*
 	if (data["location"][i]["md-requestby"] != undefined) {
 	    if (data["location"][i]["md-requestby"] == 'Login') {
 		// Login to target's OPAC
@@ -444,9 +451,12 @@ function renderDetails(data, marker)
 		}
 	    }
 	} // end of request-by
+*/
     }
 
+    requestForm += '<input type="submit" value="Request..."></form>';
     details += '</table></div>';
+    details += requestForm;
     return details;
 }
  //EOF
