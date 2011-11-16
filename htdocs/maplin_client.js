@@ -386,9 +386,11 @@ function replaceHtml(el, html) {
 function renderDetails(data, marker)
 {
     var details = '<div class="details" id="det_'+data.recid+'"><table>';
+    var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
         details += '<tr><td><b>Title</b></td><td><b>:</b> '+data["md-title"];
+	requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + '">';
   	if (data["md-title-remainder"] !== undefined) {
 	      details += ' : <span>' + data["md-title-remainder"] + ' </span>';
   	}
@@ -399,12 +401,13 @@ function renderDetails(data, marker)
     }
     if (data["md-date"] != undefined)
         details += '<tr><td><b>Date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
-    if (data["md-author"] != undefined)
+    if (data["md-author"] != undefined) {
         details += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
+	requestForm += '<input type="hidden" name="author" value="' + data["md-author"] + '">';
+    }
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
 
-    var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post"><input type="hidden" name="rm" value="request">';
     var len=data["location"].length;
     details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
@@ -416,47 +419,20 @@ function renderDetails(data, marker)
             details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
 	if (data["location"][i]["@name"] != undefined)
             details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
-	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
 
 	if (data["location"][i]["md-holding"] != undefined)
 	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
-	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
 
 	if (data["location"][i]["md-symbol"] != undefined)
 	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
+
 	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
-
-/*
-	if (data["location"][i]["md-requestby"] != undefined) {
-	    if (data["location"][i]["md-requestby"] == 'Login') {
-		// Login to target's OPAC
-		if (data["location"][i]["md-requesturl"] != undefined) {
-		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '" target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
-		} else {
-		    details += '<tr><td><b>via email</b></td><td><b>:</b> ' + 'some.url.goes.here' + '</td></tr>';
-		}
-
-	    } else if (data["location"][i]["md-requestby"] == 'Maplin') {
-		// Let Maplin handle it
-		if (data["location"][i]["md-requesturl"] != undefined) {
-		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="/cgi-bin/lightning.cgi?rm=lightning_request_form' + '&amp;ztarget=' + data["location"][i]["@name"] + '&amp;title=' + data["md-title"] + '&amp;author=' + data["md-author"] + '&amp;medium=' + data["md-medium"] + '&amp;isbn=' + data["location"][i]["md-isbn"] + '&amp;callno=' + data["location"][i]["md-callnumber"] + '&amp;date=' + data["md-date"] + '&amp;holding=' + data["location"][i]["md-holding"] + '" target="_blank">' + 'Open a Maplin request window' + '</a>'  + '</td></tr>';
-		}
- 
-	    } else {  
-		// Start local Email client
-		if (data["location"][i]["md-requesturl"] != undefined) {
-		    details += '<tr><td><b>requesturl</b></td><td><b>:</b> ' + '<a href="' + data["location"][i]["md-requesturl"] + '?subject=ILL Request&amp;body=Library X would like to request the title:%0A%0A' + data["md-title"] + '%0A%0A from ' + data["location"][i]["@name"] + '." target="_blank">' + data["location"][i]["md-requesturl"] + '</a>'  + '</td></tr>';
-		} else {
-		    details += '<tr><td><b>via email</b></td><td><b>:</b> ' + 'some.url.goes.here' + '</td></tr>';
-		}
-	    }
-	} // end of request-by
-*/
+	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
+	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
     }
 
-    requestForm += '<input type="submit" value="Request..."></form>';
-    details += '</table></div>';
-    details += requestForm;
+    requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_"></form>';
+    details += '</table>' + requestForm + '</div>';
     return details;
 }
  //EOF
