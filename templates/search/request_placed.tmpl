@@ -23,34 +23,22 @@
 <div id="main">
 
   <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Enter your patron's barcode</li>
-      <li>Click the "Send Request" button</li>
-    </ol>
   </div>
 
   <div id="middlecontent">
-    <p>Requesting user: <TMPL_VAR NAME="username"></p>
-
-    <h2>parms</h2>
-    <TMPL_LOOP name="parms">
-      <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
-    </TMPL_LOOP>
-
-    <h2>sources</h2>
+    <h2>Your request has been placed</h2>
     <table>
-      <tr><td>symbol</td><td>location</td><td>holding</td></tr>
-      <TMPL_LOOP name="sources">
-	<tr><td><TMPL_VAR name="symbol"></td><td><TMPL_VAR name="location"></td><td><TMPL_VAR name="holding"></td></tr>
-      </TMPL_LOOP>
+      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Request #</td><td>: <TMPL_VAR NAME="request_id"></td></tr>
     </table>
+    <p>Your request has been added to the first lender's pending list.</p>
 
   </div>
 
   <div id="rightcontent">
     <h2>Information</h2>
-    <p>Maplin asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
+    <p>If the first lender cannot fill the request, it will automatically be sent to the next lender.</p>
+    <p>If no lenders are able to fill the request, you will be notified.</p>
   </div>
 
 </div>

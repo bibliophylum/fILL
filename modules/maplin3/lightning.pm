@@ -19,7 +19,43 @@ sub setup {
 	'lightning_search_form'    => 'lightning_search_process',
 	'lightning_request_form'   => 'lightning_request_process',
 	'request'                  => 'request_process',
+	'complete_the_request'    => 'complete_the_request_process',
 	);
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub complete_the_request_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $pbarcode = $q->param('pbarcode');
+    my $reqid = $q->param('request_id');
+    if ($pbarcode) {
+	my $SQL = "UPDATE request SET patron_barcode=?, current_target=1 WHERE id=?";
+	$self->dbh->do($SQL, undef, $pbarcode, $reqid);  # do some error checking....!
+    }
+
+    # get the request
+    my $hr_req = $self->dbh->selectrow_hashref("SELECT * FROM request WHERE id=?",undef,$reqid);
+    my $requester = $hr_req->{requester};
+    my $seq = $hr_req->{current_target}; # where are we in the sequence of sources? (sequence #)
+
+    # get the first source
+    my $hr_src = $self->dbh->selectrow_hashref("SELECT * FROM sources WHERE request_id=? and sequence_number=?",undef,$reqid,$seq);
+    my $source_library = $hr_src->{library};
+
+    # begin the ILL conversation
+    my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
+    $self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
+
+    my $template = $self->load_tmpl('search/request_placed.tmpl');	
+    $template->param( pagetitle => "Maplin-4 Request has been placed",
+		      username => $self->authen->username,
+		      request_id => $reqid,
+	);
+    return $template->output;
 }
 
 #--------------------------------------------------------------------------------
@@ -68,12 +104,63 @@ sub request_process {
 	}
 	push @sources, \%src;
     }
-    $self->log->debug( Dumper(@sources) );
+#    $self->log->debug( Dumper(@sources) );
 
-    my $template = $self->load_tmpl('search/lightning_request_test.tmpl');	
-    $template->param( pagetitle => "Maplin-4 Lightning Request test",
+    # Get this user's (requester's) library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"SELECT lid FROM libraries WHERE name=?",
+	undef,
+	$self->authen->username,
+	);
+    my $requester = $hr_id->{lid};
+    if (not defined $requester) {
+	# should never get here...
+	# go to some error page.
+    }
+
+    my $title = $q->param('title');
+    my $author = $q->param('author');
+
+    # These should be atomic...
+    # create the request (sans patron barcode)
+    $self->dbh->do("INSERT INTO request (title,author,requester,current_target) VALUES (?,?,?,?)",
+		   undef,
+		   $title,
+		   $author,
+		   $requester,
+		   0                                   # no source yet (aka request isn't complete until patron barcode is in
+	);
+    my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
+    # ...end of atomic
+
+    # ...and the sources list (worry about proper order after this code is working!)
+    my $sequence = 1;
+    my $SQL = "INSERT INTO sources (request_id, sequence_number, library, call_number) VALUES (?,?,?,?)";
+    foreach my $src (@sources) {
+	my $hr_id = $self->dbh->selectrow_hashref(
+	    "SELECT lid FROM libraries WHERE name=?",
+	    undef,
+	    $src->{symbol},
+	    );
+	my $lenderID = $hr_id->{lid};
+	next unless defined $lenderID;
+	$self->dbh->do($SQL,
+		       undef,
+		       $reqid,
+		       $sequence++,
+		       $lenderID,
+		       "fake-call-number",
+	    );
+    }
+
+
+    my $template = $self->load_tmpl('search/make_request.tmpl');	
+    $template->param( pagetitle => "Maplin-4 Request an ILL",
 		      username => $self->authen->username,
-		      parms => \@parms,
+#		      parms => \@parms,
+		      request_id => $reqid,
+		      title => $q->param('title'),
+		      author => $q->param('author'),
 		      sources => \@sources,
 	);
     return $template->output;

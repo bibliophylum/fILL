@@ -16,7 +16,7 @@ create table request (
 -- on-going conversation
 create table requests_active (
   request_id INTEGER REFERENCES request (id),
-  ts TIMESTAMP,
+  ts TIMESTAMP DEFAULT now(),
   msg_from INTEGER REFERENCES libraries (lid),
   msg_to INTEGER REFERENCES libraries (lid),
   status VARCHAR(40),
