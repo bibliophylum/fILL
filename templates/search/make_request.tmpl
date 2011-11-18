@@ -31,34 +31,6 @@
   </div>
 
   <div id="middlecontent">
-    <p>Requesting user: <TMPL_VAR NAME="username"></p>
-    <p>Request #: <TMPL_VAR name="request_id"></p>
-
-<!-- 
-    <h2>parms</h2>
-    <TMPL_LOOP name="parms">
-      <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
-    </TMPL_LOOP>
--->
-      
-    <h2>Request an Interlibrary Loan</h2>
-    <table>
-      <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
-      <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
-    </table>
-    
-    <p>The title was found at these locations:</p>
-    
-    <h2>sources</h2>
-    <table>
-      <tr><td>symbol</td><td>location</td><td>holding</td></tr>
-      <TMPL_LOOP name="sources">
-	<tr><td><TMPL_VAR name="symbol"></td><td><TMPL_VAR name="location"></td><td><TMPL_VAR name="holding"></td></tr>
-      </TMPL_LOOP>
-    </table>
-    
-    <p>Maplin will automatically determine which lender to try first, to minimize lender workloads.</p>
-
     <form action="/cgi-bin/lightning.cgi" method="post">
       <h2>Patron barcode</h2>
       <p>Enter the barcode number of your patron: 
@@ -68,6 +40,33 @@
       <input type="hidden" name="rm" value="complete_the_request">
       <input type="submit" value="Complete the request">
     </form>
+
+    <!-- 
+    <h2>parms</h2>
+    <TMPL_LOOP name="parms">
+      <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
+    </TMPL_LOOP>
+    -->
+    
+    <br/>
+
+    <h3>Interlibrary Loan request details</h3>
+    <table>
+      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Request #</td><td>: <TMPL_VAR name="request_id"></td></tr>
+      <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
+      <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
+    </table>
+    
+    <h3>The title was found at these locations:</h3>
+    <p><em>Maplin will automatically determine which lender to try first, to minimize lender workloads.</em></p>
+    <table>
+      <tr><td>symbol</td><td>location</td><td>holding</td></tr>
+      <TMPL_LOOP name="sources">
+	<tr><td><TMPL_VAR name="symbol"></td><td><TMPL_VAR name="location"></td><td><TMPL_VAR name="holding"></td></tr>
+      </TMPL_LOOP>
+    </table>
+    
   </div>
 
   <div id="rightcontent">

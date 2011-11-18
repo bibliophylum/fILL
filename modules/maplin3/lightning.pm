@@ -19,7 +19,9 @@ sub setup {
 	'lightning_search_form'    => 'lightning_search_process',
 	'lightning_request_form'   => 'lightning_request_process',
 	'request'                  => 'request_process',
-	'complete_the_request'    => 'complete_the_request_process',
+	'complete_the_request'     => 'complete_the_request_process',
+	'pull_list'                => 'pull_list_process',
+	'respond'                  => 'respond_process',
 	);
 }
 
@@ -77,6 +79,29 @@ sub lightning_search_process {
 #--------------------------------------------------------------------------------
 #
 #
+sub pull_list_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    # sql to get requests to this library, which this library has not responded to yet
+    my $SQL = "select r.title, r.author, ra.ts, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) where ra.msg_to=$lid and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=$lid)";
+
+    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} } );
+
+    my $template = $self->load_tmpl('search/pull_list.tmpl');	
+    $template->param( pagetitle => $self->authen->username . " Pull-list",
+		      username => $self->authen->username,
+		      pulls => $pulls,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
 sub request_process {
     my $self = shift;
     my $q = $self->query;
@@ -107,12 +132,7 @@ sub request_process {
 #    $self->log->debug( Dumper(@sources) );
 
     # Get this user's (requester's) library id
-    my $hr_id = $self->dbh->selectrow_hashref(
-	"SELECT lid FROM libraries WHERE name=?",
-	undef,
-	$self->authen->username,
-	);
-    my $requester = $hr_id->{lid};
+    my $requester = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
     if (not defined $requester) {
 	# should never get here...
 	# go to some error page.
@@ -162,6 +182,24 @@ sub request_process {
 		      title => $q->param('title'),
 		      author => $q->param('author'),
 		      sources => \@sources,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub respond_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/respond.tmpl');	
+    $template->param( pagetitle => "Respond to ILL requests",
+		      username => $self->authen->username,
+		      lid => $lid,
 	);
     return $template->output;
     
@@ -260,5 +298,18 @@ sub lightning_request_process {
 }
 
 
+#--------------------------------------------------------------------------------------------
+sub get_lid_from_symbol {
+    my $self = shift;
+    my $symbol = shift;
+    # Get this user's (requester's) library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"SELECT lid FROM libraries WHERE name=?",
+	undef,
+	$symbol
+	);
+    my $requester = $hr_id->{lid};
+    return $requester;
+}
 
 1; # so the 'require' or 'use' succeeds

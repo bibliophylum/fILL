@@ -684,7 +684,7 @@ a.continue:hover   { color:#1240AB; font-size:140%; font-weight:600; }
 }
 #csstabs li a:hover {
   color: #fff ;
-  background-color: #00b366 ;
+  background-color: #ffd073 ;
 }
 #csstabs li.current_tab a 
 {
@@ -902,4 +902,20 @@ div.details {
 }
 #stat {
     width: 250px;
+}
+
+
+/*---------- sandbox -----------*/
+div#waitDiv
+{
+  margin-top: 30px; 
+  margin-bottom: 30px; 
+  text-align: center; 
+  font-weight: 700;
+  display: none;
+}
+div#mylistDiv {
+  margin-left: auto ;
+  margin-right: auto ;
+  display: block;
 }

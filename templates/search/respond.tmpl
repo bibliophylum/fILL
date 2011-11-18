@@ -1,0 +1,111 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<script language="javascript" src="/json2.js"></script>
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+    alert('toggled ' + whichLayer);
+  }
+</script>
+
+<script type="text/javascript">
+
+  var ajaxrequest = false;
+  try {
+    ajaxrequest = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      ajaxrequest = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        ajaxrequest = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        ajaxrequest = false;
+      }
+    }
+  }
+
+  if (!ajaxrequest)
+    alert("Error initializing XMLHttpRequest.");
+
+  ajaxrequest.onreadystatechange=function() {
+    if (ajaxrequest.readyState==4 && ajaxrequest.status==200) {
+
+alert('got response: ' + ajaxrequest.responseText);
+      var data = JSON.parse( ajaxrequest.responseText );
+alert('data: ' + data.unhandledRequests.length);
+      for (var i=0;i<data.unhandledRequests.length;i++) 
+ 	{
+	  alert('element ' + i);
+	  var x = document.createElement('div');
+          x.className = 'unhandledRequest';
+	  var y = document.createElement('p');
+          y.apendChild(document.createTextNode(data.unhandledRequests[i].call_number));
+//          y.apendChild(document.createTextNode(data.unhandledRequests[i].call_number + ', ' + data.unhandledRequests[i].author + ', ' + data.unhandledRequests[i].title + ', ' + data.unhandledRequests[i].ts));
+          x.appendChild(y);
+	  document.getElementById('mylistDiv').appendChild(x);
+	}
+
+      toggleLayer("waitDiv");
+      toggleLayer("mylistDiv");
+    }
+  }
+
+  ajaxrequest.open("POST","/cgi-bin/get-active-requests.cgi",true);
+  ajaxrequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  ajaxrequest.send("lid=<TMPL_VAR name="lid">");
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</li>
+      <li>Select all of the requests that you are filling, and click the "Shipped" button.</li>
+      <li>For each remaining request - those that will be unfilled - select a reason and click the "Unfilled" button.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Default due date</h3>
+
+      <h3>Respond to requests</h3>
+      <div id="mylistDiv">
+      </div>
+    </div>
+
+  </div>
+
+  <div id="rightcontent">
+    <h2>Information</h2>
+    <ul>
+      <li>As requests are handled, they are removed from this list.</li>
+      <li>You can see the status of all of your active ILLs in the "Current ILLs" screen.</li>
+    </ul>
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
