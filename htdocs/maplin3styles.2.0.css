@@ -912,10 +912,10 @@ div#waitDiv
   margin-bottom: 30px; 
   text-align: center; 
   font-weight: 700;
-  display: none;
+  display: block;
 }
 div#mylistDiv {
   margin-left: auto ;
   margin-right: auto ;
-  display: block;
+  display: none;
 }

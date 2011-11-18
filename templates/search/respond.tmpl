@@ -46,17 +46,13 @@
   ajaxrequest.onreadystatechange=function() {
     if (ajaxrequest.readyState==4 && ajaxrequest.status==200) {
 
-alert('got response: ' + ajaxrequest.responseText);
       var data = JSON.parse( ajaxrequest.responseText );
-alert('data: ' + data.unhandledRequests.length);
       for (var i=0;i<data.unhandledRequests.length;i++) 
  	{
-	  alert('element ' + i);
 	  var x = document.createElement('div');
           x.className = 'unhandledRequest';
 	  var y = document.createElement('p');
-          y.apendChild(document.createTextNode(data.unhandledRequests[i].call_number));
-//          y.apendChild(document.createTextNode(data.unhandledRequests[i].call_number + ', ' + data.unhandledRequests[i].author + ', ' + data.unhandledRequests[i].title + ', ' + data.unhandledRequests[i].ts));
+          y.appendChild(document.createTextNode(data.unhandledRequests[i].call_number + ', ' + data.unhandledRequests[i].author + ', ' + data.unhandledRequests[i].title + ', ' + data.unhandledRequests[i].ts));
           x.appendChild(y);
 	  document.getElementById('mylistDiv').appendChild(x);
 	}
