@@ -919,3 +919,36 @@ div#mylistDiv {
   margin-right: auto ;
   display: none;
 }
+#gradient-style {
+    border-collapse: collapse;
+    font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+    font-size: 12px;
+    margin: 20px;
+    text-align: left;
+    width: 480px;
+}
+#gradient-style th {
+    background: url("img/table-head-gradient.png") repeat-x scroll 0 0 #B9C9FE;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 2px solid #D3DDFF;
+    color: #003399;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 8px;
+}
+#gradient-style td {
+    background: url("img/table-row-gradient.png") repeat-x scroll 0 0 #E8EDFF;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    color: #666699;
+    padding: 8px;
+}
+#gradient-style tfoot tr td {
+    background: none repeat scroll 0 0 #E8EDFF;
+    color: #9999CC;
+    font-size: 12px;
+}
+#gradient-style tbody tr:hover td {
+    background: url("/img/table-row-gradient-hover.png") repeat-x scroll 0 0 #D0DAFD;
+    color: #333399;
+}
