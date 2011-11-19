@@ -925,7 +925,8 @@ div#mylistDiv {
     font-size: 12px;
     margin: 20px;
     text-align: left;
-    width: 480px;
+/*    width: 480px; */
+    width: 100%;
 }
 #gradient-style th {
     background: url("img/table-head-gradient.png") repeat-x scroll 0 0 #B9C9FE;
