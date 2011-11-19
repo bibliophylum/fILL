@@ -24,8 +24,12 @@
 
   <div id="middlecontent">
     <h3>Pull list</h3>
-    <table>
-      <tr><td>Call #</td><td>Author</td><td>Title</td><td>Date/Time requested</td><td>Requested by</td></tr>
+    <table id="gradient-style">
+      <thead>
+	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th></tr>
+      </thead>
+      <tfoot><tr><td colspan="5">You can print this and take it to the stacks.</td></tr></tfoot>
+      <tbody>
       <TMPL_LOOP name="pulls">
 	<tr>
 	  <td><TMPL_VAR NAME="call_number"></td>
@@ -35,6 +39,7 @@
 	  <td><TMPL_VAR NAME="msg_from"></td>
 	</tr>
       </TMPL_LOOP>
+      </tbody>
     </table>
     
   </div>
