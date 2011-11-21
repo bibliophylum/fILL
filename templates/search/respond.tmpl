@@ -77,7 +77,7 @@
 
       var tFoot = myTable.createTFoot();
       row = tFoot.insertRow(-1);
-      cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "Some random footer text";
+      cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
 
       // explicit creation of TBODY element to make IE happy
       var tBody = document.createElement("TBODY");
@@ -109,6 +109,72 @@
 
 </script>
 
+<script type="text/javascript">
+// Explanation of why we need a function to create the buttons' onclick handlers:
+// http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
+// Short answer: scoping and closures
+
+function make_shipit_handler( requestId ) {
+  return function() { shipit( requestId ) };
+}
+
+function shipit( requestId ) {
+  alert( requestId );
+}
+</script>
+
+<script type="text/javascript">
+function set_default_due_date(oForm) {
+  var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
+  var theTable = document.getElementById('gradient-style');
+
+  for( var x = 0; x < theTable.tHead.rows.length; x++ ) {
+    var y = document.createElement('th');
+    y.appendChild(document.createTextNode('Due date'));
+    theTable.tHead.rows[x].appendChild(y);
+
+    y = document.createElement('th');
+    y.appendChild(document.createTextNode('Response'));
+    theTable.tHead.rows[x].appendChild(y);
+
+  }
+
+  for( var z = 0; z < theTable.tBodies.length; z++ ) {
+    for( var x = 0; x < theTable.tBodies[z].rows.length; x++ ) {
+      var y = document.createElement('td');
+      y.appendChild(document.createTextNode( defaultDueDate ));
+      theTable.tBodies[z].rows[x].appendChild(y);
+
+      y = document.createElement('td');
+      var b1 = document.createElement("input");
+      b1.type = "button";
+      b1.value = "Sent";
+      var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
+      b1.onclick = make_shipit_handler( requestId );
+      y.appendChild(b1);
+
+      var b2 = document.createElement("input");
+      b2.type = "button";
+      b2.value = "Change due date";
+      b2.onclick = function () { alert('click!'); };
+      y.appendChild(b2);
+
+      var b3 = document.createElement("input");
+      b3.type = "button";
+      b3.value = "Unfilled";
+      b3.onclick = function () { alert('click!'); };
+      y.appendChild(b3);
+
+      theTable.tBodies[z].rows[x].appendChild(y);
+
+    }
+  }
+  for( var x = 0; x < theTable.tFoot.rows.length; x++ ) {
+    theTable.tFoot.rows[x].cells[0].colSpan++;
+    theTable.tFoot.rows[x].cells[0].colSpan++; // and one for the response field
+  }
+}
+</script>
 
 <div id="main">
 
@@ -116,8 +182,8 @@
     <h2>Instructions</h2>
     <ol>
       <li>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</li>
-      <li>Select all of the requests that you are filling, and click the "Shipped" button.</li>
-      <li>For each remaining request - those that will be unfilled - select a reason and click the "Unfilled" button.</li>
+      <li>For each of the requests that you are filling, click the "Sent" button.</li>
+      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
     </ol>
   </div>
 
@@ -128,20 +194,22 @@
 
     <div id="myDiv">
       <h3>Default due date</h3>
+      <div id="defaultDueDate">
+	<form id="set_default_due_date" onsubmit="set_default_due_date(this); return false;">
+	  Year: <input type="text" size="4" maxlength="4" name="year" value="2011">
+	  Month: <input type="text" size="2" maxlength="2" name="month" value="11">
+	  Day: <input type="text" size="2" maxlength="2" name="day" value="28">
+	  <input type="submit" value="Set as default"/>
+	</form>
+      </div>
 
+      <br/>
       <h3>Respond to requests</h3>
       <div id="mylistDiv"></div>
     </div>
 
   </div>
 
-  <div id="rightcontent">
-    <h2>Information</h2>
-    <ul>
-      <li>As requests are handled, they are removed from this list.</li>
-      <li>You can see the status of all of your active ILLs in the "Current ILLs" screen.</li>
-    </ul>
-  </div>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
