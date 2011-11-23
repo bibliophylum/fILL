@@ -84,8 +84,8 @@ function shipit( requestId ) {
 		  //alert('change request status: '+data);
 	      }
 	     );
-//    $("#req"+requestId).remove();  // toast the row
-    $("#req"+requestId).slideUp(1000, function() { $(this).remove(); }); // toast the row
+    // slideUp doesn't work for <tr>
+    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 }
 
 function set_default_due_date(oForm) {
