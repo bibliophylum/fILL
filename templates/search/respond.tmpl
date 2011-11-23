@@ -21,6 +21,8 @@ $('document').ready(function(){
                 //alert(data); //uncomment this for debug
                 //alert (data.unhandledRequests[0].id+" "+data.unhandledRequests[0].msg_from+" "+data.unhandledRequests[0].call_number+" "+data.unhandledRequests[0].author+" "+data.unhandledRequests[0].title+" "+data.unhandledRequests[0].ts); //further debug
                 build_table(data);
+                //toggleLayer("waitDiv");
+                //toggleLayer("mylistDiv");
            });
 });
 
@@ -45,7 +47,7 @@ $('document').ready(function(){
     </div>
 
     <div id="myDiv">
-      <h3>Default due date</h3>
+      <h3>1. Set a default due date</h3>
       <div id="defaultDueDate">
 	<form id="set_default_due_date" onsubmit="set_default_due_date(this); return false;">
 	  Year: <input type="text" size="4" maxlength="4" name="year" value="2011">
@@ -56,7 +58,7 @@ $('document').ready(function(){
       </div>
 
       <br/>
-      <h3>Respond to requests</h3>
+      <h3>2. Respond to requests</h3>
       <div id="mylistDiv"></div>
     </div>
 

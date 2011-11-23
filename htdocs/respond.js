@@ -60,52 +60,68 @@ function shipit( requestId ) {
 function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
     var theTable = document.getElementById('gradient-style');
-    
-    for( var x = 0; x < theTable.tHead.rows.length; x++ ) {
-	var y = document.createElement('th');
-	y.appendChild(document.createTextNode('Due date'));
-	theTable.tHead.rows[x].appendChild(y);
-	
-	y = document.createElement('th');
-	y.appendChild(document.createTextNode('Response'));
-	theTable.tHead.rows[x].appendChild(y);
-	
-    }
-    
-    for( var z = 0; z < theTable.tBodies.length; z++ ) {
-	for( var x = 0; x < theTable.tBodies[z].rows.length; x++ ) {
-	    var y = document.createElement('td');
-	    y.appendChild(document.createTextNode( defaultDueDate ));
-	    theTable.tBodies[z].rows[x].appendChild(y);
-	    
-	    y = document.createElement('td');
-	    var b1 = document.createElement("input");
-	    b1.type = "button";
-	    b1.value = "Sent";
-	    var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
-	    b1.onclick = make_shipit_handler( requestId );
-	    y.appendChild(b1);
-	    
-	    var b2 = document.createElement("input");
-	    b2.type = "button";
-	    b2.value = "Change due date";
-	    b2.onclick = function () { alert('click!'); };
-	    y.appendChild(b2);
-	    
-	    var b3 = document.createElement("input");
-	    b3.type = "button";
-	    b3.value = "Unfilled";
-	    b3.onclick = function () { alert('click!'); };
-	    y.appendChild(b3);
-	    
-	    theTable.tBodies[z].rows[x].appendChild(y);
-	    
+
+    var alreadyExists = false;
+    var dueDateCellIndex = 0;
+    for( var i = 0; i < theTable.tHead.rows[0].cells.length; i++ ) {
+	if (theTable.tHead.rows[0].cells[i].innerHTML === 'Due date') {
+	    alreadyExists = true;
+	    dueDateCellIndex = i;
+	    break;
 	}
     }
-    for( var x = 0; x < theTable.tFoot.rows.length; x++ ) {
-	theTable.tFoot.rows[x].cells[0].colSpan++;
-	theTable.tFoot.rows[x].cells[0].colSpan++; // and one for the response field
-    }
+
+    if (alreadyExists) {
+	for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
+	    theTable.tBodies[0].rows[r].cells[dueDateCellIndex].innerHTML = defaultDueDate;
+	}
+    } else {
+	for( var x = 0; x < theTable.tHead.rows.length; x++ ) {
+	    var y = document.createElement('th');
+	    y.appendChild(document.createTextNode('Due date'));
+	    theTable.tHead.rows[x].appendChild(y);
+	    
+	    y = document.createElement('th');
+	    y.appendChild(document.createTextNode('Response'));
+	    theTable.tHead.rows[x].appendChild(y);
+	    
+	}
+	
+	for( var z = 0; z < theTable.tBodies.length; z++ ) {
+	    for( var x = 0; x < theTable.tBodies[z].rows.length; x++ ) {
+		var y = document.createElement('td');
+		y.appendChild(document.createTextNode( defaultDueDate ));
+		theTable.tBodies[z].rows[x].appendChild(y);
+		
+		y = document.createElement('td');
+		var b1 = document.createElement("input");
+		b1.type = "button";
+		b1.value = "Sent";
+		var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
+		b1.onclick = make_shipit_handler( requestId );
+		y.appendChild(b1);
+		
+		var b2 = document.createElement("input");
+		b2.type = "button";
+		b2.value = "Change due date";
+		b2.onclick = function () { alert('click!'); };
+		y.appendChild(b2);
+		
+		var b3 = document.createElement("input");
+		b3.type = "button";
+		b3.value = "Unfilled";
+		b3.onclick = function () { alert('click!'); };
+		y.appendChild(b3);
+		
+		theTable.tBodies[z].rows[x].appendChild(y);
+		
+	    }
+	}
+	for( var x = 0; x < theTable.tFoot.rows.length; x++ ) {
+	    theTable.tFoot.rows[x].cells[0].colSpan++;
+	    theTable.tFoot.rows[x].cells[0].colSpan++; // and one for the response field
+	}
+    } // end if(alreadyExists)
 }
 
 function toggleLayer( whichLayer )
