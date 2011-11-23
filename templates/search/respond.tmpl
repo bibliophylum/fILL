@@ -49,11 +49,11 @@ $('document').ready(function(){
     <div id="myDiv">
       <h3>1. Set a default due date</h3>
       <div id="defaultDueDate">
-	<form id="set_default_due_date" onsubmit="set_default_due_date(this); return false;">
+	<form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change default'; return false;">
 	  Year: <input type="text" size="4" maxlength="4" name="year" value="2011">
 	  Month: <input type="text" size="2" maxlength="2" name="month" value="11">
 	  Day: <input type="text" size="2" maxlength="2" name="day" value="28">
-	  <input type="submit" value="Set as default"/>
+	  <input type="submit" name="submit_default_due_date" value="Set as default"/>
 	</form>
       </div>
 

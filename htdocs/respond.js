@@ -29,7 +29,7 @@ function build_table( data ) {
     for (var i=0;i<data.unhandledRequests.length;i++) 
     {
 //	alert (data.unhandledRequests[i].id+" "+data.unhandledRequests[i].msg_from+" "+data.unhandledRequests[i].call_number+" "+data.unhandledRequests[i].author+" "+data.unhandledRequests[i].title+" "+data.unhandledRequests[i].ts); //further debug
-        row = tBody.insertRow(-1);
+        row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
@@ -54,7 +54,38 @@ function make_shipit_handler( requestId ) {
 }
 
 function shipit( requestId ) {
-    alert( requestId );
+    // NOTE: this code will find table rows based on cell contents...
+    // ...as we now have <tr id='xxx'>, there's an easier way....
+
+    // Returns [{reqid: 12, msg_to: '101'}, 
+    //          {reqid: 15, msg_to: '98'},
+    // Note that nth-child uses 1-based indexing, not 0-based
+    var parms = $('#gradient-style tbody tr').map(function() {
+	// $(this) is used more than once; cache it for performance.
+	var $row = $(this);
+	
+	// For each row that's "mapped", return an object that
+	//  describes the first and second <td> in the row.
+	if ($row.find(':nth-child(1)').text() == requestId) {
+	    return {
+		reqid: $row.find(':nth-child(1)').text(),
+		msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
+		lid: '101', // where do we pull this from?
+		status: "ILL-Answer|Shipped",
+		message: "due:"+$row.find(':nth-child(7)').text()  // due-date
+	    }
+	} else {
+	    return null;
+	};
+    }).get();
+
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+	      function(data){
+		  //alert('change request status: '+data);
+	      }
+	     );
+//    $("#req"+requestId).remove();  // toast the row
+    $("#req"+requestId).slideUp(1000, function() { $(this).remove(); }); // toast the row
 }
 
 function set_default_due_date(oForm) {
