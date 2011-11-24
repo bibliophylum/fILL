@@ -153,6 +153,7 @@ function set_default_due_date(oForm) {
 	    theTable.tFoot.rows[x].cells[0].colSpan++; // and one for the response field
 	}
     } // end if(alreadyExists)
+    $("#gradient-style > tbody > tr > td:nth-child(7)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )
