@@ -1,8 +1,9 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_search.tmpl">
 
+<link type="text/css" href="/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/respond.js"></script>
 
 
@@ -25,6 +26,11 @@ $('document').ready(function(){
                 //toggleLayer("waitDiv");
                 //toggleLayer("mylistDiv");
            });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
 });
 
 </script>
@@ -51,10 +57,15 @@ $('document').ready(function(){
       <h3>1. Set a default due date</h3>
       <div id="defaultDueDate">
 	<form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change default'; return false;">
+<!--
 	  Year: <input type="text" size="4" maxlength="4" name="year" value="2011">
 	  Month: <input type="text" size="2" maxlength="2" name="month" value="11">
 	  Day: <input type="text" size="2" maxlength="2" name="day" value="28">
-	  <input type="submit" name="submit_default_due_date" value="Set as default"/>
+-->
+	  <p>
+	    Date (yyyy-mm-dd): <input id="datepicker" type="text">
+	    <input type="submit" name="submit_default_due_date" value="Set as default"/>
+	  </p>
 	</form>
       </div>
 

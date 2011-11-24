@@ -89,7 +89,8 @@ function shipit( requestId ) {
 }
 
 function set_default_due_date(oForm) {
-    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
+//    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
+    var defaultDueDate = oForm.elements["datepicker"].value;
     var theTable = document.getElementById('gradient-style');
 
     var alreadyExists = false;
