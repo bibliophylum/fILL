@@ -54,6 +54,12 @@
   <set target="66.244.209.14:210/L4U_Agent" name="requestby" value="Maplin"/>
   <set target="66.244.209.14:210/L4U_Agent" name="requesturl" value="http://66.244.209.14/4DCGI/gen_2002/Lang=Def"/>
 
+<!-- Russell and District Regional Library -->
+  <set target="206.45.118.129:210/l4u_agent" name="pz:name" value="Russell and District Regional Library (L4U)"/>
+  <set target="206.45.118.129:210/l4u_agent" name="symbol" value="MRD"/>
+  <set target="206.45.118.129:210/l4u_agent" name="requestby" value="Maplin"/>
+  <set target="206.45.118.129:210/l4u_agent" name="requesturl" value="http://206.45.118.129/4DCGI/gen_2002/Lang=Def"/>
+
 <!-- Northwest Regional Library - Swan River -->
   <set target="206.45.96.178:210/Default" name="pz:name" value="Northwest Regional Library - Swan River (L4U)"/>
   <set target="206.45.96.178:210/Default" name="symbol" value="MSRN"/>
