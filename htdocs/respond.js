@@ -16,10 +16,12 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -36,7 +38,32 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = "";
+        cell = row.insertCell(-1); 
+
+	var divResponses = document.createElement("div");
+	divResponses.id = 'divResponses'+data.unhandledRequests[i].id;
+
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Sent";
+	var requestId = data.unhandledRequests[i].id;
+	b1.onclick = make_shipit_handler( requestId );
+	divResponses.appendChild(b1);
 	
+	var b2 = document.createElement("input");
+	b2.type = "button";
+	b2.value = "Change due date";
+	b2.onclick = function () { alert('click!'); };
+	divResponses.appendChild(b2);
+	
+	var b3 = document.createElement("input");
+	b3.type = "button";
+	b3.value = "Unfilled";
+	b3.onclick = make_unfilled_handler( requestId );
+	divResponses.appendChild(b3);
+
+	cell.appendChild( divResponses );
     }
     
     document.getElementById('mylistDiv').appendChild(myTable);
@@ -93,15 +120,51 @@ function make_unfilled_handler( requestId ) {
 }
 
 function unfilled( requestId ) {
-    // show the reason-unfilled div
+    var row = $("#req"+requestId);
+    var ruDiv = document.createElement("div");
+    ruDiv.className = "reasonUnfilled";
+    var ruForm = document.createElement("form");
 
+    var ru = document.createElement("div");
+    ru.setAttribute('id','unfilledradioset');
+    ruForm.appendChild(ru);
+    ruDiv.appendChild(ruForm);
+    row[0].cells[7].appendChild(ruDiv);
+
+    $("#divResponses"+requestId).hide();
+    $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
+
+
+    $("<input type='submit' value='Submit'>").appendTo(ruForm);
+
+    // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
+    $("#unfilledradioset").buttonset();
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='in-use-on-loan' id='in-use-on-loan' checked='checked'/><label for='in-use-on-loan'>in-use-on-loan</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='in-process' id='in-process'/><label for='in-process'>in-process</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='lost' id='lost'/><label for='lost'>lost</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='non-circulating' id='non-circulating'/><label for='non-circulating'>non-circulating</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-owned' id='not-owned'/><label for='not-owned'>not-owned</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-on-shelf' id='not-on-shelf'/><label for='not-on-shelf'>not-on-shelf</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-reserve' id='on-reserve'/><label for='on-reserve'>on-reserve</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='poor-condition' id='poor-condition'/><label for='poor-condition'>poor-condition</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='charges' id='charges'/><label for='charges'>charges</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-hold' id='on-hold'/><label for='on-hold'>on-hold</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='policy-problem' id='policy-problem'/><label for='policy-problem'>policy-problem</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
+//    $("#unfilledradioset").append("<input type='radio' name='radioset' value='responder-specific' id='responder-specific'/><label for='responder-specific'>responder-specific</label>");
+    $("#unfilledradioset").buttonset('refresh');
+
+//    alert(row[0].cells[7]);
+//    alert( $('input:radio[name=radioset]:checked').val() );
+
+    
 //    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
 //	      function(data){
 //		  //alert('change request status: '+data);
 //	      }
 //	     );
     // slideUp doesn't work for <tr>
-    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+//    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 }
 
 
@@ -111,88 +174,9 @@ function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["datepicker"].value;
     var theTable = document.getElementById('gradient-style');
 
-    var alreadyExists = false;
-    var dueDateCellIndex = 0;
-    for( var i = 0; i < theTable.tHead.rows[0].cells.length; i++ ) {
-	if (theTable.tHead.rows[0].cells[i].innerHTML === 'Due date') {
-	    alreadyExists = true;
-	    dueDateCellIndex = i;
-	    break;
-	}
+    for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
+	theTable.tBodies[0].rows[r].cells[6].innerHTML = defaultDueDate;
     }
-
-    if (alreadyExists) {
-	for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	    theTable.tBodies[0].rows[r].cells[dueDateCellIndex].innerHTML = defaultDueDate;
-	}
-    } else {
-	for( var x = 0; x < theTable.tHead.rows.length; x++ ) {
-	    var y = document.createElement('th');
-	    y.appendChild(document.createTextNode('Due date'));
-	    theTable.tHead.rows[x].appendChild(y);
-	    
-	    y = document.createElement('th');
-	    y.appendChild(document.createTextNode('Response'));
-	    theTable.tHead.rows[x].appendChild(y);
-	    
-	}
-	
-	for( var z = 0; z < theTable.tBodies.length; z++ ) {
-	    for( var x = 0; x < theTable.tBodies[z].rows.length; x++ ) {
-		var y = document.createElement('td');
-		y.appendChild(document.createTextNode( defaultDueDate ));
-		theTable.tBodies[z].rows[x].appendChild(y);
-		
-		y = document.createElement('td');
-		var b1 = document.createElement("input");
-		b1.type = "button";
-		b1.value = "Sent";
-		var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
-		b1.onclick = make_shipit_handler( requestId );
-		y.appendChild(b1);
-		
-		var b2 = document.createElement("input");
-		b2.type = "button";
-		b2.value = "Change due date";
-		b2.onclick = function () { alert('click!'); };
-		y.appendChild(b2);
-		
-		var b3 = document.createElement("input");
-		b3.type = "button";
-		b3.value = "Unfilled";
-		//var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
-		b3.onclick = make_unfilled_handler( requestId );
-		y.appendChild(b3);
-		var ruDiv = document.createElement("div");
-		ruDiv.className = "reasonUnfilled";
-		var ruForm = document.createElement("form");
-		var ru = document.createElement("div");
-		// do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='in-use-on-loan'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='in-process'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='lost'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='non-circulating'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='not-owned'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='not-on-shelf'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='on-reserve'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='poor-condition'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='charges'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='on-hold'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='policy-problem'>").appendTo(ru);
-		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='other'>").appendTo(ru);
-		ruForm.appendChild(ru);
-		ruDiv.appendChild(ruForm);
-		y.appendChild(ruDiv);
-		
-		theTable.tBodies[z].rows[x].appendChild(y);
-		
-	    }
-	}
-	for( var x = 0; x < theTable.tFoot.rows.length; x++ ) {
-	    theTable.tFoot.rows[x].cells[0].colSpan++;
-	    theTable.tFoot.rows[x].cells[0].colSpan++; // and one for the response field
-	}
-    } // end if(alreadyExists)
     $("#gradient-style > tbody > tr > td:nth-child(7)").stop(true,true).effect("highlight", {}, 2000);
 }
 
