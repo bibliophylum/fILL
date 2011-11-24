@@ -88,6 +88,24 @@ function shipit( requestId ) {
     $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 }
 
+function make_unfilled_handler( requestId ) {
+    return function() { unfilled( requestId ) };
+}
+
+function unfilled( requestId ) {
+    // show the reason-unfilled div
+
+//    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+//	      function(data){
+//		  //alert('change request status: '+data);
+//	      }
+//	     );
+    // slideUp doesn't work for <tr>
+    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+}
+
+
+
 function set_default_due_date(oForm) {
 //    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
     var defaultDueDate = oForm.elements["datepicker"].value;
@@ -142,8 +160,29 @@ function set_default_due_date(oForm) {
 		var b3 = document.createElement("input");
 		b3.type = "button";
 		b3.value = "Unfilled";
-		b3.onclick = function () { alert('click!'); };
+		//var requestId = theTable.tBodies[z].rows[x].cells[0].firstChild.data;
+		b3.onclick = make_unfilled_handler( requestId );
 		y.appendChild(b3);
+		var ruDiv = document.createElement("div");
+		ruDiv.className = "reasonUnfilled";
+		var ruForm = document.createElement("form");
+		var ru = document.createElement("div");
+		// do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='in-use-on-loan'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='in-process'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='lost'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='non-circulating'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='not-owned'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='not-on-shelf'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='on-reserve'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='poor-condition'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='charges'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='on-hold'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='policy-problem'>").appendTo(ru);
+		$("<INPUT TYPE='RADIO' NAME='RADIOTEST' VALUE='other'>").appendTo(ru);
+		ruForm.appendChild(ru);
+		ruDiv.appendChild(ruForm);
+		y.appendChild(ruDiv);
 		
 		theTable.tBodies[z].rows[x].appendChild(y);
 		
