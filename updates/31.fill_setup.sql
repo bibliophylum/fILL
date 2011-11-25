@@ -19,7 +19,7 @@ create table requests_active (
   ts TIMESTAMP DEFAULT now(),
   msg_from INTEGER REFERENCES libraries (lid),
   msg_to INTEGER REFERENCES libraries (lid),
-  status VARCHAR(40),
+  status VARCHAR(100),
   message VARCHAR(100)
 );
 

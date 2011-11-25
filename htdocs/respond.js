@@ -98,8 +98,8 @@ function shipit( requestId ) {
 		reqid: $row.find(':nth-child(1)').text(),
 		msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
 		lid: '101', // where do we pull this from?
-		status: "ILL-Answer|Shipped",
-		message: "due:"+$row.find(':nth-child(7)').text()  // due-date
+		status: "ILL-Answer|Will-Supply|being-processed-for-supply",
+		message: ""
 	    }
 	} else {
 	    return null;
@@ -108,11 +108,29 @@ function shipit( requestId ) {
 
     $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
 	      function(data){
-		  //alert('change request status: '+data);
-	      }
-	     );
-    // slideUp doesn't work for <tr>
-    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    var myRow=$("#req"+requestId);
+	    var parms = {
+		"reqid": requestId,
+		"msg_to": myRow.find(':nth-child(2)').text(),
+		"lid": '101',
+		"status": "Shipped",
+		"message": "due "+myRow.find(':nth-child(7)').text()
+	    };
+	    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+		      function(data){
+//			  alert('change request status: '+data+'\n'+parms.status);
+		      });
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
 }
 
 function make_unfilled_handler( requestId ) {
@@ -172,7 +190,7 @@ function unfilled( requestId ) {
 
 	$.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
 		  function(data){
-		      alert('change request status: '+data);
+//		      alert('change request status: '+data);
 		      // slideUp doesn't work for <tr>
 		      $("#req"+requestId).fadeOut(400, function() { $("req"+requestId).remove(); }); // toast the row
 		  }
