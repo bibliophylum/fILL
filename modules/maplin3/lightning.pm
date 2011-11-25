@@ -55,6 +55,7 @@ sub complete_the_request_process {
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "Maplin-4 Request has been placed",
 		      username => $self->authen->username,
+		      lid => $requester,
 		      request_id => $reqid,
 	);
     return $template->output;
@@ -93,6 +94,7 @@ sub pull_list_process {
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
     $template->param( pagetitle => $self->authen->username . " Pull-list",
 		      username => $self->authen->username,
+		      lid => $lid,
 		      pulls => $pulls,
 	);
     return $template->output;
@@ -177,6 +179,7 @@ sub request_process {
     my $template = $self->load_tmpl('search/make_request.tmpl');	
     $template->param( pagetitle => "Maplin-4 Request an ILL",
 		      username => $self->authen->username,
+		      lid => $requester,
 #		      parms => \@parms,
 		      request_id => $reqid,
 		      title => $q->param('title'),

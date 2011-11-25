@@ -51,11 +51,11 @@ function build_table( data ) {
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
-	var b2 = document.createElement("input");
-	b2.type = "button";
-	b2.value = "Change due date";
-	b2.onclick = function () { alert('click!'); };
-	divResponses.appendChild(b2);
+//	var b2 = document.createElement("input");
+//	b2.type = "button";
+//	b2.value = "Change due date";
+//	b2.onclick = function () { alert('click!'); };
+//	divResponses.appendChild(b2);
 	
 	var b3 = document.createElement("input");
 	b3.type = "button";
@@ -97,7 +97,7 @@ function shipit( requestId ) {
 	    return {
 		reqid: $row.find(':nth-child(1)').text(),
 		msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
-		lid: '101', // where do we pull this from?
+		lid: $("#lid").text(),
 		status: "ILL-Answer|Will-Supply|being-processed-for-supply",
 		message: ""
 	    }
@@ -115,7 +115,7 @@ function shipit( requestId ) {
 	    var parms = {
 		"reqid": requestId,
 		"msg_to": myRow.find(':nth-child(2)').text(),
-		"lid": '101',
+		"lid": $("#lid").text(),
 		"status": "Shipped",
 		"message": "due "+myRow.find(':nth-child(7)').text()
 	    };
@@ -179,7 +179,7 @@ function unfilled( requestId ) {
 		return {
 		    reqid: $row.find(':nth-child(1)').text(),
 		    msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
-		    lid: '101', // where do we pull this from?
+		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Unfilled|"+reason,
 		    message: ""
 		}
