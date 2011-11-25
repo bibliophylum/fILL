@@ -122,7 +122,7 @@ function make_unfilled_handler( requestId ) {
 function unfilled( requestId ) {
     var row = $("#req"+requestId);
     var ruDiv = document.createElement("div");
-    ruDiv.className = "reasonUnfilled";
+    ruDiv.id = "reasonUnfilled";
     var ruForm = document.createElement("form");
 
     var ru = document.createElement("div");
@@ -135,7 +135,50 @@ function unfilled( requestId ) {
     $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
 
 
-    $("<input type='submit' value='Submit'>").appendTo(ruForm);
+    var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
+    cButton.bind('click', function() {
+	$("#reasonUnfilled").remove(); 
+	$("#divResponses"+requestId).show(); 
+	//return false;
+    });
+
+    var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
+    sButton.bind('click', function() {
+	var reason = $('input:radio[name=radioset]:checked').val();
+	$("#reasonUnfilled").remove(); 
+	$("#divResponses"+requestId).show(); 
+	
+	// Returns [{reqid: 12, msg_to: '101'}, 
+	//          {reqid: 15, msg_to: '98'},
+	// Note that nth-child uses 1-based indexing, not 0-based
+	var parms = $('#gradient-style tbody tr').map(function() {
+	    // $(this) is used more than once; cache it for performance.
+	    var $row = $(this);
+	    
+	    // For each row that's "mapped", return an object that
+	    //  describes the first and second <td> in the row.
+	    if ($row.find(':nth-child(1)').text() == requestId) {
+		return {
+		    reqid: $row.find(':nth-child(1)').text(),
+		    msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
+		    lid: '101', // where do we pull this from?
+		    status: "ILL-Answer|Unfilled|"+reason,
+		    message: ""
+		}
+	    } else {
+		return null;
+	    };
+	}).get();
+
+	$.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+		  function(data){
+		      alert('change request status: '+data);
+		      // slideUp doesn't work for <tr>
+		      $("#req"+requestId).fadeOut(400, function() { $("req"+requestId).remove(); }); // toast the row
+		  }
+		 );
+
+    });
 
     // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
     $("#unfilledradioset").buttonset();
@@ -155,16 +198,8 @@ function unfilled( requestId ) {
     $("#unfilledradioset").buttonset('refresh');
 
 //    alert(row[0].cells[7]);
-//    alert( $('input:radio[name=radioset]:checked').val() );
 
     
-//    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
-//	      function(data){
-//		  //alert('change request status: '+data);
-//	      }
-//	     );
-    // slideUp doesn't work for <tr>
-//    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 }
 
 
