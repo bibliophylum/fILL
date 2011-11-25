@@ -24,6 +24,7 @@ sub setup {
 	'respond'                  => 'respond_process',
 	'receive'                  => 'receiving_process',
 	'returns'                  => 'returns_process',
+	'checkins'                 => 'checkins_process',
 	);
 }
 
@@ -239,6 +240,24 @@ sub returns_process {
 
     my $template = $self->load_tmpl('search/returns.tmpl');	
     $template->param( pagetitle => "Return items to lending libraries",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkins_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/checkins.tmpl');	
+    $template->param( pagetitle => "Loan items to be checked back into your ILS",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);
