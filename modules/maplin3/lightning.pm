@@ -22,6 +22,7 @@ sub setup {
 	'complete_the_request'     => 'complete_the_request_process',
 	'pull_list'                => 'pull_list_process',
 	'respond'                  => 'respond_process',
+	'receive'                  => 'receiving_process',
 	);
 }
 
@@ -201,6 +202,24 @@ sub respond_process {
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub receiving_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/receiving.tmpl');	
+    $template->param( pagetitle => "Receive items to fill your requests",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);

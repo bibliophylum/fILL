@@ -1,0 +1,73 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<link type="text/css" href="/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/receiving.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_search_receive");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-receiving-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.receiving[0].id+" "+data.receiving[0].msg_from+" "+data.receiving[0].call_number+" "+data.receiving[0].author+" "+data.receiving[0].title+" "+data.receiving[0].ts); //further debug
+                build_table(data);
+                //toggleLayer("waitDiv");
+                //toggleLayer("mylistDiv");
+           });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $("#slipPrinting").buttonset();
+    $("#slipPrinting").append("<input type='radio' name='slip' value='single' id='single' checked='checked'/><label for='single'>Individual slips</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='multi' id='multi'/><label for='multi'>Multiple slips on a page</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='none' id='none'/><label for='none'>Do not print slips</label>");
+    $("#slipPrinting").buttonset('refresh');
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>As books arrive from lending libraries to fill your ILL requests, click the 'Received' button for that book.</li>
+      <li>You will have the option of printing a date-due slip.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Printing of Date-Due slips</h3>
+      <p>Select your printing option:</p>
+      <div id="slipPrinting">
+      </div>
+
+      <br/>
+      <h3>Receiving</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
