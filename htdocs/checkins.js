@@ -39,7 +39,7 @@ function build_table( data ) {
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Return";
+	b1.value = "Checked in to ILS";
 	var requestId = data.checkins[i].id;
 	b1.onclick = make_checkin_handler( requestId );
 	divResponses.appendChild(b1);
@@ -93,6 +93,10 @@ function checkin( requestId ) {
 	      })
 	.success(function() {
 	    //alert('success');
+	    $.getJSON('/cgi-bin/move-to-history.cgi', { 'reqid' : requestId },
+		      function(data){
+			  alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
+		      });
 	})
 	.error(function() {
 	    alert('error');

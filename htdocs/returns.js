@@ -95,7 +95,7 @@ function return_item( requestId ) {
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
 	.success(function() {
-	    alert('success');
+	    // alert('success');
 	    // print slip (single) / add to slip page (multi) / do nothing (none)
 	})
 	.error(function() {
