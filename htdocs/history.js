@@ -1,12 +1,21 @@
 // history.js
 function build_table( data ) {
-    for (var i=0;i<data.history.length;i++) {
-	oTable.fnAddData( [
-	    data.history[i].id,
-	    data.history[i].title,
-	    data.history[i].author,
-	    data.history[i].patron_barcode,
-	    data.history[i].ts
+    for (var i=0;i<data.history.borrowing.length;i++) {
+	oTable_borrowing.fnAddData( [
+	    data.history.borrowing[i].id,
+	    data.history.borrowing[i].title,
+	    data.history.borrowing[i].author,
+	    data.history.borrowing[i].patron_barcode,
+	    data.history.borrowing[i].ts
+	] );
+    }
+    for (var i=0;i<data.history.lending.length;i++) {
+	oTable_lending.fnAddData( [
+	    data.history.lending[i].id,
+	    data.history.lending[i].title,
+	    data.history.lending[i].author,
+	    data.history.lending[i].requester,
+	    data.history.lending[i].ts
 	] );
     }
     toggleLayer("waitDiv");

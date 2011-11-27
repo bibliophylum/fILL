@@ -953,6 +953,9 @@ div#mylistDiv {
     background: url("/img/table-row-gradient-hover.png") repeat-x scroll 0 0 #D0DAFD;
     color: #333399;
 }
-#datatable {
+#datatable_borrowing {
+    width: 100%;
+}
+#datatable_lending {
     width: 100%;
 }

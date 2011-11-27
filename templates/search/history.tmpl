@@ -17,7 +17,7 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    oTable = $('#datatable').dataTable({
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
        "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "bInfo": true,
@@ -35,6 +35,14 @@ $('document').ready(function(){
 //			}
 //		]
 //	}
+    });
+
+    oTable_lending = $('#datatable_lending').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
     });
 
     $.getJSON('/cgi-bin/get-history.cgi', {lid: <TMPL_VAR name="lid">},
@@ -75,12 +83,26 @@ $('document').ready(function(){
     </div>
 
     <div id="mylistDiv">
-      <br/>
+      <h4>Borrowing history</h4>
       <div class="dataTable_wrapper">
-	<table id="datatable">
+	<table id="datatable_borrowing">
 	  <thead>
 	    <tr>
 	      <th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
+      </div>
+
+      <br />
+      <h4>Lending history</h4>
+      <div class="dataTable_wrapper">
+	<table id="datatable_lending">
+	  <thead>
+	    <tr>
+	      <th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th>
 	    </tr>
 	  </thead>
 	  <tbody>
