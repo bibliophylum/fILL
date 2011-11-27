@@ -1,0 +1,96 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<link type="text/css" href="/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript" src="/history.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_search_history");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    oTable = $('#datatable').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+// Requires Flash ver 10...
+//	"oTableTools": {
+//                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf"
+//		"aButtons": [
+//			"copy", "csv", "xls", "pdf",
+//			{
+//				"sExtends":    "collection",
+//				"sButtonText": "Save",
+//				"aButtons":    [ "csv", "xls", "pdf" ]
+//			}
+//		]
+//	}
+    });
+
+    $.getJSON('/cgi-bin/get-history.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.history[0].id+" "+data.history[0].title+" "+data.history[0].author+" "+data.history[0].patron_barcode+" "+data.history[0].ts); //further debug
+                build_table(data);
+                //toggleLayer("waitDiv");
+                //toggleLayer("mylistDiv");
+           })
+	.success(function() {
+	    //alert('success');
+	    // print slip (single) / add to slip page (multi) / do nothing (none)
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	});
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Borrowing and lending history</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="mylistDiv">
+      <br/>
+      <div class="dataTable_wrapper">
+	<table id="datatable">
+	  <thead>
+	    <tr>
+	      <th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

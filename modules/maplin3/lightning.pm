@@ -25,6 +25,7 @@ sub setup {
 	'receive'                  => 'receiving_process',
 	'returns'                  => 'returns_process',
 	'checkins'                 => 'checkins_process',
+	'history'                  => 'history_process',
 	);
 }
 
@@ -258,6 +259,24 @@ sub checkins_process {
 
     my $template = $self->load_tmpl('search/checkins.tmpl');	
     $template->param( pagetitle => "Loan items to be checked back into your ILS",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub history_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/history.tmpl');	
+    $template->param( pagetitle => "ILL history",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);
