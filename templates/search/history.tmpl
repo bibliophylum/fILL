@@ -17,6 +17,10 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
+    $(function() {
+        $( "#tabs" ).tabs();
+    });
+
     var anOpenBorrowing = [];
     var anOpenLending = [];
     var sImageUrl = "/DataTables-1.8.2/examples/examples_support/";
@@ -148,37 +152,45 @@ $('document').ready(function(){
       Loading... <img src="/wait.gif">
     </div>
 
-    <div id="mylistDiv">
-      <h4>Borrowing history</h4>
-      <div class="dataTable_wrapper">
-	<table id="datatable_borrowing">
-	  <thead>
-	    <tr>
-	      <th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  </tbody>
-	</table>
+    <div id="tabs">
+      <ul>
+	<li><a href="#tabs-1">Borrowing history</a></li>
+	<li><a href="#tabs-2">Lending history</a></li>
+      </ul>
+
+      <div id="tabs-1">
+	<!--     <div id="mylistDiv">  -->
+	<h4>Borrowing history</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_borrowing">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
       </div>
 
-      <br />
-      <h4>Lending history</h4>
-      <div class="dataTable_wrapper">
-	<table id="datatable_lending">
-	  <thead>
-	    <tr>
-	      <th></th><th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th><th>status</th><th>message</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  </tbody>
-	</table>
+      <div id="tabs-2">
+	<h4>Lending history</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_lending">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th><th>status</th><th>message</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
       </div>
+
     </div>
-
   </div>
-
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
