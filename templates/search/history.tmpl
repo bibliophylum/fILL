@@ -17,7 +17,8 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    var anOpen = [];
+    var anOpenBorrowing = [];
+    var anOpenLending = [];
     var sImageUrl = "/DataTables-1.8.2/examples/examples_support/";
 
     oTable_borrowing = $('#datatable_borrowing').dataTable({
@@ -59,6 +60,18 @@ $('document').ready(function(){
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "id" },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "requester" },
+            { "mDataProp": "ts" }
+        ]
     });
 
     $.getJSON('/cgi-bin/get-history.cgi', {lid: <TMPL_VAR name="lid">},
@@ -82,19 +95,36 @@ $('document').ready(function(){
 
     $('#datatable_borrowing td.control').live( 'click', function () {
       var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpen );
+      var i = $.inArray( nTr, anOpenBorrowing );
    
       if ( i === -1 ) {
         $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-        var nDetailsRow = oTable_borrowing.fnOpen( nTr, fnFormatDetails(oTable_borrowing, nTr), 'details' );
-        $('div.innerDetails', nDetailsRow).slideDown();
-        anOpen.push( nTr );
+	fnFormatDetails(oTable_borrowing, nTr);
+        anOpenBorrowing.push( nTr );
       }
       else {
         $('img', this).attr( 'src', sImageUrl+"details_open.png" );
         $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
           oTable_borrowing.fnClose( nTr );
-          anOpen.splice( i, 1 );
+          anOpenBorrowing.splice( i, 1 );
+        } );
+      }
+    } );
+
+    $('#datatable_lending td.control').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenLending );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_lending, nTr);
+        anOpenLending.push( nTr );
+      }
+      else {
+        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+          oTable_lending.fnClose( nTr );
+          anOpenLending.splice( i, 1 );
         } );
       }
     } );
