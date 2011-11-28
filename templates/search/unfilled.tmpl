@@ -1,0 +1,61 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<link type="text/css" href="/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/unfilled.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_search_unfilled");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-unfilled-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.unfilled[0].id+" "+data.unfilled[0].title+" "+data.unfilled[0].author+" "+data.unfilled[0].patron_barcode+" "+data.unfilled[0].ts); //further debug
+                build_table(data);
+                //toggleLayer("waitDiv");
+                //toggleLayer("mylistDiv");
+           });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If a lending library was unable to fill your request, that request will be shown here.</li>
+      <li>If there are more possible lenders, you'll see a 'Try next lender' button; otherwise, you'll see the message "No other lenders".</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Unfilled: the lending libraries were unable to fill these requests</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

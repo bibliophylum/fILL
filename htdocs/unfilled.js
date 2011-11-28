@@ -1,4 +1,4 @@
-// checkins.js
+// unfilled.js
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","gradient-style");
@@ -12,36 +12,50 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Back from"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Check-in"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-    for (var i=0;i<data.checkins.length;i++) 
+//    alert('building rows');
+    for (var i=0;i<data.unfilled.length;i++) 
     {
-        row = tBody.insertRow(-1); row.id = 'req'+data.checkins[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].title;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].msg_from;
+//	alert (data.unfilled[i].id+" "+data.unfilled[i].msg_from+" "+data.unfilled[i].call_number+" "+data.unfilled[i].author+" "+data.unfilled[i].title+" "+data.unfilled[i].ts); //further debug
+        row = tBody.insertRow(-1); row.id = 'req'+data.unfilled[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
-	divResponses.id = 'divResponses'+data.checkins[i].id;
+	divResponses.id = 'divResponses'+data.unfilled[i].id;
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Checked in to ILS";
-	var requestId = data.checkins[i].id;
-	b1.onclick = make_checkin_handler( requestId );
+	b1.value = "Try next lender";
+	b1.disabled = "disabled";
+	var requestId = data.unfilled[i].id;
+	b1.onclick = make_trynextlender_handler( requestId );
+	divResponses.appendChild(b1);
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Cancel request";
+	var requestId = data.unfilled[i].id;
+	b1.onclick = make_cancel_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
@@ -57,11 +71,11 @@ function build_table( data ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_checkin_handler( requestId ) {
-    return function() { checkin( requestId ) };
+function make_trynextlender_handler( requestId ) {
+    return function() { try_next_lender( requestId ) };
 }
 
-function checkin( requestId ) {
+function try_next_lender( requestId ) {
     // NOTE: this code will find table rows based on cell contents...
     // ...as we now have <tr id='xxx'>, there's an easier way....
 
@@ -79,8 +93,55 @@ function checkin( requestId ) {
 		reqid: $row.find(':nth-child(1)').text(),
 		msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
-		status: "Checked-in",
+		status: "Received",
 		message: ""
+	    }
+	} else {
+	    return null;
+	};
+    }).get();
+
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	    // print slip (single) / add to slip page (multi) / do nothing (none)
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+function make_cancel_handler( requestId ) {
+    return function() { cancel( requestId ) };
+}
+
+function cancel( requestId ) {
+    // NOTE: this code will find table rows based on cell contents...
+    // ...as we now have <tr id='xxx'>, there's an easier way....
+
+    // Returns [{reqid: 12, msg_to: '101'}, 
+    //          {reqid: 15, msg_to: '98'},
+    // Note that nth-child uses 1-based indexing, not 0-based
+    var parms = $('#gradient-style tbody tr').map(function() {
+	// $(this) is used more than once; cache it for performance.
+	var $row = $(this);
+	
+	// For each row that's "mapped", return an object that
+	//  describes the first and second <td> in the row.
+	if ($row.find(':nth-child(1)').text() == requestId) {
+	    return {
+		reqid: $row.find(':nth-child(1)').text(),
+		msg_to: $("#lid").text(),  // message to myself
+		lid: $("#lid").text(),
+		status: "Message",
+		message: "Requester closed the request."
 	    }
 	} else {
 	    return null;
