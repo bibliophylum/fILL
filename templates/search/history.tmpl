@@ -49,7 +49,9 @@ $('document').ready(function(){
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "patron_barcode" },
-            { "mDataProp": "ts" }
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" }
         ]
 
     });
@@ -70,20 +72,18 @@ $('document').ready(function(){
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requester" },
-            { "mDataProp": "ts" }
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" }
         ]
     });
 
     $.getJSON('/cgi-bin/get-history.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
-                //alert (data.history[0].id+" "+data.history[0].title+" "+data.history[0].author+" "+data.history[0].patron_barcode+" "+data.history[0].ts); //further debug
                 build_table(data);
-                //toggleLayer("waitDiv");
-                //toggleLayer("mylistDiv");
            })
 	.success(function() {
 	    //alert('success');
-	    // print slip (single) / add to slip page (multi) / do nothing (none)
 	})
 	.error(function() {
 	    alert('error');
@@ -154,7 +154,7 @@ $('document').ready(function(){
 	<table id="datatable_borrowing">
 	  <thead>
 	    <tr>
-	      <th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th>
+	      <th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -168,7 +168,7 @@ $('document').ready(function(){
 	<table id="datatable_lending">
 	  <thead>
 	    <tr>
-	      <th></th><th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th>
+	      <th></th><th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th><th>status</th><th>message</th>
 	    </tr>
 	  </thead>
 	  <tbody>
