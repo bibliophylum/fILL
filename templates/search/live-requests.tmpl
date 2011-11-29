@@ -1,0 +1,196 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_search.tmpl">
+
+<link type="text/css" href="/css/cupertino/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript" src="/live-requests.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_search_live_requests");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $(function() {
+        $( "#tabs" ).tabs();
+    });
+
+    var anOpenBorrowing = [];
+    var anOpenLending = [];
+    var sImageUrl = "/DataTables-1.8.2/examples/examples_support/";
+
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+// Requires Flash ver 10...
+//	"oTableTools": {
+//                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf"
+//		"aButtons": [
+//			"copy", "csv", "xls", "pdf",
+//			{
+//				"sExtends":    "collection",
+//				"sButtonText": "Save",
+//				"aButtons":    [ "csv", "xls", "pdf" ]
+//			}
+//		]
+//	}
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "id" },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "patron_barcode" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" }
+        ]
+
+    });
+
+    oTable_lending = $('#datatable_lending').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "id" },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "requester" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" }
+        ]
+    });
+
+    $.getJSON('/cgi-bin/get-live-requests.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                build_table(data);
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	});
+
+
+    $('#datatable_borrowing td.control').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenBorrowing );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_borrowing, nTr);
+        anOpenBorrowing.push( nTr );
+      }
+      else {
+        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+          oTable_borrowing.fnClose( nTr );
+          anOpenBorrowing.splice( i, 1 );
+        } );
+      }
+    } );
+
+    $('#datatable_lending td.control').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenLending );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_lending, nTr);
+        anOpenLending.push( nTr );
+      }
+      else {
+        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+          oTable_lending.fnClose( nTr );
+          anOpenLending.splice( i, 1 );
+        } );
+      }
+    } );
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Current interlibrary loans: borrowing and lending</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="tabs">
+      <ul>
+	<li><a href="#tabs-1">Current borrowing</a></li>
+	<li><a href="#tabs-2">Current lending</a></li>
+      </ul>
+
+      <div id="tabs-1">
+	<!--     <div id="mylistDiv">  -->
+	<h4>Current borrowing</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_borrowing">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+
+      <div id="tabs-2">
+	<h4>Current lending</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_lending">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>requester</th><th>ts</th><th>status</th><th>message</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

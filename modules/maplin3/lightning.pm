@@ -27,6 +27,7 @@ sub setup {
 	'returns'                  => 'returns_process',
 	'checkins'                 => 'checkins_process',
 	'history'                  => 'history_process',
+	'live_requests'            => 'live_requests_process',
 	);
 }
 
@@ -278,6 +279,24 @@ sub history_process {
 
     my $template = $self->load_tmpl('search/history.tmpl');	
     $template->param( pagetitle => "ILL history",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub live_requests_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/live-requests.tmpl');	
+    $template->param( pagetitle => "Current ILLs",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);
