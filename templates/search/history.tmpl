@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
-
+<script type="text/javascript" src="/moment.min.js"></script>
 <script type="text/javascript" src="/history.js"></script>
 
 <script type="text/javascript">
@@ -16,6 +16,19 @@ $.ajaxSetup ({
 });  
 
 $('document').ready(function(){
+
+    $(function() {
+        var dateStart = moment();
+        dateStart = dateStart.subtract('months',1);
+
+        $("#startdate").datepicker({ dateFormat: 'yy-mm-dd', defaultDate: '-1m' });
+        $("#startdate").datepicker('setDate', dateStart.native() );
+
+        $( "#enddate" ).datepicker({ dateFormat: 'yy-mm-dd', defaultDate: null });
+        $(" #enddate" ).datepicker('setDate', new Date());
+
+    });
+
 
     $(function() {
         $( "#tabs" ).tabs();
@@ -82,11 +95,21 @@ $('document').ready(function(){
         ]
     });
 
-    $.getJSON('/cgi-bin/get-history.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                build_table(data);
-           })
-	.success(function() {
+    var d_s;
+    var d_e;
+    $(function() {
+        d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
+        d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
+//        alert( d_s );
+
+        $.getJSON('/cgi-bin/get-history.cgi', { lid:   <TMPL_VAR name="lid">, 
+                                                start: d_s, 
+                                                end:   d_e
+                                              },
+                function(data){
+                    build_table(data);
+               })
+        .success(function() {
 	    //alert('success');
 	})
 	.error(function() {
@@ -95,7 +118,7 @@ $('document').ready(function(){
 	.complete(function() {
             //alert('ajax complete');
 	});
-
+    });
 
     $('#datatable_borrowing td.control').live( 'click', function () {
       var nTr = this.parentNode;
@@ -148,6 +171,22 @@ $('document').ready(function(){
   </div>
 
   <div id="middlecontent">
+    <div>
+      <h3>Specify a date range</h3>
+      <form>
+	<table cellspacing="20">
+	  <tr>
+	    <td>
+	      View history from (yyyy-mm-dd): <input id="startdate" type="text">
+	      <br>up to (but not including) (yyyy-mm-dd): <input id="enddate" type="text">
+	    </td><td>
+	      <input type="button" value="Fetch requests within this date range" onClick="requery(<TMPL_VAR name="lid">); return false;">
+	    </td>
+	  </tr>
+	</table>
+      </form>
+    </div>
+
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>

@@ -8,7 +8,7 @@ function build_table( data ) {
 	var ai = oTable_lending.fnAddData( data.active.lending[i] );
     }
     toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    toggleLayer("tabs");
 }
 
 function fnFormatDetails( oTable, nTr )

@@ -13,7 +13,7 @@ function build_table( data ) {
 //	n.setAttribute('id', data.history.borrowing[i].id); 
     }
     toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    toggleLayer("tabs");
 }
 
 function fnFormatDetails( oTable, nTr )
@@ -53,6 +53,34 @@ function fnFormatDetails( oTable, nTr )
 	});
 }
 
+function requery( lid ) 
+{
+    var d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
+    var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
+//    alert( d_s+"\n"+d_e );
+    toggleLayer("waitDiv");
+    toggleLayer("tabs");
+    $.getJSON('/cgi-bin/get-history.cgi', { "lid":   lid,
+                                            "start": d_s, 
+                                            "end":   d_e
+                                          },
+              function(data){
+		  oTable_borrowing.fnClearTable();
+		  oTable_lending.fnClearTable();
+//		  alert('data is: '+data.history.borrowing[0].title);
+                  build_table(data);
+              })
+    	.success(function() {
+//            alert('success');
+       	})
+       	.error(function() {
+            alert('error');
+       	})
+       	.complete(function() {
+//            alert('ajax complete');
+       	});
+};
+
 
 function toggleLayer( whichLayer )
 {
@@ -69,7 +97,7 @@ function toggleLayer( whichLayer )
     if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
 	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
     vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-    //    alert('toggled ' + whichLayer);
+    //alert('toggled ' + whichLayer);
 }
 
 function set_primary_tab(tab_id) {
