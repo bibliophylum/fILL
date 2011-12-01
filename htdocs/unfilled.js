@@ -16,11 +16,13 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Current"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "# sources"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -38,6 +40,8 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_target;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].sources;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
@@ -46,7 +50,9 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Try next lender";
-	b1.disabled = "disabled";
+	if (data.unfilled[i].current_target >= data.unfilled[i].sources) {
+	    b1.disabled = "disabled";
+	}
 	var requestId = data.unfilled[i].id;
 	b1.onclick = make_trynextlender_handler( requestId );
 	divResponses.appendChild(b1);
