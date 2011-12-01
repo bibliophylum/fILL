@@ -18,12 +18,15 @@ $('document').ready(function(){
     $(function() {
         var dateStart = moment();
         dateStart = dateStart.subtract('months',1);
+	var dateEnd = moment();
+	dateEnd = dateEnd.add('days',1);
 
         $("#startdate").datepicker({ dateFormat: 'yy-mm-dd', defaultDate: '-1m' });
         $("#startdate").datepicker('setDate', dateStart.native() );
 
         $( "#enddate" ).datepicker({ dateFormat: 'yy-mm-dd', defaultDate: null });
-        $(" #enddate" ).datepicker('setDate', new Date());
+//        $(" #enddate" ).datepicker('setDate', new Date());
+        $(" #enddate" ).datepicker('setDate', dateEnd.native());  // include today in the history :-)
 
     });
 
