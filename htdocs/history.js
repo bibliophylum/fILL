@@ -65,6 +65,7 @@ function requery( lid )
                                             "end":   d_e
                                           },
               function(data){
+//		  alert('first success');
 		  oTable_borrowing.fnClearTable();
 		  oTable_lending.fnClearTable();
 //		  alert('data is: '+data.history.borrowing[0].title);
