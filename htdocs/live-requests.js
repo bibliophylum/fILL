@@ -32,13 +32,13 @@ function fnFormatDetails( oTable, nTr )
 	    var numDetails = data.request_details.length; 
 	    sOut = '<div class="innerDetails">'+
 		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Timestamp</th><th>Msg from</th><th>Msg from (ID)</th><th>Msg to</th><th>Msg to (ID)</th><th>Status</th><th>Extra information</th></thead>';
+		'<thead><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
 	    for (var i = 0; i < numDetails; i++) {
 		var detRow = '<tr><td>'+data.request_details[i].ts+'</td>'+
 		    '<td>'+data.request_details[i].from+'</td>'+
-		    '<td>'+data.request_details[i].msg_from+'</td>'+
+//		    '<td>'+data.request_details[i].msg_from+'</td>'+
 		    '<td>'+data.request_details[i].to+'</td>'+
-		    '<td>'+data.request_details[i].msg_to+'</td>'+
+//		    '<td>'+data.request_details[i].msg_to+'</td>'+
 		    '<td>'+data.request_details[i].status+'</td>'+
 		    '<td>'+data.request_details[i].message+'</td></tr>';
 		sOut=sOut+detRow;
