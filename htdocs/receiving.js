@@ -15,13 +15,14 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Receive"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "As items are received, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As items are received, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -36,6 +37,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].patron_barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].from;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].message;
@@ -84,7 +86,7 @@ function receive( requestId ) {
 	if ($row.find(':nth-child(1)').text() == requestId) {
 	    return {
 		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+		msg_to: $row.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
 		status: "Received",
 		message: ""

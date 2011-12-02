@@ -14,11 +14,12 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Back from"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Back from (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Check-in"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.";
+    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -31,6 +32,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].from;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].msg_from;
         cell = row.insertCell(-1); 
 
@@ -77,7 +79,7 @@ function checkin( requestId ) {
 	if ($row.find(':nth-child(1)').text() == requestId) {
 	    return {
 		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+		msg_to: $row.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
 		status: "Checked-in",
 		message: ""

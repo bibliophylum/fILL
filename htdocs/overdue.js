@@ -14,13 +14,14 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Borrowed from"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Borrowed from (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "These items are now overdue.";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "These items are now overdue.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -34,6 +35,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].from;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].due_date;

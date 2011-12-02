@@ -15,14 +15,15 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Current"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "# sources"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last source tried"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -38,6 +39,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_target;

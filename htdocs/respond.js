@@ -12,6 +12,7 @@ function build_table( data ) {
     
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
@@ -21,7 +22,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -33,6 +34,7 @@ function build_table( data ) {
 //	alert (data.unhandledRequests[i].id+" "+data.unhandledRequests[i].msg_from+" "+data.unhandledRequests[i].call_number+" "+data.unhandledRequests[i].author+" "+data.unhandledRequests[i].title+" "+data.unhandledRequests[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
@@ -96,7 +98,7 @@ function shipit( requestId ) {
 	if ($row.find(':nth-child(1)').text() == requestId) {
 	    return {
 		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
+		msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
 		status: "ILL-Answer|Will-Supply|being-processed-for-supply",
 		message: ""
@@ -114,10 +116,10 @@ function shipit( requestId ) {
 	    var myRow=$("#req"+requestId);
 	    var parms = {
 		"reqid": requestId,
-		"msg_to": myRow.find(':nth-child(2)').text(),
+		"msg_to": myRow.find(':nth-child(3)').text(),
 		"lid": $("#lid").text(),
 		"status": "Shipped",
-		"message": "due "+myRow.find(':nth-child(7)').text()
+		"message": "due "+myRow.find(':nth-child(8)').text()
 	    };
 	    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 		      function(data){
@@ -178,7 +180,7 @@ function unfilled( requestId ) {
 	    if ($row.find(':nth-child(1)').text() == requestId) {
 		return {
 		    reqid: $row.find(':nth-child(1)').text(),
-		    msg_to: $row.find(':nth-child(2)').text(),  // sending TO whoever original was FROM
+		    msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
 		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Unfilled|"+reason,
 		    message: ""
@@ -215,7 +217,7 @@ function unfilled( requestId ) {
 //    $("#unfilledradioset").append("<input type='radio' name='radioset' value='responder-specific' id='responder-specific'/><label for='responder-specific'>responder-specific</label>");
     $("#unfilledradioset").buttonset('refresh');
 
-//    alert(row[0].cells[7]);
+//    alert(row[0].cells[8]);
 
     
 }
@@ -230,7 +232,7 @@ function set_default_due_date(oForm) {
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
 	theTable.tBodies[0].rows[r].cells[6].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(7)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )

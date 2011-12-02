@@ -15,11 +15,12 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return to"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Return to (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -34,6 +35,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].to;
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].msg_to;
         cell = row.insertCell(-1); 
 
@@ -80,7 +82,7 @@ function return_item( requestId ) {
 	if ($row.find(':nth-child(1)').text() == requestId) {
 	    return {
 		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+		msg_to: $row.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
 		status: "Returned",
 		message: ""
