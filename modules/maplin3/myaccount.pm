@@ -23,6 +23,7 @@ sub setup {
     $self->mode_param('rm');
     $self->run_modes(
 	'myaccount_settings_form'    => 'myaccount_settings_process',
+	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	'myaccount_zserver_form'     => 'myaccount_zserver_process',
 	'myaccount_locations_form'   => 'myaccount_locations_process',
 	'myaccount_status_form'      => 'myaccount_status_process',
@@ -115,6 +116,28 @@ sub myaccount_settings_process {
     return $template->output;
 }
 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_library_barcodes_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my $SQL = "select lb.lid, lb.borrower, l.name, l.library, lb.barcode from library_barcodes lb left join libraries l on l.lid=lb.borrower where lb.lid=? order by l.library";
+
+    my $barcodes = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
+
+    my $template = $self->load_tmpl('myaccount/library-barcodes.tmpl');	
+    $template->param( pagetitle => $self->authen->username . " barcodes from ILS",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      barcodes => $barcodes,
+	);
+    return $template->output;
+    
+}
 
 #--------------------------------------------------------------------------------
 #
@@ -679,6 +702,20 @@ sub _set_header_to_get_fresh_page {
                         pre-check=0
                         )),
 	);
+}
+
+#--------------------------------------------------------------------------------------------
+sub get_lid_from_symbol {
+    my $self = shift;
+    my $symbol = shift;
+    # Get this user's (requester's) library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"SELECT lid FROM libraries WHERE name=?",
+	undef,
+	$symbol
+	);
+    my $requester = $hr_id->{lid};
+    return $requester;
 }
 
 
