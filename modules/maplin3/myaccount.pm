@@ -125,15 +125,11 @@ sub myaccount_library_barcodes_process {
     my $q = $self->query;
 
     my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
-    my $SQL = "select lb.lid, lb.borrower, l.name, l.library, lb.barcode from library_barcodes lb left join libraries l on l.lid=lb.borrower where lb.lid=? order by l.library";
-
-    my $barcodes = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
 
     my $template = $self->load_tmpl('myaccount/library-barcodes.tmpl');	
     $template->param( pagetitle => $self->authen->username . " barcodes from ILS",
 		      username => $self->authen->username,
 		      lid => $lid,
-		      barcodes => $barcodes,
 	);
     return $template->output;
     

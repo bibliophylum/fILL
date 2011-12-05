@@ -1,13 +1,16 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
 <link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
-
+<script type="text/javascript" src="/jquery.DataTables.editable.js"></script>
 <script type="text/javascript" src="/library-barcodes.js"></script>
 
+
 <script type="text/javascript">
+//set_secondary_tab("menu_borrow_receive");
 
 $.ajaxSetup ({  
   cache: false  
@@ -15,41 +18,26 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
+//    oTable_barcodes = $('#datatable_barcodes').dataTable();
     oTable_barcodes = $('#datatable_barcodes').dataTable({
-       "bJQueryUI": true,
+        "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
-// Requires Flash ver 10...
-//	"oTableTools": {
-//                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf"
-//		"aButtons": [
-//			"copy", "csv", "xls", "pdf",
-//			{
-//				"sExtends":    "collection",
-//				"sButtonText": "Save",
-//				"aButtons":    [ "csv", "xls", "pdf" ]
-//			}
-//		]
-//	},
-
         "iDisplayLength": 25,
         "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-
         "aoColumns": [
             { "mDataProp": "lid" },
             { "mDataProp": "borrower" },
             { "mDataProp": "name" },
             { "mDataProp": "library" },
             { "mDataProp": "barcode" },
-            { "mDataProp": "update" },      
+            { "mDataProp": null }
         ]
-
     });
 
-/*
-    $.getJSON('/cgi-bin/get-live-requests.cgi', {lid: <TMPL_VAR name="lid">},
+    $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
            })
@@ -62,7 +50,7 @@ $('document').ready(function(){
 	.complete(function() {
             //alert('ajax complete');
 	});
-*/
+
 });
 
 </script>
@@ -73,43 +61,35 @@ $('document').ready(function(){
   <div id="leftcontent">
     <h2>Instructions</h2>
     <ol>
-      <li>none yet</li>
+      <li>Click on a row and enter the barcode from your ILS.</li>
     </ol>
   </div>
 
   <div id="middlecontent">
-    <!--     <div id="mylistDiv">  -->
-    <h4>Library barcodes from your ILS</h4>
-    <div class="dataTable_wrapper">
-      <table id="datatable_barcodes" width="100%">
-	<thead>
-	  <tr>
-	    <th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th><th>update</th>
-	  </tr>
-	</thead>
-	<tbody>
-	  <TMPL_LOOP name="barcodes">
-	    <tr>
-	      <td><TMPL_VAR name="lid"></td>
-	      <td><TMPL_VAR name="borrower"></td>
-	      <td><TMPL_VAR name="name"></td>
-	      <td><TMPL_VAR name="library"></td>
-	      <td><TMPL_VAR name="barcode"></td>
-	      <td>
-		<form action="/cgi-bin/update-library-barcode.cgi">
-		  <input type="text" name="barcode" value='<TMPL_VAR name="barcode">'>
-		  <input type="hidden" name="lid" value='<TMPL_VAR name="lid">'>
-		  <input type="hidden" name="borrower" value='<TMPL_VAR name="borrower">'>
-		  <input type="submit" value="Update">
-		</form>
-	      </td>
-	    </tr>
-	  </TMPL_LOOP>
-	</tbody>
-      </table>
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
     </div>
+
+    <div id="myDiv">
+      <h3>Library barcodes from your ILS</h3>
+      <div id="mylistDiv">
+	<div class="dataTable_wrapper">
+	  <table id="datatable_barcodes" width="100%">
+	    <thead>
+	      <tr>
+		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th><th></th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+    </div>
+
   </div>
-  
+
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
