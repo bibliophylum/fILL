@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/jquery.DataTables.editable.js"></script>
+<script type="text/javascript" src="/jquery.jeditable.js"></script>
 <script type="text/javascript" src="/library-barcodes.js"></script>
 
 
@@ -18,8 +18,9 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-//    oTable_barcodes = $('#datatable_barcodes').dataTable();
-    oTable_barcodes = $('#datatable_barcodes').dataTable({
+    var anOpenBarcodes = [];
+
+    oTable = $('#datatable_barcodes').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "bInfo": true,
@@ -33,16 +34,31 @@ $('document').ready(function(){
             { "mDataProp": "name" },
             { "mDataProp": "library" },
             { "mDataProp": "barcode" },
-            { "mDataProp": null }
         ]
     });
+
 
     $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
            })
 	.success(function() {
-	    //alert('success');
+	    alert('success');
+	    /* Apply the jEditable handlers to the table */
+	    $('td:eq(4)', oTable.fnGetNodes()).editable( '/cgi-bin/update-library-barcode.cgi', {
+	        "callback": function( sValue, y ) {
+		    var aPos = oTable.fnGetPosition( this );
+		    oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+	        },
+         	"submitdata": function ( value, settings ) {
+	            return {
+		        "row_id": this.parentNode.getAttribute('id'),
+			"column": oTable.fnGetPosition( this )[2]
+		    };
+        	},
+	        "height": "14px"
+            } );
+
 	})
 	.error(function() {
 	    alert('error');
@@ -50,6 +66,8 @@ $('document').ready(function(){
 	.complete(function() {
             //alert('ajax complete');
 	});
+
+
 
 });
 
@@ -78,7 +96,7 @@ $('document').ready(function(){
 	  <table id="datatable_barcodes" width="100%">
 	    <thead>
 	      <tr>
-		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th><th></th>
+		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th>
 	      </tr>
 	    </thead>
 	    <tbody>

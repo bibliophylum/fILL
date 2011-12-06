@@ -1,11 +1,10 @@
 // library_barcodes.js
 function build_table( data ) {
     for (var i=0;i<data.barcodes.length;i++) {
-	var ai = oTable_barcodes.fnAddData( data.barcodes[i] );
+	var ai = oTable.fnAddData( data.barcodes[i] );
 	var n = oTable.fnSettings().aoData[ ai[0] ].nTr;
 	var oData = oTable.fnGetData( n );
-	// n.setAttribute('id', n.cells[0].innerHTML+'_'+n.cells[1].innerHTML);
-	n.setAttribute('id', n.id+'_'+n.borrower);
+	n.setAttribute('id', n.cells[0].innerHTML+'_'+n.cells[1].innerHTML);
     }
     toggleLayer("waitDiv");
     toggleLayer("mylistDiv");
