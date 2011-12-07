@@ -2,8 +2,9 @@ package maplin3::lightning;
 use warnings;
 use strict;
 use base 'maplin3base';
-use ZOOM;
-use MARC::Record;
+use GD::Barcode;
+use GD::Barcode::Code39;
+use MIME::Base64;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
@@ -94,9 +95,14 @@ sub pull_list_process {
     my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    my $SQL = "select r.title, r.author, ra.ts, l.name as from, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=$lid and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=$lid)";
+    my $SQL = "select b.barcode, r.title, r.author, ra.ts, l.name as from, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?)";
 
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} } );
+    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
+
+    # generate barcodes
+    foreach my $request (@$pulls) {
+	$request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( $request->{barcode} )->plot->png);
+    }
 
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
     $template->param( pagetitle => $self->authen->username . " Pull-list",

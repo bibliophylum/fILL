@@ -39,9 +39,9 @@
     <h3>Pull list</h3>
     <table id="gradient-style">
       <thead>
-	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requested by (ID)</th></tr>
+	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requested by (ID)</th><th>Library barcode</th><th>Scanable barcode</th></tr>
       </thead>
-      <tfoot><tr><td colspan="6">You can print this and take it to the stacks.</td></tr></tfoot>
+      <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
       <tbody>
       <TMPL_LOOP name="pulls">
 	<tr>
@@ -51,6 +51,8 @@
 	  <td><TMPL_VAR NAME="ts"></td>
 	  <td><TMPL_VAR NAME="from"></td>
 	  <td><TMPL_VAR NAME="msg_from"></td>
+	  <td><TMPL_VAR NAME="barcode"></td>
+	  <td><img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/></td>
 	</tr>
       </TMPL_LOOP>
       </tbody>
