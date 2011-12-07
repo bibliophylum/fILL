@@ -3,15 +3,16 @@
 use CGI;
 use DBI;
 use JSON;
+use Data::Dumper;
 
 my $query = new CGI;
-my $msg_from = $query->param('lid');
+#print STDERR Dumper($query->param('value'));  # ducks
+#print STDERR Dumper($query->param('id'));
+#print STDERR Dumper($query->param('row_id')); # 85_137
+#print STDERR Dumper($query->param('column'));
 
-print STDERR "in update-library-barcode.cgi\n";
-exit;
-
-# sql to add to the request conversation
-my $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+my ($lid,$borrower) = split /_/, $query->param('row_id');
+my $SQL = "update library_barcodes set barcode=? where lid=? and borrower=?";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -22,7 +23,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
-my $retval = $dbh->do( $SQL, undef, $reqid, $msg_from, $msg_to, $status, $message );
+my $retval = $dbh->do( $SQL, undef, $query->param('value'), $lid, $borrower );
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
+print "Content-Type:application/json\n\n" . to_json( { success => $retval, data => $query->param('value') } );
