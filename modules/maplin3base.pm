@@ -181,10 +181,6 @@ sub show_logged_out_process {
     #
     # Do some housekeeping
     #
-    # Clear any old search results
-    $self->dbh->do("DELETE FROM marc WHERE sessionid=?",undef,$self->session->id());
-    # Clear any status results
-    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$self->session->id());
 
     # Open the html template
     # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.

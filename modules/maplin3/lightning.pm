@@ -101,7 +101,9 @@ sub pull_list_process {
 
     # generate barcodes
     foreach my $request (@$pulls) {
-	$request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( $request->{barcode} )->plot->png);
+	if (( $request->{barcode} ) && ( $request->{barcode} =~ /\d+/)) {
+	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( $request->{barcode} )->plot->png);
+	}
     }
 
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
@@ -144,7 +146,7 @@ sub request_process {
 	}
 	push @sources, \%src;
     }
-#    $self->log->debug( Dumper(@sources) );
+    $self->log->debug( Dumper(@sources) );
 
     # Get this user's (requester's) library id
     my $requester = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
@@ -184,7 +186,7 @@ sub request_process {
 		       $reqid,
 		       $sequence++,
 		       $lenderID,
-		       "fake-call-number",
+		       $src->{"callno"},
 	    );
     }
 
@@ -193,10 +195,9 @@ sub request_process {
     $template->param( pagetitle => "Maplin-4 Request an ILL",
 		      username => $self->authen->username,
 		      lid => $requester,
-#		      parms => \@parms,
 		      request_id => $reqid,
-		      title => $q->param('title'),
-		      author => $q->param('author'),
+		      title => $q->param('title') || ' ',
+		      author => $q->param('author') || ' ',
 		      sources => \@sources,
 	);
     return $template->output;

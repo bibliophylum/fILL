@@ -1,0 +1,1 @@
+perl -e 'use GD; $im=GD::Image->new(); print $im->can("png") ? "yes" : "no" , "\n";'

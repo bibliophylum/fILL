@@ -61,9 +61,9 @@
     <h3>The title was found at these locations:</h3>
     <p><em>Maplin will automatically determine which lender to try first, to minimize lender workloads.</em></p>
     <table>
-      <tr><td>symbol</td><td>location</td><td>holding</td></tr>
+      <tr><td>symbol</td><td>location</td><td>holding</td><td>callno</td></tr>
       <TMPL_LOOP name="sources">
-	<tr><td><TMPL_VAR name="symbol"></td><td><TMPL_VAR name="location"></td><td><TMPL_VAR name="holding"></td></tr>
+	<tr><td><TMPL_VAR name="symbol"></td><td><TMPL_VAR name="location"></td><td><TMPL_VAR name="holding"></td><td><TMPL_VAR name="callno"></td></tr>
       </TMPL_LOOP>
     </table>
     

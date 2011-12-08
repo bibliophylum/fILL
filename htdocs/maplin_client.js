@@ -429,6 +429,7 @@ function renderDetails(data, marker)
 	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
 	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
 	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
+	requestForm += '<input type="hidden" name="callno_' + i + '" value="' + data["location"][i]["md-callnumber"] + '">';
     }
 
     requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_"></form>';
