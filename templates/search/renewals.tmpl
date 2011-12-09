@@ -1,0 +1,58 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/renewals.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_renewals");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-renewals-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.renewals[0].id+" "+data.renewals[0].msg_from+" "+data.renewals[0].call_number+" "+data.renewals[0].author+" "+data.renewals[0].title+" "+data.renewals[0].ts); //further debug
+                build_table(data);
+                //toggleLayer("waitDiv");
+                //toggleLayer("mylistDiv");
+           });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>These are items that your patrons currently have out.</li>
+      <li>You can request a renewal.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <br/>
+      <h3>Request renewals (for ILL items currently out to your patrons)</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

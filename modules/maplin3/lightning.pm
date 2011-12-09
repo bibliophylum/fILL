@@ -25,8 +25,10 @@ sub setup {
 	'respond'                  => 'respond_process',
 	'unfilled'                 => 'unfilled_process',
 	'receive'                  => 'receiving_process',
+	'renewals'                 => 'renewals_process',
 	'returns'                  => 'returns_process',
 	'overdue'                  => 'overdue_process',
+	'renew_answer'             => 'renew_answer_process',
 	'checkins'                 => 'checkins_process',
 	'history'                  => 'history_process',
 	'live_requests'            => 'live_requests_process',
@@ -233,6 +235,42 @@ sub receiving_process {
 
     my $template = $self->load_tmpl('search/receiving.tmpl');	
     $template->param( pagetitle => "Receive items to fill your requests",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub renewals_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/renewals.tmpl');	
+    $template->param( pagetitle => "Ask for renewals on borrowed items",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub renew_answer_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/renew-answer.tmpl');	
+    $template->param( pagetitle => "Respond to renewal requests",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);
