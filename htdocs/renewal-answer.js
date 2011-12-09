@@ -108,27 +108,50 @@ function make_cannotRenew_handler( requestId ) {
 
 function cannotRenew( requestId ) {
     var myRow=$("#req"+requestId);
-    var parms = {
-	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(3)').text(),
-	"lid": $("#lid").text(),
-	"status": "Renew-Answer|No-renewal",
-	"message": ""
-    };
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
-	      function(data){
-		  //alert('change request status: '+data+'\n'+parms.status);
-	      })
-        .success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-	    // slideUp doesn't work for <tr>
-	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
-	});
+
+    var crDiv = document.createElement("div");
+    crDiv.id = "cannotRenewMessage";
+    var crForm = document.createElement("form");
+    crDiv.appendChild(crForm);
+    myRow[0].cells[8].appendChild(crDiv);
+
+    $("#divResponses"+requestId).hide();
+
+    $("<p />").text("You can enter a message if you'd like:").appendTo(crForm);
+    $("<input />").attr({'type':'text','id':'crmsg'}).appendTo(crForm);
+    var cButton = $("<input type='button' value='Cancel'>").appendTo(crForm);
+    cButton.bind('click', function() {
+	$("#cannotRenewMessage").remove(); 
+	$("#divResponses"+requestId).show(); 
+	//return false;
+    });
+
+    var sButton = $("<input type='submit' value='Submit'>").appendTo(crForm);
+    sButton.bind('click', function() {
+	var reason = $('input:[id=crmsg]').val();
+	alert(reason);
+	var parms = {
+	    "reqid": requestId,
+	    "msg_to": myRow.find(':nth-child(3)').text(),
+	    "lid": $("#lid").text(),
+	    "status": "Renew-Answer|No-renewal",
+	    "message": reason
+	};
+	$.getJSON('/cgi-bin/change-request-status.cgi', parms,
+		  function(data){
+		      //alert('change request status: '+data+'\n'+parms.status);
+		  })
+            .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+		// slideUp doesn't work for <tr>
+		$("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    });
+    });
 }
 
 function set_default_due_date(oForm) {
