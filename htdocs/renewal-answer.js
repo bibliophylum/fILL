@@ -129,7 +129,8 @@ function cannotRenew( requestId ) {
     var sButton = $("<input type='submit' value='Submit'>").appendTo(crForm);
     sButton.bind('click', function() {
 	var reason = $('input:[id=crmsg]').val();
-	alert(reason);
+	$("#cannotRenewMessage").remove(); 
+	$("#divResponses"+requestId).show(); 
 	var parms = {
 	    "reqid": requestId,
 	    "msg_to": myRow.find(':nth-child(3)').text(),
@@ -137,6 +138,7 @@ function cannotRenew( requestId ) {
 	    "status": "Renew-Answer|No-renewal",
 	    "message": reason
 	};
+
 	$.getJSON('/cgi-bin/change-request-status.cgi', parms,
 		  function(data){
 		      //alert('change request status: '+data+'\n'+parms.status);
