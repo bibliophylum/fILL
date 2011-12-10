@@ -363,6 +363,18 @@
 	    <xsl:value-of select="."/>
 	  </xsl:for-each>
         </pz:metadata>
+	<!-- Spruce locations -->
+	<xsl:if test="marc:subfield[@code='d']">
+	  <pz:metadata type="locallocation">
+	    <xsl:value-of select="marc:subfield[@code='d']"/>
+	  </pz:metadata>
+	</xsl:if>
+	<!-- Spruce call numbers -->
+	<xsl:if test="marc:subfield[@code='c']">
+	  <pz:metadata type="localcallno">
+	    <xsl:value-of select="marc:subfield[@code='c']"/>
+	  </pz:metadata>
+	</xsl:if>
       </xsl:for-each>
 
       <xsl:for-each select="marc:datafield[@tag='949']">

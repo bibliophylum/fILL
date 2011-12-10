@@ -422,14 +422,22 @@ function renderDetails(data, marker)
 
 	if (data["location"][i]["md-holding"] != undefined)
 	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
-
-	if (data["location"][i]["md-symbol"] != undefined)
+	if (data["location"][i]["md-symbol"] != undefined) {
 	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
+	    if (data["location"][i]["md-symbol"] == 'SPRUCE') {
+		if (data["location"][i]["md-locallocation"] != undefined)
+		    details += '<tr><td><b>Spruce locations</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"]  + '</td></tr>';
+		if (data["location"][i]["md-localcallno"] != undefined)
+		    details += '<tr><td><b>Spruce callno</b></td><td><b>:</b> ' + data["location"][i]["md-localcallno"]  + '</td></tr>';
+	    }
+	}
 
 	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
 	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
 	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
 	requestForm += '<input type="hidden" name="callno_' + i + '" value="' + data["location"][i]["md-callnumber"] + '">';
+	requestForm += '<input type="hidden" name="sprucelocation_' + i + '" value="' + data["location"][i]["md-locallocation"] + '">';
+	requestForm += '<input type="hidden" name="sprucecallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
     }
 
     requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_"></form>';

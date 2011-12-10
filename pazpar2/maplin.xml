@@ -81,6 +81,7 @@
   <metadata name="holding"/>
   <metadata name="fulltext"/>
   <metadata name="locallocation" brief="yes"/>
+  <metadata name="localcallno" brief="yes"/>
   <metadata name="callnumber" brief="yes"/>
   <metadata name="publicnote" brief="yes"/>
   

@@ -1,5 +1,6 @@
 <settings target="*">
   <set target="catalogue.bclibraries.ca:210/SPRUCE" name="pz:name" value="Spruce Co-operative"/>
+  <set target="catalogue.bclibraries.ca:210/SPRUCE" name="symbol" value="SPRUCE"/>
   <set target="catalogue.bclibraries.ca:210/SPRUCE" name="requestby" value="Maplin"/>
   <set target="catalogue.bclibraries.ca:210/SPRUCE" name="requesturl" value="https://hume.uwinnipeg.ca/opac/en-CA/skin/default/xml/myopac.xml?ol=117&amp;l=117&amp;d=2"/>
 

@@ -8,6 +8,16 @@ use MIME::Base64;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
+my %SPRUCE_TO_MAPLIN = (
+    'ALTONA' => 'MAOW',
+    'BOISSEVAIN' => 'MBOM',
+    'MANITOU' => 'MMA',
+    'MIAMI' => 'MMIOW',
+    'MORDEN' => 'MMOW',
+    'STEROSE' => 'MSTR',
+    'WINKLER' => 'MWOW',
+);
+
 #--------------------------------------------------------------------------------
 # Define our runmodes
 #
@@ -142,11 +152,53 @@ sub request_process {
 
     my @sources;
     foreach my $num (sort keys %sources) {
-	my %src;
-	foreach my $pname (keys %{$sources{$num}}) {
-	    $src{$pname} = $sources{$num}{$pname};
+	if ($sources{$num}{'symbol'} eq 'SPRUCE') {
+	    $self->log->debug( "Callno: " . $sources{$num}{'sprucecallno'} );
+	    # split the combined sprucelocation into separate locations
+	    my @locs = split /\,/, $sources{$num}{'sprucelocation'};
+	    my @callnos = split /\,/, $sources{$num}{'sprucecallno'};
+	    my %spruce_callno = ();
+	    for (my $i=0; $i < @locs; $i++) {
+		$spruce_callno{ $locs[$i] } = $callnos[$i];
+	    }
+
+	    delete $sources{$num}{'sprucelocation'};
+	    delete $sources{$num}{'sprucecallno'};
+
+	    my @holdings = split /\,/, $sources{$num}{'holding'};
+#	    $self->log->debug( Dumper(@holdings) );
+	    my %spruce_holding = ();
+	    foreach my $holding (@holdings) {
+		foreach my $key (keys %SPRUCE_TO_MAPLIN) {
+		    if ( $holding =~ m/($key) \d{14}/ ) {
+			$spruce_holding{$key} = $holding;
+		    }
+		}
+	    }
+#	    $self->log->debug( Dumper(%spruce_holding) );
+
+	    my %seen;
+	    foreach my $loc (@locs) {
+		next if $seen{$loc};
+		$seen{$loc} = 1;
+		my %src;
+		foreach my $pname (keys %{$sources{$num}}) {
+		    $src{$pname} = $sources{$num}{$pname};
+		}
+		$src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		$src{'holding'} = $spruce_holding{ $loc };
+		$src{'callno'} = $spruce_callno{ $loc };
+		push @sources, \%src;
+	    }
+	} else {
+	    # non-Spruce
+	    my %src;
+	    foreach my $pname (keys %{$sources{$num}}) {
+		next if (($pname eq 'sprucelocation') || ($pname eq 'sprucecallno'));
+		$src{$pname} = $sources{$num}{$pname};
+	    }
+	    push @sources, \%src;
 	}
-	push @sources, \%src;
     }
     $self->log->debug( Dumper(@sources) );
 
