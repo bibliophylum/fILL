@@ -11,6 +11,7 @@ print STDERR "move-to-history: $reqid\n";
 
 my $rSuccess = 0;
 my $rClosed = 0;
+my $rFilledBy = 0;
 my $rHistory = 0;
 my $rActive = 0;
 my $rSources = 0;
@@ -29,8 +30,11 @@ $dbh->{AutoCommit} = 0;  # enable transactions, if possible
 $dbh->{RaiseError} = 1;
 
 eval {
-    my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,filled_by) (select id,title,author,requester,patron_barcode,current_target from request where id=?)";
+    my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_target from request where id=?)";
     $rClosed = $dbh->do( $SQL, undef, $reqid );
+
+    $SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
+    $rFilledBy = $dbh->do( $SQL, undef, $reqid );
 
     $SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
     $rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
@@ -58,4 +62,4 @@ if ($@) {
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $rSuccess, closed => $rClosed, history => $rHistory, active => $rActive, sources => $rSources, request => $rRequest } );
+print "Content-Type:application/json\n\n" . to_json( { success => $rSuccess, closed => $rClosed, filledby => $rFilledBy, history => $rHistory, active => $rActive, sources => $rSources, request => $rRequest } );
