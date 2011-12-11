@@ -224,10 +224,14 @@ sub request_process {
     my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
     # ...end of atomic
 
+    # remove duplicate entries for a given library (they may have multiple holdings)
+    my %seen = ();
+    my @unique_sources = grep { ! $seen{ $_->{'symbol'} }++ } @sources;
+
     # ...and the sources list (worry about proper order after this code is working!)
     my $sequence = 1;
     my $SQL = "INSERT INTO sources (request_id, sequence_number, library, call_number) VALUES (?,?,?,?)";
-    foreach my $src (@sources) {
+    foreach my $src (@unique_sources) {
 	my $hr_id = $self->dbh->selectrow_hashref(
 	    "SELECT lid FROM libraries WHERE name=?",
 	    undef,
