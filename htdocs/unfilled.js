@@ -84,32 +84,12 @@ function make_trynextlender_handler( requestId ) {
 }
 
 function try_next_lender( requestId ) {
-    // NOTE: this code will find table rows based on cell contents...
-    // ...as we now have <tr id='xxx'>, there's an easier way....
-
-    // Returns [{reqid: 12, msg_to: '101'}, 
-    //          {reqid: 15, msg_to: '98'},
-    // Note that nth-child uses 1-based indexing, not 0-based
-    var parms = $('#gradient-style tbody tr').map(function() {
-	// $(this) is used more than once; cache it for performance.
-	var $row = $(this);
-	
-	// For each row that's "mapped", return an object that
-	//  describes the first and second <td> in the row.
-	if ($row.find(':nth-child(1)').text() == requestId) {
-	    return {
-		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
-		lid: $("#lid").text(),
-		status: "Received",
-		message: ""
-	    }
-	} else {
-	    return null;
-	};
-    }).get();
-
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+    var myRow=$("#req"+requestId);
+    var parms = {
+	reqid: requestId,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
@@ -131,32 +111,15 @@ function make_cancel_handler( requestId ) {
 }
 
 function cancel( requestId ) {
-    // NOTE: this code will find table rows based on cell contents...
-    // ...as we now have <tr id='xxx'>, there's an easier way....
-
-    // Returns [{reqid: 12, msg_to: '101'}, 
-    //          {reqid: 15, msg_to: '98'},
-    // Note that nth-child uses 1-based indexing, not 0-based
-    var parms = $('#gradient-style tbody tr').map(function() {
-	// $(this) is used more than once; cache it for performance.
-	var $row = $(this);
-	
-	// For each row that's "mapped", return an object that
-	//  describes the first and second <td> in the row.
-	if ($row.find(':nth-child(1)').text() == requestId) {
-	    return {
-		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $("#lid").text(),  // message to myself
-		lid: $("#lid").text(),
-		status: "Message",
-		message: "Requester closed the request."
-	    }
-	} else {
-	    return null;
-	};
-    }).get();
-
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+    var myRow=$("#req"+requestId);
+    var parms = {
+	reqid: requestId,
+	msg_to: $("#lid").text(),  // message to myself
+	lid: $("#lid").text(),
+	status: "Message",
+	message: "Requester closed the request."
+    }
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
