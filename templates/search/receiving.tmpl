@@ -34,6 +34,17 @@ $('document').ready(function(){
     $("#slipPrinting").append("<input type='radio' name='slip' value='none' id='none'/><label for='none'>Do not print slips</label>");
     $("#slipPrinting").buttonset('refresh');
 
+    $.getJSON('/cgi-bin/get-menu-borrow-counts.cgi', {lid: <TMPL_VAR name="lid">},
+        function(data){
+            if (data.counts.unfilled > 0) {
+                $('#menu_borrow_unfilled a')[0].innerHTML = 'Unfilled: '+data.counts.unfilled;
+            };
+            if (data.counts.overdue > 0) {
+                $('#menu_borrow_overdue a')[0].innerHTML = 'Overdue: '+data.counts.overdue;
+            };
+            //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\noverdue: '+data.counts.overdue);
+    });
+
 });
 
 </script>

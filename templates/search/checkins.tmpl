@@ -24,6 +24,17 @@ $('document').ready(function(){
                 //toggleLayer("mylistDiv");
            });
 
+    $.getJSON('/cgi-bin/get-menu-lend-counts.cgi', {lid: <TMPL_VAR name="lid">},
+        function(data){
+            if (data.counts.renewalRequests > 0) {
+                $('#menu_lend_renewal_requests a')[0].innerHTML = 'Renewal requests: '+data.counts.renewalRequests;
+            };
+            if (data.counts.waiting > 0) {
+                $('#menu_lend_respond a')[0].innerHTML = 'Respond: '+data.counts.waiting;
+            };
+            //alert('get-menu-lend-counts\nrenewalRequests: '+data.counts.renewalRequests+'\nwaiting: '+data.counts.waiting);
+    });
+
 });
 
 </script>

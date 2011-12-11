@@ -1,6 +1,12 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
+<link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/jquery-1.7.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+
+
 <script type="text/javascript">
   function toggleLayer( whichLayer )
   {
@@ -22,6 +28,8 @@
 
 <script language="JavaScript">
 
+$('document').ready(function() {
+
   function set_primary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
   }
@@ -31,6 +39,19 @@
   }
 
   set_secondary_tab("menu_lend_pull");
+
+  $.getJSON('/cgi-bin/get-menu-lend-counts.cgi', {lid: <TMPL_VAR name="lid">},
+      function(data){
+          if (data.counts.renewalRequests > 0) {
+              $('#menu_lend_renewal_requests a')[0].innerHTML = 'Renewal requests: '+data.counts.renewalRequests;
+          };
+          if (data.counts.waiting > 0) {
+              $('#menu_lend_respond a')[0].innerHTML = 'Respond: '+data.counts.waiting;
+          };
+          //alert('get-menu-lend-counts\nrenewalRequests: '+data.counts.renewalRequests+'\nwaiting: '+data.counts.waiting);
+  });
+});
+
 </script>
 
 <div id="main">
