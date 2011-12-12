@@ -24,6 +24,14 @@ $SQL = "select count(r.id) as overdue from request r left join requests_active r
 my @overdue = $dbh->selectrow_array($SQL, undef, $lid, $lid );
 $overdue[0] = 0 unless (@overdue);
 
+$SQL = "select count(r.id) as renewals from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='Renew' and ra.request_id not in (select request_id from requests_active where msg_from=? and status like 'Renew-Answer%')";
+my @renews = $dbh->selectrow_array($SQL, undef, $lid, $lid );
+@renews[0] = 0 unless (@renews);
+
+$SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?)";
+my @waiting = $dbh->selectrow_array($SQL, undef, $lid, $lid );
+@waiting[0] = 0 unless (@waiting);
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0]} } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0]} } );

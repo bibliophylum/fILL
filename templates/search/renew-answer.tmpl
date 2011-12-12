@@ -4,6 +4,7 @@
 <link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/menu-counters.js"></script>
 <script type="text/javascript" src="/renewal-answer.js"></script>
 
 
@@ -31,15 +32,8 @@ $('document').ready(function(){
            $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
     });
 
-    $.getJSON('/cgi-bin/get-menu-lend-counts.cgi', {lid: <TMPL_VAR name="lid">},
-        function(data){
-            if (data.counts.renewalRequests > 0) {
-                $('#menu_lend_renewal_requests a')[0].innerHTML = 'Renewal requests: '+data.counts.renewalRequests;
-            };
-            if (data.counts.waiting > 0) {
-                $('#menu_lend_respond a')[0].innerHTML = 'Respond: '+data.counts.waiting;
-            };
-            //alert('get-menu-lend-counts\nrenewalRequests: '+data.counts.renewalRequests+'\nwaiting: '+data.counts.waiting);
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
     });
 
 });

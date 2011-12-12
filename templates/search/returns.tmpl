@@ -4,6 +4,7 @@
 <link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <script type="text/javascript" src="/jquery-1.7.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/menu-counters.js"></script>
 <script type="text/javascript" src="/returns.js"></script>
 
 
@@ -24,15 +25,8 @@ $('document').ready(function(){
                 //toggleLayer("mylistDiv");
            });
 
-    $.getJSON('/cgi-bin/get-menu-borrow-counts.cgi', {lid: <TMPL_VAR name="lid">},
-        function(data){
-            if (data.counts.unfilled > 0) {
-                $('#menu_borrow_unfilled a')[0].innerHTML = 'Unfilled: '+data.counts.unfilled;
-            };
-            if (data.counts.overdue > 0) {
-                $('#menu_borrow_overdue a')[0].innerHTML = 'Overdue: '+data.counts.overdue;
-            };
-            //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\noverdue: '+data.counts.overdue);
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
     });
 
 });
