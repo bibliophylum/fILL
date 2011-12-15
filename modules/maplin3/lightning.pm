@@ -445,7 +445,7 @@ sub unfilled_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub lightning_request_process {
+sub lightning_request_process_DEPRECATED {
     my $self = shift;
     my $q = $self->query;
 
