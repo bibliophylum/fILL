@@ -111,10 +111,10 @@ sub pull_list_process {
 
     my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
 
-    # generate barcodes
+    # generate barcodes (code39 requires '*' as start and stop characters
     foreach my $request (@$pulls) {
 	if (( $request->{barcode} ) && ( $request->{barcode} =~ /\d+/)) {
-	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( $request->{barcode} )->plot->png);
+	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $request->{barcode} . '*' )->plot->png);
 	}
     }
 
