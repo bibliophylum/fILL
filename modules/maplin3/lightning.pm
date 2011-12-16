@@ -130,7 +130,11 @@ sub pull_list_process {
 
 #--------------------------------------------------------------------------------
 #
+# I think the ordering of the sources needs to be based on something like:
+# select l.lid, l.name, count(rh1.request_id) as borrowed, count(rh2.request_id) as loaned from libraries l left join requests_history rh1 on rh1.msg_from=l.lid left join requests_history rh2 on rh2.msg_to=l.lid where rh1.status = 'Received' and rh2.status = 'Shipped' group by l.lid, l.name;
 #
+# that is, find how many items each library has borrowed and how many loaned.  Then calculate (loaned - borrowed) and sort by that
+# (so a library that has borrowed more than it has loaned will end up with a lower number (in fact, negative))
 sub request_process {
     my $self = shift;
     my $q = $self->query;
