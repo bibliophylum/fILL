@@ -39,7 +39,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].to;
+        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].to; cell.setAttribute('title', data.unhandledRequests[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].msg_to;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].message;

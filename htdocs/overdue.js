@@ -35,7 +35,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].from;
+        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].due_date;

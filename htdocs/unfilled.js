@@ -39,7 +39,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_target;
