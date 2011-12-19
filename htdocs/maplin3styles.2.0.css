@@ -5,7 +5,7 @@
 body,p,div,th,td,dd,ul,ol
 {
   font-weight: 400;
-  font-size: 95%;
+/*  font-size: 95%; */
   line-height: normal;
 /*   color: #000000; */
   font-family: arial, helvetica, sans-serif;
@@ -15,7 +15,7 @@ body,p,div,th,td,dd,ul,ol
 b,strong {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
-  font-size: 95%;
+/*  font-size: 95%; */
 /*   color: #000000; */
 }
 
@@ -780,7 +780,7 @@ p.info_zserver_zero_recs {
 
 html {
     overflow-y: scroll;
-    font-size: 95%;
+/*    font-size: 95%; */
 }
 
 body {
