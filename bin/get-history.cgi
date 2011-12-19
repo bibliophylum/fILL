@@ -22,12 +22,11 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
     ) or die $DBI::errstr;
 
 # sql to get this library's borrowing history
-my $SQL="select rc.id, rc.title, rc.author, rc.patron_barcode, rh.ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) where rc.requester=? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
+my $SQL="select rc.id, rc.title, rc.author, rc.patron_barcode, date_trunc('second',rh.ts) as ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) where rc.requester=? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
 my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $start, $end );
 
 # sql to get this library's lending history
-#my $SQL="select rc.id, rc.title, rc.author, l.name as requested_by, rc.requester, rh.ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) left join libraries l on rc.requester = l.lid where rc.requester<>? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
-my $SQL="select rc.id, rc.title, rc.author, l.name as requested_by, rh.ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) left join libraries l on rc.requester = l.lid where rc.requester<>? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
+my $SQL="select rc.id, rc.title, rc.author, l.name as requested_by, date_trunc('second',rh.ts) as ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) left join libraries l on rc.requester = l.lid where rc.requester<>? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
 my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $start, $end );
 
 $dbh->disconnect;
