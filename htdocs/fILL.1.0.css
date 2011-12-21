@@ -1,0 +1,1117 @@
+/*----------------------------------------------------*/
+
+* { margin:0; padding:0; }
+
+body,p,div,th,td,dd,ul,ol
+{
+  font-weight: 400;
+/*  font-size: 95%; */
+  line-height: normal;
+/*   color: #000000; */
+  font-family: arial, helvetica, sans-serif;
+  Font-style: normal;
+}
+
+b,strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+/*  font-size: 95%; */
+/*   color: #000000; */
+}
+
+h1
+{
+  font-weight: 700;
+  font-size: 160%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h2
+{
+  font-weight: 700;
+  font-size: 150%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h3
+{
+  font-weight: 700;
+  font-size: 130%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h4
+{
+  font-weight: 700;
+  font-size: 120%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h5
+{
+  font-weight: 700;
+  font-size: 110%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+h6
+{
+  font-weight: 700;
+  font-size: 105%;
+  font-family: arial, helvetica, sans-serif;
+}
+
+#header {
+  height:75px;
+  background:url(img/header.png) repeat-x 0 0
+}
+
+#logo
+{
+  padding:10px 0 0 12px;
+  float: left;
+}
+
+#logo_title
+{
+  color:#4671d5;
+  font-family:georgia, tahoma, arial narrow, arial;
+  font-size:28px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  border-bottom:1px solid #7ea3ac;
+  width:260px
+}
+
+#logo_slogan {
+  color:#ffd073;
+  font-size:12px;
+  font-family:tahoma, arial
+}
+
+#header_quick_access {
+  position:absolute;
+  top:0;
+  right:0;
+  width:400px;
+  text-align: right;
+}
+
+#header_quick_access ul
+{
+  text-align: right;
+}
+
+#header_quick_access li
+{
+  list-style-type: none;
+  padding: 0.25em 1 em;
+  /* border-right: 1px solid white; */
+  display: inline;
+  font-weight: 500;
+  font-size: 130%;
+  color: #fff;
+}
+
+#header_quick_access li A:link    { color: #fff; text-decoration:underline }
+#header_quick_access li A:active  { color: #fff; text-decoration:underline }
+#header_quick_access li A:visited { color: #fff; text-decoration:underline }
+
+#header_quick_access A:link    { color: #fff; text-decoration:underline }
+#header_quick_access A:active  { color: #fff; text-decoration:underline }
+#header_quick_access A:visited { color: #fff; text-decoration:underline }
+
+
+#leftcontent {
+  float:left;
+  width: 15%;
+  background: #afc2fe;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin-right: 15px;
+  padding-bottom: 20px;
+  color: #003399;
+}
+
+#middlecontent {
+  float:left;
+  width:70%;
+}
+
+#rightcontent {
+  float:left;
+  width:10%;
+  background: #afc2fe;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin-left: 15px;
+  padding-bottom: 20px;
+  color: #003399;
+}
+
+/* bottom bar */
+#nav2
+{
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  clear: both;
+}
+
+#nav2 ul
+{
+  background-color: #afc2fe;
+  text-align: center;
+  margin-left: 0;
+  padding-left: 0;
+  border-bottom: 1px solid gray;
+}
+
+#nav2 li
+{
+  list-style-type: none;
+  padding: 0.25em 1 em;
+  border-left: 1px solid white;
+  display: inline;
+  font-wight: 700;
+  font-size: 90%;
+}
+
+#nav2 li:first-child
+{
+  border: none;
+}
+
+#nav2 li A:link    { color: white }
+#nav2 li A:active  { color: white }
+#nav2 li A:visited { color: white }
+
+/*------------------------------------------------------*/
+
+div#searchBoxDiv {
+  width: 700px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+/*------------------------------------------------------*/
+div.wait
+{
+  margin-top: 30px; 
+  margin-bottom: 30px; 
+  text-align: center; 
+  font-weight: 700;
+}
+.short_instruction
+{
+  font-size: 75%;
+  font-family:arial;
+  font-style:italic;
+  color: grey;
+  display: inline;
+}
+
+/*------------------------------------------------------*/
+/*-------------------------------------------------------*/
+
+#csstabs 
+{
+  margin-top: 0em;
+  margin-bottom: 0.5em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+#csstabs ul 
+{
+  background-color: #afc2fe;
+  text-align: center;
+  margin: 0em ;
+  padding: 1.0em ;
+  list-style: none ;
+}
+#csstabs ul li 
+{
+  margin: 0 ;
+  padding: 0 ;
+  display: inline ;
+  text-align: center ;
+  list-style: none ;
+  font-family: Arial, Helvetica, sans-serif ;
+}
+#csstabs li a 
+{
+  color: #003399 ;
+  background-color: #afc2f3;
+  border: 1px outset #bfffe4 ;
+  padding: 4px ;
+  text-decoration: none ;
+  display: inline ;
+}
+#csstabs li a:hover {
+  color: #003399 ;
+  background-color: #dbe3ff;
+}
+#csstabs li.current_tab a 
+{
+  color: #000000;
+  background-color: #dbe3ff;
+  border: 1px outset #bfffe4 ;
+  padding: 4px ;
+  text-decoration: none ;
+  display: inline ;
+}
+
+
+#csssubmenu
+{
+  margin-top: -1.0em;
+  margin-bottom: 1.0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+#csssubmenu ul
+{
+  background-color: #dbe3ff;
+  text-align: center;
+  margin: 0em;
+  padding: 0.4em;
+  list-style: none;
+}
+#csssubmenu ul li 
+{
+  margin: 0 ;
+  padding: 0 ;
+  display: inline ;
+  text-align: center ;
+  list-style: none ;
+  font-family: Arial, Helvetica, sans-serif ;
+}
+#csssubmenu li a
+{
+  color: #003399 ;
+  background-color: #dbe3ff;
+  border: 1px outset #bfffe4 ;
+  padding: 3px ;
+  text-decoration: none ;
+  display: inline ;
+}
+#csssubmenu li a:hover {
+  color: #003399;
+  background-color: #fff ;
+}
+#csssubmenu li.current_tab a
+{
+  color: #000 ;
+  background-color: #fff ;
+  border: 1px outset #bfffe4 ;
+  padding: 3px ;
+  text-decoration: none ;
+  display: inline ;
+}
+
+/*------------------------------------------------------*/
+
+html {
+    overflow-y: scroll;
+/*    font-size: 95%; */
+}
+
+body {
+    font-family: tahoma, arial, sans-serif;
+    color: #06266f;
+}
+
+hr {
+    border: 0;
+    color: #06266f;
+    background-color: #06266f;
+    height: 1px;
+}
+
+thead {
+    font-weight: bold;
+}
+
+a {
+    color: #06266f; 
+    text-decoration: none;
+}
+
+a.extern {
+    color: #CC6600;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.crossout:hover {
+    text-decoration: line-through;
+    font-weight: bold;
+}
+
+
+#header_searchbar {
+    float: left;
+    padding:25px 10px 10px 12px;
+    line-height: 40px;
+/*    border-top: 1px solid  #06266f; */
+    color: #ffffff;
+    font-size: large;
+}
+
+input#button {
+    border: 3px outset #4671d5;
+    background-color: #4671d5;
+    padding: 2px;
+    width: 6em;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 10px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+input#query {
+    border: 2px inset #6c8cd5;
+    padding: 3px;
+    font-size: 12px;
+}
+
+div.termtitle {
+    margin: 4px;
+    font-weight: bold;
+}
+
+div.record {
+    padding: 5px;
+}
+
+div.details {
+    border: 1px solid #1240AB;
+    color: gray;
+    padding: 5px;
+    margin: 4px;
+}
+
+#switchmenu {
+    padding-bottom: 3px;
+    text-align: right;
+}
+
+#recordview {
+    background-color: #fafafa;
+    border-bottom: 1px solid  #06266f;
+}
+
+#targetview {
+    background-color: #fafafa;
+    border-bottom: 1px solid  #06266f;
+}
+
+#bytarget {
+    padding: 7px;
+}
+
+#footer {
+    padding-top: 4px;
+    color: #74c775;
+    text-align: center;
+}
+
+/* from Ohio Web Library */
+#progress_empty {
+    float: left !important;
+}
+#progress_filler {
+    float: left !important;
+}
+#stat {
+    width: 250px;
+}
+
+
+/*---------- sandbox -----------*/
+div#waitDiv
+{
+  margin-top: 30px; 
+  margin-bottom: 30px; 
+  text-align: center; 
+  font-weight: 700;
+  display: block;
+}
+div#mylistDiv {
+  margin-left: auto ;
+  margin-right: auto ;
+  display: none;
+}
+#gradient-style {
+    border-collapse: collapse;
+    font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+    font-size: 12px;
+    margin: 20px;
+    text-align: left;
+/*    width: 480px; */
+    width: 100%;
+}
+#gradient-style th {
+    background: url("img/table-head-gradient.png") repeat-x scroll 0 0 #B9C9FE;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 2px solid #D3DDFF;
+    color: #003399;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 8px;
+}
+#gradient-style td {
+    background: url("img/table-row-gradient.png") repeat-x scroll 0 0 #E8EDFF;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    color: #666699;
+    padding: 8px;
+}
+#gradient-style tfoot tr td {
+    background: none repeat scroll 0 0 #E8EDFF;
+    color: #9999CC;
+    font-size: 12px;
+}
+#gradient-style tbody tr:hover td {
+    background: url("/img/table-row-gradient-hover.png") repeat-x scroll 0 0 #D0DAFD;
+    color: #333399;
+}
+#datatable_borrowing {
+    width: 100%;
+}
+#datatable_lending {
+    width: 100%;
+}
+div.innerDetails { display: none }
+#tabs { display: none }
+
+/*- DataTables demo page css --------------------------------------------*/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * General page setup
+ */
+#dt_example {
+	font: 80%/1.45em "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	background-color: #fff;
+}
+
+
+#dt_example #container {
+	width: 800px;
+	margin: 30px auto;
+	padding: 0;
+}
+
+
+#dt_example #footer {
+	margin: 50px auto 0 auto;
+	padding: 0;
+}
+
+#dt_example #demo {
+	margin: 30px auto 0 auto;
+}
+
+#dt_example .demo_jui {
+	margin: 30px auto 0 auto;
+}
+
+#dt_example .big {
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.6em;
+	color: #4E6CA3;
+}
+
+#dt_example .spacer {
+	height: 20px;
+	clear: both;
+}
+
+#dt_example .clear {
+	clear: both;
+}
+
+#dt_example pre {
+	padding: 15px;
+	background-color: #F5F5F5;
+	border: 1px solid #CCCCCC;
+}
+
+#dt_example h1 {
+	margin-top: 2em;
+	font-size: 1.3em;
+	font-weight: normal;
+	line-height: 1.6em;
+	color: #4E6CA3;
+	border-bottom: 1px solid #B0BED9;
+	clear: both;
+}
+
+#dt_example h2 {
+	font-size: 1.2em;
+	font-weight: normal;
+	line-height: 1.6em;
+	color: #4E6CA3;
+	clear: both;
+}
+
+#dt_example a {
+	color: #0063DC;
+	text-decoration: none;
+}
+
+#dt_example a:hover {
+	text-decoration: underline;
+}
+
+#dt_example ul {
+	color: #4E6CA3;
+}
+
+.css_right {
+	float: right;
+}
+
+.css_left {
+	float: left;
+}
+
+.demo_links {
+	float: left;
+	width: 50%;
+	margin-bottom: 1em;
+}
+
+/*- DataTables demo table jui css --------------------------------------------*/
+
+/*
+ *  File:         demo_table_jui.css
+ *  CVS:          $Id$
+ *  Description:  CSS descriptions for DataTables demo pages
+ *  Author:       Allan Jardine
+ *  Created:      Tue May 12 06:47:22 BST 2009
+ *  Modified:     $Date$ by $Author$
+ *  Language:     CSS
+ *  Project:      DataTables
+ *
+ *  Copyright 2009 Allan Jardine. All Rights Reserved.
+ *
+ * ***************************************************************************
+ * DESCRIPTION
+ *
+ * The styles given here are suitable for the demos that are used with the standard DataTables
+ * distribution (see www.datatables.net). You will most likely wish to modify these styles to
+ * meet the layout requirements of your site.
+ *
+ * Common issues:
+ *   'full_numbers' pagination - I use an extra selector on the body tag to ensure that there is
+ *     no conflict between the two pagination types. If you want to use full_numbers pagination
+ *     ensure that you either have "example_alt_pagination" as a body class name, or better yet,
+ *     modify that selector.
+ *   Note that the path used for Images is relative. All images are by default located in
+ *     ../images/ - relative to this CSS file.
+ */
+
+
+/*
+ * jQuery UI specific styling
+ */
+
+.paging_two_button .ui-button {
+	float: left;
+	cursor: pointer;
+	* cursor: hand;
+}
+
+.paging_full_numbers .ui-button {
+	padding: 2px 6px;
+	margin: 0;
+	cursor: pointer;
+	* cursor: hand;
+}
+
+.dataTables_paginate .ui-button {
+	margin-right: -0.1em !important;
+}
+
+.paging_full_numbers {
+	width: 350px !important;
+}
+
+.dataTables_wrapper .ui-toolbar {
+	padding: 5px;
+}
+
+.dataTables_paginate {
+	width: auto;
+}
+
+.dataTables_info {
+	padding-top: 3px;
+}
+
+table.display thead th {
+	padding: 3px 0px 3px 10px;
+	cursor: pointer;
+	* cursor: hand;
+}
+
+div.dataTables_wrapper .ui-widget-header {
+	font-weight: normal;
+}
+
+
+/*
+ * Sort arrow icon positioning
+ */
+table.display thead th div.DataTables_sort_wrapper {
+	position: relative;
+	padding-right: 20px;
+	padding-right: 20px;
+}
+
+table.display thead th div.DataTables_sort_wrapper span {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+	right: 0;
+}
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * Everything below this line is the same as demo_table.css. This file is
+ * required for 'cleanliness' of the markup
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables features
+ */
+
+.dataTables_wrapper {
+	position: relative;
+	min-height: 302px;
+	_height: 302px;
+	clear: both;
+}
+
+.dataTables_processing {
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	width: 250px;
+	margin-left: -125px;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: #999;
+	font-size: 11px;
+	padding: 2px 0;
+}
+
+.dataTables_length {
+	width: 40%;
+	float: left;
+}
+
+.dataTables_filter {
+	width: 50%;
+	float: right;
+	text-align: right;
+}
+
+.dataTables_info {
+	width: 50%;
+	float: left;
+}
+
+.dataTables_paginate {
+	float: right;
+	text-align: right;
+}
+
+/* Pagination nested */
+.paginate_disabled_previous, .paginate_enabled_previous, .paginate_disabled_next, .paginate_enabled_next {
+	height: 19px;
+	width: 19px;
+	margin-left: 3px;
+	float: left;
+}
+
+.paginate_disabled_previous {
+	background-image: url('../images/back_disabled.jpg');
+}
+
+.paginate_enabled_previous {
+	background-image: url('../images/back_enabled.jpg');
+}
+
+.paginate_disabled_next {
+	background-image: url('../images/forward_disabled.jpg');
+}
+
+.paginate_enabled_next {
+	background-image: url('../images/forward_enabled.jpg');
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
+table.display {
+	margin: 0 auto;
+	width: 100%;
+	clear: both;
+	border-collapse: collapse;
+}
+
+table.display tfoot th {
+	padding: 3px 0px 3px 10px;
+	font-weight: bold;
+	font-weight: normal;
+}
+
+table.display tr.heading2 td {
+	border-bottom: 1px solid #aaa;
+}
+
+table.display td {
+	padding: 3px 10px;
+}
+
+table.display td.center {
+	text-align: center;
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables sorting
+ */
+
+.sorting_asc {
+	background: url('../images/sort_asc.png') no-repeat center right;
+}
+
+.sorting_desc {
+	background: url('../images/sort_desc.png') no-repeat center right;
+}
+
+.sorting {
+	background: url('../images/sort_both.png') no-repeat center right;
+}
+
+.sorting_asc_disabled {
+	background: url('../images/sort_asc_disabled.png') no-repeat center right;
+}
+
+.sorting_desc_disabled {
+	background: url('../images/sort_desc_disabled.png') no-repeat center right;
+}
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables row classes
+ */
+table.display tr.odd.gradeA {
+	background-color: #ddffdd;
+}
+
+table.display tr.even.gradeA {
+	background-color: #eeffee;
+}
+
+
+
+
+table.display tr.odd.gradeA {
+	background-color: #ddffdd;
+}
+
+table.display tr.even.gradeA {
+	background-color: #eeffee;
+}
+
+table.display tr.odd.gradeC {
+	background-color: #ddddff;
+}
+
+table.display tr.even.gradeC {
+	background-color: #eeeeff;
+}
+
+table.display tr.odd.gradeX {
+	background-color: #ffdddd;
+}
+
+table.display tr.even.gradeX {
+	background-color: #ffeeee;
+}
+
+table.display tr.odd.gradeU {
+	background-color: #ddd;
+}
+
+table.display tr.even.gradeU {
+	background-color: #eee;
+}
+
+
+tr.odd {
+	background-color: #E2E4FF;
+}
+
+tr.even {
+	background-color: white;
+}
+
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Misc
+ */
+.dataTables_scroll {
+	clear: both;
+}
+
+.top, .bottom {
+	padding: 15px;
+	background-color: #F5F5F5;
+	border: 1px solid #CCCCCC;
+}
+
+.top .dataTables_info {
+	float: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.dataTables_empty {
+	text-align: center;
+}
+
+tfoot input {
+	margin: 0.5em 0;
+	width: 100%;
+	color: #444;
+}
+
+tfoot input.search_init {
+	color: #999;
+}
+
+td.group {
+	background-color: #d1cfd0;
+	border-bottom: 2px solid #A19B9E;
+	border-top: 2px solid #A19B9E;
+}
+
+td.details {
+	background-color: #d1cfd0;
+	border: 2px solid #A19B9E;
+}
+
+
+.example_alt_pagination div.dataTables_info {
+	width: 40%;
+}
+
+.paging_full_numbers span.paginate_button,
+ 	.paging_full_numbers span.paginate_active {
+	border: 1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 2px 5px;
+	margin: 0 3px;
+	cursor: pointer;
+	*cursor: hand;
+}
+
+.paging_full_numbers span.paginate_button {
+	background-color: #ddd;
+}
+
+.paging_full_numbers span.paginate_button:hover {
+	background-color: #ccc;
+}
+
+.paging_full_numbers span.paginate_active {
+	background-color: #99B3FF;
+}
+
+table.display tr.even.row_selected td {
+	background-color: #B0BED9;
+}
+
+table.display tr.odd.row_selected td {
+	background-color: #9FAFD1;
+}
+
+
+/*
+ * Sorting classes for columns
+ */
+/* For the standard odd/even */
+tr.odd td.sorting_1 {
+	background-color: #D3D6FF;
+}
+
+tr.odd td.sorting_2 {
+	background-color: #DADCFF;
+}
+
+tr.odd td.sorting_3 {
+	background-color: #E0E2FF;
+}
+
+tr.even td.sorting_1 {
+	background-color: #EAEBFF;
+}
+
+tr.even td.sorting_2 {
+	background-color: #F2F3FF;
+}
+
+tr.even td.sorting_3 {
+	background-color: #F9F9FF;
+}
+
+
+/* For the Conditional-CSS grading rows */
+/*
+ 	Colour calculations (based off the main row colours)
+  Level 1:
+		dd > c4
+		ee > d5
+	Level 2:
+	  dd > d1
+	  ee > e2
+ */
+tr.odd.gradeA td.sorting_1 {
+	background-color: #c4ffc4;
+}
+
+tr.odd.gradeA td.sorting_2 {
+	background-color: #d1ffd1;
+}
+
+tr.odd.gradeA td.sorting_3 {
+	background-color: #d1ffd1;
+}
+
+tr.even.gradeA td.sorting_1 {
+	background-color: #d5ffd5;
+}
+
+tr.even.gradeA td.sorting_2 {
+	background-color: #e2ffe2;
+}
+
+tr.even.gradeA td.sorting_3 {
+	background-color: #e2ffe2;
+}
+
+tr.odd.gradeC td.sorting_1 {
+	background-color: #c4c4ff;
+}
+
+tr.odd.gradeC td.sorting_2 {
+	background-color: #d1d1ff;
+}
+
+tr.odd.gradeC td.sorting_3 {
+	background-color: #d1d1ff;
+}
+
+tr.even.gradeC td.sorting_1 {
+	background-color: #d5d5ff;
+}
+
+tr.even.gradeC td.sorting_2 {
+	background-color: #e2e2ff;
+}
+
+tr.even.gradeC td.sorting_3 {
+	background-color: #e2e2ff;
+}
+
+tr.odd.gradeX td.sorting_1 {
+	background-color: #ffc4c4;
+}
+
+tr.odd.gradeX td.sorting_2 {
+	background-color: #ffd1d1;
+}
+
+tr.odd.gradeX td.sorting_3 {
+	background-color: #ffd1d1;
+}
+
+tr.even.gradeX td.sorting_1 {
+	background-color: #ffd5d5;
+}
+
+tr.even.gradeX td.sorting_2 {
+	background-color: #ffe2e2;
+}
+
+tr.even.gradeX td.sorting_3 {
+	background-color: #ffe2e2;
+}
+
+tr.odd.gradeU td.sorting_1 {
+	background-color: #c4c4c4;
+}
+
+tr.odd.gradeU td.sorting_2 {
+	background-color: #d1d1d1;
+}
+
+tr.odd.gradeU td.sorting_3 {
+	background-color: #d1d1d1;
+}
+
+tr.even.gradeU td.sorting_1 {
+	background-color: #d5d5d5;
+}
+
+tr.even.gradeU td.sorting_2 {
+	background-color: #e2e2e2;
+}
+
+tr.even.gradeU td.sorting_3 {
+	background-color: #e2e2e2;
+}
+
+
+/*
+ * Row highlighting example
+ */
+.ex_highlight #example tbody tr.even:hover, #example tbody tr.even td.highlighted {
+	background-color: #ECFFB3;
+}
+
+.ex_highlight #example tbody tr.odd:hover, #example tbody tr.odd td.highlighted {
+	background-color: #E6FF99;
+}
