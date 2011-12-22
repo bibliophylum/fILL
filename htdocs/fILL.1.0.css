@@ -5,7 +5,7 @@
 body,p,div,th,td,dd,ul,ol
 {
   font-weight: 400;
-/*  font-size: 95%; */
+  font-size: 95%;
   line-height: normal;
 /*   color: #000000; */
   font-family: arial, helvetica, sans-serif;

@@ -1,10 +1,6 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
-<link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript" src="/js/library-barcodes.js"></script>
 
@@ -28,6 +24,17 @@ $('document').ready(function(){
 	"sDom": '<"H"Tfr>t<"F"ip>',
         "iDisplayLength": 25,
         "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+	"oTableTools": {
+                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf", "print",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
         "aoColumns": [
             { "mDataProp": "lid", "sWidth": "5%" },
             { "mDataProp": "borrower", "sWidth": "5%" },

@@ -1,12 +1,4 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-
-<link type="text/css" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
-<!-- 
-<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js"></script>
--->
 <script type="text/javascript" src="/js/live-requests.js"></script>
 
 <script type="text/javascript">
@@ -18,7 +10,18 @@ $.ajaxSetup ({
 $('document').ready(function(){
 
     $(function() {
-        $( "#tabs" ).tabs();
+        $( "#tabs" ).tabs( {
+            "show": function(event, ui) {
+                var jqTable = $('table.display', ui.panel);
+                if ( jqTable.length > 0 ) {
+                    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+                    if ( oTableTools != null && oTableTools.fnResizeRequired() ) {
+                        jqTable.dataTable().fnAdjustColumnSizing();
+                        oTableTools.fnResizeButtons();
+                    }
+                }
+            }
+        });
     });
 
     var anOpenBorrowing = [];
@@ -33,9 +36,9 @@ $('document').ready(function(){
 	"sDom": '<"H"Tfr>t<"F"ip>',
         // TableTools requires Flash version 10...
 	"oTableTools": {
-                "sSwfPath": "DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
 		"aButtons": [
-			"copy", "csv", "xls", "pdf",
+			"copy", "csv", "xls", "pdf", "print",
 			{
 				"sExtends":    "collection",
 				"sButtonText": "Save",
@@ -66,6 +69,17 @@ $('document').ready(function(){
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
+	"oTableTools": {
+                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
         "aoColumns": [
             {
                "mDataProp": null,
@@ -163,7 +177,7 @@ $('document').ready(function(){
 	<!--     <div id="mylistDiv">  -->
 	<h4>Current borrowing</h4>
 	<div class="dataTable_wrapper">
-	  <table id="datatable_borrowing">
+	  <table id="datatable_borrowing" class="display">
 	    <thead>
 	      <tr>
 		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
@@ -178,7 +192,7 @@ $('document').ready(function(){
       <div id="tabs-2">
 	<h4>Current lending</h4>
 	<div class="dataTable_wrapper">
-	  <table id="datatable_lending">
+	  <table id="datatable_lending" class="display">
 	    <thead>
 	      <tr>
 		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
