@@ -4,6 +4,9 @@
 <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+<!-- 
+<script type="text/javascript" charset="utf-8" src="/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js"></script>
+-->
 <script type="text/javascript" src="/js/live-requests.js"></script>
 
 <script type="text/javascript">
@@ -28,18 +31,18 @@ $('document').ready(function(){
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
-// Requires Flash ver 10...
-//	"oTableTools": {
-//                "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf"
-//		"aButtons": [
-//			"copy", "csv", "xls", "pdf",
-//			{
-//				"sExtends":    "collection",
-//				"sButtonText": "Save",
-//				"aButtons":    [ "csv", "xls", "pdf" ]
-//			}
-//		]
-//	}
+        // TableTools requires Flash version 10...
+	"oTableTools": {
+                "sSwfPath": "DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
         "aoColumns": [
             {
                "mDataProp": null,
