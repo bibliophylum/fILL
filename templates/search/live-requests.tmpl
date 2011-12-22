@@ -9,6 +9,8 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
+    // This is the bit that makes TableTools work on tabs
+    // (from https://github.com/DataTables/TableTools/blob/master/tabs.html)
     $(function() {
         $( "#tabs" ).tabs( {
             "show": function(event, ui) {
