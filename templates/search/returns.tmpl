@@ -17,8 +17,38 @@ $('document').ready(function(){
             function(data){
                 //alert (data.returns[0].id+" "+data.returns[0].msg_from+" "+data.returns[0].call_number+" "+data.returns[0].author+" "+data.returns[0].title+" "+data.returns[0].ts); //further debug
                 build_table(data);
-                //toggleLayer("waitDiv");
-                //toggleLayer("mylistDiv");
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Return to" },
+                           { "mDataProp": "Return to (ID)" },
+                           { "mDataProp": "Call #" },
+                           { "mDataProp": "Return" }
+                      ]
+
+                  });
            });
 
     $(function() {

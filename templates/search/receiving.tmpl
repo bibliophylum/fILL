@@ -17,8 +17,39 @@ $('document').ready(function(){
             function(data){
                 //alert (data.receiving[0].id+" "+data.receiving[0].msg_from+" "+data.receiving[0].call_number+" "+data.receiving[0].author+" "+data.receiving[0].title+" "+data.receiving[0].ts); //further debug
                 build_table(data);
-                //toggleLayer("waitDiv");
-                //toggleLayer("mylistDiv");
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Due date" },
+                           { "mDataProp": "Receive" }
+                      ]
+
+                  });
            });
 
     $(function() {

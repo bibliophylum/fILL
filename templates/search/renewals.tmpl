@@ -17,8 +17,40 @@ $('document').ready(function(){
             function(data){
                 //alert (data.renewals[0].id+" "+data.renewals[0].msg_from+" "+data.renewals[0].call_number+" "+data.renewals[0].author+" "+data.renewals[0].title+" "+data.renewals[0].ts); //further debug
                 build_table(data);
-                //toggleLayer("waitDiv");
-                //toggleLayer("mylistDiv");
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Lender" },
+                           { "mDataProp": "Lender (ID)" },
+                           { "mDataProp": "Status" },
+                           { "mDataProp": "Message" },
+                           { "mDataProp": "Renewal" }
+                      ]
+
+                  });
            });
 
     $(function() {

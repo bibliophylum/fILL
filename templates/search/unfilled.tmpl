@@ -16,10 +16,43 @@ $('document').ready(function(){
     $.getJSON('/cgi-bin/get-unfilled-list.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 //alert (data.unfilled[0].id+" "+data.unfilled[0].title+" "+data.unfilled[0].author+" "+data.unfilled[0].patron_barcode+" "+data.unfilled[0].ts); //further debug
-                build_table(data);
-                //toggleLayer("waitDiv");
-                //toggleLayer("mylistDiv");
-           });
+                build_table(data); 
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "Status" },
+                           { "mDataProp": "Last source tried" },
+                           { "mDataProp": "Total # sources" },
+                           { "mDataProp": "Next lender?" }
+                      ]
+
+                  });
+    });
 
     $(function() {
            $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
