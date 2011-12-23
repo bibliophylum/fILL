@@ -452,7 +452,7 @@ div#mylistDiv {
     border-collapse: collapse;
     font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
     font-size: 12px;
-    margin: 20px;
+/*    margin: 20px; */
     text-align: left;
 /*    width: 480px; */
     width: 100%;
