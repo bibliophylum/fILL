@@ -35,6 +35,37 @@ $('document').ready(function() {
 
   set_secondary_tab("menu_lend_pull");
 
+  //$('#gradient-style').dataTable();
+  oTable = $('#gradient-style').dataTable({
+         "bJQueryUI": true,
+         "sPaginationType": "full_numbers",
+         "bInfo": true,
+         "bSort": true,
+         "sDom": '<"H"Tfr>t<"F"ip>',
+         // TableTools requires Flash version 10...
+         "oTableTools": {
+             "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+           "aButtons": [
+	      "copy", "csv", "xls", "pdf", "print",
+	      {
+		"sExtends":    "collection",
+		"sButtonText": "Save",
+		"aButtons":    [ "csv", "xls", "pdf" ]
+	      }
+           ]
+         },
+         "aoColumns": [
+             { "mDataProp": "Call #" },
+             { "mDataProp": "Author" },
+             { "mDataProp": "Title" },
+             { "mDataProp": "Date/Time requested" },
+             { "mDataProp": "Requested by" },
+             { "mDataProp": "Requested by (ID)" },
+             { "mDataProp": "Library barcode" },
+             { "mDataProp": "Scannable barcode" }
+        ]
+  });
+
   $(function() {
          update_menu_counters( <TMPL_VAR name="lid"> );
   });
