@@ -60,8 +60,7 @@ $('document').ready(function() {
              { "mDataProp": "Title" },
              { "mDataProp": "Date/Time requested" },
              { "mDataProp": "Requested by" },
-             { "mDataProp": "Library barcode" },
-             { "mDataProp": "Scannable barcode" }
+             { "mDataProp": "Library barcode" }
         ]
   });
 
@@ -79,7 +78,7 @@ $('document').ready(function() {
     <h3>Pull list</h3>
     <table id="gradient-style">
       <thead>
-	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Library barcode</th><th>Scanable barcode</th></tr>
+	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Library barcode</th></tr>
       </thead>
       <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
       <tbody>
@@ -90,8 +89,10 @@ $('document').ready(function() {
 	  <td><TMPL_VAR NAME="title"></td>
 	  <td><TMPL_VAR NAME="ts"></td>
 	  <td title="<TMPL_VAR NAME="library">"><TMPL_VAR NAME="from"></td>
-	  <td><TMPL_VAR NAME="barcode"></td>
-	  <td><img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/></td>
+	  <td>
+	    <TMPL_VAR NAME="barcode"><br/>
+	    <img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>
+	  </td>
 	</tr>
       </TMPL_LOOP>
       </tbody>
