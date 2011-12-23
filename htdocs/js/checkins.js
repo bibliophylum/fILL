@@ -32,7 +32,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].from; cell.setAttribute('title', data.checkins[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].msg_from;
         cell = row.insertCell(-1); 
 

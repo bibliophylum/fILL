@@ -37,7 +37,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].patron_barcode;
-        cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].from; cell.setAttribute('title', data.receiving[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].message;

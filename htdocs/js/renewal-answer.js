@@ -34,7 +34,7 @@ function build_table( data ) {
 //	alert (data.renewRequests[i].id+" "+data.renewRequests[i].msg_from+" "+data.renewRequests[i].call_number+" "+data.renewRequests[i].author+" "+data.renewRequests[i].title+" "+data.renewRequests[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.renewRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].from; cell.setAttribute('title', data.renewRequests[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].call_number;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].author;

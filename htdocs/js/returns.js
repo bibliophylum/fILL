@@ -35,7 +35,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].to; cell.setAttribute('title', data.unhandledRequests[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].to; cell.setAttribute('title', data.returns[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.returns[i].msg_to;
         cell = row.insertCell(-1); 
 
