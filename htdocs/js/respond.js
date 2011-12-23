@@ -149,7 +149,12 @@ function unfilled( requestId ) {
     ru.setAttribute('id','unfilledradioset');
     ruForm.appendChild(ru);
     ruDiv.appendChild(ruForm);
-    row[0].cells[7].appendChild(ruDiv);
+//    row[0].cells[8].appendChild(ruDiv);
+//    row[0].append($("<tr>").attr({id: "rowUnfilled"})).append($("<td>").attr({colspan: "8"})).appendChild(ruDiv);
+//    $("#req"+requestId).after().append($("<tr>").attr({id: "rowUnfilled"})).append($("<td>").attr({colspan: "8"})).appendChild(ruDiv);
+    $("<tr id='tmprow'><td id='tmpcol' colspan='8'></td></tr>").insertAfter($("#req"+requestId));
+    var c = $("#tmpcol");
+    c.appendChild(ruDiv);
 
     $("#divResponses"+requestId).hide();
     $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
