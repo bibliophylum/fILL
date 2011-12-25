@@ -150,11 +150,8 @@ function unfilled( requestId ) {
     ruForm.appendChild(ru);
     ruDiv.appendChild(ruForm);
 //    row[0].cells[8].appendChild(ruDiv);
-//    row[0].append($("<tr>").attr({id: "rowUnfilled"})).append($("<td>").attr({colspan: "8"})).appendChild(ruDiv);
-//    $("#req"+requestId).after().append($("<tr>").attr({id: "rowUnfilled"})).append($("<td>").attr({colspan: "8"})).appendChild(ruDiv);
-    $("<tr id='tmprow'><td id='tmpcol' colspan='8'></td></tr>").insertAfter($("#req"+requestId));
-    var c = $("#tmpcol");
-    c.appendChild(ruDiv);
+    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='8'></td></tr>").insertAfter($("#req"+requestId));
+    $("#tmpcol").append(ruDiv);
 
     $("#divResponses"+requestId).hide();
     $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
@@ -163,6 +160,7 @@ function unfilled( requestId ) {
     var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
     cButton.bind('click', function() {
 	$("#reasonUnfilled").remove(); 
+	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
 	//return false;
     });
@@ -171,6 +169,7 @@ function unfilled( requestId ) {
     sButton.bind('click', function() {
 	var reason = $('input:radio[name=radioset]:checked').val();
 	$("#reasonUnfilled").remove(); 
+	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
 	
 	// Returns [{reqid: 12, msg_to: '101'}, 
