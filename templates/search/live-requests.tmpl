@@ -60,7 +60,11 @@ $('document').ready(function(){
             { "mDataProp": "patron_barcode" },
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
-            { "mDataProp": "message" }
+            { "mDataProp": "message" },
+            { "mDataProp": null,
+              "sClass": "actions",
+              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            }
         ]
 
     });
@@ -95,7 +99,11 @@ $('document').ready(function(){
 //            { "mDataProp": "requester" },
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
-            { "mDataProp": "message" }
+            { "mDataProp": "message" },
+            { "mDataProp": null,
+              "sClass": "actions",
+              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            }
         ]
     });
 
@@ -150,6 +158,42 @@ $('document').ready(function(){
       }
     } );
 
+    $('#datatable_borrowing td.actions').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenBorrowing );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatBorrowingActions(oTable_borrowing, nTr);
+        anOpenBorrowing.push( nTr );
+      }
+      else {
+        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+          oTable_borrowing.fnClose( nTr );
+          anOpenBorrowing.splice( i, 1 );
+        } );
+      }
+    } );
+
+    $('#datatable_lending td.actions').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenLending );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatLendingActions(oTable_lending, nTr);
+        anOpenLending.push( nTr );
+      }
+      else {
+        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+          oTable_lending.fnClose( nTr );
+          anOpenLending.splice( i, 1 );
+        } );
+      }
+    } );
+
 });
 
 </script>
@@ -182,7 +226,7 @@ $('document').ready(function(){
 	  <table id="datatable_borrowing" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
+		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -197,7 +241,7 @@ $('document').ready(function(){
 	  <table id="datatable_lending" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
+		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>
