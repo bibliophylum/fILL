@@ -45,34 +45,33 @@ function fnFormatDetails( oTable, nTr )
 	    }
 	    sOut = sOut+'</table>'+'</div>';
             var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
+	    $(nDetailsRow).attr('detail','conversation');
             $('div.innerDetails', nDetailsRow).slideDown();
 
 	});
 }
 
 
-function fnFormatBorrowingActions( oTable, nTr )
+function fnFormatBorrowingOverrides( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-//    sOut = sOut+'<tr><td><button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-all"><span class="ui-button-text">Receive</span></button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped"</td></tr>';
-//    sOut = sOut+'<tr><td><button class="ui-button ui-button-text-only ui-widget ui-state-default ui-corner-all"><span class="ui-button-text">Close</span></button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"</td></tr>';
-
     sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped"</td></tr>';
     sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
+    $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
     $('#bClose').button();
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
 
-function fnFormatLendingActions( oTable, nTr )
+function fnFormatLendingOverrides( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
@@ -82,7 +81,8 @@ function fnFormatLendingActions( oTable, nTr )
     sOut = sOut+'<tr><td><button id="bReturned">Returned</span></button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
-    var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
+    var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
+    $(nDetailsRow).attr('detail','overrides');
     $('#bReturned').button();
     $('div.innerDetails', nDetailsRow).slideDown();
 }

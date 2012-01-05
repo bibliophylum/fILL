@@ -62,7 +62,7 @@ $('document').ready(function(){
             { "mDataProp": "status" },
             { "mDataProp": "message" },
             { "mDataProp": null,
-              "sClass": "actions",
+              "sClass": "overrides center",
               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             }
         ]
@@ -101,7 +101,7 @@ $('document').ready(function(){
             { "mDataProp": "status" },
             { "mDataProp": "message" },
             { "mDataProp": null,
-              "sClass": "actions",
+              "sClass": "overrides center",
               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             }
         ]
@@ -125,18 +125,37 @@ $('document').ready(function(){
     $('#datatable_borrowing td.control').live( 'click', function () {
       var nTr = this.parentNode;
       var i = $.inArray( nTr, anOpenBorrowing );
-   
-      if ( i === -1 ) {
+
+      if (i === -1) {
         $('img', this).attr( 'src', sImageUrl+"details_close.png" );
 	fnFormatDetails(oTable_borrowing, nTr);
         anOpenBorrowing.push( nTr );
       }
       else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_borrowing.fnClose( nTr );
-          anOpenBorrowing.splice( i, 1 );
-        } );
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length == 0) {
+          // must be overrides that is open.  close it and open the conversation
+	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+
+            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
+   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatDetails(oTable_borrowing, nTr);
+            anOpenBorrowing.push( nTr );
+          } );
+          
+	} else {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+          } );
+        }
       }
     } );
 
@@ -150,47 +169,102 @@ $('document').ready(function(){
         anOpenLending.push( nTr );
       }
       else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_lending.fnClose( nTr );
-          anOpenLending.splice( i, 1 );
-        } );
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length == 0) {
+          // must be overrides that is open.  close it and open the conversation
+	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+
+            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
+   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatDetails(oTable_lending, nTr);
+            anOpenLending.push( nTr );
+          } );
+          
+	} else {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+          } );
+        }
       }
     } );
 
-    $('#datatable_borrowing td.actions').live( 'click', function () {
+    $('#datatable_borrowing td.overrides').live( 'click', function () {
       var nTr = this.parentNode;
       var i = $.inArray( nTr, anOpenBorrowing );
-   
+
       if ( i === -1 ) {
         $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatBorrowingActions(oTable_borrowing, nTr);
+	fnFormatBorrowingOverrides(oTable_borrowing, nTr);
         anOpenBorrowing.push( nTr );
       }
       else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_borrowing.fnClose( nTr );
-          anOpenBorrowing.splice( i, 1 );
-        } );
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="overrides"]');
+	if (rOpen.length == 0) {
+          // must be conversation that is open.  close it and open the overrides
+	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+
+   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatBorrowingOverrides(oTable_borrowing, nTr);
+            anOpenBorrowing.push( nTr );
+          } );
+          
+	} else {
+          // overrides is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+          } );
+        }
       }
     } );
 
-    $('#datatable_lending td.actions').live( 'click', function () {
+    $('#datatable_lending td.overrides').live( 'click', function () {
       var nTr = this.parentNode;
       var i = $.inArray( nTr, anOpenLending );
    
       if ( i === -1 ) {
         $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatLendingActions(oTable_lending, nTr);
+	fnFormatLendingOverrides(oTable_lending, nTr);
         anOpenLending.push( nTr );
       }
       else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_lending.fnClose( nTr );
-          anOpenLending.splice( i, 1 );
-        } );
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="overrides"]');
+	if (rOpen.length == 0) {
+          // must be conversation that is open.  close it and open the overrides
+	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+
+   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatLendingOverrides(oTable_lending, nTr);
+            anOpenLending.push( nTr );
+          } );
+          
+	} else {
+          // overrides is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+          } );
+        }
       }
     } );
 
@@ -226,7 +300,7 @@ $('document').ready(function(){
 	  <table id="datatable_borrowing" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th><th>actions</th>
+		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -241,7 +315,7 @@ $('document').ready(function(){
 	  <table id="datatable_lending" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th><th>actions</th>
+		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
 	      </tr>
 	    </thead>
 	    <tbody>
