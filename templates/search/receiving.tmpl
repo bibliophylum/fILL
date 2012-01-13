@@ -1,6 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
+<script type="text/javascript" scr="/plugins/jquery.printElement.js"></script>
 <script type="text/javascript" src="/js/receiving.js"></script>
 
 
@@ -12,6 +13,7 @@ $.ajaxSetup ({
 });  
 
 $('document').ready(function(){
+//    $(".btnPrint").printPage();
 
     $.getJSON('/cgi-bin/get-receiving-list.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
@@ -27,7 +29,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {

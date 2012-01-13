@@ -1,4 +1,21 @@
 // receiving.js
+/*
+    fILL - Free/Open-Source Interlibrary Loan management system
+    Copyright (C) 2012  David A. Christensen
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");
@@ -101,8 +118,18 @@ function receive( requestId ) {
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
 	.success(function() {
-	    //alert('success');
+//	    alert('success');
 	    // print slip (single) / add to slip page (multi) / do nothing (none)
+
+	    $("#slip").remove();  // toast any existing slip div
+	    $('<div id="slip"></div>').appendTo("#leftcontent");
+//	    $("#slip").removeClass();
+	    $("#slip").css( "background-color", "white");
+	    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
+	    $("#slip").load( urlSlipWriter, function() {
+//		alert('Load was performed:' + $("#slip").html() );
+		$("#slip").printElement({ leaveOpen:true, printMode:'popup'});
+	    });
 	})
 	.error(function() {
 	    alert('error');
