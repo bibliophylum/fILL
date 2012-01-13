@@ -123,12 +123,11 @@ function receive( requestId ) {
 
 	    $("#slip").remove();  // toast any existing slip div
 	    $('<div id="slip"></div>').appendTo("#leftcontent");
-//	    $("#slip").removeClass();
 	    $("#slip").css( "background-color", "white");
 	    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
 	    $("#slip").load( urlSlipWriter, function() {
-//		alert('Load was performed:' + $("#slip").html() );
 		$("#slip").printElement({ leaveOpen:true, printMode:'popup'});
+//		$("#slip").printElement({ leaveOpen:false, printMode:'iframe'});
 	    });
 	})
 	.error(function() {
