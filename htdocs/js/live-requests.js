@@ -69,6 +69,25 @@ function fnFormatDetails( oTable, nTr )
 }
 
 
+function override( e, oData )
+{
+//    alert('button: ' + e.id + '\nid: ' + oData.id);
+    $.getJSON('/cgi-bin/override.cgi', {"reqid": oData.id, "override": e.id},
+	      function(data){
+		  //alert(data);
+	      })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+oData.id).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
 function fnFormatBorrowingOverrides( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
@@ -76,14 +95,16 @@ function fnFormatBorrowingOverrides( oTable, nTr )
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped"</td></tr>';
-    sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"</td></tr>';
+    sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
     $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
+    $('#bReceive').click(function() { override( this, oData ); return false; });
     $('#bClose').button();
+    $('#bClose').click(function() { override( this, oData ); return false; });
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
@@ -95,12 +116,13 @@ function fnFormatLendingOverrides( oTable, nTr )
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReturned">Returned</span></button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"</td></tr>';
+    sOut = sOut+'<tr><td><button id="bReturned">Returned</span></button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
     $(nDetailsRow).attr('detail','overrides');
     $('#bReturned').button();
+    $('#bReturned').click(function() { override( this, oData ); return false; });
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
