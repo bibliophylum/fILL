@@ -84,11 +84,12 @@ function override( e, oData )
 	})
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
-	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
+//	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
 	});
 }
 
-function fnFormatBorrowingOverrides( oTable, nTr )
+
+function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
 {
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
@@ -102,14 +103,24 @@ function fnFormatBorrowingOverrides( oTable, nTr )
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
     $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
-    $('#bReceive').click(function() { override( this, oData ); return false; });
+    $('#bReceive').click(function() { 
+	override( this, oData );
+	$(nTr).children('.overrides').click();
+	$('#datatable_borrowing').fnReloadAjax(); // this should actually just update the nTr rather than reload the entire table (there may be other rows open)
+	return false; 
+    });
     $('#bClose').button();
-    $('#bClose').click(function() { override( this, oData ); return false; });
+    $('#bClose').click(function() { 
+	override( this, oData );
+	$(nTr).children('.overrides').click();
+	$('#datatable_borrowing').fnReloadAjax(); // this should remove the nTr instead... closed and moved to history....
+	return false; 
+    });
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
 
-function fnFormatLendingOverrides( oTable, nTr )
+    function fnFormatLendingOverrides( oTable, nTr, anOpen )
 {
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
@@ -122,7 +133,12 @@ function fnFormatLendingOverrides( oTable, nTr )
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
     $(nDetailsRow).attr('detail','overrides');
     $('#bReturned').button();
-    $('#bReturned').click(function() { override( this, oData ); return false; });
+    $('#bReturned').click(function() { 
+	override( this, oData );  
+	$(nTr).children('.overrides').click();
+	$('#datatable_lending').fnReloadAjax(); // this should remove the nTr instead.... closed and moved to history....
+	return false; 
+    });
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
