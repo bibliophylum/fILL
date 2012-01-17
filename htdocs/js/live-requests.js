@@ -84,7 +84,7 @@ function override( e, oData )
 	})
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
-	    $("#req"+oData.id).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
 	});
 }
 

@@ -1,5 +1,7 @@
 #!/usr/bin/perl
-
+#
+# This needs to do error checking....
+#
 use CGI;
 use DBI;
 use JSON;
@@ -27,17 +29,18 @@ my $lender_id;
 my $status = "Message";
 my $retval;
 switch( $override ) {
+
     case "bReceive" {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
 	$message = $href->{"borrower"} . " received item without " . $href->{"lender"} . " marking as 'Shipped'";
 	# borrower sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );	
 	# force the ILL to be marked as Shipped by the lender
-# Gah.  can't use backticks in cgi...
-	$retval = `./change-request-status.cgi reqid=$reqid lid=$lender_id msg_to=$borrower_id status=Shipped message="override by $href->{borrower}"`;
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );	
     }
+
     case "bClose" {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
@@ -46,9 +49,9 @@ switch( $override ) {
 	# borrower sends a message about overriding
 	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
 	# force the ILL to be marked as Checked-in by the lender
-	$retval = `./change-request-status.cgi reqid=$reqid lid=$lender_id msg_to=$borrower_id status=Checked-in message="override by $href->{borrower}"`;
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "override by $href->{borrower}" );	
 	# ...and move to history
-	$retval = `./move-to-history.cgi reqid=$reqid`;
+	$retval = move_to_history( $dbh, $reqid );
     }
 
     case "bReturned" {
@@ -59,10 +62,10 @@ switch( $override ) {
 	# lender sends a message about overriding
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, $status, $message );
 	# force the ILL to be marked as Returned by the borrower
-	$retval = `./change-request-status.cgi reqid=$reqid lid=$borrower_id msg_to=$lender_id status=Returned message="override by $href->{lender}"`;
+	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Returned', "override by $href->{lender}" );	
 	# lender check-in and move to history
-	$retval = `./change-request-status.cgi reqid=$reqid lid=$lender_id msg_to=$borrower_id status=Checked-in message=""`;
-	$retval = `./move-to-history.cgi reqid=$reqid`;
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "" );
+	$retval = move_to_history( $dbh, $reqid );
     }
 
     else {
@@ -76,5 +79,45 @@ switch( $override ) {
 # sql to add to the request conversation
 
 $dbh->disconnect;
+print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
 
-print $retval;  # Content-type header + JSON
+
+sub move_to_history {
+    my $dbh = shift;
+    my $reqid = shift;
+
+    $dbh->{AutoCommit} = 0;  # enable transactions, if possible
+    $dbh->{RaiseError} = 1;
+    eval {
+	my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_target from request where id=?)";
+	$rClosed = $dbh->do( $SQL, undef, $reqid );
+	
+	$SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
+	$rFilledBy = $dbh->do( $SQL, undef, $reqid );
+	
+	$SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
+	$rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	
+	$SQL = "delete from requests_active where request_id=?;";
+	$rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	
+	$SQL = "delete from sources where request_id=?;";
+	$rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	
+	$SQL = "delete from request where id=?;";
+	$rRequest = $dbh->do( $SQL, undef, $reqid );
+	
+	$dbh->commit;   # commit the changes if we get this far
+    };
+    if ($@) {
+	warn "Transaction aborted because $@";
+	# now rollback to undo the incomplete changes
+	# but do it in an eval{} as it may also fail
+	eval { $dbh->rollback };
+	# add other application on-error-clean-up code here
+    } else {
+	$rSuccess = 1;
+    }
+
+    return $rSuccess;
+}
