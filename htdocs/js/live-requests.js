@@ -106,14 +106,15 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $('#bReceive').click(function() { 
 	override( this, oData );
 	$(nTr).children('.overrides').click();
-	$('#datatable_borrowing').fnReloadAjax(); // this should actually just update the nTr rather than reload the entire table (there may be other rows open)
+	oTable.fnUpdate( 'Shipped', nTr, 6 );
+	oTable.fnUpdate( 'override', nTr, 7 );
 	return false; 
     });
     $('#bClose').button();
     $('#bClose').click(function() { 
 	override( this, oData );
 	$(nTr).children('.overrides').click();
-	$('#datatable_borrowing').fnReloadAjax(); // this should remove the nTr instead... closed and moved to history....
+	oTable.fnDeleteRow( nTr );
 	return false; 
     });
     $('div.innerDetails', nDetailsRow).slideDown();
@@ -136,7 +137,7 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $('#bReturned').click(function() { 
 	override( this, oData );  
 	$(nTr).children('.overrides').click();
-	$('#datatable_lending').fnReloadAjax(); // this should remove the nTr instead.... closed and moved to history....
+	oTable.fnDeleteRow( nTr );
 	return false; 
     });
     $('div.innerDetails', nDetailsRow).slideDown();
