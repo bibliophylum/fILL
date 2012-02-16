@@ -184,7 +184,11 @@ sub search_simple_ajax_process {
 			# Create the zservers list
 			my @selectedZservers;
 			my $sqlZserversList = "SELECT id FROM zservers WHERE (available=1 and alive=1)";
-			
+			# Flin Flon 'any' index hack
+			if ($index eq 'any') {
+			    $sqlZserversList .= " AND (name <> 'Flin Flon Public Library')";
+			}
+
 			my $sqlPhrase = "";
 			if ($includeStandardResources) {
 			    $sqlPhrase .= " OR isstandardresource=1";
@@ -445,7 +449,11 @@ sub search_common_process {
 			# Create the zservers list
 			my @selectedZservers;
 			my $sqlZserversList = "SELECT id FROM zservers WHERE (available=1 and alive=1)";
-			
+			# Flin Flon 'any' index hack
+			if ($q->param('any_keywords')) {
+			    $sqlZserversList .= " AND (name <> 'Flin Flon Public Library')";
+			}
+
 			my $sqlPhrase = "";
 			if ($includeStandardResources) {
 			    $sqlPhrase .= " OR isstandardresource=1";
