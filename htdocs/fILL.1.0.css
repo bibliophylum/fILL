@@ -78,14 +78,15 @@ h6
   font-family:georgia, tahoma, arial narrow, arial;
   font-size:28px;
   font-weight:800;
-  text-transform:uppercase;
+#  text-transform:uppercase;
   letter-spacing:2px;
   border-bottom:1px solid #7ea3ac;
   width:260px
 }
 
 #logo_slogan {
-  color:#ffd073;
+#  color:#ffd073;
+  color:#AAF3FF;
   font-size:12px;
   font-family:tahoma, arial
 }

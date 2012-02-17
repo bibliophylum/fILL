@@ -84,6 +84,12 @@
   <set target="216.130.92.141:210/Melita_ILS" name="requestby" value="Maplin"/>
   <set target="216.130.92.141:210/Melita_ILS" name="requesturl" value="http://216.130.92.141/Melita/LoginPatron.aspx?App=MyAccount"/>
 
+<!-- Pierson Library -->
+  <set target="216.130.92.141:210/Pierson_ILS" name="pz:name" value="Pierson Library (Insignia)"/>
+  <set target="216.130.92.141:210/Pierson_ILS" name="symbol" value="MESP"/>
+  <set target="216.130.92.141:210/Pierson_ILS" name="requestby" value="Maplin"/>
+  <set target="216.130.92.141:210/Pierson_ILS" name="requesturl" value="http://216.130.92.141/Melita/LoginPatron.aspx?App=MyAccount"/>
+
 <!-- Thompson Public Library -->
   <set target="catalogue.thompsonlibrary.com:210/ILS" name="pz:name" value="Thompson Public Library (Insignia)"/>
   <set target="catalogue.thompsonlibrary.com:210/ILS" name="symbol" value="MTH"/>
