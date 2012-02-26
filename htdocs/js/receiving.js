@@ -120,15 +120,43 @@ function receive( requestId ) {
 	.success(function() {
 //	    alert('success');
 	    // print slip (single) / add to slip page (multi) / do nothing (none)
+//	    alert($('input[@name=slip]:checked').val());
 
-	    $("#slip").remove();  // toast any existing slip div
-	    $('<div id="slip"></div>').appendTo("#leftcontent");
-	    $("#slip").css( "background-color", "white");
-	    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
-	    $("#slip").load( urlSlipWriter, function() {
-		$("#slip").printElement({ leaveOpen:true, printMode:'popup'});
-//		$("#slip").printElement({ leaveOpen:false, printMode:'iframe'});
-	    });
+	    if ((!$('input[@name=slip]:checked').val()) || ($('input[@name=slip]:checked').val() == 'none')) {
+		// do not print slips
+		alert('Do not print slips');
+	    } else {
+		if ($('input[@name=slip]:checked').val() == 'single') {
+		    $("#slip").remove();  // toast any existing slip div
+		    $('<div id="slip"></div>').appendTo("#leftcontent");
+		    $("#slip").css( "background-color", "white");
+		    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
+		    $("#slip").load( urlSlipWriter, function() {
+			$("#slip").printElement({ leaveOpen:true, printMode:'popup'});
+			//		$("#slip").printElement({ leaveOpen:false, printMode:'iframe'});
+		    });
+		} else {
+//		    alert('Multiple slips per page');
+		    $('<div id="slip"></div>').appendTo("#multiPrint");
+		    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
+		    $("#slip").load( urlSlipWriter, function() {
+			$("#slip").append('<br /><hr class=dotted><br />');
+			$("#slip").removeAttr('id');
+			
+//			alert($("#multiPrint > div").length);
+			var para;
+			if ($("#multiPrint > div").length == 1) {
+			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
+			} else {
+			    para='<p class="slipCount">There are '+$("#multiPrint > div").length+' slips to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
+			}
+			$('.slipCount').remove();
+			$("#multiCount").append(para);
+		    });
+		    
+		}
+	    }
+
 	})
 	.error(function() {
 	    alert('error');
@@ -139,6 +167,11 @@ function receive( requestId ) {
 	});
 }
 
+function printMulti() {
+    $("#multiPrint").printElement({ leaveOpen:true, printMode:'popup'});
+    $("#multiPrint > div").remove();
+    $('.slipCount').remove();
+}
 
 function toggleLayer( whichLayer )
 {

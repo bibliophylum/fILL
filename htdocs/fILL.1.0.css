@@ -331,6 +331,13 @@ hr {
     height: 1px;
 }
 
+hr.dotted {
+    background-color:#fff;
+    border:#000 1px dotted;
+    border-style: none none dotted;
+    color:#fff;
+}
+
 thead {
     font-weight: bold;
 }
