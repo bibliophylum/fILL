@@ -1,0 +1,110 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript" src="/plugins/jquery.printElement.js"></script>
+<script type="text/javascript" src="/js/receiving.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_receive");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+//    $(".btnPrint").printPage();
+
+    $.getJSON('/cgi-bin/get-receiving-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.receiving[0].id+" "+data.receiving[0].msg_from+" "+data.receiving[0].call_number+" "+data.receiving[0].author+" "+data.receiving[0].title+" "+data.receiving[0].ts); //further debug
+                build_table(data);
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Due date" },
+                           { "mDataProp": "Receive" }
+                      ]
+
+                  });
+           });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $("#slipPrinting").buttonset();
+    $("#slipPrinting").append("<input type='radio' name='slip' value='single' id='single' checked='checked'/><label for='single'>Individual slips</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='multi' id='multi'/><label for='multi'>Multiple slips on a page</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='none' id='none'/><label for='none'>Do not print slips</label>");
+    $("#slipPrinting").buttonset('refresh');
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>As books arrive from lending libraries to fill your ILL requests, click the 'Received' button for that book.</li>
+      <li>You will have the option of printing a date-due slip.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Printing of Date-Due slips</h3>
+      <p>Select your printing option:</p>
+      <div id="slipPrinting"></div>
+      <div id="multiCount"></div>
+
+      <br/>
+      <h3>Receiving</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+    <div id="multiPrint">
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

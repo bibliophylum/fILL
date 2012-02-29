@@ -1,3 +1,21 @@
+#
+#    fILL - Free/Open-Source Interlibrary Loan management system
+#    Copyright (C) 2012  David A. Christensen
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 package maplin3base;
 use strict;
 use base 'CGI::Application';
@@ -24,7 +42,7 @@ my %config = (
     LOGOUT_RUNMODE => 'logged_out',
     LOGIN_FORM => { 
 	TITLE => 'Sign in to Maplin',
-	COMMENT => 'Reminder: When placing a request please select the library that is the highest Net-Borrower.  This helps make the interlibrary loan workload fair for all libraries.',
+	COMMENT => 'Manitoba Public Libraries ILL Management System.',
 	FOCUS_FORM_ONLOAD => 1,
     }
     );
@@ -161,7 +179,7 @@ sub welcome_process {
 	                      'welcome.tmpl',
 			      cache => 0,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Welcome',
+    $template->param( pagetitle => 'Maplin-4 Welcome',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -181,10 +199,6 @@ sub show_logged_out_process {
     #
     # Do some housekeeping
     #
-    # Clear any old search results
-    $self->dbh->do("DELETE FROM marc WHERE sessionid=?",undef,$self->session->id());
-    # Clear any status results
-    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$self->session->id());
 
     # Open the html template
     # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
@@ -193,7 +207,7 @@ sub show_logged_out_process {
 	                      'logged_out.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Logged Out',
+    $template->param( pagetitle => 'Maplin-4 Logged Out',
 		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
 	);
@@ -217,7 +231,7 @@ sub forbidden_process {
 	                      'forbidden.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-3 Forbidden',
+    $template->param( pagetitle => 'Maplin-4 Forbidden',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -244,7 +258,7 @@ sub environment_process {
 	    );
 	push(@loop, \%row);
     }
-    $template->param(pagetitle => 'Maplin-3 Environment',
+    $template->param(pagetitle => 'Maplin-4 Environment',
 		     env_variable_loop => \@loop);
     return $template->output;
 }

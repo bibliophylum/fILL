@@ -1,0 +1,50 @@
+<settings target="*">
+
+<!-- Legislative Library -->
+  <set target="library.gov.mb.ca:211/legislative" name="pz:name" value="Legislative Library (Horizon)"/>
+  <set target="library.gov.mb.ca:211/legislative" name="symbol" value="MWP"/>
+  <set target="library.gov.mb.ca:211/legislative" name="requestby" value="Login"/>
+  <set target="library.gov.mb.ca:211/legislative" name="requesturl" value="http://library.gov.mb.ca/ipac20/ipac.jsp?profile=ab&amp;auth=true&amp;submenu=subtab11"/>
+
+<!-- PLS Union Catalogue -->
+  <set target="library.gov.mb.ca:210/maplin" name="pz:name" value="Public Library Services (Horizon)"/>
+  <set target="library.gov.mb.ca:210/maplin" name="symbol" value="MWPL"/>
+  <set target="library.gov.mb.ca:210/maplin" name="requestby" value="Maplin"/>
+  <set target="library.gov.mb.ca:210/maplin" name="requesturl" value="/cgi-bin/lightning.cgi?rm=lightning_request_form"/>
+
+<!-- Western Manitoba Regional Library -->
+  <set target="216.36.147.26:210/horizon" name="pz:name" value="Western Manitoba Regional Library (Horizon)"/>
+  <set target="216.36.147.26:210/horizon" name="symbol" value="MBW"/>
+  <set target="216.36.147.26:210/horizon" name="requestby" value="Login"/>
+  <set target="216.36.147.26:210/horizon" name="requesturl" value="http://216.36.147.26/ipac20/ipac.jsp?profile=mbw&amp;auth=true&amp;submenu=subtab33"/>
+
+<!-- Winnipeg Public Library -->
+  <set target="198.163.53.31:210/horizon" name="pz:name" value="Winnipeg Public Library (Horizon)"/>
+  <set target="198.163.53.31:210/horizon" name="symbol" value="MW"/>
+  <set target="198.163.53.31:210/horizon" name="requestby" value="Login"/>
+  <set target="198.163.53.31:210/horizon" name="requesturl" value="http://wpl-pac.winnipeg.ca/ipac20/ipac.jsp?profile=wpl&amp;menu=account"/>
+
+<!-- settings apply to all targets -->
+
+  <!-- mapping for unqualified search -->
+  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+
+  <!-- field-specific mappings -->
+  <set name="pz:cclmap:au" value="u=1004 s=al"/>
+  <set name="pz:cclmap:ti" value="u=4 s=al 2=102"/>
+  <set name="pz:cclmap:su" value="u=21 s=al 2=102"/>
+  <set name="pz:cclmap:isbn" value="u=7 2=102"/>
+  <set name="pz:cclmap:issn" value="u=8 2=102"/>
+  <set name="pz:cclmap:date" value="u=30 r=r 2=102"/>
+
+  <!-- Retrieval settings -->
+
+  <set name="pz:requestsyntax" value="marc21"/>
+  <set name="pz:elements" value="F"/>
+
+  <!-- Result normalization settings -->
+
+  <set name="pz:nativesyntax" value="iso2709"/>
+  <set name="pz:xslt" value="marc21.xsl"/>
+
+</settings>

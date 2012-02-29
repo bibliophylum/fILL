@@ -1,0 +1,89 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript" src="/js/overdue.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_overdue");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-overdue-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.overdue[0].id+" "+data.overdue[0].title+" "+data.overdue[0].author+" "+data.overdue[0].ts+" "+data.overdue[0].due_date+" "+data.overdue[0].patron_barcode); //further debug
+                build_table(data);
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Borrowed from" },
+                           { "mDataProp": "Borrowed from (ID)" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Due date" },
+                           { "mDataProp": "Patron" }
+                      ]
+
+                  });
+           });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>You will need to contact these patrons.</li>
+      <li>Items will be removed from the overdue list when you mark them as 'Returned' on the Returns screen.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <br/>
+      <h3>Overdues (items borrowed through ILL that are now overdue)</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -2,28 +2,100 @@
 <TMPL_INCLUDE NAME="submenu_info.tmpl">
 
 <script type="text/javascript">
-  <!--
-  set_secondary_tab("menu_info_contacts");
-  //-->
+set_secondary_tab("menu_info_contacts");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    oTable = $('#datatable_contacts').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+        "iDisplayLength": 10,
+        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	"oTableTools": {
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf", "print",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
+        "aoColumns": [
+            { "mDataProp": "library", "sWidth": "25%" },
+            { "mDataProp": "name", "sWidth": "5%" },
+            { "mDataProp": "email_address", "sWidth": "30%" },
+            { "mDataProp": "mailing_address", "sWidth": "35%" }
+        ],
+        "bAutoWidth": false
+    });
+
+    $('#datatable_contacts tbody tr').live('mouseover mouseout', function (event) {
+        if (event.type == 'mouseover') {
+            $(this).addClass("ui-state-hover");
+        } else {
+            $(this).removeClass("ui-state-hover");
+        }
+    });
+
+
+});
+
 </script>
 
-<h1>Library Contact Information</h1>
-<table border=1>
-  <tr>
-    <td>Library</td><td>Symbol</td><td>Email</td><td>Mailing Address</td>
-  </tr>
-  <TMPL_LOOP NAME="libraries">
-    <tr>
-      <td><TMPL_VAR NAME="library"></td>
-      <td><TMPL_VAR NAME="name"></td>
-      <td><TMPL_VAR NAME="email_address"></td>
-      <td>
-	<TMPL_VAR NAME="mailing_address_line1"><br>
-	<TMPL_VAR NAME="mailing_address_line2"><br>
-	<TMPL_VAR NAME="mailing_address_line3">
-      </td>
-    </tr>
-  </TMPL_LOOP>
-</table>
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>None yet.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="myDiv">
+      <h3>Library contact information</h3>
+      <div>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_contacts" width="100%">
+	    <thead>
+	      <tr>
+		<th>library</th><th>name</th><th>email_address</th><th>mailing_address</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+
+	      <TMPL_LOOP NAME="libraries">
+		<tr>
+		  <td><TMPL_VAR NAME="library"></td>
+		  <td><TMPL_VAR NAME="name"></td>
+		  <td><TMPL_VAR NAME="email_address"></td>
+		  <td>
+		    <TMPL_VAR NAME="mailing_address_line1"><br>
+		      <TMPL_VAR NAME="mailing_address_line2"><br>
+			<TMPL_VAR NAME="mailing_address_line3">
+		  </td>
+		</tr>
+	      </TMPL_LOOP>
+
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

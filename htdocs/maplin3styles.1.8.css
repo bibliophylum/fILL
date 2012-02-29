@@ -751,7 +751,7 @@ p.info_zserver_ok {
   display: inline;
 }
 
-p.info_zserver_error {
+p.info_zserver_not_alive {
   font-family:arial;
   font-size:10pt;
   color: red;
@@ -772,33 +772,3 @@ p.info_zserver_zero_recs {
   background-color: #663300;
   display: inline;
 }
-
-/*------------------------------------------------------*/
-
-/* two-column layout http://www.nd.edu/~tlehman/presentations/css_magic/col/col5.shtml */
-
-#contain {
-    border: 3px outset blue;
-    float: left;
-    margin-bottom: 15px;
-    width: 100%;
-}
-#lcol, #rcol {
-    display: inline;
-    padding: .25cm;
-    margin: .5cm;
-}
-#lcol {
-    float: left;
-    background-color: #e3e3e3;
-    width: 45%;
-}
-#rcol {
-    float: right;
-    background-color: #e3e3e3;
-    width: 45%;
-}
-#rcol ul { list-style-position: inside; }
-#rcol ol { list-style-position: inside; }
-#status_ok { background-color: #33FF33; }
-#status_not_ok { background-color: #FF9900; }

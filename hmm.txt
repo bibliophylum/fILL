@@ -1,1 +1,27 @@
 Hmm.  Just testing some SVN-y goodness.
+
+This is what is returned from:
+      $ bin/get-history.cgi lid=101 start='2011-01-01' end='2012-01-01'
+(when using dataset_1)
+
+{"history":{
+
+"lending":[
+	{"status":"Checked-in","ts":"2011-12-01 13:55:19.881818","requester":85,"author":"Zubrin, Robert","title":"The case for Mars","id":3,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:21.360933","requester":85,"author":"Weber, David","title":"Old soldiers","id":6,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:23.361975","requester":99,"author":"Walker, Cami","title":"29 gifts","id":28,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:24.659506","requester":99,"author":"Turner, Nancy J","title":"Wild coffee and tea substitutes of Canada","id":30,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:27.173962","requester":99,"author":"Perl, Philip","title":"Cacti and succulents","id":25,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:29.349693","requester":99,"author":"Nixon, Robin","title":"Plug-in Javascript 100 power solutions","id":24,"message":""},
+	{"status":"Checked-in","ts":"2011-12-01 13:55:31.484495","requester":85,"author":"Kear, Janet","title":"Ducks of the world","id":7,"message":""}
+],
+
+"borrowing":[
+	{"status":"Returned","ts":"2011-12-01 13:51:31.797763","patron_barcode":"23333000003304","author":"Kalman, Bobbie","title":"Yellowstone National Park","id":57,"message":""},
+	{"status":"Returned","ts":"2011-12-01 13:51:33.814147","patron_barcode":"23333000003303","author":"Heisel, Sharon E","title":"Precious gold, precious jade","id":54,"message":""},
+	{"status":"Returned","ts":"2011-12-01 13:51:35.166621","patron_barcode":"23333000003302","author":"Grambling, Lois G","title":"Can I bring my pterodactyl to school, Ms. Johnson?","id":48,"message":""},
+	{"status":"Returned","ts":"2011-12-01 13:51:36.997397","patron_barcode":"23333000003302","author":"Gould, Stephen Jay","title":"Bully for brontosaurus","id":50,"message":""},
+	{"status":"Returned","ts":"2011-12-01 13:51:43.058246","patron_barcode":"23333000003304","author":"Brown, Roy","title":"Steamboats on the Assiniboine","id":60,"message":""},
+	{"status":"Returned","ts":"2011-12-01 13:51:44.490742","patron_barcode":"23333000003303","author":"Bishop, Nic","title":"Forest explorer","id":55,"message":""}
+]
+}}

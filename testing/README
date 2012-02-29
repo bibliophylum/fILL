@@ -1,0 +1,9 @@
+Notes:
+
+WARNING: Do NOT do this on a live system!  You WILL be eaten by a grue!
+
+To reset the ILL tables to a known state for testing:
+1. $ psql -U mapapp -h localhost -d maplin <drop-ill-tables.sql
+2. $ psql -U mapapp -h localhost -d maplin <dataset_1.sql
+
+pw is maplin3db

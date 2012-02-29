@@ -1,0 +1,144 @@
+Stopping server:
+david@acer-laptop:/etc/pazpar2/services-available$ sudo kill `cat /var/run/pazpar2.pid`
+
+Starting server:
+david@acer-laptop:/etc/pazpar2/services-available$ sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
+
+-----------------------------------------------------------------------------
+Updating pazpar2
+
+When pazpar2 gets updated (through your package management system), make sure to copy the file
+     /usr/share/pazpar2/js/pz2.js
+to the htdocs directory.
+
+-----------------------------------------------------------------------------
+Installing pazpar2
+
+Which version of (k)ubuntu?
+$ cat /etc/issue
+Ubuntu 11.04 \n \l
+
+$ grep CODENAME /etc/lsb-release
+DISTRIB_CODENAME=natty
+
+Ubuntu users can add the following two lines in /etc/apt/sources.list
+and use Ubuntus own package management tools apt-get, aptitude, etc.
+Replace intrepid with your version of Ubuntu. Use 
+  grep CODENAME /etc/lsb-release
+to determine your Ubuntu release.
+
+deb http://ftp.indexdata.dk/ubuntu intrepid main
+deb-src http://ftp.indexdata.dk/ubuntu intrepid main
+
+These packages are signed with a key you can install as follows:
+ wget http://ftp.indexdata.dk/debian/indexdata.asc
+ sudo apt-key add indexdata.asc
+
+
+Then use your system's package management to install:
+pazpar2
+pazpar2-apache2
+pazpar2-doc
+pazpar2-js
+pazpar2-jsdemo
+pazpar2-test1
+
+Important!  Now go to /etc/pazpar2/services-enabled, and (as root) unlink default.xml
+(or else you'll have problems starting the pazpar2 service later....)
+
+-----------------------------------------------------------------------------
+targets:
+/etc/pazpar2/settings
+
+...controlled by:
+david@acer-laptop:/etc/pazpar2/services-available$ sudo emacs default.xml
+
+
+The pazpar daemon config file (/etc/pazpar2/server.xml) has the following line:
+    <include src="services-enabled/*.xml"/>
+
+The services-enabled directory contains a symlink to a services-available entry:
+david@acer-laptop:/etc/pazpar2$ ll services-enabled/
+total 8
+drwxr-xr-x 2 root root 4096 2011-07-20 16:10 ./
+drwxr-xr-x 5 root root 4096 2011-08-23 10:48 ../
+lrwxrwxrwx 1 root root   33 2011-07-20 16:10 default.xml -> ../services-available/default.xml
+
+By making the following change in services-available/default.xml...
+
+  <!-- settings src="settings/sru-test.xml"/ -->
+  <settings src="settings/gutenberg-sru.xml"/>
+
+...and stopping/restarting the pazpar2 daemon, we can search and get results (at http://localhost/pazpar2/jsdemo/)
+
+Page 27 of the Pazpar2 user's Guide suggets that you can specify a directory for src; all .xml files in that directory are read.
+Tried it... didn't return records... check the log for failures.
+
+Cool... opencontent.xml works :-)
+
+Try building one for Spruce/Evergreen....
+
+
+-----------------------------------------------------------------------------
+
+This didn't work in server.xml:
+    <!-- David, testing: from page 29 of pazpar2 user's guide -->
+    <metadata name="title" brief="yes" sortkey="skiparticle" merge="longest" rank="6"/>
+    <metadata name="isbn" merge="unique"/>
+    <metadata name="date" brief="yes" sortkey="numeric" type="year" merge="range" termlist="yes"/>
+    <metadata name="author" brief="yes" termlist="yes" merge="longest" rank="2"/>
+    <metadata name="subject" merge="unique" termlist="yes" rank="3"/>
+    <metadata name="url" merge="unique"/>
+    <!-- end David, testing -->
+
+
+
+-----------------------------------------------------------------------------
+Replacing default.xml with maplin.xml:
+1. in /etc/pazpar2/services-available:
+   # cp default.xml maplin.xml
+   (make whatever changes you need to maplin.xml)
+2. in /etc/pazpar2/services-enabled:
+   # ln -s ../services-available/maplin.xml .
+   # unlink default.xml 
+3. Restart pazpar2 daemon.
+
+
+-----------------------------------------------------------------------------
+Setting up the pazpar2 web interface via apache2:
+	pazpar2 package downloaded/installed to /home/david/prj/pazpar2-1.5.6
+	symlink /opt/pazpar2-demo to /home/david/prj/pazpar2-1.5.6/www
+	Here's the virtual host:
+
+david@acer-laptop:~/prj/paz$ cat /etc/apache2/sites-available/pazpar2-demo
+<VirtualHost *:80>
+       DocumentRoot /opt/pazpar2-demo/
+       ServerName www.pazpar2-demo.cxn
+
+       <Directory />
+               Options Indexes FollowSymLinks MultiViews
+               AllowOverride None
+       </Directory>
+       <Directory /opt/pazpar2-demo/www/>
+               Options Indexes FollowSymLinks MultiViews
+               AllowOverride None
+               Order allow,deny
+               Allow from all
+       </Directory>
+
+# Other directives here
+
+</VirtualHost>
+
+
+-----------------------------------------------------------------------------
+Changing the look and feel:
+With the apache virtual host enabled (i.e. going to http://www.pazpar2-demo.cxn/jsdemo/[mindex.html] works), you'll want to edit the files:
+     /opt/pazpar2-demo/index.html ('mindex.html' was just me checking to make sure I've got the right file :-)
+     ...to reference maplin_client.js rather than example_client.js
+
+     copy example_client.js to maplin_client.js
+
+     styles.css (or styles_maplin_01.css), refered to in index.html
+
+-----------------------------------------------------------------------------

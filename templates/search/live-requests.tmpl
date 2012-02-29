@@ -1,0 +1,331 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<script type="text/javascript" src="/js/live-requests.js"></script>
+
+<script type="text/javascript">
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    // This is the bit that makes TableTools work on tabs
+    // (from https://github.com/DataTables/TableTools/blob/master/tabs.html)
+    $(function() {
+        $( "#tabs" ).tabs( {
+            "show": function(event, ui) {
+                var jqTable = $('table.display', ui.panel);
+                if ( jqTable.length > 0 ) {
+                    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+                    if ( oTableTools != null && oTableTools.fnResizeRequired() ) {
+                        jqTable.dataTable().fnAdjustColumnSizing();
+                        oTableTools.fnResizeButtons();
+                    }
+                }
+            }
+        });
+    });
+
+    var anOpenBorrowing = [];
+    var anOpenLending = [];
+    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+        // TableTools requires Flash version 10...
+	"oTableTools": {
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf", "print",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "id" },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "patron_barcode" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" },
+            { "mDataProp": null,
+              "sClass": "overrides center",
+              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            }
+        ]
+
+    });
+
+    oTable_lending = $('#datatable_lending').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+	"oTableTools": {
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "id" },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "requested_by" },
+//            { "mDataProp": "requester" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "status" },
+            { "mDataProp": "message" },
+            { "mDataProp": null,
+              "sClass": "overrides center",
+              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            }
+        ]
+    });
+
+    $.getJSON('/cgi-bin/get-live-requests.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                build_table(data);
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	});
+
+
+    $('#datatable_borrowing td.control').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenBorrowing );
+
+      if (i === -1) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_borrowing, nTr);
+        anOpenBorrowing.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length == 0) {
+          // must be overrides that is open.  close it and open the conversation
+	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+
+            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
+   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatDetails(oTable_borrowing, nTr);
+            anOpenBorrowing.push( nTr );
+          } );
+          
+	} else {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+
+    $('#datatable_lending td.control').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenLending );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_lending, nTr);
+        anOpenLending.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length == 0) {
+          // must be overrides that is open.  close it and open the conversation
+	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+
+            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
+   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatDetails(oTable_lending, nTr);
+            anOpenLending.push( nTr );
+          } );
+          
+	} else {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+
+    $('#datatable_borrowing td.overrides').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenBorrowing );
+
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatBorrowingOverrides(oTable_borrowing, nTr, anOpenBorrowing);
+        anOpenBorrowing.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="overrides"]');
+	if (rOpen.length == 0) {
+          // must be conversation that is open.  close it and open the overrides
+	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+
+   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatBorrowingOverrides(oTable_borrowing, nTr, anOpenBorrowin);
+            anOpenBorrowing.push( nTr );
+          } );
+          
+	} else {
+          // overrides is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+
+    $('#datatable_lending td.overrides').live( 'click', function () {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenLending );
+   
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatLendingOverrides(oTable_lending, nTr, anOpenLending);
+        anOpenLending.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="overrides"]');
+	if (rOpen.length == 0) {
+          // must be conversation that is open.  close it and open the overrides
+	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+
+   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatLendingOverrides(oTable_lending, nTr, anOpenLending);
+            anOpenLending.push( nTr );
+          } );
+          
+	} else {
+          // overrides is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_lending.fnClose( nTr );
+            anOpenLending.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Current interlibrary loans: borrowing and lending</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="tabs">
+      <ul>
+	<li><a href="#tabs-1">Current borrowing</a></li>
+	<li><a href="#tabs-2">Current lending</a></li>
+      </ul>
+
+      <div id="tabs-1">
+	<!--     <div id="mylistDiv">  -->
+	<h4>Current borrowing</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_borrowing" class="display">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+
+      <div id="tabs-2">
+	<h4>Current lending</h4>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_lending" class="display">
+	    <thead>
+	      <tr>
+		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

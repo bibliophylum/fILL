@@ -1,0 +1,105 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_lend.tmpl">
+
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<script language="JavaScript">
+
+$('document').ready(function() {
+
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  set_secondary_tab("menu_lend_pull");
+
+  //$('#gradient-style').dataTable();
+  oTable = $('#gradient-style').dataTable({
+         "bJQueryUI": true,
+         "sPaginationType": "full_numbers",
+         "bInfo": true,
+         "bSort": true,
+         "sDom": '<"H"Tfr>t<"F"ip>',
+         // TableTools requires Flash version 10...
+         "oTableTools": {
+             "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+           "aButtons": [
+	      "copy", "csv", "xls", "pdf", "print",
+	      {
+		"sExtends":    "collection",
+		"sButtonText": "Save",
+		"aButtons":    [ "csv", "xls", "pdf" ]
+	      }
+           ]
+         },
+         "aoColumns": [
+             { "mDataProp": "Call #" },
+             { "mDataProp": "Author" },
+             { "mDataProp": "Title" },
+             { "mDataProp": "Date/Time requested" },
+             { "mDataProp": "Requested by" },
+             { "mDataProp": "Your barcode for the requesting library" }
+        ]
+  });
+
+  $(function() {
+         update_menu_counters( <TMPL_VAR name="lid"> );
+  });
+
+});
+
+</script>
+
+<div id="main">
+
+  <div id="middlecontent">
+    <h3>Pull list</h3>
+    <table id="gradient-style">
+      <thead>
+	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Your barcode for the requesting library</th></tr>
+      </thead>
+      <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
+      <tbody>
+      <TMPL_LOOP name="pulls">
+	<tr>
+	  <td><TMPL_VAR NAME="call_number"></td>
+	  <td><TMPL_VAR NAME="author"></td>
+	  <td><TMPL_VAR NAME="title"></td>
+	  <td><TMPL_VAR NAME="ts"></td>
+	  <td title="<TMPL_VAR NAME="library">"><TMPL_VAR NAME="from"></td>
+	  <td>
+	    <TMPL_VAR NAME="barcode"><br/>
+	    <img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>
+	  </td>
+	</tr>
+      </TMPL_LOOP>
+      </tbody>
+    </table>
+    
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

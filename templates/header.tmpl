@@ -1,8 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head><title><TMPL_VAR name="pagetitle"></title>
-<link type="text/css" rel="stylesheet" href="/maplin3styles.1.8.css">
+<!-- <link type="text/css" rel="stylesheet" href="/maplin3styles.2.0.css"> -->
+<link type="text/css" rel="stylesheet" href="/fILL.1.0.css">
 <link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
+<link type="text/css" rel="stylesheet" href="/css/maplin-theme/jquery-ui-1.8.16.custom.css"/>
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
+
+<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/menu-counters.js"></script>
+<script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+
+<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/ZeroClipboard.js" charset="utf-8" type="text/javascript"></script>
+<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js" charset="utf-8" type="text/javascript"></script>
+
+<script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
 
 <script language="JavaScript">
 
@@ -17,27 +33,29 @@
 </script>
 
 <!-- Google analytics -->
+<!--
 <script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-21021258-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+//  var _gaq = _gaq || [];
+//  _gaq.push(['_setAccount', 'UA-21021258-1']);
+//  _gaq.push(['_trackPageview']);
+//
+//  (function() {
+//    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+//    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+//    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+//  })();
 
 </script>
-
+-->
 </head>
-<body>
+<body class="example_alt_pagination">
 
 <DIV id="header">
   <div id="logo">
-    <div id="logo_title">MAPLIN-3</div>
-    <div id="logo_slogan">Manitoba Public Library Z39.50 search and request</div>
+    <!--div id="logo_title">fILL (Maplin-4)</div-->
+    <img src="/img/fILL.png">
+    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
   <div id="header_quick_access">
     <ul>
@@ -45,16 +63,34 @@
       <li><TMPL_VAR NAME="username"> </li>
       <li><a href="?authen_logout=1">Log out</a></li>
     </ul>
-    <a href="/Librarian_Guide.pdf">Librarian's Guide (PDF)...</a>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
 </DIV>
 
 <!-- div id="nav1" -->
 <div id="csstabs">
   <ul>
-    <li id="menu_search">
-      <a href=/cgi-bin/maplin3.cgi?rm=search_simple_ajax_form>
-      Search
+    <li id="menu_borrow">
+      <a href=/cgi-bin/lightning.cgi?rm=lightning_search_form>
+      Borrowing from other libraries
+      </a>
+    </li>
+
+    <li id="menu_lend">
+      <a href=/cgi-bin/lightning.cgi?rm=pull_list>
+      Lending to other libraries
+      </a>
+    </li>
+
+    <li id="menu_borrow_live_requests">
+      <a href=/cgi-bin/lightning.cgi?rm=live_requests>
+      Current ILLs
+      </a>
+    </li>
+
+    <li id="menu_borrow_history">
+      <a href=/cgi-bin/lightning.cgi?rm=history>
+      History
       </a>
     </li>
 
@@ -64,32 +100,12 @@
       </a>
     </li>
 
-<!-- Finished Friday, July 22nd.
-    <li id="menu_zerocirc">
-      <a href=/cgi-bin/zerocirc.cgi?rm=browse_form>
-      Collection Development Tool
-      </a>
-    </li>
--->
-
     <li id="menu_info">
       <a href=/cgi-bin/info.cgi?rm=info_contacts_form>
       Info
       </a>
     </li>
 
-    <li id="menu_patrons">
-      <a href=/cgi-bin/patrons.cgi?rm=patrons_verify_form>
-      Patrons
-      </a>
-    </li>
-<!--
-    <li id="menu_supplemental">
-      <a href=/cgi-bin/supplemental.cgi?rm=worldlanguages_form>
-      Supplemental blocks
-      </a>
-    </li>
--->
     <li id="menu_admin">
       <a href=/cgi-bin/admin.cgi?rm=admin_reports_form>
       Admin

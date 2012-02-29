@@ -1,0 +1,110 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_lend.tmpl">
+
+<script type="text/javascript" src="/js/respond.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_lend_respond");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-active-requests.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //console.log(data.unhandledRequests[0].id);
+                //console.log(data.unhandledRequests[0].title);
+                //alert(data); //uncomment this for debug
+                //alert (data.unhandledRequests[0].id+" "+data.unhandledRequests[0].msg_from+" "+data.unhandledRequests[0].call_number+" "+data.unhandledRequests[0].author+" "+data.unhandledRequests[0].title+" "+data.unhandledRequests[0].ts); //further debug
+                build_table(data);
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "Call #" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Due date" },
+                           { "mDataProp": "Response" }
+                      ]
+
+                  });
+
+           });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</li>
+      <li>For each of the requests that you are filling, click the "Sent" button.</li>
+      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
+      <li>Hover over a library's symbol to see the full name of the library.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>1. Set a default due date</h3>
+      <div id="defaultDueDate">
+	<form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change default'; return false;">
+	  <p>
+	    Date (yyyy-mm-dd): <input id="datepicker" type="text">
+	    <input type="submit" name="submit_default_due_date" value="Set as default"/>
+	  </p>
+	</form>
+      </div>
+
+      <br/>
+      <h3>2. Respond to requests</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

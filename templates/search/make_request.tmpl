@@ -1,0 +1,84 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Enter your patron's barcode</li>
+      <li>Click the "Send Request" button</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <form action="/cgi-bin/lightning.cgi" method="post">
+      <h2>Patron barcode</h2>
+      <p>Enter the barcode number of your patron: 
+	<input type="text" name="pbarcode" size="15" maxlength="15">
+      </p>
+      <input type="hidden" name="request_id" value=<TMPL_VAR name="request_id">>
+      <input type="hidden" name="rm" value="complete_the_request">
+      <input type="submit" value="Complete the request">
+    </form>
+
+    <!-- 
+    <h2>parms</h2>
+    <TMPL_LOOP name="parms">
+      <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
+    </TMPL_LOOP>
+    -->
+    
+    <br/>
+
+    <h3>Interlibrary Loan request details</h3>
+    <table>
+      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Request #</td><td>: <TMPL_VAR name="request_id"></td></tr>
+      <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
+      <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
+    </table>
+    
+    <h3>The title was found at these locations:</h3>
+    <p><em>Maplin will automatically determine which lender to try first, to minimize lender workloads.</em></p>
+    <table>
+      <tr><td>symbol</td><td>location</td><td>holding</td><td>callno</td></tr>
+      <TMPL_LOOP name="sources">
+	<tr>
+	  <td><TMPL_VAR name="symbol"></td>
+	  <td><TMPL_VAR name="location"></td>
+	  <td><TMPL_VAR name="holding"></td>
+	  <td><TMPL_VAR name="callno"></td>
+	</tr>
+      </TMPL_LOOP>
+    </table>
+    
+  </div>
+
+  <div id="rightcontent">
+    <h2>Information</h2>
+    <p>Maplin asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

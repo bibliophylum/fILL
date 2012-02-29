@@ -58,44 +58,6 @@
       </tr>
     </table>
 
-    <h5>Search these resources by default</h5>
-    <table>
-      <tr>
-	<td>
-	  <TMPL_IF NAME="use_standardresource">
-	    <input type="checkbox" name="standard" checked="yes" > Standard, 
-          <TMPL_ELSE>
-	    <input type="checkbox" name="standard"> Standard, 
-	  </TMPL_IF>
-	</td>
-
-	<td>
-	  <TMPL_IF NAME="use_electronicresource">
-	    <input type="checkbox" name="ebook" checked="yes" > Electronic, 
-          <TMPL_ELSE>
-	    <input type="checkbox" name="ebook"> Electronic, 
-	  </TMPL_IF>
-	</td>
-
-	<td>
-	  <TMPL_IF NAME="use_databaseresource">
-	    <input type="checkbox" name="database" checked="yes" > Database, 
-          <TMPL_ELSE>
-	    <input type="checkbox" name="database"> Database, 
-	  </TMPL_IF>
-	</td>
-
-	<td>
-	  <TMPL_IF NAME="use_webresource">
-	    <input type="checkbox" name="web" checked="no" > Web
-          <TMPL_ELSE>
-	    <input type="checkbox" name="web"> Web
-	  </TMPL_IF>
-	</td>
-      </tr>
-    </table>
-
-
     <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
     <br />
     <input type="submit" name="submit" value="Update" />

@@ -1,0 +1,5 @@
+Test if your libgd has png support:
+perl -e 'use GD; $im=GD::Image->new(); print $im->can("png") ? "yes" : "no" , "\n";'
+
+If it doesn't, download the libgd source adn compile... you'll need to ./configure --with-png
+Then make, sudo make install, and get into CPAN shell to 'force install GD' ot have it pick up the new library.

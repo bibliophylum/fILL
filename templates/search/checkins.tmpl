@@ -1,0 +1,87 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_lend.tmpl">
+
+<script type="text/javascript" src="/js/checkins.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_lend_checkins");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-checkin-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.checkins[0].id+" "+data.checkins[0].msg_from+" "+data.checkins[0].author+" "+data.checkins[0].title+" "+data.checkins[0].ts); //further debug
+                build_table(data);
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Back from" },
+                           { "mDataProp": "Back from (ID)" },
+                           { "mDataProp": "Check-in" }
+                      ]
+
+                  });
+           });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>This is a list of loans you have made to other libraries, where the borrowing library has returned the item.</li>
+      <li>When the item arrives in the mail, check it in here and in your ILS.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <br/>
+      <h3>Check-ins (incoming items to be checked in)</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
