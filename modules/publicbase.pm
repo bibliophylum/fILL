@@ -74,7 +74,7 @@ sub cgiapp_init {
       LOG_DISPATCH_MODULES => [ 
         {    module => 'Log::Dispatch::File',
                name => 'messages',
-           filename => '/opt/maplin3/logs/messages_public.log',
+           filename => '/opt/fILL/logs/messages_public.log',
           min_level => 'debug'
         },
       ],

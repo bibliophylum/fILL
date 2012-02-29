@@ -100,7 +100,7 @@ sub send_pdf {
 
     my $docname = $q->param("doc");
     $self->header_add( -attachment => $docname );    
-    $self->stream_file( "/opt/maplin3/restricted_docs/$docname",2048);
+    $self->stream_file( "/opt/fILL/restricted_docs/$docname",2048);
     
 #    $self->header_type('none'); # let's you set your own headers
 #    $self->header_props(

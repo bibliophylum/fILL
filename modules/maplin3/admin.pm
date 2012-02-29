@@ -93,10 +93,10 @@ sub admin_logs_process {
     my $log = $q->param("log");
     $log = "No log chosen" unless ($log);
 
-    opendir(DIR, '/opt/maplin3/logs') || die "can't opendir /opt/maplin3/logs: $!";
-    my @accessLogs = grep { /^access.log/ && -f "/opt/maplin3/logs/$_" } readdir(DIR);
+    opendir(DIR, '/opt/fILL/logs') || die "can't opendir /opt/fILL/logs: $!";
+    my @accessLogs = grep { /^access.log/ && -f "/opt/fILL/logs/$_" } readdir(DIR);
     rewinddir(DIR);
-    my @errorLogs = grep { /^error.log/ && -f "/opt/maplin3/logs/$_" } readdir(DIR);
+    my @errorLogs = grep { /^error.log/ && -f "/opt/fILL/logs/$_" } readdir(DIR);
     closedir DIR;
 
     # turn them into hashes for the template loops
@@ -120,7 +120,7 @@ sub admin_logs_process {
     my $tail;
 
     if (($log =~ /^access.log/) || ($log =~ /^error.log/)) {
-	$tail = `tail -n 40 /opt/maplin3/logs/$log`;
+	$tail = `tail -n 40 /opt/fILL/logs/$log`;
     }
 
     my $template = $self->load_tmpl('admin/logs.tmpl');
@@ -895,8 +895,8 @@ sub admin_status_process {
 		
 		unless (open F, "-|") {
 		    open STDERR, ">&=1";
-		    exec "/opt/maplin3/externals/adminStatusCheck.pl", $session;
-		    die "Cannot execute /opt/maplin3/externals/adminStatusCheck.pl";
+		    exec "/opt/fILL/externals/adminStatusCheck.pl", $session;
+		    die "Cannot execute /opt/fILL/externals/adminStatusCheck.pl";
 		}
 		# do some stuff
 #	        # buf will contain STDOUT/STDERR of the command exec'd
@@ -1696,7 +1696,7 @@ sub admin_reports_ILL_graphs_process {
 	my $total_borrowed = $self->dbh->selectrow_arrayref( $SQL_total_borrowed, undef, $user );
 	
 #	# debug
-#	open(LOG,'>','/opt/maplin3/logs/graphing.log') or die $!;
+#	open(LOG,'>','/opt/fILL/logs/graphing.log') or die $!;
 #	print LOG $SQL_borrowed . "\n";
 #	foreach my $key ( sort keys %$rows ) {
 #	    print LOG "$key: $rows->{$key}->{c}\n";
@@ -1748,7 +1748,7 @@ sub admin_reports_ILL_graphs_process {
 	push @data, [ @dataset_net ];
 
 	# debug
-#	open(LOG,'>','/opt/maplin3/logs/graphing.log') or die $!;
+#	open(LOG,'>','/opt/fILL/logs/graphing.log') or die $!;
 #	print LOG Dumper(@data);
 #	close LOG;
 
@@ -1769,7 +1769,7 @@ sub admin_reports_ILL_graphs_process {
 	$graph->set_legend( @legend_keys );
 
 	my $gd = $graph->plot(\@data) or die $graph->error;
-	my $filename = "/opt/maplin3/htdocs/tmp/graph$$";
+	my $filename = "/opt/fILL/htdocs/tmp/graph$$";
 	$gd->can('png') ? $filename .= '.png' : $filename .= '.gif';
 	open(IMG, '>', $filename) or die $!;
 	binmode IMG;
@@ -1779,7 +1779,7 @@ sub admin_reports_ILL_graphs_process {
 
 
 	my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
-	$filename =~ s|/opt/maplin3/htdocs||;
+	$filename =~ s|/opt/fILL/htdocs||;
 	$template = $self->load_tmpl('admin/reports/ILL_graphs_report.tmpl');
 	$template->param(
 	    pagetitle => 'Maplin-4 Admin Reports ILL Graphs',
@@ -1908,7 +1908,7 @@ sub admin_reports_ILL_pie_process {
 	    label => "Slices less than 5 degrees are not labeled",
 	    ) or die $graph->error;
 	my $gd = $graph->plot(\@dataLoan) or die $graph->error . "<br>\n$SQL_loaned";
-	my $filename_loaned = "/opt/maplin3/htdocs/tmp/graph_pieLoan$$";
+	my $filename_loaned = "/opt/fILL/htdocs/tmp/graph_pieLoan$$";
 	$gd->can('png') ? $filename_loaned .= '.png' : $filename_loaned .= '.gif';
 	open(IMG, '>', $filename_loaned) or die $!;
 	binmode IMG;
@@ -1923,7 +1923,7 @@ sub admin_reports_ILL_pie_process {
 	    label => "Slices less than 5 degrees are not labeled",
 	    ) or die $graph->error;
 	$gd = $graph->plot(\@dataBorr) or die $graph->error;
-	my $filename_borrowed = "/opt/maplin3/htdocs/tmp/graph_pieBorr$$";
+	my $filename_borrowed = "/opt/fILL/htdocs/tmp/graph_pieBorr$$";
 	$gd->can('png') ? $filename_borrowed .= '.png' : $filename_borrowed .= '.gif';
 	open(IMG, '>', $filename_borrowed) or die $!;
 	binmode IMG;
@@ -1933,7 +1933,7 @@ sub admin_reports_ILL_pie_process {
 
 #	$graph = GD::Graph::pie->new(600,400);
 #	$gd = $graph->plot(\@dataNet) or die $graph->error;
-#	my $filename_net = "/opt/maplin3/htdocs/tmp/graph_pieNet$$.png";
+#	my $filename_net = "/opt/fILL/htdocs/tmp/graph_pieNet$$.png";
 #	open(IMG, '>', $filename_net) or die $!;
 #	binmode IMG;
 #	print IMG $gd->png;
@@ -1942,9 +1942,9 @@ sub admin_reports_ILL_pie_process {
 
 	my $now_string = strftime "%a %b %e %H:%M:%S %Y", localtime;
 
-	$filename_loaned   =~ s|/opt/maplin3/htdocs||;
-	$filename_borrowed =~ s|/opt/maplin3/htdocs||;
-#	$filename_net      =~ s|/opt/maplin3/htdocs||;
+	$filename_loaned   =~ s|/opt/fILL/htdocs||;
+	$filename_borrowed =~ s|/opt/fILL/htdocs||;
+#	$filename_net      =~ s|/opt/fILL/htdocs||;
 
 	$template = $self->load_tmpl('admin/reports/ILL_pie_report.tmpl');
 	$template->param(

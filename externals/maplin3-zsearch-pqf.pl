@@ -47,7 +47,7 @@ my $log = Log::Dispatch->new();
 $log->add( Log::Dispatch::File->new
 	   ( name      => 'file1',
 	     min_level => 'notice',  # debug, info, notice, warning, error, critical, alert, emergency
-	     filename  => '/opt/maplin3/logs/z3950.log',
+	     filename  => '/opt/fILL/logs/z3950.log',
 	     mode      => 'append',
 	     newline   => 1
 	   )
@@ -59,7 +59,7 @@ if (DEBUG) {
 	$log->add( Log::Dispatch::File->new
 		   ( name      => 'file2',
 		     min_level => 'debug',  # debug, info, notice, warning, error, critical, alert, emergency
-		     filename  => '/opt/maplin3/logs/flinflon.log',
+		     filename  => '/opt/fILL/logs/flinflon.log',
 		     mode      => 'append',
 		     newline   => 1
 		   )
