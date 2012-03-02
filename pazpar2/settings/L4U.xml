@@ -100,6 +100,5 @@
 
   <set name="pz:nativesyntax" value="iso2709"/>
   <set name="pz:xslt" value="marc21.xsl"/>
-  <!-- set name="pz:xslt" value="maplin.xsl"/ -->
 
 </settings>

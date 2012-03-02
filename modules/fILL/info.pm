@@ -16,9 +16,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-package maplin3::info;
+package fILL::info;
 use strict;
-use base 'maplin3base';
+use base 'fILLbase';
 use CGI::Application::Plugin::Stream (qw/stream_file/);
 use ZOOM;
 use Net::Ping;
@@ -58,7 +58,7 @@ sub info_contacts_process {
 	);
     
     my $template = $self->load_tmpl('info/contacts.tmpl');
-    $template->param(pagetitle => "Maplin-4 Info Contacts",
+    $template->param(pagetitle => "fILL Info Contacts",
 		     username  => $self->authen->username,
 		     libraries => $aref);
     return $template->output;
@@ -72,7 +72,7 @@ sub info_documents_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('info/documents.tmpl');
-    $template->param(pagetitle => "Maplin-4 Info Documents",
+    $template->param(pagetitle => "fILL Info Documents",
 		     username => $self->authen->username);
     return $template->output;
 }
@@ -85,7 +85,7 @@ sub info_feeds_process {
     my $self = shift;
 
     my $template = $self->load_tmpl('info/feeds.tmpl');
-    $template->param(pagetitle => "Maplin-4 Info Feeds",
+    $template->param(pagetitle => "fILL Info Feeds",
 		     username => $self->authen->username);
     return $template->output;
 }

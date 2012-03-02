@@ -94,12 +94,12 @@ This didn't work in server.xml:
 
 
 -----------------------------------------------------------------------------
-Replacing default.xml with maplin.xml:
+Replacing default.xml with fILL.xml:
 1. in /etc/pazpar2/services-available:
-   # cp default.xml maplin.xml
-   (make whatever changes you need to maplin.xml)
+   # cp default.xml fILL.xml
+   (make whatever changes you need to fILL.xml)
 2. in /etc/pazpar2/services-enabled:
-   # ln -s ../services-available/maplin.xml .
+   # ln -s ../services-available/fILL.xml .
    # unlink default.xml 
 3. Restart pazpar2 daemon.
 
@@ -135,10 +135,10 @@ david@acer-laptop:~/prj/paz$ cat /etc/apache2/sites-available/pazpar2-demo
 Changing the look and feel:
 With the apache virtual host enabled (i.e. going to http://www.pazpar2-demo.cxn/jsdemo/[mindex.html] works), you'll want to edit the files:
      /opt/pazpar2-demo/index.html ('mindex.html' was just me checking to make sure I've got the right file :-)
-     ...to reference maplin_client.js rather than example_client.js
+     ...to reference fILL_client.js rather than example_client.js
 
-     copy example_client.js to maplin_client.js
+     copy example_client.js to fILL_client.js
 
-     styles.css (or styles_maplin_01.css), refered to in index.html
+     styles.css (or styles_fILL_01.css), refered to in index.html
 
 -----------------------------------------------------------------------------

@@ -16,9 +16,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-package maplin3::myaccount;
+package fILL::myaccount;
 use strict;
-use base 'maplin3base';
+use base 'fILLbase';
 use Data::Dumper;
 
 #--------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ sub myaccount_settings_process {
     $status = "Editing in process." unless $status;
 
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
-    $template->param(pagetitle => "Maplin-4 MyAccount Settings",
+    $template->param(pagetitle => "fILL MyAccount Settings",
 		     username     => $self->authen->username,
 	             status       => $status,
 		     editLID      => $href->{lid},

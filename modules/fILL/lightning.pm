@@ -16,10 +16,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-package maplin3::lightning;
+package fILL::lightning;
 use warnings;
 use strict;
-use base 'maplin3base';
+use base 'fILLbase';
 use GD::Barcode;
 use GD::Barcode::Code39;
 use MIME::Base64;
@@ -91,7 +91,7 @@ sub complete_the_request_process {
     $self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
 
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
-    $template->param( pagetitle => "Maplin-4 Request has been placed",
+    $template->param( pagetitle => "fILL Request has been placed",
 		      username => $self->authen->username,
 		      lid => $requester,
 		      request_id => $reqid,
@@ -107,7 +107,7 @@ sub lightning_search_process {
     my $q = $self->query;
 
     my $template = $self->load_tmpl('search/lightning.tmpl');	
-#    $template->param( pagetitle => "Maplin-4 Lightning Search",
+#    $template->param( pagetitle => "fILL Lightning Search",
 #		      username => $self->authen->username,
 #		      sessionid => $self->session->id(),
 #	);
@@ -272,7 +272,7 @@ sub request_process {
 
 
     my $template = $self->load_tmpl('search/make_request.tmpl');	
-    $template->param( pagetitle => "Maplin-4 Request an ILL",
+    $template->param( pagetitle => "fILL Request an ILL",
 		      username => $self->authen->username,
 		      lid => $requester,
 		      request_id => $reqid,
@@ -484,7 +484,7 @@ sub lightning_request_process_DEPRECATED {
 
     my $subject = "Subject: ILL Request: " . $q->param('title') . "\n";
 
-    my $content = "This is an automatically generated request from MAPLIN-3\n\n";
+    my $content = "This is an automatically generated request from fILL\n\n";
     $content .= $hr_user->{'library'} . " would like to request the following item\nfrom ";
     $content .= $zname . ":\n-------------------------------------\n";
     $content .= "Title : " . $q->param('title') . "\n";
@@ -525,7 +525,7 @@ sub lightning_request_process_DEPRECATED {
 	    # sendmail blew up
 	    $self->log->debug("sendmail blew up");
 	    $error_sendmail = 1;
-	    $content =~ s/This is an automatically generated request from Maplin-4/Maplin had a problem sending email.\nThis is a MANUAL request./;
+	    $content =~ s/This is an automatically generated request from fILL/fILL had a problem sending email.\nThis is a MANUAL request./;
 	    $content = "--- copy from here ---\n" . $content . "\n--- copy to here ---\n";
 	} else {
 	    #$self->log->debug("sendmail sent request");
@@ -535,7 +535,7 @@ sub lightning_request_process_DEPRECATED {
     }
 
     my $template = $self->load_tmpl('search/lightning_request.tmpl');	
-    $template->param( pagetitle => "Maplin-4 Lightning Request",
+    $template->param( pagetitle => "fILL Lightning Request",
 		      username => $self->authen->username,
 		      from => $from,
 		      to => $to,

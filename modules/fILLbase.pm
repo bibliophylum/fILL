@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-package maplin3base;
+package fILLbase;
 use strict;
 use base 'CGI::Application';
 use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
@@ -41,14 +41,14 @@ my %config = (
     POST_LOGIN_RUNMODE => 'welcome',
     LOGOUT_RUNMODE => 'logged_out',
     LOGIN_FORM => { 
-	TITLE => 'Sign in to Maplin',
+	TITLE => 'Sign in to fILL',
 	COMMENT => 'Manitoba Public Libraries ILL Management System.',
 	FOCUS_FORM_ONLOAD => 1,
     }
     );
 
-maplin3base->authen->config(%config);
-maplin3base->authen->protected_runmodes(':all');
+fILLbase->authen->config(%config);
+fILLbase->authen->protected_runmodes(':all');
 
 
 
@@ -59,12 +59,6 @@ sub cgiapp_init {
     my $self = shift;
     
     # use the same args as DBI->connect();
-    #$self->dbh_config($data_source, $username, $auth, \%attr);
-    #$self->dbh_config("DBI:mysql:database=maplin;mysql_server_prepare=1",
-	#	      "mapapp",
-	#	      "maplin3db", 
-	#	      {LongReadLen => 65536} 
-	#);
     $self->dbh_config("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
 		       "maplin3db",
@@ -179,7 +173,7 @@ sub welcome_process {
 	                      'welcome.tmpl',
 			      cache => 0,
 			     );	
-    $template->param( pagetitle => 'Maplin-4 Welcome',
+    $template->param( pagetitle => 'fILL Welcome',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -207,7 +201,7 @@ sub show_logged_out_process {
 	                      'logged_out.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-4 Logged Out',
+    $template->param( pagetitle => 'fILL Logged Out',
 		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
 	);
@@ -231,7 +225,7 @@ sub forbidden_process {
 	                      'forbidden.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( pagetitle => 'Maplin-4 Forbidden',
+    $template->param( pagetitle => 'fILL Forbidden',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
 	);
@@ -258,7 +252,7 @@ sub environment_process {
 	    );
 	push(@loop, \%row);
     }
-    $template->param(pagetitle => 'Maplin-4 Environment',
+    $template->param(pagetitle => 'fILL Environment',
 		     env_variable_loop => \@loop);
     return $template->output;
 }

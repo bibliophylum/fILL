@@ -5,6 +5,6 @@
 use strict;
 #use lib qw(.);
 use lib "/opt/fILL/modules";
-use maplin3::info;
-my $app = maplin3::info->new();
+use fILL::info;
+my $app = fILL::info->new();
 $app->run();

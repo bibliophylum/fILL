@@ -8,7 +8,7 @@ echo Creating new /opt/fILL...
 sudo mkdir /opt/fILL
 echo Changing ownership...
 sudo chown david:david /opt/fILL
-echo Copying from checked-out svn repository...
+echo Copying from local git repository...
 cp -R * /opt/fILL
 echo Allowing write to message logs...
 sudo chmod ugo+w /opt/fILL/logs/graphing.log
@@ -29,11 +29,11 @@ sudo rm /etc/pazpar2/settings/*
 echo Copying pazpar2 settings
 sudo cp /opt/fILL/pazpar2/settings/* /etc/pazpar2/settings
 echo Updating pazpar2 services
-sudo unlink /etc/pazpar2/services-enabled/maplin.xml
-sudo cp /opt/fILL/pazpar2/maplin.xml /etc/pazpar2/services-available/maplin.xml
-sudo ln -s /etc/pazpar2/services-available/maplin.xml /etc/pazpar2/services-enabled/maplin.xml
+sudo unlink /etc/pazpar2/services-enabled/fILL.xml
+sudo cp /opt/fILL/pazpar2/fILL.xml /etc/pazpar2/services-available/fILL.xml
+sudo ln -s /etc/pazpar2/services-available/fILL.xml /etc/pazpar2/services-enabled/fILL.xml
 echo Updating pazpar2 xslt
-#sudo cp /opt/fILL/pazpar2/maplin.xsl /etc/pazpar2/maplin.xsl
+#sudo cp /opt/fILL/pazpar2/fILL.xsl /etc/pazpar2/fILL.xsl
 sudo cp /opt/fILL/pazpar2/marc21.xsl /etc/pazpar2/marc21.xsl
 echo Clearing pazpar2 log
 sudo rm /var/log/pazpar2.log
