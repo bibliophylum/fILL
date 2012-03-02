@@ -1,0 +1,12 @@
+Any changes to the PostgreSQL table structure should go here.
+
+Eg: if we wanted to add a column, 'foo', to the table 'request', create a file called 00.add-foo-column-to-request.sql containing:
+
+alter table request add column foo varchar(80);
+
+Replace the '00.' in the file name with the next available sequence number; the idea is that you can start at 00 and apply each sql file in turn to end up with a "current" database structure.
+
+There are two starting points:
+00.initial-empty.sql - just creates the database
+or
+00.initial-with-data.sql - creates the database, and populates it with some test data
