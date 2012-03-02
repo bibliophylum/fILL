@@ -15,8 +15,6 @@ sudo chmod ugo+w /opt/fILL/logs/graphing.log
 sudo chmod ugo+w /opt/fILL/logs/messages.log
 sudo chmod ugo+w /opt/fILL/logs/messages_public.log
 sudo chmod ugo+w /opt/fILL/logs/z3950.log
-sudo chmod ugo+w /opt/fILL/logs/zsearch.log
-sudo chmod ugo+w /opt/fILL/logs/zserver_alive.log
 echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp
 sudo chmod g+w /opt/fILL/htdocs/tmp
