@@ -1,17 +1,5 @@
 <settings target="*">
 
-<!-- Legislative Library -->
-  <set target="library.gov.mb.ca:211/legislative" name="pz:name" value="Legislative Library (Horizon)"/>
-  <set target="library.gov.mb.ca:211/legislative" name="symbol" value="MWP"/>
-  <set target="library.gov.mb.ca:211/legislative" name="requestby" value="Login"/>
-  <set target="library.gov.mb.ca:211/legislative" name="requesturl" value="http://library.gov.mb.ca/ipac20/ipac.jsp?profile=ab&amp;auth=true&amp;submenu=subtab11"/>
-
-<!-- PLS Union Catalogue -->
-  <set target="library.gov.mb.ca:210/maplin" name="pz:name" value="Public Library Services (Horizon)"/>
-  <set target="library.gov.mb.ca:210/maplin" name="symbol" value="MWPL"/>
-  <set target="library.gov.mb.ca:210/maplin" name="requestby" value="Maplin"/>
-  <set target="library.gov.mb.ca:210/maplin" name="requesturl" value="/cgi-bin/lightning.cgi?rm=lightning_request_form"/>
-
 <!-- Western Manitoba Regional Library -->
   <set target="216.36.147.26:210/horizon" name="pz:name" value="Western Manitoba Regional Library (Horizon)"/>
   <set target="216.36.147.26:210/horizon" name="symbol" value="MBW"/>
