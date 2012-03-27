@@ -27,6 +27,7 @@ use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
 my %SPRUCE_TO_MAPLIN = (
+    'MWPL' => 'MWPL',
     'ALTONA' => 'MAOW',
     'BOISSEVAIN' => 'MBOM',
     'MANITOU' => 'MMA',
