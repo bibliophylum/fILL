@@ -1,4 +1,4 @@
-﻿/* Compile using: mxmlc --target-player=10.0.0 ZeroClipboard.as */
+﻿/* Compile using: mxmlc --target-player=10.0.0 -static-link-runtime-shared-libraries=true -library-path+=lib ZeroClipboardPdf.as */
 package {
 	import flash.display.Stage;
 	import flash.display.Sprite;
@@ -13,6 +13,20 @@ package {
 	import flash.system.System;
 	import flash.net.FileReference;
 	import flash.net.FileFilter;
+	
+	/* PDF imports */
+	import org.alivepdf.pdf.PDF;
+	import org.alivepdf.data.Grid;
+	import org.alivepdf.data.GridColumn;
+	import org.alivepdf.layout.Orientation;
+	import org.alivepdf.layout.Size;
+	import org.alivepdf.layout.Unit;
+	import org.alivepdf.display.Display;
+	import org.alivepdf.saving.Method;
+	import org.alivepdf.fonts.FontFamily;
+	import org.alivepdf.fonts.Style;
+	import org.alivepdf.fonts.CoreFont;
+	import org.alivepdf.colors.RGBColor;
  
 	public class ZeroClipboard extends Sprite {
 		
@@ -43,7 +57,9 @@ package {
 			button.alpha = 0.0;
 			addChild(button);
 			
-			button.addEventListener(MouseEvent.CLICK, clickHandler);
+			button.addEventListener(MouseEvent.CLICK, function(event:Event):void {
+				clickHandler(event);
+			} );
 			button.addEventListener(MouseEvent.MOUSE_OVER, function(event:Event):void {
 				ExternalInterface.call( 'ZeroClipboard.dispatch', domId, 'mouseOver', null );
 			} );
@@ -57,12 +73,10 @@ package {
 				ExternalInterface.call( 'ZeroClipboard.dispatch', domId, 'mouseUp', null );
 			} );
 			
-			/* External functions
-			 * See the PDF version for why this is done this way :-(
-			 */
+			// External functions - readd whenever the stage is made active for IE
 			addCallbacks();
-			setInterval( addCallbacks, 1000 );
-			
+			stage.addEventListener(Event.ACTIVATE, addCallbacks);
+
 			// signal to the browser that we are ready
 			ExternalInterface.call( 'ZeroClipboard.dispatch', domId, 'load', null );
 		}
@@ -130,8 +144,9 @@ package {
 					fileRef.save( strToUTF8(clipText), fileName );
 				}
 			} else if ( action == "pdf" ) {
-					fileRef.save( "This instance of ZeroClipboard is not configured for PDF export. "+
-						"Please use the PDF export version.", fileName+".txt" );
+				/* Save as a PDF */
+				var pdf:PDF = configPdf();
+				fileRef.save( pdf.save( Method.LOCAL ), fileName );
 			} else {
 				/* Copy the text to the clipboard. Note charset and BOM have no effect here */
 				System.setClipboard( clipText );
@@ -156,6 +171,78 @@ package {
 				}
 			}
 			return "";
+		}
+		
+		
+		private function configPdf():PDF
+		{
+			var
+				pdf:PDF,
+				i:int, iLen:int,
+				splitText:Array    = clipText.split("--/TableToolsOpts--\n"),
+				opts:Array         = splitText[0].split("\n"),
+				dataIn:Array       = splitText[1].split("\n"),
+				aColRatio:Array    = getProp( 'colWidth', opts ).split('\t'),
+				title:String       = getProp( 'title', opts ),
+				message:String     = getProp( 'message', opts ),
+				orientation:String = getProp( 'orientation', opts ),
+				size:String        = getProp( 'size', opts ),
+				iPageWidth:int     = 0,
+				dataOut:Array      = [],
+				columns:Array      = [],
+				headers:Array,
+				y:int = 0;
+			
+			/* Create the PDF */
+			pdf = new PDF( Orientation[orientation.toUpperCase()], Unit.MM, Size[size.toUpperCase()] );
+			pdf.setDisplayMode( Display.FULL_WIDTH );
+			pdf.addPage();
+			iPageWidth = pdf.getCurrentPage().w-20;
+			pdf.textStyle( new RGBColor(0), 1 );
+			
+			/* Add the title / message if there is one */
+			pdf.setFont( new CoreFont(FontFamily.HELVETICA), 14 );
+			if ( title != "" )
+			{
+				pdf.writeText(11, title+"\n");
+			}
+			
+			pdf.setFont( new CoreFont(FontFamily.HELVETICA), 11 );
+			if ( message != "" )
+			{
+				pdf.writeText(11, message+"\n");
+			}
+			
+			/* Data setup. Split up the headers, and then construct the columns */
+			for ( i=0, iLen=dataIn.length ; i<iLen ; i++ )
+			{
+				if ( dataIn[i] != "" )
+				{
+					dataOut.push( dataIn[i].split("\t") );
+				}
+			}
+			headers = dataOut.shift();
+			
+			for ( i=0, iLen=headers.length ; i<iLen ; i++ )
+			{
+				columns.push( new GridColumn( " \n"+headers[i]+"\n ", i.toString(), aColRatio[i]*iPageWidth, 'C' ) );
+			}
+			
+			var grid:Grid = new Grid(
+				dataOut,                  /* 1. data */
+				iPageWidth,               /* 2. width */
+				100,                      /* 3. height */
+				new RGBColor (0xE0E0E0),  /* 4. headerColor */
+				new RGBColor (0xFFFFFF),  /* 5. backgroundColor */
+				true,                     /* 6. alternateRowColor */
+				new RGBColor ( 0x0 ),     /* 7. borderColor */
+				.1,                       /* 8. border alpha */
+				null,                     /* 9. joins */
+				columns                   /* 10. columns */
+			);
+			
+			pdf.addGrid( grid, 0, y );
+			return pdf;
 		}
 		
 		
