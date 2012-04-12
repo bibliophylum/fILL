@@ -20,8 +20,6 @@ package fILL::info;
 use strict;
 use base 'fILLbase';
 use CGI::Application::Plugin::Stream (qw/stream_file/);
-use ZOOM;
-use Net::Ping;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
