@@ -93,6 +93,13 @@ sub complete_the_request_process {
     my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
     $self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
 
+    # does the selected source library want immediate notification, by email, of new requests?
+    my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM libraries WHERE lid=?",
+					     undef,$source_library);
+    if ($notify[0]) {
+	send_notification($self,$notify[1],$reqid);
+    }
+
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",
 		      username => $self->authen->username,
@@ -559,6 +566,50 @@ sub lightning_request_process_DEPRECATED {
     return $template->output;
 }
 
+
+#--------------------------------------------------------------------------------------------
+sub send_notification {
+    my $self = shift;
+    my $to_email = shift;
+    my $reqid = shift;
+
+#    $self->log->info( "Source wants an email" );
+
+    # for testing:
+    my $old_email = $to_email;
+    $to_email = 'David.Christensen@gov.mb.ca';
+
+    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
+					  undef,$reqid);
+
+    my $subject = "Subject: ILL Request: " . $tac[0] . "\n";
+    my $content = "fILL notification\n\n";
+    $content .= "You have a new request for the follwing item:\n";
+    $content .= $tac[2] . "\t" . $tac[1] . "\t" . $tac[0] . "\n\n";
+    $content .= "fILL: https://mintaka.gotdns.org/cgi-bin/lightning.cgi\n";
+    $content .= "\n\n(debug): original email: $old_email\n";
+
+#    $self->log->info( "To: $to_email\n$subject$content" );
+
+    my $error_sendmail = 0;
+    my $sendmail = "/usr/sbin/sendmail -t";
+
+    eval {
+        open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
+        print SENDMAIL 'To: ' . $to_email;
+        print SENDMAIL $subject;
+        print SENDMAIL "Content-type: text/plain\n\n";
+        print SENDMAIL $content;
+        close(SENDMAIL);
+    };
+    if ($@) {
+        # sendmail blew up
+        $self->log->debug("sendmail blew up");
+    } else {
+#        $self->log->debug("sendmail sent request");
+    }
+
+}
 
 #--------------------------------------------------------------------------------------------
 sub get_lid_from_symbol {
