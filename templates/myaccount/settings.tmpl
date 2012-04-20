@@ -55,6 +55,17 @@
 	    </tr>
 	  </table>
 	</td>
+      </tr><tr>
+	<td>Do you want to receive email notifications for new requests?</td>
+	<td>
+	  <TMPL_IF NAME="editRequestEmailNotification">
+	    <input TYPE="radio" NAME="request_email_notification" VALUE='t' CHECKED>Yes<br>
+	    <input TYPE="radio" NAME="request_email_notification" VALUE='f'>No<br>
+	  <TMPL_ELSE>
+	    <input TYPE="radio" NAME="request_email_notification" VALUE='t'>Yes<br>
+	    <input TYPE="radio" NAME="request_email_notification" VALUE='f' CHECKED>No<br>
+	  </TMPL_IF>
+	</td>
       </tr>
     </table>
 
