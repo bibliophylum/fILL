@@ -1,0 +1,78 @@
+<settings target="*">
+
+<!-- Northwest Regional Library - Benito -->
+  <set target="206.45.217.109:210/Default" name="pz:name" value="Northwest Regional Library - Benito"/>
+  <set target="206.45.217.109:210/Default" name="symbol" value="MBB"/>
+
+<!-- Bette Winner Public Library -->
+  <set target="206.45.110.176:210/L4U_Agent" name="pz:name" value="Bette Winner Public Library (L4U)"/>
+  <set target="206.45.110.176:210/L4U_Agent" name="symbol" value="MGI"/>
+
+<!-- Border Regional Library - Elkhorn Branch -->
+  <set target="74.113.180.251:210/Default" name="pz:name" value="Border Regional Library - Elkhorn Branch (L4U)"/>
+  <set target="74.113.180.251:210/Default" name="symbol" value="ME"/>
+
+<!-- Border Regional Library -->
+  <set target="74.113.178.216:210/Default" name="pz:name" value="Border Regional Library (L4U)"/>
+  <set target="74.113.178.216:210/Default" name="symbol" value="MVE"/>
+
+<!-- Evergreen Regional Library - Arborg -->
+  <set target="library.arborg.com:210/Default" name="pz:name" value="Evergreen Regional Library - Arborg (L4U)"/>
+  <set target="library.arborg.com:210/Default" name="symbol" value="MAB"/>
+
+<!-- Evergreen Regional Library - Gimli -->
+  <set target="206.45.206.184:210/Default" name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
+  <set target="206.45.206.184:210/Default" name="symbol" value="MGE"/>
+
+<!-- Evergreen Regional Library - Riverton -->
+  <set target="206.45.204.145:210/Default" name="pz:name" value="Evergreen Regional Library - Riverton (L4U)"/>
+  <set target="206.45.204.145:210/Default" name="symbol" value="MRB"/>
+
+<!-- Flin Flon Public Library -->
+  <set target="206.45.107.155:210/Default" name="pz:name" value="Flin Flon Public Library (L4U)"/>
+  <set target="206.45.107.155:210/Default" name="symbol" value="MFF"/>
+
+<!-- Jolys Regional Library -->
+  <set target="66.244.209.14:210/L4U_Agent" name="pz:name" value="Jolys Regional Library (L4U)"/>
+  <set target="66.244.209.14:210/L4U_Agent" name="symbol" value="MSTP"/>
+
+<!-- Russell and District Regional Library -->
+  <set target="206.45.118.129:210/l4u_agent" name="pz:name" value="Russell and District Regional Library (L4U)"/>
+  <set target="206.45.118.129:210/l4u_agent" name="symbol" value="MRD"/>
+
+<!-- Northwest Regional Library - Swan River -->
+  <set target="206.45.96.178:210/Default" name="pz:name" value="Northwest Regional Library - Swan River (L4U)"/>
+  <set target="206.45.96.178:210/Default" name="symbol" value="MSRN"/>
+
+<!-- The Pas Regional Library -->
+  <set target="206.45.107.244:210/L4U_Agent" name="pz:name" value="The Pas Regional Library (L4U)"/>
+  <set target="206.45.107.244:210/L4U_Agent" name="symbol" value="MTP"/>
+
+<!-- Bibliotheque Tache -->
+  <set target="50.56.96.182:210/L4U_Agent" name="pz:name" value="The Pas Regional Library (L4U)"/>
+  <set target="50.56.96.182:210/L4U_Agent" name="symbol" value="MTP"/>
+
+<!-- settings apply to all targets -->
+
+  <!-- mapping for unqualified search -->
+  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+
+  <!-- field-specific mappings -->
+  <set name="pz:cclmap:au" value="u=1004 s=al"/>
+  <set name="pz:cclmap:ti" value="u=4 s=al 2=102"/>
+  <set name="pz:cclmap:su" value="u=21 s=al 2=102"/>
+  <set name="pz:cclmap:isbn" value="u=7 2=102"/>
+  <set name="pz:cclmap:issn" value="u=8 2=102"/>
+  <set name="pz:cclmap:date" value="u=30 r=r 2=102"/>
+
+  <!-- Retrieval settings -->
+
+  <set name="pz:requestsyntax" value="marc21"/>
+  <set name="pz:elements" value="F"/>
+
+  <!-- Result normalization settings -->
+
+  <set name="pz:nativesyntax" value="iso2709"/>
+  <set name="pz:xslt" value="marc21.xsl"/>
+
+</settings>

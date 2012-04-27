@@ -24,4 +24,5 @@ ZOOM
 DateTime
 GD
 GD::Graph
+GD::Barcode
 Net::Ping

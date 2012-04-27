@@ -394,19 +394,11 @@
           <xsl:copy-of select="."/>
       </xsl:for-each>
 
-      <!-- Maplin -->
-      <pz:metadata type="symbol">
+      <!-- fILL -->
+<!--      <pz:metadata type="symbol">
 	<xsl:value-of select="$symbol"/>
       </pz:metadata>
-
-      <pz:metadata type="requestby">
-	<xsl:value-of select="$requestby"/>
-      </pz:metadata>
-
-      <pz:metadata type="requesturl">
-	<xsl:value-of select="$requesturl"/>
-      </pz:metadata>
-      <!-- end Maplin -->
+-->      <!-- end fILL -->
 
       <!-- other stylesheets importing this might want to define this -->
       <xsl:call-template name="record-hook"/>

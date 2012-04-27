@@ -103,10 +103,8 @@
   <metadata name="thumburl" brief="yes" merge="unique"/>
   <metadata name="score"/>
 
-  <!-- maplin -->
+  <!-- fILL -->
   <metadata name="symbol" setting="postproc" brief="yes" merge="no"/>
-  <metadata name="requestby" setting="postproc" brief="yes" merge="no"/>
-  <metadata name="requesturl" setting="postproc" brief="yes" merge="no"/>
 
 </service>
 <!-- Keep this comment at the end of the file
