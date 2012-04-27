@@ -1,22 +1,5 @@
 /* A very simple client that shows a basic usage of the pz2.js
 */
-/*
-    fILL - Free/Open-Source Interlibrary Loan management system
-    Copyright (C) 2012  David A. Christensen
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 // create a parameters array and pass it to the pz2's constructor
 // then register the form submit event with the pz2.search function
@@ -142,13 +125,7 @@ function my_onstat(data) {
 
 function my_onterm(data) {
     var termlists = [];
-    termlists.push('<br><hr/><b>Refine your search by:</b><hr/><div class="termtitle">.::Sources</div>');
-    for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
-        termlists.push('<a href="#" target_id='+data.xtargets[i].id
-            + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
-        + ' </a><span> (' + data.xtargets[i].freq + ')</span><br/>');
-    }
-     
+    termlists.push('<br><hr/><b>Refine your search by:</b>');
     termlists.push('<hr/><div class="termtitle">.::Subjects</div>');
     for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
@@ -163,6 +140,14 @@ function my_onterm(data) {
                             + data.author[i].freq 
                             + ')</span><br/>');
     }
+
+    termlists.push('<hr/><div class="termtitle">.::Sources</div>');
+    for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
+        termlists.push('<a href="#" target_id='+data.xtargets[i].id
+            + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
+        + ' </a><span> (' + data.xtargets[i].freq + ')</span><br/>');
+    }
+     
     var termlist = document.getElementById("termlist");
     replaceHtml(termlist, termlists.join(''));
 }
