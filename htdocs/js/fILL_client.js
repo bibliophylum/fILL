@@ -402,7 +402,8 @@ function replaceHtml(el, html) {
 
 function renderDetails(data, marker)
 {
-    var details = '<div class="details" id="det_'+data.recid+'"><table>';
+    var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
+    var details = '<table>';
     var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
@@ -457,8 +458,10 @@ function renderDetails(data, marker)
 	requestForm += '<input type="hidden" name="sprucecallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
     }
 
-    requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_"></form>';
-    details += '</table>' + requestForm + '</div>';
-    return details;
+    requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';
+    requestForm += '</form>';
+    details += '</table>';
+    details_and_form += requestForm + details + '</div>';
+    return details_and_form;
 }
  //EOF
