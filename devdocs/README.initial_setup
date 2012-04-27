@@ -26,3 +26,5 @@ GD
 GD::Graph
 GD::Barcode
 Net::Ping
+JSON
+
