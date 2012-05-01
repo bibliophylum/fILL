@@ -32,6 +32,7 @@ sub setup {
     $self->run_modes(
 	'info_contacts_form'   => 'info_contacts_process',
 	'info_documents_form'  => 'info_documents_process',
+	'info_reports_form'    => 'info_reports_process',
 	'info_feeds_form'      => 'info_feeds_process',
 	'send_pdf'             => 'send_pdf',
 	);
@@ -71,6 +72,19 @@ sub info_documents_process {
 
     my $template = $self->load_tmpl('info/documents.tmpl');
     $template->param(pagetitle => "fILL Info Documents",
+		     username => $self->authen->username);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_reports_process {
+    my $self = shift;
+
+    my $template = $self->load_tmpl('info/reports.tmpl');
+    $template->param(pagetitle => "fILL Info Reports",
 		     username => $self->authen->username);
     return $template->output;
 }
