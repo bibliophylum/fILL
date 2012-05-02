@@ -62,8 +62,9 @@ $('document').ready(function(){
 		]
 	},
         "aoColumns": [
+            { "mDataProp": "rid", "sWidth": "5%" },
             { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "50%" },
+            { "mDataProp": "description", "sWidth": "45%" },
             { "mDataProp": "generator", "sWidth": "15%" },
             { "mDataProp": "actions", "sWidth": "15%" }
         ],
@@ -99,8 +100,9 @@ $('document').ready(function(){
 		]
 	},
         "aoColumns": [
+            { "mDataProp": "rid", "sWidth": "5%" },
             { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "50%" },
+            { "mDataProp": "description", "sWidth": "45%" },
             { "mDataProp": "generator", "sWidth": "15%" },
             { "mDataProp": "actions", "sWidth": "15%" }
         ],
@@ -136,8 +138,9 @@ $('document').ready(function(){
 		]
 	},
         "aoColumns": [
+            { "mDataProp": "rid", "sWidth": "5%" },
             { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "50%" },
+            { "mDataProp": "description", "sWidth": "45%" },
             { "mDataProp": "generator", "sWidth": "15%" },
             { "mDataProp": "actions", "sWidth": "15%" }
         ],
@@ -173,8 +176,9 @@ $('document').ready(function(){
 		]
 	},
         "aoColumns": [
+            { "mDataProp": "rid", "sWidth": "5%" },
             { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "50%" },
+            { "mDataProp": "description", "sWidth": "45%" },
             { "mDataProp": "generator", "sWidth": "15%" },
             { "mDataProp": "actions", "sWidth": "15%" }
         ],
@@ -231,7 +235,7 @@ $('document').ready(function(){
     </ol>
   </div>
 
-  <div id="middlecontent">
+  <div id="middlecontent" lid=<TMPL_VAR name="lid">>
 
     <div id="myDiv">
       <h3>Reports</h3>
@@ -271,7 +275,7 @@ $('document').ready(function(){
 	  <table id="datatable_summary" class="display">
 	    <thead>
 	      <tr>
-		<th>name</th><th>description</th><th>generator</th><th>actions</th>
+		<th>rid</th><th>name</th><th>description</th><th>generator</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -286,7 +290,7 @@ $('document').ready(function(){
 	  <table id="datatable_borrowing" class="display">
 	    <thead>
 	      <tr>
-		<th>name</th><th>description</th><th>generator</th><th>actions</th>
+		<th>rid</th><th>name</th><th>description</th><th>generator</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -301,7 +305,7 @@ $('document').ready(function(){
 	  <table id="datatable_lending" class="display">
 	    <thead>
 	      <tr>
-		<th>name</th><th>description</th><th>generator</th><th>actions</th>
+		<th>rid</th><th>name</th><th>description</th><th>generator</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -316,7 +320,7 @@ $('document').ready(function(){
 	  <table id="datatable_narrative" class="display">
 	    <thead>
 	      <tr>
-		<th>name</th><th>description</th><th>generator</th><th>actions</th>
+		<th>rid</th><th>name</th><th>description</th><th>generator</th><th>actions</th>
 	      </tr>
 	    </thead>
 	    <tbody>

@@ -83,9 +83,12 @@ sub info_documents_process {
 sub info_reports_process {
     my $self = shift;
 
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
     my $template = $self->load_tmpl('info/reports.tmpl');
     $template->param(pagetitle => "fILL Info Reports",
-		     username => $self->authen->username);
+		     username => $self->authen->username,
+	             lid => $lid);
     return $template->output;
 }
 
@@ -125,6 +128,19 @@ sub send_pdf {
     return;
 } 
 
+#--------------------------------------------------------------------------------------------
+sub get_lid_from_symbol {
+    my $self = shift;
+    my $symbol = shift;
+    # Get this user's (requester's) library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"SELECT lid FROM libraries WHERE name=?",
+	undef,
+	$symbol
+	);
+    my $requester = $hr_id->{lid};
+    return $requester;
+}
 
 1; # so the 'require' or 'use' succeeds
 

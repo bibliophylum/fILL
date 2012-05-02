@@ -28,7 +28,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.summary[i].generator );
 	divActions.appendChild(b1);
-	$("#datatable_summary tr td:last-child").append( divActions );
+	$("#datatable_summary tr:last td:last-child").append( divActions );
+	$("#datatable_summary tr:last").attr("rid",data.reports.summary[i].rid);
     }
 
     for (var i=0;i<data.reports.borrowing.length;i++) {
@@ -39,9 +40,10 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.summary[i].generator );
+	b1.onclick = make_report_handler( data.reports.borrowing[i].generator );
 	divActions.appendChild(b1);
-	$("#datatable_summary tr td:last-child").append( divActions );
+	$("#datatable_borrowing tr:last td:last-child").append( divActions );
+	$("#datatable_borrowing tr:last").attr("rid",data.reports.borrowing[i].rid);
     }
 
     for (var i=0;i<data.reports.lending.length;i++) {
@@ -52,9 +54,10 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.summary[i].generator );
+	b1.onclick = make_report_handler( data.reports.lending[i].generator );
 	divActions.appendChild(b1);
-	$("#datatable_summary tr td:last-child").append( divActions );
+	$("#datatable_lending tr:last td:last-child").append( divActions );
+	$("#datatable_lending tr:last").attr("rid",data.reports.lending[i].rid);
     }
 
     for (var i=0;i<data.reports.narrative.length;i++) {
@@ -65,9 +68,10 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.summary[i].generator );
+	b1.onclick = make_report_handler( data.reports.narrative[i].generator );
 	divActions.appendChild(b1);
-	$("#datatable_summary tr td:last-child").append( divActions );
+	$("#datatable_narrative tr:last td:last-child").append( divActions );
+	$("#datatable_narrative tr:last").attr("rid",data.reports.narrative[i].rid);
     }
 
     toggleLayer("waitDiv");
@@ -83,7 +87,10 @@ function make_report_handler( generator ) {
 }
 
 function report( generator ) {
-    alert(generator);
+    var lid=$("#middlecontent").attr("lid");
+    var d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
+    var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
+    alert(generator+', '+lid+', '+d_s+'-'+d_e);
     
 }
 
