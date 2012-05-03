@@ -26,7 +26,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.summary[i].generator );
+	b1.onclick = make_report_handler( data.reports.summary[i].rid );
 	divActions.appendChild(b1);
 	$("#datatable_summary tr:last td:last-child").append( divActions );
 	$("#datatable_summary tr:last").attr("rid",data.reports.summary[i].rid);
@@ -40,7 +40,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.borrowing[i].generator );
+	b1.onclick = make_report_handler( data.reports.borrowing[i].rid );
 	divActions.appendChild(b1);
 	$("#datatable_borrowing tr:last td:last-child").append( divActions );
 	$("#datatable_borrowing tr:last").attr("rid",data.reports.borrowing[i].rid);
@@ -54,7 +54,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.lending[i].generator );
+	b1.onclick = make_report_handler( data.reports.lending[i].rid );
 	divActions.appendChild(b1);
 	$("#datatable_lending tr:last td:last-child").append( divActions );
 	$("#datatable_lending tr:last").attr("rid",data.reports.lending[i].rid);
@@ -68,7 +68,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Run report";
-	b1.onclick = make_report_handler( data.reports.narrative[i].generator );
+	b1.onclick = make_report_handler( data.reports.narrative[i].rid );
 	divActions.appendChild(b1);
 	$("#datatable_narrative tr:last td:last-child").append( divActions );
 	$("#datatable_narrative tr:last").attr("rid",data.reports.narrative[i].rid);
@@ -86,12 +86,29 @@ function make_report_handler( generator ) {
     return function() { report( generator ) };
 }
 
-function report( generator ) {
+function report( rid ) {
     var lid=$("#middlecontent").attr("lid");
     var d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
     var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
-    alert(generator+', '+lid+', '+d_s+'-'+d_e);
+    alert('report #'+rid+', library #'+lid+', '+d_s+' to '+d_e);
     
+    $.getJSON('/cgi-bin/queue-report.cgi', { "lid":   lid,
+                                             "rid":   rid,
+                                             "start": d_s, 
+                                             "end":   d_e
+                                           },
+              function(data){
+		  $("tr[rid="+rid+"] td:last-child div input").remove();
+		  $("tr[rid="+rid+"] td:last-child div").append('<p>Queued.</p>');
+		  alert('Report has been queued.');
+              })
+    	.success(function() {
+       	})
+       	.error(function() {
+            alert('error');
+       	})
+       	.complete(function() {
+       	});
 }
 
 function requery( lid ) 
@@ -100,6 +117,7 @@ function requery( lid )
     var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
     toggleLayer("waitDiv");
     toggleLayer("tabs");
+
 // As an example, here's how it is in reports.js:
 // (but we don't need to query the db to fill the tables here....)
 //
