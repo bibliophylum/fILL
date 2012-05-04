@@ -1,25 +1,38 @@
 echo Disabling existing site...
 sudo a2dissite fILL.conf
+
+echo Stopping reporter...
+sudo kill `cat /var/run/fILLreporter.pid`
+
 echo Unlinking fILL configuration...
 sudo unlink /etc/apache2/sites-available/fILL.conf
+
 echo Removing existing /opt/fILL...
 sudo rm -rf /opt/fILL
+
 echo Creating new /opt/fILL...
 sudo mkdir /opt/fILL
+
 echo Changing ownership...
 sudo chown david:david /opt/fILL
+
 echo Copying from local git repository...
 cp -R * /opt/fILL
+
 echo Allowing write to message logs...
 sudo chmod ugo+w /opt/fILL/logs/graphing.log
 sudo chmod ugo+w /opt/fILL/logs/messages.log
 sudo chmod ugo+w /opt/fILL/logs/messages_public.log
 sudo chmod ugo+w /opt/fILL/logs/z3950.log
+sudo chmod ugo+w /opt/fILL/logs/fILLreporter.log
+
 echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp
 sudo chmod g+w /opt/fILL/htdocs/tmp
+
 echo Creating symlink to apache sites-available
 sudo ln -s /opt/fILL/conf/fILL.conf /etc/apache2/sites-available/fILL.conf
+
 echo Stopping pazpar2 daemon
 sudo kill `cat /var/run/pazpar2.pid`
 echo Removing old pazpar2 settings
@@ -39,6 +52,10 @@ sudo touch /var/log/pazpar2.log
 sudo ln -s /var/log/pazpar2.log /opt/fILL/logs/pazpar2.log
 echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
+
+echo Restarting reporter daemon
+sudo perl -w -T /opt/fILL/services/J.J.Jameson.pl
+
 echo Enabling site...
 sudo a2ensite fILL.conf
 echo Reloading apache...
