@@ -74,7 +74,9 @@ sub process_request {
 
 	    # create a unique filename
 	    my $reportsdir = "/opt/fILL/htdocs/reports/"; 
-	    my $filename = "testreport";
+#	    my $filename = "testreport";
+	    my $filename = $ts->{ts} . $$;
+	    $filename =~ s/\D//g;
 	    # hand off to the individual report generator
 	    my @args = ("/opt/fILL/services/reports/" . $report->{generator} . ".pl",
 			'--rid', $notice->{rid},
