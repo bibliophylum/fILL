@@ -1,10 +1,18 @@
-#!/usr/bin/perl -w -T
+#!/usr/bin/perl -w
 package fILLreporter;
 
 use strict;
 use base qw(Net::Server::Fork); # any personality will do
 
-#fILLreporter->run;
+# To run this in background daemon mode, do:
+# fILLreporter.pl --setsid=1
+#
+# To turn off the daemon, do:
+# kill `cat /var/run/fILLreporter.pid`
+
+__PACKAGE__->run({ conf_file => '/opt/fILL/conf/fILLreporter.conf',
+		 });
+exit;
 
 ### over-ridden subs below
 

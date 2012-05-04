@@ -2,7 +2,7 @@ echo Disabling existing site...
 sudo a2dissite fILL.conf
 
 echo Stopping reporter...
-sudo kill `cat /var/run/fILLreporter.pid`
+sudo kill `cat /tmp/fILLreporter.pid`
 
 echo Unlinking fILL configuration...
 sudo unlink /etc/apache2/sites-available/fILL.conf
@@ -54,7 +54,7 @@ echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
 echo Restarting reporter daemon
-sudo perl -w -T /opt/fILL/services/J.J.Jameson.pl
+sudo /opt/fILL/services/fILLreporter.pl
 
 echo Enabling site...
 sudo a2ensite fILL.conf
