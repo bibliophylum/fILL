@@ -28,5 +28,7 @@ GD::Barcode
 Net::Ping
 JSON
 Net::Server
+Net::Telnet
+Getopt::Long
 
 

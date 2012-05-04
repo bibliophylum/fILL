@@ -25,6 +25,7 @@ sudo chmod ugo+w /opt/fILL/logs/messages.log
 sudo chmod ugo+w /opt/fILL/logs/messages_public.log
 sudo chmod ugo+w /opt/fILL/logs/z3950.log
 sudo chmod ugo+w /opt/fILL/logs/fILLreporter.log
+sudo chmod ugo+w /opt/fILL/logs/telnet.log
 
 echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp

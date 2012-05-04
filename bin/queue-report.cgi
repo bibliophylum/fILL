@@ -1,30 +1,23 @@
 #!/usr/bin/perl
 
 use CGI;
-use DBI;
 use JSON;
+use Net::Telnet;
 
 my $query = new CGI;
-my $rid = $query->param('rid');
-my $lid = $query->param('lid');
-my $d_s = $query->param('start');
-my $d_e = $query->param('end');
 
-# sql to add to the report queue
-my $SQL = "insert into reports_queue (rid, lid, range_start, range_end) values (?,?,?,?)";
+# send to the reporter to queue and handle
+my $obj = new Net::Telnet( Host => 'localhost',
+			   Port => '20204',
+#			   Dump_Log => '/opt/fILL/logs/telnet.log',
+    );
+my $ok = $obj->print( to_json( { rid => $query->param('rid'), 
+				 lid => $query->param('lid'),
+				 range_start => $query->param('start'),
+				 range_end => $query->param('end')
+			       } ));
+my $response = $obj->getline();  # wait for a response....
+$obj->close;
+chomp $response;
 
-my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
-		       "mapapp",
-		       "maplin3db",
-		       {AutoCommit => 1, 
-			RaiseError => 1, 
-			PrintError => 0,
-		       }
-    ) or die $DBI::errstr;
-
-my $retval = $dbh->do( $SQL, undef, $rid, $lid, $d_s, $d_e );
-$dbh->disconnect;
-
-# at this point, poke the reporter-boss with a stick
-
-print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
+print "Content-Type:application/json\n\n" . $response;
