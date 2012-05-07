@@ -1,0 +1,186 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript" src="/js/moment.min.js"></script>
+<script type="text/javascript" src="/js/report-folder.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_info_report-folder");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $(function() {
+        $( "#tabs" ).tabs( {
+            "show": function(event, ui) {
+                var jqTable = $('table.display', ui.panel);
+                if ( jqTable.length > 0 ) {
+                    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
+                    if ( oTableTools != null && oTableTools.fnResizeRequired() ) {
+                        jqTable.dataTable().fnAdjustColumnSizing();
+                        oTableTools.fnResizeButtons();
+                    }
+                }
+            }
+        });
+    });
+
+
+    oTable_completed = $('#datatable_completed').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+        "bSort": true,
+        "sDom": '<"H"Tfr>t<"F"ip>',
+        "iDisplayLength": 10,
+        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "oTableTools": {
+             "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+             "aButtons": [
+		"copy", "csv", "xls", "pdf", "print",
+		{
+			"sExtends":    "collection",
+			"sButtonText": "Save",
+			"aButtons":    [ "csv", "xls", "pdf" ]
+		}
+	    ]
+    	},
+        "aoColumns": [
+            { "mDataProp": "name", "sWidth": "15%" },
+            { "mDataProp": "range_start", "sWidth": "15%" },
+            { "mDataProp": "range_end", "sWidth": "15%" },
+            { "mDataProp": "download", "sWidth": "15%" },
+            { "mDataProp": "actions", "sWidth": "15%" }
+        ],
+        "bAutoWidth": false
+    });
+
+    $('#datatable_completed tbody tr').live('mouseover mouseout', function (event) {
+        if (event.type == 'mouseover') {
+            $(this).addClass("ui-state-hover");
+        } else {
+            $(this).removeClass("ui-state-hover");
+        }
+    });
+
+    oTable_queued = $('#datatable_queued').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+ 	"bSort": true,
+    	"sDom": '<"H"Tfr>t<"F"ip>',
+        "iDisplayLength": 10,
+        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+    	"oTableTools": {
+            "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+	    "aButtons": [
+		"copy", "csv", "xls", "pdf", "print",
+		{
+			"sExtends":    "collection",
+			"sButtonText": "Save",
+			"aButtons":    [ "csv", "xls", "pdf" ]
+		}
+	    ]
+	},
+        "aoColumns": [
+            { "mDataProp": "name", "sWidth": "15%" },
+            { "mDataProp": "range_start", "sWidth": "15%" },
+            { "mDataProp": "range_end", "sWidth": "15%" },
+            { "mDataProp": "submitted", "sWidth": "15%" },
+            { "mDataProp": "actions", "sWidth": "15%" }
+        ],
+        "bAutoWidth": false
+    });
+
+    $('#datatable_queued tbody tr').live('mouseover mouseout', function (event) {
+        if (event.type == 'mouseover') {
+            $(this).addClass("ui-state-hover");
+        } else {
+            $(this).removeClass("ui-state-hover");
+        }
+    });
+
+    $(function() {
+        $.getJSON('/cgi-bin/get-report-folder.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+               build_table(data);
+            })
+        .success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	});
+    });
+
+});
+
+</script>
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>None yet.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent" lid=<TMPL_VAR name="lid">>
+
+    <div id="myDiv">
+      <h3>Report folder</h3>
+
+      <div id="waitDiv">
+	Loading... <img src="/wait.gif">
+      </div>
+
+      <div id="tabs">
+	<ul>
+	  <li><a href="#tabs-1">Completed</a></li>
+	  <li><a href="#tabs-2">Queued</a></li>
+	</ul>
+	
+	<div id="tabs-1">
+	  <!--     <div id="mylistDiv">  -->
+	  <h4>Completed reports</h4>
+	  <div class="dataTable_wrapper">
+	    <table id="datatable_completed" class="display">
+	      <thead>
+		<tr>
+		  <th>name</th><th>range_start</th><th>range_end</th><th>download</th><th>actions</th>
+		</tr>
+	      </thead>
+	      <tbody>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+	
+	<div id="tabs-2">
+	  <h4>Queued reports</h4>
+	  <div class="dataTable_wrapper">
+	    <table id="datatable_queued" class="display">
+	      <thead>
+		<tr>
+		  <th>name</th><th>range_start</th><th>range_end</th><th>submitted</th><th>actions</th>
+		</tr>
+	      </thead>
+	      <tbody>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+	
+      </div>
+    </div>
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

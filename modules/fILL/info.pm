@@ -30,11 +30,12 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'info_contacts_form'   => 'info_contacts_process',
-	'info_documents_form'  => 'info_documents_process',
-	'info_reports_form'    => 'info_reports_process',
-	'info_feeds_form'      => 'info_feeds_process',
-	'send_pdf'             => 'send_pdf',
+	'info_contacts_form'      => 'info_contacts_process',
+	'info_documents_form'     => 'info_documents_process',
+	'info_reports_form'       => 'info_reports_process',
+	'info_report-folder_form' => 'info_reportfolder_process',
+	'info_feeds_form'         => 'info_feeds_process',
+	'send_pdf'                => 'send_pdf',
 	);
 }
 
@@ -87,6 +88,22 @@ sub info_reports_process {
 
     my $template = $self->load_tmpl('info/reports.tmpl');
     $template->param(pagetitle => "fILL Info Reports",
+		     username => $self->authen->username,
+	             lid => $lid);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_reportfolder_process {
+    my $self = shift;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('info/report-folder.tmpl');
+    $template->param(pagetitle => "fILL Info Reports-folder",
 		     username => $self->authen->username,
 	             lid => $lid);
     return $template->output;

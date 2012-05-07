@@ -39,12 +39,32 @@ my $library       = $dbh->selectrow_arrayref("select library from libraries wher
 # Either way, need to order the stats (probably in lifecycle order) rather than just loop through DBI arrays - it's a little confusing :-)
 
 my $hbreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_history where request_id in (select request_id from requests_history where msg_from=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-my $hlreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_history where request_id in (select request_id from requests_history where msg_to=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-
 my $abreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_active where request_id in (select request_id from requests_active where msg_from=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
+
+my $hlreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_history where request_id in (select request_id from requests_history where msg_to=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
 my $alreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_active where request_id in (select request_id from requests_active where msg_to=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
 
 $dbh->disconnect;
+
+my %borrowing;
+foreach my $aref (@$hbreqs) {
+    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
+    $borrowing{$aref->[0]} += $aref->[2];
+}
+foreach my $aref (@$abreqs) {
+    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
+    $borrowing{$aref->[0]} += $aref->[2];
+}
+
+my %lending;
+foreach my $aref (@$hlreqs) {
+    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
+    $lending{$aref->[0]} += $aref->[2];
+}
+foreach my $aref (@$alreqs) {
+    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
+    $lending{$aref->[0]} += $aref->[2];
+}
 
 open( OUTF, '>', $filename) or die "cannot open > $filename: $!";
 
@@ -53,25 +73,14 @@ print OUTF "Basic statistics.\n";
 print OUTF "ILL requests initiated from $range_start up to (but not including) $range_end.\n\n";
 
 print OUTF "Borrowing from other libraries\n";
-#print OUTF Dumper($hbreqs) . "\n";
-print OUTF "\nHistoric:\n";
-foreach my $aref (@$hbreqs) {
-    print OUTF $aref->[0] . " " . $aref->[1] . "\t" . $aref->[2] . "\n";
-}
-print OUTF "\nCurrently active requests:\n";
-foreach my $aref (@$abreqs) {
-    print OUTF $aref->[0] . " " . $aref->[1] . "\t" . $aref->[2] . "\n";
+foreach my $status (keys %borrowing) {
+    print OUTF $status . "\t" . $borrowing{$status} . "\n";
 }
 
 print OUTF "\n\nLending to other libraries\n\n";
 #print OUTF Dumper($hlreqs) . "\n";
-print OUTF "\nHistoric:\n";
-foreach my $aref (@$hlreqs) {
-    print OUTF $aref->[0] . " " . $aref->[1] . "\t" . $aref->[2] . "\n";
-}
-print OUTF "\nCurrently active requests:\n";
-foreach my $aref (@$alreqs) {
-    print OUTF $aref->[0] . " " . $aref->[1] . "\t" . $aref->[2] . "\n";
+foreach my $status (keys %lending) {
+    print OUTF $status . "\t" . $lending{$status} . "\n";
 }
 
 print OUTF "\n\n---current long-format date time goes here---\n";
