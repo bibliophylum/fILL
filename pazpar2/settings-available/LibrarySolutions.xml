@@ -5,6 +5,8 @@
   <set target="207.161.70.145:5666/LSPacZ" name="symbol" value="MDP"/>
   <set target="207.161.70.145:5666/LSPacZ" name="pz:cclmap:ti" value="u=4 s=al 2=3"/>
   <set target="207.161.70.145:5666/LSPacZ" name="pz:cclmap:su" value="u=21 s=al 2=3"/>
+  <set target="207.161.70.145:5666/LSPacZ" name="pz:cclmap:isbn" value="u=7 2=3"/>
+  <set target="207.161.70.145:5666/LSPacZ" name="pz:cclmap:issn" value="u=8 2=3"/>
 
 <!-- settings apply to all targets -->
 
