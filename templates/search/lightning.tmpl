@@ -111,27 +111,9 @@
       </a>
     </li>
 
-    <li id="menu_admin">
-      <a href=/cgi-bin/admin.cgi?rm=admin_reports_form>
-      Admin
-      </a>
-    </li>
-
   </ul>
 
 </div>
-
-<script language="JavaScript">
-
-  var uname = '<TMPL_VAR NAME="username">';
-
-  if ((uname == 'admin') || (uname == 'ADMIN')) {
-    document.getElementById('menu_admin').style.display="inline";
-  } else {
-    document.getElementById('menu_admin').style.display="none";
-  }
-
-</script>      
 
 <!-- end header.tmpl -->
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">

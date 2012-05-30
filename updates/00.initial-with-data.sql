@@ -57,74 +57,6 @@ $$;
 
 ALTER FUNCTION public.update_ts() OWNER TO mapapp;
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: authgroups; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
---
-
-CREATE TABLE authgroups (
-    gid integer NOT NULL,
-    authorization_group character varying(20)
-);
-
-
-ALTER TABLE public.authgroups OWNER TO mapapp;
-
---
--- Name: authgroups_gid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
---
-
-CREATE SEQUENCE authgroups_gid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.authgroups_gid_seq OWNER TO mapapp;
-
---
--- Name: authgroups_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mapapp
---
-
-ALTER SEQUENCE authgroups_gid_seq OWNED BY authgroups.gid;
-
-
---
--- Name: authgroups_gid_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
---
-
-SELECT pg_catalog.setval('authgroups_gid_seq', 1, false);
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
---
-
-CREATE TABLE users (
-    uid integer NOT NULL,
-    name character varying(30),
-    password character varying(30),
-    active smallint,
-    email_address character varying(200),
-    admin smallint,
-    library character varying(200),
-    mailing_address_line1 character varying(200),
-    mailing_address_line2 character varying(200),
-    mailing_address_line3 character varying(200),
-    ill_sent smallint,
-    home_zserver_id smallint,
-    home_zserver_location character varying(30),
-    last_login timestamp without time zone
-);
-
-
-ALTER TABLE public.users OWNER TO mapapp;
-
 --
 -- Name: libraries_lid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
 --
@@ -140,18 +72,15 @@ CREATE SEQUENCE libraries_lid_seq
 ALTER TABLE public.libraries_lid_seq OWNER TO mapapp;
 
 --
--- Name: libraries_lid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mapapp
---
-
-ALTER SEQUENCE libraries_lid_seq OWNED BY users.uid;
-
-
---
 -- Name: libraries_lid_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
 --
 
-SELECT pg_catalog.setval('libraries_lid_seq', 139, true);
+SELECT pg_catalog.setval('libraries_lid_seq', 140, false);
 
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
 
 --
 -- Name: libraries; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
@@ -163,25 +92,14 @@ CREATE TABLE libraries (
     password character varying(30),
     active smallint,
     email_address character varying(200),
-    admin smallint,
     library character varying(200),
     mailing_address_line1 character varying(200),
     mailing_address_line2 character varying(200),
     mailing_address_line3 character varying(200),
-    ill_sent smallint,
-    home_zserver_id smallint,
-    home_zserver_location character varying(30),
     last_login timestamp without time zone,
-    unverified_patron_request_limit integer DEFAULT 2,
     town character varying(50),
     region character varying(15),
-    ebsco_user character varying(40),
-    ebsco_pass character varying(40),
-    use_standardresource boolean DEFAULT true,
-    use_databaseresource boolean DEFAULT true,
-    use_electronicresource boolean DEFAULT true,
-    use_webresource boolean DEFAULT false,
-    wpl_institution_card character varying(40)
+    request_email_notification boolean DEFAULT false
 );
 
 
@@ -194,11 +112,77 @@ ALTER TABLE public.libraries OWNER TO mapapp;
 CREATE TABLE library_barcodes (
     lid integer NOT NULL,
     borrower integer,
-    barcode character varying(15)
+    barcode character varying(14)
 );
 
 
 ALTER TABLE public.library_barcodes OWNER TO mapapp;
+
+--
+-- Name: reports_rid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
+--
+
+CREATE SEQUENCE reports_rid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.reports_rid_seq OWNER TO mapapp;
+
+--
+-- Name: reports_rid_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
+--
+
+SELECT pg_catalog.setval('reports_rid_seq', 8, true);
+
+
+--
+-- Name: reports; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports (
+    rid integer DEFAULT nextval('reports_rid_seq'::regclass) NOT NULL,
+    rtype character varying(15),
+    name character varying(40),
+    description character varying(1000),
+    generator character varying(40)
+);
+
+
+ALTER TABLE public.reports OWNER TO mapapp;
+
+--
+-- Name: reports_complete; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports_complete (
+    lid integer NOT NULL,
+    rid integer NOT NULL,
+    range_start character(10),
+    range_end character(10),
+    report_file character varying(100)
+);
+
+
+ALTER TABLE public.reports_complete OWNER TO mapapp;
+
+--
+-- Name: reports_queue; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports_queue (
+    ts timestamp without time zone DEFAULT now(),
+    rid integer NOT NULL,
+    lid integer NOT NULL,
+    range_start character(10),
+    range_end character(10)
+);
+
+
+ALTER TABLE public.reports_queue OWNER TO mapapp;
 
 --
 -- Name: request_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
@@ -218,7 +202,7 @@ ALTER TABLE public.request_seq OWNER TO mapapp;
 -- Name: request_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
 --
 
-SELECT pg_catalog.setval('request_seq', 424, true);
+SELECT pg_catalog.setval('request_seq', 436, true);
 
 
 --
@@ -316,167 +300,139 @@ CREATE TABLE sources (
 ALTER TABLE public.sources OWNER TO mapapp;
 
 --
--- Name: gid; Type: DEFAULT; Schema: public; Owner: mapapp
---
-
-ALTER TABLE ONLY authgroups ALTER COLUMN gid SET DEFAULT nextval('authgroups_gid_seq'::regclass);
-
-
---
--- Name: uid; Type: DEFAULT; Schema: public; Owner: mapapp
---
-
-ALTER TABLE ONLY users ALTER COLUMN uid SET DEFAULT nextval('libraries_lid_seq'::regclass);
-
-
---
--- Data for Name: authgroups; Type: TABLE DATA; Schema: public; Owner: mapapp
---
-
-COPY authgroups (gid, authorization_group) FROM stdin;
-1	basic
-2	request
-3	CDT
-4	reports
-5	headquarters
-6	admin
-\.
-
-
---
 -- Data for Name: libraries; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY libraries (lid, name, password, active, email_address, admin, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, ill_sent, home_zserver_id, home_zserver_location, last_login, unverified_patron_request_limit, town, region, ebsco_user, ebsco_pass, use_standardresource, use_databaseresource, use_electronicresource, use_webresource, wpl_institution_card) FROM stdin;
-97	MNW	MNW	1	neepawa@wmrlibrary.mb.ca	0	Western Manitoba Regional  Library - Neepawa	280 Davidson St.	Box 759	Neepawa, MB  R0J 1H0	485	5	mnw	2011-02-03 12:02:04.730694	2	Neepawa	WESTMAN	s6844425	password	t	f	f	f	\N
-72	MRA	MRA	1	rcreglib@mts.net	0	Rapid City Regional Library	425 3rd Ave.	Box 8	Rapid City, MB  R0K 1W0	104	1	MRA	2011-01-27 14:59:47.699491	2	Rapid City	WESTMAN	s5826566	password	t	f	f	f	\N
-9	MNHA	MNHA	1	tansi23@hotmail.com	0	Ayamiscikewikamik		Box 250	Norway House, MB  ROB 1BO	0	1	MNHA	2010-07-27 11:50:28.606789	2	\N	\N	\N	\N	t	f	f	f	\N
-127	Caitlyn	Caitlyn	0		1	PLS - clerk				0	1		\N	2	\N	\N	\N	\N	t	f	f	f	\N
-2	test	123	1	David_A_Christensen@hotmail.com	0	A Test Library	456 Someother St.	Mycity, MB  R7A 0X0	\N	0	1	test	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-128	Margo	me	1		1	PLS - staff				\N	1		2008-09-15 15:49:51	2	\N	\N	\N	\N	t	f	f	f	\N
-105	MWRR	MWRR	0	lgirardi@rrcc.mb.ca	0	Red River College	2055 Notre Dame Ave		Winnipeg, MB  R3H 0J9	0	1	MWRR	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-106	MWTS	MWTS	0	lisanne.wood@mts.mb.ca	0	Manitoba Telecom Services Corporate	489 Empress St.	Box 6666	Winnipeg, MB  R3C 3V6	0	1	MWTS	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-108	MSERC	MSERC	0	serc2mb@mb.sympatico.ca	0	Brandon SERC	731B Princess Ave		Brandon, MB  R7A 0P4	0	1	MSERC	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-109	MWMRC	MWMRC	0	bdearth@itc.mb.ca	0	Industrial Technology Centre	200-78 Innovation Drive		Winnipeg, MB  R3T 6C2	0	1	MWMRC	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-95	MCNC	discover	1	carberry@wmrlibrary.mb.ca	0	Western Manitoba Regional Library - Carberry/North Cypress	115 Main Street	Box 382	Carberry, MB  R0K 0H0	623	5	mcnc	2011-02-01 16:29:41.937069	2	Carberry	WESTMAN	carberry	carberry	t	f	f	f	\N
-13	MIBR	MIBR	1	ritchotlib@hotmail.com	0	Bibliothèque Ritchot - Main	310 Lamoureux Rd.	Box 340	Ile des Chenes, MB  R0A 0T0	556	1	MIBR	2011-02-01 16:34:41.862614	2	Ile des Chenes	EASTMAN	s6314735	password	t	f	f	f	\N
-80	MSL	MSL	1	dslibrary@hotmail.com	0	Snow Lake Community Library	101 Cherry St.	Box 760	Snow Lake, MB  R0B 1M0	274	1	MSL	2011-02-03 12:37:04.304046	2	Snow Lake	NORMAN	s6208129	password	t	f	f	f	\N
-29	MGE	MGE	1	gimli.library@mts.net	0	Evergreen Regional Library - Main	65 First Avenue	Box 1140	Gimli, MB  R0C 1B0	596	1	MGE	2011-02-03 12:56:09.653775	2	Gimli	INTERLAKE	evergreenreg	trial	t	f	f	f	\N
-58	MDPGV	MDPGV	1	grandvw@mts.net	0	Parkland Regional Library - Grandview	433 Main St.	Box Box 700	Grandview, MB  R0L 0Y0	701	2		2011-02-01 15:07:26.727646	2	Grandview	PARKLAND	grandview	grandview	t	f	f	f	\N
-107	MDPST	MDPST	1	stratlibrary@mts.net	0	Parkland Regional Library - Strathclair	50 Main St.	Box 303	Strathclair, MB  R0J 2C0	37	2		2011-01-31 09:12:18.896689	2	Strathclair	WESTMAN	strathclair	strathclair	t	f	f	f	\N
-134	MDS	MDS	1	staff@springfieldlibrary.ca	0	Springfield Public Library	Box 340		Dugald, MB  R0E 0K0	\N	1	MDS	2011-02-02 12:28:41.043479	2	Oakbank	EASTMAN	\N	\N	t	f	f	f	\N
-81	MWOWH	MWOWH	1	headlib@scrlibrary.mb.ca	0	South Central Regional Library - Office	160 Main Street   (325-5864)	Box 1540	Winkler, MB  R6W 4B4	0	12	MWOWH	2010-09-30 14:30:24.845846	2	\N	\N	\N	\N	t	f	f	f	\N
-63	MDPOR	MDPOR	1	orlibrary@inetlink.ca	0	Parkland Regional Library - Ochre River	203 Main St.	Box 219	Ochre River, MB  R0L 1K0	281	2		2011-02-02 17:58:17.64862	2	Ochre River	PARKLAND	s9233164	password	t	f	f	f	\N
-137	TEST	TEST	1	nowhere@just.testing	0	A test library				\N	61	TEST	2011-02-02 18:50:18.609395	2	\N	\N	\N	\N	t	f	f	f	\N
-121	TWAS	TWAS	1		0	Bren Del Win Centennial Library - Waskada	30 Souris Ave.		Waskada, MB  R0M 2E0	0	47	TWAS	\N	2	Waskada	WESTMAN	\N	\N	t	f	f	f	\N
-122	MPFN	MPFN	1	peguislibrary@yahoo.ca	0	Peguis Community	Lot 30 Peguis Indian Reserve	Box Box 190	Peguis, MB  R0J 3J0	0	1	MPFN	2009-03-04 17:23:42	2	Peguis	INTERLAKE	\N	\N	t	f	f	f	\N
-75	MBA	MBA	1	rmargyle@gmail.com	0	R.M. of Argyle Public Library	627 Elizabeth Ave. E.	Box 10	Baldur, MB  R0K 0B0	45	1	MBA	2011-02-01 10:00:40.596398	2	Baldur	WESTMAN	s7204480	password	t	f	f	f	\N
-125	MNCN	MNCN	1	NCNBranch@Thompsonlibrary.com	0	Thompson Public Library - Nelson House	1 ATEC Drive	Box 454	Nelson House, MB  R0B 1A0	0	10	MNCN	\N	2	Nelson House	NORMAN	\N	\N	t	f	f	f	\N
-35	MHH	MHH	1	hml@mts.net	0	Headingley Municipal Library	49 Alboro Street		Headingley, MB  R4J 1A3	1153	44	HML	2011-02-03 10:21:31.672572	2	Headingly	CENTRAL	s6875882	password	t	f	f	f	\N
-78	MSTR	MSTR	1	sroselib@mts.net	0	Ste. Rose Regional Library	580 Central Avenue	General Delivery	Ste. Rose du Lac, MB  R0L 1S0	662	1	MSTR	2011-02-03 12:41:49.075946	2	Ste. Rose du Lac	PARKLAND	library	reader	t	f	f	f	\N
-124	MDPSLA	MDPSLA	1	lazarelib@mts.net	0	Parkland Regional Library - St. Lazare		Box 201	St. Lazare, MB  R0M 1Y0	43	2		2010-11-25 17:06:24.004507	2	St. Lazare	WESTMAN	\N	\N	t	f	f	f	\N
-103	MEPL	MEPL	1	library@townofemerson.com	0	Emerson Library	104 Church Street	Box 340	Emerson, MB  R0A 0L0	147	1	MEPL	2011-01-24 18:56:43.490848	2	Emerson	CENTRAL	s6763302	password	t	f	f	f	\N
-37	MSSM	MSSM	1	stmlibrary@jrlibrary.mb.ca	0	Jolys Regional Library - St. Malo	189 St. Malo Street	Box 593	St.Malo, MB  R0A 1T0	200	1	MSSM	2011-02-02 15:43:01.43152	2	St. Malo	EASTMAN	saint	malo	t	f	f	f	\N
-28	MCH	MCH	1	mchlibrary@yahoo.ca	0	Churchill Public Library	180 Laverendrye	Box 730	Churchill, MB  R0B 0E0	97	1	MCH	2011-02-03 10:04:52.805515	2	Churchill	NORMAN	s6722383	password	t	f	f	f	\N
-27	MEL	MEL	1	epl1@mts.net	0	Eriksdale Public Library	PTH 68  (9 Main St.)	Box 219	Eriksdale, MB  R0C 0W0	389	1	MEL	2011-02-03 12:27:27.45312	2	Eriksdale	INTERLAKE	mel	mel	t	f	f	f	\N
-77	MBI	MBI	1	binslb@mts.net	0	Russell & District Library - Binscarth	106 Russell St.	Box  379	Binscarth, MB  R0J 0G0	49	1	MBI	2011-01-12 16:33:26.593717	2	Binscarth	PARKLAND	binscarth	binscarth	t	f	f	f	\N
-61	MDPMC	MDPMC	1	mccrea16@mts.net	0	Parkland Regional Library - McCreary	615 Burrows Rd.	Box 297	McCreary, MB  R0J 1B0	112	2		2011-01-18 15:43:28.57626	2	McCreary	PARKLAND	mccreary	mccreary	t	f	f	f	\N
-42	MLR	MLR	1	lrlib@mts.net	0	Leaf Rapids Public Library	20 Town Centre	Box 190	Leaf Rapids, MB  R0B 1W0	33	1	MLR	2009-05-25 18:16:48	2	Leaf Rapids	NORMAN	s6970871	password	t	f	f	f	\N
-67	MDPWP	MDPWP	1	wpgosis@mts.net	0	Parkland Regional Library - Winnipegosis	130 2nd St.	Box Box 10	Winnipegosis, MB  R0L 2G0	190	2		2011-02-02 14:18:10.749017	2	Winnipegosis	PARKLAND	winnipegosis	winnipegosis	t	f	f	f	\N
-88	MESMN	MESMN	1	smrl1nap@yahoo.ca	0	Southwestern Manitoba Regional Library - Napinka	57 Souris St.	Box 975	Melita, MB  R0M 1L0	0	4	MESM	2010-09-14 14:14:28.201392	2	Napinka	WESTMAN	napinka	napinka	t	f	f	f	\N
-43	MLLC	MLLC	1	lynnlib@mts.net	0	Lynn Lake Centennial Library	503 Sherritt Ave.	Box 1127	Lynn Lake, MB  R0B 0W0	0	1	MLLC	\N	2	Lynn Lake	NORMAN	s6993334	password	t	f	f	f	\N
-50	MDPBR	MDPBR	1	briver@mts.net	0	Parkland Regional Library - Birch River	116 3rd St. East	Box 245	Birch River, MB  R0L 0E0	0	2		2008-12-18 20:36:09	2	Birch River	PARKLAND	birch	river	t	f	f	f	\N
-60	MDPLA	MDPLA	1	langlib@mts.net	0	Parkland Regional Library - Langruth	402 Main St.	Box 154	Langruth, MB  R0H 0N0	2	2		2010-07-30 09:16:07.67375	2	Langruth	CENTRAL	langruth	langruth	t	f	f	f	\N
-68	MP	MP	1	email@pinawapubliclibrary.com	0	Pinawa Public Library	Vanier Road	General Delivery	Pinawa, MB  R0E 1L0	845	22		2012-01-19 14:27:21.29003	2	Pinawa	EASTMAN	s1035842	password	t	f	f	f	\N
-90	MSTE	MSTE	1	steinlib@rocketmail.com	0	Jake Epp Library	255 Elmdale Street		Steinbach, MB  R5G 0C9	1186	16	Jake Epp	2012-01-20 08:37:48.360584	2	Steinbach	EASTMAN	jake	ebscotrial	t	f	f	f	\N
-1	DTL	DTL123	1	David_A_Christensen@hotmail.com	1	The Great Library of Davidland	123 Some Street South	Brandon, MB  R7A 7A1		11	1	mwpl	2009-12-09 15:11:39.580858	2	\N	\N	\N	\N	t	f	f	f	\N
-89	MESP	MESP	1	pcilibrary@goinet.ca	0	Southwestern Manitoba Regional Library - Pierson	58 Railway Avenue	Box 39	Pierson, MB  R0M 1S0	189	4	MESP	2011-01-28 09:45:37.364496	2	Pierson	WESTMAN	s2487764	password	t	f	f	f	\N
-54	MDPER	MDPER	1	erick11@mts.net	0	Parkland Regional Library - Erickson	20 Main St. W	Box 385	Erickson, MB  R0J 0P0	173	2		2011-02-01 11:11:13.915092	2	Erickson	WESTMAN	s6085216	password	t	f	f	f	\N
-49	MDP	MDP	1	prlhq@parklandlib.mb.ca	0	Parkland Regional Library - Main	504 Main St. N.		Dauphin, MB  R7N 1C9	6	2		2011-01-25 13:15:46.362271	2	\N	\N	\N	\N	t	f	f	f	\N
-111	MSSC	MSSC	1	shilocommunitylibrary@yahoo.ca	0	Shilo Community Library  (765-3000 ext 3664)		Box Box 177	Shilo, MB  R0K 2A0	52	1	MSSC	2011-02-01 15:25:17.713108	2	\N	\N	\N	\N	t	f	f	f	\N
-138			0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-17	MLB	bsjlromd	1	bsjl@bsjl.ca	0	Bibliothèque Saint-Joachim Library	29, baie Normandeau Bay	Box 39	La Broquerie, MB  R0A 0W0	489	57	MLB	2011-02-02 08:08:42.558263	2	La Broquerie	EASTMAN	s6416082	password	t	f	f	f	\N
-52	MDPBO	MDPBO	1	bows18@mts.net	0	Parkland Regional Library - Bowsman	105 2nd St.	Box 209	Bowsman, MB  R0L 0H0	25	2		2011-01-04 11:20:46.044179	2	Bowsman	PARKLAND	bowsman	bowsman	t	f	f	f	\N
-55	MDPFO	MDPFO	1	foxlib@mts.net	0	Parkland Regional Library - Foxwarren	312 Webster Ave.	Box 204	Foxwarren, MB  R0J 0P0	234	2		2011-02-01 10:41:17.93653	2	Foxwarren	WESTMAN	s9052086	password	t	f	f	f	\N
-100	MWP	MWP	1	legislative_library@gov.mb.ca	0	Manitoba Legislative Library	100 - 200 Vaughan		Winnipeg, MB  R3C 1T5	0	14	MWP	2010-05-13 10:04:18.931478	2	\N	\N	\N	\N	t	f	f	f	\N
-86	MTSIR	MTSIR	1	teulonbranchlibrary@yahoo.com	0	South Interlake Regional Library - Teulon	19 Beach Road	Box 68	Teulon, MB  R0C 3B0	726	19	Teulon	2011-02-02 10:47:07.748734	2	Teulon	INTERLAKE	teulon	teulon	t	f	f	f	\N
-102	MHP	MHP	1	victlib@goinet.ca	0	Victoria Municipal Library	102 Stewart Ave	Box 371	Holland, MB  R0G 0X0	313	1	MHP	2011-01-27 16:50:14.499442	2	Holland	CENTRAL	s6825002	password	t	f	f	f	\N
-11	MSJB	MSJB	1	biblio@atrium.ca	0	Bibliothèque Montcalm	113B 2nd	Box 345	Saint-Jean-Baptiste, MB  R0G 2B0	191	1	MSJB	2011-02-02 09:30:53.111402	2	Saint-Jean-Baptiste	CENTRAL	s6151884	password	t	f	f	f	\N
-47	MBB	MBB	1	benlib@mts.net	0	North-West Regional Library - Benito Branch	140 Main Street	Box 220	Benito, MB  R0L 0C0	592	1	MBB	2011-01-27 14:18:36.739511	2	Benito	PARKLAND	benito	benito	t	f	f	f	\N
-22	ME	brlelk	1	elkhornbrl@rfnow.com	0	Border Regional Library - Elkhorn	211 Richhill Ave.	Box 370	Elkhorn, MB  R0M 0N0	297	9	ME	2011-02-03 09:59:18.485715	2	Elkhorn	WESTMAN	borderelkhorn	BorderRegional	t	f	f	f	\N
-41	MPM	MPM	1	pmlibrary@mts.net	0	Pilot Mound Public Library - Pilot Mound	219 Broadway Ave. W.	Box 126	Pilot Mound, MB  R0G 1P0	113	1	MPM	2011-02-03 10:55:31.63491	2	Pilot Mound	CENTRAL	pilot	mound	t	f	f	f	\N
-45	MMNN	MMNN	1	maclib@mts.net	0	North Norfolk-MacGregor Library	35 Hampton St. E.	Box 760	MacGregor, MB  R0H 0R0	1515	1	MMNN	2011-02-02 15:10:26.856663	2	MacGregor	CENTRAL	s7049550	password	t	f	f	f	\N
-14	MSAD	MSAD	1	stadbranch@hotmail.com	0	Bibliothèque Ritchot - St. Adolphe	444 rue La Seine		St. Adolphe, MB  R5A 1C2	293	1	MSAD	2011-02-02 15:52:05.639717	2	St. Adolphe	EASTMAN	sal	adolphe	t	f	f	f	\N
-73	MRP	MRP	1	restonlb@yahoo.ca	0	Reston District Library	220 - 4th St.	Box 340	Reston, MB  R0M 1X0	655	45	RDL	2011-02-03 11:23:53.280404	2	Reston	WESTMAN	reston	trial	t	f	f	f	\N
-66	MDPSI	MDPSI	1	siglun15@mts.net	0	Parkland Regional Library - Siglunes	5 - 61 Main St.	Box 368	Ashern, MB  R0C 0E0	71	2		2011-02-02 15:17:39.520904	2	Ashern	INTERLAKE	siglunes	siglunes	t	f	f	f	\N
-15	MSAG	MSAG	1	bibliosteagathe@atrium.ca	0	Bibliothèque Ritchot - Ste. Agathe	310 Chemin Pembina Trail	Box 40	Sainte-Agathe, MB  ROG 1YO	107	1	MSAG	2011-02-02 19:05:31.804753	2	Ste. Agathe	EASTMAN	saint	agathe	t	f	f	f	\N
-98	MMR	MMR	1	mmr@mts.net	0	Minnedosa Regional Library	45 1st  Ave. SE	Box 1226	Minnedosa, MB  R0J 1E0	577	25	Minnedosa	2011-02-03 12:20:34.182761	2	Minnedosa	WESTMAN	minnedosarl	minnedosarl	t	f	f	f	\N
-23	MMCA	MMCA	1	library@mcauley-mb.com	0	Border Regional Library - McAuley	207 Qu'Appelle Street	Box 234	McAuley, MB  R0M 1H0	44	9	MMCA	2011-01-25 14:27:40.737841	2	McAuley	WESTMAN	bordermcauley	BorderRegional	t	f	f	f	\N
-76	MRD	MRD	1	ruslib@mts.net	0	Russell & District Regional Library - Main	339 Main St.	Box 340	Russell, MB  R0J 1W0	940	1	MRD	2011-02-01 13:17:19.029251	2	Russell	PARKLAND	s1036253	password	t	f	f	f	\N
-136	MVBB	MVBB	1	victoriabeachbranch@hotmail.com	0	Bibliotheque Allard - Victoria Beach	Box 279	Victoria Beach, MB  R0E 2C0		\N	41	MVBB	2010-12-15 14:34:37.863963	2	\N	\N	\N	\N	t	f	f	f	\N
-62	MDPMI	MDPMI	1	minitons@mts.net	0	Parkland Regional Library - Minitonas	300 Main St.	Box 496	Minitonas, MB  R0L 1G0	402	2		2011-02-02 15:14:04.465687	2	Minitonas	PARKLAND	minitonas	minitonas	t	f	f	f	\N
-74	MRO	MRO	1	rrl@mts.net	0	Rossburn Regional Library	53 Main St. North	Box 87	Rossburn, MB  R0J 1V0	149	1	MRO	2011-01-28 15:18:05.156408	2	Rossburn	PARKLAND	s5913667	password	t	f	f	f	\N
-25	MDB	bdwcl	1	bdwlib@mts.net	0	Bren Del Win Centennial Library	211 North Railway W.	Box 584	Deloraine, MB  R0M 0M0	520	47	MDB	2011-02-02 10:56:11.631378	2	Deloriane	WESTMAN	s6568841	password	t	f	f	f	\N
-19	MS	lucy	1	somlib@mts.net	0	Bibliotheque Somerset Library	Box 279	289 Carlton Avenue 	Somerset, MB  R0G 2L0	352	1	MS	2011-02-01 15:51:52.043388	2	Somerset	CENTRAL	s6463631	password	t	f	f	f	\N
-85	MSTOS	MSTOS	1	circ@sirlibrary.com	0	South Interlake Regional Library - Main	419 Main St.		Stonewall, MB  R0C 2Z0	1391	19	Stonewall	2012-03-02 15:47:14.36883	2	Stonewall	INTERLAKE	s1036635	password	t	f	f	f	\N
-79	MSEL	MSEL	1	ill@ssarl.org	0	Red River North Regional Library	303 Main Street		Selkirk, MB  R1A 1S7	2778	3	MSEL	2011-11-03 15:59:47.492864	2	Selkirk	INTERLAKE	redrivernorth	steelers	t	f	f	f	\N
-82	MAOW	maow	1	aill@scrlibrary.mb.ca	0	South Central Regional Library - Altona	113-125 Centre Ave. E. (324-1503)	Box 650	Altona, MB  R0G 0B0	794	12	Altona	2011-12-12 14:35:21.057783	2	Altona	CENTRAL	s6353086	password	t	f	f	f	\N
-71	MRIP	MRIP	1	pcrl@mts.net	0	Prairie Crocus Regional Library	137 Main Street	Box 609	Rivers, MB  R0K 1X0	610	37	MRIP	2011-12-12 13:38:08.964639	2	Rivers	WESTMAN	s7183384	password	t	f	f	f	\N
-21	MVE	MVE	1	borderlibraryvirden@rfnow.com	0	Border Regional Library - Main	312 - 7th  Avenue	Box 970	Virden, MB  R0M 2C0	1762	9	MVE	2012-02-24 08:32:46.839581	2	Virden	WESTMAN	bordervirden	BorderRegional	t	f	f	f	\N
-84	MWOW	MWOW	1	will@scrlibrary.mb.ca	0	South Central Regional Library - Winkler	160 Main Street (325-7174)	Box 1540	Winkler, MB  R6W 4B4	1408	12	Winkler	2011-12-12 14:59:19.401459	2	Winkler	CENTRAL	s6465864	password	t	f	f	f	\N
-18	MSA	msa	1	steannelib@steannemb.ca	0	Bibliothèque Ste. Anne	16 rue de l'Eglise		Ste. Anne, MB  R5H 1H8	607	36	MSA	2011-02-03 11:16:24.882061	2	Ste. Anne	EASTMAN	s6481383	password	t	f	f	f	\N
-101	MWPL	MWPL	1	pls@gov.mb.ca	0	Public Library Services Branch	300 - 1011 Rosser Avenue		Brandon, MB  R7A 0L5	21	1	MWPL	2011-12-15 16:13:59.717452	2	\N	\N	s5521720	password	t	f	f	f	\N
-31	MRB	LAKE	1	rlibrary@mts.net	0	Evergreen Regional Library - Riverton	56 Laura Ave.	Box 310	Riverton, MB  R0C 2R0	685	1	MRB	2012-02-29 14:00:18.263003	2	Riverton	INTERLAKE	riverton	riverton	t	f	f	f	\N
-91	MTP	MTP	1	illthepas@mts.net	0	The Pas Regional Library	53 Edwards Avenue	Box 4100	The Pas, MB  R9A 1R2	779	1	MTP	2011-02-02 15:54:58.568087	2	The Pas	NORMAN	s6571842	password	t	f	f	f	\N
-38	MLDB	MLDB	1	mldb@mts.net	0	Lac du Bonnet Regional Library	84-3rd Street	Box 216	Lac du Bonnet, MB  R0E 1A0	1237	39	LDBRL	2011-02-03 10:17:25.172551	2	Lac du Bonnet	EASTMAN	\N	\N	t	f	f	f	\N
-46	MSRN	MSRN	1	nwrl@mymts.net	0	North-West Regional Library - Main	610-1st  St. North	Box 999	Swan River, MB  R0L 1Z0	1368	11		2011-02-03 11:42:08.406029	2	Swan River	PARKLAND	s7071953	password	t	f	f	f	\N
-34	MSOG	MSOG	1	ill@sourislibrary.mb.ca	0	Glenwood & Souris Regional Library	18 - 114 2nd St. S.	Box 760	Souris, MB  R0K 2C0	1115	34	MSOG	2011-02-01 21:41:47.575609	2	Souris	WESTMAN	s6859026	password	t	f	f	f	\N
-40	MCCB	CC111	1	cartlib@mts.net	0	Lakeland Regional Library - Cartwright	483 Veteran Drive	Box 235	Cartwright, MB  R0K 0L0	480	18	Cartwright Library	2011-02-02 16:34:12.994159	2	Cartwright	CENTRAL	cartwright	Cartwright	t	f	f	f	\N
-53	MDA	MDA	1	DauphinLibrary@parklandlib.mb.ca	0	Parkland Regional Library - Dauphin	504 Main Street North		Dauphin, MB  R7N 1C9	1918	2		2011-02-02 19:42:49.630926	2	Dauphin	PARKLAND	s4732742	password	t	f	f	f	\N
-65	MDPSL	MDPSL	1	sllibrary@mts.net	0	Parkland Regional Library - Shoal Lake	418 Station Road S.	Box 428	Shoal Lake, MB  R0J 1Z0	231	2		2011-02-01 14:06:09.972297	2	Shoal Lake	WESTMAN	s7725300	password	t	f	f	f	\N
-51	MDPBI	MDPBI	1	birtlib@mts.net	0	Parkland Regional Library - Birtle	907 Main Street	Box 207	Birtle, MB  R0M 0C0	294	2		2011-02-03 11:31:03.715139	2	Birtle	WESTMAN	birtle	birtle	t	f	f	f	\N
-16	MSCL	MSCL	1	stclib@mts.net	0	Bibliothèque Saint-Claude	50 1st Street	Box 203	St. Claude, MB  R0G 1Z0	53	1	MSCL	2011-01-20 11:20:23.16518	2	St. Claude	CENTRAL	s6393310	password	t	f	f	f	\N
-110	MBBB	MBBB	1	beacheslibrary@hotmail.com	0	Bibliotheque Allard - Beaches	40005 Jackfish Lake Rd. N. Walter Whyte School	Box 279	Victoria Beach, MB  R0E 2C0	231	41	BBL	2011-01-27 16:15:41.161472	2	Traverse Bay	EASTMAN	s5772290	Password	t	f	f	f	\N
-12	MNDP	MNDP	1	ndbiblio@yahoo.ca	0	Bibliothèque Pere Champagne	44 Rue Rogers	Box 399	Notre Dame de Lourdes, MB  R0G 1M0	320	50	MNDP	2011-02-01 09:47:15.311152	2	Notre Dame de Lourdes	CENTRAL	ndbiblio	password	t	f	f	f	\N
-69	MPLP	MPLP	1	portlib@portagelibrary.com	0	Portage La Prairie Regional Library	40-B Royal Road N		Portage La Prairie, MB  R1N 1V1	1228	15		2011-02-02 13:51:02.458258	2	Portage la Prairie	CENTRAL	s7165579	password	t	f	f	f	\N
-26	MBBR	MBBR	1	brrlibr2@mts.net	0	Brokenhead River Regional Library	427 Park  Ave.	Box 1087	Beausejour, MB  R0E 0C0	1231	42	BRRL	2011-02-02 17:21:32.430374	2	Beausejour	EASTMAN	s4239300	password	t	f	f	f	\N
-120	MHW	MHW	1	hartney@wmrlibrary.mb.ca	0	Western Manitoba Regional - Hartney Cameron Branch	209 Airdrie St.	Box 121	Hartney, MB  R0M 0X0	428	5	mhw	2011-01-29 11:28:09.80128	2	Hartney	WESTMAN	\N	\N	t	f	f	f	\N
-93	MMVR	MMVR	1	valleylib@mts.net	0	Valley Regional Library	141Main Street South	Box 397	Morris, MB  R0G 1K0	812	1	MMVR	2011-02-03 12:17:58.225938	2	Morris	CENTRAL	s6683258	password	t	f	f	f	\N
-10	MSTG	MSTG	1	ill@allardlibrary.com	0	Bibliotheque Allard	104086 PTH 11	Box 157	St Georges, MB  R0E 1V0	651	40	BARL	2011-02-03 12:15:00.441084	2	St Georges	EASTMAN	s6091479	password	t	f	f	f	\N
-112	ASGY	ASGY	0	lfrolek@yrl.ab.ca	0	Yellowhead Regional		Box 400	Spruce Grove, AB, MB  T7X 2Y1	0	1	ASGY	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-104	MBAC	MBAC	1	library@assiniboinec.mb.ca	0	Assiniboine Community College	1430 Victoria Avenue East		Brandon, MB  R7A 2A9	4	1	MBAC	2011-01-25 14:07:16.067536	2	\N	\N	\N	\N	t	f	f	f	\N
-57	MDPGL	MDPGL	1	gladstne@mts.net	0	Parkland Regional Library - Gladstone	42 Morris Avenue N.	Box 720	Gladstone, MB  R0J 0T0	1125	2		2011-02-03 10:06:30.811072	2	Gladstone	CENTRAL	\N	\N	t	f	f	f	\N
-64	MDPRO	MDPRO	1	roblinli@mts.net	0	Parkland Regional Library - Roblin	123 lst Ave. N.	Box 1342	Roblin, MB  R0L 1P0	387	2		2011-01-25 15:18:33.838446	2	Roblin	PARKLAND	roblin	roblin	t	f	f	f	\N
-96	MGW	MGW	1	jackie@wmrl.ca	0	Western Manitoba Regional  Library - Glenboro/South Cypress	105 Broadway St.	Box 429	Glenboro, MB  R0K 0X0	518	5	mgw	2011-02-01 16:29:58.638328	2	Glenboro	WESTMAN	glenboro	glenboro	t	f	f	f	\N
-33	MGI	MGI11	1	bwinner@gillamnet.com	0	Bette Winner Public Library	235 Mattonnabee Ave.	Box 400	Gillam, MB  R0B 0L0	184	1	MGI	2011-02-01 16:54:57.526489	2	Gillam	NORMAN	bwpl	bwpl	t	f	f	f	\N
-48	MLPJ	MLPJ	1	mlpj@mts.net	0	Pauline Johnson Library	23 Main Street	Box 698	Lundar, MB  R0C 1Y0	330	1	MLPJ	2011-02-03 10:48:25.445635	2	Lundar	INTERLAKE	s7132074	password	t	f	f	f	\N
-56	MDPGP	MDPGP	1	gilbert3@mts.net	0	Parkland Regional Library - Gilbert Plains	113 Main St. N.	Box 303	Gilbert Plains, MB  R0L 0X0	75	2		2011-01-29 16:19:27.923943	2	Gilbert Plains	PARKLAND	gilbert	plains	t	f	f	f	\N
-59	MDPHA	MDPHA	1	hamlib@mymts.net	0	Parkland Regional Library - Hamiota	43 Maple Ave. E.	Box 609	Hamiota, MB  R0M 0T0	361	2		2011-02-01 16:33:06.705467	2	Hamiota	WESTMAN	hamiota	hamiota	t	f	f	f	\N
-131	UCN	UCN321	1		1	University Colleges North pilot project				\N	0		2010-12-16 14:12:00.413037	2	\N	\N	\N	\N	t	f	f	f	\N
-119	MTPL	MTPL	1	btl@srsd.ca	0	Bibliothque Publique Tache Public Library - Main		Box 16	Lorette, MB  R0A 0Y0	571	1	MTPL	2011-02-02 16:00:40.614521	2	Lorette	EASTMAN	\N	\N	t	f	f	f	\N
-113	MWSC	MWSC	1	library@smd.mb.ca	0	Society for Manitobans with Disabilities - Stephen Sparling	825 Sherbrooks Street		Winnipeg, MB  R3A 1M5	0	1	MWSC	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-114	MWEMM	MWEMM	0	LJanower@gov.mb.ca	0	Manitoba Industry Trade and Mines - Mineral Resource	Suite 360 - 1395 Ellice Ave.		Winnipeg, MB  R3G 3P2	0	1	MWEMM	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-115	OKE	OKE	0	eroussin@kenora.ca	0	Kenora Public Library	24 Main St. South		Kenora, Ontario, MB  P9N 1S7	0	1	OKE	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-32	MFF	SHOELACE	1	ffplill@mts.net	0	Flin Flon Public Library	58 Main Street		Flin Flon, MB  R8A 1J8	981	64	MFF	2011-12-12 12:56:51.457245	2	Flin Flon	NORMAN	s6829351	password	t	f	f	f	\N
-24	MCB	MCB	1	illbrl@hotmail.com	0	Boyne Regional Library	15 - 1st Avenue SW	Box 788	Carman, MB  R0G 0J0	788	24	Main	2011-12-12 13:10:44.162827	2	Carman	CENTRAL	s1035547	password	t	f	f	f	\N
-94	MBW	rescue	1	bdnill@wmrlibrary.mb.ca	0	Western Manitoba Regional Library - Brandon	710 Rosser Avenue, Unit 1		Brandon, MB  R7A 0K9	996	5	mbw	2011-12-12 14:08:45.397178	2	Brandon	WESTMAN	s5521791	p0011656	t	f	f	f	\N
-83	MMOW	MMOW	1	mill@scrlibrary.mb.ca	0	South Central Regional Library - Morden	514 Stephen Street	Morden, MB  R6M 1T7	204-822-4092	2145	12	Morden	2011-12-12 15:14:53.469843	2	Morden	CENTRAL	s5521766	p0011655	t	f	f	f	\N
-135	MMIOW	MMIOW	1	thlib@scrlibrary.mb.ca	0	South Central Regional Library - Miami	423 Norton Avenue	(Box 431)	Miami, MB  R0G 1H0	\N	12	Miami	2011-12-12 15:28:31.991569	2	Miami	CENTRAL	\N	\N	t	f	f	f	\N
-39	MKL	MKL	1	lrl@mts.net	0	Lakeland Regional Library - Main	318 Williams Ave.	Box 970	Killarney, MB  R0K 1G0	2060	18	Lakeland Regional Library	2011-12-12 16:03:53.003063	2	Killarney	WESTMAN	s8921274	password	t	f	f	f	\N
-30	MAB	TIME	1	arborglibrary@mts.net	0	Evergreen Regional Library - Arborg	292 Main Street	Box 4053	Arborg, MB  R0C 0A0	1598	1	MAB	2011-12-15 15:40:37.628952	2	Arborg	INTERLAKE	arborg	arborg	t	f	f	f	\N
-44	MMA	MMA	1	manitoulibrary@mts.net	0	Manitou Regional Library	418 Main St.	Box 432	Manitou, MB  R0G 1G0	596	1	MMA	2011-12-30 08:55:30.596456	2	Manitou	CENTRAL	s7007965	password	t	f	f	f	\N
-116	CPL	CPL	0		0	Crocus Plains Regional Secondary School	1930 First Street		Brandon, MB  R7A 6Y6	0	1	CPL	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-117	MWHBCA	MWHBCA	0	hbca@gov.mb.ca	0	Hudsons Bay Company Archives	200 Vaughan St.		Winnipeg, MB  R3C 1T5	0	1	MWHBCA	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-118	MWJ	MWJ	0	jodi.turner@justice.gc.ca	0	Department of Justice	301-310 Broadway Avenue		Winnipeg, MB  R3C 0S6	0	1	MWJ	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-130	UNC	UNC321	1		0	Delete me!				\N	0		2008-07-28 15:22:43	2	\N	\N	\N	\N	t	f	f	f	\N
-36	MSTP	MSTP	1	stplibrary@jrlibrary.mb.ca	0	Jolys Regional Library - Main	505 Hebert Ave. N.	Box 118	St. Pierre-Jolys, MB  R0A 1V0	1607	21	MSTP	2011-02-03 09:05:21.66346	2	St. Pierre	EASTMAN	s6110155	password	t	f	f	f	\N
-132	Headingley Municipal Library	MHH	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	\N	\N	\N	t	f	f	f	\N
-129	admin	maplin3db	1	David.A.Christensen@gmail.com	1	Maplin-3 Administrator				\N	0		2012-03-02 15:20:08.314775	2	\N	\N	\N	\N	t	f	f	f	\N
-87	MESM	MESM	1	swmblib@mts.net	0	Southwestern Manitoba Regional Library - Main	149 Main St. S.	Box 639	Melita, MB  R0M 1L0	1290	4	Main	2011-12-08 14:27:16.546842	2	Melita	WESTMAN	s8921298	password	t	t	t	t	\N
-139	Spruce	Spruce	1	headlib@scrlibrary.mb.ca	0	Spruce Co-operative	 	 	 	\N	74	WINKLER	2011-11-04 08:55:19.297548	2	\N	\N	\N	\N	t	t	t	f	\N
-99	MW	MW	1	wpl-illo@winnipeg.ca	0	Winnipeg Public Library : Interlibrary Loans	251 Donald St.		Winnipeg, MB  R3C 3P5	97	28		2011-12-12 11:31:38.138719	2	Winnipeg	WINNIPEG	\N	\N	t	f	f	f	1234567890
-20	MBOM	MBOM	1	mbomill@mts.net	0	Boissevain and Morton Regional Library	436 South Railway St.	Box 340	Boissevain, MB  R0K 0E0	1183	74	BOISSEVAIN	2012-01-13 16:16:28.997444	2	Boissevain	WESTMAN	s6080402	password	t	f	f	f	\N
-92	MTH	MTH	1	interlibraryloans@thompsonlibrary.com	0	Thompson Public Library	81 Thompson Drive North		Thompson, MB  R8N 0C3	743	10		2012-01-19 15:13:17.695393	2	Thompson	NORMAN	s8914567	password	t	f	f	f	\N
+COPY libraries (lid, name, password, active, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, last_login, town, region, request_email_notification) FROM stdin;
+97	MNW	MNW	1	neepawa@wmrlibrary.mb.ca	Western Manitoba Regional  Library - Neepawa	280 Davidson St.	Box 759	Neepawa, MB  R0J 1H0	2011-02-03 12:02:04.730694	Neepawa	WESTMAN	f
+72	MRA	MRA	1	rcreglib@mts.net	Rapid City Regional Library	425 3rd Ave.	Box 8	Rapid City, MB  R0K 1W0	2011-01-27 14:59:47.699491	Rapid City	WESTMAN	f
+9	MNHA	MNHA	1	tansi23@hotmail.com	Ayamiscikewikamik		Box 250	Norway House, MB  ROB 1BO	2010-07-27 11:50:28.606789	\N	\N	f
+127	Caitlyn	Caitlyn	0		PLS - clerk				\N	\N	\N	f
+2	test	123	1	David_A_Christensen@hotmail.com	A Test Library	456 Someother St.	Mycity, MB  R7A 0X0	\N	\N	\N	\N	f
+128	Margo	me	1		PLS - staff				2008-09-15 15:49:51	\N	\N	f
+105	MWRR	MWRR	0	lgirardi@rrcc.mb.ca	Red River College	2055 Notre Dame Ave		Winnipeg, MB  R3H 0J9	\N	\N	\N	f
+106	MWTS	MWTS	0	lisanne.wood@mts.mb.ca	Manitoba Telecom Services Corporate	489 Empress St.	Box 6666	Winnipeg, MB  R3C 3V6	\N	\N	\N	f
+108	MSERC	MSERC	0	serc2mb@mb.sympatico.ca	Brandon SERC	731B Princess Ave		Brandon, MB  R7A 0P4	\N	\N	\N	f
+109	MWMRC	MWMRC	0	bdearth@itc.mb.ca	Industrial Technology Centre	200-78 Innovation Drive		Winnipeg, MB  R3T 6C2	\N	\N	\N	f
+95	MCNC	discover	1	carberry@wmrlibrary.mb.ca	Western Manitoba Regional Library - Carberry/North Cypress	115 Main Street	Box 382	Carberry, MB  R0K 0H0	2011-02-01 16:29:41.937069	Carberry	WESTMAN	f
+13	MIBR	MIBR	1	ritchotlib@hotmail.com	Bibliothèque Ritchot - Main	310 Lamoureux Rd.	Box 340	Ile des Chenes, MB  R0A 0T0	2011-02-01 16:34:41.862614	Ile des Chenes	EASTMAN	f
+80	MSL	MSL	1	dslibrary@hotmail.com	Snow Lake Community Library	101 Cherry St.	Box 760	Snow Lake, MB  R0B 1M0	2011-02-03 12:37:04.304046	Snow Lake	NORMAN	f
+29	MGE	MGE	1	gimli.library@mts.net	Evergreen Regional Library - Main	65 First Avenue	Box 1140	Gimli, MB  R0C 1B0	2011-02-03 12:56:09.653775	Gimli	INTERLAKE	f
+58	MDPGV	MDPGV	1	grandvw@mts.net	Parkland Regional Library - Grandview	433 Main St.	Box Box 700	Grandview, MB  R0L 0Y0	2011-02-01 15:07:26.727646	Grandview	PARKLAND	f
+107	MDPST	MDPST	1	stratlibrary@mts.net	Parkland Regional Library - Strathclair	50 Main St.	Box 303	Strathclair, MB  R0J 2C0	2011-01-31 09:12:18.896689	Strathclair	WESTMAN	f
+134	MDS	MDS	1	staff@springfieldlibrary.ca	Springfield Public Library	Box 340		Dugald, MB  R0E 0K0	2011-02-02 12:28:41.043479	Oakbank	EASTMAN	f
+81	MWOWH	MWOWH	1	headlib@scrlibrary.mb.ca	South Central Regional Library - Office	160 Main Street   (325-5864)	Box 1540	Winkler, MB  R6W 4B4	2010-09-30 14:30:24.845846	\N	\N	f
+63	MDPOR	MDPOR	1	orlibrary@inetlink.ca	Parkland Regional Library - Ochre River	203 Main St.	Box 219	Ochre River, MB  R0L 1K0	2011-02-02 17:58:17.64862	Ochre River	PARKLAND	f
+137	TEST	TEST	1	nowhere@just.testing	A test library				2011-02-02 18:50:18.609395	\N	\N	f
+121	TWAS	TWAS	1		Bren Del Win Centennial Library - Waskada	30 Souris Ave.		Waskada, MB  R0M 2E0	\N	Waskada	WESTMAN	f
+122	MPFN	MPFN	1	peguislibrary@yahoo.ca	Peguis Community	Lot 30 Peguis Indian Reserve	Box Box 190	Peguis, MB  R0J 3J0	2009-03-04 17:23:42	Peguis	INTERLAKE	f
+75	MBA	MBA	1	rmargyle@gmail.com	R.M. of Argyle Public Library	627 Elizabeth Ave. E.	Box 10	Baldur, MB  R0K 0B0	2011-02-01 10:00:40.596398	Baldur	WESTMAN	f
+125	MNCN	MNCN	1	NCNBranch@Thompsonlibrary.com	Thompson Public Library - Nelson House	1 ATEC Drive	Box 454	Nelson House, MB  R0B 1A0	\N	Nelson House	NORMAN	f
+35	MHH	MHH	1	hml@mts.net	Headingley Municipal Library	49 Alboro Street		Headingley, MB  R4J 1A3	2011-02-03 10:21:31.672572	Headingly	CENTRAL	f
+78	MSTR	MSTR	1	sroselib@mts.net	Ste. Rose Regional Library	580 Central Avenue	General Delivery	Ste. Rose du Lac, MB  R0L 1S0	2011-02-03 12:41:49.075946	Ste. Rose du Lac	PARKLAND	f
+124	MDPSLA	MDPSLA	1	lazarelib@mts.net	Parkland Regional Library - St. Lazare		Box 201	St. Lazare, MB  R0M 1Y0	2010-11-25 17:06:24.004507	St. Lazare	WESTMAN	f
+103	MEPL	MEPL	1	library@townofemerson.com	Emerson Library	104 Church Street	Box 340	Emerson, MB  R0A 0L0	2011-01-24 18:56:43.490848	Emerson	CENTRAL	f
+37	MSSM	MSSM	1	stmlibrary@jrlibrary.mb.ca	Jolys Regional Library - St. Malo	189 St. Malo Street	Box 593	St.Malo, MB  R0A 1T0	2011-02-02 15:43:01.43152	St. Malo	EASTMAN	f
+28	MCH	MCH	1	mchlibrary@yahoo.ca	Churchill Public Library	180 Laverendrye	Box 730	Churchill, MB  R0B 0E0	2011-02-03 10:04:52.805515	Churchill	NORMAN	f
+27	MEL	MEL	1	epl1@mts.net	Eriksdale Public Library	PTH 68  (9 Main St.)	Box 219	Eriksdale, MB  R0C 0W0	2011-02-03 12:27:27.45312	Eriksdale	INTERLAKE	f
+77	MBI	MBI	1	binslb@mts.net	Russell & District Library - Binscarth	106 Russell St.	Box  379	Binscarth, MB  R0J 0G0	2011-01-12 16:33:26.593717	Binscarth	PARKLAND	f
+61	MDPMC	MDPMC	1	mccrea16@mts.net	Parkland Regional Library - McCreary	615 Burrows Rd.	Box 297	McCreary, MB  R0J 1B0	2011-01-18 15:43:28.57626	McCreary	PARKLAND	f
+42	MLR	MLR	1	lrlib@mts.net	Leaf Rapids Public Library	20 Town Centre	Box 190	Leaf Rapids, MB  R0B 1W0	2009-05-25 18:16:48	Leaf Rapids	NORMAN	f
+67	MDPWP	MDPWP	1	wpgosis@mts.net	Parkland Regional Library - Winnipegosis	130 2nd St.	Box Box 10	Winnipegosis, MB  R0L 2G0	2011-02-02 14:18:10.749017	Winnipegosis	PARKLAND	f
+88	MESMN	MESMN	1	smrl1nap@yahoo.ca	Southwestern Manitoba Regional Library - Napinka	57 Souris St.	Box 975	Melita, MB  R0M 1L0	2010-09-14 14:14:28.201392	Napinka	WESTMAN	f
+43	MLLC	MLLC	1	lynnlib@mts.net	Lynn Lake Centennial Library	503 Sherritt Ave.	Box 1127	Lynn Lake, MB  R0B 0W0	\N	Lynn Lake	NORMAN	f
+50	MDPBR	MDPBR	1	briver@mts.net	Parkland Regional Library - Birch River	116 3rd St. East	Box 245	Birch River, MB  R0L 0E0	2008-12-18 20:36:09	Birch River	PARKLAND	f
+60	MDPLA	MDPLA	1	langlib@mts.net	Parkland Regional Library - Langruth	402 Main St.	Box 154	Langruth, MB  R0H 0N0	2010-07-30 09:16:07.67375	Langruth	CENTRAL	f
+68	MP	MP	1	email@pinawapubliclibrary.com	Pinawa Public Library	Vanier Road	General Delivery	Pinawa, MB  R0E 1L0	2012-01-19 14:27:21.29003	Pinawa	EASTMAN	f
+1	DTL	DTL123	1	David_A_Christensen@hotmail.com	The Great Library of Davidland	123 Some Street South	Brandon, MB  R7A 7A1		2009-12-09 15:11:39.580858	\N	\N	f
+89	MESP	MESP	1	pcilibrary@goinet.ca	Southwestern Manitoba Regional Library - Pierson	58 Railway Avenue	Box 39	Pierson, MB  R0M 1S0	2011-01-28 09:45:37.364496	Pierson	WESTMAN	f
+54	MDPER	MDPER	1	erick11@mts.net	Parkland Regional Library - Erickson	20 Main St. W	Box 385	Erickson, MB  R0J 0P0	2011-02-01 11:11:13.915092	Erickson	WESTMAN	f
+49	MDP	MDP	1	prlhq@parklandlib.mb.ca	Parkland Regional Library - Main	504 Main St. N.		Dauphin, MB  R7N 1C9	2011-01-25 13:15:46.362271	\N	\N	f
+111	MSSC	MSSC	1	shilocommunitylibrary@yahoo.ca	Shilo Community Library  (765-3000 ext 3664)		Box Box 177	Shilo, MB  R0K 2A0	2011-02-01 15:25:17.713108	\N	\N	f
+138			0	\N	\N	\N	\N	\N	\N	\N	\N	f
+17	MLB	bsjlromd	1	bsjl@bsjl.ca	Bibliothèque Saint-Joachim Library	29, baie Normandeau Bay	Box 39	La Broquerie, MB  R0A 0W0	2011-02-02 08:08:42.558263	La Broquerie	EASTMAN	f
+52	MDPBO	MDPBO	1	bows18@mts.net	Parkland Regional Library - Bowsman	105 2nd St.	Box 209	Bowsman, MB  R0L 0H0	2011-01-04 11:20:46.044179	Bowsman	PARKLAND	f
+55	MDPFO	MDPFO	1	foxlib@mts.net	Parkland Regional Library - Foxwarren	312 Webster Ave.	Box 204	Foxwarren, MB  R0J 0P0	2011-02-01 10:41:17.93653	Foxwarren	WESTMAN	f
+86	MTSIR	MTSIR	1	teulonbranchlibrary@yahoo.com	South Interlake Regional Library - Teulon	19 Beach Road	Box 68	Teulon, MB  R0C 3B0	2011-02-02 10:47:07.748734	Teulon	INTERLAKE	f
+102	MHP	MHP	1	victlib@goinet.ca	Victoria Municipal Library	102 Stewart Ave	Box 371	Holland, MB  R0G 0X0	2011-01-27 16:50:14.499442	Holland	CENTRAL	f
+11	MSJB	MSJB	1	biblio@atrium.ca	Bibliothèque Montcalm	113B 2nd	Box 345	Saint-Jean-Baptiste, MB  R0G 2B0	2011-02-02 09:30:53.111402	Saint-Jean-Baptiste	CENTRAL	f
+47	MBB	MBB	1	benlib@mts.net	North-West Regional Library - Benito Branch	140 Main Street	Box 220	Benito, MB  R0L 0C0	2011-01-27 14:18:36.739511	Benito	PARKLAND	f
+22	ME	brlelk	1	elkhornbrl@rfnow.com	Border Regional Library - Elkhorn	211 Richhill Ave.	Box 370	Elkhorn, MB  R0M 0N0	2011-02-03 09:59:18.485715	Elkhorn	WESTMAN	f
+41	MPM	MPM	1	pmlibrary@mts.net	Pilot Mound Public Library - Pilot Mound	219 Broadway Ave. W.	Box 126	Pilot Mound, MB  R0G 1P0	2011-02-03 10:55:31.63491	Pilot Mound	CENTRAL	f
+45	MMNN	MMNN	1	maclib@mts.net	North Norfolk-MacGregor Library	35 Hampton St. E.	Box 760	MacGregor, MB  R0H 0R0	2011-02-02 15:10:26.856663	MacGregor	CENTRAL	f
+14	MSAD	MSAD	1	stadbranch@hotmail.com	Bibliothèque Ritchot - St. Adolphe	444 rue La Seine		St. Adolphe, MB  R5A 1C2	2011-02-02 15:52:05.639717	St. Adolphe	EASTMAN	f
+73	MRP	MRP	1	restonlb@yahoo.ca	Reston District Library	220 - 4th St.	Box 340	Reston, MB  R0M 1X0	2011-02-03 11:23:53.280404	Reston	WESTMAN	f
+66	MDPSI	MDPSI	1	siglun15@mts.net	Parkland Regional Library - Siglunes	5 - 61 Main St.	Box 368	Ashern, MB  R0C 0E0	2011-02-02 15:17:39.520904	Ashern	INTERLAKE	f
+15	MSAG	MSAG	1	bibliosteagathe@atrium.ca	Bibliothèque Ritchot - Ste. Agathe	310 Chemin Pembina Trail	Box 40	Sainte-Agathe, MB  ROG 1YO	2011-02-02 19:05:31.804753	Ste. Agathe	EASTMAN	f
+98	MMR	MMR	1	mmr@mts.net	Minnedosa Regional Library	45 1st  Ave. SE	Box 1226	Minnedosa, MB  R0J 1E0	2011-02-03 12:20:34.182761	Minnedosa	WESTMAN	f
+23	MMCA	MMCA	1	library@mcauley-mb.com	Border Regional Library - McAuley	207 Qu'Appelle Street	Box 234	McAuley, MB  R0M 1H0	2011-01-25 14:27:40.737841	McAuley	WESTMAN	f
+76	MRD	MRD	1	ruslib@mts.net	Russell & District Regional Library - Main	339 Main St.	Box 340	Russell, MB  R0J 1W0	2011-02-01 13:17:19.029251	Russell	PARKLAND	f
+136	MVBB	MVBB	1	victoriabeachbranch@hotmail.com	Bibliotheque Allard - Victoria Beach	Box 279	Victoria Beach, MB  R0E 2C0		2010-12-15 14:34:37.863963	\N	\N	f
+62	MDPMI	MDPMI	1	minitons@mts.net	Parkland Regional Library - Minitonas	300 Main St.	Box 496	Minitonas, MB  R0L 1G0	2011-02-02 15:14:04.465687	Minitonas	PARKLAND	f
+74	MRO	MRO	1	rrl@mts.net	Rossburn Regional Library	53 Main St. North	Box 87	Rossburn, MB  R0J 1V0	2011-01-28 15:18:05.156408	Rossburn	PARKLAND	f
+25	MDB	bdwcl	1	bdwlib@mts.net	Bren Del Win Centennial Library	211 North Railway W.	Box 584	Deloraine, MB  R0M 0M0	2011-02-02 10:56:11.631378	Deloriane	WESTMAN	f
+19	MS	lucy	1	somlib@mts.net	Bibliotheque Somerset Library	Box 279	289 Carlton Avenue 	Somerset, MB  R0G 2L0	2011-02-01 15:51:52.043388	Somerset	CENTRAL	f
+79	MSEL	MSEL	1	ill@ssarl.org	Red River North Regional Library	303 Main Street		Selkirk, MB  R1A 1S7	2011-11-03 15:59:47.492864	Selkirk	INTERLAKE	f
+82	MAOW	maow	1	aill@scrlibrary.mb.ca	South Central Regional Library - Altona	113-125 Centre Ave. E. (324-1503)	Box 650	Altona, MB  R0G 0B0	2011-12-12 14:35:21.057783	Altona	CENTRAL	f
+18	MSA	msa	1	steannelib@steannemb.ca	Bibliothèque Ste. Anne	16 rue de l'Eglise		Ste. Anne, MB  R5H 1H8	2011-02-03 11:16:24.882061	Ste. Anne	EASTMAN	f
+31	MRB	LAKE	1	rlibrary@mts.net	Evergreen Regional Library - Riverton	56 Laura Ave.	Box 310	Riverton, MB  R0C 2R0	2012-02-29 14:00:18.263003	Riverton	INTERLAKE	f
+91	MTP	MTP	1	illthepas@mts.net	The Pas Regional Library	53 Edwards Avenue	Box 4100	The Pas, MB  R9A 1R2	2011-02-02 15:54:58.568087	The Pas	NORMAN	f
+38	MLDB	MLDB	1	mldb@mts.net	Lac du Bonnet Regional Library	84-3rd Street	Box 216	Lac du Bonnet, MB  R0E 1A0	2011-02-03 10:17:25.172551	Lac du Bonnet	EASTMAN	f
+100	MWP	MWP	1	legislative_library@gov.mb.ca	Manitoba Legislative Library	100 - 200 Vaughan		Winnipeg, MB  R3C 1T5	2012-03-28 13:56:42.767746	\N	\N	f
+34	MSOG	MSOG	1	ill@sourislibrary.mb.ca	Glenwood & Souris Regional Library	18 - 114 2nd St. S.	Box 760	Souris, MB  R0K 2C0	2011-02-01 21:41:47.575609	Souris	WESTMAN	f
+71	MRIP	MRIP	1	pcrl@mts.net	Prairie Crocus Regional Library	137 Main Street	Box 609	Rivers, MB  R0K 1X0	2012-04-30 09:06:07.229841	Rivers	WESTMAN	f
+21	MVE	MVE	1	borderlibraryvirden@rfnow.com	Border Regional Library - Main	312 - 7th  Avenue	Box 970	Virden, MB  R0M 2C0	2012-05-01 08:29:16.411326	Virden	WESTMAN	f
+84	MWOW	MWOW	1	will@scrlibrary.mb.ca	South Central Regional Library - Winkler	160 Main Street (325-7174)	Box 1540	Winkler, MB  R6W 4B4	2012-05-28 11:17:02.575702	Winkler	CENTRAL	f
+40	MCCB	CC111	1	cartlib@mts.net	Lakeland Regional Library - Cartwright	483 Veteran Drive	Box 235	Cartwright, MB  R0K 0L0	2011-02-02 16:34:12.994159	Cartwright	CENTRAL	f
+53	MDA	MDA	1	DauphinLibrary@parklandlib.mb.ca	Parkland Regional Library - Dauphin	504 Main Street North		Dauphin, MB  R7N 1C9	2011-02-02 19:42:49.630926	Dauphin	PARKLAND	f
+65	MDPSL	MDPSL	1	sllibrary@mts.net	Parkland Regional Library - Shoal Lake	418 Station Road S.	Box 428	Shoal Lake, MB  R0J 1Z0	2011-02-01 14:06:09.972297	Shoal Lake	WESTMAN	f
+51	MDPBI	MDPBI	1	birtlib@mts.net	Parkland Regional Library - Birtle	907 Main Street	Box 207	Birtle, MB  R0M 0C0	2011-02-03 11:31:03.715139	Birtle	WESTMAN	f
+16	MSCL	MSCL	1	stclib@mts.net	Bibliothèque Saint-Claude	50 1st Street	Box 203	St. Claude, MB  R0G 1Z0	2011-01-20 11:20:23.16518	St. Claude	CENTRAL	f
+110	MBBB	MBBB	1	beacheslibrary@hotmail.com	Bibliotheque Allard - Beaches	40005 Jackfish Lake Rd. N. Walter Whyte School	Box 279	Victoria Beach, MB  R0E 2C0	2011-01-27 16:15:41.161472	Traverse Bay	EASTMAN	f
+12	MNDP	MNDP	1	ndbiblio@yahoo.ca	Bibliothèque Pere Champagne	44 Rue Rogers	Box 399	Notre Dame de Lourdes, MB  R0G 1M0	2011-02-01 09:47:15.311152	Notre Dame de Lourdes	CENTRAL	f
+26	MBBR	MBBR	1	brrlibr2@mts.net	Brokenhead River Regional Library	427 Park  Ave.	Box 1087	Beausejour, MB  R0E 0C0	2011-02-02 17:21:32.430374	Beausejour	EASTMAN	f
+120	MHW	MHW	1	hartney@wmrlibrary.mb.ca	Western Manitoba Regional - Hartney Cameron Branch	209 Airdrie St.	Box 121	Hartney, MB  R0M 0X0	2011-01-29 11:28:09.80128	Hartney	WESTMAN	f
+93	MMVR	MMVR	1	valleylib@mts.net	Valley Regional Library	141Main Street South	Box 397	Morris, MB  R0G 1K0	2011-02-03 12:17:58.225938	Morris	CENTRAL	f
+10	MSTG	MSTG	1	ill@allardlibrary.com	Bibliotheque Allard	104086 PTH 11	Box 157	St Georges, MB  R0E 1V0	2011-02-03 12:15:00.441084	St Georges	EASTMAN	f
+112	ASGY	ASGY	0	lfrolek@yrl.ab.ca	Yellowhead Regional		Box 400	Spruce Grove, AB, MB  T7X 2Y1	\N	\N	\N	f
+104	MBAC	MBAC	1	library@assiniboinec.mb.ca	Assiniboine Community College	1430 Victoria Avenue East		Brandon, MB  R7A 2A9	2011-01-25 14:07:16.067536	\N	\N	f
+57	MDPGL	MDPGL	1	gladstne@mts.net	Parkland Regional Library - Gladstone	42 Morris Avenue N.	Box 720	Gladstone, MB  R0J 0T0	2011-02-03 10:06:30.811072	Gladstone	CENTRAL	f
+64	MDPRO	MDPRO	1	roblinli@mts.net	Parkland Regional Library - Roblin	123 lst Ave. N.	Box 1342	Roblin, MB  R0L 1P0	2011-01-25 15:18:33.838446	Roblin	PARKLAND	f
+96	MGW	MGW	1	jackie@wmrl.ca	Western Manitoba Regional  Library - Glenboro/South Cypress	105 Broadway St.	Box 429	Glenboro, MB  R0K 0X0	2011-02-01 16:29:58.638328	Glenboro	WESTMAN	f
+33	MGI	MGI11	1	bwinner@gillamnet.com	Bette Winner Public Library	235 Mattonnabee Ave.	Box 400	Gillam, MB  R0B 0L0	2011-02-01 16:54:57.526489	Gillam	NORMAN	f
+48	MLPJ	MLPJ	1	mlpj@mts.net	Pauline Johnson Library	23 Main Street	Box 698	Lundar, MB  R0C 1Y0	2011-02-03 10:48:25.445635	Lundar	INTERLAKE	f
+56	MDPGP	MDPGP	1	gilbert3@mts.net	Parkland Regional Library - Gilbert Plains	113 Main St. N.	Box 303	Gilbert Plains, MB  R0L 0X0	2011-01-29 16:19:27.923943	Gilbert Plains	PARKLAND	f
+59	MDPHA	MDPHA	1	hamlib@mymts.net	Parkland Regional Library - Hamiota	43 Maple Ave. E.	Box 609	Hamiota, MB  R0M 0T0	2011-02-01 16:33:06.705467	Hamiota	WESTMAN	f
+131	UCN	UCN321	1		University Colleges North pilot project				2010-12-16 14:12:00.413037	\N	\N	f
+119	MTPL	MTPL	1	btl@srsd.ca	Bibliothque Publique Tache Public Library - Main		Box 16	Lorette, MB  R0A 0Y0	2011-02-02 16:00:40.614521	Lorette	EASTMAN	f
+113	MWSC	MWSC	1	library@smd.mb.ca	Society for Manitobans with Disabilities - Stephen Sparling	825 Sherbrooks Street		Winnipeg, MB  R3A 1M5	\N	\N	\N	f
+114	MWEMM	MWEMM	0	LJanower@gov.mb.ca	Manitoba Industry Trade and Mines - Mineral Resource	Suite 360 - 1395 Ellice Ave.		Winnipeg, MB  R3G 3P2	\N	\N	\N	f
+115	OKE	OKE	0	eroussin@kenora.ca	Kenora Public Library	24 Main St. South		Kenora, Ontario, MB  P9N 1S7	\N	\N	\N	f
+32	MFF	SHOELACE	1	ffplill@mts.net	Flin Flon Public Library	58 Main Street		Flin Flon, MB  R8A 1J8	2011-12-12 12:56:51.457245	Flin Flon	NORMAN	f
+24	MCB	MCB	1	illbrl@hotmail.com	Boyne Regional Library	15 - 1st Avenue SW	Box 788	Carman, MB  R0G 0J0	2011-12-12 13:10:44.162827	Carman	CENTRAL	f
+94	MBW	rescue	1	bdnill@wmrlibrary.mb.ca	Western Manitoba Regional Library - Brandon	710 Rosser Avenue, Unit 1		Brandon, MB  R7A 0K9	2011-12-12 14:08:45.397178	Brandon	WESTMAN	f
+135	MMIOW	MMIOW	1	thlib@scrlibrary.mb.ca	South Central Regional Library - Miami	423 Norton Avenue	(Box 431)	Miami, MB  R0G 1H0	2011-12-12 15:28:31.991569	Miami	CENTRAL	f
+39	MKL	MKL	1	lrl@mts.net	Lakeland Regional Library - Main	318 Williams Ave.	Box 970	Killarney, MB  R0K 1G0	2011-12-12 16:03:53.003063	Killarney	WESTMAN	f
+44	MMA	MMA	1	manitoulibrary@mts.net	Manitou Regional Library	418 Main St.	Box 432	Manitou, MB  R0G 1G0	2011-12-30 08:55:30.596456	Manitou	CENTRAL	f
+116	CPL	CPL	0		Crocus Plains Regional Secondary School	1930 First Street		Brandon, MB  R7A 6Y6	\N	\N	\N	f
+117	MWHBCA	MWHBCA	0	hbca@gov.mb.ca	Hudsons Bay Company Archives	200 Vaughan St.		Winnipeg, MB  R3C 1T5	\N	\N	\N	f
+118	MWJ	MWJ	0	jodi.turner@justice.gc.ca	Department of Justice	301-310 Broadway Avenue		Winnipeg, MB  R3C 0S6	\N	\N	\N	f
+130	UNC	UNC321	1		Delete me!				2008-07-28 15:22:43	\N	\N	f
+30	MAB	TIME	1	arborglibrary@mts.net	Evergreen Regional Library - Arborg	292 Main Street	Box 4053	Arborg, MB  R0C 0A0	2012-03-29 09:55:06.585298	Arborg	INTERLAKE	f
+36	MSTP	MSTP	1	stplibrary@jrlibrary.mb.ca	Jolys Regional Library - Main	505 Hebert Ave. N.	Box 118	St. Pierre-Jolys, MB  R0A 1V0	2011-02-03 09:05:21.66346	St. Pierre	EASTMAN	f
+132	Headingley Municipal Library	MHH	0	\N	\N	\N	\N	\N	\N	\N	\N	f
+129	admin	maplin3db	1	David.A.Christensen@gmail.com	Maplin-3 Administrator				2012-03-02 15:20:08.314775	\N	\N	f
+83	MMOW	MMOW	1	mill@scrlibrary.mb.ca	South Central Regional Library - Morden	514 Stephen Street	Morden, MB  R6M 1T7	204-822-4092	2012-05-28 10:02:43.090645	Morden	CENTRAL	f
+87	MESM	MESM	1	swmblib@mts.net	Southwestern Manitoba Regional Library - Main	149 Main St. S.	Box 639	Melita, MB  R0M 1L0	2011-12-08 14:27:16.546842	Melita	WESTMAN	f
+139	Spruce	Spruce	1	headlib@scrlibrary.mb.ca	Spruce Co-operative	 	 	 	2011-11-04 08:55:19.297548	\N	\N	f
+99	MW	MW	1	wpl-illo@winnipeg.ca	Winnipeg Public Library : Interlibrary Loans	251 Donald St.		Winnipeg, MB  R3C 3P5	2011-12-12 11:31:38.138719	Winnipeg	WINNIPEG	f
+92	MTH	MTH	1	interlibraryloans@thompsonlibrary.com	Thompson Public Library	81 Thompson Drive North		Thompson, MB  R8N 0C3	2012-01-19 15:13:17.695393	Thompson	NORMAN	f
+90	MSTE	MSTE	1	steinlib@rocketmail.com	Jake Epp Library	255 Elmdale Street		Steinbach, MB  R5G 0C9	2012-03-29 08:43:27.183717	Steinbach	EASTMAN	f
+20	MBOM	MBOM	1	mbomill@mts.net	Boissevain and Morton Regional Library	436 South Railway St.	Box 340	Boissevain, MB  R0K 0E0	2012-05-03 08:47:47.533285	Boissevain	WESTMAN	f
+101	MWPL	MWPL	1	pls@gov.mb.ca	Public Library Services Branch	300 - 1011 Rosser Avenue		Brandon, MB  R7A 0L5	2012-04-20 15:26:39.119386	\N	\N	t
+85	MSTOS	MSTOS	1	circ@sirlibrary.com	South Interlake Regional Library - Main	419 Main St.		Stonewall, MB  R0C 2Z0	2012-05-30 14:21:16.583286	Stonewall	INTERLAKE	f
+46	MSRN	MSRN	1	nwrl@mymts.net	North-West Regional Library - Main	610-1st  St. North	Box 999	Swan River, MB  R0L 1Z0	2012-04-27 11:46:09.958516	Swan River	PARKLAND	f
+69	MPLP	MPLP	1	portlib@portagelibrary.com	Portage La Prairie Regional Library	40-B Royal Road N		Portage La Prairie, MB  R1N 1V1	2012-04-27 14:28:45.534335	Portage la Prairie	CENTRAL	f
 \.
 
 
@@ -10093,428 +10049,471 @@ COPY library_barcodes (lid, borrower, barcode) FROM stdin;
 
 
 --
+-- Data for Name: reports; Type: TABLE DATA; Schema: public; Owner: mapapp
+--
+
+COPY reports (rid, rtype, name, description, generator) FROM stdin;
+2	Summary	Basic stats	Number of items borrowed and number of items loaned for the selected period.	report-basic-stats
+3	Borrowing	Frequent titles	A list of titles borrowed more than once.	report-frequent-titles
+4	Borrowing	Frequent authors	A list of authors borrowed more than once.	report-frequent-authors
+5	Borrowing	Fic vs nonfic	Total borrowing by fiction/nonfiction.	report-fic-nonfic
+6	Summary	Daily/Weekly/Monthly	Borrowed and loaned daily, weekly, and monthly stats for the selected period.	report-dwm
+7	Lending	Unfilled	Number of requests you could not fill, by reason.	report-unfilled
+8	Borrowing	No sources	List of titles requested which no sources could loan to you	report-no-sources
+\.
+
+
+--
+-- Data for Name: reports_complete; Type: TABLE DATA; Schema: public; Owner: mapapp
+--
+
+COPY reports_complete (lid, rid, range_start, range_end, report_file) FROM stdin;
+85	2	2012-04-07	2012-05-08	201205071628207148746371
+\.
+
+
+--
+-- Data for Name: reports_queue; Type: TABLE DATA; Schema: public; Owner: mapapp
+--
+
+COPY reports_queue (ts, rid, lid, range_start, range_end) FROM stdin;
+\.
+
+
+--
 -- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
 COPY request (id, title, author, requester, patron_barcode, current_target) FROM stdin;
-4	Alps and their people, The	Bullen, Susan	85	26786700000001	1
-5	Appalachian spring	Gustafson, Eleanor	85	26786700000001	1
-6	Andes [videorecording]	\N	85	26786700000001	1
-7	Alchemy	\N	85	26786700000001	1
-8	Accident	Steel, Danielle	85	26786700000001	1
-9	Accelerate	\N	85	26786700000001	1
-10	According to Jake and the kid	Mitchell, W. O	85	26786700000001	1
-11	Ace Ventura	\N	85	26786700000001	1
-12	Active training	Silberman, Melvin L	85	26786700000001	1
-13	Acute care nursing in the home	\N	85	26786700000001	1
-14	Adventure guides	\N	85	26786700000001	1
-15	The aerobats:  the world's great aerial demonstration teams	Yenne, Bill	85	26786700000001	1
-16	Anchor Hocking's Fire-King & more	Florence, Gene	85	26786700000001	1
-17	Angle of repose	Stegner, Wallace Earle	85	26786700000001	1
-18	Arctic Alphabet	Lynch, Wayne	85	26786700000001	1
-19	Astronomy today	Asimov, Isaac	85	26786700000001	1
-20	Appetite for life	Fitch, Noel Riley	85	26786700000001	1
-21	Backhoes	McClellan, Ray	32	26330000000002	1
-22	Bradford Angier's Backcountry basics	Angier, Bradford	32	26330000000002	1
-23	Bachelor Jim	Boon, Clarence A	32	26330000000002	1
-24	Bad company	Wick, Steve	32	26330000000002	1
-25	Barbarian tides	\N	32	26330000000002	1
-26	Bank shot	Westlake, Donald E	32	26330000000002	1
-27	Barbie	\N	32	26330000000002	1
-28	Battle ready	Clancy, Tom	32	26330000000002	1
-29	Beach road	Patterson, James	32	\N	0
-30	Beach Girls	Rice, Luanne	32	26330000000002	1
-31	Bowling	Strickland, Robert	32	26330000000002	1
-32	Bear attacks	Herrero, Stephen	32	26330000000002	1
-1	Awkward aardvark	Mwalimu	85	26786700000001	1
-2	Apples	Browning, Frank	85	26786700000001	1
-3	Arthur! Arthur!	Black, Arthur	85	26786700000001	1
-33	Beggar maid, queen	Peters, Maureen	32	26330000000002	1
-34	Bedside manners	Barker, Margaret	32	26330000000002	1
-35	Belle Arabelle	Marokvia, Mireille	32	26330000000002	1
-36	Biology	Campbell, Neil A	32	26330000000002	1
-37	Bird	Burnie, David	32	26330000000002	1
-38	Black Beauty;	Sewell, Anna	32	26330000000002	1
-39	Ballroom dancing	\N	32	26330000000002	1
-40	Beaver skins and mountain men ;	Burger, Carl	32	26330000000002	1
-41	Contempt of court	Curriden, Mark	24	26220000000003	1
-42	Contemporary Canadian painting	Withrow, William J	24	26220000000003	1
-43	Courtesy becomes me	Bayer, Lewena	24	26220000000003	1
-44	Cosmopolitan	Cecchini, Toby	24	26220000000003	1
-45	Curiosity	Thomas, Joan	24	26220000000003	1
-46	Crossword answer book, The	Newman, Stanley	24	26220000000003	1
-47	Colony	Siddons, Anne Rivers	24	26220000000003	1
-48	Community Helpers from A to Z	Kalman, Bobbie	24	26220000000003	1
-49	Canadian diplomacy and the Korean war, 1950-1953	Donaghy, Greg	24	26220000000003	1
-50	Control	Anderson, Jack	24	26220000000003	1
-51	Crude world	Maass, Peter	24	26220000000003	1
-52	Creed	Harte, Bryce	24	26220000000003	1
-53	Cree language structures	Ahenakew, Freda	24	26220000000003	1
-54	Critical	Cook, Robin	24	26220000000003	1
-55	Cultural Anthropology	Kottak Conrad Phillip,Kottak, Conrad Phillip	24	26220000000003	1
-56	Cyanide wells	Muller, Marcia	24	26220000000003	1
-57	Calligraphy	Campbell, Fiona	24	26220000000003	1
-58	Coots, codgers and curmudgeons	Sisson, Hal C	24	26220000000003	1
-59	Calumet City	Newton, Charlie	24	26220000000003	1
-60	Cradle to canoe	Kraiker, Rolf	24	26220000000003	1
-61	Disturbance	Burke, Jan	92	26840000000004	1
-62	Duke	Boswell, John	92	26840000000004	1
-63	Dialogue	Turco, Lewis	92	26840000000004	1
-64	Deadlock	Johansen, Iris	92	26840000000004	1
-65	Diaspora by design	Moghissi, Haideh	92	26840000000004	1
-66	Doctor Zhivago	Pasternak, Boris Leonidovich	92	26840000000004	1
-67	The diversity of life	Wilson, Edward O	92	26840000000004	1
-68	Dude, where's my country?	Moore, Michael	92	\N	0
-69	Dude ranch	Bryant, Bonnie	92	26840000000004	1
-70	Dragon	Cussler, Clive	92	26840000000004	1
-71	Danger point	Wentworth, Patricia	92	26840000000004	1
-72	Disciplining dissent	\N	92	26840000000004	1
-73	Dinosaur	Norman, David	92	26840000000004	1
-74	Dyslexia	Landau, Elaine	92	26840000000004	1
-75	Digital photography for dummies	King, Julie Adair	92	26840000000004	1
-76	Domestic descendants	Moscow, Henry	92	26840000000004	1
-77	A Delicate balance	Albee, Edward	92	26840000000004	1
-78	Delicate dances	\N	92	26840000000004	1
-79	Dirty Blonde	Scottoline, Lisa	92	26840000000004	1
-80	Deforestation	Owens, Caleb	92	26840000000004	1
-81	Electric mischief	Bartholomew, Alan	71	26747000000005	1
-82	The Echelon vendetta	Stone, David	71	26747000000005	1
-83	Energy	Oxlade, Chris	71	26747000000005	1
-84	Enigma	Harris, Robert	71	26747000000005	1
-85	The entropy effect	McIntyre, Vonda N	71	26747000000005	1
-86	Eternal prairie	Adams, R	71	26747000000005	1
-87	Everlasting	Woodiwiss, Kathleen E	71	26747000000005	1
-88	Earth	Asimov, Issac	71	26747000000005	1
-89	Ethics	Wekesser, Carol	71	26747000000005	1
-90	L'escargot	Monette, Lise	71	26747000000005	1
-91	Elephant song	Smith, Wilbur A	71	26747000000005	1
-92	Eau Canada	\N	71	26747000000005	1
-93	Eutopia: a novel of terrible optimism	Nickle, David	71	26747000000005	1
-94	Ethnic conflict	Cozic, Charles (ed.)	71	26747000000005	1
-95	Ethernet	Spurgeon, Charles	71	26747000000005	1
-96	English masterpieces;	Mack, Maynard	71	26747000000005	1
-97	Employment Equity Act	\N	71	26747000000005	1
-98	Evolution	Moore, Ruth Ellen	71	26747000000005	1
-99	Ear, nose, and throat disorders sourcebook	\N	71	26747000000005	1
-100	Excel 2007	Jacobs, Kathy	71	26747000000005	1
-101	Face forward	Aucoin, Kevyn	68	26700000000006	1
-102	Flying finish. --	Francis, Dick	68	26700000000006	1
-103	Family	Bombeck, Erma	68	26700000000006	1
-104	Flowers for Algernon	Keyes, Daniel	68	26700000000006	1
-105	Frugal Gourmet collection [videorecording] :, The	\N	68	26700000000006	1
-106	Fruitful encounters	Brush, Stephen G	68	26700000000006	1
-107	The Franklin Expedition As Recorded In Hudson's Bay Company Post Journals	Houston, C. Stuart	68	26700000000006	1
-108	Following the line of duty :the other side of the battle	King, Herbert R	68	26700000000006	1
-109	Football fugitive	Christopher, Matt	68	26700000000006	1
-110	Fried green tomatoes	\N	68	26700000000006	1
-111	Fancy Nancy	O'Connor, Jane	68	26700000000006	1
-112	FILTER, AIR, HIGH EFFICIENCY RIGID TYPE, FOR REMOVAL OF PARTICULATE FROM VENTILATING SYSTEMS	\N	68	26700000000006	1
-113	Fear of frying	Churchill, Jill	68	26700000000006	1
-114	Field hockey	Gutman, Bill	68	26700000000006	1
-115	Futile efforts	Piccirilli, Tom	68	26700000000006	1
-116	Ferrari	McKenna, A. T	68	26700000000006	1
-117	Feudal coats-of-arms	Foster, Joseph	68	26700000000006	1
-118	Fur traders	\N	68	26700000000006	1
-119	Feather on the moon	Whitney, Phyllis A	68	26700000000006	1
-120	Financial freedom in 8 minutes a day	Hulnick, Ron	68	26700000000006	1
-121	Giants! Giants! Giants!	\N	94	26290000000007	1
-122	Giraffe family	Goodall, Jane	94	\N	0
-123	Giraffe	Ledgard, J.M	94	26290000000007	1
-124	Gaelic envy	White, Nancy	94	26290000000007	1
-125	Germ	Liparulo, Robert	94	26290000000007	1
-126	Giggle, giggle, quack	Cronin, Doreen	94	26290000000007	1
-127	Gorgeous	Vail, Rachel	94	26290000000007	1
-128	Generous death	Pickard, Nancy	94	26290000000007	1
-129	Good night, sleep tight, don't let the bedbugs bite!	De Groat, Diane	94	26290000000007	1
-130	Grammar matters	Ghomeshi, Jila	94	26290000000007	1
-131	Golden fox	Smith, Wilbur A	94	26290000000007	1
-132	Genius	Gleick, James	94	26290000000007	1
-133	Gentlemen of the road	Chabon, Michael	94	26290000000007	1
-134	Gulliver in Lilliput	Findlay, Lisa	94	26290000000007	1
-135	Goal!	Javaherbin, Mina	94	26290000000007	1
-136	Gentlemen of adventure	Gann, Ernest Kellogg	94	26290000000007	1
-137	Geology rocks!	Blobaum, Cindy	94	26290000000007	1
-138	Ghost	\N	94	26290000000007	1
-139	Goose	Bang, Molly	94	26290000000007	1
-140	Galapagos	\N	94	26290000000007	1
-141	Hardware;	Barnes, Linda	90	26830000000008	1
-143	Helping your anxious child	Rapee, Ronald M	90	26830000000008	1
-144	Hubris	Isikoff, Michael	90	26830000000008	1
-146	The honor of the queen	Weber, David	90	26830000000008	1
-147	Horrible Harry goes to the moon	Kline, Suzy	90	26830000000008	1
-148	Honourable intentions	Barr, Natalie	90	26830000000008	1
-149	Harry Potter and the Chamber of Secrets	Rowling, J. K	90	\N	0
-150	Harry Potter and the goblet of fire	Rowling, J. K	90	26830000000008	1
-151	Hallucinogens	Barter, James	90	26830000000008	1
-152	Hummingbird	Spencer, LaVyrle	90	26830000000008	1
-153	Harry Houdini	Macleod, Elizabeth,MacLeod, Elizabeth	90	26830000000008	1
-154	Hawk	Hawk, Tony	90	26830000000008	1
-155	Healing grief	Van Praagh, James	90	26830000000008	1
-156	Hello Canada!	Young, Scott	90	26830000000008	1
-157	Heritage	\N	90	26830000000008	1
-158	Humble pie	Benrey, Ron	90	26830000000008	1
-159	Half empty	Rakoff, David	90	26830000000008	1
-160	Honey	Andrews, V.C	90	26830000000008	1
-161	Internal affairs	Dial, Connie	82	26269000000009	1
-162	Invisible	McCourtney, Lorena	82	\N	0
-163	Invisible prey	Sandford, John	82	26269000000009	1
-164	Icon	Forsyth, Frederick	82	26269000000009	1
-165	Ideology	Eagleton, Terry	82	26269000000009	1
-166	Irish whiskey	Greeley, Andrew M	82	26269000000009	1
-167	Imperial Rome	Hadas, Moses	82	26269000000009	1
-168	Investigative reports [videorecording]	\N	82	26269000000009	1
-169	The illuminating world of light with Max Axiom, super scientist	Sohn, Emily	82	26269000000009	1
-170	The imaginary Indian	Francis, Daniel	82	26269000000009	1
-171	Infernal devices	Reeve, Philip	82	26269000000009	1
-172	Intelligent universe	Gardner, James N	82	26269000000009	1
-173	I'm not suffering from insanity-- I'm enjoying every minute of it!	Linamen, Karen Scalf	82	26269000000009	1
-174	Insidious	\N	82	26269000000009	1
-175	Ironic	Grills, Barry	82	26269000000009	1
-176	The integral trees	Niven, Larry	82	26269000000009	1
-177	Identity : the autobiography of Edward L. Stephanson (Sveinsson)	Stephanson, Edward L	82	26269000000009	1
-178	Independent means	Townson, Monica	82	26269000000009	1
-179	Islam	\N	82	26269000000009	1
-180	Internet	Jefferis, David	82	26269000000009	1
-181	Jade	Barr, Pat	84	26969000000010	1
-182	Jealous?	De la Cruz, Melissa	84	26969000000010	1
-183	Justice	Kellerman, Faye	84	26969000000010	1
-184	Jellyfish	Herriges, Ann	84	26969000000010	1
-185	Jelly belly	Lee, Dennis	84	\N	0
-186	Jelly Belly	Smith, Robert Kimmel	84	26969000000010	1
-187	Jesse James	Brant, Marley	84	26969000000010	1
-188	Jumpstart the world	Hyde, Catherine Ryan	84	26969000000010	1
-189	Jazzy jeans	Baskett, Mickey	84	26969000000010	1
-190	Jerome	Ressner, Philip	84	26969000000010	1
-191	Justin Case	Vail, Rachel	84	26969000000010	1
-192	Journey to Portugal	Saramago, Jos.&#780;	84	26969000000010	1
-193	Johnny Appleseed	Kellogg, Steven	84	26969000000010	1
-194	Jacob's ladder	\N	84	26969000000010	1
-195	Jumping Lessons	Leitch, Patricia	84	26969000000010	1
-196	Jilted	McKenzie, Lorna	84	26969000000010	1
-197	Just joking!	Griffiths, Andy	84	26969000000010	1
-198	Japan	Seidensticker, Edward	84	26969000000010	1
-199	The Jolly Mon	Buffett, Jimmy	84	26969000000010	1
-200	Jackson's dilemma	Murdoch, Iris	84	26969000000010	1
-201	Karma	Smith, Mitchell	83	26669000000011	1
-202	Kinetic and potential energy	Viegas, Jennifer	83	26669000000011	1
-203	Kamchatka	\N	83	26669000000011	1
-204	Kiss of a dark moon	Kohler, Sharie	83	26669000000011	1
-205	Kentucky!	Ross, Dana Fuller	83	26669000000011	1
-206	Kick	Myers, Walter Dean	83	26669000000011	1
-207	Klondike	Berton, Pierre	83	26669000000011	1
-208	Knight	Gravett, Christopher	83	26669000000011	1
-209	Killer pancake	Davidson, Diane Mott	83	26669000000011	1
-210	The Kite Runner	Hosseini, Khaled,Hosseini, KHaled	83	26669000000011	1
-211	Kickstart	Herman, Alexander	83	26669000000011	1
-212	Koko's kitten	Patterson, Francine	83	26669000000011	1
-213	The Koran	Dawood, N.J	83	26669000000011	1
-214	Kuwait-- in pictures	\N	83	26669000000011	1
-215	Kumquat May, I'll always love you	Grant, Cynthia D	83	26669000000011	1
-216	Killer whales	Patent, Dorothy Hinshaw	83	26669000000011	1
-217	Kids are worth it !	Coloroso, Barbara	83	26669000000011	1
-218	Kirk Douglas	\N	83	26669000000011	1
-219	Kanada	Wiseman, Eva	83	26669000000011	1
-220	Kneeling in Bethlehem	Weems, Ann	83	26669000000011	1
-240	Leaving	Kingsbury, Karen	135	26646900000012	1
-222	Latin America	Fuentes, Carlos	135	26646900000012	1
-221	Landscape Planning	Adam, Judith	135	26646900000012	1
-223	Lutheran St. Matthew, Stony Plain, Alberta	Baron, Eric J. (Eric John), 1923-	135	26646900000012	1
-224	Let sleeping dogs lie	Ledbetter, Suzann	135	26646900000012	1
-225	Leadbelly	Jess, Tyehimba	135	26646900000012	1
-226	Leadership	Hillier, Rick	135	26646900000012	1
-227	Looking for Rachel Wallace	Parker, Robert B	135	26646900000012	1
-228	Learning	Kingsbury, Karen	135	26646900000012	1
-229	Love comes softly	Oke, Janette	135	26646900000012	1
-230	Lone star cafe	Wingate, Lisa	135	26646900000012	1
-231	Lemon	Strube, Cordelia	135	26646900000012	1
-232	Last Chance Bay	Carter, Anne	135	26646900000012	1
-233	Liberating Atlantis	Turtledove, Harry	135	26646900000012	1
-234	Lightning	Koontz, Dean R	135	26646900000012	1
-235	Lighting solutions	\N	135	26646900000012	1
-236	Little Women	Alcott, Louis May	135	26646900000012	1
-237	Lester B Pearson; The geek	Gibb, Gordon R	135	26646900000012	1
-238	Leonardo Da Vinci	Pedretti, Carlo	135	26646900000012	1
-239	The law-bringers	Conway, Elliot	135	26646900000012	1
-242	Malachite	Langan, Ruth	20	26266000000013	1
-243	Malachi McCormick's Irish country cooking	McCormick, Malachi	20	26266000000013	1
-244	Mort	Pratchett, Terry	20	26266000000013	1
-245	Model railroads	Herda, D. J	20	26266000000013	1
-246	The Method	\N	20	26266000000013	1
-247	Martial arts in action	Levigne, Heather	20	\N	0
-248	Martial law	Dixon, Franklin W	20	26266000000013	1
-249	Men are from Mars, women are from Venus	Gray, John	20	\N	0
-250	Marriage	Swedenborg, Emanuel.  (1688-1772)	20	26266000000013	1
-251	Multiple choice	Tashjian, Janet	20	26266000000013	1
-253	Mastering the guitar	Bay, William	20	26266000000013	1
-254	Margarita, martini, mojito	Gage, Allan	20	26266000000013	1
-255	The mulberry tree	Deveraux, Jude	20	26266000000013	1
-256	Money, Money, Money	McBain, Ed	20	26266000000013	1
-257	Material witness	Tanenbaum, Robert K	20	26266000000013	1
-258	Murder most fowl	Crider, Bill	20	26266000000013	1
-259	A majority of one	Stubbs, Lewis St. George	20	26266000000013	1
-260	Mythology	Hamilton, Edith	20	26266000000013	1
-261	Naive art in the West	Czernecki, Stefan	39	26550000000014	1
-262	The nature of the beast	Fyfield, Frances	39	26550000000014	1
-263	Notorious	Dailey, Janet	39	26550000000014	1
-264	Norbert Nipkin	McConnell, Robert	39	26550000000014	1
-265	Nordic Vision walk	\N	39	26550000000014	1
-266	Noon	Taseer, Aatish	39	26550000000014	1
-267	Naughty nautical neighbors	Auerbach, Annie	39	26550000000014	1
-268	Noble house	Clavell, James	39	26550000000014	1
-269	Notable Canadian children's books	\N	39	26550000000014	1
-270	The name of the rose	Eco, Umberto	39	26550000000014	1
-271	The Nonsuch	Rankin, Laird	39	26550000000014	1
-272	Nickel and dimed	Ehrenreich, Barbara	39	26550000000014	1
-273	Nerd gone wild	Thompson, Vicki Lewis	39	26550000000014	1
-274	NASTY BUSINESS	Paradis, Peter	39	26550000000014	1
-275	Needle and thread	Martin, Ann M	39	26550000000014	1
-276	Nervous water	Tapply, William G	39	26550000000014	1
-277	Nectar	Prior, Lily	39	26550000000014	1
-278	Neil Armstrong	Westman, Paul	39	26550000000014	1
-279	Nutrients in the Canadian environment	Ironside, G. R	39	26550000000014	1
-280	Nobel	\N	39	26550000000014	1
-281	Obsidian butterfly	Hamilton, Laurell K	30	26220100000015	1
-282	Opus Dei	Allen, John L	30	26220100000015	1
-283	Ocean	MacQuitty, Miranda	30	26220100000015	1
-284	An obvious enchantment	Malarkey, Tucker	30	26220100000015	1
-285	Original sin	James, P. D	30	26220100000015	1
-286	Out of the shadows, SATB	Purifoy, John	30	26220100000015	1
-287	Oriental rugs	Allane, Lee	30	26220100000015	1
-288	Order in chaos	Whyte, Jack	30	26220100000015	1
-289	Ordinary heroes	Turow, Scott	30	26220100000015	1
-290	Orient et Occident au temps des Croisades	Cahen, Claude	30	26220100000015	1
-291	Orbit	Nance, John J	30	26220100000015	1
-292	Open house	Berg, Elizabeth	30	26220100000015	1
-293	Open sources	\N	30	26220100000015	1
-294	Oil spill!	Berger, Melvin	30	26220100000015	1
-295	Oil	Piper, Allan	30	26220100000015	1
-296	Olive Kitteridge	Strout, Elizabeth	30	26220100000015	1
-297	Ominous	Brian, Kate	30	26220100000015	1
-298	Opal	Snelling, Lauraine	30	26220100000015	1
-299	Oral history	\N	30	26220100000015	1
-300	On the other side	Wolff-Monckeberg, Mathilde	30	26220100000015	1
-301	Peking	Bonavia, David	98	26670000000016	1
-302	Pugs	Maggitti, Phil	98	26670000000016	1
-303	Paris 1919	Macmillan, Margaret Olwen,MacMillan, Margaret Olwen	98	26670000000016	1
-304	Pancakes, pancakes!	Carle, Eric	98	26670000000016	1
-305	Powder river	Cotton, Ralph W	98	26670000000016	1
-306	Palace	Massy, Christian de	98	26670000000016	1
-307	Partial payments	Epstein, Joseph	98	26670000000016	1
-308	Park prisoners	Waiser, Bill	98	26670000000016	1
-309	Pork, perfect pork	\N	98	26670000000016	1
-310	Pastries, pies and tarts	\N	98	26670000000016	1
-311	Plumbing 1-2-3	Cory, Steve	98	26670000000016	1
-312	Puzzle in a pear tree	Hall, Parnell	98	26670000000016	1
-313	Porridge and old clothes	Scott, Eileen M	98	26670000000016	1
-314	Pirates!	\N	98	26670000000016	1
-315	Pluto	Asimov, Isaac	98	26670000000016	1
-316	Plank houses	Gibson, Karen Bush	98	26670000000016	1
-317	Perfect	McNaught, Judith,MCNaught, Judith	98	26670000000016	1
-318	Puppies	Sjonger, Rebecca	98	26670000000016	1
-319	Ping and Pong	Lee, Dennis	98	26670000000016	1
-320	Planets	Sagan, Carl	98	26670000000016	1
-321	A quiche before dying	Churchill, Jill	87	26376000000017	1
-322	Quick Science	Herman and Nina Schneider	87	26376000000017	1
-323	Quick cooking for busy people	Wokes, Karen	87	26376000000017	1
-324	Quiet!	Bright, Paul	87	26376000000017	1
-325	Queen of sorcery	Eddings, David	87	26376000000017	1
-326	The queen of the damned	Rice, Anne	87	26376000000017	1
-327	Quintessential Tarantino	Page, Edwin	87	26376000000017	1
-328	QUERY PROCESSING TECHNIQUES FOR DISTRIBUTED, RELATIONAL DATA BASE SYSTEMS : COMPUTER SCIENCE, DISTRIBUTED DATABASE SYSTEMS, NO.13	EPSTEIN, ROBERT S	87	26376000000017	1
-329	Quarrel with murder	Creasey, John	87	26376000000017	1
-330	Quirky, jerky, extra perky	Cleary, Brian P	87	26376000000017	1
-331	The quixotic vision of Sinclair Lewis	Light, Martin	87	26376000000017	1
-332	Quasi-democracy ?	Stewart, David Kenney	87	26376000000017	1
-333	Queensland, Australia	\N	87	26376000000017	1
-334	Quality Equation 4-H club pack	Manitoba 4-H	87	26376000000017	1
-335	Quantity time	MacGregor, Roy	87	26376000000017	1
-336	Quelle surprise pour Caro!	Wark, Laurie	87	26376000000017	1
-337	Quick & easy gourd crafts	Baskett, Mickey	87	26376000000017	1
-338	Quick cozy flannel quilts	\N	87	26376000000017	1
-339	All quiet on the western front;	Remarque, Erich Maria	87	26376000000017	1
-340	Quite a year for plums	White, Bailey	87	\N	0
-341	Quite early one morning. --	Thomas, Dylan	87	26376000000017	1
-342	Redneck Cinderella	McLane, Luann,McLane, LuAnn	72	26720000000018	1
-343	Redcoat	Cornwell, Bernard	72	26720000000018	1
-344	Roughneck Cowboy	Thomas, Marin	72	26720000000018	1
-345	Radio astronomy	Richardson, Adele	72	26720000000018	1
-346	Routine activities, opportunity and crime in the inner city	Kohm, Steven A	72	26720000000018	1
-347	Raisins and almonds: A Phryne Fisher Mystery	Greenwood, Kerry	72	26720000000018	1
-348	Reading by Lightning	Thomas, Joan	72	26720000000018	1
-349	Racing the Wind	Baglio, Ben M,Baglio Ben M	72	26720000000018	1
-351	Revolver	Sedgwick, Marcus	72	26720000000018	1
-352	Rescue	Shreve, Anita	72	26720000000018	1
-353	Revenue Canada	\N	72	26720000000018	1
-354	Reality bites	Morgan, Melissa J	72	26720000000018	1
-355	Realty check	Rinomato, Sandra	72	26720000000018	1
-356	Regrets only	Quinn, Sally	72	26720000000018	1
-357	Reinventing the sacred	Kauffman, Stuart A	72	26720000000018	1
-358	The Roman;	Waltari, Mika Toimi	72	26720000000018	1
-359	Running hot	Krentz, Jayne Ann	72	26720000000018	1
-360	The radioactive boy scout	Silverstein, Ken	72	26720000000018	1
-361	Suddenly	Delinsky, Barbara	34	26764000000019	1
-362	Sailing to Capri	Adler, Elizabeth	34	26764000000019	1
-363	Shelter	Coben, Harlan	34	26764000000019	1
-364	Silly Tilly's Valentine	Hoban, Lillian	34	26764000000019	1
-365	Sugar daddy	Kleypas, Lisa	34	26764000000019	1
-366	Sunken treasure	Gibbons, Gail	34	26764000000019	1
-367	Surface rights in Manitoba	\N	34	26764000000019	1
-368	Scratch the Surface	Conant, Susan	34	26764000000019	1
-369	Sleeping beauty	Margolin, Phillip	34	26764000000019	1
-370	Stupid white men --	Moore, Michael	34	26764000000019	1
-371	Shame	Rushdie, Salman	34	26764000000019	1
-372	Subtle	Brooks, Bruce	34	26764000000019	1
-373	Snakes	Grace, Eric	34	26764000000019	1
-374	Sweet liar	Deveraux, Jude	34	26764000000019	1
-375	Stealth	Miller, Karen	34	26764000000019	1
-376	Steel Magnolias	Bootsman Video	34	26764000000019	1
-377	Sharing	Nielsen, Shelly	34	26764000000019	1
-378	S'mores	Adams, Lisa	34	26764000000019	1
-379	Slightly shady	Quick, Amanda	34	26764000000019	1
-380	Spruce Woods adventure	Gamache, Donna Firby	34	26764000000019	1
-381	Tennis	Gutman, Bill	18	26720100000020	1
-382	Turtles	Martin, Louise	18	26720100000020	1
-383	Tanks	Hogg, Ian V	18	26720100000020	1
-384	Toys	Patterson, James	18	26720100000020	1
-385	A Terrible beauty	\N	18	26720100000020	1
-386	Tongue twisters	Chmielewski, Gary	18	26720100000020	1
-387	Taxes for Canadians for dummies	\N	18	26720100000020	1
-388	Taxi	\N	18	26720100000020	1
-389	Trust Me	Krentz, Jayne Ann	18	26720100000020	1
-390	Titanic	\N	18	\N	0
-391	Titanic	Hustak, Alan	18	26720100000020	1
-392	Tipping point, The	Gladwell, Malcolm	18	26720100000020	1
-393	Time and tide	Fleming, Thomas J	18	26720100000020	1
-394	Tesla	Cheney, Margaret	18	26720100000020	1
-395	Tao;	Rawson, Philip S	18	26720100000020	1
-396	Thirst	Oliver, Mary	18	26720100000020	1
-397	The tide at sunrise;	Warner, Denis Ashton	18	26720100000020	1
-398	Timeline	Crichton, Michael	18	26720100000020	1
-399	Tibet	\N	18	26720100000020	1
-400	Three cups of tea	Mortenson, Greg	18	26720100000020	1
-401	The undertaker	Clarke, Richard	21	26830000000021	1
-402	Underwater life	Miller-Schroeder, Patricia	21	26830000000021	1
-403	Understanding Shakespeare	Ludowyk, E. F. C	21	26830000000021	1
-404	Ulterior motives	Blackstock, Terri	21	26830000000021	1
-405	Und ob ich schon wanderte --	Klassen, Peter P	21	26830000000021	1
-406	The unfortunate marriage of Azeb Yitades	Mezlekia, Nega	21	26830000000021	1
-407	Unorthodox openings	Benjamin, Joel	21	26830000000021	1
-408	Undying love	Lacy, Al	21	26830000000021	1
-409	Unearthly asylum	Bracegirdle, P. J	21	26830000000021	1
-410	Undercover Blues	\N	21	26830000000021	1
-411	Unstable ideas	Kagan, Jerome	21	26830000000021	1
-412	Unreliable sources	Lee, Martin A	21	26830000000021	1
-413	The umbrella	Brett, Jan	21	26830000000021	1
-414	Underwear!	Monsell, Mary Elise	21	26830000000021	1
-415	Until you	McNaught, Judith	21	\N	0
-416		Sher, Julian	21	\N	0
-417	Until Forever	Lindsey, Johanna	21	26830000000021	1
-418	Ulysses	Geringer, Laura	21	26830000000021	1
-419	Uruguay	Morrison, Marion	21	26830000000021	1
-420	Ukraine	Shevchenko, Anna	21	26830000000021	1
-421	10 little rubber ducks	Carle, Eric	85	\N	0
-422	Penguins of Madagascar	\N	85	\N	0
-424	Caribou	Vogel, Julia	85	2345678901    	1
+431	Interlibrary loan practices handbook	Boucher, Virginia	85	David testing 	1
+432	Wilderness rivers of Manitoba	\N	85	\N	0
+433	Two dumb ducks	Eaton, Maxwell	85	\N	0
+435	Flying geese	Haworth-Attard, Barbara,Haworth- Attard, Barbara	85	26290000000007	1
+436	The Hunger Games	Collins, Suzanne	85	26669000000011	1
+434	Ducks	Hudak, Heather C	85	1223          	1
+97	Employment Equity Act	\N	71	26747000000005	2
+186	Jelly Belly	Smith, Robert Kimmel	84	26969000000010	2
+280	Nobel	\N	39	26550000000014	2
+4	Alps and their people, The	Bullen, Susan	85	26786700000001	2
+6	Andes [videorecording]	\N	85	26786700000001	2
+7	Alchemy	\N	85	26786700000001	2
+8	Accident	Steel, Danielle	85	26786700000001	2
+9	Accelerate	\N	85	26786700000001	2
+10	According to Jake and the kid	Mitchell, W. O	85	26786700000001	2
+11	Ace Ventura	\N	85	26786700000001	2
+12	Active training	Silberman, Melvin L	85	26786700000001	2
+13	Acute care nursing in the home	\N	85	26786700000001	2
+14	Adventure guides	\N	85	26786700000001	2
+15	The aerobats:  the world's great aerial demonstration teams	Yenne, Bill	85	26786700000001	2
+16	Anchor Hocking's Fire-King & more	Florence, Gene	85	26786700000001	2
+17	Angle of repose	Stegner, Wallace Earle	85	26786700000001	2
+18	Arctic Alphabet	Lynch, Wayne	85	26786700000001	2
+19	Astronomy today	Asimov, Isaac	85	26786700000001	2
+20	Appetite for life	Fitch, Noel Riley	85	26786700000001	2
+21	Backhoes	McClellan, Ray	32	26330000000002	2
+22	Bradford Angier's Backcountry basics	Angier, Bradford	32	26330000000002	2
+23	Bachelor Jim	Boon, Clarence A	32	26330000000002	2
+24	Bad company	Wick, Steve	32	26330000000002	2
+25	Barbarian tides	\N	32	26330000000002	2
+26	Bank shot	Westlake, Donald E	32	26330000000002	2
+27	Barbie	\N	32	26330000000002	2
+28	Battle ready	Clancy, Tom	32	26330000000002	2
+29	Beach road	Patterson, James	32	\N	1
+30	Beach Girls	Rice, Luanne	32	26330000000002	2
+31	Bowling	Strickland, Robert	32	26330000000002	2
+32	Bear attacks	Herrero, Stephen	32	26330000000002	2
+1	Awkward aardvark	Mwalimu	85	26786700000001	2
+369	Sleeping beauty	Margolin, Phillip	34	26764000000019	2
+370	Stupid white men --	Moore, Michael	34	26764000000019	2
+371	Shame	Rushdie, Salman	34	26764000000019	2
+390	Titanic	\N	18	\N	1
+2	Apples	Browning, Frank	85	26786700000001	2
+3	Arthur! Arthur!	Black, Arthur	85	26786700000001	2
+33	Beggar maid, queen	Peters, Maureen	32	26330000000002	2
+34	Bedside manners	Barker, Margaret	32	26330000000002	2
+35	Belle Arabelle	Marokvia, Mireille	32	26330000000002	2
+36	Biology	Campbell, Neil A	32	26330000000002	2
+37	Bird	Burnie, David	32	26330000000002	2
+38	Black Beauty;	Sewell, Anna	32	26330000000002	2
+39	Ballroom dancing	\N	32	26330000000002	2
+40	Beaver skins and mountain men ;	Burger, Carl	32	26330000000002	2
+41	Contempt of court	Curriden, Mark	24	26220000000003	2
+42	Contemporary Canadian painting	Withrow, William J	24	26220000000003	2
+43	Courtesy becomes me	Bayer, Lewena	24	26220000000003	2
+44	Cosmopolitan	Cecchini, Toby	24	26220000000003	2
+45	Curiosity	Thomas, Joan	24	26220000000003	2
+46	Crossword answer book, The	Newman, Stanley	24	26220000000003	2
+47	Colony	Siddons, Anne Rivers	24	26220000000003	2
+48	Community Helpers from A to Z	Kalman, Bobbie	24	26220000000003	2
+49	Canadian diplomacy and the Korean war, 1950-1953	Donaghy, Greg	24	26220000000003	2
+50	Control	Anderson, Jack	24	26220000000003	2
+51	Crude world	Maass, Peter	24	26220000000003	2
+52	Creed	Harte, Bryce	24	26220000000003	2
+53	Cree language structures	Ahenakew, Freda	24	26220000000003	2
+54	Critical	Cook, Robin	24	26220000000003	2
+55	Cultural Anthropology	Kottak Conrad Phillip,Kottak, Conrad Phillip	24	26220000000003	2
+56	Cyanide wells	Muller, Marcia	24	26220000000003	2
+57	Calligraphy	Campbell, Fiona	24	26220000000003	2
+58	Coots, codgers and curmudgeons	Sisson, Hal C	24	26220000000003	2
+59	Calumet City	Newton, Charlie	24	26220000000003	2
+60	Cradle to canoe	Kraiker, Rolf	24	26220000000003	2
+61	Disturbance	Burke, Jan	92	26840000000004	2
+62	Duke	Boswell, John	92	26840000000004	2
+63	Dialogue	Turco, Lewis	92	26840000000004	2
+64	Deadlock	Johansen, Iris	92	26840000000004	2
+65	Diaspora by design	Moghissi, Haideh	92	26840000000004	2
+66	Doctor Zhivago	Pasternak, Boris Leonidovich	92	26840000000004	2
+67	The diversity of life	Wilson, Edward O	92	26840000000004	2
+68	Dude, where's my country?	Moore, Michael	92	\N	1
+69	Dude ranch	Bryant, Bonnie	92	26840000000004	2
+70	Dragon	Cussler, Clive	92	26840000000004	2
+71	Danger point	Wentworth, Patricia	92	26840000000004	2
+72	Disciplining dissent	\N	92	26840000000004	2
+73	Dinosaur	Norman, David	92	26840000000004	2
+74	Dyslexia	Landau, Elaine	92	26840000000004	2
+75	Digital photography for dummies	King, Julie Adair	92	26840000000004	2
+76	Domestic descendants	Moscow, Henry	92	26840000000004	2
+77	A Delicate balance	Albee, Edward	92	26840000000004	2
+78	Delicate dances	\N	92	26840000000004	2
+79	Dirty Blonde	Scottoline, Lisa	92	26840000000004	2
+80	Deforestation	Owens, Caleb	92	26840000000004	2
+81	Electric mischief	Bartholomew, Alan	71	26747000000005	2
+82	The Echelon vendetta	Stone, David	71	26747000000005	2
+83	Energy	Oxlade, Chris	71	26747000000005	2
+84	Enigma	Harris, Robert	71	26747000000005	2
+85	The entropy effect	McIntyre, Vonda N	71	26747000000005	2
+86	Eternal prairie	Adams, R	71	26747000000005	2
+87	Everlasting	Woodiwiss, Kathleen E	71	26747000000005	2
+88	Earth	Asimov, Issac	71	26747000000005	2
+89	Ethics	Wekesser, Carol	71	26747000000005	2
+90	L'escargot	Monette, Lise	71	26747000000005	2
+91	Elephant song	Smith, Wilbur A	71	26747000000005	2
+92	Eau Canada	\N	71	26747000000005	2
+93	Eutopia: a novel of terrible optimism	Nickle, David	71	26747000000005	2
+94	Ethnic conflict	Cozic, Charles (ed.)	71	26747000000005	2
+95	Ethernet	Spurgeon, Charles	71	26747000000005	2
+96	English masterpieces;	Mack, Maynard	71	26747000000005	2
+98	Evolution	Moore, Ruth Ellen	71	26747000000005	2
+99	Ear, nose, and throat disorders sourcebook	\N	71	26747000000005	2
+100	Excel 2007	Jacobs, Kathy	71	26747000000005	2
+101	Face forward	Aucoin, Kevyn	68	26700000000006	2
+102	Flying finish. --	Francis, Dick	68	26700000000006	2
+103	Family	Bombeck, Erma	68	26700000000006	2
+104	Flowers for Algernon	Keyes, Daniel	68	26700000000006	2
+105	Frugal Gourmet collection [videorecording] :, The	\N	68	26700000000006	2
+106	Fruitful encounters	Brush, Stephen G	68	26700000000006	2
+107	The Franklin Expedition As Recorded In Hudson's Bay Company Post Journals	Houston, C. Stuart	68	26700000000006	2
+108	Following the line of duty :the other side of the battle	King, Herbert R	68	26700000000006	2
+109	Football fugitive	Christopher, Matt	68	26700000000006	2
+110	Fried green tomatoes	\N	68	26700000000006	2
+111	Fancy Nancy	O'Connor, Jane	68	26700000000006	2
+112	FILTER, AIR, HIGH EFFICIENCY RIGID TYPE, FOR REMOVAL OF PARTICULATE FROM VENTILATING SYSTEMS	\N	68	26700000000006	2
+113	Fear of frying	Churchill, Jill	68	26700000000006	2
+114	Field hockey	Gutman, Bill	68	26700000000006	2
+115	Futile efforts	Piccirilli, Tom	68	26700000000006	2
+116	Ferrari	McKenna, A. T	68	26700000000006	2
+117	Feudal coats-of-arms	Foster, Joseph	68	26700000000006	2
+118	Fur traders	\N	68	26700000000006	2
+119	Feather on the moon	Whitney, Phyllis A	68	26700000000006	2
+120	Financial freedom in 8 minutes a day	Hulnick, Ron	68	26700000000006	2
+121	Giants! Giants! Giants!	\N	94	26290000000007	2
+122	Giraffe family	Goodall, Jane	94	\N	1
+123	Giraffe	Ledgard, J.M	94	26290000000007	2
+124	Gaelic envy	White, Nancy	94	26290000000007	2
+125	Germ	Liparulo, Robert	94	26290000000007	2
+126	Giggle, giggle, quack	Cronin, Doreen	94	26290000000007	2
+127	Gorgeous	Vail, Rachel	94	26290000000007	2
+128	Generous death	Pickard, Nancy	94	26290000000007	2
+129	Good night, sleep tight, don't let the bedbugs bite!	De Groat, Diane	94	26290000000007	2
+130	Grammar matters	Ghomeshi, Jila	94	26290000000007	2
+131	Golden fox	Smith, Wilbur A	94	26290000000007	2
+132	Genius	Gleick, James	94	26290000000007	2
+133	Gentlemen of the road	Chabon, Michael	94	26290000000007	2
+134	Gulliver in Lilliput	Findlay, Lisa	94	26290000000007	2
+135	Goal!	Javaherbin, Mina	94	26290000000007	2
+136	Gentlemen of adventure	Gann, Ernest Kellogg	94	26290000000007	2
+137	Geology rocks!	Blobaum, Cindy	94	26290000000007	2
+138	Ghost	\N	94	26290000000007	2
+139	Goose	Bang, Molly	94	26290000000007	2
+140	Galapagos	\N	94	26290000000007	2
+141	Hardware;	Barnes, Linda	90	26830000000008	2
+143	Helping your anxious child	Rapee, Ronald M	90	26830000000008	2
+144	Hubris	Isikoff, Michael	90	26830000000008	2
+146	The honor of the queen	Weber, David	90	26830000000008	2
+147	Horrible Harry goes to the moon	Kline, Suzy	90	26830000000008	2
+148	Honourable intentions	Barr, Natalie	90	26830000000008	2
+149	Harry Potter and the Chamber of Secrets	Rowling, J. K	90	\N	1
+150	Harry Potter and the goblet of fire	Rowling, J. K	90	26830000000008	2
+151	Hallucinogens	Barter, James	90	26830000000008	2
+152	Hummingbird	Spencer, LaVyrle	90	26830000000008	2
+153	Harry Houdini	Macleod, Elizabeth,MacLeod, Elizabeth	90	26830000000008	2
+154	Hawk	Hawk, Tony	90	26830000000008	2
+155	Healing grief	Van Praagh, James	90	26830000000008	2
+156	Hello Canada!	Young, Scott	90	26830000000008	2
+157	Heritage	\N	90	26830000000008	2
+158	Humble pie	Benrey, Ron	90	26830000000008	2
+159	Half empty	Rakoff, David	90	26830000000008	2
+160	Honey	Andrews, V.C	90	26830000000008	2
+161	Internal affairs	Dial, Connie	82	26269000000009	2
+162	Invisible	McCourtney, Lorena	82	\N	1
+163	Invisible prey	Sandford, John	82	26269000000009	2
+164	Icon	Forsyth, Frederick	82	26269000000009	2
+165	Ideology	Eagleton, Terry	82	26269000000009	2
+166	Irish whiskey	Greeley, Andrew M	82	26269000000009	2
+167	Imperial Rome	Hadas, Moses	82	26269000000009	2
+168	Investigative reports [videorecording]	\N	82	26269000000009	2
+169	The illuminating world of light with Max Axiom, super scientist	Sohn, Emily	82	26269000000009	2
+170	The imaginary Indian	Francis, Daniel	82	26269000000009	2
+171	Infernal devices	Reeve, Philip	82	26269000000009	2
+172	Intelligent universe	Gardner, James N	82	26269000000009	2
+173	I'm not suffering from insanity-- I'm enjoying every minute of it!	Linamen, Karen Scalf	82	26269000000009	2
+174	Insidious	\N	82	26269000000009	2
+175	Ironic	Grills, Barry	82	26269000000009	2
+176	The integral trees	Niven, Larry	82	26269000000009	2
+177	Identity : the autobiography of Edward L. Stephanson (Sveinsson)	Stephanson, Edward L	82	26269000000009	2
+178	Independent means	Townson, Monica	82	26269000000009	2
+179	Islam	\N	82	26269000000009	2
+180	Internet	Jefferis, David	82	26269000000009	2
+181	Jade	Barr, Pat	84	26969000000010	2
+182	Jealous?	De la Cruz, Melissa	84	26969000000010	2
+183	Justice	Kellerman, Faye	84	26969000000010	2
+184	Jellyfish	Herriges, Ann	84	26969000000010	2
+185	Jelly belly	Lee, Dennis	84	\N	1
+187	Jesse James	Brant, Marley	84	26969000000010	2
+188	Jumpstart the world	Hyde, Catherine Ryan	84	26969000000010	2
+189	Jazzy jeans	Baskett, Mickey	84	26969000000010	2
+190	Jerome	Ressner, Philip	84	26969000000010	2
+191	Justin Case	Vail, Rachel	84	26969000000010	2
+192	Journey to Portugal	Saramago, Jos.&#780;	84	26969000000010	2
+193	Johnny Appleseed	Kellogg, Steven	84	26969000000010	2
+194	Jacob's ladder	\N	84	26969000000010	2
+195	Jumping Lessons	Leitch, Patricia	84	26969000000010	2
+196	Jilted	McKenzie, Lorna	84	26969000000010	2
+197	Just joking!	Griffiths, Andy	84	26969000000010	2
+198	Japan	Seidensticker, Edward	84	26969000000010	2
+199	The Jolly Mon	Buffett, Jimmy	84	26969000000010	2
+200	Jackson's dilemma	Murdoch, Iris	84	26969000000010	2
+201	Karma	Smith, Mitchell	83	26669000000011	2
+202	Kinetic and potential energy	Viegas, Jennifer	83	26669000000011	2
+203	Kamchatka	\N	83	26669000000011	2
+204	Kiss of a dark moon	Kohler, Sharie	83	26669000000011	2
+205	Kentucky!	Ross, Dana Fuller	83	26669000000011	2
+206	Kick	Myers, Walter Dean	83	26669000000011	2
+207	Klondike	Berton, Pierre	83	26669000000011	2
+208	Knight	Gravett, Christopher	83	26669000000011	2
+209	Killer pancake	Davidson, Diane Mott	83	26669000000011	2
+210	The Kite Runner	Hosseini, Khaled,Hosseini, KHaled	83	26669000000011	2
+211	Kickstart	Herman, Alexander	83	26669000000011	2
+212	Koko's kitten	Patterson, Francine	83	26669000000011	2
+213	The Koran	Dawood, N.J	83	26669000000011	2
+214	Kuwait-- in pictures	\N	83	26669000000011	2
+215	Kumquat May, I'll always love you	Grant, Cynthia D	83	26669000000011	2
+216	Killer whales	Patent, Dorothy Hinshaw	83	26669000000011	2
+217	Kids are worth it !	Coloroso, Barbara	83	26669000000011	2
+218	Kirk Douglas	\N	83	26669000000011	2
+219	Kanada	Wiseman, Eva	83	26669000000011	2
+220	Kneeling in Bethlehem	Weems, Ann	83	26669000000011	2
+240	Leaving	Kingsbury, Karen	135	26646900000012	2
+222	Latin America	Fuentes, Carlos	135	26646900000012	2
+221	Landscape Planning	Adam, Judith	135	26646900000012	2
+223	Lutheran St. Matthew, Stony Plain, Alberta	Baron, Eric J. (Eric John), 1923-	135	26646900000012	2
+224	Let sleeping dogs lie	Ledbetter, Suzann	135	26646900000012	2
+225	Leadbelly	Jess, Tyehimba	135	26646900000012	2
+226	Leadership	Hillier, Rick	135	26646900000012	2
+227	Looking for Rachel Wallace	Parker, Robert B	135	26646900000012	2
+228	Learning	Kingsbury, Karen	135	26646900000012	2
+229	Love comes softly	Oke, Janette	135	26646900000012	2
+230	Lone star cafe	Wingate, Lisa	135	26646900000012	2
+231	Lemon	Strube, Cordelia	135	26646900000012	2
+232	Last Chance Bay	Carter, Anne	135	26646900000012	2
+233	Liberating Atlantis	Turtledove, Harry	135	26646900000012	2
+234	Lightning	Koontz, Dean R	135	26646900000012	2
+235	Lighting solutions	\N	135	26646900000012	2
+236	Little Women	Alcott, Louis May	135	26646900000012	2
+237	Lester B Pearson; The geek	Gibb, Gordon R	135	26646900000012	2
+238	Leonardo Da Vinci	Pedretti, Carlo	135	26646900000012	2
+239	The law-bringers	Conway, Elliot	135	26646900000012	2
+242	Malachite	Langan, Ruth	20	26266000000013	2
+243	Malachi McCormick's Irish country cooking	McCormick, Malachi	20	26266000000013	2
+244	Mort	Pratchett, Terry	20	26266000000013	2
+245	Model railroads	Herda, D. J	20	26266000000013	2
+246	The Method	\N	20	26266000000013	2
+247	Martial arts in action	Levigne, Heather	20	\N	1
+248	Martial law	Dixon, Franklin W	20	26266000000013	2
+249	Men are from Mars, women are from Venus	Gray, John	20	\N	1
+250	Marriage	Swedenborg, Emanuel.  (1688-1772)	20	26266000000013	2
+251	Multiple choice	Tashjian, Janet	20	26266000000013	2
+253	Mastering the guitar	Bay, William	20	26266000000013	2
+254	Margarita, martini, mojito	Gage, Allan	20	26266000000013	2
+255	The mulberry tree	Deveraux, Jude	20	26266000000013	2
+256	Money, Money, Money	McBain, Ed	20	26266000000013	2
+257	Material witness	Tanenbaum, Robert K	20	26266000000013	2
+258	Murder most fowl	Crider, Bill	20	26266000000013	2
+259	A majority of one	Stubbs, Lewis St. George	20	26266000000013	2
+260	Mythology	Hamilton, Edith	20	26266000000013	2
+261	Naive art in the West	Czernecki, Stefan	39	26550000000014	2
+262	The nature of the beast	Fyfield, Frances	39	26550000000014	2
+263	Notorious	Dailey, Janet	39	26550000000014	2
+264	Norbert Nipkin	McConnell, Robert	39	26550000000014	2
+265	Nordic Vision walk	\N	39	26550000000014	2
+266	Noon	Taseer, Aatish	39	26550000000014	2
+267	Naughty nautical neighbors	Auerbach, Annie	39	26550000000014	2
+268	Noble house	Clavell, James	39	26550000000014	2
+269	Notable Canadian children's books	\N	39	26550000000014	2
+270	The name of the rose	Eco, Umberto	39	26550000000014	2
+271	The Nonsuch	Rankin, Laird	39	26550000000014	2
+272	Nickel and dimed	Ehrenreich, Barbara	39	26550000000014	2
+273	Nerd gone wild	Thompson, Vicki Lewis	39	26550000000014	2
+274	NASTY BUSINESS	Paradis, Peter	39	26550000000014	2
+275	Needle and thread	Martin, Ann M	39	26550000000014	2
+276	Nervous water	Tapply, William G	39	26550000000014	2
+277	Nectar	Prior, Lily	39	26550000000014	2
+278	Neil Armstrong	Westman, Paul	39	26550000000014	2
+279	Nutrients in the Canadian environment	Ironside, G. R	39	26550000000014	2
+281	Obsidian butterfly	Hamilton, Laurell K	30	26220100000015	2
+282	Opus Dei	Allen, John L	30	26220100000015	2
+283	Ocean	MacQuitty, Miranda	30	26220100000015	2
+284	An obvious enchantment	Malarkey, Tucker	30	26220100000015	2
+285	Original sin	James, P. D	30	26220100000015	2
+286	Out of the shadows, SATB	Purifoy, John	30	26220100000015	2
+287	Oriental rugs	Allane, Lee	30	26220100000015	2
+288	Order in chaos	Whyte, Jack	30	26220100000015	2
+289	Ordinary heroes	Turow, Scott	30	26220100000015	2
+290	Orient et Occident au temps des Croisades	Cahen, Claude	30	26220100000015	2
+291	Orbit	Nance, John J	30	26220100000015	2
+292	Open house	Berg, Elizabeth	30	26220100000015	2
+293	Open sources	\N	30	26220100000015	2
+294	Oil spill!	Berger, Melvin	30	26220100000015	2
+295	Oil	Piper, Allan	30	26220100000015	2
+296	Olive Kitteridge	Strout, Elizabeth	30	26220100000015	2
+297	Ominous	Brian, Kate	30	26220100000015	2
+298	Opal	Snelling, Lauraine	30	26220100000015	2
+299	Oral history	\N	30	26220100000015	2
+300	On the other side	Wolff-Monckeberg, Mathilde	30	26220100000015	2
+301	Peking	Bonavia, David	98	26670000000016	2
+302	Pugs	Maggitti, Phil	98	26670000000016	2
+303	Paris 1919	Macmillan, Margaret Olwen,MacMillan, Margaret Olwen	98	26670000000016	2
+304	Pancakes, pancakes!	Carle, Eric	98	26670000000016	2
+305	Powder river	Cotton, Ralph W	98	26670000000016	2
+306	Palace	Massy, Christian de	98	26670000000016	2
+307	Partial payments	Epstein, Joseph	98	26670000000016	2
+308	Park prisoners	Waiser, Bill	98	26670000000016	2
+309	Pork, perfect pork	\N	98	26670000000016	2
+310	Pastries, pies and tarts	\N	98	26670000000016	2
+311	Plumbing 1-2-3	Cory, Steve	98	26670000000016	2
+312	Puzzle in a pear tree	Hall, Parnell	98	26670000000016	2
+313	Porridge and old clothes	Scott, Eileen M	98	26670000000016	2
+314	Pirates!	\N	98	26670000000016	2
+315	Pluto	Asimov, Isaac	98	26670000000016	2
+316	Plank houses	Gibson, Karen Bush	98	26670000000016	2
+317	Perfect	McNaught, Judith,MCNaught, Judith	98	26670000000016	2
+318	Puppies	Sjonger, Rebecca	98	26670000000016	2
+319	Ping and Pong	Lee, Dennis	98	26670000000016	2
+320	Planets	Sagan, Carl	98	26670000000016	2
+321	A quiche before dying	Churchill, Jill	87	26376000000017	2
+322	Quick Science	Herman and Nina Schneider	87	26376000000017	2
+323	Quick cooking for busy people	Wokes, Karen	87	26376000000017	2
+324	Quiet!	Bright, Paul	87	26376000000017	2
+325	Queen of sorcery	Eddings, David	87	26376000000017	2
+326	The queen of the damned	Rice, Anne	87	26376000000017	2
+327	Quintessential Tarantino	Page, Edwin	87	26376000000017	2
+328	QUERY PROCESSING TECHNIQUES FOR DISTRIBUTED, RELATIONAL DATA BASE SYSTEMS : COMPUTER SCIENCE, DISTRIBUTED DATABASE SYSTEMS, NO.13	EPSTEIN, ROBERT S	87	26376000000017	2
+329	Quarrel with murder	Creasey, John	87	26376000000017	2
+330	Quirky, jerky, extra perky	Cleary, Brian P	87	26376000000017	2
+331	The quixotic vision of Sinclair Lewis	Light, Martin	87	26376000000017	2
+332	Quasi-democracy ?	Stewart, David Kenney	87	26376000000017	2
+333	Queensland, Australia	\N	87	26376000000017	2
+334	Quality Equation 4-H club pack	Manitoba 4-H	87	26376000000017	2
+335	Quantity time	MacGregor, Roy	87	26376000000017	2
+336	Quelle surprise pour Caro!	Wark, Laurie	87	26376000000017	2
+337	Quick & easy gourd crafts	Baskett, Mickey	87	26376000000017	2
+338	Quick cozy flannel quilts	\N	87	26376000000017	2
+339	All quiet on the western front;	Remarque, Erich Maria	87	26376000000017	2
+340	Quite a year for plums	White, Bailey	87	\N	1
+341	Quite early one morning. --	Thomas, Dylan	87	26376000000017	2
+342	Redneck Cinderella	McLane, Luann,McLane, LuAnn	72	26720000000018	2
+343	Redcoat	Cornwell, Bernard	72	26720000000018	2
+344	Roughneck Cowboy	Thomas, Marin	72	26720000000018	2
+345	Radio astronomy	Richardson, Adele	72	26720000000018	2
+346	Routine activities, opportunity and crime in the inner city	Kohm, Steven A	72	26720000000018	2
+347	Raisins and almonds: A Phryne Fisher Mystery	Greenwood, Kerry	72	26720000000018	2
+348	Reading by Lightning	Thomas, Joan	72	26720000000018	2
+349	Racing the Wind	Baglio, Ben M,Baglio Ben M	72	26720000000018	2
+351	Revolver	Sedgwick, Marcus	72	26720000000018	2
+352	Rescue	Shreve, Anita	72	26720000000018	2
+353	Revenue Canada	\N	72	26720000000018	2
+354	Reality bites	Morgan, Melissa J	72	26720000000018	2
+355	Realty check	Rinomato, Sandra	72	26720000000018	2
+356	Regrets only	Quinn, Sally	72	26720000000018	2
+357	Reinventing the sacred	Kauffman, Stuart A	72	26720000000018	2
+358	The Roman;	Waltari, Mika Toimi	72	26720000000018	2
+359	Running hot	Krentz, Jayne Ann	72	26720000000018	2
+360	The radioactive boy scout	Silverstein, Ken	72	26720000000018	2
+361	Suddenly	Delinsky, Barbara	34	26764000000019	2
+362	Sailing to Capri	Adler, Elizabeth	34	26764000000019	2
+363	Shelter	Coben, Harlan	34	26764000000019	2
+364	Silly Tilly's Valentine	Hoban, Lillian	34	26764000000019	2
+365	Sugar daddy	Kleypas, Lisa	34	26764000000019	2
+366	Sunken treasure	Gibbons, Gail	34	26764000000019	2
+367	Surface rights in Manitoba	\N	34	26764000000019	2
+368	Scratch the Surface	Conant, Susan	34	26764000000019	2
+372	Subtle	Brooks, Bruce	34	26764000000019	2
+373	Snakes	Grace, Eric	34	26764000000019	2
+374	Sweet liar	Deveraux, Jude	34	26764000000019	2
+375	Stealth	Miller, Karen	34	26764000000019	2
+376	Steel Magnolias	Bootsman Video	34	26764000000019	2
+377	Sharing	Nielsen, Shelly	34	26764000000019	2
+378	S'mores	Adams, Lisa	34	26764000000019	2
+379	Slightly shady	Quick, Amanda	34	26764000000019	2
+380	Spruce Woods adventure	Gamache, Donna Firby	34	26764000000019	2
+381	Tennis	Gutman, Bill	18	26720100000020	2
+382	Turtles	Martin, Louise	18	26720100000020	2
+383	Tanks	Hogg, Ian V	18	26720100000020	2
+384	Toys	Patterson, James	18	26720100000020	2
+385	A Terrible beauty	\N	18	26720100000020	2
+386	Tongue twisters	Chmielewski, Gary	18	26720100000020	2
+387	Taxes for Canadians for dummies	\N	18	26720100000020	2
+388	Taxi	\N	18	26720100000020	2
+389	Trust Me	Krentz, Jayne Ann	18	26720100000020	2
+391	Titanic	Hustak, Alan	18	26720100000020	2
+392	Tipping point, The	Gladwell, Malcolm	18	26720100000020	2
+393	Time and tide	Fleming, Thomas J	18	26720100000020	2
+394	Tesla	Cheney, Margaret	18	26720100000020	2
+395	Tao;	Rawson, Philip S	18	26720100000020	2
+396	Thirst	Oliver, Mary	18	26720100000020	2
+397	The tide at sunrise;	Warner, Denis Ashton	18	26720100000020	2
+398	Timeline	Crichton, Michael	18	26720100000020	2
+399	Tibet	\N	18	26720100000020	2
+400	Three cups of tea	Mortenson, Greg	18	26720100000020	2
+401	The undertaker	Clarke, Richard	21	26830000000021	2
+402	Underwater life	Miller-Schroeder, Patricia	21	26830000000021	2
+403	Understanding Shakespeare	Ludowyk, E. F. C	21	26830000000021	2
+404	Ulterior motives	Blackstock, Terri	21	26830000000021	2
+405	Und ob ich schon wanderte --	Klassen, Peter P	21	26830000000021	2
+406	The unfortunate marriage of Azeb Yitades	Mezlekia, Nega	21	26830000000021	2
+407	Unorthodox openings	Benjamin, Joel	21	26830000000021	2
+408	Undying love	Lacy, Al	21	26830000000021	2
+409	Unearthly asylum	Bracegirdle, P. J	21	26830000000021	2
+410	Undercover Blues	\N	21	26830000000021	2
+411	Unstable ideas	Kagan, Jerome	21	26830000000021	2
+412	Unreliable sources	Lee, Martin A	21	26830000000021	2
+413	The umbrella	Brett, Jan	21	26830000000021	2
+414	Underwear!	Monsell, Mary Elise	21	26830000000021	2
+415	Until you	McNaught, Judith	21	\N	1
+416		Sher, Julian	21	\N	1
+417	Until Forever	Lindsey, Johanna	21	26830000000021	2
+418	Ulysses	Geringer, Laura	21	26830000000021	2
+419	Uruguay	Morrison, Marion	21	26830000000021	2
+420	Ukraine	Shevchenko, Anna	21	26830000000021	2
+421	10 little rubber ducks	Carle, Eric	85	\N	1
+422	Penguins of Madagascar	\N	85	\N	1
+424	Caribou	Vogel, Julia	85	2345678901    	2
+425	10 little rubber ducks	Carle, Eric	85	\N	1
+426	Evaluation of proposal by Ducks Unlimited to construct a conservation centre and office within Oak Hammock Marsh	Bovey, Robin	85	\N	1
+427	Manitoba mixedwood forest research and advisory committee	Canadian Wildlife Service	85	26269000000009	2
+428	10 little rubber ducks	Carle, Eric	101	\N	1
+429	Interlibrary loan practices handbook	Boucher, Virginia	85	David testing 	2
+430	10 little rubber ducks	Carle, Eric	85	David testing 	2
 \.
 
 
@@ -10523,12 +10522,13 @@ COPY request (id, title, author, requester, patron_barcode, current_target) FROM
 --
 
 COPY request_closed (id, title, author, requester, patron_barcode, filled_by, attempts) FROM stdin;
-241	The maiden	Deveraux, Jude	20	26266000000013	31	1
-252	Murder on the orient express	Christie, Agatha	20	26266000000013	31	1
-142	Hegemony or survival	Chomsky, Noam	90	26830000000008	31	1
-350	Retire rich!	Gadsden, Stephen	72	26720000000018	31	1
-145	Happiness sold separately	Winston, Lolly	90	26830000000008	31	1
-423	10 little rubber ducks	Carle, Eric	85	26220100000015	31	1
+241	The maiden	Deveraux, Jude	20	26266000000013	\N	1
+252	Murder on the orient express	Christie, Agatha	20	26266000000013	\N	1
+142	Hegemony or survival	Chomsky, Noam	90	26830000000008	\N	1
+350	Retire rich!	Gadsden, Stephen	72	26720000000018	\N	1
+145	Happiness sold separately	Winston, Lolly	90	26830000000008	\N	1
+423	10 little rubber ducks	Carle, Eric	85	26220100000015	\N	1
+5	Appalachian spring	Gustafson, Eleanor	85	26786700000001	\N	2
 \.
 
 
@@ -10541,7 +10541,6 @@ COPY requests_active (request_id, ts, msg_from, msg_to, status, message) FROM st
 2	2011-12-12 11:51:28.563778	85	99	ILL-Request	\N
 3	2011-12-12 11:52:19.316667	85	90	ILL-Request	\N
 4	2011-12-12 11:52:55.572766	85	32	ILL-Request	\N
-5	2011-12-12 11:53:36.033538	85	90	ILL-Request	\N
 6	2011-12-12 11:54:06.546173	85	21	ILL-Request	\N
 7	2011-12-12 11:55:27.673781	85	101	ILL-Request	\N
 8	2011-12-12 11:56:09.61186	85	39	ILL-Request	\N
@@ -10966,12 +10965,55 @@ COPY requests_active (request_id, ts, msg_from, msg_to, status, message) FROM st
 1	2012-01-19 15:05:09.293482	90	85	Shipped	due 2012-01-31
 3	2012-01-19 15:05:12.63687	90	85	ILL-Answer|Will-Supply|being-processed-for-supply	
 3	2012-01-19 15:05:12.934284	90	85	Shipped	due 2012-01-31
-5	2012-01-19 15:05:21.464686	90	85	ILL-Answer|Unfilled|on-hold	
 67	2012-01-19 15:12:18.628433	92	90	Message	MTH received item without MSTE marking as 'Shipped'
 67	2012-01-19 15:12:18.647834	90	92	Shipped	override by MTH
 424	2012-03-02 11:13:04.39783	85	82	ILL-Request	\N
 424	2012-03-02 11:23:30.87022	85	82	ILL-Request	\N
 246	2012-01-13 16:16:19.066815	92	20	ILL-Answer|Will-Supply|being-processed-for-supply	
+1	2012-03-28 13:41:12.119653	85	90	Received	
+1	2012-03-28 13:48:59.01178	85	90	Renew	
+427	2012-03-28 13:51:41.687075	85	46	ILL-Request	\N
+427	2012-03-28 13:52:09.249218	46	85	ILL-Answer|Will-Supply|being-processed-for-supply	
+427	2012-03-28 13:52:09.540442	46	85	Shipped	due 2012-03-31
+427	2012-03-28 13:52:28.205845	85	46	Received	
+427	2012-03-28 13:56:32.588327	85	46	Renew	
+284	2012-03-29 09:53:59.953396	85	30	ILL-Answer|Will-Supply|being-processed-for-supply	
+284	2012-03-29 09:54:00.314655	85	30	Shipped	due 2012-04-30
+292	2012-03-29 09:54:03.324411	85	30	ILL-Answer|Will-Supply|being-processed-for-supply	
+292	2012-03-29 09:54:03.607124	85	30	Shipped	due 2012-04-30
+284	2012-03-29 09:55:21.019624	30	85	Received	
+292	2012-03-29 09:55:22.761418	30	85	Received	
+284	2012-03-29 09:55:40.874446	30	85	Returned	
+292	2012-03-29 09:55:42.01593	30	85	Returned	
+429	2012-04-18 16:34:21.734596	85	101	ILL-Request	\N
+430	2012-04-20 14:58:54.031585	85	101	ILL-Request	\N
+430	2012-04-20 14:59:56.269611	101	85	ILL-Answer|Unfilled|in-use-on-loan	
+430	2012-04-20 15:00:22.395556	85	85	Message	Trying next source
+430	2012-04-20 15:00:22.410771	85	84	ILL-Request	\N
+431	2012-04-20 15:04:53.924657	85	101	ILL-Request	\N
+245	2012-04-30 09:06:44.906329	71	20	ILL-Answer|Will-Supply|being-processed-for-supply	
+245	2012-04-30 09:06:45.173642	71	20	Shipped	due 2012-05-31
+167	2012-04-30 09:06:46.175133	71	82	ILL-Answer|Will-Supply|being-processed-for-supply	
+167	2012-04-30 09:06:46.396128	71	82	Shipped	due 2012-05-31
+76	2012-04-30 09:07:16.015185	71	92	ILL-Answer|Unfilled|not-on-shelf	
+434	2012-05-03 10:10:53.987606	85	85	ILL-Request	\N
+48	2012-05-03 10:14:29.043773	85	24	ILL-Answer|Will-Supply|being-processed-for-supply	
+48	2012-05-03 10:14:29.231613	85	24	Shipped	due 2012-05-31
+173	2012-05-03 10:14:30.494875	85	82	ILL-Answer|Will-Supply|being-processed-for-supply	
+173	2012-05-03 10:14:30.706632	85	82	Shipped	due 2012-05-31
+174	2012-05-03 10:14:41.043785	85	82	ILL-Answer|Unfilled|in-use-on-loan	
+3	2012-05-03 10:17:16.266254	85	90	Received	
+1	2012-05-03 10:21:50.917684	85	90	Returned	
+435	2012-05-09 13:17:24.476672	85	99	ILL-Request	\N
+191	2012-05-09 13:22:46.996744	85	84	ILL-Answer|Will-Supply|being-processed-for-supply	
+191	2012-05-09 13:22:47.361748	85	84	Shipped	due 2012-05-31
+211	2012-05-09 13:22:48.730549	85	83	ILL-Answer|Will-Supply|being-processed-for-supply	
+211	2012-05-09 13:22:48.959316	85	83	Shipped	due 2012-05-31
+224	2012-05-09 13:23:00.635587	85	135	ILL-Answer|Unfilled|in-use-on-loan	
+234	2012-05-09 13:55:17.732517	85	135	ILL-Answer|Unfilled|policy-problem	
+10	2012-05-28 11:17:24.202635	84	85	ILL-Answer|Unfilled|not-owned	
+17	2012-05-28 11:17:28.01369	84	85	ILL-Answer|Unfilled|in-use-on-loan	
+436	2012-05-30 14:20:02.362202	85	48	ILL-Request	\N
 \.
 
 
@@ -11008,6 +11050,9 @@ COPY requests_history (request_id, ts, msg_from, msg_to, status, message) FROM s
 423	2012-02-29 13:59:25.457127	31	85	Renew-Answer|Ok	due 2012-03-15
 423	2012-02-29 14:00:07.388035	85	31	Returned	
 423	2012-02-29 14:00:35.432014	31	85	Checked-in	
+5	2011-12-12 11:53:36.033538	85	90	ILL-Request	\N
+5	2012-01-19 15:05:21.464686	90	85	ILL-Answer|Unfilled|on-hold	
+5	2012-05-07 09:19:41.740302	85	85	Message	Requester closed the request.
 \.
 
 
@@ -11047,8 +11092,6 @@ COPY sources (request_id, sequence_number, library, call_number) FROM stdin;
 3	1	90	817.54 Bla 1991
 3	2	34	791.45 BLACK
 4	1	32	J 949.407 Bul
-5	1	90	ChrFic Gustaf son 1984
-5	2	98	Fic Gu
 6	1	21	DVD 13845
 7	1	101	undefined
 8	1	39	F Steel,F Steel (pbk)
@@ -12327,23 +12370,58 @@ COPY sources (request_id, sequence_number, library, call_number) FROM stdin;
 421	3	82	J E Car
 422	1	20	DVD/Operation/G
 424	1	82	J 599.658 Vog
+425	1	87	J E Car
+425	2	25	E Carle
+425	3	99	undefined
+426	1	100	Manitoba Envir Registry 3127
+427	1	46	undefined
+428	1	99	undefined
+428	2	101	E CARLE
+428	3	84	J E Car
+428	4	83	J E Car
+428	5	82	J E Car
+429	1	101	025.62 BOU
+429	2	99	undefined
+430	1	101	E CARLE
+430	2	84	J E Car
+430	3	83	J E Car
+430	4	82	J E Car
+431	1	101	025.62 BOU
+431	2	99	undefined
+432	1	84	797.122 Wil
+432	2	83	797.122 Wil
+432	3	38	797.122 WIL
+432	4	26	ANF 797.122 WIL
+432	5	35	797.1 WIL
+433	1	38	undefined
+433	2	79	undefined
+433	3	94	undefined
+434	1	85	J 636.597 HUDAK
+434	2	134	J 636.597 HUD
+434	3	94	undefined
+435	1	99	undefined
+435	2	48	YA HAW
+435	3	85	T HAWORTH-ATTARD
+435	4	38	J FIC HAW
+435	5	26	JF HAW
+435	6	46	undefined
+436	1	48	YA COL
+436	2	87	ILL Sept 30/11
+436	3	71	YADF Col
+436	4	34	YA Collins Bk1 2008,YA Collins Bk1 2008
+436	5	89	F Col
+436	6	68	TEEN FIC COL
+436	7	25	J Collins
+436	8	94	undefined
+436	9	26	AF COL,AF COL,AF COL,AF COL
+436	10	35	T COL,T COL,T COL
+436	11	27	A FIC COL
+436	12	92	T Collins,T Collins
+436	13	99	undefined
+436	14	79	Y.A. F COL,Y.A. F COL c.2,Y.A. F COL c.3
+436	15	134	YA F COL,YA F COL
+436	16	38	YA COL #1 Hunger
 \.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: mapapp
---
-
-COPY users (uid, name, password, active, email_address, admin, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, ill_sent, home_zserver_id, home_zserver_location, last_login) FROM stdin;
-\.
-
-
---
--- Name: authgroups_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
---
-
-ALTER TABLE ONLY authgroups
-    ADD CONSTRAINT authgroups_pkey PRIMARY KEY (gid);
 
 
 --
@@ -12368,6 +12446,14 @@ ALTER TABLE ONLY request
 
 ALTER TABLE ONLY search_statistics
     ADD CONSTRAINT search_statistics_pkey PRIMARY KEY (sessionid);
+
+
+--
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+ALTER TABLE ONLY libraries
+    ADD CONSTRAINT unique_name UNIQUE (name);
 
 
 --

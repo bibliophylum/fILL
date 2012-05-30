@@ -57,67 +57,6 @@ $$;
 
 ALTER FUNCTION public.update_ts() OWNER TO mapapp;
 
-SET default_tablespace = '';
-
-SET default_with_oids = false;
-
---
--- Name: authgroups; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
---
-
-CREATE TABLE authgroups (
-    gid integer NOT NULL,
-    authorization_group character varying(20)
-);
-
-
-ALTER TABLE public.authgroups OWNER TO mapapp;
-
---
--- Name: authgroups_gid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
---
-
-CREATE SEQUENCE authgroups_gid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.authgroups_gid_seq OWNER TO mapapp;
-
---
--- Name: authgroups_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mapapp
---
-
-ALTER SEQUENCE authgroups_gid_seq OWNED BY authgroups.gid;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
---
-
-CREATE TABLE users (
-    uid integer NOT NULL,
-    name character varying(30),
-    password character varying(30),
-    active smallint,
-    email_address character varying(200),
-    admin smallint,
-    library character varying(200),
-    mailing_address_line1 character varying(200),
-    mailing_address_line2 character varying(200),
-    mailing_address_line3 character varying(200),
-    ill_sent smallint,
-    home_zserver_id smallint,
-    home_zserver_location character varying(30),
-    last_login timestamp without time zone
-);
-
-
-ALTER TABLE public.users OWNER TO mapapp;
-
 --
 -- Name: libraries_lid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
 --
@@ -132,12 +71,9 @@ CREATE SEQUENCE libraries_lid_seq
 
 ALTER TABLE public.libraries_lid_seq OWNER TO mapapp;
 
---
--- Name: libraries_lid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: mapapp
---
+SET default_tablespace = '';
 
-ALTER SEQUENCE libraries_lid_seq OWNED BY users.uid;
-
+SET default_with_oids = false;
 
 --
 -- Name: libraries; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
@@ -149,25 +85,14 @@ CREATE TABLE libraries (
     password character varying(30),
     active smallint,
     email_address character varying(200),
-    admin smallint,
     library character varying(200),
     mailing_address_line1 character varying(200),
     mailing_address_line2 character varying(200),
     mailing_address_line3 character varying(200),
-    ill_sent smallint,
-    home_zserver_id smallint,
-    home_zserver_location character varying(30),
     last_login timestamp without time zone,
-    unverified_patron_request_limit integer DEFAULT 2,
     town character varying(50),
     region character varying(15),
-    ebsco_user character varying(40),
-    ebsco_pass character varying(40),
-    use_standardresource boolean DEFAULT true,
-    use_databaseresource boolean DEFAULT true,
-    use_electronicresource boolean DEFAULT true,
-    use_webresource boolean DEFAULT false,
-    wpl_institution_card character varying(40)
+    request_email_notification boolean DEFAULT false
 );
 
 
@@ -180,11 +105,70 @@ ALTER TABLE public.libraries OWNER TO mapapp;
 CREATE TABLE library_barcodes (
     lid integer NOT NULL,
     borrower integer,
-    barcode character varying(15)
+    barcode character varying(14)
 );
 
 
 ALTER TABLE public.library_barcodes OWNER TO mapapp;
+
+--
+-- Name: reports_rid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
+--
+
+CREATE SEQUENCE reports_rid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.reports_rid_seq OWNER TO mapapp;
+
+--
+-- Name: reports; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports (
+    rid integer DEFAULT nextval('reports_rid_seq'::regclass) NOT NULL,
+    rtype character varying(15),
+    name character varying(40),
+    description character varying(1000),
+    generator character varying(40)
+);
+
+
+ALTER TABLE public.reports OWNER TO mapapp;
+
+--
+-- Name: reports_complete; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports_complete (
+    lid integer NOT NULL,
+    rid integer NOT NULL,
+    range_start character(10),
+    range_end character(10),
+    report_file character varying(100)
+);
+
+
+ALTER TABLE public.reports_complete OWNER TO mapapp;
+
+--
+-- Name: reports_queue; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE reports_queue (
+    ts timestamp without time zone DEFAULT now(),
+    rid integer NOT NULL,
+    lid integer NOT NULL,
+    range_start character(10),
+    range_end character(10)
+);
+
+
+ALTER TABLE public.reports_queue OWNER TO mapapp;
 
 --
 -- Name: request_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
@@ -295,28 +279,6 @@ CREATE TABLE sources (
 ALTER TABLE public.sources OWNER TO mapapp;
 
 --
--- Name: gid; Type: DEFAULT; Schema: public; Owner: mapapp
---
-
-ALTER TABLE ONLY authgroups ALTER COLUMN gid SET DEFAULT nextval('authgroups_gid_seq'::regclass);
-
-
---
--- Name: uid; Type: DEFAULT; Schema: public; Owner: mapapp
---
-
-ALTER TABLE ONLY users ALTER COLUMN uid SET DEFAULT nextval('libraries_lid_seq'::regclass);
-
-
---
--- Name: authgroups_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
---
-
-ALTER TABLE ONLY authgroups
-    ADD CONSTRAINT authgroups_pkey PRIMARY KEY (gid);
-
-
---
 -- Name: request_closed_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -338,6 +300,14 @@ ALTER TABLE ONLY request
 
 ALTER TABLE ONLY search_statistics
     ADD CONSTRAINT search_statistics_pkey PRIMARY KEY (sessionid);
+
+
+--
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+ALTER TABLE ONLY libraries
+    ADD CONSTRAINT unique_name UNIQUE (name);
 
 
 --

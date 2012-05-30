@@ -10,3 +10,7 @@ There are two starting points:
 00.initial-empty.sql - just creates the database
 or
 00.initial-with-data.sql - creates the database, and populates it with some test data
+
+To create the database, log in as (or su to) user postgres, and:
+$ psql <00.initial-with-data.sql
+

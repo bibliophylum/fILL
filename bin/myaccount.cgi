@@ -1,9 +1,8 @@
 #!/usr/bin/perl -w
 ##
-##  CGI-Application admin
+##  CGI-Application myaccount
 ##
 use strict;
-#use lib qw(.);
 use lib "/opt/fILL/modules";
 use fILL::myaccount;
 my $app = fILL::myaccount->new();
