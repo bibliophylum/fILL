@@ -1,4 +1,4 @@
-// reports.js
+// report-folder.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  David A. Christensen
@@ -23,9 +23,9 @@ function build_table( data ) {
 	var ai = oTable_completed.fnAddData( data.reports.completed[i] );
 
 	// make clinks lickable
-	$("#datatable_completed td:nth-child(4)").html("<a href='http://localhost/reports/"+
+	$("#datatable_completed td:nth-child(4)").html("<a href='?rm=send_report_output&doc="+
 						       data.reports.completed[i].download+
-						       "' target='_blank'>"+
+						       "'>"+
 						       data.reports.completed[i].download+
 						       "</a>");
 

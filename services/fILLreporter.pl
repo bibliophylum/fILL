@@ -73,10 +73,11 @@ sub process_request {
 	    $self->log(4, Dumper($report));
 
 	    # create a unique filename
-	    my $reportsdir = "/opt/fILL/htdocs/reports/"; 
-#	    my $filename = "testreport";
+#	    my $reportsdir = "/opt/fILL/htdocs/reports/"; # this would be visible in browser....
+	    my $reportsdir = "/opt/fILL/report-output/"; 
 	    my $filename = $ts->{ts} . $$;
 	    $filename =~ s/\D//g;
+	    $filename .= '.txt';
 	    # hand off to the individual report generator
 	    my @args = ("/opt/fILL/services/reports/" . $report->{generator} . ".pl",
 			'--rid', $notice->{rid},

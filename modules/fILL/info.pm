@@ -36,6 +36,7 @@ sub setup {
 	'info_report-folder_form' => 'info_reportfolder_process',
 	'info_feeds_form'         => 'info_feeds_process',
 	'send_pdf'                => 'send_pdf',
+	'send_report_output'      => 'send_report_output',
 	);
 }
 
@@ -142,6 +143,20 @@ sub send_pdf {
 #
 #  return "Download $docname";
 
+    return;
+} 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub send_report_output {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $docname = $q->param("doc");
+    $self->header_add( -attachment => $docname );    
+    $self->stream_file( "/opt/fILL/report-output/$docname",2048);
+    
     return;
 } 
 
