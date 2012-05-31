@@ -15,10 +15,6 @@ $('document').ready(function(){
 
     $.getJSON('/cgi-bin/get-active-requests.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
-                //console.log(data.unhandledRequests[0].id);
-                //console.log(data.unhandledRequests[0].title);
-                //alert(data); //uncomment this for debug
-                //alert (data.unhandledRequests[0].id+" "+data.unhandledRequests[0].msg_from+" "+data.unhandledRequests[0].call_number+" "+data.unhandledRequests[0].author+" "+data.unhandledRequests[0].title+" "+data.unhandledRequests[0].ts); //further debug
                 build_table(data);
 
                 //$('#gradient-style').dataTable();
@@ -47,6 +43,7 @@ $('document').ready(function(){
                            { "mDataProp": "Call #" },
                            { "mDataProp": "Author" },
                            { "mDataProp": "Title" },
+                           { "mDataProp": "Note" },
                            { "mDataProp": "Timestamp" },
                            { "mDataProp": "Due date" },
                            { "mDataProp": "Response" }

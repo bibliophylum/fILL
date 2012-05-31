@@ -74,10 +74,15 @@ sub complete_the_request_process {
     my $q = $self->query;
 
     my $pbarcode = $q->param('pbarcode');
+    my $request_note = $q->param('request_note');
     my $reqid = $q->param('request_id');
     if ($pbarcode) {
 	my $SQL = "UPDATE request SET patron_barcode=?, current_target=1 WHERE id=?";
 	$self->dbh->do($SQL, undef, $pbarcode, $reqid);  # do some error checking....!
+    }
+    if ($request_note) {
+	my $SQL = "UPDATE request SET note=? WHERE id=?";
+	$self->dbh->do($SQL, undef, $request_note, $reqid);  # do some error checking....!
     }
 
     # get the request
@@ -135,7 +140,7 @@ sub pull_list_process {
     my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    my $SQL = "select b.barcode, r.title, r.author, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
+    my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
 
     my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
 

@@ -33,13 +33,14 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -56,6 +57,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = "";
         cell = row.insertCell(-1); 
