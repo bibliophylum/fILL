@@ -8,7 +8,8 @@ my $query = new CGI;
 
 # send to the reporter to queue and handle
 my $obj = new Net::Telnet( Host => 'localhost',
-			   Port => '20204',
+#			   Port => '20204',
+			   Port => '20205',
 #			   Dump_Log => '/opt/fILL/logs/telnet.log',
     );
 my $ok = $obj->print( to_json( { rid => $query->param('rid'), 
