@@ -21,13 +21,13 @@ function build_table( data ) {
     for (var i=0;i<data.reports.completed.length;i++) {
 	data.reports.completed[i].actions = ''; // add the 'actions' column
 	var ai = oTable_completed.fnAddData( data.reports.completed[i] );
-
+	//alert(data.reports.completed[i].download);
 	// make clinks lickable
-	$("#datatable_completed td:nth-child(4)").html("<a href='?rm=send_report_output&doc="+
-						       data.reports.completed[i].download+
-						       "'>"+
-						       data.reports.completed[i].download+
-						       "</a>");
+	$("#datatable_completed tr:last td:nth-child(4)").html("<a href='?rm=send_report_output&doc="+
+							       data.reports.completed[i].download+
+							       "'>"+
+							       data.reports.completed[i].download+
+							       "</a>");
 
 	var divActions = document.createElement("div");
 	var b1 = document.createElement("input");
