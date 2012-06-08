@@ -253,9 +253,9 @@ function set_default_due_date(oForm) {
     var theTable = document.getElementById('gradient-style');
 
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[7].innerHTML = defaultDueDate;
+	theTable.tBodies[0].rows[r].cells[8].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(9)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )
