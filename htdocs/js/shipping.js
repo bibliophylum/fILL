@@ -33,7 +33,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Mailing address"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
@@ -57,7 +57,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].call_number;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].title;
-        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].note;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].mailing_address;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = "";
         cell = row.insertCell(-1); 
