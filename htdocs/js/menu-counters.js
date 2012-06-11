@@ -44,6 +44,12 @@ function update_menu_counters( lid ) {
                     waiting[0].innerHTML = 'Respond: '+data.counts.waiting;
 		}
             };
+            if (data.counts.shipping > 0) {
+		var shipping = $('#menu_lend_shipping a');
+		if (shipping.length > 0) {
+                    shipping[0].innerHTML = 'Shipping: '+data.counts.shipping;
+		}
+            };
             //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
     });
 }

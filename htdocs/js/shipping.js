@@ -1,4 +1,4 @@
-// respond.js
+// shipping.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  David A. Christensen
@@ -47,28 +47,28 @@ function build_table( data ) {
     myTable.appendChild(tBody);
     
 //    alert('building rows');
-    for (var i=0;i<data.unhandledRequests.length;i++) 
+    for (var i=0;i<data.shipping.length;i++) 
     {
-//	alert (data.unhandledRequests[i].id+" "+data.unhandledRequests[i].msg_from+" "+data.unhandledRequests[i].call_number+" "+data.unhandledRequests[i].author+" "+data.unhandledRequests[i].title+" "+data.unhandledRequests[i].ts); //further debug
-        row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
+//	alert (data.shipping[i].id+" "+data.shipping[i].msg_from+" "+data.shipping[i].call_number+" "+data.shipping[i].author+" "+data.shipping[i].title+" "+data.shipping[i].ts); //further debug
+        row = tBody.insertRow(-1); row.id = 'req'+data.shipping[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].from; cell.setAttribute('title', data.shipping[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].msg_to;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].call_number;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].note;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = "";
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
-	divResponses.id = 'divResponses'+data.unhandledRequests[i].id;
+	divResponses.id = 'divResponses'+data.shipping[i].id;
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Will-supply";
-	var requestId = data.unhandledRequests[i].id;
+	b1.value = "Sent";
+	var requestId = data.shipping[i].id;
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
@@ -78,11 +78,11 @@ function build_table( data ) {
 //	b2.onclick = function () { alert('click!'); };
 //	divResponses.appendChild(b2);
 	
-	var b3 = document.createElement("input");
-	b3.type = "button";
-	b3.value = "Unfilled";
-	b3.onclick = make_unfilled_handler( requestId );
-	divResponses.appendChild(b3);
+//	var b3 = document.createElement("input");
+//	b3.type = "button";
+//	b3.value = "Unfilled";
+//	b3.onclick = make_unfilled_handler( requestId );
+//	divResponses.appendChild(b3);
 
 	cell.appendChild( divResponses );
     }
@@ -119,8 +119,8 @@ function shipit( requestId ) {
 		reqid: $row.find(':nth-child(1)').text(),
 		msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
-		status: "ILL-Answer|Will-Supply|being-processed-for-supply",
-		message: ""
+		status: "Shipped",
+		message: "due "+$row.find(':nth-child(9)').text()
 	    }
 	} else {
 	    return null;
@@ -153,99 +153,6 @@ function shipit( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
-
-function make_unfilled_handler( requestId ) {
-    return function() { unfilled( requestId ) };
-}
-
-function unfilled( requestId ) {
-    var row = $("#req"+requestId);
-    var ruDiv = document.createElement("div");
-    ruDiv.id = "reasonUnfilled";
-    var ruForm = document.createElement("form");
-
-    var ru = document.createElement("div");
-    ru.setAttribute('id','unfilledradioset');
-    ruForm.appendChild(ru);
-    ruDiv.appendChild(ruForm);
-//    row[0].cells[8].appendChild(ruDiv);
-    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='8'></td></tr>").insertAfter($("#req"+requestId));
-    $("#tmpcol").append(ruDiv);
-
-    $("#divResponses"+requestId).hide();
-    $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
-
-
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
-    cButton.bind('click', function() {
-	$("#reasonUnfilled").remove(); 
-	$("#tmprow").remove();
-	$("#divResponses"+requestId).show(); 
-	//return false;
-    });
-
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
-    sButton.bind('click', function() {
-	var reason = $('input:radio[name=radioset]:checked').val();
-	$("#reasonUnfilled").remove(); 
-	$("#tmprow").remove();
-	$("#divResponses"+requestId).show(); 
-	
-	// Returns [{reqid: 12, msg_to: '101'}, 
-	//          {reqid: 15, msg_to: '98'},
-	// Note that nth-child uses 1-based indexing, not 0-based
-	var parms = $('#gradient-style tbody tr').map(function() {
-	    // $(this) is used more than once; cache it for performance.
-	    var $row = $(this);
-	    
-	    // For each row that's "mapped", return an object that
-	    //  describes the first and second <td> in the row.
-	    if ($row.find(':nth-child(1)').text() == requestId) {
-		return {
-		    reqid: $row.find(':nth-child(1)').text(),
-		    msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
-		    lid: $("#lid").text(),
-		    status: "ILL-Answer|Unfilled|"+reason,
-		    message: ""
-		}
-	    } else {
-		return null;
-	    };
-	}).get();
-
-	$.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
-		  function(data){
-//		      alert('change request status: '+data);
-		      // slideUp doesn't work for <tr>
-		      $("#req"+requestId).fadeOut(400, function() { $("req"+requestId).remove(); }); // toast the row
-		  }
-		 );
-
-    });
-
-    // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
-    $("#unfilledradioset").buttonset();
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='in-use-on-loan' id='in-use-on-loan' checked='checked'/><label for='in-use-on-loan'>in-use-on-loan</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='in-process' id='in-process'/><label for='in-process'>in-process</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='lost' id='lost'/><label for='lost'>lost</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='non-circulating' id='non-circulating'/><label for='non-circulating'>non-circulating</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-owned' id='not-owned'/><label for='not-owned'>not-owned</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-on-shelf' id='not-on-shelf'/><label for='not-on-shelf'>not-on-shelf</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-reserve' id='on-reserve'/><label for='on-reserve'>on-reserve</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='poor-condition' id='poor-condition'/><label for='poor-condition'>poor-condition</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='charges' id='charges'/><label for='charges'>charges</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-hold' id='on-hold'/><label for='on-hold'>on-hold</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='policy-problem' id='policy-problem'/><label for='policy-problem'>policy-problem</label>");
-    $("#unfilledradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
-//    $("#unfilledradioset").append("<input type='radio' name='radioset' value='responder-specific' id='responder-specific'/><label for='responder-specific'>responder-specific</label>");
-    $("#unfilledradioset").buttonset('refresh');
-
-//    alert(row[0].cells[8]);
-
-    
-}
-
-
 
 function set_default_due_date(oForm) {
 //    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;

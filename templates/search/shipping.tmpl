@@ -1,11 +1,11 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/respond.js"></script>
+<script type="text/javascript" src="/js/shipping.js"></script>
 
 
 <script type="text/javascript">
-set_secondary_tab("menu_lend_respond");
+set_secondary_tab("menu_lend_shipping");
 
 $.ajaxSetup ({  
   cache: false  
@@ -13,7 +13,7 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    $.getJSON('/cgi-bin/get-active-requests.cgi', {lid: <TMPL_VAR name="lid">},
+    $.getJSON('/cgi-bin/get-shipping.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
 
@@ -54,6 +54,10 @@ $('document').ready(function(){
            });
 
     $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $(function() {
            update_menu_counters( <TMPL_VAR name="lid"> );
     });
 
@@ -67,8 +71,8 @@ $('document').ready(function(){
   <div id="leftcontent">
     <h2>Instructions</h2>
     <ol>
-      <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
-      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
+      <li>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</li>
+      <li>For each of the requests that you are filling, click the "Sent" button.</li>
       <li>Hover over a library's symbol to see the full name of the library.</li>
     </ol>
   </div>
@@ -80,7 +84,29 @@ $('document').ready(function(){
     </div>
 
     <div id="myDiv">
-      <h3>Respond to requests</h3>
+      <div class="innerLeft">
+	<h3>1. Set a default due date</h3>
+	<div id="defaultDueDate">
+	  <form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change default'; return false;">
+	    <p>
+	      Date (yyyy-mm-dd): <input id="datepicker" type="text">
+	      <input type="submit" name="submit_default_due_date" value="Set as default"/>
+	    </p>
+	  </form>
+	</div>
+      </div>
+
+      <div class="innerLeft">
+	<h3>(3. Canada Post Shipping Tool)</h3>
+	<div id="shippingtool">
+	  <p>Clicking on this link will open the <a href="http://www.clatoolbox.ca/EOE_SCE_Prod/forms/" target="_blank" style="text-decoration : underline;">Canada Post Shipping Tool</a> in a new tab or window.</p>
+	</div>
+      </div>
+
+      <div class="clear">
+
+      <br/>
+      <h3>2. Items to ship</h3>
       <div id="mylistDiv"></div>
 
     </div>

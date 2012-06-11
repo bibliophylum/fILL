@@ -32,6 +32,11 @@ $SQL = "select count(r.id) from request r left join requests_active ra on (r.id 
 my @waiting = $dbh->selectrow_array($SQL, undef, $lid, $lid );
 @waiting[0] = 0 unless (@waiting);
 
+$SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_from=? and ra.status like '%Will-Supply%' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Shipped')";
+my @shipping = $dbh->selectrow_array($SQL, undef, $lid, $lid );
+@shipping[0] = 0 unless (@shipping);
+
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0]} } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], shipping => $shipping[0]} } );

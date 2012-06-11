@@ -54,6 +54,7 @@ sub setup {
 	'complete_the_request'     => 'complete_the_request_process',
 	'pull_list'                => 'pull_list_process',
 	'respond'                  => 'respond_process',
+	'shipping'                 => 'shipping_process',
 	'unfilled'                 => 'unfilled_process',
 	'receive'                  => 'receiving_process',
 	'renewals'                 => 'renewals_process',
@@ -310,6 +311,24 @@ sub respond_process {
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
+		      username => $self->authen->username,
+		      lid => $lid,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub shipping_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/shipping.tmpl');	
+    $template->param( pagetitle => "Shipping",
 		      username => $self->authen->username,
 		      lid => $lid,
 	);
