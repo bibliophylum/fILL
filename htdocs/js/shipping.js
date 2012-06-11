@@ -132,18 +132,7 @@ function shipit( requestId ) {
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
 	.success(function() {
-//	    var myRow=$("#req"+requestId);
-//	    var parms = {
-//		"reqid": requestId,
-//		"msg_to": myRow.find(':nth-child(3)').text(),
-//		"lid": $("#lid").text(),
-//		"status": "Shipped",
-//		"message": "due "+myRow.find(':nth-child(8)').text()
-//	    };
-//	    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
-//		      function(data){
-////			  alert('change request status: '+data+'\n'+parms.status);
-//		      });
+	    update_menu_counters( $("#lid").text() );
 	})
 	.error(function() {
 	    alert('error');
