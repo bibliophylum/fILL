@@ -30,7 +30,6 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Mailing address"; row.appendChild(cell);
@@ -40,7 +39,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -54,7 +53,6 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].from; cell.setAttribute('title', data.shipping[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].msg_to;
-        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].call_number;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].mailing_address;
@@ -72,18 +70,6 @@ function build_table( data ) {
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
-//	var b2 = document.createElement("input");
-//	b2.type = "button";
-//	b2.value = "Change due date";
-//	b2.onclick = function () { alert('click!'); };
-//	divResponses.appendChild(b2);
-	
-//	var b3 = document.createElement("input");
-//	b3.type = "button";
-//	b3.value = "Unfilled";
-//	b3.onclick = make_unfilled_handler( requestId );
-//	divResponses.appendChild(b3);
-
 	cell.appendChild( divResponses );
     }
     
@@ -120,7 +106,7 @@ function shipit( requestId ) {
 		msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
 		lid: $("#lid").text(),
 		status: "Shipped",
-		message: "due "+$row.find(':nth-child(9)').text()
+		message: "due "+$row.find(':nth-child(8)').text()
 	    }
 	} else {
 	    return null;
@@ -149,9 +135,9 @@ function set_default_due_date(oForm) {
     var theTable = document.getElementById('gradient-style');
 
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[8].innerHTML = defaultDueDate;
+	theTable.tBodies[0].rows[r].cells[7].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(9)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )
