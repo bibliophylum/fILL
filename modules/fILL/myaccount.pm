@@ -42,7 +42,7 @@ sub myaccount_settings_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $SQL_getUser = "SELECT lid, name, password, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, request_email_notification FROM libraries WHERE name=?";
+    my $SQL_getUser = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, canada_post_customer_number, request_email_notification FROM libraries WHERE name=?";
 
     my $status;
     my @searchprefs;
@@ -54,8 +54,10 @@ sub myaccount_settings_process {
     my $email_address = $q->param("email_address");
     my $library = $q->param("library");
     my $mailing_address_line1 = $q->param("mailing_address_line1");
-    my $mailing_address_line2 = $q->param("mailing_address_line2");
-    my $mailing_address_line3 = $q->param("mailing_address_line3");
+    my $city = $q->param("city");
+    my $province = $q->param("province");
+    my $post_code = $q->param("post_code");
+    my $canada_post_customer_number = $q->param("canada_post_customer_number");
     my $request_email_notification = $q->param("request_email_notification");
 
     # If the user has clicked the 'update' button, $lid will be defined
@@ -64,15 +66,17 @@ sub myaccount_settings_process {
 
 	$self->log->debug("MyAccount:Settings: Updating lid [$lid], name [$name]");
 
-	$self->dbh->do("UPDATE libraries SET name=?, password=?, email_address=?, library=?, mailing_address_line1=?, mailing_address_line2=?, mailing_address_line3=?, request_email_notification=? WHERE lid=?",
+	$self->dbh->do("UPDATE libraries SET name=?, password=?, email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, canada_post_customer_number=?, request_email_notification=? WHERE lid=?",
 		       undef,
 		       $name,
 		       $password,
 		       $email_address,
 		       $library,
 		       $mailing_address_line1,
-		       $mailing_address_line2,
-		       $mailing_address_line3,
+		       $city,
+		       $province,
+		       $post_code,
+		       $canada_post_customer_number,
 		       $request_email_notification,
 		       $lid
 	    );
@@ -102,8 +106,10 @@ sub myaccount_settings_process {
 		     editEmail    => $href->{email_address},
 		     editLibrary  => $href->{library},
 		     editMailingAddressLine1 => $href->{mailing_address_line1},
-		     editMailingAddressLine2 => $href->{mailing_address_line2},
-		     editMailingAddressLine3 => $href->{mailing_address_line3},
+		     editCity => $href->{city},
+		     editProvince => $href->{province},
+		     editPostalCode => $href->{post_code},
+		     editCanadaPostCustomerNumber => $href->{canada_post_customer_number},
 		     editRequestEmailNotification => $href->{request_email_notification},
 	);
     return $template->output;

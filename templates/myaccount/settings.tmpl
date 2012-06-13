@@ -21,7 +21,7 @@
       </tr><tr>
 	<td>Password:</td>
 	<td>
-	  <input TYPE="text" NAME="password" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editPassword>">
+	  <input TYPE="text" NAME="password" SIZE="20" MAXLENGTH="20" VALUE="<TMPL_VAR NAME=editPassword>">
 	</td>
       </tr><tr>
 	<td>Email address:</td>
@@ -34,26 +34,36 @@
 	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
 	</td>
       </tr><tr>
-	<td>Mailing address</td>
+	<td>Interlibrary Loan Mailing address</td>
 	<td>
 	  <table>
 	    <tr>
-	      <td>Line 1:</td>
+	      <td>Street address or Box#:</td>
 	      <td>
 		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
 	      </td>
 	    </tr><tr>
-	      <td>Line 2:</td>
+	      <td>Town/City:</td>
 	      <td>
-		<input TYPE="text" NAME="mailing_address_line2" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine2>">
+		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>">
 	      </td>
 	    </tr><tr>
-	      <td>Line 3:</td>
+	      <td>Province:</td>
 	      <td>
-		<input TYPE="text" NAME="mailing_address_line3" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine3>">
+		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>">
+	      </td>
+	    </tr><tr>
+	      <td>Postal code:</td>
+	      <td>
+		<input TYPE="text" NAME="post_code" SIZE="6" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
 	      </td>
 	    </tr>
 	  </table>
+	</td>
+      </tr><tr>
+	<td>Canada Post customer number:</td>
+	<td>
+	  <input TYPE="text" NAME="canada_post_customer_number" SIZE="10" MAXLENGTH="10" VALUE="<TMPL_VAR NAME=editCanadaPostCustomerNumber>">
 	</td>
       </tr><tr>
 	<td>Do you want to receive email notifications for new requests?</td>
