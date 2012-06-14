@@ -8,7 +8,11 @@ my $query = new CGI;
 my $lid = $query->param('lid');
 
 # sql to get requests to this library, which this library has not responded to yet
-my $SQL = "select r.id, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number, r.author, r.title";
+#my $SQL = "select r.id, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number, r.author, r.title";
+
+my $SQL = "select r.id, r.title, r.author, r.note, case when l.canada_post_customer_number is null then 'no' else 'yes' end as has_canada_post_account, date_trunc('second',ra.ts) as ts, l.name as from, l.library, ra.msg_from, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number, r.author, r.title";
+
+
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
