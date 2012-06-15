@@ -60,13 +60,19 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = "";
         cell = row.insertCell(-1); 
 
+	var requestId = data.shipping[i].id;
 	var divResponses = document.createElement("div");
-	divResponses.id = 'divResponses'+data.shipping[i].id;
+	divResponses.id = 'divResponses'+requestId;
+
+	var b3 = document.createElement("input");
+	b3.type = "button";
+	b3.value = "Canada Post";
+	b3.onclick = make_canada_post_handler( requestId );
+	divResponses.appendChild(b3);
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Sent";
-	var requestId = data.shipping[i].id;
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
@@ -129,6 +135,113 @@ function shipit( requestId ) {
 	});
 }
 
+function make_canada_post_handler( requestId ) {
+    return function() { canada_post( requestId ) };
+}
+
+function canada_post( requestId ) {
+    var row = $("#req"+requestId);
+    var cpDiv = document.createElement("div");
+    cpDiv.id = "canadaPost";
+    $.getJSON('/cgi-bin/get-canada-post-form-data.cgi', {reqid: requestId},
+	      function(data){
+		  //alert(data.shipment.customer_ref1);
+		  var cpForm = document.createElement("form");
+		  cpForm.setAttribute('id','cpForm');
+		  var cp = document.createElement("div");
+		  cp.setAttribute('id','canadapost');
+
+		  cpForm.appendChild(cp);
+		  cpDiv.appendChild(cpForm);
+		  $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#req"+requestId));
+		  $("#tmpcol").append(cpDiv);
+		  
+		  $("#divResponses"+requestId).hide();
+		  
+		  // build the mini-form
+		  $("<table id='cpTable'><thead><tr><td>Shipment</td><td>SENDER</td><td>DESTINATION</td><td>REQUIRED FIELDS</td></tr></thead><tbody></tbody></table>").appendTo(cpForm);
+		  $('#cpTable > tbody:last').append("<tr></tr>");
+
+		  $('#cpTable > tbody > tr:last').append("<td id='cpTableShipInfo'></td>");
+		  $('#cpTableShipInfo').append("<p>For now, assume Library Book Rate</p>");
+		  $('#cpTableShipInfo').append("<p>group id: "+data.shipment.group_id+"</p>");
+		  $('#cpTableShipInfo').append("<p>expected mailing date: "+data.shipment.expected_mailing_date+"</p>");
+		  $('#cpTableShipInfo').append("<p>service code: "+data.shipment.service_code+"</p>");
+		  
+		  $('#cpTable > tbody > tr:last').append("<td id='cpTableSender'></td>");
+		  $('#cpTableSender').append("<p>"+data.shipment.sender.name+"</p>");
+		  $('#cpTableSender').append("<p>"+data.shipment.sender.company+"</p>");
+		  $('#cpTableSender').append("<p>"+data.shipment.sender.address_line1+"</p>");
+		  $('#cpTableSender').append("<p>"+data.shipment.sender.city+", "+data.shipment.sender.province+"  "+data.shipment.sender.postal_code+"</p>");
+		  $('#cpTableSender').append("<br/>");
+		  $('#cpTableSender').append("<p>Phone: "+data.shipment.sender.contact_phone+"</p>");
+		  $('#cpTableSender').append("<p>Email: "+data.shipment.sender.email_address+"</p>");
+		  
+		  $('#cpTable > tbody > tr:last').append("<td id='cpTableDestination'></td>");
+		  $('#cpTableDestination').append("<p>"+data.shipment.destination.name+"</p>");
+		  $('#cpTableDestination').append("<p>"+data.shipment.destination.company+"</p>");
+		  $('#cpTableDestination').append("<p>"+data.shipment.destination.address_line1+"</p>");
+		  $('#cpTableDestination').append("<p>"+data.shipment.destination.city+", "+data.shipment.sender.province+"  "+data.shipment.sender.postal_code+"</p>");
+		  $('#cpTableDestination').append("<br/>");
+		  $('#cpTableDestination').append("<p>Phone: "+data.shipment.destination.contact_phone+"</p>");
+		  $('#cpTableDestination').append("<p>Email: "+data.shipment.destination.email_address+"</p>");
+		  
+		  $('#cpTable > tbody > tr:last').append("<td id='cpTableRequiredFields'></td>");
+		  $('#cpTableRequiredFields').append("<input type='hidden' name='reqid' value='"+requestId+"'>");
+		  $('#cpTableRequiredFields').append("<p>Weight:<input type='text' name='weight'>(kg)</p>");
+		  $('#cpTableRequiredFields').append("<p>Email notification</p>");
+		  $('#cpTableRequiredFields').append("<p><input type='radio' name='notifyShipment' value='true'>Yes, <input type='radio' name='notifyShipment' value='false' checked>No : on-shipment</p>");
+		  $('#cpTableRequiredFields').append("<p><input type='radio' name='notifyException' value='true' checked>Yes, <input type='radio' name='notifyException' value='false'>No : on-exception</p>");
+		  $('#cpTableRequiredFields').append("<p><input type='radio' name='notifyDelivery' value='true'>Yes, <input type='radio' name='notifyDelivery' value='false' checked>No : on-delivery</p>");
+
+		  var cButton = $("<input type='button' value='Cancel'>").appendTo(cpForm);
+		  cButton.bind('click', function() {
+		      $("#canadaPost").remove(); 
+		      $("#tmprow").remove();
+		      $("#divResponses"+requestId).show(); 
+		      //return false;
+		  });
+		  
+		  var sButton = $("<input type='submit' value='Submit'>").appendTo(cpForm);
+		  sButton.bind('click', function() {
+		      var s=$("#cpForm").serialize();
+//		      alert(s);
+		      $.getJSON('/cgi-bin/canada-post-create-shipment.cgi', $("#cpForm").serialize(),
+		      		function(data){
+//				    alert(data);
+				    // remove the now-submitted form
+				    $("#cpForm").remove();
+
+				    // display the submission results
+				    var cp = document.createElement("div");
+				    cp.setAttribute('id','canadapost');
+				    cpDiv.appendChild(cp);
+
+				    // DAVID: these need to be buttons that invoke a server-side cgi (which passes the entry-point link from here
+				    // and knows the api keys...
+				    $("#canadapost").append("<a href='"+data.cp_response.details.href+"' target='_blank'>Mailing labels</a>");
+				    $("#canadapost").append("<a href='"+data.cp_response.group.href+"' target='_blank'>Mailing labels</a>");
+				    $("#canadapost").append("<a href='"+data.cp_response.price.href+"' target='_blank'>Mailing labels</a>");
+				    $("#canadapost").append("<a href='"+data.cp_response.label.href+"' target='_blank'>Mailing labels</a>");
+				    alert("hi");
+		      		})
+		      	  .success(function() {
+//			      $("#canadaPost").remove(); 
+//			      $("#tmprow").remove();
+//			      $("#divResponses"+requestId).show(); 
+			  })
+			  .error(function() {
+			      alert('urk!');
+		      	  });
+
+		      return false;
+		  });
+	      })
+	.success(function() {
+	    //alert('success!');
+	});  // .getJSON get-canada-post-form-data
+}
+
 function set_default_due_date(oForm) {
 //    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
     var defaultDueDate = oForm.elements["datepicker"].value;
@@ -137,7 +250,7 @@ function set_default_due_date(oForm) {
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
 	theTable.tBodies[0].rows[r].cells[7].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(tcpe,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )
