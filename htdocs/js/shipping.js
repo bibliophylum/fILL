@@ -204,26 +204,32 @@ function canada_post( requestId ) {
 		  
 		  var sButton = $("<input type='submit' value='Submit'>").appendTo(cpForm);
 		  sButton.bind('click', function() {
+		      $("#cpForm").append("<img src='/wait.gif'>");
 		      var s=$("#cpForm").serialize();
-//		      alert(s);
 		      $.getJSON('/cgi-bin/canada-post-create-shipment.cgi', $("#cpForm").serialize(),
 		      		function(data){
-//				    alert(data);
 				    // remove the now-submitted form
 				    $("#cpForm").remove();
-
+				    
 				    // display the submission results
 				    var cp = document.createElement("div");
 				    cp.setAttribute('id','canadapost');
 				    cpDiv.appendChild(cp);
 
-				    // DAVID: these need to be buttons that invoke a server-side cgi (which passes the entry-point link from here
-				    // and knows the api keys...
-				    $("#canadapost").append("<a href='"+data.cp_response.details.href+"' target='_blank'>Mailing labels</a>");
-				    $("#canadapost").append("<a href='"+data.cp_response.group.href+"' target='_blank'>Mailing labels</a>");
-				    $("#canadapost").append("<a href='"+data.cp_response.price.href+"' target='_blank'>Mailing labels</a>");
-				    $("#canadapost").append("<a href='"+data.cp_response.label.href+"' target='_blank'>Mailing labels</a>");
-				    alert("hi");
+				    $("#canadapost").append("<h2>Canada Post tracking #: "+data.cp_response.tracking_pin+"</h2>");
+				    var sOut = '<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+					'<thead><th>Action</th><th>Description</th></thead>';
+				    sOut = sOut+'<tr><td><button id="bPrintLabel">Print label</button></td><td>Open the PDF of the Canada Post mailing label.<br/>You can always reprint the Canada Post mailing label from the Current ILLs tab.</td></tr>';
+				    sOut = sOut+'</table>'+'</div>';
+				    $("#canadapost").append(sOut);
+				    $('#bPrintLabel').button();
+				    $('#bPrintLabel').click(function() { 
+					$("#bPrintLabel").parent().append("<img src='/wait.gif'>");
+					window.open('/cgi-bin/canada-post-get-label.cgi?reqid='+requestId);
+					$("#bPrintLabel").next().remove(); // toast the wait image
+					return false; 
+				    });
+
 		      		})
 		      	  .success(function() {
 //			      $("#canadaPost").remove(); 

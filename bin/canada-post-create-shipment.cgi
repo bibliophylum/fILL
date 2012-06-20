@@ -49,8 +49,6 @@ my @to_ary = $dbh->selectrow_array($SQL, undef, $to );
 #print "\nTO ($to):\n";
 #print "\t" . $to_ary[LIBRARY] . "\n\t" . $to_ary[STREET] . "\n\t" .$to_ary[CITY] . ", " . $to_ary[PROVINCE] . "  " . $to_ary[POST_CODE] . "\n";
 
-$dbh->disconnect;
-
 my %api = ();
 $api{username} = '8683f23ad38e2dba';       # developer API keys
 $api{password} = 'ebc41a5e1a5f35bf88b4cd'; # use production keys when going live
@@ -163,12 +161,6 @@ my $xml = <<"EOXML";
 EOXML
     ;
 
-# This is optional in the xml... these are the defaults anyway:
-#        <print-preferences>
-#            <output-format>8.5x11</output-format>
-#            <encoding>PDF</encoding>
-#        </print-preferences>
-
 # Production
 #my $REST_url = "https://soa-gw.canadapost.ca/rs/$mailed_by/$mobo/shipment";
 # Development
@@ -182,9 +174,6 @@ $client->addHeader( 'Accept', 'application/vnd.cpc.shipment-v2+xml' );
 $client->addHeader( 'Accept-language', 'en-CA' );
 $client->addHeader( 'Authorization', "Basic " . encode_base64("$api{username}:$api{password}") );
 $client->POST( $REST_url, $xml );
-#print 'Response code: [' . $client->responseCode() . "]\n";
-#print 'Response headers: [' . $client->responseHeaders() . "]\n";
-#print "Response content:\n" . $client->responseContent() . "\n";
 
 my $parser = XML::LibXML->new();
 my $doc = $parser->parse_string($client->responseContent());
@@ -194,67 +183,23 @@ $xc->registerNs( canadapost => 'http://www.canadapost.ca/ws/shipment');
 
 my %cp_response = ();
 $cp_response{status} = $xc->findvalue('//canadapost:shipment-status');
-#print "STATUS [" . $cp_response{status} . "]\n";
 
 if ($cp_response{status} eq 'created') {
     $cp_response{tracking_pin} = $xc->findvalue('//canadapost:tracking-pin');
-    #print "Tracking PIN [" . $cp_response{tracking_pin} . "]\n";
     my ($links) = $xc->findnodes('//canadapost:links');
-    #print "Links\n";
     foreach my $link ( $xc->findnodes('./canadapost:link',$links )) {
 	my $rel = $link->findvalue('@rel');
-	#print "rel: ". $rel . "\t";
 	my $href = $link->findvalue('@href');
-	#print "href: " . $href . "\t";
 	my $media = $link->findvalue('@media-type');
-	#print "media: " . $media . "\n";
 
 	$cp_response{$link->findvalue('@rel')} = { href => $link->findvalue('@href'), media => $link->findvalue('@media-type') };
     }
+    $dbh->do("update request set canada_post_endpoint=? where id=?", undef, $cp_response{"self"}{"href"}, $reqid);
 }
-#print STDERR Dumper(%cp_response);
+
+$dbh->disconnect;
+
+#print STDERR Dumper(\%cp_response);
 print "Content-Type:application/json\n\n" . to_json( { cp_response => \%cp_response });
 exit;
 
-#
-# Get shipping labels
-#
-
-## Production
-##my $REST_url = "https://soa-gw.canadapost.ca/ers/artifact/$api{username}/10238/0";
-## Development
-#my $REST_url = "https://ct.soa-gw.canadapost.ca/ers/artifact/$api{username}/10238/0";
-## ...endpoint from create shipment:
-##my $REST_url = "https://ct.soa-gw.canadapost.ca/ers/artifact/8683f23ad38e2dba/10238/0";
-#
-
-$client = REST::Client->new();
-$client->addHeader( 'Accept', $cp_response{label}{media} );
-$client->addHeader( 'Accept-language', 'en-CA' );
-$client->addHeader( 'Authorization', "Basic " . encode_base64("$api{username}:$api{password}") );
-$client->GET( $cp_response{label}{href} );
-print STDERR 'Response code: [' . $client->responseCode() . "]\n";
-print STDERR 'Response headers: [' . $client->responseHeaders() . "]\n";
-open(LB,'>','label.pdf') or die "$@";
-print LB $client->responseContent(); # pdf file
-close LB;
-
-print "\nPrice:\n";
-$client = REST::Client->new();
-$client->addHeader( 'Accept', $cp_response{price}{media} );
-$client->addHeader( 'Accept-language', 'en-CA' );
-$client->addHeader( 'Authorization', "Basic " . encode_base64("$api{username}:$api{password}") );
-$client->GET( $cp_response{price}{href} );
-print STDERR 'Response code: [' . $client->responseCode() . "]\n";
-print STDERR 'Response headers: [' . $client->responseHeaders() . "]\n";
-print $client->responseContent(); # pdf file
-
-print "\nDetails:\n";
-$client = REST::Client->new();
-$client->addHeader( 'Accept', $cp_response{details}{media} );
-$client->addHeader( 'Accept-language', 'en-CA' );
-$client->addHeader( 'Authorization', "Basic " . encode_base64("$api{username}:$api{password}") );
-$client->GET( $cp_response{details}{href} );
-print STDERR 'Response code: [' . $client->responseCode() . "]\n";
-print STDERR 'Response headers: [' . $client->responseHeaders() . "]\n";
-print $client->responseContent(); # pdf file
