@@ -35,12 +35,11 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Has CP account?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -59,7 +58,6 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].has_canada_post_account;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
@@ -157,7 +155,6 @@ function unfilled( requestId ) {
     ru.setAttribute('id','unfilledradioset');
     ruForm.appendChild(ru);
     ruDiv.appendChild(ruForm);
-//    row[0].cells[8].appendChild(ruDiv);
     $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#req"+requestId));
     $("#tmpcol").append(ruDiv);
 
@@ -204,7 +201,6 @@ function unfilled( requestId ) {
 
 	$.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
 		  function(data){
-//		      alert('change request status: '+data);
 		      // slideUp doesn't work for <tr>
 		      $("#req"+requestId).fadeOut(400, function() { $("req"+requestId).remove(); }); // toast the row
 		  })
@@ -230,23 +226,6 @@ function unfilled( requestId ) {
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
 //    $("#unfilledradioset").append("<input type='radio' name='radioset' value='responder-specific' id='responder-specific'/><label for='responder-specific'>responder-specific</label>");
     $("#unfilledradioset").buttonset('refresh');
-
-//    alert(row[0].cells[8]);
-
-    
-}
-
-
-
-function set_default_due_date(oForm) {
-//    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
-    var defaultDueDate = oForm.elements["datepicker"].value;
-    var theTable = document.getElementById('gradient-style');
-
-    for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[8].innerHTML = defaultDueDate;
-    }
-    $("#gradient-style > tbody > tr > td:nth-child(9)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )

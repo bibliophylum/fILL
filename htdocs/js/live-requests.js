@@ -88,11 +88,6 @@ function override( e, oData )
 	});
 }
 
-function get_cp_label( e, oData )
-{
-    window.open('/cgi-bin/canada-post-get-label.cgi?reqid='+oData.id);
-}
-
 function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
 {
     var oData = oTable.fnGetData( nTr );
@@ -132,18 +127,11 @@ function fnFormatLendingOverrides( oTable, nTr, anOpen )
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReprintLabel">Reprint label</button></td><td>if you need to reprint the Canada Post mailing label.</td></tr>';
     sOut = sOut+'<tr><td><button id="bReturned">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
     $(nDetailsRow).attr('detail','overrides');
-    $('#bReprintLabel').button();
-    $('#bReprintLabel').click(function() { 
-	get_cp_label( this, oData );  
-	$(nTr).children('.overrides').click();
-	return false; 
-    });
     $('#bReturned').button();
     $('#bReturned').click(function() { 
 	override( this, oData );  
