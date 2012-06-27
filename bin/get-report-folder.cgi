@@ -15,7 +15,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 			PrintError => 0,
 		       }
     ) or die $DBI::errstr;
-my $SQL_completed = "select r.name, rc.range_start, rc.range_end, rc.report_file as download from reports r left join reports_complete rc on r.rid=rc.rid where lid=? order by rc.report_file";
+my $SQL_completed = "select rc.rcid, r.name, rc.range_start, rc.range_end, rc.report_file as download from reports r left join reports_complete rc on r.rid=rc.rid where lid=? order by rc.report_file";
 my $SQL_queued = "select r.name, rq.range_start, rq.range_end, rq.ts as submitted from reports r left join reports_queue rq on r.rid=rq.rid where lid=? order by rq.ts";
 
 my $aref_completed = $dbh->selectall_arrayref($SQL_completed, { Slice => {} }, $lid );

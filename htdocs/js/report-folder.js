@@ -23,20 +23,24 @@ function build_table( data ) {
 	var ai = oTable_completed.fnAddData( data.reports.completed[i] );
 	//alert(data.reports.completed[i].download);
 	// make clinks lickable
-	$("#datatable_completed tr:last td:nth-child(4)").html("<a href='?rm=send_report_output&doc="+
-							       data.reports.completed[i].download+
-							       "'>"+
-							       data.reports.completed[i].download+
-							       "</a>");
 
+	var n = oTable_completed.fnSettings().aoData[ ai[0] ].nTr;
+	// n is now the TR that was added
+	n.setAttribute('id',data.reports.completed[i].rcid);
+	$("#"+data.reports.completed[i].rcid+" td:nth-child(5)").html("<a href='?rm=send_report_output&doc="+
+								      data.reports.completed[i].download+
+								      "'>"+
+								      data.reports.completed[i].download+
+								      "</a>");
+
+	
 	var divActions = document.createElement("div");
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Delete";
 //	b1.onclick = make_report_handler( data.reports.completed[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_completed tr:last td:last-child").append( divActions );
-	$("#datatable_completed tr:last").attr("rid",data.reports.completed[i].rid);
+	$("#"+data.reports.completed[i].rcid+" td:last-child").append( divActions );
     }
 
     for (var i=0;i<data.reports.queued.length;i++) {

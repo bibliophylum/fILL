@@ -28,8 +28,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.summary[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_summary tr:last td:last-child").append( divActions );
-	$("#datatable_summary tr:last").attr("rid",data.reports.summary[i].rid);
+	$("#datatable_summary > tbody > tr:first-child:contains("+data.reports.summary[i].rid+")").attr("rid",data.reports.summary[i].rid);
+	$('#datatable_summary > tbody > tr[rid*="'+data.reports.summary[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.borrowing.length;i++) {
@@ -42,8 +42,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.borrowing[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_borrowing tr:last td:last-child").append( divActions );
-	$("#datatable_borrowing tr:last").attr("rid",data.reports.borrowing[i].rid);
+	$("#datatable_borrowing > tbody > tr:first-child:contains("+data.reports.borrowing[i].rid+")").attr("rid",data.reports.borrowing[i].rid);
+	$('#datatable_borrowing > tbody > tr[rid*="'+data.reports.borrowing[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.lending.length;i++) {
@@ -56,8 +56,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.lending[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_lending tr:last td:last-child").append( divActions );
-	$("#datatable_lending tr:last").attr("rid",data.reports.lending[i].rid);
+	$("#datatable_lending > tbody > tr:first-child:contains("+data.reports.lending[i].rid+")").attr("rid",data.reports.lending[i].rid);
+	$('#datatable_lending > tbody > tr[rid*="'+data.reports.lending[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.narrative.length;i++) {
@@ -70,8 +70,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.narrative[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_narrative tr:last td:last-child").append( divActions );
-	$("#datatable_narrative tr:last").attr("rid",data.reports.narrative[i].rid);
+	$("#datatable_narrative > tbody > tr:first-child:contains("+data.reports.narrative[i].rid+")").attr("rid",data.reports.narrative[i].rid);
+	$('#datatable_narrative > tbody > tr[rid*="'+data.reports.narrative[i].rid+'"] > td:last-child').append( divActions );
     }
 
     toggleLayer("waitDiv");

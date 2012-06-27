@@ -49,9 +49,10 @@ $('document').ready(function(){
 	    ]
     	},
         "aoColumns": [
+            { "mDataProp": "rcid", "sWidth": "10%" },
             { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "range_start", "sWidth": "15%" },
-            { "mDataProp": "range_end", "sWidth": "15%" },
+            { "mDataProp": "range_start", "sWidth": "10%" },
+            { "mDataProp": "range_end", "sWidth": "10%" },
             { "mDataProp": "download", "sWidth": "15%" },
             { "mDataProp": "actions", "sWidth": "15%" }
         ],
@@ -154,7 +155,7 @@ $('document').ready(function(){
 	    <table id="datatable_completed" class="display">
 	      <thead>
 		<tr>
-		  <th>name</th><th>range_start</th><th>range_end</th><th>download</th><th>actions</th>
+		  <th>rcid</th><th>name</th><th>range_start</th><th>range_end</th><th>download</th><th>actions</th>
 		</tr>
 	      </thead>
 	      <tbody>
