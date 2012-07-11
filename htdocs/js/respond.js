@@ -48,7 +48,6 @@ function build_table( data ) {
 //    alert('building rows');
     for (var i=0;i<data.unhandledRequests.length;i++) 
     {
-//	alert (data.unhandledRequests[i].id+" "+data.unhandledRequests[i].msg_from+" "+data.unhandledRequests[i].call_number+" "+data.unhandledRequests[i].author+" "+data.unhandledRequests[i].title+" "+data.unhandledRequests[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);

@@ -97,7 +97,7 @@ function checkin( requestId ) {
 	    //alert('success');
 	    $.getJSON('/cgi-bin/move-to-history.cgi', { 'reqid' : requestId },
 		      function(data){
-			  alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
+//			  alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
 		      });
 	})
 	.error(function() {

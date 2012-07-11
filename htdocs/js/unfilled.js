@@ -49,7 +49,6 @@ function build_table( data ) {
 //    alert('building rows');
     for (var i=0;i<data.unfilled.length;i++) 
     {
-//	alert (data.unfilled[i].id+" "+data.unfilled[i].msg_from+" "+data.unfilled[i].call_number+" "+data.unfilled[i].author+" "+data.unfilled[i].title+" "+data.unfilled[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.unfilled[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].title;
