@@ -369,7 +369,7 @@ a.crossout:hover {
     font-size: large;
 }
 
-input#button {
+input#button,input#help {
     border: 3px outset #4671d5;
     background-color: #4671d5;
     padding: 2px;

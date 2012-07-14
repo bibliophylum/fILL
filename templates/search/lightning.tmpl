@@ -35,6 +35,13 @@
   })();
 
 </script>
+
+<script type="text/javascript">
+  function searchHelp(e) {
+    alert("Search help\n\nfILL does a general keyword search by default.\n\nAdvanced searching\n\nSpecific title:  \tti=\"The case for mars\"\nSpecific author:\tau=\"Zubrin, Robert\"\nSpecific subject:\tsu=\"mars planet\"\n\nNote that specific searches match exactly against each library's\ncatalogue record; keyword searches are a lot more forgiving!");
+  }
+</script>
+
  </head>
  
  <body onload="domReady();">
@@ -59,6 +66,7 @@
     <form id="searchForm" name="search">
       <input id="query" type="text" size="50"/>
       <input id="button" type="submit" value="Search"/>
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
     </form>
   </div>
 

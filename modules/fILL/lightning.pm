@@ -238,7 +238,7 @@ sub request_process {
 	    push @sources, \%src;
 	}
     }
-    $self->log->debug( Dumper(@sources) );
+#    $self->log->debug( Dumper(@sources) );
 
     # Get this user's (requester's) library id
     my $requester = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
@@ -266,16 +266,24 @@ sub request_process {
     my %seen = ();
     my @unique_sources = grep { ! $seen{ $_->{'symbol'} }++ } @sources;
 
-    # ...and the sources list (worry about proper order after this code is working!)
-    my $sequence = 1;
-    my $SQL = "INSERT INTO sources (request_id, sequence_number, library, call_number) VALUES (?,?,?,?)";
+    # net borrower/lender count  (loaned - borrowed)
+#    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Received' THEN 1 ELSE 0 END) as borrowed, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) AS loaned, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_history rh on rh.msg_from=l.lid group by l.lid, l.name order by l.name";
+    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_history rh on rh.msg_from=l.lid group by l.lid, l.name order by l.name";
+    my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
     foreach my $src (@unique_sources) {
-	my $hr_id = $self->dbh->selectrow_hashref(
-	    "SELECT lid FROM libraries WHERE name=?",
-	    undef,
-	    $src->{symbol},
-	    );
-	my $lenderID = $hr_id->{lid};
+	$src->{net} = $nblc_href->{ $src->{symbol} }{net};
+	$src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+    }
+
+    # sort sources by net borrower/lender count
+    my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
+#    $self->log->debug( Dumper(@sorted_sources) );
+
+    # create the sources list for this request
+    my $sequence = 1;
+    $SQL = "INSERT INTO sources (request_id, sequence_number, library, call_number) VALUES (?,?,?,?)";
+    foreach my $src (@sorted_sources) {
+	my $lenderID = $src->{lid};
 	next unless defined $lenderID;
 	$self->dbh->do($SQL,
 		       undef,
@@ -294,7 +302,7 @@ sub request_process {
 		      request_id => $reqid,
 		      title => $q->param('title') || ' ',
 		      author => $q->param('author') || ' ',
-		      sources => \@sources,
+		      sources => \@sorted_sources,
 	);
     return $template->output;
     
