@@ -28,8 +28,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.summary[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_summary > tbody > tr:first-child:contains("+data.reports.summary[i].rid+")").attr("rid",data.reports.summary[i].rid);
-	$('#datatable_summary > tbody > tr[rid*="'+data.reports.summary[i].rid+'"] > td:last-child').append( divActions );
+	$("#datatable_summary > tbody > tr > td:first-child:contains("+data.reports.summary[i].rid+")").parent().attr("rid",data.reports.summary[i].rid);
+	$('#datatable_summary > tbody > tr[rid="'+data.reports.summary[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.borrowing.length;i++) {
@@ -42,8 +42,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.borrowing[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_borrowing > tbody > tr:first-child:contains("+data.reports.borrowing[i].rid+")").attr("rid",data.reports.borrowing[i].rid);
-	$('#datatable_borrowing > tbody > tr[rid*="'+data.reports.borrowing[i].rid+'"] > td:last-child').append( divActions );
+	$("#datatable_borrowing > tbody > tr > td:first-child:contains('"+data.reports.borrowing[i].rid+"')").parent().attr("rid",data.reports.borrowing[i].rid);
+	$('#datatable_borrowing > tbody > tr[rid="'+data.reports.borrowing[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.lending.length;i++) {
@@ -56,8 +56,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.lending[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_lending > tbody > tr:first-child:contains("+data.reports.lending[i].rid+")").attr("rid",data.reports.lending[i].rid);
-	$('#datatable_lending > tbody > tr[rid*="'+data.reports.lending[i].rid+'"] > td:last-child').append( divActions );
+	$("#datatable_lending > tbody > tr > td:first-child:contains("+data.reports.lending[i].rid+")").parent().attr("rid",data.reports.lending[i].rid);
+	$('#datatable_lending > tbody > tr[rid="'+data.reports.lending[i].rid+'"] > td:last-child').append( divActions );
     }
 
     for (var i=0;i<data.reports.narrative.length;i++) {
@@ -70,8 +70,8 @@ function build_table( data ) {
 	b1.value = "Run report";
 	b1.onclick = make_report_handler( data.reports.narrative[i].rid );
 	divActions.appendChild(b1);
-	$("#datatable_narrative > tbody > tr:first-child:contains("+data.reports.narrative[i].rid+")").attr("rid",data.reports.narrative[i].rid);
-	$('#datatable_narrative > tbody > tr[rid*="'+data.reports.narrative[i].rid+'"] > td:last-child').append( divActions );
+	$("#datatable_narrative > tbody > tr > td:first-child:contains("+data.reports.narrative[i].rid+")").parent().attr("rid",data.reports.narrative[i].rid);
+	$('#datatable_narrative > tbody > tr[rid="'+data.reports.narrative[i].rid+'"] > td:last-child').append( divActions );
     }
 
     toggleLayer("waitDiv");
@@ -82,8 +82,8 @@ function build_table( data ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_report_handler( generator ) {
-    return function() { report( generator ) };
+function make_report_handler( rid ) {
+    return function() { report( rid ) };
 }
 
 function report( rid ) {
