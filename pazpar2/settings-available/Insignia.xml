@@ -38,7 +38,7 @@
   <set target="insigniasoftware.com:210/minnedosa" name="symbol" value="MMR"/>
 
 <!-- North Norfolk MacGregor Library -->
-  <set target="206.45.206.163:210/ILS" name="pz:name" value="North Norfolk MacGregor Library (Insignia)"/>
+  <set target="206.45.94.71:210/ILS" name="pz:name" value="North Norfolk MacGregor Library (Insignia)"/>
   <set target="206.45.94.71:210/ILS" name="symbol" value="MMNN"/>
 
 <!-- Pauline Johnson Library -->
@@ -79,7 +79,7 @@
   <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
 
   <!-- field-specific mappings -->
-  <set name="pz:cclmap:au" value="u=1004 s=al"/>
+  <set name="pz:cclmap:au" value="u=1003 s=al"/>
   <set name="pz:cclmap:ti" value="u=4 s=al 2=102"/>
   <set name="pz:cclmap:su" value="u=21 s=al 2=102"/>
   <set name="pz:cclmap:isbn" value="u=7 2=102"/>
