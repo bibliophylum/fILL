@@ -40,11 +40,12 @@ my %config = (
     STORE          => 'Session',
     POST_LOGIN_RUNMODE => 'welcome',
     LOGOUT_RUNMODE => 'logged_out',
-    LOGIN_FORM => { 
-	TITLE => 'Sign in to fILL',
-	COMMENT => 'Manitoba Public Libraries ILL Management System.',
-	FOCUS_FORM_ONLOAD => 1,
-    }
+#    LOGIN_FORM => { 
+#	TITLE => 'Sign in to fILL',
+#	COMMENT => 'Manitoba Public Libraries ILL Management System.',
+#	FOCUS_FORM_ONLOAD => 1,
+#    }
+    LOGIN_RUNMODE => 'login',
     );
 
 fILLbase->authen->config(%config);
@@ -107,6 +108,7 @@ sub cgiapp_init {
 #	'dbtest'        => 'display_db_entries',
 #	'emailtest'     => 'send_test_email',
 
+	'login'                      => 'login_process',
 	'welcome'                    => 'welcome_process',
 	'logged_out'                 => 'show_logged_out_process',
 	'forbidden'                  => 'forbidden_process',
@@ -237,6 +239,24 @@ sub forbidden_process {
     my $html_output = $template->output;
     return $html_output;
 }
+
+#--------------------------------------------------------------------------------
+#
+#
+sub login_process {
+    my $self = shift;
+    my $template = $self->load_tmpl(	    
+	                      'login.tmpl',
+			      cache => 0,
+			     );	
+    $template->param( pagetitle => 'Log in to fILL',
+	);
+
+    # Parse the template
+    my $html_output = $template->output;
+    return $html_output;
+}
+
 
 #--------------------------------------------------------------------------------
 #
