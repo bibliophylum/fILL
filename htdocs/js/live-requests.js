@@ -1,14 +1,16 @@
 // live-requests.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
-    Copyright (C) 2012  David A. Christensen
+    Copyright (C) 2012  Government of Manitoba
 
-    This program is free software: you can redistribute it and/or modify
+    live-requests.js is a part of fILL.
+
+    fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    fILL is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -74,10 +76,32 @@ function override( e, oData )
 //    alert('button: ' + e.id + '\nid: ' + oData.id);
     $.getJSON('/cgi-bin/override.cgi', {"reqid": oData.id, "override": e.id},
 	      function(data){
-		  //alert(data);
+//		  alert(data);
 	      })
 	.success(function() {
-	    //alert('success');
+//	    alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+//	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
+	});
+}
+
+function tryNextLender( oData )
+{
+    var parms = {
+	reqid: oData.id,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
+	      function(data){
+//		  alert(data);
+	      })
+	.success(function() {
+//	    alert('success');
 	})
 	.error(function() {
 	    alert('error');
@@ -96,6 +120,8 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
     sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bTryNextLender">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bCancel">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
@@ -103,10 +129,26 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
     $('#bReceive').click(function() { 
-	get_cp_label( this, oData );
+	override( this, oData );
 	$(nTr).children('.overrides').click();
 	oTable.fnUpdate( 'Shipped', nTr, 6 );
 	oTable.fnUpdate( 'override', nTr, 7 );
+	return false; 
+    });
+    $('#bTryNextLender').button();
+    $('#bTryNextLender').click(function() { 
+	$('#bCancel').click();  // cancel the existing request
+	tryNextLender( oData );
+	$(nTr).children('.overrides').click();
+	oTable.fnUpdate( '-try-next-lender-', nTr, 6 );
+	oTable.fnUpdate( 'override', nTr, 7 );
+	return false; 
+    });
+    $('#bCancel').button();
+    $('#bCancel').click(function() { 
+	override( this, oData );
+	$(nTr).children('.overrides').click();
+	oTable.fnDeleteRow( nTr );
 	return false; 
     });
     $('#bClose').button();

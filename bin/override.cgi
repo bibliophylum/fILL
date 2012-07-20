@@ -41,6 +41,19 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );	
     }
 
+    case "bCancel" {
+	# borrowing override
+	$borrower_id = $href->{"borrower_id"};
+	$lender_id = $href->{"lender_id"};
+	$message = $href->{"borrower"} . " cancelled the request to " . $href->{"lender"};
+	# borrower sends a message about overriding
+	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	# force the ILL to be marked as Cancelled by the lender
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
+	# ...and move to history
+	$retval = move_to_history( $dbh, $reqid );
+    }
+
     case "bClose" {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
