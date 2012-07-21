@@ -4,7 +4,7 @@ In order to set up a Maplin instance, you must have the following prerequisites 
 2. PostgreSQL (currently using 8.4) (install from KPackageKit)
 3. yaz toolkit from IndexData (install from KPackageKit)
 4. DBD::Pg, DBI (install from KPackageKit)
-5. libgd2 (download from http://www.libgd.org/releases/ and install; KPackageKit package does not include gdlib-config utility required by Perl GD module)
+5. libgd2-noxpm-dev or libgd2-xpm-dev (depending on whether you want the x-windows overhead or not).  This includes the gdlib-config utility required by Perl GD module.
 
 Then install the following Perl modules from CPAN:
 HTML::Template

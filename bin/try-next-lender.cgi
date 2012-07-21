@@ -39,7 +39,7 @@ if (@ary) {
     # should never get here! (user should not be given the option to request from the next source
     # if there is no next source)
     $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
-    $dbh->do($SQL, undef, $reqid, $msg_from, $msg_from, "Message", "Error: no next source.");
+    $dbh->do($SQL, undef, $reqid, $msg_from, $msg_from, "Message", "No further sources");
 }
 
 $dbh->disconnect;
