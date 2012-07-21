@@ -137,8 +137,8 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     });
     $('#bTryNextLender').button();
     $('#bTryNextLender').click(function() { 
-	$('#bCancel').click();  // cancel the existing request
-	tryNextLender( oData );
+//	tryNextLender( oData );
+	override( this, oData );
 	$(nTr).children('.overrides').click();
 	oTable.fnUpdate( '-try-next-lender-', nTr, 6 );
 	oTable.fnUpdate( 'override', nTr, 7 );

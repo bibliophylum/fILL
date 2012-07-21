@@ -651,7 +651,8 @@ sub get_lid_from_symbol {
     my $symbol = shift;
     # Get this user's (requester's) library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"SELECT lid FROM libraries WHERE name=?",
+#	"SELECT lid FROM libraries WHERE name=?",
+	"SELECT lid FROM users WHERE username=?",
 	undef,
 	$symbol
 	);

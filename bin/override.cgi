@@ -20,7 +20,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
-my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request'";
+my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
 my $href = $dbh->selectrow_hashref($SQL, undef, $reqid);
 
 $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
@@ -52,6 +52,40 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
 	# ...and move to history
 	$retval = move_to_history( $dbh, $reqid );
+    }
+
+    case "bTryNextLender" {
+	# borrowing override
+	$borrower_id = $href->{"borrower_id"};
+	$lender_id = $href->{"lender_id"};
+	$message = $href->{"borrower"} . " is trying next lender";
+	# borrower sends a message about overriding
+	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	# mark the ILL as Cancelled by the borrower
+	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Cancelled', "override by $href->{borrower}" );	
+	# mark the cancellation as acknowleged by the lender (so the ILL does not show up on the lender's pull list / respond list)
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
+
+	# try next lender (from try-next-lender.cgi)
+	$SQL = "select library from sources where request_id=? and sequence_number=(select current_target from request where id=?)+1";
+	my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
+
+	if (@ary) {
+	    # message to requesting library
+	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "Trying next source");
+	    
+	    # begin the ILL conversation
+	    $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
+	    $dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
+	    
+	    $SQL = "UPDATE request SET current_target = current_target+1";
+	    $dbh->do($SQL);
+	    
+	} else {
+	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "No further sources");
+	}
     }
 
     case "bClose" {
