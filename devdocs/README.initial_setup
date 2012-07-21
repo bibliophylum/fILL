@@ -30,6 +30,7 @@ JSON
 Net::Server
 Net::Telnet
 Getopt::Long
+Digest::SHA1
 Selenium::Remote::Driver
 
 

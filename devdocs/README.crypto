@@ -1,0 +1,14 @@
+Looks like Apache authentication uses SHA1, so:
+
+See: http://dba.stackexchange.com/questions/1883/how-do-i-install-pgcrypto-for-postgresql-in-ubuntu-server
+
+
+$ sudo apt-get install postgresql-contrib-8.4
+$ psql -d maplin -f /usr/share/postgresql/8.4/contrib/pgcrypto.sql
+
+Then, from within psql, you can do things like:
+maplin=# select '{SHA}'||encode(digest('password','sha1'),'base64');
+             ?column?              
+-----------------------------------
+ {SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g=
+(1 row)

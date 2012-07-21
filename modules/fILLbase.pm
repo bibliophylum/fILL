@@ -25,15 +25,27 @@ use CGI::Application::Plugin::Authentication;
 use CGI::Application::Plugin::Authentication::Driver::DBI;
 use CGI::Application::Plugin::Authorization;
 use CGI::Application::Plugin::LogDispatch;
+use Digest::SHA1;
 use Data::Dumper;
+
+#    DRIVER         => [ 'DBI',
+#			TABLE => 'libraries',
+#			CONSTRAINTS => {
+#			    'libraries.name' => '__CREDENTIAL_1__',
+#			    'libraries.password' => '__CREDENTIAL_2__',
+#			    'libraries.active' => 1
+#			},
+#
+#    ],
+
+#{SHA}||encode(digest('mvbb','sha1'),'base64')
 
 my %config = (
     DRIVER         => [ 'DBI',
-			TABLE => 'libraries',
+			TABLE => 'users',
 			CONSTRAINTS => {
-			    'libraries.name' => '__CREDENTIAL_1__',
-			    'libraries.password' => '__CREDENTIAL_2__',
-			    'libraries.active' => 1
+			    'users.username' => '__CREDENTIAL_1__',
+			    'MD5:users.password' => '__CREDENTIAL_2__'
 			},
 
     ],
