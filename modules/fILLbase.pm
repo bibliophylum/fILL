@@ -174,6 +174,8 @@ sub welcome_process {
     # The application object
     my $self = shift;
 
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
     my $rows_affected = $self->dbh->do("UPDATE libraries SET last_login=NOW() WHERE name=?",
 				       undef,
 				       $self->authen->username,
@@ -190,6 +192,8 @@ sub welcome_process {
     $template->param( pagetitle => 'fILL Welcome',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
+		      lid => $lid,
+		      library => $library,
 	);
 
     # Parse the template
@@ -287,6 +291,21 @@ sub environment_process {
     $template->param(pagetitle => 'fILL Environment',
 		     env_variable_loop => \@loop);
     return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------------------
+sub get_library_from_username {
+    my $self = shift;
+    my $username = shift;
+    # Get this user's library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	undef,
+	$username
+	);
+    $self->log->debug( Dumper( $hr_id ) );
+    return ($hr_id->{lid}, $hr_id->{library});
 }
 
 

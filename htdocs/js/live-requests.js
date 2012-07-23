@@ -33,7 +33,6 @@ function build_table( data ) {
 function fnFormatDetails( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
-//    alert('getting details for reqid: '+oData.id);
     $.getJSON('/cgi-bin/get-live-request-details.cgi', { "reqid": oData.id },
 	      function(data){
 		  //alert('first success');
@@ -45,7 +44,6 @@ function fnFormatDetails( oTable, nTr )
 	    alert('error');
 	})
 	.complete(function(jqXHRObject) {
-//	    alert('jqHXRObject response text: '+jqXHRObject.responseText);
 	    var data = $.parseJSON(jqXHRObject.responseText)
 	    var sOut;
 	    var numDetails = data.request_details.length; 
@@ -55,9 +53,7 @@ function fnFormatDetails( oTable, nTr )
 	    for (var i = 0; i < numDetails; i++) {
 		var detRow = '<tr><td>'+data.request_details[i].ts+'</td>'+
 		    '<td>'+data.request_details[i].from+'</td>'+
-//		    '<td>'+data.request_details[i].msg_from+'</td>'+
 		    '<td>'+data.request_details[i].to+'</td>'+
-//		    '<td>'+data.request_details[i].msg_to+'</td>'+
 		    '<td>'+data.request_details[i].status+'</td>'+
 		    '<td>'+data.request_details[i].message+'</td></tr>';
 		sOut=sOut+detRow;
@@ -71,34 +67,14 @@ function fnFormatDetails( oTable, nTr )
 }
 
 
-function override( e, oData )
+function override( e, oData, oTable, nTr )
 {
-//    alert('button: ' + e.id + '\nid: ' + oData.id);
     $.getJSON('/cgi-bin/override.cgi', {"reqid": oData.id, "override": e.id},
 	      function(data){
-//		  alert(data);
-	      })
-	.success(function() {
-//	    alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-	    // slideUp doesn't work for <tr>
-//	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
-	});
-}
-
-function tryNextLender( oData )
-{
-    var parms = {
-	reqid: oData.id,
-	lid: $("#lid").text(),
-    }
-    $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
-	      function(data){
-//		  alert(data);
+		  $(nTr).children('.overrides').click();
+		  if (data.status) { oTable.fnUpdate( data.status, nTr, 6 ); };
+		  if (data.message) { oTable.fnUpdate( data.message, nTr, 7 ); };
+		  if (data.alert_text) { alert(data.alert_text); };
 	      })
 	.success(function() {
 //	    alert('success');
@@ -129,32 +105,23 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
     $('#bReceive').click(function() { 
-	override( this, oData );
-	$(nTr).children('.overrides').click();
-	oTable.fnUpdate( 'Shipped', nTr, 6 );
-	oTable.fnUpdate( 'override', nTr, 7 );
+	override( this, oData, oTable, nTr );
 	return false; 
     });
     $('#bTryNextLender').button();
     $('#bTryNextLender').click(function() { 
-//	tryNextLender( oData );
-	override( this, oData );
-	$(nTr).children('.overrides').click();
-	oTable.fnUpdate( '-try-next-lender-', nTr, 6 );
-	oTable.fnUpdate( 'override', nTr, 7 );
+	override( this, oData, oTable, nTr );
 	return false; 
     });
     $('#bCancel').button();
     $('#bCancel').click(function() { 
-	override( this, oData );
-	$(nTr).children('.overrides').click();
+	override( this, oData, oTable, nTr );
 	oTable.fnDeleteRow( nTr );
 	return false; 
     });
     $('#bClose').button();
     $('#bClose').click(function() { 
-	override( this, oData );
-	$(nTr).children('.overrides').click();
+	override( this, oData, oTable, nTr );
 	oTable.fnDeleteRow( nTr );
 	return false; 
     });
@@ -176,8 +143,7 @@ function fnFormatLendingOverrides( oTable, nTr, anOpen )
     $(nDetailsRow).attr('detail','overrides');
     $('#bReturned').button();
     $('#bReturned').click(function() { 
-	override( this, oData );  
-	$(nTr).children('.overrides').click();
+	override( this, oData, oTable, nTr );
 	oTable.fnDeleteRow( nTr );
 	return false; 
     });
@@ -200,7 +166,6 @@ function toggleLayer( whichLayer )
     if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
 	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
     vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-    //    alert('toggled ' + whichLayer);
 }
 
 function set_primary_tab(tab_id) {

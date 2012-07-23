@@ -30,7 +30,7 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'myaccount_settings_form'    => 'myaccount_settings_process',
+	'myaccount_settings_form'         => 'myaccount_settings_process',
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	);
 }
@@ -42,40 +42,29 @@ sub myaccount_settings_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $SQL_getUser = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, request_email_notification FROM libraries WHERE name=?";
-
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    $self->log->debug("username: " . $self->authen->username);
+    $self->log->debug("lid: $lid, library: $library");
     my $status;
     my @searchprefs;
 
-    # Get any parameter data (ie - user is submitting a change)
-    my $lid = $q->param("lid");
-    my $name = $q->param("name");
-    my $password = $q->param("password");
-    my $email_address = $q->param("email_address");
-    my $library = $q->param("library");
-    my $mailing_address_line1 = $q->param("mailing_address_line1");
-    my $city = $q->param("city");
-    my $province = $q->param("province");
-    my $post_code = $q->param("post_code");
-    my $request_email_notification = $q->param("request_email_notification");
-
-    # If the user has clicked the 'update' button, $lid will be defined
+    # If the user has clicked the 'update' button, $q->param("lid") will be defined
     # (the user is submitting a change)
-    if (defined $lid) {
+    if (defined $q->param("lid")) {
 
-	$self->log->debug("MyAccount:Settings: Updating lid [$lid], name [$name]");
+	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
 
 	$self->dbh->do("UPDATE libraries SET name=?, password=?, email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, request_email_notification=? WHERE lid=?",
 		       undef,
-		       $name,
-		       $password,
-		       $email_address,
-		       $library,
-		       $mailing_address_line1,
-		       $city,
-		       $province,
-		       $post_code,
-		       $request_email_notification,
+		       $q->param("name"),
+		       $q->param("password"),
+		       $q->param("email_address"),
+		       $q->param("library"),
+		       $q->param("mailing_address_line1"),
+		       $q->param("city"),
+		       $q->param("province"),
+		       $q->param("post_code"),
+		       $q->param("request_email_notification"),
 		       $lid
 	    );
 
@@ -85,18 +74,21 @@ sub myaccount_settings_process {
     }
 
     # Get the form data
+    my $SQL_getLibrary = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, request_email_notification FROM libraries WHERE lid=?";
     my $href = $self->dbh->selectrow_hashref(
-	$SQL_getUser,
+	$SQL_getLibrary,
 	{},
-	$self->authen->username,
+	$lid,
 	);
-    $self->log->debug("MyAccount:Settings: Edit user lid:$href->{lid}, name:$href->{name}, library:$href->{library}");
+    $self->log->debug("MyAccount:Settings: Edit user lid:$href->{lid}, username:" . $self->authen->username .  ", library:$href->{library}");
 
     $status = "Editing in process." unless $status;
 
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
     $template->param(pagetitle => "fILL MyAccount Settings",
 		     username     => $self->authen->username,
+		     lid          => $lid,
+		     library      => $library,
 	             status       => $status,
 		     editLID      => $href->{lid},
 		     editName     => $href->{name},
@@ -104,7 +96,7 @@ sub myaccount_settings_process {
 		     editEmail    => $href->{email_address},
 		     editLibrary  => $href->{library},
 		     editMailingAddressLine1 => $href->{mailing_address_line1},
-		     editCity => $href->{city},
+		     editCity     => $href->{city},
 		     editProvince => $href->{province},
 		     editPostalCode => $href->{post_code},
 		     editRequestEmailNotification => $href->{request_email_notification},
@@ -120,32 +112,29 @@ sub myaccount_library_barcodes_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('myaccount/library-barcodes.tmpl');	
     $template->param( pagetitle => $self->authen->username . " barcodes from ILS",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
 }
 
 #--------------------------------------------------------------------------------------------
-sub get_lid_from_symbol {
+sub get_library_from_username {
     my $self = shift;
-    my $symbol = shift;
-    # Get this user's (requester's) library id
+    my $username = shift;
+    # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"SELECT lid FROM libraries WHERE name=?",
+	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
-	$symbol
+	$username
 	);
-    my $requester = $hr_id->{lid};
-    return $requester;
+    return ($hr_id->{lid}, $hr_id->{library});
 }
 
-
 1; # so the 'require' or 'use' succeeds
-
-#		     atstart => $href->{'atstart'},

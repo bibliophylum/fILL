@@ -417,7 +417,7 @@ function renderDetails(data, marker)
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
 	if (data["location"][i]["md-medium"] != undefined)
-	    details += '<tr><td><b>Medium</b></td><td><b>:</b> ' + data["location"][i]["md-medium"] + '</td></tr>';
+	    details += '<tr><td><b>Medium</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	if (data["location"][i]["md-subject"] != undefined)
             details += '<tr><td><b>Subject</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
 	if (data["location"][i]["@name"] != undefined)

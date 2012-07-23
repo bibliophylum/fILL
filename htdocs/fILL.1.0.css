@@ -123,6 +123,9 @@ h6
 #header_quick_access A:active  { color: #fff; text-decoration:underline }
 #header_quick_access A:visited { color: #fff; text-decoration:underline }
 
+#library_name {
+  color: #fff;
+}
 
 #leftcontent {
   float:left;
@@ -1116,7 +1119,6 @@ tr.even.gradeU td.sorting_2 {
 tr.even.gradeU td.sorting_3 {
 	background-color: #e2e2e2;
 }
-
 
 /*
  * Row highlighting example

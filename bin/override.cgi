@@ -30,6 +30,8 @@ my $borrower_id;
 my $lender_id;
 my $status = "Message";
 my $retval;
+my $return_data_href;
+
 switch( $override ) {
 
     case "bReceive" {
@@ -40,7 +42,10 @@ switch( $override ) {
 	# borrower sends a message about overriding
 	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );	
 	# force the ILL to be marked as Shipped by the lender
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );	
+	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );
+	$return_data_href->{ success } = $retval;
+	$return_data_href->{ status } = "Shipped";
+	$return_data_href->{ message } = "override";
     }
 
     case "bCancel" {
@@ -54,6 +59,9 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
 	# ...and move to history
 	$retval = move_to_history( $dbh, $reqid );
+	$return_data_href->{ success } = $retval;
+	$return_data_href->{ status } = "Cancelled";
+	$return_data_href->{ message } = "override";
     }
 
     case "bTryNextLender" {
@@ -83,10 +91,16 @@ switch( $override ) {
 	    
 	    $SQL = "UPDATE request SET current_target = current_target+1";
 	    $dbh->do($SQL);
+	    $return_data_href->{ success } = 1;
+	    $return_data_href->{ status } = "Forwarded to next lender";
 	    
 	} else {
 	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
 	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "No further sources");
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Message";
+	    $return_data_href->{ message } = "No further sources";
+	    $return_data_href->{ alert_text } = "There were no further sources.\nThis request will remain here until you override to cancel it.";
 	}
     }
 
@@ -101,6 +115,9 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "override by $href->{borrower}" );	
 	# ...and move to history
 	$retval = move_to_history( $dbh, $reqid );
+	$return_data_href->{ success } = $retval;
+	$return_data_href->{ status } = "Checked-in";
+	$return_data_href->{ message } = "override";
     }
 
     case "bReturned" {
@@ -115,6 +132,9 @@ switch( $override ) {
 	# lender check-in and move to history
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "" );
 	$retval = move_to_history( $dbh, $reqid );
+	$return_data_href->{ success } = $retval;
+	$return_data_href->{ status } = "Returned";
+	$return_data_href->{ message } = "override";
     }
 
     else {
@@ -122,13 +142,17 @@ switch( $override ) {
 	$lender_id = $href->{"lender_id"};
 	$message = "unknown override: [$override]";
 	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	$return_data_href->{ success } = $retval;
+	$return_data_href->{ status } = "error";
+	$return_data_href->{ message } = $message;
     }
 }
 
 # sql to add to the request conversation
 
 $dbh->disconnect;
-print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
+#print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
+print "Content-Type:application/json\n\n" . to_json( $return_data_href );
 
 
 sub move_to_history {

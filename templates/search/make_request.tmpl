@@ -20,6 +20,16 @@
   }
 </script>
 
+<script type="text/javascript">
+
+$('document').ready(function(){
+  update_menu_counters( <TMPL_VAR name="lid"> );
+  $("#pbarcode").focus();
+});
+
+</script>
+
+
 <div id="main">
 
   <div id="leftcontent">
@@ -34,7 +44,7 @@
     <form action="/cgi-bin/lightning.cgi" method="post">
       <h2>Patron barcode</h2>
       <p>Enter the barcode number of your patron: 
-	<input type="text" name="pbarcode" size="15" maxlength="15">
+	<input id="pbarcode" type="text" name="pbarcode" size="14" maxlength="14">
       </p>
       <p>Enter any additional notes for the potential lenders: 
 	<input type="text" name="request_note" size="60" maxlength="80">

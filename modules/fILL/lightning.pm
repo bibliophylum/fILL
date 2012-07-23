@@ -124,11 +124,14 @@ sub lightning_search_process {
     my $self = shift;
     my $q = $self->query;
 
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
     my $template = $self->load_tmpl('search/lightning.tmpl');	
-#    $template->param( pagetitle => "fILL Lightning Search",
-#		      username => $self->authen->username,
-#		      sessionid => $self->session->id(),
-#	);
+    $template->param( pagetitle => "fILL Lightning Search",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
     return $template->output;
 }
 
@@ -140,7 +143,7 @@ sub pull_list_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
     my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
@@ -158,6 +161,7 @@ sub pull_list_process {
     $template->param( pagetitle => $self->authen->username . " Pull-list",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 		      pulls => $pulls,
 	);
     return $template->output;
@@ -243,8 +247,8 @@ sub request_process {
 #    $self->log->debug( Dumper(@sources) );
 
     # Get this user's (requester's) library id
-    my $requester = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
-    if (not defined $requester) {
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    if (not defined $lid) {
 	# should never get here...
 	# go to some error page.
     }
@@ -258,7 +262,7 @@ sub request_process {
 		   undef,
 		   $title,
 		   $author,
-		   $requester,
+		   $lid,
 		   0                                   # no source yet (aka request isn't complete until patron barcode is in
 	);
     my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
@@ -292,7 +296,7 @@ sub request_process {
 		       $reqid,
 		       $sequence++,
 		       $lenderID,
-		       $src->{"callno"},
+		       substr($src->{"callno"},0,99),  # some libraries don't clean up copy-cat recs
 	    );
     }
 
@@ -300,7 +304,8 @@ sub request_process {
     my $template = $self->load_tmpl('search/make_request.tmpl');	
     $template->param( pagetitle => "fILL Request an ILL",
 		      username => $self->authen->username,
-		      lid => $requester,
+		      lid => $lid,
+		      library => $library,
 		      request_id => $reqid,
 		      title => $q->param('title') || ' ',
 		      author => $q->param('author') || ' ',
@@ -317,12 +322,13 @@ sub respond_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -335,12 +341,13 @@ sub shipping_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/shipping.tmpl');	
     $template->param( pagetitle => "Shipping",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -353,12 +360,13 @@ sub receiving_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/receiving.tmpl');	
     $template->param( pagetitle => "Receive items to fill your requests",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -371,12 +379,13 @@ sub renewals_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renewals.tmpl');	
     $template->param( pagetitle => "Ask for renewals on borrowed items",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -389,12 +398,13 @@ sub renew_answer_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renew-answer.tmpl');	
     $template->param( pagetitle => "Respond to renewal requests",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -407,12 +417,13 @@ sub returns_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/returns.tmpl');	
     $template->param( pagetitle => "Return items to lending libraries",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -425,12 +436,13 @@ sub overdue_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/overdue.tmpl');	
     $template->param( pagetitle => "Overdue items to be returned to lender",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -443,12 +455,13 @@ sub checkins_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/checkins.tmpl');	
     $template->param( pagetitle => "Loan items to be checked back into your ILS",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -461,12 +474,13 @@ sub history_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/history.tmpl');	
     $template->param( pagetitle => "ILL history",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -479,12 +493,13 @@ sub live_requests_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/live-requests.tmpl');	
     $template->param( pagetitle => "Current ILLs",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
@@ -497,109 +512,17 @@ sub unfilled_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/unfilled.tmpl');	
     $template->param( pagetitle => "Unfilled ILL requests",
 		      username => $self->authen->username,
 		      lid => $lid,
+		      library => $library,
 	);
     return $template->output;
     
 }
-
-#--------------------------------------------------------------------------------
-#
-#
-sub lightning_request_process_DEPRECATED {
-    my $self = shift;
-    my $q = $self->query;
-
-    my $zname = $q->param('ztarget');
-    $zname =~ s/^(.+) \(.+$/$1/;
-    my $hr_zserver = $self->dbh->selectrow_hashref("SELECT id, email_address FROM zservers WHERE name=?", {}, $zname);
-    
-    my $hr_user = $self->dbh->selectrow_hashref("SELECT lid, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE name=?", {}, $self->authen->username);
-    
-    my $from = "From: plslib1\@mts.net\n";
-    my $to = "To: " . $hr_zserver->{'email_address'} . "\n";
-    my $reply_to = "Reply-to: " . $hr_user->{'email_address'} . "\n";
-    my $cc = "Cc: " . $hr_user->{'email_address'} . "\n";
-
-    my $subject = "Subject: ILL Request: " . $q->param('title') . "\n";
-
-    my $content = "This is an automatically generated request from fILL\n\n";
-    $content .= $hr_user->{'library'} . " would like to request the following item\nfrom ";
-    $content .= $zname . ":\n-------------------------------------\n";
-    $content .= "Title : " . $q->param('title') . "\n";
-    $content .= "Author: " . $q->param('author') . "\n";
-    $content .= "Call #: " . $q->param('callno') . "\n";
-    $content .= "Medium: " . $q->param('medium') . ", ";
-    $content .= "PubDate " . $q->param('date') . ", ";
-    $content .= "ISBN " . $q->param('isbn') . "\n";
-    $content .= "Holding:" . $q->param('holding') . "\n";
-
-    $content .= "\n-------------------------------------\n";
-    $content .= "Requesting library: " . $self->authen->username . "\n\n";
-    $content .= $hr_user->{'library'} . "\n";
-    $content .= $hr_user->{'mailing_address_line1'} . "\n" if ($hr_user->{'mailing_address_line1'});
-    $content .= $hr_user->{'mailing_address_line2'} . "\n" if ($hr_user->{'mailing_address_line2'});
-    $content .= $hr_user->{'mailing_address_line3'} . "\n" if ($hr_user->{'mailing_address_line3'});
-
-    $content .= "\n-------------------------------------\n";
-    $content .= "Patron #: " . $q->param('patron') . "\n" if ($q->param('patron'));
-    $content .= "Notes   : " . $q->param('notes') . "\n" if ($q->param('notes'));
-
-    my $sent = $q->param('sent') || 0;
-    my $error_sendmail = 0;
-    my $sendmail = "/usr/sbin/sendmail -t";
-    if ($q->param('send_email')) {
-	eval {
-	    open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
-	    #    print SENDMAIL $from;
-	    print SENDMAIL $reply_to;
-	    print SENDMAIL $to;
-	    print SENDMAIL $cc;
-	    print SENDMAIL $subject;
-	    print SENDMAIL "Content-type: text/plain\n\n";
-	    print SENDMAIL $content;
-	    close(SENDMAIL);
-	};
-	if ($@) {
-	    # sendmail blew up
-	    $self->log->debug("sendmail blew up");
-	    $error_sendmail = 1;
-	    $content =~ s/This is an automatically generated request from fILL/fILL had a problem sending email.\nThis is a MANUAL request./;
-	    $content = "--- copy from here ---\n" . $content . "\n--- copy to here ---\n";
-	} else {
-	    #$self->log->debug("sendmail sent request");
-	    #$self->_update_ILL_stats($lid, $zid, $loc, $callno, $pubdate);
-	    $sent = 1;
-	}
-    }
-
-    my $template = $self->load_tmpl('search/lightning_request.tmpl');	
-    $template->param( pagetitle => "fILL Lightning Request",
-		      username => $self->authen->username,
-		      from => $from,
-		      to => $to,
-		      cc => $cc,
-		      reply_to => $reply_to,
-		      subject => $subject,
-		      content => $content,
-		      error_sendmail => $error_sendmail,
-		      sent => $sent,
-		      ztarget => $q->param('ztarget'),
-		      title => $q->param('title'),
-		      author => $q->param('author'),
-		      callno => $q->param('callno'),
-		      medium => $q->param('medium'),
-		      date => $q->param('date'),
-		      isbn => $q->param('isbn'),
-	);
-    return $template->output;
-}
-
 
 #--------------------------------------------------------------------------------------------
 sub send_notification {
@@ -646,18 +569,16 @@ sub send_notification {
 }
 
 #--------------------------------------------------------------------------------------------
-sub get_lid_from_symbol {
+sub get_library_from_username {
     my $self = shift;
-    my $symbol = shift;
-    # Get this user's (requester's) library id
+    my $username = shift;
+    # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-#	"SELECT lid FROM libraries WHERE name=?",
-	"SELECT lid FROM users WHERE username=?",
+	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
-	$symbol
+	$username
 	);
-    my $requester = $hr_id->{lid};
-    return $requester;
+    return ($hr_id->{lid}, $hr_id->{library});
 }
 
 1; # so the 'require' or 'use' succeeds

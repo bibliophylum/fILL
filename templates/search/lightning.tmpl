@@ -7,8 +7,10 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
   <link rel="stylesheet" href="/fILL.1.0.css"></link>
+  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
   <script type="text/javascript" src="/js/pz2.js"></script>
   <script type="text/javascript" src="/js/fILL_client.js"></script>
+  <script type="text/javascript" src="/js/menu-counters.js"></script>
 <script language="JavaScript">
 
   function set_primary_tab(tab_id) {
@@ -40,6 +42,15 @@
   function searchHelp(e) {
     alert("Search help\n\nfILL does a general keyword search by default.\n\nAdvanced searching\n\nSpecific title:  \tti=\"The case for mars\"\nSpecific author:\tau=\"Zubrin, Robert\"\nSpecific subject:\tsu=\"mars planet\"\n\nYou can combine these using the connectors AND, OR, NOT:\n\n\tau=\"david drake\" and au=\"eric flint\"\n\n\tti=\"cooking\" and su=\"solar\"\n\n\tti=\"cooking\" not su=\"microwave\"");
   }
+</script>
+
+<script type="text/javascript">
+
+$('document').ready(function(){
+  update_menu_counters( <TMPL_VAR name="lid"> );
+  $("#query").focus();
+});
+
 </script>
 
  </head>
@@ -76,7 +87,8 @@
       <li><TMPL_VAR NAME="username"> </li>
       <li><a href="?authen_logout=1">Log out</a></li>
     </ul>
-<!--    <p id="lid"><TMPL_VAR NAME="lid"></p> -->
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
 </DIV>
 

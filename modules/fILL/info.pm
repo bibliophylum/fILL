@@ -47,20 +47,24 @@ sub info_contacts_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $SQL_getUser = "SELECT name, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE active=1 ORDER BY library";
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $SQL_getLibrary = "SELECT name, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE active=1 ORDER BY library";
 
     # Get any parameter data (ie - user is submitting a change)
     my $sort = $q->param("sort");
 
     # Get the form data
     my $aref = $self->dbh->selectall_arrayref(
-	$SQL_getUser,
+	$SQL_getLibrary,
 	{ Slice => {} }
 	);
     
     my $template = $self->load_tmpl('info/contacts.tmpl');
     $template->param(pagetitle => "fILL Info Contacts",
 		     username  => $self->authen->username,
+		     lid       => $lid,
+		     library   => $library,
 		     libraries => $aref);
     return $template->output;
 }
@@ -72,9 +76,14 @@ sub info_contacts_process {
 sub info_documents_process {
     my $self = shift;
 
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
     my $template = $self->load_tmpl('info/documents.tmpl');
     $template->param(pagetitle => "fILL Info Documents",
-		     username => $self->authen->username);
+		     username => $self->authen->username,
+	             lid => $lid,
+		     library => $library,
+	);
     return $template->output;
 }
 
@@ -85,12 +94,14 @@ sub info_documents_process {
 sub info_reports_process {
     my $self = shift;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('info/reports.tmpl');
     $template->param(pagetitle => "fILL Info Reports",
 		     username => $self->authen->username,
-	             lid => $lid);
+	             lid => $lid,
+		     library => $library,
+	);
     return $template->output;
 }
 
@@ -101,12 +112,14 @@ sub info_reports_process {
 sub info_reportfolder_process {
     my $self = shift;
 
-    my $lid = get_lid_from_symbol($self, $self->authen->username);  # do error checking!
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('info/report-folder.tmpl');
     $template->param(pagetitle => "fILL Info Reports-folder",
 		     username => $self->authen->username,
-	             lid => $lid);
+	             lid => $lid,
+		     library => $library,
+	);
     return $template->output;
 }
 
@@ -117,9 +130,14 @@ sub info_reportfolder_process {
 sub info_feeds_process {
     my $self = shift;
 
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
     my $template = $self->load_tmpl('info/feeds.tmpl');
     $template->param(pagetitle => "fILL Info Feeds",
-		     username => $self->authen->username);
+		     username => $self->authen->username,
+	             lid => $lid,
+		     library => $library,
+	);
     return $template->output;
 }
 
@@ -161,18 +179,18 @@ sub send_report_output {
 } 
 
 #--------------------------------------------------------------------------------------------
-sub get_lid_from_symbol {
+sub get_library_from_username {
     my $self = shift;
-    my $symbol = shift;
-    # Get this user's (requester's) library id
+    my $username = shift;
+    # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"SELECT lid FROM libraries WHERE name=?",
+	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
-	$symbol
+	$username
 	);
-    my $requester = $hr_id->{lid};
-    return $requester;
+    return ($hr_id->{lid}, $hr_id->{library});
 }
+
 
 1; # so the 'require' or 'use' succeeds
 
