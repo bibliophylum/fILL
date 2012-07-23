@@ -25,7 +25,7 @@ use CGI::Application::Plugin::Authentication;
 use CGI::Application::Plugin::Authentication::Driver::DBI;
 use CGI::Application::Plugin::Authorization;
 use CGI::Application::Plugin::LogDispatch;
-use Digest::SHA1;
+use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
 
 #    DRIVER         => [ 'DBI',
