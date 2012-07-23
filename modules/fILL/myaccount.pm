@@ -54,10 +54,8 @@ sub myaccount_settings_process {
 
 	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
 
-	$self->dbh->do("UPDATE libraries SET name=?, password=?, email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, request_email_notification=? WHERE lid=?",
+	$self->dbh->do("UPDATE libraries SET email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, request_email_notification=? WHERE lid=?",
 		       undef,
-		       $q->param("name"),
-		       $q->param("password"),
 		       $q->param("email_address"),
 		       $q->param("library"),
 		       $q->param("mailing_address_line1"),
@@ -91,8 +89,6 @@ sub myaccount_settings_process {
 		     library      => $library,
 	             status       => $status,
 		     editLID      => $href->{lid},
-		     editName     => $href->{name},
-		     editPassword => $href->{password},
 		     editEmail    => $href->{email_address},
 		     editLibrary  => $href->{library},
 		     editMailingAddressLine1 => $href->{mailing_address_line1},
