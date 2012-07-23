@@ -2,13 +2,17 @@
 -- PostgreSQL database dump
 --
 
+-- Started on 2012-07-22 22:19:44 CDT
+
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET escape_string_warning = off;
 
 --
+-- TOC entry 1911 (class 1262 OID 17393)
 -- Name: maplin; Type: DATABASE; Schema: -; Owner: postgres
 --
 
@@ -21,57 +25,480 @@ ALTER DATABASE maplin OWNER TO postgres;
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
 
 --
--- Name: update_ts(); Type: FUNCTION; Schema: public; Owner: mapapp
+-- TOC entry 169 (class 1255 OID 17394)
+-- Dependencies: 6
+-- Name: armor(bytea); Type: FUNCTION; Schema: public; Owner: david
 --
 
-CREATE FUNCTION update_ts() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-   BEGIN
-     NEW.ts = NOW();
-     RETURN NEW;
-   END;
-$$;
+CREATE FUNCTION armor(bytea) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_armor';
 
 
-ALTER FUNCTION public.update_ts() OWNER TO mapapp;
+ALTER FUNCTION public.armor(bytea) OWNER TO david;
 
 --
+-- TOC entry 170 (class 1255 OID 17395)
+-- Dependencies: 6
+-- Name: crypt(text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION crypt(text, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_crypt';
+
+
+ALTER FUNCTION public.crypt(text, text) OWNER TO david;
+
+--
+-- TOC entry 171 (class 1255 OID 17396)
+-- Dependencies: 6
+-- Name: dearmor(text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION dearmor(text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_dearmor';
+
+
+ALTER FUNCTION public.dearmor(text) OWNER TO david;
+
+--
+-- TOC entry 172 (class 1255 OID 17397)
+-- Dependencies: 6
+-- Name: decrypt(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION decrypt(bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_decrypt';
+
+
+ALTER FUNCTION public.decrypt(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 173 (class 1255 OID 17398)
+-- Dependencies: 6
+-- Name: decrypt_iv(bytea, bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION decrypt_iv(bytea, bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_decrypt_iv';
+
+
+ALTER FUNCTION public.decrypt_iv(bytea, bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 174 (class 1255 OID 17399)
+-- Dependencies: 6
+-- Name: digest(text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION digest(text, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_digest';
+
+
+ALTER FUNCTION public.digest(text, text) OWNER TO david;
+
+--
+-- TOC entry 175 (class 1255 OID 17400)
+-- Dependencies: 6
+-- Name: digest(bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION digest(bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_digest';
+
+
+ALTER FUNCTION public.digest(bytea, text) OWNER TO david;
+
+--
+-- TOC entry 176 (class 1255 OID 17401)
+-- Dependencies: 6
+-- Name: encrypt(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION encrypt(bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_encrypt';
+
+
+ALTER FUNCTION public.encrypt(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 177 (class 1255 OID 17402)
+-- Dependencies: 6
+-- Name: encrypt_iv(bytea, bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION encrypt_iv(bytea, bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_encrypt_iv';
+
+
+ALTER FUNCTION public.encrypt_iv(bytea, bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 178 (class 1255 OID 17403)
+-- Dependencies: 6
+-- Name: gen_random_bytes(integer); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION gen_random_bytes(integer) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pg_random_bytes';
+
+
+ALTER FUNCTION public.gen_random_bytes(integer) OWNER TO david;
+
+--
+-- TOC entry 179 (class 1255 OID 17404)
+-- Dependencies: 6
+-- Name: gen_salt(text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION gen_salt(text) RETURNS text
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pg_gen_salt';
+
+
+ALTER FUNCTION public.gen_salt(text) OWNER TO david;
+
+--
+-- TOC entry 180 (class 1255 OID 17405)
+-- Dependencies: 6
+-- Name: gen_salt(text, integer); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION gen_salt(text, integer) RETURNS text
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pg_gen_salt_rounds';
+
+
+ALTER FUNCTION public.gen_salt(text, integer) OWNER TO david;
+
+--
+-- TOC entry 181 (class 1255 OID 17406)
+-- Dependencies: 6
+-- Name: hmac(text, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION hmac(text, text, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_hmac';
+
+
+ALTER FUNCTION public.hmac(text, text, text) OWNER TO david;
+
+--
+-- TOC entry 182 (class 1255 OID 17407)
+-- Dependencies: 6
+-- Name: hmac(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION hmac(bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pg_hmac';
+
+
+ALTER FUNCTION public.hmac(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 183 (class 1255 OID 17408)
+-- Dependencies: 6
+-- Name: idx(anyarray, anyelement); Type: FUNCTION; Schema: public; Owner: mapapp
+--
+
+CREATE FUNCTION idx(anyarray, anyelement) RETURNS integer
+    LANGUAGE sql IMMUTABLE
+    AS $_$
+  SELECT i FROM (
+     SELECT generate_series(array_lower($1,1),array_upper($1,1))
+  ) g(i)
+  WHERE $1[i] = $2
+  LIMIT 1;
+$_$;
+
+
+ALTER FUNCTION public.idx(anyarray, anyelement) OWNER TO mapapp;
+
+--
+-- TOC entry 184 (class 1255 OID 17409)
+-- Dependencies: 6
+-- Name: pgp_key_id(bytea); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_key_id(bytea) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_key_id_w';
+
+
+ALTER FUNCTION public.pgp_key_id(bytea) OWNER TO david;
+
+--
+-- TOC entry 185 (class 1255 OID 17410)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt(bytea, bytea); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt(bytea, bytea) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_text';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt(bytea, bytea) OWNER TO david;
+
+--
+-- TOC entry 186 (class 1255 OID 17411)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt(bytea, bytea, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_text';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 187 (class 1255 OID 17412)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt(bytea, bytea, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt(bytea, bytea, text, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_text';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt(bytea, bytea, text, text) OWNER TO david;
+
+--
+-- TOC entry 188 (class 1255 OID 17413)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt_bytea(bytea, bytea); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt_bytea(bytea, bytea) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt_bytea(bytea, bytea) OWNER TO david;
+
+--
+-- TOC entry 189 (class 1255 OID 17414)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt_bytea(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt_bytea(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 190 (class 1255 OID 17415)
+-- Dependencies: 6
+-- Name: pgp_pub_decrypt_bytea(bytea, bytea, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_decrypt_bytea(bytea, bytea, text, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_decrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_pub_decrypt_bytea(bytea, bytea, text, text) OWNER TO david;
+
+--
+-- TOC entry 191 (class 1255 OID 17416)
+-- Dependencies: 6
+-- Name: pgp_pub_encrypt(text, bytea); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_encrypt(text, bytea) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_encrypt_text';
+
+
+ALTER FUNCTION public.pgp_pub_encrypt(text, bytea) OWNER TO david;
+
+--
+-- TOC entry 192 (class 1255 OID 17417)
+-- Dependencies: 6
+-- Name: pgp_pub_encrypt(text, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_encrypt(text, bytea, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_encrypt_text';
+
+
+ALTER FUNCTION public.pgp_pub_encrypt(text, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 193 (class 1255 OID 17418)
+-- Dependencies: 6
+-- Name: pgp_pub_encrypt_bytea(bytea, bytea); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_encrypt_bytea(bytea, bytea) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_encrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_pub_encrypt_bytea(bytea, bytea) OWNER TO david;
+
+--
+-- TOC entry 194 (class 1255 OID 17419)
+-- Dependencies: 6
+-- Name: pgp_pub_encrypt_bytea(bytea, bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_pub_encrypt_bytea(bytea, bytea, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_pub_encrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_pub_encrypt_bytea(bytea, bytea, text) OWNER TO david;
+
+--
+-- TOC entry 195 (class 1255 OID 17420)
+-- Dependencies: 6
+-- Name: pgp_sym_decrypt(bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_decrypt(bytea, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_decrypt_text';
+
+
+ALTER FUNCTION public.pgp_sym_decrypt(bytea, text) OWNER TO david;
+
+--
+-- TOC entry 196 (class 1255 OID 17421)
+-- Dependencies: 6
+-- Name: pgp_sym_decrypt(bytea, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_decrypt(bytea, text, text) RETURNS text
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_decrypt_text';
+
+
+ALTER FUNCTION public.pgp_sym_decrypt(bytea, text, text) OWNER TO david;
+
+--
+-- TOC entry 197 (class 1255 OID 17422)
+-- Dependencies: 6
+-- Name: pgp_sym_decrypt_bytea(bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_decrypt_bytea(bytea, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_decrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_sym_decrypt_bytea(bytea, text) OWNER TO david;
+
+--
+-- TOC entry 198 (class 1255 OID 17423)
+-- Dependencies: 6
+-- Name: pgp_sym_decrypt_bytea(bytea, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_decrypt_bytea(bytea, text, text) RETURNS bytea
+    LANGUAGE c IMMUTABLE STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_decrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_sym_decrypt_bytea(bytea, text, text) OWNER TO david;
+
+--
+-- TOC entry 199 (class 1255 OID 17424)
+-- Dependencies: 6
+-- Name: pgp_sym_encrypt(text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_encrypt(text, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_encrypt_text';
+
+
+ALTER FUNCTION public.pgp_sym_encrypt(text, text) OWNER TO david;
+
+--
+-- TOC entry 200 (class 1255 OID 17425)
+-- Dependencies: 6
+-- Name: pgp_sym_encrypt(text, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_encrypt(text, text, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_encrypt_text';
+
+
+ALTER FUNCTION public.pgp_sym_encrypt(text, text, text) OWNER TO david;
+
+--
+-- TOC entry 201 (class 1255 OID 17426)
+-- Dependencies: 6
+-- Name: pgp_sym_encrypt_bytea(bytea, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_encrypt_bytea(bytea, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_encrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_sym_encrypt_bytea(bytea, text) OWNER TO david;
+
+--
+-- TOC entry 202 (class 1255 OID 17427)
+-- Dependencies: 6
+-- Name: pgp_sym_encrypt_bytea(bytea, text, text); Type: FUNCTION; Schema: public; Owner: david
+--
+
+CREATE FUNCTION pgp_sym_encrypt_bytea(bytea, text, text) RETURNS bytea
+    LANGUAGE c STRICT
+    AS '$libdir/pgcrypto', 'pgp_sym_encrypt_bytea';
+
+
+ALTER FUNCTION public.pgp_sym_encrypt_bytea(bytea, text, text) OWNER TO david;
+
+--
+-- TOC entry 140 (class 1259 OID 17428)
+-- Dependencies: 6
 -- Name: libraries_lid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
 --
 
 CREATE SEQUENCE libraries_lid_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
 ALTER TABLE public.libraries_lid_seq OWNER TO mapapp;
 
 --
+-- TOC entry 1914 (class 0 OID 0)
+-- Dependencies: 140
 -- Name: libraries_lid_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
 --
 
@@ -83,6 +510,8 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- TOC entry 141 (class 1259 OID 17430)
+-- Dependencies: 1862 1863 6
 -- Name: libraries; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -99,13 +528,20 @@ CREATE TABLE libraries (
     last_login timestamp without time zone,
     town character varying(50),
     region character varying(15),
-    request_email_notification boolean DEFAULT false
+    request_email_notification boolean DEFAULT false,
+    city character varying(40),
+    province character varying(5),
+    post_code character(6),
+    phone character(10),
+    canada_post_customer_number character(10)
 );
 
 
 ALTER TABLE public.libraries OWNER TO mapapp;
 
 --
+-- TOC entry 142 (class 1259 OID 17438)
+-- Dependencies: 6
 -- Name: library_barcodes; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -119,20 +555,24 @@ CREATE TABLE library_barcodes (
 ALTER TABLE public.library_barcodes OWNER TO mapapp;
 
 --
+-- TOC entry 143 (class 1259 OID 17441)
+-- Dependencies: 6
 -- Name: reports_rid_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
 --
 
 CREATE SEQUENCE reports_rid_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
 ALTER TABLE public.reports_rid_seq OWNER TO mapapp;
 
 --
+-- TOC entry 1915 (class 0 OID 0)
+-- Dependencies: 143
 -- Name: reports_rid_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
 --
 
@@ -140,6 +580,8 @@ SELECT pg_catalog.setval('reports_rid_seq', 8, true);
 
 
 --
+-- TOC entry 144 (class 1259 OID 17443)
+-- Dependencies: 1864 6
 -- Name: reports; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -155,10 +597,38 @@ CREATE TABLE reports (
 ALTER TABLE public.reports OWNER TO mapapp;
 
 --
+-- TOC entry 145 (class 1259 OID 17450)
+-- Dependencies: 6
+-- Name: reports_complete_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
+--
+
+CREATE SEQUENCE reports_complete_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.reports_complete_seq OWNER TO mapapp;
+
+--
+-- TOC entry 1916 (class 0 OID 0)
+-- Dependencies: 145
+-- Name: reports_complete_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
+--
+
+SELECT pg_catalog.setval('reports_complete_seq', 1, false);
+
+
+--
+-- TOC entry 146 (class 1259 OID 17452)
+-- Dependencies: 1865 6
 -- Name: reports_complete; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
 CREATE TABLE reports_complete (
+    rcid integer DEFAULT nextval('reports_complete_seq'::regclass) NOT NULL,
     lid integer NOT NULL,
     rid integer NOT NULL,
     range_start character(10),
@@ -170,6 +640,8 @@ CREATE TABLE reports_complete (
 ALTER TABLE public.reports_complete OWNER TO mapapp;
 
 --
+-- TOC entry 147 (class 1259 OID 17456)
+-- Dependencies: 1866 6
 -- Name: reports_queue; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -185,27 +657,33 @@ CREATE TABLE reports_queue (
 ALTER TABLE public.reports_queue OWNER TO mapapp;
 
 --
+-- TOC entry 148 (class 1259 OID 17460)
+-- Dependencies: 6
 -- Name: request_seq; Type: SEQUENCE; Schema: public; Owner: mapapp
 --
 
 CREATE SEQUENCE request_seq
     START WITH 1
     INCREMENT BY 1
-    NO MINVALUE
     NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
 ALTER TABLE public.request_seq OWNER TO mapapp;
 
 --
+-- TOC entry 1917 (class 0 OID 0)
+-- Dependencies: 148
 -- Name: request_seq; Type: SEQUENCE SET; Schema: public; Owner: mapapp
 --
 
-SELECT pg_catalog.setval('request_seq', 436, true);
+SELECT pg_catalog.setval('request_seq', 960, true);
 
 
 --
+-- TOC entry 149 (class 1259 OID 17462)
+-- Dependencies: 1867 1868 6
 -- Name: request; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -215,13 +693,18 @@ CREATE TABLE request (
     author character varying(256),
     requester integer NOT NULL,
     patron_barcode character(14),
-    current_target integer DEFAULT 1
+    current_target integer DEFAULT 1,
+    note character varying(80),
+    canada_post_endpoint character varying(1024),
+    canada_post_tracking_number character varying(40)
 );
 
 
 ALTER TABLE public.request OWNER TO mapapp;
 
 --
+-- TOC entry 150 (class 1259 OID 17470)
+-- Dependencies: 6
 -- Name: request_closed; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -232,13 +715,16 @@ CREATE TABLE request_closed (
     requester integer NOT NULL,
     patron_barcode character(14),
     filled_by integer,
-    attempts integer
+    attempts integer,
+    note character varying(80)
 );
 
 
 ALTER TABLE public.request_closed OWNER TO mapapp;
 
 --
+-- TOC entry 151 (class 1259 OID 17476)
+-- Dependencies: 1869 6
 -- Name: requests_active; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -255,6 +741,8 @@ CREATE TABLE requests_active (
 ALTER TABLE public.requests_active OWNER TO mapapp;
 
 --
+-- TOC entry 152 (class 1259 OID 17480)
+-- Dependencies: 6
 -- Name: requests_history; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -271,6 +759,8 @@ CREATE TABLE requests_history (
 ALTER TABLE public.requests_history OWNER TO mapapp;
 
 --
+-- TOC entry 153 (class 1259 OID 17483)
+-- Dependencies: 1870 1871 1872 6
 -- Name: search_statistics; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -286,6 +776,8 @@ CREATE TABLE search_statistics (
 ALTER TABLE public.search_statistics OWNER TO mapapp;
 
 --
+-- TOC entry 154 (class 1259 OID 17492)
+-- Dependencies: 1873 6
 -- Name: sources; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -300,143 +792,187 @@ CREATE TABLE sources (
 ALTER TABLE public.sources OWNER TO mapapp;
 
 --
+-- TOC entry 155 (class 1259 OID 17496)
+-- Dependencies: 6
+-- Name: uid_sequence; Type: SEQUENCE; Schema: public; Owner: mapapp
+--
+
+CREATE SEQUENCE uid_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.uid_sequence OWNER TO mapapp;
+
+--
+-- TOC entry 1918 (class 0 OID 0)
+-- Dependencies: 155
+-- Name: uid_sequence; Type: SEQUENCE SET; Schema: public; Owner: mapapp
+--
+
+SELECT pg_catalog.setval('uid_sequence', 123, true);
+
+
+--
+-- TOC entry 156 (class 1259 OID 17498)
+-- Dependencies: 1874 6
+-- Name: users; Type: TABLE; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+CREATE TABLE users (
+    uid integer DEFAULT nextval('uid_sequence'::regclass),
+    username character varying(40) NOT NULL,
+    password character varying(100) NOT NULL,
+    lid integer NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO mapapp;
+
+--
+-- TOC entry 1897 (class 0 OID 17430)
+-- Dependencies: 141
 -- Data for Name: libraries; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY libraries (lid, name, password, active, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, last_login, town, region, request_email_notification) FROM stdin;
-97	MNW	MNW	1	neepawa@wmrlibrary.mb.ca	Western Manitoba Regional  Library - Neepawa	280 Davidson St.	Box 759	Neepawa, MB  R0J 1H0	2011-02-03 12:02:04.730694	Neepawa	WESTMAN	f
-72	MRA	MRA	1	rcreglib@mts.net	Rapid City Regional Library	425 3rd Ave.	Box 8	Rapid City, MB  R0K 1W0	2011-01-27 14:59:47.699491	Rapid City	WESTMAN	f
-9	MNHA	MNHA	1	tansi23@hotmail.com	Ayamiscikewikamik		Box 250	Norway House, MB  ROB 1BO	2010-07-27 11:50:28.606789	\N	\N	f
-127	Caitlyn	Caitlyn	0		PLS - clerk				\N	\N	\N	f
-2	test	123	1	David_A_Christensen@hotmail.com	A Test Library	456 Someother St.	Mycity, MB  R7A 0X0	\N	\N	\N	\N	f
-128	Margo	me	1		PLS - staff				2008-09-15 15:49:51	\N	\N	f
-105	MWRR	MWRR	0	lgirardi@rrcc.mb.ca	Red River College	2055 Notre Dame Ave		Winnipeg, MB  R3H 0J9	\N	\N	\N	f
-106	MWTS	MWTS	0	lisanne.wood@mts.mb.ca	Manitoba Telecom Services Corporate	489 Empress St.	Box 6666	Winnipeg, MB  R3C 3V6	\N	\N	\N	f
-108	MSERC	MSERC	0	serc2mb@mb.sympatico.ca	Brandon SERC	731B Princess Ave		Brandon, MB  R7A 0P4	\N	\N	\N	f
-109	MWMRC	MWMRC	0	bdearth@itc.mb.ca	Industrial Technology Centre	200-78 Innovation Drive		Winnipeg, MB  R3T 6C2	\N	\N	\N	f
-95	MCNC	discover	1	carberry@wmrlibrary.mb.ca	Western Manitoba Regional Library - Carberry/North Cypress	115 Main Street	Box 382	Carberry, MB  R0K 0H0	2011-02-01 16:29:41.937069	Carberry	WESTMAN	f
-13	MIBR	MIBR	1	ritchotlib@hotmail.com	Bibliothèque Ritchot - Main	310 Lamoureux Rd.	Box 340	Ile des Chenes, MB  R0A 0T0	2011-02-01 16:34:41.862614	Ile des Chenes	EASTMAN	f
-80	MSL	MSL	1	dslibrary@hotmail.com	Snow Lake Community Library	101 Cherry St.	Box 760	Snow Lake, MB  R0B 1M0	2011-02-03 12:37:04.304046	Snow Lake	NORMAN	f
-29	MGE	MGE	1	gimli.library@mts.net	Evergreen Regional Library - Main	65 First Avenue	Box 1140	Gimli, MB  R0C 1B0	2011-02-03 12:56:09.653775	Gimli	INTERLAKE	f
-58	MDPGV	MDPGV	1	grandvw@mts.net	Parkland Regional Library - Grandview	433 Main St.	Box Box 700	Grandview, MB  R0L 0Y0	2011-02-01 15:07:26.727646	Grandview	PARKLAND	f
-107	MDPST	MDPST	1	stratlibrary@mts.net	Parkland Regional Library - Strathclair	50 Main St.	Box 303	Strathclair, MB  R0J 2C0	2011-01-31 09:12:18.896689	Strathclair	WESTMAN	f
-134	MDS	MDS	1	staff@springfieldlibrary.ca	Springfield Public Library	Box 340		Dugald, MB  R0E 0K0	2011-02-02 12:28:41.043479	Oakbank	EASTMAN	f
-81	MWOWH	MWOWH	1	headlib@scrlibrary.mb.ca	South Central Regional Library - Office	160 Main Street   (325-5864)	Box 1540	Winkler, MB  R6W 4B4	2010-09-30 14:30:24.845846	\N	\N	f
-63	MDPOR	MDPOR	1	orlibrary@inetlink.ca	Parkland Regional Library - Ochre River	203 Main St.	Box 219	Ochre River, MB  R0L 1K0	2011-02-02 17:58:17.64862	Ochre River	PARKLAND	f
-137	TEST	TEST	1	nowhere@just.testing	A test library				2011-02-02 18:50:18.609395	\N	\N	f
-121	TWAS	TWAS	1		Bren Del Win Centennial Library - Waskada	30 Souris Ave.		Waskada, MB  R0M 2E0	\N	Waskada	WESTMAN	f
-122	MPFN	MPFN	1	peguislibrary@yahoo.ca	Peguis Community	Lot 30 Peguis Indian Reserve	Box Box 190	Peguis, MB  R0J 3J0	2009-03-04 17:23:42	Peguis	INTERLAKE	f
-75	MBA	MBA	1	rmargyle@gmail.com	R.M. of Argyle Public Library	627 Elizabeth Ave. E.	Box 10	Baldur, MB  R0K 0B0	2011-02-01 10:00:40.596398	Baldur	WESTMAN	f
-125	MNCN	MNCN	1	NCNBranch@Thompsonlibrary.com	Thompson Public Library - Nelson House	1 ATEC Drive	Box 454	Nelson House, MB  R0B 1A0	\N	Nelson House	NORMAN	f
-35	MHH	MHH	1	hml@mts.net	Headingley Municipal Library	49 Alboro Street		Headingley, MB  R4J 1A3	2011-02-03 10:21:31.672572	Headingly	CENTRAL	f
-78	MSTR	MSTR	1	sroselib@mts.net	Ste. Rose Regional Library	580 Central Avenue	General Delivery	Ste. Rose du Lac, MB  R0L 1S0	2011-02-03 12:41:49.075946	Ste. Rose du Lac	PARKLAND	f
-124	MDPSLA	MDPSLA	1	lazarelib@mts.net	Parkland Regional Library - St. Lazare		Box 201	St. Lazare, MB  R0M 1Y0	2010-11-25 17:06:24.004507	St. Lazare	WESTMAN	f
-103	MEPL	MEPL	1	library@townofemerson.com	Emerson Library	104 Church Street	Box 340	Emerson, MB  R0A 0L0	2011-01-24 18:56:43.490848	Emerson	CENTRAL	f
-37	MSSM	MSSM	1	stmlibrary@jrlibrary.mb.ca	Jolys Regional Library - St. Malo	189 St. Malo Street	Box 593	St.Malo, MB  R0A 1T0	2011-02-02 15:43:01.43152	St. Malo	EASTMAN	f
-28	MCH	MCH	1	mchlibrary@yahoo.ca	Churchill Public Library	180 Laverendrye	Box 730	Churchill, MB  R0B 0E0	2011-02-03 10:04:52.805515	Churchill	NORMAN	f
-27	MEL	MEL	1	epl1@mts.net	Eriksdale Public Library	PTH 68  (9 Main St.)	Box 219	Eriksdale, MB  R0C 0W0	2011-02-03 12:27:27.45312	Eriksdale	INTERLAKE	f
-77	MBI	MBI	1	binslb@mts.net	Russell & District Library - Binscarth	106 Russell St.	Box  379	Binscarth, MB  R0J 0G0	2011-01-12 16:33:26.593717	Binscarth	PARKLAND	f
-61	MDPMC	MDPMC	1	mccrea16@mts.net	Parkland Regional Library - McCreary	615 Burrows Rd.	Box 297	McCreary, MB  R0J 1B0	2011-01-18 15:43:28.57626	McCreary	PARKLAND	f
-42	MLR	MLR	1	lrlib@mts.net	Leaf Rapids Public Library	20 Town Centre	Box 190	Leaf Rapids, MB  R0B 1W0	2009-05-25 18:16:48	Leaf Rapids	NORMAN	f
-67	MDPWP	MDPWP	1	wpgosis@mts.net	Parkland Regional Library - Winnipegosis	130 2nd St.	Box Box 10	Winnipegosis, MB  R0L 2G0	2011-02-02 14:18:10.749017	Winnipegosis	PARKLAND	f
-88	MESMN	MESMN	1	smrl1nap@yahoo.ca	Southwestern Manitoba Regional Library - Napinka	57 Souris St.	Box 975	Melita, MB  R0M 1L0	2010-09-14 14:14:28.201392	Napinka	WESTMAN	f
-43	MLLC	MLLC	1	lynnlib@mts.net	Lynn Lake Centennial Library	503 Sherritt Ave.	Box 1127	Lynn Lake, MB  R0B 0W0	\N	Lynn Lake	NORMAN	f
-50	MDPBR	MDPBR	1	briver@mts.net	Parkland Regional Library - Birch River	116 3rd St. East	Box 245	Birch River, MB  R0L 0E0	2008-12-18 20:36:09	Birch River	PARKLAND	f
-60	MDPLA	MDPLA	1	langlib@mts.net	Parkland Regional Library - Langruth	402 Main St.	Box 154	Langruth, MB  R0H 0N0	2010-07-30 09:16:07.67375	Langruth	CENTRAL	f
-68	MP	MP	1	email@pinawapubliclibrary.com	Pinawa Public Library	Vanier Road	General Delivery	Pinawa, MB  R0E 1L0	2012-01-19 14:27:21.29003	Pinawa	EASTMAN	f
-1	DTL	DTL123	1	David_A_Christensen@hotmail.com	The Great Library of Davidland	123 Some Street South	Brandon, MB  R7A 7A1		2009-12-09 15:11:39.580858	\N	\N	f
-89	MESP	MESP	1	pcilibrary@goinet.ca	Southwestern Manitoba Regional Library - Pierson	58 Railway Avenue	Box 39	Pierson, MB  R0M 1S0	2011-01-28 09:45:37.364496	Pierson	WESTMAN	f
-54	MDPER	MDPER	1	erick11@mts.net	Parkland Regional Library - Erickson	20 Main St. W	Box 385	Erickson, MB  R0J 0P0	2011-02-01 11:11:13.915092	Erickson	WESTMAN	f
-49	MDP	MDP	1	prlhq@parklandlib.mb.ca	Parkland Regional Library - Main	504 Main St. N.		Dauphin, MB  R7N 1C9	2011-01-25 13:15:46.362271	\N	\N	f
-111	MSSC	MSSC	1	shilocommunitylibrary@yahoo.ca	Shilo Community Library  (765-3000 ext 3664)		Box Box 177	Shilo, MB  R0K 2A0	2011-02-01 15:25:17.713108	\N	\N	f
-138			0	\N	\N	\N	\N	\N	\N	\N	\N	f
-17	MLB	bsjlromd	1	bsjl@bsjl.ca	Bibliothèque Saint-Joachim Library	29, baie Normandeau Bay	Box 39	La Broquerie, MB  R0A 0W0	2011-02-02 08:08:42.558263	La Broquerie	EASTMAN	f
-52	MDPBO	MDPBO	1	bows18@mts.net	Parkland Regional Library - Bowsman	105 2nd St.	Box 209	Bowsman, MB  R0L 0H0	2011-01-04 11:20:46.044179	Bowsman	PARKLAND	f
-55	MDPFO	MDPFO	1	foxlib@mts.net	Parkland Regional Library - Foxwarren	312 Webster Ave.	Box 204	Foxwarren, MB  R0J 0P0	2011-02-01 10:41:17.93653	Foxwarren	WESTMAN	f
-86	MTSIR	MTSIR	1	teulonbranchlibrary@yahoo.com	South Interlake Regional Library - Teulon	19 Beach Road	Box 68	Teulon, MB  R0C 3B0	2011-02-02 10:47:07.748734	Teulon	INTERLAKE	f
-102	MHP	MHP	1	victlib@goinet.ca	Victoria Municipal Library	102 Stewart Ave	Box 371	Holland, MB  R0G 0X0	2011-01-27 16:50:14.499442	Holland	CENTRAL	f
-11	MSJB	MSJB	1	biblio@atrium.ca	Bibliothèque Montcalm	113B 2nd	Box 345	Saint-Jean-Baptiste, MB  R0G 2B0	2011-02-02 09:30:53.111402	Saint-Jean-Baptiste	CENTRAL	f
-47	MBB	MBB	1	benlib@mts.net	North-West Regional Library - Benito Branch	140 Main Street	Box 220	Benito, MB  R0L 0C0	2011-01-27 14:18:36.739511	Benito	PARKLAND	f
-22	ME	brlelk	1	elkhornbrl@rfnow.com	Border Regional Library - Elkhorn	211 Richhill Ave.	Box 370	Elkhorn, MB  R0M 0N0	2011-02-03 09:59:18.485715	Elkhorn	WESTMAN	f
-41	MPM	MPM	1	pmlibrary@mts.net	Pilot Mound Public Library - Pilot Mound	219 Broadway Ave. W.	Box 126	Pilot Mound, MB  R0G 1P0	2011-02-03 10:55:31.63491	Pilot Mound	CENTRAL	f
-45	MMNN	MMNN	1	maclib@mts.net	North Norfolk-MacGregor Library	35 Hampton St. E.	Box 760	MacGregor, MB  R0H 0R0	2011-02-02 15:10:26.856663	MacGregor	CENTRAL	f
-14	MSAD	MSAD	1	stadbranch@hotmail.com	Bibliothèque Ritchot - St. Adolphe	444 rue La Seine		St. Adolphe, MB  R5A 1C2	2011-02-02 15:52:05.639717	St. Adolphe	EASTMAN	f
-73	MRP	MRP	1	restonlb@yahoo.ca	Reston District Library	220 - 4th St.	Box 340	Reston, MB  R0M 1X0	2011-02-03 11:23:53.280404	Reston	WESTMAN	f
-66	MDPSI	MDPSI	1	siglun15@mts.net	Parkland Regional Library - Siglunes	5 - 61 Main St.	Box 368	Ashern, MB  R0C 0E0	2011-02-02 15:17:39.520904	Ashern	INTERLAKE	f
-15	MSAG	MSAG	1	bibliosteagathe@atrium.ca	Bibliothèque Ritchot - Ste. Agathe	310 Chemin Pembina Trail	Box 40	Sainte-Agathe, MB  ROG 1YO	2011-02-02 19:05:31.804753	Ste. Agathe	EASTMAN	f
-98	MMR	MMR	1	mmr@mts.net	Minnedosa Regional Library	45 1st  Ave. SE	Box 1226	Minnedosa, MB  R0J 1E0	2011-02-03 12:20:34.182761	Minnedosa	WESTMAN	f
-23	MMCA	MMCA	1	library@mcauley-mb.com	Border Regional Library - McAuley	207 Qu'Appelle Street	Box 234	McAuley, MB  R0M 1H0	2011-01-25 14:27:40.737841	McAuley	WESTMAN	f
-76	MRD	MRD	1	ruslib@mts.net	Russell & District Regional Library - Main	339 Main St.	Box 340	Russell, MB  R0J 1W0	2011-02-01 13:17:19.029251	Russell	PARKLAND	f
-136	MVBB	MVBB	1	victoriabeachbranch@hotmail.com	Bibliotheque Allard - Victoria Beach	Box 279	Victoria Beach, MB  R0E 2C0		2010-12-15 14:34:37.863963	\N	\N	f
-62	MDPMI	MDPMI	1	minitons@mts.net	Parkland Regional Library - Minitonas	300 Main St.	Box 496	Minitonas, MB  R0L 1G0	2011-02-02 15:14:04.465687	Minitonas	PARKLAND	f
-74	MRO	MRO	1	rrl@mts.net	Rossburn Regional Library	53 Main St. North	Box 87	Rossburn, MB  R0J 1V0	2011-01-28 15:18:05.156408	Rossburn	PARKLAND	f
-25	MDB	bdwcl	1	bdwlib@mts.net	Bren Del Win Centennial Library	211 North Railway W.	Box 584	Deloraine, MB  R0M 0M0	2011-02-02 10:56:11.631378	Deloriane	WESTMAN	f
-19	MS	lucy	1	somlib@mts.net	Bibliotheque Somerset Library	Box 279	289 Carlton Avenue 	Somerset, MB  R0G 2L0	2011-02-01 15:51:52.043388	Somerset	CENTRAL	f
-79	MSEL	MSEL	1	ill@ssarl.org	Red River North Regional Library	303 Main Street		Selkirk, MB  R1A 1S7	2011-11-03 15:59:47.492864	Selkirk	INTERLAKE	f
-82	MAOW	maow	1	aill@scrlibrary.mb.ca	South Central Regional Library - Altona	113-125 Centre Ave. E. (324-1503)	Box 650	Altona, MB  R0G 0B0	2011-12-12 14:35:21.057783	Altona	CENTRAL	f
-18	MSA	msa	1	steannelib@steannemb.ca	Bibliothèque Ste. Anne	16 rue de l'Eglise		Ste. Anne, MB  R5H 1H8	2011-02-03 11:16:24.882061	Ste. Anne	EASTMAN	f
-31	MRB	LAKE	1	rlibrary@mts.net	Evergreen Regional Library - Riverton	56 Laura Ave.	Box 310	Riverton, MB  R0C 2R0	2012-02-29 14:00:18.263003	Riverton	INTERLAKE	f
-91	MTP	MTP	1	illthepas@mts.net	The Pas Regional Library	53 Edwards Avenue	Box 4100	The Pas, MB  R9A 1R2	2011-02-02 15:54:58.568087	The Pas	NORMAN	f
-38	MLDB	MLDB	1	mldb@mts.net	Lac du Bonnet Regional Library	84-3rd Street	Box 216	Lac du Bonnet, MB  R0E 1A0	2011-02-03 10:17:25.172551	Lac du Bonnet	EASTMAN	f
-100	MWP	MWP	1	legislative_library@gov.mb.ca	Manitoba Legislative Library	100 - 200 Vaughan		Winnipeg, MB  R3C 1T5	2012-03-28 13:56:42.767746	\N	\N	f
-34	MSOG	MSOG	1	ill@sourislibrary.mb.ca	Glenwood & Souris Regional Library	18 - 114 2nd St. S.	Box 760	Souris, MB  R0K 2C0	2011-02-01 21:41:47.575609	Souris	WESTMAN	f
-71	MRIP	MRIP	1	pcrl@mts.net	Prairie Crocus Regional Library	137 Main Street	Box 609	Rivers, MB  R0K 1X0	2012-04-30 09:06:07.229841	Rivers	WESTMAN	f
-21	MVE	MVE	1	borderlibraryvirden@rfnow.com	Border Regional Library - Main	312 - 7th  Avenue	Box 970	Virden, MB  R0M 2C0	2012-05-01 08:29:16.411326	Virden	WESTMAN	f
-84	MWOW	MWOW	1	will@scrlibrary.mb.ca	South Central Regional Library - Winkler	160 Main Street (325-7174)	Box 1540	Winkler, MB  R6W 4B4	2012-05-28 11:17:02.575702	Winkler	CENTRAL	f
-40	MCCB	CC111	1	cartlib@mts.net	Lakeland Regional Library - Cartwright	483 Veteran Drive	Box 235	Cartwright, MB  R0K 0L0	2011-02-02 16:34:12.994159	Cartwright	CENTRAL	f
-53	MDA	MDA	1	DauphinLibrary@parklandlib.mb.ca	Parkland Regional Library - Dauphin	504 Main Street North		Dauphin, MB  R7N 1C9	2011-02-02 19:42:49.630926	Dauphin	PARKLAND	f
-65	MDPSL	MDPSL	1	sllibrary@mts.net	Parkland Regional Library - Shoal Lake	418 Station Road S.	Box 428	Shoal Lake, MB  R0J 1Z0	2011-02-01 14:06:09.972297	Shoal Lake	WESTMAN	f
-51	MDPBI	MDPBI	1	birtlib@mts.net	Parkland Regional Library - Birtle	907 Main Street	Box 207	Birtle, MB  R0M 0C0	2011-02-03 11:31:03.715139	Birtle	WESTMAN	f
-16	MSCL	MSCL	1	stclib@mts.net	Bibliothèque Saint-Claude	50 1st Street	Box 203	St. Claude, MB  R0G 1Z0	2011-01-20 11:20:23.16518	St. Claude	CENTRAL	f
-110	MBBB	MBBB	1	beacheslibrary@hotmail.com	Bibliotheque Allard - Beaches	40005 Jackfish Lake Rd. N. Walter Whyte School	Box 279	Victoria Beach, MB  R0E 2C0	2011-01-27 16:15:41.161472	Traverse Bay	EASTMAN	f
-12	MNDP	MNDP	1	ndbiblio@yahoo.ca	Bibliothèque Pere Champagne	44 Rue Rogers	Box 399	Notre Dame de Lourdes, MB  R0G 1M0	2011-02-01 09:47:15.311152	Notre Dame de Lourdes	CENTRAL	f
-26	MBBR	MBBR	1	brrlibr2@mts.net	Brokenhead River Regional Library	427 Park  Ave.	Box 1087	Beausejour, MB  R0E 0C0	2011-02-02 17:21:32.430374	Beausejour	EASTMAN	f
-120	MHW	MHW	1	hartney@wmrlibrary.mb.ca	Western Manitoba Regional - Hartney Cameron Branch	209 Airdrie St.	Box 121	Hartney, MB  R0M 0X0	2011-01-29 11:28:09.80128	Hartney	WESTMAN	f
-93	MMVR	MMVR	1	valleylib@mts.net	Valley Regional Library	141Main Street South	Box 397	Morris, MB  R0G 1K0	2011-02-03 12:17:58.225938	Morris	CENTRAL	f
-10	MSTG	MSTG	1	ill@allardlibrary.com	Bibliotheque Allard	104086 PTH 11	Box 157	St Georges, MB  R0E 1V0	2011-02-03 12:15:00.441084	St Georges	EASTMAN	f
-112	ASGY	ASGY	0	lfrolek@yrl.ab.ca	Yellowhead Regional		Box 400	Spruce Grove, AB, MB  T7X 2Y1	\N	\N	\N	f
-104	MBAC	MBAC	1	library@assiniboinec.mb.ca	Assiniboine Community College	1430 Victoria Avenue East		Brandon, MB  R7A 2A9	2011-01-25 14:07:16.067536	\N	\N	f
-57	MDPGL	MDPGL	1	gladstne@mts.net	Parkland Regional Library - Gladstone	42 Morris Avenue N.	Box 720	Gladstone, MB  R0J 0T0	2011-02-03 10:06:30.811072	Gladstone	CENTRAL	f
-64	MDPRO	MDPRO	1	roblinli@mts.net	Parkland Regional Library - Roblin	123 lst Ave. N.	Box 1342	Roblin, MB  R0L 1P0	2011-01-25 15:18:33.838446	Roblin	PARKLAND	f
-96	MGW	MGW	1	jackie@wmrl.ca	Western Manitoba Regional  Library - Glenboro/South Cypress	105 Broadway St.	Box 429	Glenboro, MB  R0K 0X0	2011-02-01 16:29:58.638328	Glenboro	WESTMAN	f
-33	MGI	MGI11	1	bwinner@gillamnet.com	Bette Winner Public Library	235 Mattonnabee Ave.	Box 400	Gillam, MB  R0B 0L0	2011-02-01 16:54:57.526489	Gillam	NORMAN	f
-48	MLPJ	MLPJ	1	mlpj@mts.net	Pauline Johnson Library	23 Main Street	Box 698	Lundar, MB  R0C 1Y0	2011-02-03 10:48:25.445635	Lundar	INTERLAKE	f
-56	MDPGP	MDPGP	1	gilbert3@mts.net	Parkland Regional Library - Gilbert Plains	113 Main St. N.	Box 303	Gilbert Plains, MB  R0L 0X0	2011-01-29 16:19:27.923943	Gilbert Plains	PARKLAND	f
-59	MDPHA	MDPHA	1	hamlib@mymts.net	Parkland Regional Library - Hamiota	43 Maple Ave. E.	Box 609	Hamiota, MB  R0M 0T0	2011-02-01 16:33:06.705467	Hamiota	WESTMAN	f
-131	UCN	UCN321	1		University Colleges North pilot project				2010-12-16 14:12:00.413037	\N	\N	f
-119	MTPL	MTPL	1	btl@srsd.ca	Bibliothque Publique Tache Public Library - Main		Box 16	Lorette, MB  R0A 0Y0	2011-02-02 16:00:40.614521	Lorette	EASTMAN	f
-113	MWSC	MWSC	1	library@smd.mb.ca	Society for Manitobans with Disabilities - Stephen Sparling	825 Sherbrooks Street		Winnipeg, MB  R3A 1M5	\N	\N	\N	f
-114	MWEMM	MWEMM	0	LJanower@gov.mb.ca	Manitoba Industry Trade and Mines - Mineral Resource	Suite 360 - 1395 Ellice Ave.		Winnipeg, MB  R3G 3P2	\N	\N	\N	f
-115	OKE	OKE	0	eroussin@kenora.ca	Kenora Public Library	24 Main St. South		Kenora, Ontario, MB  P9N 1S7	\N	\N	\N	f
-32	MFF	SHOELACE	1	ffplill@mts.net	Flin Flon Public Library	58 Main Street		Flin Flon, MB  R8A 1J8	2011-12-12 12:56:51.457245	Flin Flon	NORMAN	f
-24	MCB	MCB	1	illbrl@hotmail.com	Boyne Regional Library	15 - 1st Avenue SW	Box 788	Carman, MB  R0G 0J0	2011-12-12 13:10:44.162827	Carman	CENTRAL	f
-94	MBW	rescue	1	bdnill@wmrlibrary.mb.ca	Western Manitoba Regional Library - Brandon	710 Rosser Avenue, Unit 1		Brandon, MB  R7A 0K9	2011-12-12 14:08:45.397178	Brandon	WESTMAN	f
-135	MMIOW	MMIOW	1	thlib@scrlibrary.mb.ca	South Central Regional Library - Miami	423 Norton Avenue	(Box 431)	Miami, MB  R0G 1H0	2011-12-12 15:28:31.991569	Miami	CENTRAL	f
-39	MKL	MKL	1	lrl@mts.net	Lakeland Regional Library - Main	318 Williams Ave.	Box 970	Killarney, MB  R0K 1G0	2011-12-12 16:03:53.003063	Killarney	WESTMAN	f
-44	MMA	MMA	1	manitoulibrary@mts.net	Manitou Regional Library	418 Main St.	Box 432	Manitou, MB  R0G 1G0	2011-12-30 08:55:30.596456	Manitou	CENTRAL	f
-116	CPL	CPL	0		Crocus Plains Regional Secondary School	1930 First Street		Brandon, MB  R7A 6Y6	\N	\N	\N	f
-117	MWHBCA	MWHBCA	0	hbca@gov.mb.ca	Hudsons Bay Company Archives	200 Vaughan St.		Winnipeg, MB  R3C 1T5	\N	\N	\N	f
-118	MWJ	MWJ	0	jodi.turner@justice.gc.ca	Department of Justice	301-310 Broadway Avenue		Winnipeg, MB  R3C 0S6	\N	\N	\N	f
-130	UNC	UNC321	1		Delete me!				2008-07-28 15:22:43	\N	\N	f
-30	MAB	TIME	1	arborglibrary@mts.net	Evergreen Regional Library - Arborg	292 Main Street	Box 4053	Arborg, MB  R0C 0A0	2012-03-29 09:55:06.585298	Arborg	INTERLAKE	f
-36	MSTP	MSTP	1	stplibrary@jrlibrary.mb.ca	Jolys Regional Library - Main	505 Hebert Ave. N.	Box 118	St. Pierre-Jolys, MB  R0A 1V0	2011-02-03 09:05:21.66346	St. Pierre	EASTMAN	f
-132	Headingley Municipal Library	MHH	0	\N	\N	\N	\N	\N	\N	\N	\N	f
-129	admin	maplin3db	1	David.A.Christensen@gmail.com	Maplin-3 Administrator				2012-03-02 15:20:08.314775	\N	\N	f
-83	MMOW	MMOW	1	mill@scrlibrary.mb.ca	South Central Regional Library - Morden	514 Stephen Street	Morden, MB  R6M 1T7	204-822-4092	2012-05-28 10:02:43.090645	Morden	CENTRAL	f
-87	MESM	MESM	1	swmblib@mts.net	Southwestern Manitoba Regional Library - Main	149 Main St. S.	Box 639	Melita, MB  R0M 1L0	2011-12-08 14:27:16.546842	Melita	WESTMAN	f
-139	Spruce	Spruce	1	headlib@scrlibrary.mb.ca	Spruce Co-operative	 	 	 	2011-11-04 08:55:19.297548	\N	\N	f
-99	MW	MW	1	wpl-illo@winnipeg.ca	Winnipeg Public Library : Interlibrary Loans	251 Donald St.		Winnipeg, MB  R3C 3P5	2011-12-12 11:31:38.138719	Winnipeg	WINNIPEG	f
-92	MTH	MTH	1	interlibraryloans@thompsonlibrary.com	Thompson Public Library	81 Thompson Drive North		Thompson, MB  R8N 0C3	2012-01-19 15:13:17.695393	Thompson	NORMAN	f
-90	MSTE	MSTE	1	steinlib@rocketmail.com	Jake Epp Library	255 Elmdale Street		Steinbach, MB  R5G 0C9	2012-03-29 08:43:27.183717	Steinbach	EASTMAN	f
-20	MBOM	MBOM	1	mbomill@mts.net	Boissevain and Morton Regional Library	436 South Railway St.	Box 340	Boissevain, MB  R0K 0E0	2012-05-03 08:47:47.533285	Boissevain	WESTMAN	f
-101	MWPL	MWPL	1	pls@gov.mb.ca	Public Library Services Branch	300 - 1011 Rosser Avenue		Brandon, MB  R7A 0L5	2012-04-20 15:26:39.119386	\N	\N	t
-85	MSTOS	MSTOS	1	circ@sirlibrary.com	South Interlake Regional Library - Main	419 Main St.		Stonewall, MB  R0C 2Z0	2012-05-30 14:21:16.583286	Stonewall	INTERLAKE	f
-46	MSRN	MSRN	1	nwrl@mymts.net	North-West Regional Library - Main	610-1st  St. North	Box 999	Swan River, MB  R0L 1Z0	2012-04-27 11:46:09.958516	Swan River	PARKLAND	f
-69	MPLP	MPLP	1	portlib@portagelibrary.com	Portage La Prairie Regional Library	40-B Royal Road N		Portage La Prairie, MB  R1N 1V1	2012-04-27 14:28:45.534335	Portage la Prairie	CENTRAL	f
+COPY libraries (lid, name, password, active, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3, last_login, town, region, request_email_notification, city, province, post_code, phone, canada_post_customer_number) FROM stdin;
+127	Caitlyn	Caitlyn	0		PLS - clerk				\N	\N	\N	f	\N	\N	\N	\N	\N
+2	test	test	1	David_A_Christensen@hotmail.com	A Test Library	456 Someother St.	Mycity, MB  R7A 0X0	\N	\N	\N	\N	f	\N	\N	\N	\N	\N
+136	MVBB	MVBB	1	victoriabeachbranch@hotmail.com	Bibliotheque Allard - Victoria Beach	Box 279	Victoria Beach, MB  R0E 2C0		2010-12-15 14:34:37.863963	\N	\N	f	\N	\N	\N	\N	\N
+131	UCN	UCN	1		University Colleges North pilot project				2010-12-16 14:12:00.413037	\N	\N	f	\N	\N	\N	\N	\N
+130	UNC	UNC	1		Delete me!				2008-07-28 15:22:43	\N	\N	f	\N	\N	\N	\N	\N
+132	Headingley Municipal Library	Headingley Municipal Library	0	\N	\N	\N	\N	\N	\N	\N	\N	f	\N	\N	\N	\N	\N
+128	Margo	Margo	1		PLS - staff				2008-09-15 15:49:51	\N	\N	f	\N	\N	\N	\N	\N
+137	TEST	TEST	1	nowhere@just.testing	A test library				2011-02-02 18:50:18.609395	\N	\N	f	\N	\N	\N	\N	\N
+72	MRA	MRA	1	rcreglib@mts.net	Rapid City Regional Library	425 3rd Ave.	Box 8	Rapid City, MB  R0K 1W0	2011-01-27 14:59:47.699491	Rapid City	WESTMAN	f	Rapid City	MB	R0K1W0	\N	\N
+9	MNHA	MNHA	1	tansi23@hotmail.com	Ayamiscikewikamik		Box 250	Norway House, MB  ROB 1BO	2010-07-27 11:50:28.606789	\N	\N	f	Norway House	MB	ROB1BO	\N	\N
+105	MWRR	MWRR	0	lgirardi@rrcc.mb.ca	Red River College	2055 Notre Dame Ave		Winnipeg, MB  R3H 0J9	\N	\N	\N	f	Winnipeg	MB	R3H0J9	\N	\N
+108	MSERC	MSERC	0	serc2mb@mb.sympatico.ca	Brandon SERC	731B Princess Ave		Brandon, MB  R7A 0P4	\N	\N	\N	f	Brandon	MB	R7A0P4	\N	\N
+109	MWMRC	MWMRC	0	bdearth@itc.mb.ca	Industrial Technology Centre	200-78 Innovation Drive		Winnipeg, MB  R3T 6C2	\N	\N	\N	f	Winnipeg	MB	R3T6C2	\N	\N
+95	MCNC	MCNC	1	carberry@wmrlibrary.mb.ca	Western Manitoba Regional Library - Carberry/North Cypress	115 Main Street	Box 382	Carberry, MB  R0K 0H0	2011-02-01 16:29:41.937069	Carberry	WESTMAN	f	Carberry	MB	R0K0H0	\N	\N
+13	MIBR	MIBR	1	ritchotlib@hotmail.com	Bibliothèque Ritchot - Main	310 Lamoureux Rd.	Box 340	Ile des Chenes, MB  R0A 0T0	2011-02-01 16:34:41.862614	Ile des Chenes	EASTMAN	f	Ile des Chenes	MB	R0A0T0	\N	\N
+80	MSL	MSL	1	dslibrary@hotmail.com	Snow Lake Community Library	101 Cherry St.	Box 760	Snow Lake, MB  R0B 1M0	2011-02-03 12:37:04.304046	Snow Lake	NORMAN	f	Snow Lake	MB	R0B1M0	\N	\N
+58	MDPGV	MDPGV	1	grandvw@mts.net	Parkland Regional Library - Grandview	433 Main St.	Box Box 700	Grandview, MB  R0L 0Y0	2011-02-01 15:07:26.727646	Grandview	PARKLAND	f	Grandview	MB	R0L0Y0	\N	\N
+107	MDPST	MDPST	1	stratlibrary@mts.net	Parkland Regional Library - Strathclair	50 Main St.	Box 303	Strathclair, MB  R0J 2C0	2011-01-31 09:12:18.896689	Strathclair	WESTMAN	f	Strathclair	MB	R0J2C0	\N	\N
+134	MDS	MDS	1	staff@springfieldlibrary.ca	Springfield Public Library	Box 340		Dugald, MB  R0E 0K0	2011-02-02 12:28:41.043479	Oakbank	EASTMAN	f	Dugald	MB	R0E0K0	\N	\N
+81	MWOWH	MWOWH	1	headlib@scrlibrary.mb.ca	South Central Regional Library - Office	160 Main Street   (325-5864)	Box 1540	Winkler, MB  R6W 4B4	2010-09-30 14:30:24.845846	\N	\N	f	Winkler	MB	R6W4B4	\N	\N
+63	MDPOR	MDPOR	1	orlibrary@inetlink.ca	Parkland Regional Library - Ochre River	203 Main St.	Box 219	Ochre River, MB  R0L 1K0	2011-02-02 17:58:17.64862	Ochre River	PARKLAND	f	Ochre River	MB	R0L1K0	\N	\N
+121	TWAS	TWAS	1		Bren Del Win Centennial Library - Waskada	30 Souris Ave.		Waskada, MB  R0M 2E0	\N	Waskada	WESTMAN	f	Waskada	MB	R0M2E0	\N	\N
+122	MPFN	MPFN	1	peguislibrary@yahoo.ca	Peguis Community	Lot 30 Peguis Indian Reserve	Box Box 190	Peguis, MB  R0J 3J0	2009-03-04 17:23:42	Peguis	INTERLAKE	f	Peguis	MB	R0J3J0	\N	\N
+125	MNCN	MNCN	1	NCNBranch@Thompsonlibrary.com	Thompson Public Library - Nelson House	1 ATEC Drive	Box 454	Nelson House, MB  R0B 1A0	\N	Nelson House	NORMAN	f	Nelson House	MB	R0B1A0	\N	\N
+35	MHH	MHH	1	hml@mts.net	Headingley Municipal Library	49 Alboro Street		Headingley, MB  R4J 1A3	2011-02-03 10:21:31.672572	Headingly	CENTRAL	f	Headingley	MB	R4J1A3	\N	\N
+78	MSTR	MSTR	1	sroselib@mts.net	Ste. Rose Regional Library	580 Central Avenue	General Delivery	Ste. Rose du Lac, MB  R0L 1S0	2011-02-03 12:41:49.075946	Ste. Rose du Lac	PARKLAND	f	Ste. Rose du Lac	MB	R0L1S0	\N	\N
+124	MDPSLA	MDPSLA	1	lazarelib@mts.net	Parkland Regional Library - St. Lazare		Box 201	St. Lazare, MB  R0M 1Y0	2010-11-25 17:06:24.004507	St. Lazare	WESTMAN	f	St. Lazare	MB	R0M1Y0	\N	\N
+103	MEPL	MEPL	1	library@townofemerson.com	Emerson Library	104 Church Street	Box 340	Emerson, MB  R0A 0L0	2011-01-24 18:56:43.490848	Emerson	CENTRAL	f	Emerson	MB	R0A0L0	\N	\N
+28	MCH	MCH	1	mchlibrary@yahoo.ca	Churchill Public Library	180 Laverendrye	Box 730	Churchill, MB  R0B 0E0	2011-02-03 10:04:52.805515	Churchill	NORMAN	f	Churchill	MB	R0B0E0	\N	\N
+27	MEL	MEL	1	epl1@mts.net	Eriksdale Public Library	PTH 68  (9 Main St.)	Box 219	Eriksdale, MB  R0C 0W0	2011-02-03 12:27:27.45312	Eriksdale	INTERLAKE	f	Eriksdale	MB	R0C0W0	\N	\N
+61	MDPMC	MDPMC	1	mccrea16@mts.net	Parkland Regional Library - McCreary	615 Burrows Rd.	Box 297	McCreary, MB  R0J 1B0	2011-01-18 15:43:28.57626	McCreary	PARKLAND	f	McCreary	MB	R0J1B0	\N	\N
+42	MLR	MLR	1	lrlib@mts.net	Leaf Rapids Public Library	20 Town Centre	Box 190	Leaf Rapids, MB  R0B 1W0	2009-05-25 18:16:48	Leaf Rapids	NORMAN	f	Leaf Rapids	MB	R0B1W0	\N	\N
+67	MDPWP	MDPWP	1	wpgosis@mts.net	Parkland Regional Library - Winnipegosis	130 2nd St.	Box Box 10	Winnipegosis, MB  R0L 2G0	2011-02-02 14:18:10.749017	Winnipegosis	PARKLAND	f	Winnipegosis	MB	R0L2G0	\N	\N
+43	MLLC	MLLC	1	lynnlib@mts.net	Lynn Lake Centennial Library	503 Sherritt Ave.	Box 1127	Lynn Lake, MB  R0B 0W0	\N	Lynn Lake	NORMAN	f	Lynn Lake	MB	R0B0W0	\N	\N
+50	MDPBR	MDPBR	1	briver@mts.net	Parkland Regional Library - Birch River	116 3rd St. East	Box 245	Birch River, MB  R0L 0E0	2008-12-18 20:36:09	Birch River	PARKLAND	f	Birch River	MB	R0L0E0	\N	\N
+60	MDPLA	MDPLA	1	langlib@mts.net	Parkland Regional Library - Langruth	402 Main St.	Box 154	Langruth, MB  R0H 0N0	2010-07-30 09:16:07.67375	Langruth	CENTRAL	f	Langruth	MB	R0H0N0	\N	\N
+77	MBI	MBI	1	binslb@mts.net	Russell & District Library - Binscarth	106 Russell St.	Box  379	Binscarth, MB  R0J 0G0	2012-07-13 14:34:08.39894	Binscarth	PARKLAND	f	Binscarth	MB	R0J0G0	\N	\N
+1	DTL	DTL	1	David_A_Christensen@hotmail.com	The Great Library of Davidland	123 Some Street South	Brandon, MB  R7A 7A1		2009-12-09 15:11:39.580858	\N	\N	f	Brandon	MB	R7A0L5	\N	\N
+89	MESP	MESP	1	pcilibrary@goinet.ca	Southwestern Manitoba Regional Library - Pierson	58 Railway Avenue	Box 39	Pierson, MB  R0M 1S0	2011-01-28 09:45:37.364496	Pierson	WESTMAN	f	Pierson	MB	R0M1S0	\N	\N
+54	MDPER	MDPER	1	erick11@mts.net	Parkland Regional Library - Erickson	20 Main St. W	Box 385	Erickson, MB  R0J 0P0	2011-02-01 11:11:13.915092	Erickson	WESTMAN	f	Erickson	MB	R0J0P0	\N	\N
+49	MDP	MDP	1	prlhq@parklandlib.mb.ca	Parkland Regional Library - Main	504 Main St. N.		Dauphin, MB  R7N 1C9	2011-01-25 13:15:46.362271	\N	\N	f	Dauphin	MB	R7N1C9	\N	\N
+17	MLB	MLB	1	bsjl@bsjl.ca	Bibliothèque Saint-Joachim Library	29, baie Normandeau Bay	Box 39	La Broquerie, MB  R0A 0W0	2011-02-02 08:08:42.558263	La Broquerie	EASTMAN	f	La Broquerie	MB	R0A0W0	\N	\N
+52	MDPBO	MDPBO	1	bows18@mts.net	Parkland Regional Library - Bowsman	105 2nd St.	Box 209	Bowsman, MB  R0L 0H0	2011-01-04 11:20:46.044179	Bowsman	PARKLAND	f	Bowsman	MB	R0L0H0	\N	\N
+55	MDPFO	MDPFO	1	foxlib@mts.net	Parkland Regional Library - Foxwarren	312 Webster Ave.	Box 204	Foxwarren, MB  R0J 0P0	2011-02-01 10:41:17.93653	Foxwarren	WESTMAN	f	Foxwarren	MB	R0J0P0	\N	\N
+86	MTSIR	MTSIR	1	teulonbranchlibrary@yahoo.com	South Interlake Regional Library - Teulon	19 Beach Road	Box 68	Teulon, MB  R0C 3B0	2011-02-02 10:47:07.748734	Teulon	INTERLAKE	f	Teulon	MB	R0C3B0	\N	\N
+68	MP	MP	1	email@pinawapubliclibrary.com	Pinawa Public Library	Vanier Road	General Delivery	Pinawa, MB  R0E 1L0	2012-07-13 14:32:52.893502	Pinawa	EASTMAN	f	Pinawa	MB	R0E1L0	\N	\N
+11	MSJB	MSJB	1	biblio@atrium.ca	Bibliothèque Montcalm	113B 2nd	Box 345	Saint-Jean-Baptiste, MB  R0G 2B0	2011-02-02 09:30:53.111402	Saint-Jean-Baptiste	CENTRAL	f	Saint-Jean-Baptiste	MB	R0G2B0	\N	\N
+22	ME	ME	1	elkhornbrl@rfnow.com	Border Regional Library - Elkhorn	211 Richhill Ave.	Box 370	Elkhorn, MB  R0M 0N0	2011-02-03 09:59:18.485715	Elkhorn	WESTMAN	f	Elkhorn	MB	R0M0N0	\N	\N
+41	MPM	MPM	1	pmlibrary@mts.net	Pilot Mound Public Library - Pilot Mound	219 Broadway Ave. W.	Box 126	Pilot Mound, MB  R0G 1P0	2011-02-03 10:55:31.63491	Pilot Mound	CENTRAL	f	Pilot Mound	MB	R0G1P0	\N	\N
+45	MMNN	MMNN	1	maclib@mts.net	North Norfolk-MacGregor Library	35 Hampton St. E.	Box 760	MacGregor, MB  R0H 0R0	2011-02-02 15:10:26.856663	MacGregor	CENTRAL	f	MacGregor	MB	R0H0R0	\N	\N
+14	MSAD	MSAD	1	stadbranch@hotmail.com	Bibliothèque Ritchot - St. Adolphe	444 rue La Seine		St. Adolphe, MB  R5A 1C2	2011-02-02 15:52:05.639717	St. Adolphe	EASTMAN	f	St. Adolphe	MB	R5A1C2	\N	\N
+73	MRP	MRP	1	restonlb@yahoo.ca	Reston District Library	220 - 4th St.	Box 340	Reston, MB  R0M 1X0	2011-02-03 11:23:53.280404	Reston	WESTMAN	f	Reston	MB	R0M1X0	\N	\N
+66	MDPSI	MDPSI	1	siglun15@mts.net	Parkland Regional Library - Siglunes	5 - 61 Main St.	Box 368	Ashern, MB  R0C 0E0	2011-02-02 15:17:39.520904	Ashern	INTERLAKE	f	Ashern	MB	R0C0E0	\N	\N
+98	MMR	MMR	1	mmr@mts.net	Minnedosa Regional Library	45 1st  Ave. SE	Box 1226	Minnedosa, MB  R0J 1E0	2011-02-03 12:20:34.182761	Minnedosa	WESTMAN	f	Minnedosa	MB	R0J1E0	\N	\N
+23	MMCA	MMCA	1	library@mcauley-mb.com	Border Regional Library - McAuley	207 Qu'Appelle Street	Box 234	McAuley, MB  R0M 1H0	2011-01-25 14:27:40.737841	McAuley	WESTMAN	f	McAuley	MB	R0M1H0	\N	\N
+76	MRD	MRD	1	ruslib@mts.net	Russell & District Regional Library - Main	339 Main St.	Box 340	Russell, MB  R0J 1W0	2011-02-01 13:17:19.029251	Russell	PARKLAND	f	Russell	MB	R0J1W0	\N	\N
+62	MDPMI	MDPMI	1	minitons@mts.net	Parkland Regional Library - Minitonas	300 Main St.	Box 496	Minitonas, MB  R0L 1G0	2011-02-02 15:14:04.465687	Minitonas	PARKLAND	f	Minitonas	MB	R0L1G0	\N	\N
+74	MRO	MRO	1	rrl@mts.net	Rossburn Regional Library	53 Main St. North	Box 87	Rossburn, MB  R0J 1V0	2011-01-28 15:18:05.156408	Rossburn	PARKLAND	f	Rossburn	MB	R0J1V0	\N	\N
+25	MDB	MDB	1	bdwlib@mts.net	Bren Del Win Centennial Library	211 North Railway W.	Box 584	Deloraine, MB  R0M 0M0	2011-02-02 10:56:11.631378	Deloriane	WESTMAN	f	Deloraine	MB	R0M0M0	\N	\N
+19	MS	MS	1	somlib@mts.net	Bibliotheque Somerset Library	Box 279	289 Carlton Avenue 	Somerset, MB  R0G 2L0	2011-02-01 15:51:52.043388	Somerset	CENTRAL	f	Somerset	MB	R0G2L0	\N	\N
+79	MSEL	MSEL	1	ill@ssarl.org	Red River North Regional Library	303 Main Street		Selkirk, MB  R1A 1S7	2011-11-03 15:59:47.492864	Selkirk	INTERLAKE	f	Selkirk	MB	R1A1S7	\N	\N
+18	MSA	MSA	1	steannelib@steannemb.ca	Bibliothèque Ste. Anne	16 rue de l'Eglise		Ste. Anne, MB  R5H 1H8	2011-02-03 11:16:24.882061	Ste. Anne	EASTMAN	f	Ste. Anne	MB	R5H1H8	\N	\N
+31	MRB	MRB	1	rlibrary@mts.net	Evergreen Regional Library - Riverton	56 Laura Ave.	Box 310	Riverton, MB  R0C 2R0	2012-02-29 14:00:18.263003	Riverton	INTERLAKE	f	Riverton	MB	R0C2R0	\N	\N
+91	MTP	MTP	1	illthepas@mts.net	The Pas Regional Library	53 Edwards Avenue	Box 4100	The Pas, MB  R9A 1R2	2011-02-02 15:54:58.568087	The Pas	NORMAN	f	The Pas	MB	R9A1R2	\N	\N
+38	MLDB	MLDB	1	mldb@mts.net	Lac du Bonnet Regional Library	84-3rd Street	Box 216	Lac du Bonnet, MB  R0E 1A0	2011-02-03 10:17:25.172551	Lac du Bonnet	EASTMAN	f	Lac du Bonnet	MB	R0E1A0	\N	\N
+100	MWP	MWP	1	legislative_library@gov.mb.ca	Manitoba Legislative Library	100 - 200 Vaughan		Winnipeg, MB  R3C 1T5	2012-03-28 13:56:42.767746	\N	\N	f	Winnipeg	MB	R3C1T5	\N	\N
+34	MSOG	MSOG	1	ill@sourislibrary.mb.ca	Glenwood & Souris Regional Library	18 - 114 2nd St. S.	Box 760	Souris, MB  R0K 2C0	2011-02-01 21:41:47.575609	Souris	WESTMAN	f	Souris	MB	R0K2C0	\N	\N
+71	MRIP	MRIP	1	pcrl@mts.net	Prairie Crocus Regional Library	137 Main Street	Box 609	Rivers, MB  R0K 1X0	2012-04-30 09:06:07.229841	Rivers	WESTMAN	f	Rivers	MB	R0K1X0	\N	\N
+84	MWOW	MWOW	1	will@scrlibrary.mb.ca	South Central Regional Library - Winkler	160 Main Street (325-7174)	Box 1540	Winkler, MB  R6W 4B4	2012-05-28 11:17:02.575702	Winkler	CENTRAL	f	Winkler	MB	R6W4B4	\N	\N
+40	MCCB	MCCB	1	cartlib@mts.net	Lakeland Regional Library - Cartwright	483 Veteran Drive	Box 235	Cartwright, MB  R0K 0L0	2011-02-02 16:34:12.994159	Cartwright	CENTRAL	f	Cartwright	MB	R0K0L0	\N	\N
+53	MDA	MDA	1	DauphinLibrary@parklandlib.mb.ca	Parkland Regional Library - Dauphin	504 Main Street North		Dauphin, MB  R7N 1C9	2011-02-02 19:42:49.630926	Dauphin	PARKLAND	f	Dauphin	MB	R7N1C9	\N	\N
+65	MDPSL	MDPSL	1	sllibrary@mts.net	Parkland Regional Library - Shoal Lake	418 Station Road S.	Box 428	Shoal Lake, MB  R0J 1Z0	2011-02-01 14:06:09.972297	Shoal Lake	WESTMAN	f	Shoal Lake	MB	R0J1Z0	\N	\N
+51	MDPBI	MDPBI	1	birtlib@mts.net	Parkland Regional Library - Birtle	907 Main Street	Box 207	Birtle, MB  R0M 0C0	2011-02-03 11:31:03.715139	Birtle	WESTMAN	f	Birtle	MB	R0M0C0	\N	\N
+16	MSCL	MSCL	1	stclib@mts.net	Bibliothèque Saint-Claude	50 1st Street	Box 203	St. Claude, MB  R0G 1Z0	2011-01-20 11:20:23.16518	St. Claude	CENTRAL	f	St. Claude	MB	R0G1Z0	\N	\N
+12	MNDP	MNDP	1	ndbiblio@yahoo.ca	Bibliothèque Pere Champagne	44 Rue Rogers	Box 399	Notre Dame de Lourdes, MB  R0G 1M0	2011-02-01 09:47:15.311152	Notre Dame de Lourdes	CENTRAL	f	Notre Dame de Lourdes	MB	R0G1M0	\N	\N
+26	MBBR	MBBR	1	brrlibr2@mts.net	Brokenhead River Regional Library	427 Park  Ave.	Box 1087	Beausejour, MB  R0E 0C0	2011-02-02 17:21:32.430374	Beausejour	EASTMAN	f	Beausejour	MB	R0E0C0	\N	\N
+120	MHW	MHW	1	hartney@wmrlibrary.mb.ca	Western Manitoba Regional - Hartney Cameron Branch	209 Airdrie St.	Box 121	Hartney, MB  R0M 0X0	2011-01-29 11:28:09.80128	Hartney	WESTMAN	f	Hartney	MB	R0M0X0	\N	\N
+93	MMVR	MMVR	1	valleylib@mts.net	Valley Regional Library	141Main Street South	Box 397	Morris, MB  R0G 1K0	2011-02-03 12:17:58.225938	Morris	CENTRAL	f	Morris	MB	R0G1K0	\N	\N
+10	MSTG	MSTG	1	ill@allardlibrary.com	Bibliotheque Allard	104086 PTH 11	Box 157	St Georges, MB  R0E 1V0	2011-02-03 12:15:00.441084	St Georges	EASTMAN	f	St Georges	MB	R0E1V0	\N	\N
+112	ASGY	ASGY	0	lfrolek@yrl.ab.ca	Yellowhead Regional		Box 400	Spruce Grove, AB, MB  T7X 2Y1	\N	\N	\N	f	Spruce Grove, AB	MB	T7X2Y1	\N	\N
+104	MBAC	MBAC	1	library@assiniboinec.mb.ca	Assiniboine Community College	1430 Victoria Avenue East		Brandon, MB  R7A 2A9	2011-01-25 14:07:16.067536	\N	\N	f	Brandon	MB	R7A2A9	\N	\N
+64	MDPRO	MDPRO	1	roblinli@mts.net	Parkland Regional Library - Roblin	123 lst Ave. N.	Box 1342	Roblin, MB  R0L 1P0	2011-01-25 15:18:33.838446	Roblin	PARKLAND	f	Roblin	MB	R0L1P0	\N	\N
+96	MGW	MGW	1	jackie@wmrl.ca	Western Manitoba Regional  Library - Glenboro/South Cypress	105 Broadway St.	Box 429	Glenboro, MB  R0K 0X0	2011-02-01 16:29:58.638328	Glenboro	WESTMAN	f	Glenboro	MB	R0K0X0	\N	\N
+33	MGI	MGI	1	bwinner@gillamnet.com	Bette Winner Public Library	235 Mattonnabee Ave.	Box 400	Gillam, MB  R0B 0L0	2011-02-01 16:54:57.526489	Gillam	NORMAN	f	Gillam	MB	R0B0L0	\N	\N
+48	MLPJ	MLPJ	1	mlpj@mts.net	Pauline Johnson Library	23 Main Street	Box 698	Lundar, MB  R0C 1Y0	2011-02-03 10:48:25.445635	Lundar	INTERLAKE	f	Lundar	MB	R0C1Y0	\N	\N
+129	admin	admin	1	David.A.Christensen@gmail.com	Maplin-3 Administrator				2012-03-02 15:20:08.314775	\N	\N	f	\N	\N	\N	\N	\N
+139	Spruce	Spruce	1	headlib@scrlibrary.mb.ca	Spruce Co-operative	 	 	 	2011-11-04 08:55:19.297548	\N	\N	f	\N	\N	\N	\N	\N
+97	MNW	MNW	1	neepawa@wmrlibrary.mb.ca	Western Manitoba Regional  Library - Neepawa	280 Davidson St.	Box 759	Neepawa, MB  R0J 1H0	2011-02-03 12:02:04.730694	Neepawa	WESTMAN	f	Neepawa	MB	R0J1H0	\N	\N
+106	MWTS	MWTS	0	lisanne.wood@mts.mb.ca	Manitoba Telecom Services Corporate	489 Empress St.	Box 6666	Winnipeg, MB  R3C 3V6	\N	\N	\N	f	Winnipeg	MB	R3C3V6	\N	\N
+29	MGE	MGE	1	gimli.library@mts.net	Evergreen Regional Library - Main	65 First Avenue	Box 1140	Gimli, MB  R0C 1B0	2011-02-03 12:56:09.653775	Gimli	INTERLAKE	f	Gimli	MB	R0C1B0	\N	\N
+75	MBA	MBA	1	rmargyle@gmail.com	R.M. of Argyle Public Library	627 Elizabeth Ave. E.	Box 10	Baldur, MB  R0K 0B0	2011-02-01 10:00:40.596398	Baldur	WESTMAN	f	Baldur	MB	R0K0B0	\N	\N
+37	MSSM	MSSM	1	stmlibrary@jrlibrary.mb.ca	Jolys Regional Library - St. Malo	189 St. Malo Street	Box 593	St.Malo, MB  R0A 1T0	2011-02-02 15:43:01.43152	St. Malo	EASTMAN	f	St.Malo	MB	R0A1T0	\N	\N
+88	MESMN	MESMN	1	smrl1nap@yahoo.ca	Southwestern Manitoba Regional Library - Napinka	57 Souris St.	Box 975	Melita, MB  R0M 1L0	2010-09-14 14:14:28.201392	Napinka	WESTMAN	f	Melita	MB	R0M1L0	\N	\N
+111	MSSC	MSSC	1	shilocommunitylibrary@yahoo.ca	Shilo Community Library  (765-3000 ext 3664)		Box Box 177	Shilo, MB  R0K 2A0	2011-02-01 15:25:17.713108	\N	\N	f	Shilo	MB	R0K2A0	\N	\N
+102	MHP	MHP	1	victlib@goinet.ca	Victoria Municipal Library	102 Stewart Ave	Box 371	Holland, MB  R0G 0X0	2011-01-27 16:50:14.499442	Holland	CENTRAL	f	Holland	MB	R0G0X0	\N	\N
+47	MBB	MBB	1	benlib@mts.net	North-West Regional Library - Benito Branch	140 Main Street	Box 220	Benito, MB  R0L 0C0	2011-01-27 14:18:36.739511	Benito	PARKLAND	f	Benito	MB	R0L0C0	\N	\N
+15	MSAG	MSAG	1	bibliosteagathe@atrium.ca	Bibliothèque Ritchot - Ste. Agathe	310 Chemin Pembina Trail	Box 40	Sainte-Agathe, MB  ROG 1YO	2011-02-02 19:05:31.804753	Ste. Agathe	EASTMAN	f	Sainte-Agathe	MB	ROG1YO	\N	\N
+82	MAOW	MAOW	1	aill@scrlibrary.mb.ca	South Central Regional Library - Altona	113-125 Centre Ave. E. (324-1503)	Box 650	Altona, MB  R0G 0B0	2011-12-12 14:35:21.057783	Altona	CENTRAL	f	Altona	MB	R0G0B0	\N	\N
+21	MVE	MVE	1	borderlibraryvirden@rfnow.com	Border Regional Library - Main	312 - 7th  Avenue	Box 970	Virden, MB  R0M 2C0	2012-05-01 08:29:16.411326	Virden	WESTMAN	f	Virden	MB	R0M2C0	\N	\N
+110	MBBB	MBBB	1	beacheslibrary@hotmail.com	Bibliotheque Allard - Beaches	40005 Jackfish Lake Rd. N. Walter Whyte School	Box 279	Victoria Beach, MB  R0E 2C0	2011-01-27 16:15:41.161472	Traverse Bay	EASTMAN	f	Victoria Beach	MB	R0E2C0	\N	\N
+57	MDPGL	MDPGL	1	gladstne@mts.net	Parkland Regional Library - Gladstone	42 Morris Avenue N.	Box 720	Gladstone, MB  R0J 0T0	2011-02-03 10:06:30.811072	Gladstone	CENTRAL	f	Gladstone	MB	R0J0T0	\N	\N
+56	MDPGP	MDPGP	1	gilbert3@mts.net	Parkland Regional Library - Gilbert Plains	113 Main St. N.	Box 303	Gilbert Plains, MB  R0L 0X0	2011-01-29 16:19:27.923943	Gilbert Plains	PARKLAND	f	Gilbert Plains	MB	R0L0X0	\N	\N
+59	MDPHA	MDPHA	1	hamlib@mymts.net	Parkland Regional Library - Hamiota	43 Maple Ave. E.	Box 609	Hamiota, MB  R0M 0T0	2011-02-01 16:33:06.705467	Hamiota	WESTMAN	f	Hamiota	MB	R0M0T0	\N	\N
+119	MTPL	MTPL	1	btl@srsd.ca	Bibliothque Publique Tache Public Library - Main		Box 16	Lorette, MB  R0A 0Y0	2011-02-02 16:00:40.614521	Lorette	EASTMAN	f	Lorette	MB	R0A0Y0	\N	\N
+113	MWSC	MWSC	1	library@smd.mb.ca	Society for Manitobans with Disabilities - Stephen Sparling	825 Sherbrooks Street		Winnipeg, MB  R3A 1M5	\N	\N	\N	f	Winnipeg	MB	R3A1M5	\N	\N
+115	OKE	OKE	0	eroussin@kenora.ca	Kenora Public Library	24 Main St. South		Kenora, Ontario, MB  P9N 1S7	\N	\N	\N	f	Kenora, Ontario	MB	P9N1S7	\N	\N
+32	MFF	MFF	1	ffplill@mts.net	Flin Flon Public Library	58 Main Street		Flin Flon, MB  R8A 1J8	2011-12-12 12:56:51.457245	Flin Flon	NORMAN	f	Flin Flon	MB	R8A1J8	\N	\N
+24	MCB	MCB	1	illbrl@hotmail.com	Boyne Regional Library	15 - 1st Avenue SW	Box 788	Carman, MB  R0G 0J0	2011-12-12 13:10:44.162827	Carman	CENTRAL	f	Carman	MB	R0G0J0	\N	\N
+94	MBW	MBW	1	bdnill@wmrlibrary.mb.ca	Western Manitoba Regional Library - Brandon	710 Rosser Avenue, Unit 1		Brandon, MB  R7A 0K9	2011-12-12 14:08:45.397178	Brandon	WESTMAN	f	Brandon	MB	R7A0K9	\N	\N
+135	MMIOW	MMIOW	1	thlib@scrlibrary.mb.ca	South Central Regional Library - Miami	423 Norton Avenue	(Box 431)	Miami, MB  R0G 1H0	2011-12-12 15:28:31.991569	Miami	CENTRAL	f	Miami	MB	R0G1H0	\N	\N
+39	MKL	MKL	1	lrl@mts.net	Lakeland Regional Library - Main	318 Williams Ave.	Box 970	Killarney, MB  R0K 1G0	2011-12-12 16:03:53.003063	Killarney	WESTMAN	f	Killarney	MB	R0K1G0	\N	\N
+44	MMA	MMA	1	manitoulibrary@mts.net	Manitou Regional Library	418 Main St.	Box 432	Manitou, MB  R0G 1G0	2011-12-30 08:55:30.596456	Manitou	CENTRAL	f	Manitou	MB	R0G1G0	\N	\N
+116	CPL	CPL	0		Crocus Plains Regional Secondary School	1930 First Street		Brandon, MB  R7A 6Y6	\N	\N	\N	f	Brandon	MB	R7A6Y6	\N	\N
+118	MWJ	MWJ	0	jodi.turner@justice.gc.ca	Department of Justice	301-310 Broadway Avenue		Winnipeg, MB  R3C 0S6	\N	\N	\N	f	Winnipeg	MB	R3C0S6	\N	\N
+30	MAB	MAB	1	arborglibrary@mts.net	Evergreen Regional Library - Arborg	292 Main Street	Box 4053	Arborg, MB  R0C 0A0	2012-03-29 09:55:06.585298	Arborg	INTERLAKE	f	Arborg	MB	R0C0A0	\N	\N
+36	MSTP	MSTP	1	stplibrary@jrlibrary.mb.ca	Jolys Regional Library - Main	505 Hebert Ave. N.	Box 118	St. Pierre-Jolys, MB  R0A 1V0	2011-02-03 09:05:21.66346	St. Pierre	EASTMAN	f	St. Pierre-Jolys	MB	R0A1V0	\N	\N
+99	MW	MW	1	wpl-illo@winnipeg.ca	Winnipeg Public Library : Interlibrary Loans	251 Donald St.		Winnipeg, MB  R3C 3P5	2011-12-12 11:31:38.138719	Winnipeg	WINNIPEG	f	Winnipeg	MB	R3C3P5	\N	\N
+92	MTH	MTH	1	interlibraryloans@thompsonlibrary.com	Thompson Public Library	81 Thompson Drive North		Thompson, MB  R8N 0C3	2012-01-19 15:13:17.695393	Thompson	NORMAN	f	Thompson	MB	R8N0C3	\N	\N
+20	MBOM	MBOM	1	mbomill@mts.net	Boissevain and Morton Regional Library	436 South Railway St.	Box 340	Boissevain, MB  R0K 0E0	2012-05-03 08:47:47.533285	Boissevain	WESTMAN	f	Boissevain	MB	R0K0E0	\N	\N
+101	MWPL	MWPL	1	pls@gov.mb.ca	Public Library Services Branch	300 - 1011 Rosser Avenue		Brandon, MB  R7A 0L5	2012-04-20 15:26:39.119386	\N	\N	t	Brandon	MB	R7A0L5	\N	\N
+83	MMOW	MMOW	1	mill@scrlibrary.mb.ca	South Central Regional Library - Morden	514 Stephen Street	Morden, MB  R6M 1T7	204-822-4092	2012-07-13 15:48:05.852295	Morden	CENTRAL	f	\N	\N	\N	\N	\N
+69	MPLP	MPLP	1	portlib@portagelibrary.com	Portage La Prairie Regional Library	40-B Royal Road N		Portage La Prairie, MB  R1N 1V1	2012-04-27 14:28:45.534335	Portage la Prairie	CENTRAL	f	Portage La Prairie	MB	R1N1V1	\N	\N
+90	MSTE	MSTE	1	steinlib@rocketmail.com	Jake Epp Library	255 Elmdale Street		Steinbach, MB  R5G 0C9	2012-07-13 15:48:20.266993	Steinbach	EASTMAN	f	Steinbach	MB	R5G0C9	\N	\N
+85	MSTOS	MSTOS	1	circ@sirlibrary.com	South Interlake Regional Library - Main	419 Main St.		Stonewall, MB  R0C 2Z0	2012-07-13 14:33:15.957439	Stonewall	INTERLAKE	f	Stonewall	MB	R0C2Z0	\N	\N
+114	MWEMM	MWEMM	0	LJanower@gov.mb.ca	Manitoba Industry Trade and Mines - Mineral Resource	Suite 360 - 1395 Ellice Ave.		Winnipeg, MB  R3G 3P2	\N	\N	\N	f	Winnipeg	MB	R3G3P2	\N	\N
+117	MWHBCA	MWHBCA	0	hbca@gov.mb.ca	Hudsons Bay Company Archives	200 Vaughan St.		Winnipeg, MB  R3C 1T5	\N	\N	\N	f	Winnipeg	MB	R3C1T5	\N	\N
+87	MESM	MESM	1	swmblib@mts.net	Southwestern Manitoba Regional Library - Main	149 Main St. S.	Box 639	Melita, MB  R0M 1L0	2011-12-08 14:27:16.546842	Melita	WESTMAN	f	Melita	MB	R0M1L0	\N	\N
+46	MSRN	MSRN	1	nwrl@mymts.net	North-West Regional Library - Main	610-1st  St. North	Box 999	Swan River, MB  R0L 1Z0	2012-04-27 11:46:09.958516	Swan River	PARKLAND	f	Swan River	MB	R0L1Z0	\N	\N
 \.
 
 
 --
+-- TOC entry 1898 (class 0 OID 17438)
+-- Dependencies: 142
 -- Data for Name: library_barcodes; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
@@ -10049,6 +10585,8 @@ COPY library_barcodes (lid, borrower, barcode) FROM stdin;
 
 
 --
+-- TOC entry 1899 (class 0 OID 17443)
+-- Dependencies: 144
 -- Data for Name: reports; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
@@ -10064,15 +10602,18 @@ COPY reports (rid, rtype, name, description, generator) FROM stdin;
 
 
 --
+-- TOC entry 1900 (class 0 OID 17452)
+-- Dependencies: 146
 -- Data for Name: reports_complete; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY reports_complete (lid, rid, range_start, range_end, report_file) FROM stdin;
-85	2	2012-04-07	2012-05-08	201205071628207148746371
+COPY reports_complete (rcid, lid, rid, range_start, range_end, report_file) FROM stdin;
 \.
 
 
 --
+-- TOC entry 1901 (class 0 OID 17456)
+-- Dependencies: 147
 -- Data for Name: reports_queue; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
@@ -10081,982 +10622,1029 @@ COPY reports_queue (ts, rid, lid, range_start, range_end) FROM stdin;
 
 
 --
+-- TOC entry 1902 (class 0 OID 17462)
+-- Dependencies: 149
 -- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY request (id, title, author, requester, patron_barcode, current_target) FROM stdin;
-431	Interlibrary loan practices handbook	Boucher, Virginia	85	David testing 	1
-432	Wilderness rivers of Manitoba	\N	85	\N	0
-433	Two dumb ducks	Eaton, Maxwell	85	\N	0
-435	Flying geese	Haworth-Attard, Barbara,Haworth- Attard, Barbara	85	26290000000007	1
-436	The Hunger Games	Collins, Suzanne	85	26669000000011	1
-434	Ducks	Hudak, Heather C	85	1223          	1
-97	Employment Equity Act	\N	71	26747000000005	2
-186	Jelly Belly	Smith, Robert Kimmel	84	26969000000010	2
-280	Nobel	\N	39	26550000000014	2
-4	Alps and their people, The	Bullen, Susan	85	26786700000001	2
-6	Andes [videorecording]	\N	85	26786700000001	2
-7	Alchemy	\N	85	26786700000001	2
-8	Accident	Steel, Danielle	85	26786700000001	2
-9	Accelerate	\N	85	26786700000001	2
-10	According to Jake and the kid	Mitchell, W. O	85	26786700000001	2
-11	Ace Ventura	\N	85	26786700000001	2
-12	Active training	Silberman, Melvin L	85	26786700000001	2
-13	Acute care nursing in the home	\N	85	26786700000001	2
-14	Adventure guides	\N	85	26786700000001	2
-15	The aerobats:  the world's great aerial demonstration teams	Yenne, Bill	85	26786700000001	2
-16	Anchor Hocking's Fire-King & more	Florence, Gene	85	26786700000001	2
-17	Angle of repose	Stegner, Wallace Earle	85	26786700000001	2
-18	Arctic Alphabet	Lynch, Wayne	85	26786700000001	2
-19	Astronomy today	Asimov, Isaac	85	26786700000001	2
-20	Appetite for life	Fitch, Noel Riley	85	26786700000001	2
-21	Backhoes	McClellan, Ray	32	26330000000002	2
-22	Bradford Angier's Backcountry basics	Angier, Bradford	32	26330000000002	2
-23	Bachelor Jim	Boon, Clarence A	32	26330000000002	2
-24	Bad company	Wick, Steve	32	26330000000002	2
-25	Barbarian tides	\N	32	26330000000002	2
-26	Bank shot	Westlake, Donald E	32	26330000000002	2
-27	Barbie	\N	32	26330000000002	2
-28	Battle ready	Clancy, Tom	32	26330000000002	2
-29	Beach road	Patterson, James	32	\N	1
-30	Beach Girls	Rice, Luanne	32	26330000000002	2
-31	Bowling	Strickland, Robert	32	26330000000002	2
-32	Bear attacks	Herrero, Stephen	32	26330000000002	2
-1	Awkward aardvark	Mwalimu	85	26786700000001	2
-369	Sleeping beauty	Margolin, Phillip	34	26764000000019	2
-370	Stupid white men --	Moore, Michael	34	26764000000019	2
-371	Shame	Rushdie, Salman	34	26764000000019	2
-390	Titanic	\N	18	\N	1
-2	Apples	Browning, Frank	85	26786700000001	2
-3	Arthur! Arthur!	Black, Arthur	85	26786700000001	2
-33	Beggar maid, queen	Peters, Maureen	32	26330000000002	2
-34	Bedside manners	Barker, Margaret	32	26330000000002	2
-35	Belle Arabelle	Marokvia, Mireille	32	26330000000002	2
-36	Biology	Campbell, Neil A	32	26330000000002	2
-37	Bird	Burnie, David	32	26330000000002	2
-38	Black Beauty;	Sewell, Anna	32	26330000000002	2
-39	Ballroom dancing	\N	32	26330000000002	2
-40	Beaver skins and mountain men ;	Burger, Carl	32	26330000000002	2
-41	Contempt of court	Curriden, Mark	24	26220000000003	2
-42	Contemporary Canadian painting	Withrow, William J	24	26220000000003	2
-43	Courtesy becomes me	Bayer, Lewena	24	26220000000003	2
-44	Cosmopolitan	Cecchini, Toby	24	26220000000003	2
-45	Curiosity	Thomas, Joan	24	26220000000003	2
-46	Crossword answer book, The	Newman, Stanley	24	26220000000003	2
-47	Colony	Siddons, Anne Rivers	24	26220000000003	2
-48	Community Helpers from A to Z	Kalman, Bobbie	24	26220000000003	2
-49	Canadian diplomacy and the Korean war, 1950-1953	Donaghy, Greg	24	26220000000003	2
-50	Control	Anderson, Jack	24	26220000000003	2
-51	Crude world	Maass, Peter	24	26220000000003	2
-52	Creed	Harte, Bryce	24	26220000000003	2
-53	Cree language structures	Ahenakew, Freda	24	26220000000003	2
-54	Critical	Cook, Robin	24	26220000000003	2
-55	Cultural Anthropology	Kottak Conrad Phillip,Kottak, Conrad Phillip	24	26220000000003	2
-56	Cyanide wells	Muller, Marcia	24	26220000000003	2
-57	Calligraphy	Campbell, Fiona	24	26220000000003	2
-58	Coots, codgers and curmudgeons	Sisson, Hal C	24	26220000000003	2
-59	Calumet City	Newton, Charlie	24	26220000000003	2
-60	Cradle to canoe	Kraiker, Rolf	24	26220000000003	2
-61	Disturbance	Burke, Jan	92	26840000000004	2
-62	Duke	Boswell, John	92	26840000000004	2
-63	Dialogue	Turco, Lewis	92	26840000000004	2
-64	Deadlock	Johansen, Iris	92	26840000000004	2
-65	Diaspora by design	Moghissi, Haideh	92	26840000000004	2
-66	Doctor Zhivago	Pasternak, Boris Leonidovich	92	26840000000004	2
-67	The diversity of life	Wilson, Edward O	92	26840000000004	2
-68	Dude, where's my country?	Moore, Michael	92	\N	1
-69	Dude ranch	Bryant, Bonnie	92	26840000000004	2
-70	Dragon	Cussler, Clive	92	26840000000004	2
-71	Danger point	Wentworth, Patricia	92	26840000000004	2
-72	Disciplining dissent	\N	92	26840000000004	2
-73	Dinosaur	Norman, David	92	26840000000004	2
-74	Dyslexia	Landau, Elaine	92	26840000000004	2
-75	Digital photography for dummies	King, Julie Adair	92	26840000000004	2
-76	Domestic descendants	Moscow, Henry	92	26840000000004	2
-77	A Delicate balance	Albee, Edward	92	26840000000004	2
-78	Delicate dances	\N	92	26840000000004	2
-79	Dirty Blonde	Scottoline, Lisa	92	26840000000004	2
-80	Deforestation	Owens, Caleb	92	26840000000004	2
-81	Electric mischief	Bartholomew, Alan	71	26747000000005	2
-82	The Echelon vendetta	Stone, David	71	26747000000005	2
-83	Energy	Oxlade, Chris	71	26747000000005	2
-84	Enigma	Harris, Robert	71	26747000000005	2
-85	The entropy effect	McIntyre, Vonda N	71	26747000000005	2
-86	Eternal prairie	Adams, R	71	26747000000005	2
-87	Everlasting	Woodiwiss, Kathleen E	71	26747000000005	2
-88	Earth	Asimov, Issac	71	26747000000005	2
-89	Ethics	Wekesser, Carol	71	26747000000005	2
-90	L'escargot	Monette, Lise	71	26747000000005	2
-91	Elephant song	Smith, Wilbur A	71	26747000000005	2
-92	Eau Canada	\N	71	26747000000005	2
-93	Eutopia: a novel of terrible optimism	Nickle, David	71	26747000000005	2
-94	Ethnic conflict	Cozic, Charles (ed.)	71	26747000000005	2
-95	Ethernet	Spurgeon, Charles	71	26747000000005	2
-96	English masterpieces;	Mack, Maynard	71	26747000000005	2
-98	Evolution	Moore, Ruth Ellen	71	26747000000005	2
-99	Ear, nose, and throat disorders sourcebook	\N	71	26747000000005	2
-100	Excel 2007	Jacobs, Kathy	71	26747000000005	2
-101	Face forward	Aucoin, Kevyn	68	26700000000006	2
-102	Flying finish. --	Francis, Dick	68	26700000000006	2
-103	Family	Bombeck, Erma	68	26700000000006	2
-104	Flowers for Algernon	Keyes, Daniel	68	26700000000006	2
-105	Frugal Gourmet collection [videorecording] :, The	\N	68	26700000000006	2
-106	Fruitful encounters	Brush, Stephen G	68	26700000000006	2
-107	The Franklin Expedition As Recorded In Hudson's Bay Company Post Journals	Houston, C. Stuart	68	26700000000006	2
-108	Following the line of duty :the other side of the battle	King, Herbert R	68	26700000000006	2
-109	Football fugitive	Christopher, Matt	68	26700000000006	2
-110	Fried green tomatoes	\N	68	26700000000006	2
-111	Fancy Nancy	O'Connor, Jane	68	26700000000006	2
-112	FILTER, AIR, HIGH EFFICIENCY RIGID TYPE, FOR REMOVAL OF PARTICULATE FROM VENTILATING SYSTEMS	\N	68	26700000000006	2
-113	Fear of frying	Churchill, Jill	68	26700000000006	2
-114	Field hockey	Gutman, Bill	68	26700000000006	2
-115	Futile efforts	Piccirilli, Tom	68	26700000000006	2
-116	Ferrari	McKenna, A. T	68	26700000000006	2
-117	Feudal coats-of-arms	Foster, Joseph	68	26700000000006	2
-118	Fur traders	\N	68	26700000000006	2
-119	Feather on the moon	Whitney, Phyllis A	68	26700000000006	2
-120	Financial freedom in 8 minutes a day	Hulnick, Ron	68	26700000000006	2
-121	Giants! Giants! Giants!	\N	94	26290000000007	2
-122	Giraffe family	Goodall, Jane	94	\N	1
-123	Giraffe	Ledgard, J.M	94	26290000000007	2
-124	Gaelic envy	White, Nancy	94	26290000000007	2
-125	Germ	Liparulo, Robert	94	26290000000007	2
-126	Giggle, giggle, quack	Cronin, Doreen	94	26290000000007	2
-127	Gorgeous	Vail, Rachel	94	26290000000007	2
-128	Generous death	Pickard, Nancy	94	26290000000007	2
-129	Good night, sleep tight, don't let the bedbugs bite!	De Groat, Diane	94	26290000000007	2
-130	Grammar matters	Ghomeshi, Jila	94	26290000000007	2
-131	Golden fox	Smith, Wilbur A	94	26290000000007	2
-132	Genius	Gleick, James	94	26290000000007	2
-133	Gentlemen of the road	Chabon, Michael	94	26290000000007	2
-134	Gulliver in Lilliput	Findlay, Lisa	94	26290000000007	2
-135	Goal!	Javaherbin, Mina	94	26290000000007	2
-136	Gentlemen of adventure	Gann, Ernest Kellogg	94	26290000000007	2
-137	Geology rocks!	Blobaum, Cindy	94	26290000000007	2
-138	Ghost	\N	94	26290000000007	2
-139	Goose	Bang, Molly	94	26290000000007	2
-140	Galapagos	\N	94	26290000000007	2
-141	Hardware;	Barnes, Linda	90	26830000000008	2
-143	Helping your anxious child	Rapee, Ronald M	90	26830000000008	2
-144	Hubris	Isikoff, Michael	90	26830000000008	2
-146	The honor of the queen	Weber, David	90	26830000000008	2
-147	Horrible Harry goes to the moon	Kline, Suzy	90	26830000000008	2
-148	Honourable intentions	Barr, Natalie	90	26830000000008	2
-149	Harry Potter and the Chamber of Secrets	Rowling, J. K	90	\N	1
-150	Harry Potter and the goblet of fire	Rowling, J. K	90	26830000000008	2
-151	Hallucinogens	Barter, James	90	26830000000008	2
-152	Hummingbird	Spencer, LaVyrle	90	26830000000008	2
-153	Harry Houdini	Macleod, Elizabeth,MacLeod, Elizabeth	90	26830000000008	2
-154	Hawk	Hawk, Tony	90	26830000000008	2
-155	Healing grief	Van Praagh, James	90	26830000000008	2
-156	Hello Canada!	Young, Scott	90	26830000000008	2
-157	Heritage	\N	90	26830000000008	2
-158	Humble pie	Benrey, Ron	90	26830000000008	2
-159	Half empty	Rakoff, David	90	26830000000008	2
-160	Honey	Andrews, V.C	90	26830000000008	2
-161	Internal affairs	Dial, Connie	82	26269000000009	2
-162	Invisible	McCourtney, Lorena	82	\N	1
-163	Invisible prey	Sandford, John	82	26269000000009	2
-164	Icon	Forsyth, Frederick	82	26269000000009	2
-165	Ideology	Eagleton, Terry	82	26269000000009	2
-166	Irish whiskey	Greeley, Andrew M	82	26269000000009	2
-167	Imperial Rome	Hadas, Moses	82	26269000000009	2
-168	Investigative reports [videorecording]	\N	82	26269000000009	2
-169	The illuminating world of light with Max Axiom, super scientist	Sohn, Emily	82	26269000000009	2
-170	The imaginary Indian	Francis, Daniel	82	26269000000009	2
-171	Infernal devices	Reeve, Philip	82	26269000000009	2
-172	Intelligent universe	Gardner, James N	82	26269000000009	2
-173	I'm not suffering from insanity-- I'm enjoying every minute of it!	Linamen, Karen Scalf	82	26269000000009	2
-174	Insidious	\N	82	26269000000009	2
-175	Ironic	Grills, Barry	82	26269000000009	2
-176	The integral trees	Niven, Larry	82	26269000000009	2
-177	Identity : the autobiography of Edward L. Stephanson (Sveinsson)	Stephanson, Edward L	82	26269000000009	2
-178	Independent means	Townson, Monica	82	26269000000009	2
-179	Islam	\N	82	26269000000009	2
-180	Internet	Jefferis, David	82	26269000000009	2
-181	Jade	Barr, Pat	84	26969000000010	2
-182	Jealous?	De la Cruz, Melissa	84	26969000000010	2
-183	Justice	Kellerman, Faye	84	26969000000010	2
-184	Jellyfish	Herriges, Ann	84	26969000000010	2
-185	Jelly belly	Lee, Dennis	84	\N	1
-187	Jesse James	Brant, Marley	84	26969000000010	2
-188	Jumpstart the world	Hyde, Catherine Ryan	84	26969000000010	2
-189	Jazzy jeans	Baskett, Mickey	84	26969000000010	2
-190	Jerome	Ressner, Philip	84	26969000000010	2
-191	Justin Case	Vail, Rachel	84	26969000000010	2
-192	Journey to Portugal	Saramago, Jos.&#780;	84	26969000000010	2
-193	Johnny Appleseed	Kellogg, Steven	84	26969000000010	2
-194	Jacob's ladder	\N	84	26969000000010	2
-195	Jumping Lessons	Leitch, Patricia	84	26969000000010	2
-196	Jilted	McKenzie, Lorna	84	26969000000010	2
-197	Just joking!	Griffiths, Andy	84	26969000000010	2
-198	Japan	Seidensticker, Edward	84	26969000000010	2
-199	The Jolly Mon	Buffett, Jimmy	84	26969000000010	2
-200	Jackson's dilemma	Murdoch, Iris	84	26969000000010	2
-201	Karma	Smith, Mitchell	83	26669000000011	2
-202	Kinetic and potential energy	Viegas, Jennifer	83	26669000000011	2
-203	Kamchatka	\N	83	26669000000011	2
-204	Kiss of a dark moon	Kohler, Sharie	83	26669000000011	2
-205	Kentucky!	Ross, Dana Fuller	83	26669000000011	2
-206	Kick	Myers, Walter Dean	83	26669000000011	2
-207	Klondike	Berton, Pierre	83	26669000000011	2
-208	Knight	Gravett, Christopher	83	26669000000011	2
-209	Killer pancake	Davidson, Diane Mott	83	26669000000011	2
-210	The Kite Runner	Hosseini, Khaled,Hosseini, KHaled	83	26669000000011	2
-211	Kickstart	Herman, Alexander	83	26669000000011	2
-212	Koko's kitten	Patterson, Francine	83	26669000000011	2
-213	The Koran	Dawood, N.J	83	26669000000011	2
-214	Kuwait-- in pictures	\N	83	26669000000011	2
-215	Kumquat May, I'll always love you	Grant, Cynthia D	83	26669000000011	2
-216	Killer whales	Patent, Dorothy Hinshaw	83	26669000000011	2
-217	Kids are worth it !	Coloroso, Barbara	83	26669000000011	2
-218	Kirk Douglas	\N	83	26669000000011	2
-219	Kanada	Wiseman, Eva	83	26669000000011	2
-220	Kneeling in Bethlehem	Weems, Ann	83	26669000000011	2
-240	Leaving	Kingsbury, Karen	135	26646900000012	2
-222	Latin America	Fuentes, Carlos	135	26646900000012	2
-221	Landscape Planning	Adam, Judith	135	26646900000012	2
-223	Lutheran St. Matthew, Stony Plain, Alberta	Baron, Eric J. (Eric John), 1923-	135	26646900000012	2
-224	Let sleeping dogs lie	Ledbetter, Suzann	135	26646900000012	2
-225	Leadbelly	Jess, Tyehimba	135	26646900000012	2
-226	Leadership	Hillier, Rick	135	26646900000012	2
-227	Looking for Rachel Wallace	Parker, Robert B	135	26646900000012	2
-228	Learning	Kingsbury, Karen	135	26646900000012	2
-229	Love comes softly	Oke, Janette	135	26646900000012	2
-230	Lone star cafe	Wingate, Lisa	135	26646900000012	2
-231	Lemon	Strube, Cordelia	135	26646900000012	2
-232	Last Chance Bay	Carter, Anne	135	26646900000012	2
-233	Liberating Atlantis	Turtledove, Harry	135	26646900000012	2
-234	Lightning	Koontz, Dean R	135	26646900000012	2
-235	Lighting solutions	\N	135	26646900000012	2
-236	Little Women	Alcott, Louis May	135	26646900000012	2
-237	Lester B Pearson; The geek	Gibb, Gordon R	135	26646900000012	2
-238	Leonardo Da Vinci	Pedretti, Carlo	135	26646900000012	2
-239	The law-bringers	Conway, Elliot	135	26646900000012	2
-242	Malachite	Langan, Ruth	20	26266000000013	2
-243	Malachi McCormick's Irish country cooking	McCormick, Malachi	20	26266000000013	2
-244	Mort	Pratchett, Terry	20	26266000000013	2
-245	Model railroads	Herda, D. J	20	26266000000013	2
-246	The Method	\N	20	26266000000013	2
-247	Martial arts in action	Levigne, Heather	20	\N	1
-248	Martial law	Dixon, Franklin W	20	26266000000013	2
-249	Men are from Mars, women are from Venus	Gray, John	20	\N	1
-250	Marriage	Swedenborg, Emanuel.  (1688-1772)	20	26266000000013	2
-251	Multiple choice	Tashjian, Janet	20	26266000000013	2
-253	Mastering the guitar	Bay, William	20	26266000000013	2
-254	Margarita, martini, mojito	Gage, Allan	20	26266000000013	2
-255	The mulberry tree	Deveraux, Jude	20	26266000000013	2
-256	Money, Money, Money	McBain, Ed	20	26266000000013	2
-257	Material witness	Tanenbaum, Robert K	20	26266000000013	2
-258	Murder most fowl	Crider, Bill	20	26266000000013	2
-259	A majority of one	Stubbs, Lewis St. George	20	26266000000013	2
-260	Mythology	Hamilton, Edith	20	26266000000013	2
-261	Naive art in the West	Czernecki, Stefan	39	26550000000014	2
-262	The nature of the beast	Fyfield, Frances	39	26550000000014	2
-263	Notorious	Dailey, Janet	39	26550000000014	2
-264	Norbert Nipkin	McConnell, Robert	39	26550000000014	2
-265	Nordic Vision walk	\N	39	26550000000014	2
-266	Noon	Taseer, Aatish	39	26550000000014	2
-267	Naughty nautical neighbors	Auerbach, Annie	39	26550000000014	2
-268	Noble house	Clavell, James	39	26550000000014	2
-269	Notable Canadian children's books	\N	39	26550000000014	2
-270	The name of the rose	Eco, Umberto	39	26550000000014	2
-271	The Nonsuch	Rankin, Laird	39	26550000000014	2
-272	Nickel and dimed	Ehrenreich, Barbara	39	26550000000014	2
-273	Nerd gone wild	Thompson, Vicki Lewis	39	26550000000014	2
-274	NASTY BUSINESS	Paradis, Peter	39	26550000000014	2
-275	Needle and thread	Martin, Ann M	39	26550000000014	2
-276	Nervous water	Tapply, William G	39	26550000000014	2
-277	Nectar	Prior, Lily	39	26550000000014	2
-278	Neil Armstrong	Westman, Paul	39	26550000000014	2
-279	Nutrients in the Canadian environment	Ironside, G. R	39	26550000000014	2
-281	Obsidian butterfly	Hamilton, Laurell K	30	26220100000015	2
-282	Opus Dei	Allen, John L	30	26220100000015	2
-283	Ocean	MacQuitty, Miranda	30	26220100000015	2
-284	An obvious enchantment	Malarkey, Tucker	30	26220100000015	2
-285	Original sin	James, P. D	30	26220100000015	2
-286	Out of the shadows, SATB	Purifoy, John	30	26220100000015	2
-287	Oriental rugs	Allane, Lee	30	26220100000015	2
-288	Order in chaos	Whyte, Jack	30	26220100000015	2
-289	Ordinary heroes	Turow, Scott	30	26220100000015	2
-290	Orient et Occident au temps des Croisades	Cahen, Claude	30	26220100000015	2
-291	Orbit	Nance, John J	30	26220100000015	2
-292	Open house	Berg, Elizabeth	30	26220100000015	2
-293	Open sources	\N	30	26220100000015	2
-294	Oil spill!	Berger, Melvin	30	26220100000015	2
-295	Oil	Piper, Allan	30	26220100000015	2
-296	Olive Kitteridge	Strout, Elizabeth	30	26220100000015	2
-297	Ominous	Brian, Kate	30	26220100000015	2
-298	Opal	Snelling, Lauraine	30	26220100000015	2
-299	Oral history	\N	30	26220100000015	2
-300	On the other side	Wolff-Monckeberg, Mathilde	30	26220100000015	2
-301	Peking	Bonavia, David	98	26670000000016	2
-302	Pugs	Maggitti, Phil	98	26670000000016	2
-303	Paris 1919	Macmillan, Margaret Olwen,MacMillan, Margaret Olwen	98	26670000000016	2
-304	Pancakes, pancakes!	Carle, Eric	98	26670000000016	2
-305	Powder river	Cotton, Ralph W	98	26670000000016	2
-306	Palace	Massy, Christian de	98	26670000000016	2
-307	Partial payments	Epstein, Joseph	98	26670000000016	2
-308	Park prisoners	Waiser, Bill	98	26670000000016	2
-309	Pork, perfect pork	\N	98	26670000000016	2
-310	Pastries, pies and tarts	\N	98	26670000000016	2
-311	Plumbing 1-2-3	Cory, Steve	98	26670000000016	2
-312	Puzzle in a pear tree	Hall, Parnell	98	26670000000016	2
-313	Porridge and old clothes	Scott, Eileen M	98	26670000000016	2
-314	Pirates!	\N	98	26670000000016	2
-315	Pluto	Asimov, Isaac	98	26670000000016	2
-316	Plank houses	Gibson, Karen Bush	98	26670000000016	2
-317	Perfect	McNaught, Judith,MCNaught, Judith	98	26670000000016	2
-318	Puppies	Sjonger, Rebecca	98	26670000000016	2
-319	Ping and Pong	Lee, Dennis	98	26670000000016	2
-320	Planets	Sagan, Carl	98	26670000000016	2
-321	A quiche before dying	Churchill, Jill	87	26376000000017	2
-322	Quick Science	Herman and Nina Schneider	87	26376000000017	2
-323	Quick cooking for busy people	Wokes, Karen	87	26376000000017	2
-324	Quiet!	Bright, Paul	87	26376000000017	2
-325	Queen of sorcery	Eddings, David	87	26376000000017	2
-326	The queen of the damned	Rice, Anne	87	26376000000017	2
-327	Quintessential Tarantino	Page, Edwin	87	26376000000017	2
-328	QUERY PROCESSING TECHNIQUES FOR DISTRIBUTED, RELATIONAL DATA BASE SYSTEMS : COMPUTER SCIENCE, DISTRIBUTED DATABASE SYSTEMS, NO.13	EPSTEIN, ROBERT S	87	26376000000017	2
-329	Quarrel with murder	Creasey, John	87	26376000000017	2
-330	Quirky, jerky, extra perky	Cleary, Brian P	87	26376000000017	2
-331	The quixotic vision of Sinclair Lewis	Light, Martin	87	26376000000017	2
-332	Quasi-democracy ?	Stewart, David Kenney	87	26376000000017	2
-333	Queensland, Australia	\N	87	26376000000017	2
-334	Quality Equation 4-H club pack	Manitoba 4-H	87	26376000000017	2
-335	Quantity time	MacGregor, Roy	87	26376000000017	2
-336	Quelle surprise pour Caro!	Wark, Laurie	87	26376000000017	2
-337	Quick & easy gourd crafts	Baskett, Mickey	87	26376000000017	2
-338	Quick cozy flannel quilts	\N	87	26376000000017	2
-339	All quiet on the western front;	Remarque, Erich Maria	87	26376000000017	2
-340	Quite a year for plums	White, Bailey	87	\N	1
-341	Quite early one morning. --	Thomas, Dylan	87	26376000000017	2
-342	Redneck Cinderella	McLane, Luann,McLane, LuAnn	72	26720000000018	2
-343	Redcoat	Cornwell, Bernard	72	26720000000018	2
-344	Roughneck Cowboy	Thomas, Marin	72	26720000000018	2
-345	Radio astronomy	Richardson, Adele	72	26720000000018	2
-346	Routine activities, opportunity and crime in the inner city	Kohm, Steven A	72	26720000000018	2
-347	Raisins and almonds: A Phryne Fisher Mystery	Greenwood, Kerry	72	26720000000018	2
-348	Reading by Lightning	Thomas, Joan	72	26720000000018	2
-349	Racing the Wind	Baglio, Ben M,Baglio Ben M	72	26720000000018	2
-351	Revolver	Sedgwick, Marcus	72	26720000000018	2
-352	Rescue	Shreve, Anita	72	26720000000018	2
-353	Revenue Canada	\N	72	26720000000018	2
-354	Reality bites	Morgan, Melissa J	72	26720000000018	2
-355	Realty check	Rinomato, Sandra	72	26720000000018	2
-356	Regrets only	Quinn, Sally	72	26720000000018	2
-357	Reinventing the sacred	Kauffman, Stuart A	72	26720000000018	2
-358	The Roman;	Waltari, Mika Toimi	72	26720000000018	2
-359	Running hot	Krentz, Jayne Ann	72	26720000000018	2
-360	The radioactive boy scout	Silverstein, Ken	72	26720000000018	2
-361	Suddenly	Delinsky, Barbara	34	26764000000019	2
-362	Sailing to Capri	Adler, Elizabeth	34	26764000000019	2
-363	Shelter	Coben, Harlan	34	26764000000019	2
-364	Silly Tilly's Valentine	Hoban, Lillian	34	26764000000019	2
-365	Sugar daddy	Kleypas, Lisa	34	26764000000019	2
-366	Sunken treasure	Gibbons, Gail	34	26764000000019	2
-367	Surface rights in Manitoba	\N	34	26764000000019	2
-368	Scratch the Surface	Conant, Susan	34	26764000000019	2
-372	Subtle	Brooks, Bruce	34	26764000000019	2
-373	Snakes	Grace, Eric	34	26764000000019	2
-374	Sweet liar	Deveraux, Jude	34	26764000000019	2
-375	Stealth	Miller, Karen	34	26764000000019	2
-376	Steel Magnolias	Bootsman Video	34	26764000000019	2
-377	Sharing	Nielsen, Shelly	34	26764000000019	2
-378	S'mores	Adams, Lisa	34	26764000000019	2
-379	Slightly shady	Quick, Amanda	34	26764000000019	2
-380	Spruce Woods adventure	Gamache, Donna Firby	34	26764000000019	2
-381	Tennis	Gutman, Bill	18	26720100000020	2
-382	Turtles	Martin, Louise	18	26720100000020	2
-383	Tanks	Hogg, Ian V	18	26720100000020	2
-384	Toys	Patterson, James	18	26720100000020	2
-385	A Terrible beauty	\N	18	26720100000020	2
-386	Tongue twisters	Chmielewski, Gary	18	26720100000020	2
-387	Taxes for Canadians for dummies	\N	18	26720100000020	2
-388	Taxi	\N	18	26720100000020	2
-389	Trust Me	Krentz, Jayne Ann	18	26720100000020	2
-391	Titanic	Hustak, Alan	18	26720100000020	2
-392	Tipping point, The	Gladwell, Malcolm	18	26720100000020	2
-393	Time and tide	Fleming, Thomas J	18	26720100000020	2
-394	Tesla	Cheney, Margaret	18	26720100000020	2
-395	Tao;	Rawson, Philip S	18	26720100000020	2
-396	Thirst	Oliver, Mary	18	26720100000020	2
-397	The tide at sunrise;	Warner, Denis Ashton	18	26720100000020	2
-398	Timeline	Crichton, Michael	18	26720100000020	2
-399	Tibet	\N	18	26720100000020	2
-400	Three cups of tea	Mortenson, Greg	18	26720100000020	2
-401	The undertaker	Clarke, Richard	21	26830000000021	2
-402	Underwater life	Miller-Schroeder, Patricia	21	26830000000021	2
-403	Understanding Shakespeare	Ludowyk, E. F. C	21	26830000000021	2
-404	Ulterior motives	Blackstock, Terri	21	26830000000021	2
-405	Und ob ich schon wanderte --	Klassen, Peter P	21	26830000000021	2
-406	The unfortunate marriage of Azeb Yitades	Mezlekia, Nega	21	26830000000021	2
-407	Unorthodox openings	Benjamin, Joel	21	26830000000021	2
-408	Undying love	Lacy, Al	21	26830000000021	2
-409	Unearthly asylum	Bracegirdle, P. J	21	26830000000021	2
-410	Undercover Blues	\N	21	26830000000021	2
-411	Unstable ideas	Kagan, Jerome	21	26830000000021	2
-412	Unreliable sources	Lee, Martin A	21	26830000000021	2
-413	The umbrella	Brett, Jan	21	26830000000021	2
-414	Underwear!	Monsell, Mary Elise	21	26830000000021	2
-415	Until you	McNaught, Judith	21	\N	1
-416		Sher, Julian	21	\N	1
-417	Until Forever	Lindsey, Johanna	21	26830000000021	2
-418	Ulysses	Geringer, Laura	21	26830000000021	2
-419	Uruguay	Morrison, Marion	21	26830000000021	2
-420	Ukraine	Shevchenko, Anna	21	26830000000021	2
-421	10 little rubber ducks	Carle, Eric	85	\N	1
-422	Penguins of Madagascar	\N	85	\N	1
-424	Caribou	Vogel, Julia	85	2345678901    	2
-425	10 little rubber ducks	Carle, Eric	85	\N	1
-426	Evaluation of proposal by Ducks Unlimited to construct a conservation centre and office within Oak Hammock Marsh	Bovey, Robin	85	\N	1
-427	Manitoba mixedwood forest research and advisory committee	Canadian Wildlife Service	85	26269000000009	2
-428	10 little rubber ducks	Carle, Eric	101	\N	1
-429	Interlibrary loan practices handbook	Boucher, Virginia	85	David testing 	2
-430	10 little rubber ducks	Carle, Eric	85	David testing 	2
+COPY request (id, title, author, requester, patron_barcode, current_target, note, canada_post_endpoint, canada_post_tracking_number) FROM stdin;
+466	Aloe vera	Gage, Diane	33	26440000000001	1	\N	\N	\N
+467	Axis	Hachette	33	26440000000001	1	\N	\N	\N
+468	Abode of love	Barlow, Kate	33	26440000000001	1	\N	\N	\N
+469	Almost human	Gutkind, Lee	33	26440000000001	1	\N	\N	\N
+470	Arthur! Arthur!	Black, Arthur	33	26440000000001	1	\N	\N	\N
+471	Building with Dad	Nevius, Carol	10	26784000000002	1	\N	\N	\N
+472	Butterflies	Neye, Emily	10	26784000000002	1	\N	\N	\N
+473	Borrowed light	Hurley, Graham	10	26784000000002	1	\N	\N	\N
+474	Barns of western Canada	Hainstock, Bob	10	26784000000002	1	\N	\N	\N
+475	Blueberries for Sal	McCloskey, Robert	10	26784000000002	1	\N	\N	\N
+476	Cats	Fritzsche, Helga	110	26222000000003	1	\N	\N	\N
+477	Cheesemaking made easy	Carroll, Ricki	110	26222000000003	1	\N	\N	\N
+478	The Cheshire Cheese cat	Deedy, Carmen Agra	110	26222000000003	1	\N	\N	\N
+479	Central America	Lavine, Harold	110	26222000000003	1	\N	\N	\N
+480	Count your blessings	Demartini, John F	110	26222000000003	1	\N	\N	\N
+481	Deadly Daggers	Lavene, Joyce	136	26822000000004	1	\N	\N	\N
+482	Dutch	Morris, Edmund	136	26822000000004	1	\N	\N	\N
+483	Death Comes For the Fat Man	Hill, Reginald	136	26822000000004	1	\N	\N	\N
+484	Duel a history of duelling	Baldick, Robert	136	26822000000004	1	\N	\N	\N
+485	Doors & entryways	Spence, William Perkins	136	26822000000004	1	\N	\N	\N
+486	Eagle	Stone, Jeff	11	26752000000005	1	\N	\N	\N
+487	Eternal	Smith, Cynthia Leitich	11	26752000000005	1	\N	\N	\N
+488	Everything on a waffle	Horvath, Polly	11	26752000000005	1	\N	\N	\N
+489	Eastward the sea	Haywood, Charles F	11	26752000000005	1	\N	\N	\N
+490	Elvis and me	Presley, Priscilla Beaulieu	11	26752000000005	1	\N	\N	\N
+491	Farthing	Walton, Jo	12	26637000000004	1	\N	\N	\N
+492	Future perfect	Brockmann, Suzanne	12	26637000000004	1	\N	\N	\N
+493	Fearless fourteen	Evanovich, Janet	12	26637000000004	1	\N	\N	\N
+494	Felicity	Porter, Felicity	12	26637000000004	1	\N	\N	\N
+495	Full moon	Hawthorne, Rachel	12	26637000000004	1	\N	\N	\N
+496	Goodness gracious, Gulliver Mulligan	Browne, Susan Chalker	13	26427000000006	1	\N	\N	\N
+497	Grace under fire	Scanlan, Lawrence	13	26427000000006	1	\N	\N	\N
+498	Geronimo	Thompson, William	13	26427000000006	1	\N	\N	\N
+499	Geraldine Moodie	White, Donny	13	26427000000006	1	\N	\N	\N
+500	Ghost stories of Manitoba	Smith, Barbara	13	\N	0	\N	\N	\N
+501	Ghosts don't eat potato chips	Dadey, Debbie	13	26427000000006	1	\N	\N	\N
+502	Highway builders	Adams, Georgie	14	26723000000007	1	\N	\N	\N
+503	Heartfelt ways to say Thank You	Griffiths, Kathy Distefano	14	26723000000007	1	\N	\N	\N
+504	Human rights worldwide	Kabasakal Arat, Zehra F	14	26723000000007	1	\N	\N	\N
+505	Hollywood moon	Wambaugh, Joseph	14	26723000000007	1	\N	\N	\N
+506	India	Kalman, Bobbie	15	26724000000008	1	\N	\N	\N
+507	Internal combustion	Black, Edwin	15	26724000000008	1	\N	\N	\N
+508	Interesting Times	Pratchett, Terry	15	26724000000008	1	\N	\N	\N
+509	Inner Harbor	Roberts, Nora	15	26724000000008	1	\N	\N	\N
+510	Improbable cause	Jance, Judith A	15	26724000000008	1	\N	\N	\N
+511	The Juniper game	Jordan, Sherryl	16	26725000000009	1	\N	\N	\N
+512	Judges	Batten, Jack	16	26725000000009	1	\N	\N	\N
+513	Jelly Belly	Lee, Dennis	16	\N	0	\N	\N	\N
+514	Jellybean fever	Murphy, Joanne Brisson	16	26725000000009	1	\N	\N	\N
+515	January	Lord, Gabrielle	16	26725000000009	1	\N	\N	\N
+516	Kindness	Pryor, Kimberley Jane	17	26520000000010	1	\N	\N	\N
+517	Knights of the black and white	Whyte, Jack	17	26520000000010	1	\N	\N	\N
+518	Kelwood ... my cradle	Tolboom, Wanda Neill,Tolboom, Wanda (Neill)	17	26520000000010	1	\N	\N	\N
+519	A keen soldier	Clark, Andrew	17	26520000000010	1	\N	\N	\N
+520	Keeping the bees	Packer, Laurence	17	26520000000010	1	\N	\N	\N
+521	Lightning	Steel, Danielle	19	26700000000011	1	\N	\N	\N
+522	Laughter, the best medicine	\N	19	26700000000011	1	\N	\N	\N
+523	Legend	Deveraux, Jude	19	26700000000011	1	\N	\N	\N
+524	Living, loving & learning	Buscaglia, Leo F	19	26700000000011	1	\N	\N	\N
+525	Laser basics	Stevens, Lawrence	19	26700000000011	1	\N	\N	\N
+526	Marry me	Booth, Pat	18	26720000000012	1	\N	\N	\N
+527	The marmalade man	Allen, Charlotte Vale	18	26720000000012	1	\N	\N	\N
+528	The multiplex man	Hogan, James P	18	26720000000012	1	\N	\N	\N
+529	A multitude of sins	Ford, Richard	18	26720000000012	1	\N	\N	\N
+530	The merry heart	Davies, Robertson	18	26720000000012	1	\N	\N	\N
+531	Noodle's knitting	Webster, Sheryl	119	26875000000013	1	\N	\N	\N
+532	Nothing is impossible	Reeve, Christopher	119	26875000000013	1	\N	\N	\N
+533	Nurture the Nature	Gurian, Michael	119	26875000000013	1	\N	\N	\N
+534	Nice new neighbours	Brandenburg, F	119	26875000000013	1	\N	\N	\N
+535	Nighttime guardian	Stevens, Amanda	119	26875000000013	1	\N	\N	\N
+536	An orderly man	Bogarde, Dirk	20	26266000000014	1	\N	\N	\N
+537	Ordinary heroes	Turow, Scott	20	26266000000014	1	\N	\N	\N
+538	Openings	\N	20	26266000000014	1	\N	\N	\N
+539	Occasional papers	\N	20	26266000000014	1	\N	\N	\N
+540	Ocean's thirteen	\N	20	26266000000014	1	\N	\N	\N
+541	Pterodactyl	Matthews, Rupert	22	26300000000015	1	\N	\N	\N
+542	Playful parenting	Cohen, Lawrence J	22	26300000000015	1	\N	\N	\N
+543	Platypus!	Clarke, Ginjer L	22	26300000000015	1	\N	\N	\N
+544	Purple secret	R&#8471;&#9837;&#8471;&#698;ohl, John C. G	22	26300000000015	1	\N	\N	\N
+545	Pluto	Ring, Susan	22	26300000000015	1	\N	\N	\N
+546	Queen's jewels:,The	Bain, Donald	21	26830000000016	1	\N	\N	\N
+547	A quiet strength	Oke, Janette	21	26830000000016	1	\N	\N	\N
+548	Quills	\N	21	26830000000016	1	\N	\N	\N
+549	A Quarter for a Kiss	Clark, Mindy Starns	21	26830000000016	1	\N	\N	\N
+550	Quite a year for plums	White, Bailey	21	26830000000016	1	\N	\N	\N
+551	Rembrandt	Ripley, Elizabeth	23	26622000000017	1	\N	\N	\N
+552	Rebus	Rankin, Ian	23	26622000000017	1	\N	\N	\N
+553	Route de Chlifa, La	Marineau, Michele	23	26622000000017	1	\N	\N	\N
+554	Ransom	Steel, Danielle	23	26622000000017	1	\N	\N	\N
+555	Russia	Murrell, Kathleen Berton	23	26622000000017	1	\N	\N	\N
+556	Salvation city	Nunez, Sigrid	24	26220000000018	1	\N	\N	\N
+557	A sensible life	Wesley, Mary	24	26220000000018	1	\N	\N	\N
+558	Sunstroke	Kellerman, Jesse	24	26220000000018	1	\N	\N	\N
+559	Subtle energy	Collinge, William	24	26220000000018	1	\N	\N	\N
+560	Suburban renewal	Morsi, Pamela	24	26220000000018	1	\N	\N	\N
+561	Transforming power	Rebick, Judy	25	26320000000019	1	\N	\N	\N
+562	Turtles	Martin, Louise	25	26320000000019	1	\N	\N	\N
+563	Totally free	Moore, Stephanie Perry	25	26320000000019	1	\N	\N	\N
+564	Tyrannosaurus	Lindsay, William	25	26320000000019	1	\N	\N	\N
+565	Teaching hope	\N	25	26320000000019	1	\N	\N	\N
+566	The umbrella	Brett, Jan	26	26227000000020	1	\N	\N	\N
+567	The Upper class	Brown, Hobson	26	26227000000020	1	\N	\N	\N
+568	United we stand	Pringle, Jim	26	\N	0	\N	\N	\N
+569	The unwilling umpire	Roy, Ron	26	26227000000020	1	\N	\N	\N
+570	I udderly love you!	Toms, Kate	26	26227000000020	1	\N	\N	\N
+571	It's Valentine's Day	Prelutsky, Jack	28	26240000000021	1	\N	\N	\N
+572	Le vatican mis  &#777;nu	\N	28	26240000000021	1	\N	\N	\N
+573	Voltaire's Bastards	John Ralston Saul	28	26240000000021	1	\N	\N	\N
+574	Venus	Bova, Ben	28	26240000000021	1	\N	\N	\N
+575	Volcanoes	Wood, Jenny	28	26240000000021	1	\N	\N	\N
+576	Winter solstice	Pilcher, Rosamunde	103	26375000000022	1	\N	\N	\N
+577	Warrior	Fallon, Jennifer	103	26375000000022	1	\N	\N	\N
+578	A winning attitude	Hamilton-McGinty, Rosie	103	26375000000022	1	\N	\N	\N
+579	Water for elephants	Gruen, Sara	103	26375000000022	1	\N	\N	\N
+580	Westward!	Ross, Dana Fuller	103	26375000000022	1	\N	\N	\N
+581	The Xeno Chronicles	Miller, G. Wayne	27	26350000000023	1	\N	\N	\N
+582	The XENO solution	Erlick, Nelson	27	26350000000023	1	\N	\N	\N
+583	X-ray	Veasey, Nick	27	26350000000023	1	\N	\N	\N
+584	Xen	Solomon, D.J	27	26350000000023	1	\N	\N	\N
+585	Xtreme art	Hart, Christopher	27	26350000000023	1	\N	\N	\N
+586	Young Kate	Andersen, Christopher P	30	26220010000023	1	\N	\N	\N
+587	Yellow hippo	Rogers, Alan	30	26220010000023	1	\N	\N	\N
+588	Youthful passions	\N	30	26220010000023	1	\N	\N	\N
+589	Yankee Doodle Dandy	McDonald, Marci	30	26220010000023	1	\N	\N	\N
+590	Yonder	Johnston, Tony	30	26220010000023	1	\N	\N	\N
+591	Zero day	Baldacci, David	29	26430000000024	1	\N	\N	\N
+592	ZINC-COATED STEEL WIRE STRAND	\N	29	26430000000024	1	\N	\N	\N
+593	The Zoning by-law	\N	29	26430000000024	1	\N	\N	\N
+594	Zoology;	Burnett, Raymond Will	29	26430000000024	1	\N	\N	\N
+595	Zippy's tall tale	Moss, Olivia	29	26430000000024	1	\N	\N	\N
+596	Animal fact-file	Hare, Tony	31	26720010000026	1	\N	\N	\N
+597	Arthur! Arthur!	Black, Arthur	31	26720010000026	1	\N	\N	\N
+598	Alfalfa flats	Gallagher, Jack	31	26720010000026	1	\N	\N	\N
+599	Ambulance girl	Stern, Jane	31	26720010000026	1	\N	\N	\N
+600	Anywhere she runs	Webb, Debra	31	26720010000026	1	\N	\N	\N
+601	Big Girl	Steel, Danielle	34	26764000000027	1	\N	\N	\N
+602	Beige	Castellucci, Cecil	34	26764000000027	1	\N	\N	\N
+603	Baking	Greenspan, Dorie	34	26764000000027	1	\N	\N	\N
+604	Balloons	Zubrowski, Bernie	34	26764000000027	1	\N	\N	\N
+605	Blue's checkup	Albee, Sarah	34	26764000000027	1	\N	\N	\N
+606	Carlisles all	Johnson, Norma	90	26783000000028	1	\N	\N	\N
+607	Candy	Brooks, Kevin	90	26783000000028	1	\N	\N	\N
+608	Culpepper's Cannon	Paulsen, Gary	90	26783000000028	1	\N	\N	\N
+609	Canary island song	Gunn, Robin Jones	90	26783000000028	1	\N	\N	\N
+610	Crescent dawn	Cussler, Clive	90	26783000000028	1	\N	\N	\N
+611	Deep wizardry	Duane, Diane	36	26787000000029	1	\N	\N	\N
+612	Deer	Dingwall, Laima	36	26787000000029	1	\N	\N	\N
+613	Decks	\N	36	26787000000029	1	\N	\N	\N
+614	Dracula in love	Essex, Karen	36	26787000000029	1	\N	\N	\N
+615	Delhi noir	Sawhney, Hirsh	36	26787000000029	1	\N	\N	\N
+616	The eagle	Whyte, Jack	37	26776000000030	1	\N	\N	\N
+617	Encore Mafalda	Quino, 1932-	37	26776000000030	1	\N	\N	\N
+618	Enigma cipher	Cosby, Andrew	37	26776000000030	1	\N	\N	\N
+619	Eggs	Burton, Robert	37	26776000000030	1	\N	\N	\N
+620	Envoy of the Black Pine	Gray, Clio	37	26776000000030	1	\N	\N	\N
+621	A faint cold fear	Slaughter, Karin	38	26532000000031	1	\N	\N	\N
+622	Fever dream	Preston, Douglas J	38	26532000000031	1	\N	\N	\N
+623	Fruit	Francis, Brian	38	26532000000031	1	\N	\N	\N
+624	The Flock of Geryon	Christie, Agatha	38	26532000000031	1	\N	\N	\N
+625	Fabric art workshop	Stein, Susan	38	\N	0	\N	\N	\N
+626	Fabric art workshop	Stein, Susan	38	26532000000031	1	\N	\N	\N
+627	Guitar for dummies	Phillips, Mark	40	26222010000032	1	\N	\N	\N
+628	Gleam and Glow	Bunting, Eve	40	26222010000032	1	\N	\N	\N
+629	Gigantic turnip /, The	Sharkey, Niamh	40	26222010000032	1	\N	\N	\N
+630	Golf for dummies	McCord, Gary	40	26222010000032	1	\N	\N	\N
+631	Honk!	Edwards, pamela duncan,Edwards, Pamela Duncan	39	26550000000032	1	\N	\N	\N
+632	The handy science answer book	\N	39	26550000000032	1	\N	\N	\N
+633	Haze	Modesitt, L. E	39	26550000000032	1	\N	\N	\N
+634	The hobbit : or, there and back again	Tolkien, J. R. R	39	26550000000032	1	\N	\N	\N
+635	The Harbor	Neggers, Carla	39	26550000000032	1	\N	\N	\N
+636	Ideas	Watson, Peter	42	26570000000033	1	\N	\N	\N
+637	Holiday magic	\N	42	26570000000033	1	\N	\N	\N
+638	Italy	\N	42	26570000000033	1	\N	\N	\N
+639	Images of nature	\N	42	26570000000033	1	\N	\N	\N
+640	The Interior plains	Watson, Galadriel	42	26570000000033	1	\N	\N	\N
+641	Jackal	Follain, John	43	26552000000034	1	\N	\N	\N
+642	The jaguar	Parker, T. Jefferson	43	26552000000034	1	\N	\N	\N
+643	Jungle	Greenaway, Theresa	43	26552000000034	1	\N	\N	\N
+644	The jester	Patterson, James	43	26552000000034	1	\N	\N	\N
+645	Joyful stuffed dolls & animals. --	\N	43	26552000000034	1	\N	\N	\N
+646	The kiss	Steel, Danielle	44	\N	0	\N	\N	\N
+647	The kiss	Steel, Danielle	44	\N	0	\N	\N	\N
+648	The kiss	Steel, Danielle	44	26620000000036	1	\N	\N	\N
+649	Kyoto and beyond	\N	44	26620000000036	1	\N	\N	\N
+650	Knave of Hearts	Carr, Philippa	44	26620000000036	1	\N	\N	\N
+651	Kennel Building and Management	Migliorini, Mario	44	26620000000036	1	\N	\N	\N
+652	Knee deep in paradise	Butler, Brett	44	26620000000036	1	\N	\N	\N
+653	Looking for Rachel Wallace	Parker, Robert B	98	26670000000037	1	\N	\N	\N
+654	Lactose free	Knox, Lucy	98	26670000000037	1	\N	\N	\N
+655	Legion	Blatty, William Peter	98	26670000000037	1	\N	\N	\N
+656	Latvia	\N	98	26670000000037	1	\N	\N	\N
+657	Forty lashes less one	Leonard, Elmore	98	26670000000037	1	\N	\N	\N
+658	A Lancaster County Christmas	Fisher, Suzanne Woods	98	26670000000037	1	\N	\N	\N
+659	Herbs & edible flowers	Hole, Lois	98	26670000000037	1	\N	\N	\N
+660	The mulberry tree	Deveraux, Jude	45	26666000000038	1	\N	\N	\N
+661	The Manticore	Davies, Robertson	45	26666000000038	1	\N	\N	\N
+662	The Marvel Comics encyclopedia	\N	45	26666000000038	1	\N	\N	\N
+663	Hunger Games #3, The	Collins, Suzanne	45	26666000000038	1	\N	\N	\N
+664	The innocent man	Grisham, John	45	26666000000038	1	\N	\N	\N
+665	The Inuk mountie adventure	Wilson, Eric	45	26666000000038	1	\N	\N	\N
+666	New York to Dallas	Robb, J. D	47	26220020000039	1	\N	\N	\N
+667	One Perfect Day	Mead, Rebecca	47	26220020000039	1	\N	\N	\N
+668	And then there were none	Christie, Agatha	47	26220020000039	1	\N	\N	\N
+669	Tuck Everlasting	Babbitt, Natalie	47	26220020000039	1	\N	\N	\N
+670	Mother nurture	Hanson, Rick	47	26220020000039	1	\N	\N	\N
+671	Open house	Russell, Scott	46	26776010000033	1	\N	\N	\N
+672	Old Yeller	Gipson, Fred	46	26776010000033	1	\N	\N	\N
+673	The sun also rises	Hemingway, Ernest	46	26776010000033	1	\N	\N	\N
+674	Agatha Christie	\N	46	26776010000033	1	\N	\N	\N
+675	Auto repair for dummies	Sclar, Deanna	46	26776010000033	1	\N	\N	\N
+676	Outboard engines	Sherman, Edwin R	50	26372700000039	1	\N	\N	\N
+677	Eternal	Russell, Craig	50	26372700000039	1	\N	\N	\N
+678	Know your dalmation	The Pet Library	50	26372700000039	1	\N	\N	\N
+679	Poodles	Stahlkuppe, Joe	50	26372700000039	1	\N	\N	\N
+680	Jack Russell terrier	Lunis, Natalie	50	26372700000039	1	\N	\N	\N
+681	Andrew goes fishing in Manitoba	Szuminsky, Carol	51	26372400000040	1	\N	\N	\N
+682	Granny is a darling	Denton, Kady MacDonald	51	26372400000040	1	\N	\N	\N
+683	Smooth sailing	Gately, Geo	51	26372400000040	1	\N	\N	\N
+684	The sea wolf	London, Jack	51	26372400000040	1	\N	\N	\N
+685	The grilling season	Davidson, Diane Mott	51	26372400000040	1	\N	\N	\N
+686	Istanbul	\N	52	26372600000041	1	\N	\N	\N
+687	Kabloona in the yellow kayak	Jason, Victoria	52	26372600000041	1	\N	\N	\N
+688	Arctic dreams	Lopez, Barry Holstun	52	26372600000041	1	\N	\N	\N
+689	Sahara	Cussler, Clive	52	26372600000041	1	\N	\N	\N
+690	A thousand sisters	Shannon, Lisa	52	26372600000041	1	\N	\N	\N
+691	Dauphin	\N	53	26320010000042	1	\N	\N	\N
+692	Moscow Rules	Silva, Daniel	53	26320010000042	1	\N	\N	\N
+693	True history of the Kelly gang	Carey, Peter	53	26320010000042	1	\N	\N	\N
+694	The Monks of Santo Domingo De Silos	\N	53	26320010000042	1	\N	\N	\N
+695	Number the Stars	Lowry, Lois,lowry, Lois	53	26320010000042	1	\N	\N	\N
+696	Vampires of Ottawa	Wilson, Eric	54	26373700000044	1	\N	\N	\N
+697	Black Beauty;	Sewell, Anna	54	26373700000044	1	\N	\N	\N
+698	Washington	Chernow, Ron	54	26373700000044	1	\N	\N	\N
+699	Mexico	\N	54	26373700000044	1	\N	\N	\N
+700	Costa Rica	Frank, Nicole	54	26373700000044	1	\N	\N	\N
+701	Greece	Adare, Sierra	55	26373600000045	1	\N	\N	\N
+702	Afghanistan	Whitfield, Susan	55	26373600000045	1	\N	\N	\N
+703	Foucault's pendulum	Eco, Umberto	55	26373600000045	1	\N	\N	\N
+704	Thailand	\N	55	26373600000045	1	\N	\N	\N
+705	Vietnam	Kalman, Bobbie	55	26373600000045	1	\N	\N	\N
+706	Keeping the bees	Packer, Laurence	56	26374700000046	1	\N	\N	\N
+707	Rainbow's end	Vinge, Vernor	56	26374700000046	1	\N	\N	\N
+708	The children of the sky	Vinge, Vernor	56	26374700000046	1	\N	\N	\N
+709	A fire upon the deep	Vinge, Vernor	56	26374700000046	1	\N	\N	\N
+710	Cowboys & aliens	Vinge, Joan D	56	26374700000046	1	\N	\N	\N
+711	I, Asimov	Asimov, Isaac	57	26374500000048	1	\N	\N	\N
+712	Foundation	Asimov, Isaac	57	26374500000048	1	\N	\N	\N
+713	Nightfall	Asimov, Isaac	57	26374500000048	1	\N	\N	\N
+714	I, Robot	Asimov, Isaac	57	26374500000048	1	\N	\N	\N
+715	Asimov laughs again	Asimov, Isaac	57	26374500000048	1	\N	\N	\N
+716	Venus	Bova, Ben	58	26374800000049	1	\N	\N	\N
+717	Privateers	Bova, Ben	58	26374800000049	1	\N	\N	\N
+718	Mars Life	Bova, Ben	58	26374800000049	1	\N	\N	\N
+719	The green trap	Bova, Ben	58	26374800000049	1	\N	\N	\N
+720	The immortality factor	Bova, Ben	58	26374800000049	1	\N	\N	\N
+721	Beyond the fall of night	Clarke, Arthur Charles	59	26374200000050	1	\N	\N	\N
+722	2001 : a space odyssey	Clarke, Arthur C	59	26374200000050	1	\N	\N	\N
+723	The light of other days	Clarke, Arthur Charles	59	26374200000050	1	\N	\N	\N
+724	The garden of Rama	Clarke, Arthur C	59	26374200000050	1	\N	\N	\N
+725	The Last Theorem	Clarke, Arthur C	59	26374200000050	1	\N	\N	\N
+726	Man and space	Clarke, Arthur Charles	59	26374200000050	1	\N	\N	\N
+727	Lord of the Isles	Drake, David	60	26375200000051	1	\N	\N	\N
+728	The mirror of worlds	Drake, David	60	26375200000051	1	\N	\N	\N
+729	What distant deeps	Drake, David	60	26375200000051	1	\N	\N	\N
+730	Patriots	Drake, David	60	26375200000051	1	\N	\N	\N
+731	The Belgariad	Eddings, David	49	26370000000052	1	\N	\N	\N
+732	The diamond throne	Eddings, David	49	26370000000052	1	\N	\N	\N
+733	The sapphire rose	Eddings, David	49	26370000000052	1	\N	\N	\N
+734	Pawn of prophecy	Eddings, David	49	26370000000052	1	\N	\N	\N
+735	The Hidden City	Eddings, David	49	26370000000052	1	\N	\N	\N
+736	Gunpowder plot	Dunn, Carola	61	26376200000053	1	\N	\N	\N
+737	Fuel from water	Peavey, Michael A	61	26376200000053	1	\N	\N	\N
+738	Carrots love tomatoes	Riotte, Louise	61	26376200000053	1	\N	\N	\N
+739	If I had a million onions	Fitch, Sheree	61	26376200000053	1	\N	\N	\N
+740	The urban saint	Boge, Paul H	61	26376200000053	1	\N	\N	\N
+741	Coffee indulgences	Blake, Susannah	62	26376400000054	1	\N	\N	\N
+742	Black coffee	Christie, Agatha	62	26376400000054	1	\N	\N	\N
+743	Pour your heart into it	Schultz, Howard	62	26376400000054	1	\N	\N	\N
+744	The coffee trader	Liss, David	62	26376400000054	1	\N	\N	\N
+745	Wild coffee and tea substitutes of Canada	Turner, Nancy J	62	26376400000054	1	\N	\N	\N
+746	Flipbook animation and other ways to make cartoons move	Jenkins, Patrick	63	26376700000054	1	\N	\N	\N
+747	The Calvin and Hobbes lazy Sunday book	Watterson, Bill	63	26376700000054	1	\N	\N	\N
+748	Drawing	Welton, Jude	63	26376700000054	1	\N	\N	\N
+749	Drawing dinosaurs and other prehistoric animals	Bolognese, Don	63	26376700000054	1	\N	\N	\N
+750	Pumpkin painting	McKinney, Jordan	63	26376700000054	1	\N	\N	\N
+751	Counting on snow	Newhouse, Maxwell	64	26377600000055	1	\N	\N	\N
+752	A feast for crows	Martin, George R. R	64	26377600000055	1	\N	\N	\N
+753	Bird-by-bird gardening	Roth, Sally	64	26377600000055	1	\N	\N	\N
+754	The not-for-profit CEO workbook	Pidgeon Jr., Walter P	64	26377600000055	1	\N	\N	\N
+755	The cowboy and the CEO	Wenger, Christine Anne	64	26377600000055	1	\N	\N	\N
+756	The complete guide to windows & doors	\N	65	26377500000056	1	\N	\N	\N
+757	Rose windows	Cowen, Painton	65	26377500000056	1	\N	\N	\N
+758	The complete guide to decks	\N	65	26377500000056	1	\N	\N	\N
+759	The Far Pavillions	Kaye, M.M	65	26377500000056	1	\N	\N	\N
+760	The tent	Atwood, Margaret	65	26377500000056	1	\N	\N	\N
+761	Backpack gourmet	Yaffe, Linda Frederick	66	26377400000057	1	\N	\N	\N
+762	Walking softly in the wilderness	Hart, John	66	26377400000057	1	\N	\N	\N
+763	Camp cooking	McMorris, Bill	66	26377400000057	1	\N	\N	\N
+764	Le Camping	Jacobson, Cliff	66	26377400000057	1	\N	\N	\N
+765	Song of the Paddle	Mason, Bill	66	26377400000057	1	\N	\N	\N
+766	Heating, ventilating, and air conditioning library	Brumbaugh, James E	124	26377520000058	1	\N	\N	\N
+767	The Haynes automotive heating & air-conditioning systems manual	Stubblefield, Mike	124	26377520000058	1	\N	\N	\N
+768	Plumbing	\N	124	26377520000058	1	\N	\N	\N
+769	Cottage water systems	Burns, Max	124	26377520000058	1	\N	\N	\N
+770	Tapestry	Plain, Belva	124	26377520000058	1	\N	\N	\N
+771	Foods that harm, foods that heal	\N	107	26377800000059	1	\N	\N	\N
+772	The healing foods	Hausman, Patricia	107	26377800000059	1	\N	\N	\N
+773	The Healthy Heart Cookbook: Over 700 Recipes for Every Day and Every Occasion	Piscatella, Joseph C	107	26377800000059	1	\N	\N	\N
+774	Company's coming	Pare, Jean	107	26377800000059	1	\N	\N	\N
+775	Living with diabetes	Walker, Rosemary	107	26377800000059	1	\N	\N	\N
+776	The Group of Seven. -	Mellen, Peter	67	26379700000060	1	\N	\N	\N
+777	Aces high;	Clark, Alan	67	26379700000060	1	\N	\N	\N
+778	Double deuce	Parker, Robert B	67	26379700000060	1	\N	\N	\N
+779	Peter Mansbridge one on one	Mansbridge, Peter	67	26379700000060	1	\N	\N	\N
+780	Two Dollar Bill	Woods, Stuart	67	26379700000060	1	\N	\N	\N
+781	Belling the cat	Richler, Mordecai	48	26575000000061	1	\N	\N	\N
+782	Beyond the marsh; a history of three school districts	Vidir Ladies Aid	48	26575000000061	1	\N	\N	\N
+783	Getting started in calligraphy	Baron, Nancy	48	26575000000061	1	\N	\N	\N
+784	Mend it better	Roach, Kristin M	48	26575000000061	1	\N	\N	\N
+785	Daring to Dream	Roberts, Nora	48	26575000000061	1	\N	\N	\N
+786	The dog rules	Sundance, Kyra	122	26360000000063	1	\N	\N	\N
+787	Watercolor workshop	Barnes-Mellish, Glynis	122	26360000000063	1	\N	\N	\N
+788	This will be difficult to explain	Skibsrud, Johanna	122	26360000000063	1	\N	\N	\N
+789	Report on the licensing and enforcement practices of Manitoba Water Stewardship	\N	122	26360000000063	1	\N	\N	\N
+790	Schooled	Korman, Gordon	122	26360000000063	1	\N	\N	\N
+792	The airline builders	Allen, Oliver E	41	26760000000064	1	\N	\N	\N
+791	Matthew and the midnight pilot	Morgan, Allen	41	26760000000064	1	\N	\N	\N
+793	Young Scientist book of jets	Hewish, Mark	41	26760000000064	1	\N	\N	\N
+794	War and peace	Tolstoy, Leo	41	26760000000064	1	\N	\N	\N
+795	Individual power	Hudak, Heather C	41	26760000000064	1	\N	\N	\N
+796	Wings along the Winnipeg	Taylor, Peter	68	26700010000065	1	\N	\N	\N
+797	Snow in april	Pilcher, Rosamunde	68	26700010000065	1	\N	\N	\N
+798	4th of July	Patterson, James	68	26700010000065	1	\N	\N	\N
+799	August 1914	Solzhenit&#865;syn, Aleksandr Isaevich	68	26700010000065	1	\N	\N	\N
+800	Drums of Autumn	Gabaldon, Diana	68	26700010000065	1	\N	\N	\N
+801	The Dirt on Dirt	Bourgeois, Paulette	69	26757010000070	1	\N	\N	\N
+802	The sneeze	Lloyd, David	69	26757010000070	1	\N	\N	\N
+803	For laughing out loud	\N	69	26757010000070	1	\N	\N	\N
+804	Poems to share	Jackson, Leroy F	69	26757010000070	1	\N	\N	\N
+805	Le monde des oiseaux	\N	69	26757010000070	1	\N	\N	\N
+806	Feed	Anderson, M. T	71	26747000000071	1	\N	\N	\N
+807	Freshwater Fishes	Page, Lawrence	71	26747000000071	1	\N	\N	\N
+808	Telegraph Days	McMurtry, Larry,McMurtry Larry	71	26747000000071	1	\N	\N	\N
+809	The copper scroll	Rosenberg, Joel C	71	26747000000071	1	\N	\N	\N
+810	Carpentry	\N	71	26747000000071	1	\N	\N	\N
+811	An armadillo is not a pillow	Simmie, Lois	72	\N	0	\N	\N	\N
+812	An armadillo is not a pillow	Simmie, Lois	72	26720020000072	1	\N	\N	\N
+813	Club sandwich	Samson, Lisa	72	\N	0	\N	\N	\N
+814	Club sandwich	Samson, Lisa	72	26720020000072	1	\N	\N	\N
+815	The Grapes of Wrath	Steinbeck, John	72	26720020000072	1	\N	\N	\N
+816	Machete season	Hatzfeld, Jean	79	26735000000073	1	\N	\N	\N
+817	Puss in boots	Perrault, Charles	79	26735000000073	1	\N	\N	\N
+818	The Fellowship Of The Ring	Tolkien, J.R.R	79	26735000000073	1	\N	\N	\N
+819	Green lantern	Johns, Geoff	79	26735000000073	1	\N	\N	\N
+820	Boys, bears, and a serious pair of hiking boots	McDonald, Abby	79	26735000000073	1	\N	\N	\N
+821	Tears of the giraffe	McCall Smith, Alexander	73	26770000000074	1	\N	\N	\N
+822	Maple moon	Bates, Johanna Van der Zeijst	73	26770000000074	1	\N	\N	\N
+823	I've got your number	Kinsella, Sophie	73	26770000000074	1	\N	\N	\N
+824	Every living thing	Herriot, James	73	26770000000074	1	\N	\N	\N
+825	Strength training for seniors	Fekete, Michael	73	26770000000074	1	\N	\N	\N
+826	One hundred years of solitude	Marquez, Gabriel Garcia	75	26220030000075	1	\N	\N	\N
+827	Red glove	Black, Holly	75	26220030000075	1	\N	\N	\N
+828	The golden disk	Bell, William	75	26220030000075	1	\N	\N	\N
+829	Drive	Clement, Nathan	75	26220030000075	1	\N	\N	\N
+830	The Pencil	Ahlberg, Allan	75	26220030000075	1	\N	\N	\N
+831	The book that  jack wrote	Scieszka, Jon	74	26760010000076	1	\N	\N	\N
+832	I'm not really here	Allen, Tim	74	26760010000076	1	\N	\N	\N
+833	Dyslexia and other learning difficulties	Selikowitz, Mark	74	26760010000076	1	\N	\N	\N
+834	Yeah, I'm a little kid	Borden, Darryl	74	26760010000076	1	\N	\N	\N
+835	Grandma's kitchen	Hrechuk, Irene	74	26760010000076	1	\N	\N	\N
+836	The folk festival book	Johnson, Steve	77	26240010000077	1	\N	\N	\N
+837	Festival crafts	Deshpande, Chris	77	26240010000077	1	\N	\N	\N
+838	Hugh Lofting's Doctor Dolittle and the pirates	Perkins, Al	77	26240010000077	1	\N	\N	\N
+839	Chew on this	Devins, Susan	77	26240010000077	1	\N	\N	\N
+840	Fifty mighty men	MacEwan, John W. Grant	77	26240010000077	1	\N	\N	\N
+841	Pirates	Miller, Linda Lael	76	26730000000078	1	\N	\N	\N
+842	Corsair	Cussler, Clive	76	26730000000078	1	\N	\N	\N
+843	The headache cure	Kandel, Joseph	76	26730000000078	1	\N	\N	\N
+844	Sleep	Caldwell, J. Paul	76	26730000000078	1	\N	\N	\N
+845	The golden dream of Carlo Chuchio	Alexander, Lloyd	76	26730000000078	1	\N	\N	\N
+846	Nelson's Trafalgar	Adkins, Roy	80	26750000000079	1	\N	\N	\N
+847	Water for elephants	Gruen, Sara	80	26750000000079	1	\N	\N	\N
+848	Elephants	Wexo, John Bonnett	80	26750000000079	1	\N	\N	\N
+849	Death of a dormouse	Hill, Reginald	80	26750000000079	1	\N	\N	\N
+850	Hyperspace	Packard, Edward	80	26750000000079	1	\N	\N	\N
+851	The 60s	Powe-Temperley, Kitty	82	26269000000080	1	\N	\N	\N
+852	Model railroads	Herda, D. J	82	26269000000080	1	\N	\N	\N
+853	Glass rainbow :, The	Burke, James Lee	82	26269000000080	1	\N	\N	\N
+854	Stone cold	Baldacci, David	82	26269000000080	1	\N	\N	\N
+855	Shipwrecks	Cerullo, Mary M	82	26269000000080	1	\N	\N	\N
+856	Carpal tunnel syndrome	Atencio, Rosemarie	135	26646900000081	1	\N	\N	\N
+857	Amigurumi world	Rimoli, Ana Paula	135	26646900000081	1	\N	\N	\N
+858	The knowledge factory	\N	135	26646900000081	1	\N	\N	\N
+859	Barbeque secrets unbeatable recipes, tips & tricks from a barbecue champion	Shewchuk, Ron	135	26646900000081	1	\N	\N	\N
+860	Whose game is it, anyway?	Ginsburg, Richard D	135	26646900000081	1	\N	\N	\N
+861	Point blank	Coulter, Catherine	83	26669000000082	1	\N	\N	\N
+862	44 Cranberry Point	Macomber, Debbie	83	26669000000082	1	\N	\N	\N
+863	The look	Blanchard, Nina	83	26669000000082	1	\N	\N	\N
+864	Talk, talk	Chocolate, Deborah M. Newton	83	26669000000082	1	\N	\N	\N
+865	Building & maintaining docks	Lamping, Chris	83	26669000000082	1	\N	\N	\N
+866	The shipping news	Proulx, Annie	84	26969000000083	1	\N	\N	\N
+867	Submarine	Mallard, Neil	84	26969000000083	1	\N	\N	\N
+868	Our life with the Rocket	Carrier, Roch	84	26969000000083	1	\N	\N	\N
+869	Football in action	Crossingham, John	84	\N	0	\N	\N	\N
+870	Football in action	Crossingham, John	84	26969000000083	1	\N	\N	\N
+871	Storm cycle	Johansen, Iris	85	26786700000084	1	\N	\N	\N
+872	Sundown	Douglas, Jake	85	26786700000084	1	\N	\N	\N
+873	Breaker's reef	Blackstock, Terri	85	26786700000084	1	\N	\N	\N
+874	Off Armageddon Reef	Weber, David	85	26786700000084	1	\N	\N	\N
+875	Skeleton Coast	Cussler, Clive	85	26786700000084	1	\N	\N	\N
+876	Coast Road	Delinsky, Barbara	86	26874700000085	1	\N	\N	\N
+877	92 Pacific Boulevard	Macomber, Debbie	86	26874700000085	1	\N	\N	\N
+878	Atlantic	Winchester, Simon	86	26874700000085	1	\N	\N	\N
+879	North star to freedom	Gorrell, Gena K	86	26874700000085	1	\N	\N	\N
+880	North Spirit	Jiles, Paulette	86	26874700000085	1	\N	\N	\N
+881	Spirit in the rainforest	Wilson, Eric	87	26376000000087	1	\N	\N	\N
+882		Bouchard, Dave	87	26376000000087	1	\N	\N	\N
+883	The Fort Brandon story	Brown, Roy	87	26376000000087	1	\N	\N	\N
+884	Steamboats on the Assiniboine	Brown, Roy	87	26376000000087	1	\N	\N	\N
+885	Hmm?	Swanson, Diane	87	26376000000087	1	\N	\N	\N
+886	Germany	\N	88	26376600000088	1	\N	\N	\N
+887	France	\N	88	26376600000088	1	\N	\N	\N
+888	Past imperfect	\N	88	26376600000088	1	\N	\N	\N
+889	Belgium	Pateman, Robert	88	26376600000088	1	\N	\N	\N
+890	Secrets of the seven smallest states of Europe	Eccardt, Thomas M	88	26376600000088	1	\N	\N	\N
+891	Jurassic park	Crichton, Michael	89	26377000000089	1	\N	\N	\N
+892	Dawn of the dinosaurs	Fraser, Nicholas C	89	26377000000089	1	\N	\N	\N
+893	Tyrannosaurus rex and its kin	Sattler, Helen Roney	89	26377000000089	1	\N	\N	\N
+894	Dragons ;	Shuker, Karl	89	26377000000089	1	\N	\N	\N
+895	The message of the sphinx	Hancock, Graham	89	26377000000089	1	\N	\N	\N
+896	Raptor red	Bakker, Robert T	134	26370010000090	1	\N	\N	\N
+897	Swimming with the Plesiosaur	Stone, Rex	134	26370010000090	1	\N	\N	\N
+898	Beyond the dinosaurs	Brown, Charlotte Lewis	134	26370010000090	1	\N	\N	\N
+899	After the dinosaurs	Brown, Charlotte Lewis	134	26370010000090	1	\N	\N	\N
+900	Three nights in August	Bissinger, H. G	134	26370010000090	1	\N	\N	\N
+901	Cabbage moon	Wahl, Jan	78	26787010000091	1	\N	\N	\N
+902	The squash cookbook	Tarr, Yvonne Young	78	26787010000091	1	\N	\N	\N
+903	Giraffes Can't Dance	Andreae, Giles	78	26787010000091	1	\N	\N	\N
+904	Sharks	McMillan, Beverly	78	26787010000091	1	\N	\N	\N
+905	Tuna Fish Tuesday	\N	78	26787010000091	1	\N	\N	\N
+906	Communication	Grimshaw, Carol	91	26870000000093	1	\N	\N	\N
+907	Foggy Mountain breakdown and other stories	McCrumb, Sharyn	91	26870000000093	1	\N	\N	\N
+908	The case for Mars	Zubrin, Robert	91	26870000000093	1	\N	\N	\N
+909	Suddenly	Burnard, Bonnie	91	26870000000093	1	\N	\N	\N
+910	Strange worlds, amazing places	\N	91	26870000000093	1	\N	\N	\N
+911	From prairie roots	Fairbairn, Garry Lawrence	92	26840000000094	1	\N	\N	\N
+912	Snowbirds	Sroka, Mike	92	26840000000094	1	\N	\N	\N
+913	To have and have not	Hemingway, Ernest	92	26840000000094	1	\N	\N	\N
+914	New Zealand	\N	92	26840000000094	1	\N	\N	\N
+915	Saturn	Bova, Ben	92	26840000000094	1	\N	\N	\N
+916	Wilderness Manitoba	Wilson, Hap	125	26626000000095	1	\N	\N	\N
+917	Motorcycles	Oxlade, Chris	125	26626000000095	1	\N	\N	\N
+918	Hot Wheels	Landers, Ace	125	26626000000095	1	\N	\N	\N
+919	Canadian pie	Ferguson, Will	125	26626000000095	1	\N	\N	\N
+920	So you want to be a producer	Turman, Lawrence	125	26626000000095	1	\N	\N	\N
+921	Animation unleashed	Besen, Ellen	93	26687000000096	1	\N	\N	\N
+922	Programming the universe	Lloyd, Seth	93	26687000000096	1	\N	\N	\N
+923	Operation, survival	Dixon, Franklin W	93	26687000000096	1	\N	\N	\N
+924	Spitfire	Price, Alfred	93	26687000000096	1	\N	\N	\N
+925	Hornet flight	Follett, Ken	93	26687000000096	1	\N	\N	\N
+926	The end of the wasp season	Mina, Denise	102	26470000000098	1	\N	\N	\N
+927	Do Unto Otters	Keller, Laurie	102	26470000000098	1	\N	\N	\N
+928	Ginger	Voake, Charlotte	102	26470000000098	1	\N	\N	\N
+929	Taste of honey	Goudge, Eileen	102	26470000000098	1	\N	\N	\N
+930	Food allergy cookbook	Bruce-Gardyne, Lucinda	102	26470000000098	1	\N	\N	\N
+931	The harrowing of Gwynedd	Kurtz, Katherine	120	26490000000099	1	\N	\N	\N
+932	Streams of Babel	Plum-Ucci, Carol	120	26490000000099	1	\N	\N	\N
+933	On writing	King, Stephen	120	26490000000099	1	\N	\N	\N
+934	The white plume	Bowman, Charles	120	26490000000099	1	\N	\N	\N
+935	Great Northern Railroad fonds	\N	120	26490000000099	1	\N	\N	\N
+936	Banking	Hudak, Heather C	94	26290000000100	1	\N	\N	\N
+937	A breath of snow and ashes	Gabaldon, Diana	94	26290000000100	1	\N	\N	\N
+938	Diamonds	Paterson, Vicky	94	26290000000100	1	\N	\N	\N
+939	Sapphire	Rogers, Rosemary	94	26290000000100	1	\N	\N	\N
+940	The Alexandria link	Berry, Steve	94	26290000000100	1	\N	\N	\N
+941	Cell	King, Stephen	95	26262000000101	1	\N	\N	\N
+942	Losing Joe's Place	Korman, Gordon	95	26262000000101	1	\N	\N	\N
+943	Success with house plants	\N	95	26262000000101	1	\N	\N	\N
+944	Murphy's herd	Paulsen, Gary	95	26262000000101	1	\N	\N	\N
+945	Just where you belong	Eubank, Patti Reeder	95	26262000000101	1	\N	\N	\N
+947	Creating the prairie xeriscape	Williams, Sara	96	26490000000102	1	\N	\N	\N
+946	Where the sidewalk ends	Silverstein, Shel	96	26490000000102	1	\N	\N	\N
+948	Blue sky	Wood, Audrey	96	26490000000102	1	\N	\N	\N
+949	Windy city blues	Paretsky, Sara	96	26490000000102	1	\N	\N	\N
+950	The night sky book	Jobb, Jamie	96	26490000000102	1	\N	\N	\N
+951	The Gates	Connolly, John	97	26690000000103	1	\N	\N	\N
+952	Gateways	Wilson, F. Paul	97	26690000000103	1	\N	\N	\N
+953	The butter did it	Richman, Phyllis C	97	26690000000103	1	\N	\N	\N
+954	Churchill's secret agent	Butler, Josephine	97	26690000000103	1	\N	\N	\N
+955	Colby Brass	Webb, Debra	97	26690000000103	1	\N	\N	\N
+956	Somebody somewhere	Williams, Donna	99	26900000000104	1	\N	\N	\N
+957	Summer	Kingsbury, Karen	99	26900000000104	1	\N	\N	\N
+958	Seabiscuit	Hillenbrand, Laura	99	26900000000104	1	\N	\N	\N
+959	Thirst	Snitow, Alan	99	26900000000104	1	\N	\N	\N
+960	Tell me your dreams	Sheldon, Sidney,SHELDON, SIDNEY	99	26900000000104	1	\N	\N	\N
 \.
 
 
 --
+-- TOC entry 1903 (class 0 OID 17470)
+-- Dependencies: 150
 -- Data for Name: request_closed; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY request_closed (id, title, author, requester, patron_barcode, filled_by, attempts) FROM stdin;
-241	The maiden	Deveraux, Jude	20	26266000000013	\N	1
-252	Murder on the orient express	Christie, Agatha	20	26266000000013	\N	1
-142	Hegemony or survival	Chomsky, Noam	90	26830000000008	\N	1
-350	Retire rich!	Gadsden, Stephen	72	26720000000018	\N	1
-145	Happiness sold separately	Winston, Lolly	90	26830000000008	\N	1
-423	10 little rubber ducks	Carle, Eric	85	26220100000015	\N	1
-5	Appalachian spring	Gustafson, Eleanor	85	26786700000001	\N	2
+COPY request_closed (id, title, author, requester, patron_barcode, filled_by, attempts, note) FROM stdin;
 \.
 
 
 --
+-- TOC entry 1904 (class 0 OID 17476)
+-- Dependencies: 151
 -- Data for Name: requests_active; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
 COPY requests_active (request_id, ts, msg_from, msg_to, status, message) FROM stdin;
-1	2011-12-12 11:50:50.131983	85	90	ILL-Request	\N
-2	2011-12-12 11:51:28.563778	85	99	ILL-Request	\N
-3	2011-12-12 11:52:19.316667	85	90	ILL-Request	\N
-4	2011-12-12 11:52:55.572766	85	32	ILL-Request	\N
-6	2011-12-12 11:54:06.546173	85	21	ILL-Request	\N
-7	2011-12-12 11:55:27.673781	85	101	ILL-Request	\N
-8	2011-12-12 11:56:09.61186	85	39	ILL-Request	\N
-9	2011-12-12 11:56:40.124281	85	101	ILL-Request	\N
-10	2011-12-12 11:57:15.849335	85	84	ILL-Request	\N
-11	2011-12-12 11:57:53.687573	85	25	ILL-Request	\N
-12	2011-12-12 11:58:29.787813	85	99	ILL-Request	\N
-13	2011-12-12 11:59:09.873812	85	48	ILL-Request	\N
-14	2011-12-12 12:00:03.136649	85	99	ILL-Request	\N
-15	2011-12-12 12:01:04.535545	85	72	ILL-Request	\N
-16	2011-12-12 12:51:40.621998	85	101	ILL-Request	\N
-17	2011-12-12 12:52:23.096104	85	84	ILL-Request	\N
-18	2011-12-12 12:53:14.197327	85	98	ILL-Request	\N
-19	2011-12-12 12:54:20.627123	85	30	ILL-Request	\N
-20	2011-12-12 12:55:33.694451	85	101	ILL-Request	\N
-21	2011-12-12 12:58:14.477502	32	83	ILL-Request	\N
-22	2011-12-12 12:59:09.832974	32	72	ILL-Request	\N
-23	2011-12-12 12:59:40.779665	32	84	ILL-Request	\N
-24	2011-12-12 13:01:00.01523	32	33	ILL-Request	\N
-25	2011-12-12 13:01:31.205609	32	82	ILL-Request	\N
-26	2011-12-12 13:02:06.472254	32	90	ILL-Request	\N
-27	2011-12-12 13:02:39.717211	32	85	ILL-Request	\N
-28	2011-12-12 13:03:08.576603	32	68	ILL-Request	\N
-30	2011-12-12 13:04:24.130224	32	87	ILL-Request	\N
-31	2011-12-12 13:04:49.170239	32	24	ILL-Request	\N
-32	2011-12-12 13:05:12.586817	32	46	ILL-Request	\N
-33	2011-12-12 13:05:49.687341	32	24	ILL-Request	\N
-34	2011-12-12 13:06:48.299765	32	20	ILL-Request	\N
-35	2011-12-12 13:07:44.986537	32	101	ILL-Request	\N
-36	2011-12-12 13:08:17.055182	32	24	ILL-Request	\N
-37	2011-12-12 13:08:42.396886	32	98	ILL-Request	\N
-38	2011-12-12 13:09:39.71185	32	34	ILL-Request	\N
-39	2011-12-12 13:10:06.919288	32	99	ILL-Request	\N
-40	2011-12-12 13:10:33.534191	32	20	ILL-Request	\N
-41	2011-12-12 13:12:20.477484	24	39	ILL-Request	\N
-42	2011-12-12 13:12:57.107761	24	71	ILL-Request	\N
-43	2011-12-12 13:13:25.920195	24	82	ILL-Request	\N
-44	2011-12-12 13:13:57.311397	24	99	ILL-Request	\N
-45	2011-12-12 13:14:47.560049	24	92	ILL-Request	\N
-46	2011-12-12 13:16:18.964972	24	101	ILL-Request	\N
-47	2011-12-12 13:16:44.449908	24	90	ILL-Request	\N
-48	2011-12-12 13:17:24.078383	24	85	ILL-Request	\N
-49	2011-12-12 13:19:01.102517	24	20	ILL-Request	\N
-50	2011-12-12 13:19:30.005684	24	68	ILL-Request	\N
-51	2011-12-12 13:20:06.028608	24	84	ILL-Request	\N
-52	2011-12-12 13:20:32.489519	24	68	ILL-Request	\N
-53	2011-12-12 13:20:56.951128	24	85	ILL-Request	\N
-54	2011-12-12 13:21:24.133848	24	92	ILL-Request	\N
-55	2011-12-12 13:21:54.539522	24	98	ILL-Request	\N
-56	2011-12-12 13:22:28.795501	24	68	ILL-Request	\N
-57	2011-12-12 13:23:06.657959	24	34	ILL-Request	\N
-58	2011-12-12 13:23:52.550051	24	135	ILL-Request	\N
-59	2011-12-12 13:24:18.158784	24	92	ILL-Request	\N
-60	2011-12-12 13:24:41.028184	24	82	ILL-Request	\N
-61	2011-12-12 13:26:40.424336	92	83	ILL-Request	\N
-62	2011-12-12 13:27:19.132191	92	101	ILL-Request	\N
-63	2011-12-12 13:28:06.657214	92	99	ILL-Request	\N
-64	2011-12-12 13:28:39.125241	92	21	ILL-Request	\N
-65	2011-12-12 13:29:15.909345	92	100	ILL-Request	\N
-66	2011-12-12 13:29:54.618103	92	68	ILL-Request	\N
-67	2011-12-12 13:30:28.58704	92	90	ILL-Request	\N
-69	2011-12-12 13:31:27.038779	92	24	ILL-Request	\N
-70	2011-12-12 13:31:48.810979	92	24	ILL-Request	\N
-71	2011-12-12 13:32:23.767993	92	85	ILL-Request	\N
-72	2011-12-12 13:33:09.211942	92	99	ILL-Request	\N
-73	2011-12-12 13:33:44.680083	92	135	ILL-Request	\N
-74	2011-12-12 13:34:07.656283	92	83	ILL-Request	\N
-75	2011-12-12 13:34:32.381518	92	68	ILL-Request	\N
-76	2011-12-12 13:35:03.040534	92	71	ILL-Request	\N
-77	2011-12-12 13:35:55.484357	92	20	ILL-Request	\N
-78	2011-12-12 13:36:23.998635	92	100	ILL-Request	\N
-79	2011-12-12 13:37:00.906436	92	84	ILL-Request	\N
-80	2011-12-12 13:37:24.136213	92	101	ILL-Request	\N
-81	2011-12-12 13:39:02.669787	71	92	ILL-Request	\N
-82	2011-12-12 13:39:41.989933	71	84	ILL-Request	\N
-83	2011-12-12 13:40:15.149512	71	24	ILL-Request	\N
-84	2011-12-12 13:40:43.920005	71	83	ILL-Request	\N
-85	2011-12-12 13:41:56.461802	71	90	ILL-Request	\N
-86	2011-12-12 13:42:21.942357	71	82	ILL-Request	\N
-87	2011-12-12 13:42:48.829225	71	68	ILL-Request	\N
-88	2011-12-12 13:43:19.418968	71	30	ILL-Request	\N
-89	2011-12-12 13:43:50.876861	71	30	ILL-Request	\N
-90	2011-12-12 13:44:15.270209	71	18	ILL-Request	\N
-91	2011-12-12 13:44:42.265563	71	92	ILL-Request	\N
-92	2011-12-12 13:45:14.302066	71	68	ILL-Request	\N
-93	2011-12-12 13:46:02.14789	71	21	ILL-Request	\N
-94	2011-12-12 13:46:34.481816	71	46	ILL-Request	\N
-95	2011-12-12 13:47:24.596394	71	99	ILL-Request	\N
-96	2011-12-12 13:47:51.321097	71	87	ILL-Request	\N
-97	2011-12-12 13:48:44.640537	71	100	ILL-Request	\N
-98	2011-12-12 13:49:20.128048	71	30	ILL-Request	\N
-99	2011-12-12 13:50:19.182286	71	99	ILL-Request	\N
-100	2011-12-12 13:51:49.577034	71	84	ILL-Request	\N
-101	2011-12-12 13:53:53.597236	68	24	ILL-Request	\N
-102	2011-12-12 13:54:25.340122	68	85	ILL-Request	\N
-103	2011-12-12 13:54:57.889057	68	72	ILL-Request	\N
-104	2011-12-12 13:55:33.157018	68	82	ILL-Request	\N
-105	2011-12-12 13:56:06.403645	68	21	ILL-Request	\N
-106	2011-12-12 13:56:47.674555	68	99	ILL-Request	\N
-107	2011-12-12 13:58:15.914902	68	100	ILL-Request	\N
-108	2011-12-12 13:59:40.293506	68	85	ILL-Request	\N
-109	2011-12-12 14:00:10.209084	68	24	ILL-Request	\N
-110	2011-12-12 14:00:35.40303	68	24	ILL-Request	\N
-111	2011-12-12 14:01:32.658274	68	32	ILL-Request	\N
-112	2011-12-12 14:02:37.639421	68	100	ILL-Request	\N
-113	2011-12-12 14:03:12.157837	68	99	ILL-Request	\N
-114	2011-12-12 14:03:48.026405	68	71	ILL-Request	\N
-115	2011-12-12 14:04:09.030815	68	99	ILL-Request	\N
-116	2011-12-12 14:04:35.960231	68	92	ILL-Request	\N
-117	2011-12-12 14:05:06.920308	68	87	ILL-Request	\N
-118	2011-12-12 14:05:53.946344	68	83	ILL-Request	\N
-119	2011-12-12 14:06:35.570558	68	83	ILL-Request	\N
-120	2011-12-12 14:07:44.78444	68	72	ILL-Request	\N
-121	2011-12-12 14:10:02.479906	94	24	ILL-Request	\N
-123	2011-12-12 14:10:52.051085	94	98	ILL-Request	\N
-124	2011-12-12 14:11:29.959928	94	98	ILL-Request	\N
-125	2011-12-12 14:11:57.532108	94	83	ILL-Request	\N
-126	2011-12-12 14:12:18.603327	94	84	ILL-Request	\N
-127	2011-12-12 14:12:46.586589	94	92	ILL-Request	\N
-128	2011-12-12 14:13:10.660581	94	68	ILL-Request	\N
-129	2011-12-12 14:13:43.937374	94	83	ILL-Request	\N
-130	2011-12-12 14:14:22.378119	94	68	ILL-Request	\N
-131	2011-12-12 14:15:10.225835	94	92	ILL-Request	\N
-132	2011-12-12 14:15:48.238522	94	98	ILL-Request	\N
-133	2011-12-12 14:16:17.061615	94	92	ILL-Request	\N
-134	2011-12-12 14:16:46.684677	94	92	ILL-Request	\N
-135	2011-12-12 14:17:25.697616	94	84	ILL-Request	\N
-136	2011-12-12 14:17:57.121767	94	83	ILL-Request	\N
-137	2011-12-12 14:18:23.993277	94	90	ILL-Request	\N
-138	2011-12-12 14:19:22.464258	94	87	ILL-Request	\N
-139	2011-12-12 14:20:02.531045	94	99	ILL-Request	\N
-140	2011-12-12 14:20:42.059131	94	90	ILL-Request	\N
-141	2011-12-12 14:22:13.234947	90	68	ILL-Request	\N
-143	2011-12-12 14:23:34.3907	90	68	ILL-Request	\N
-144	2011-12-12 14:24:02.549379	90	85	ILL-Request	\N
-146	2011-12-12 14:25:10.542511	90	68	ILL-Request	\N
-147	2011-12-12 14:25:41.955667	90	83	ILL-Request	\N
-148	2011-12-12 14:26:22.403377	90	72	ILL-Request	\N
-150	2011-12-12 14:27:41.453323	90	84	ILL-Request	\N
-151	2011-12-12 14:28:33.862456	90	85	ILL-Request	\N
-152	2011-12-12 14:29:39.269655	90	72	ILL-Request	\N
-153	2011-12-12 14:30:05.53657	90	68	ILL-Request	\N
-154	2011-12-12 14:31:11.031843	90	99	ILL-Request	\N
-155	2011-12-12 14:31:46.22666	90	85	ILL-Request	\N
-156	2011-12-12 14:32:19.330816	90	24	ILL-Request	\N
-157	2011-12-12 14:32:45.355583	90	98	ILL-Request	\N
-158	2011-12-12 14:33:11.529716	90	135	ILL-Request	\N
-159	2011-12-12 14:33:50.048152	90	87	ILL-Request	\N
-160	2011-12-12 14:34:34.187858	90	24	ILL-Request	\N
-161	2011-12-12 14:38:07.224084	82	92	ILL-Request	\N
-163	2011-12-12 14:38:52.628066	82	24	ILL-Request	\N
-164	2011-12-12 14:39:24.210881	82	84	ILL-Request	\N
-165	2011-12-12 14:40:37.669561	82	99	ILL-Request	\N
-166	2011-12-12 14:41:11.328467	82	68	ILL-Request	\N
-167	2011-12-12 14:41:44.496293	82	71	ILL-Request	\N
-168	2011-12-12 14:42:30.030032	82	21	ILL-Request	\N
-169	2011-12-12 14:43:10.718122	82	84	ILL-Request	\N
-170	2011-12-12 14:44:00.851325	82	92	ILL-Request	\N
-171	2011-12-12 14:44:36.78407	82	92	ILL-Request	\N
-172	2011-12-12 14:45:20.619641	82	68	ILL-Request	\N
-173	2011-12-12 14:46:04.224945	82	85	ILL-Request	\N
-174	2011-12-12 14:46:37.250516	82	85	ILL-Request	\N
-175	2011-12-12 14:47:26.851477	82	20	ILL-Request	\N
-176	2011-12-12 14:48:13.244657	82	20	ILL-Request	\N
-177	2011-12-12 14:49:49.371067	82	30	ILL-Request	\N
-178	2011-12-12 14:50:53.333343	82	101	ILL-Request	\N
-179	2011-12-12 14:51:27.121511	82	24	ILL-Request	\N
-180	2011-12-12 14:52:18.196101	82	72	ILL-Request	\N
-181	2011-12-12 15:00:57.406569	84	90	ILL-Request	\N
-182	2011-12-12 15:01:59.417657	84	39	ILL-Request	\N
-183	2011-12-12 15:03:09.564977	84	68	ILL-Request	\N
-184	2011-12-12 15:04:00.687386	84	46	ILL-Request	\N
-186	2011-12-12 15:04:57.325223	84	87	ILL-Request	\N
-187	2011-12-12 15:05:21.379333	84	39	ILL-Request	\N
-188	2011-12-12 15:06:05.928876	84	92	ILL-Request	\N
-189	2011-12-12 15:06:37.471895	84	92	ILL-Request	\N
-190	2011-12-12 15:07:04.898959	84	30	ILL-Request	\N
-191	2011-12-12 15:08:09.314809	84	85	ILL-Request	\N
-192	2011-12-12 15:09:05.211998	84	18	ILL-Request	\N
-193	2011-12-12 15:10:06.268685	84	87	ILL-Request	\N
-194	2011-12-12 15:10:46.220394	84	18	ILL-Request	\N
-195	2011-12-12 15:11:24.421921	84	90	ILL-Request	\N
-196	2011-12-12 15:11:51.467454	84	46	ILL-Request	\N
-197	2011-12-12 15:12:30.820836	84	18	ILL-Request	\N
-198	2011-12-12 15:13:28.585085	84	30	ILL-Request	\N
-199	2011-12-12 15:14:11.079606	84	25	ILL-Request	\N
-200	2011-12-12 15:14:40.871951	84	68	ILL-Request	\N
-201	2011-12-12 15:16:11.221397	83	90	ILL-Request	\N
-202	2011-12-12 15:16:40.479814	83	99	ILL-Request	\N
-203	2011-12-12 15:17:14.958293	83	100	ILL-Request	\N
-204	2011-12-12 15:17:56.522719	83	47	ILL-Request	\N
-205	2011-12-12 15:18:45.653049	83	20	ILL-Request	\N
-206	2011-12-12 15:19:14.184193	83	92	ILL-Request	\N
-207	2011-12-12 15:19:54.410957	83	78	ILL-Request	\N
-208	2011-12-12 15:20:22.850752	83	39	ILL-Request	\N
-209	2011-12-12 15:20:51.343124	83	24	ILL-Request	\N
-210	2011-12-12 15:21:30.150758	83	30	ILL-Request	\N
-211	2011-12-12 15:21:59.781261	83	85	ILL-Request	\N
-212	2011-12-12 15:22:51.474231	83	78	ILL-Request	\N
-213	2011-12-12 15:23:40.755886	83	30	ILL-Request	\N
-214	2011-12-12 15:24:13.289274	83	98	ILL-Request	\N
-215	2011-12-12 15:24:37.883211	83	99	ILL-Request	\N
-216	2011-12-12 15:25:12.029777	83	92	ILL-Request	\N
-217	2011-12-12 15:25:41.801372	83	68	ILL-Request	\N
-218	2011-12-12 15:26:30.43688	83	90	ILL-Request	\N
-219	2011-12-12 15:26:59.662468	83	18	ILL-Request	\N
-220	2011-12-12 15:28:08.017819	83	87	ILL-Request	\N
-221	2011-12-12 15:31:13.996356	135	72	ILL-Request	\N
-222	2011-12-12 15:32:36.972591	135	99	ILL-Request	\N
-223	2011-12-12 15:34:27.780224	135	32	ILL-Request	\N
-224	2011-12-12 15:35:11.140415	135	85	ILL-Request	\N
-225	2011-12-12 15:36:02.042402	135	99	ILL-Request	\N
-226	2011-12-12 15:36:43.313077	135	92	ILL-Request	\N
-227	2011-12-12 15:37:41.065009	135	101	ILL-Request	\N
-228	2011-12-12 15:38:06.21619	135	34	ILL-Request	\N
-229	2011-12-12 15:38:37.381751	135	87	ILL-Request	\N
-230	2011-12-12 15:39:32.993965	135	34	ILL-Request	\N
-231	2011-12-12 15:40:20.582109	135	32	ILL-Request	\N
-232	2011-12-12 15:41:32.792406	135	90	ILL-Request	\N
-233	2011-12-12 15:42:52.485761	135	83	ILL-Request	\N
-234	2011-12-12 15:43:28.738888	135	85	ILL-Request	\N
-235	2011-12-12 15:44:00.538629	135	24	ILL-Request	\N
-236	2011-12-12 15:45:33.393967	135	98	ILL-Request	\N
-237	2011-12-12 15:46:11.60923	135	33	ILL-Request	\N
-238	2011-12-12 15:46:56.013957	135	68	ILL-Request	\N
-239	2011-12-12 15:47:59.02812	135	34	ILL-Request	\N
-240	2011-12-12 15:48:33.320835	135	24	ILL-Request	\N
-242	2011-12-12 15:50:49.931138	20	85	ILL-Request	\N
-243	2011-12-12 15:51:28.239027	20	99	ILL-Request	\N
-244	2011-12-12 15:51:55.804179	20	25	ILL-Request	\N
-245	2011-12-12 15:52:20.663142	20	71	ILL-Request	\N
-246	2011-12-12 15:53:36.600528	20	92	ILL-Request	\N
-248	2011-12-12 15:54:23.148559	20	24	ILL-Request	\N
-250	2011-12-12 15:55:43.887316	20	46	ILL-Request	\N
-251	2011-12-12 15:56:23.28394	20	85	ILL-Request	\N
-67	2012-01-19 15:13:30.33136	92	90	Received	
-253	2011-12-12 15:57:57.346481	20	99	ILL-Request	\N
-254	2011-12-12 15:58:49.207141	20	99	ILL-Request	\N
-255	2011-12-12 15:59:40.455233	20	84	ILL-Request	\N
-256	2011-12-12 16:00:09.958768	20	24	ILL-Request	\N
-257	2011-12-12 16:00:38.452248	20	98	ILL-Request	\N
-258	2011-12-12 16:01:06.479353	20	99	ILL-Request	\N
-259	2011-12-12 16:01:47.714305	20	30	ILL-Request	\N
-260	2011-12-12 16:03:07.455484	20	18	ILL-Request	\N
-261	2011-12-12 16:05:10.753758	39	44	ILL-Request	\N
-262	2011-12-12 16:06:39.628688	39	34	ILL-Request	\N
-263	2011-12-12 16:07:25.709881	39	68	ILL-Request	\N
-264	2011-12-12 16:07:51.336613	39	25	ILL-Request	\N
-265	2011-12-12 16:08:37.132789	39	83	ILL-Request	\N
-266	2011-12-12 16:09:08.453501	39	24	ILL-Request	\N
-267	2011-12-12 16:10:16.565046	39	68	ILL-Request	\N
-268	2011-12-12 16:11:06.19256	39	68	ILL-Request	\N
-269	2011-12-12 16:11:50.897702	39	99	ILL-Request	\N
-270	2011-12-12 16:12:25.370927	39	98	ILL-Request	\N
-271	2011-12-12 16:12:56.478974	39	72	ILL-Request	\N
-272	2011-12-12 16:13:29.816966	39	83	ILL-Request	\N
-273	2011-12-12 16:13:57.113121	39	84	ILL-Request	\N
-274	2011-12-12 16:14:23.674677	39	85	ILL-Request	\N
-275	2011-12-12 16:14:52.320332	39	83	ILL-Request	\N
-276	2011-12-12 16:15:20.083685	39	99	ILL-Request	\N
-277	2011-12-12 16:16:13.012449	39	99	ILL-Request	\N
-278	2011-12-12 16:16:37.620778	39	90	ILL-Request	\N
-279	2011-12-12 16:17:33.64786	39	99	ILL-Request	\N
-280	2011-12-12 16:18:05.540528	39	101	ILL-Request	\N
-281	2011-12-12 16:19:50.091845	30	90	ILL-Request	\N
-282	2011-12-12 16:21:02.925809	30	90	ILL-Request	\N
-283	2011-12-12 16:21:30.11714	30	92	ILL-Request	\N
-284	2011-12-12 16:21:59.233566	30	85	ILL-Request	\N
-285	2011-12-12 16:22:26.729936	30	68	ILL-Request	\N
-286	2011-12-12 16:23:09.484564	30	46	ILL-Request	\N
-287	2011-12-12 16:23:41.386416	30	68	ILL-Request	\N
-288	2011-12-12 16:24:41.6287	30	83	ILL-Request	\N
-289	2011-12-12 16:25:17.919097	30	90	ILL-Request	\N
-290	2011-12-12 16:25:55.626328	30	99	ILL-Request	\N
-291	2011-12-12 16:26:25.792517	30	90	ILL-Request	\N
-292	2011-12-12 16:27:03.804439	30	85	ILL-Request	\N
-293	2011-12-12 16:27:43.44054	30	99	ILL-Request	\N
-294	2011-12-12 16:28:31.156221	30	101	ILL-Request	\N
-295	2011-12-12 16:28:57.643798	30	32	ILL-Request	\N
-296	2011-12-12 16:29:32.073494	30	82	ILL-Request	\N
-297	2011-12-12 16:29:59.056048	30	20	ILL-Request	\N
-298	2011-12-12 16:30:25.061633	30	72	ILL-Request	\N
-299	2011-12-12 16:30:56.786092	30	100	ILL-Request	\N
-300	2011-12-12 16:31:45.978074	30	99	ILL-Request	\N
-301	2011-12-14 09:25:56.203352	98	71	ILL-Request	\N
-302	2011-12-14 09:26:25.558531	98	24	ILL-Request	\N
-303	2011-12-14 09:26:52.813593	98	85	ILL-Request	\N
-304	2011-12-14 09:27:20.080797	98	83	ILL-Request	\N
-305	2011-12-14 09:27:48.647448	98	24	ILL-Request	\N
-306	2011-12-14 09:28:16.557698	98	101	ILL-Request	\N
-307	2011-12-14 09:28:49.009708	98	99	ILL-Request	\N
-308	2011-12-14 09:29:41.072983	98	87	ILL-Request	\N
-309	2011-12-14 09:30:09.675364	98	83	ILL-Request	\N
-310	2011-12-14 09:31:04.886022	98	99	ILL-Request	\N
-311	2011-12-14 09:31:42.853117	98	101	ILL-Request	\N
-312	2011-12-14 09:32:29.649825	98	90	ILL-Request	\N
-313	2011-12-14 09:32:48.027872	98	24	ILL-Request	\N
-314	2011-12-14 09:33:08.531177	98	87	ILL-Request	\N
-315	2011-12-14 09:33:30.786411	98	78	ILL-Request	\N
-316	2011-12-14 09:34:02.994325	98	99	ILL-Request	\N
-317	2011-12-14 09:34:27.085039	98	90	ILL-Request	\N
-318	2011-12-14 09:34:46.765711	98	85	ILL-Request	\N
-319	2011-12-14 09:35:12.612675	98	25	ILL-Request	\N
-320	2011-12-14 09:35:59.316343	98	30	ILL-Request	\N
-321	2011-12-14 09:38:57.172686	87	90	ILL-Request	\N
-322	2011-12-14 09:40:28.565598	87	78	ILL-Request	\N
-323	2011-12-14 09:41:26.686301	87	48	ILL-Request	\N
-324	2011-12-14 09:41:57.847228	87	24	ILL-Request	\N
-325	2011-12-14 09:44:09.104472	87	24	ILL-Request	\N
-326	2011-12-14 09:44:50.044114	87	24	ILL-Request	\N
-327	2011-12-14 09:45:44.652476	87	99	ILL-Request	\N
-328	2011-12-14 09:46:21.367784	87	100	ILL-Request	\N
-329	2011-12-14 09:47:15.014853	87	90	ILL-Request	\N
-330	2011-12-14 09:48:19.668347	87	84	ILL-Request	\N
-331	2011-12-14 09:48:55.930497	87	99	ILL-Request	\N
-332	2011-12-14 09:49:24.008925	87	100	ILL-Request	\N
-333	2011-12-14 09:49:54.885519	87	82	ILL-Request	\N
-334	2011-12-14 09:51:23.34779	87	20	ILL-Request	\N
-335	2011-12-14 09:51:52.237831	87	68	ILL-Request	\N
-336	2011-12-14 09:52:52.931071	87	78	ILL-Request	\N
-337	2011-12-14 09:53:43.019362	87	92	ILL-Request	\N
-338	2011-12-14 09:54:21.855188	87	39	ILL-Request	\N
-339	2011-12-14 09:54:57.264724	87	24	ILL-Request	\N
-341	2011-12-14 09:56:07.68337	87	68	ILL-Request	\N
-342	2011-12-14 09:57:56.996435	72	92	ILL-Request	\N
-343	2011-12-14 10:00:41.524767	72	20	ILL-Request	\N
-344	2011-12-14 10:01:06.871082	72	32	ILL-Request	\N
-345	2011-12-14 10:01:33.837847	72	24	ILL-Request	\N
-346	2011-12-14 10:02:20.065519	72	100	ILL-Request	\N
-347	2011-12-14 10:03:09.737269	72	21	ILL-Request	\N
-348	2011-12-14 10:03:33.212421	72	71	ILL-Request	\N
-349	2011-12-14 10:04:02.452587	72	98	ILL-Request	\N
-351	2011-12-14 10:04:55.878968	72	92	ILL-Request	\N
-352	2011-12-14 10:07:48.489667	72	24	ILL-Request	\N
-353	2011-12-14 10:08:27.28677	72	100	ILL-Request	\N
-354	2011-12-14 10:08:58.229345	72	92	ILL-Request	\N
-355	2011-12-14 10:09:17.995202	72	92	ILL-Request	\N
-356	2011-12-14 10:10:02.061783	72	101	ILL-Request	\N
-357	2011-12-14 10:10:52.381595	72	92	ILL-Request	\N
-358	2011-12-14 10:11:30.904689	72	84	ILL-Request	\N
-359	2011-12-14 10:12:14.113974	72	39	ILL-Request	\N
-360	2011-12-14 10:12:55.898202	72	99	ILL-Request	\N
-361	2011-12-14 10:16:37.666219	34	39	ILL-Request	\N
-362	2011-12-14 10:17:08.364118	34	83	ILL-Request	\N
-363	2011-12-14 10:17:37.051878	34	83	ILL-Request	\N
-364	2011-12-14 10:18:03.344209	34	83	ILL-Request	\N
-365	2011-12-14 10:18:31.158129	34	24	ILL-Request	\N
-366	2011-12-14 10:19:35.059263	34	82	ILL-Request	\N
-367	2011-12-14 10:20:06.41039	34	84	ILL-Request	\N
-368	2011-12-14 10:20:32.796395	34	90	ILL-Request	\N
-369	2011-12-14 10:21:03.469305	34	85	ILL-Request	\N
-370	2011-12-14 10:21:36.675805	34	85	ILL-Request	\N
-371	2011-12-14 10:21:55.326172	34	83	ILL-Request	\N
-372	2011-12-14 10:22:15.224309	34	90	ILL-Request	\N
-373	2011-12-14 10:22:48.605301	34	83	ILL-Request	\N
-374	2011-12-14 10:23:11.027802	34	98	ILL-Request	\N
-375	2011-12-14 10:23:57.331455	34	24	ILL-Request	\N
-376	2011-12-14 10:24:26.067961	34	72	ILL-Request	\N
-377	2011-12-14 10:24:53.833372	34	90	ILL-Request	\N
-378	2011-12-14 10:25:19.61578	34	85	ILL-Request	\N
-379	2011-12-14 10:25:50.06976	34	83	ILL-Request	\N
-380	2011-12-14 10:26:43.021646	34	83	ILL-Request	\N
-381	2011-12-14 10:28:36.72511	18	71	ILL-Request	\N
-382	2011-12-14 10:29:06.970853	18	83	ILL-Request	\N
-383	2011-12-14 10:30:49.664907	18	99	ILL-Request	\N
-384	2011-12-14 10:31:15.755368	18	24	ILL-Request	\N
-385	2011-12-14 10:31:48.277595	18	90	ILL-Request	\N
-386	2011-12-14 10:32:14.226424	18	90	ILL-Request	\N
-387	2011-12-14 10:32:38.396192	18	31	ILL-Request	\N
-388	2011-12-14 10:33:43.035761	18	98	ILL-Request	\N
-389	2011-12-14 10:35:02.881865	18	83	ILL-Request	\N
-391	2011-12-14 10:36:41.30357	18	99	ILL-Request	\N
-392	2011-12-14 10:37:16.920071	18	31	ILL-Request	\N
-393	2011-12-14 10:38:18.107809	18	24	ILL-Request	\N
-394	2011-12-14 10:38:40.039667	18	92	ILL-Request	\N
-395	2011-12-14 10:39:08.742187	18	72	ILL-Request	\N
-396	2011-12-14 10:39:53.617974	18	32	ILL-Request	\N
-397	2011-12-14 10:40:38.787495	18	101	ILL-Request	\N
-398	2011-12-14 10:41:44.876879	18	87	ILL-Request	\N
-399	2011-12-14 10:42:42.420491	18	99	ILL-Request	\N
-400	2011-12-14 10:43:14.696096	18	83	ILL-Request	\N
-401	2011-12-14 10:44:52.922437	21	34	ILL-Request	\N
-402	2011-12-14 10:45:24.601445	21	85	ILL-Request	\N
-403	2011-12-14 10:46:09.405142	21	101	ILL-Request	\N
-404	2011-12-14 10:46:34.15077	21	24	ILL-Request	\N
-405	2011-12-14 10:47:07.298163	21	90	ILL-Request	\N
-406	2011-12-14 10:48:10.013088	21	87	ILL-Request	\N
-407	2011-12-14 10:48:50.340951	21	99	ILL-Request	\N
-408	2011-12-14 10:49:12.163244	21	90	ILL-Request	\N
-409	2011-12-14 10:49:35.268996	21	24	ILL-Request	\N
-410	2011-12-14 10:51:40.812891	21	98	ILL-Request	\N
-411	2011-12-14 10:52:13.748427	21	99	ILL-Request	\N
-412	2011-12-14 10:52:45.085318	21	100	ILL-Request	\N
-413	2011-12-14 10:53:13.989089	21	84	ILL-Request	\N
-414	2011-12-14 10:53:34.929211	21	31	ILL-Request	\N
-417	2011-12-14 10:54:51.452849	21	16	ILL-Request	\N
-418	2011-12-14 10:55:32.882754	21	87	ILL-Request	\N
-419	2011-12-14 10:56:21.488919	21	84	ILL-Request	\N
-420	2011-12-14 10:57:14.353683	21	84	ILL-Request	\N
-141	2012-01-19 14:27:47.827333	68	90	ILL-Answer|Will-Supply|being-processed-for-supply	
-141	2012-01-19 14:27:48.138125	68	90	Shipped	due 2012-01-31
-143	2012-01-19 15:00:20.186016	90	68	Message	MSTE received item without MP marking as 'Shipped'
-143	2012-01-19 15:00:20.216218	68	90	Shipped	override by MSTE
-1	2012-01-19 15:05:08.989247	90	85	ILL-Answer|Will-Supply|being-processed-for-supply	
-71	2011-12-23 13:18:37.855452	85	92	ILL-Answer|Unfilled|not-owned	
-102	2011-12-23 13:18:40.586368	85	68	ILL-Answer|Will-Supply|being-processed-for-supply	
-102	2011-12-23 13:18:40.851504	85	68	Shipped	due 2011-12-29
-27	2011-12-23 13:24:53.168033	85	32	ILL-Answer|Unfilled|on-reserve	
-108	2011-12-23 13:25:03.455311	85	68	ILL-Answer|Will-Supply|being-processed-for-supply	
-108	2011-12-23 13:25:03.780572	85	68	Shipped	due 2011-12-28
-53	2011-12-23 13:25:13.836221	85	24	ILL-Answer|Unfilled|in-use-on-loan	
-144	2011-12-23 14:15:33.721227	85	90	ILL-Answer|Will-Supply|being-processed-for-supply	
-144	2011-12-23 14:15:34.04335	85	90	Shipped	due 2011-12-31
-151	2011-12-23 14:15:38.655264	85	90	ILL-Answer|Unfilled|in-use-on-loan	
-155	2011-12-23 14:15:45.818869	85	90	ILL-Answer|Will-Supply|being-processed-for-supply	
-155	2011-12-23 14:15:46.111294	85	90	Shipped	due 2011-12-31
-144	2011-12-23 14:33:28.659002	90	85	Received	
-242	2012-01-13 10:00:18.61474	85	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-242	2012-01-13 10:00:18.994794	85	20	Shipped	due 2012-01-31
-251	2012-01-13 10:00:21.732744	85	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-251	2012-01-13 10:00:22.021478	85	20	Shipped	due 2012-01-31
-1	2012-01-19 15:05:09.293482	90	85	Shipped	due 2012-01-31
-3	2012-01-19 15:05:12.63687	90	85	ILL-Answer|Will-Supply|being-processed-for-supply	
-3	2012-01-19 15:05:12.934284	90	85	Shipped	due 2012-01-31
-67	2012-01-19 15:12:18.628433	92	90	Message	MTH received item without MSTE marking as 'Shipped'
-67	2012-01-19 15:12:18.647834	90	92	Shipped	override by MTH
-424	2012-03-02 11:13:04.39783	85	82	ILL-Request	\N
-424	2012-03-02 11:23:30.87022	85	82	ILL-Request	\N
-246	2012-01-13 16:16:19.066815	92	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-1	2012-03-28 13:41:12.119653	85	90	Received	
-1	2012-03-28 13:48:59.01178	85	90	Renew	
-427	2012-03-28 13:51:41.687075	85	46	ILL-Request	\N
-427	2012-03-28 13:52:09.249218	46	85	ILL-Answer|Will-Supply|being-processed-for-supply	
-427	2012-03-28 13:52:09.540442	46	85	Shipped	due 2012-03-31
-427	2012-03-28 13:52:28.205845	85	46	Received	
-427	2012-03-28 13:56:32.588327	85	46	Renew	
-284	2012-03-29 09:53:59.953396	85	30	ILL-Answer|Will-Supply|being-processed-for-supply	
-284	2012-03-29 09:54:00.314655	85	30	Shipped	due 2012-04-30
-292	2012-03-29 09:54:03.324411	85	30	ILL-Answer|Will-Supply|being-processed-for-supply	
-292	2012-03-29 09:54:03.607124	85	30	Shipped	due 2012-04-30
-284	2012-03-29 09:55:21.019624	30	85	Received	
-292	2012-03-29 09:55:22.761418	30	85	Received	
-284	2012-03-29 09:55:40.874446	30	85	Returned	
-292	2012-03-29 09:55:42.01593	30	85	Returned	
-429	2012-04-18 16:34:21.734596	85	101	ILL-Request	\N
-430	2012-04-20 14:58:54.031585	85	101	ILL-Request	\N
-430	2012-04-20 14:59:56.269611	101	85	ILL-Answer|Unfilled|in-use-on-loan	
-430	2012-04-20 15:00:22.395556	85	85	Message	Trying next source
-430	2012-04-20 15:00:22.410771	85	84	ILL-Request	\N
-431	2012-04-20 15:04:53.924657	85	101	ILL-Request	\N
-245	2012-04-30 09:06:44.906329	71	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-245	2012-04-30 09:06:45.173642	71	20	Shipped	due 2012-05-31
-167	2012-04-30 09:06:46.175133	71	82	ILL-Answer|Will-Supply|being-processed-for-supply	
-167	2012-04-30 09:06:46.396128	71	82	Shipped	due 2012-05-31
-76	2012-04-30 09:07:16.015185	71	92	ILL-Answer|Unfilled|not-on-shelf	
-434	2012-05-03 10:10:53.987606	85	85	ILL-Request	\N
-48	2012-05-03 10:14:29.043773	85	24	ILL-Answer|Will-Supply|being-processed-for-supply	
-48	2012-05-03 10:14:29.231613	85	24	Shipped	due 2012-05-31
-173	2012-05-03 10:14:30.494875	85	82	ILL-Answer|Will-Supply|being-processed-for-supply	
-173	2012-05-03 10:14:30.706632	85	82	Shipped	due 2012-05-31
-174	2012-05-03 10:14:41.043785	85	82	ILL-Answer|Unfilled|in-use-on-loan	
-3	2012-05-03 10:17:16.266254	85	90	Received	
-1	2012-05-03 10:21:50.917684	85	90	Returned	
-435	2012-05-09 13:17:24.476672	85	99	ILL-Request	\N
-191	2012-05-09 13:22:46.996744	85	84	ILL-Answer|Will-Supply|being-processed-for-supply	
-191	2012-05-09 13:22:47.361748	85	84	Shipped	due 2012-05-31
-211	2012-05-09 13:22:48.730549	85	83	ILL-Answer|Will-Supply|being-processed-for-supply	
-211	2012-05-09 13:22:48.959316	85	83	Shipped	due 2012-05-31
-224	2012-05-09 13:23:00.635587	85	135	ILL-Answer|Unfilled|in-use-on-loan	
-234	2012-05-09 13:55:17.732517	85	135	ILL-Answer|Unfilled|policy-problem	
-10	2012-05-28 11:17:24.202635	84	85	ILL-Answer|Unfilled|not-owned	
-17	2012-05-28 11:17:28.01369	84	85	ILL-Answer|Unfilled|in-use-on-loan	
-436	2012-05-30 14:20:02.362202	85	48	ILL-Request	\N
+466	2012-07-21 18:41:24.198571	33	99	ILL-Request	\N
+467	2012-07-21 18:42:08.85337	33	91	ILL-Request	\N
+468	2012-07-21 18:42:52.549026	33	101	ILL-Request	\N
+469	2012-07-21 18:43:31.405817	33	101	ILL-Request	\N
+470	2012-07-21 18:44:04.774031	33	34	ILL-Request	\N
+471	2012-07-21 18:45:32.03293	10	92	ILL-Request	\N
+472	2012-07-21 18:46:05.658639	10	44	ILL-Request	\N
+473	2012-07-21 18:46:47.197137	10	99	ILL-Request	\N
+474	2012-07-21 18:47:18.974449	10	68	ILL-Request	\N
+475	2012-07-21 18:47:56.08975	10	135	ILL-Request	\N
+476	2012-07-21 18:49:00.019174	110	73	ILL-Request	\N
+477	2012-07-21 18:49:30.0306	110	26	ILL-Request	\N
+478	2012-07-21 18:50:07.794706	110	92	ILL-Request	\N
+479	2012-07-21 18:50:45.870087	110	30	ILL-Request	\N
+480	2012-07-21 18:51:29.32297	110	99	ILL-Request	\N
+481	2012-07-21 18:52:57.132228	136	92	ILL-Request	\N
+482	2012-07-21 18:53:47.225234	136	99	ILL-Request	\N
+483	2012-07-21 18:54:13.28817	136	30	ILL-Request	\N
+484	2012-07-21 18:54:43.290717	136	94	ILL-Request	\N
+485	2012-07-21 18:55:20.856915	136	92	ILL-Request	\N
+486	2012-07-21 19:16:26.435627	11	79	ILL-Request	\N
+487	2012-07-21 19:17:12.439193	11	38	ILL-Request	\N
+488	2012-07-21 19:17:49.282118	11	38	ILL-Request	\N
+489	2012-07-21 19:18:18.41665	11	31	ILL-Request	\N
+490	2012-07-21 19:18:48.410866	11	38	ILL-Request	\N
+491	2012-07-21 19:20:01.684802	12	34	ILL-Request	\N
+492	2012-07-21 19:21:18.982541	12	35	ILL-Request	\N
+493	2012-07-21 19:21:50.751196	12	135	ILL-Request	\N
+494	2012-07-21 19:22:35.679651	12	30	ILL-Request	\N
+495	2012-07-21 19:23:22.940929	12	79	ILL-Request	\N
+496	2012-07-21 19:24:57.256329	13	85	ILL-Request	\N
+497	2012-07-21 19:25:44.300473	13	84	ILL-Request	\N
+498	2012-07-21 19:26:24.156391	13	30	ILL-Request	\N
+499	2012-07-21 19:26:54.966487	13	101	ILL-Request	\N
+501	2012-07-21 19:28:00.036449	13	83	ILL-Request	\N
+502	2012-07-21 19:29:21.10743	14	48	ILL-Request	\N
+503	2012-07-21 19:29:53.091694	14	36	ILL-Request	\N
+504	2012-07-21 19:30:27.442201	14	38	ILL-Request	\N
+505	2012-07-21 19:31:06.841015	14	92	ILL-Request	\N
+506	2012-07-21 19:32:09.702411	15	92	ILL-Request	\N
+507	2012-07-21 19:32:31.533922	15	26	ILL-Request	\N
+508	2012-07-21 19:32:59.552778	15	25	ILL-Request	\N
+509	2012-07-21 19:33:37.428861	15	83	ILL-Request	\N
+510	2012-07-21 19:34:15.169595	15	78	ILL-Request	\N
+511	2012-07-21 19:35:22.479653	16	94	ILL-Request	\N
+512	2012-07-21 19:35:49.757457	16	98	ILL-Request	\N
+514	2012-07-21 19:36:55.076529	16	68	ILL-Request	\N
+515	2012-07-21 19:37:34.15993	16	79	ILL-Request	\N
+516	2012-07-21 19:38:40.570255	17	45	ILL-Request	\N
+517	2012-07-21 19:39:35.585988	17	134	ILL-Request	\N
+518	2012-07-21 19:39:58.100425	17	94	ILL-Request	\N
+519	2012-07-21 19:40:26.904293	17	83	ILL-Request	\N
+520	2012-07-21 19:41:18.730408	17	26	ILL-Request	\N
+521	2012-07-21 19:42:18.534706	19	20	ILL-Request	\N
+522	2012-07-21 19:42:48.079495	19	83	ILL-Request	\N
+523	2012-07-21 19:43:33.22503	19	38	ILL-Request	\N
+524	2012-07-21 19:44:04.668678	19	98	ILL-Request	\N
+525	2012-07-21 19:45:07.548227	19	26	ILL-Request	\N
+526	2012-07-21 19:46:13.158882	18	38	ILL-Request	\N
+527	2012-07-21 19:46:48.440479	18	20	ILL-Request	\N
+528	2012-07-21 19:47:09.165148	18	30	ILL-Request	\N
+529	2012-07-21 19:47:50.130946	18	99	ILL-Request	\N
+530	2012-07-21 19:48:20.107321	18	101	ILL-Request	\N
+531	2012-07-21 19:49:38.221983	119	30	ILL-Request	\N
+532	2012-07-21 19:50:06.707135	119	98	ILL-Request	\N
+533	2012-07-21 19:50:34.369015	119	101	ILL-Request	\N
+534	2012-07-21 19:51:25.878461	119	44	ILL-Request	\N
+535	2012-07-21 19:52:02.304648	119	26	ILL-Request	\N
+536	2012-07-21 19:53:16.326568	20	99	ILL-Request	\N
+537	2012-07-21 19:53:47.654262	20	33	ILL-Request	\N
+538	2012-07-21 19:54:21.928418	20	99	ILL-Request	\N
+539	2012-07-21 19:55:01.370121	20	100	ILL-Request	\N
+540	2012-07-21 19:55:49.986925	20	20	ILL-Request	\N
+541	2012-07-21 19:56:51.790881	22	84	ILL-Request	\N
+542	2012-07-21 19:57:19.236058	22	94	ILL-Request	\N
+543	2012-07-21 19:57:41.103235	22	85	ILL-Request	\N
+544	2012-07-21 19:58:11.870129	22	44	ILL-Request	\N
+545	2012-07-21 19:58:45.796172	22	72	ILL-Request	\N
+546	2012-07-21 20:20:29.490421	21	31	ILL-Request	\N
+547	2012-07-21 20:21:04.000214	21	48	ILL-Request	\N
+548	2012-07-21 20:21:32.219523	21	99	ILL-Request	\N
+549	2012-07-21 20:21:59.206715	21	101	ILL-Request	\N
+550	2012-07-21 20:22:24.82171	21	85	ILL-Request	\N
+551	2012-07-21 20:23:32.148046	23	84	ILL-Request	\N
+552	2012-07-21 20:24:11.030848	23	99	ILL-Request	\N
+553	2012-07-21 20:24:47.405647	23	91	ILL-Request	\N
+554	2012-07-21 20:25:14.975953	23	20	ILL-Request	\N
+555	2012-07-21 20:26:14.089132	23	26	ILL-Request	\N
+556	2012-07-21 21:14:48.466143	24	79	ILL-Request	\N
+557	2012-07-21 21:15:53.211453	24	101	ILL-Request	\N
+558	2012-07-21 21:16:21.764679	24	99	ILL-Request	\N
+559	2012-07-21 21:17:05.318732	24	35	ILL-Request	\N
+560	2012-07-21 21:17:31.657095	24	83	ILL-Request	\N
+561	2012-07-21 21:18:41.199716	25	38	ILL-Request	\N
+562	2012-07-21 21:19:10.285656	25	83	ILL-Request	\N
+563	2012-07-21 21:19:54.248878	25	71	ILL-Request	\N
+564	2012-07-21 21:20:24.160614	25	78	ILL-Request	\N
+565	2012-07-21 21:21:07.763732	25	79	ILL-Request	\N
+566	2012-07-21 21:42:08.945711	26	84	ILL-Request	\N
+567	2012-07-21 21:43:13.56536	26	92	ILL-Request	\N
+569	2012-07-21 21:44:46.205089	26	101	ILL-Request	\N
+570	2012-07-21 21:45:09.468963	26	101	ILL-Request	\N
+571	2012-07-21 21:46:39.994442	28	83	ILL-Request	\N
+572	2012-07-21 21:47:17.262092	28	36	ILL-Request	\N
+573	2012-07-21 21:47:47.045012	28	44	ILL-Request	\N
+574	2012-07-21 21:48:16.964506	28	84	ILL-Request	\N
+575	2012-07-21 21:48:57.745539	28	68	ILL-Request	\N
+576	2012-07-21 21:50:15.384394	103	11	ILL-Request	\N
+577	2012-07-21 21:50:51.176934	103	83	ILL-Request	\N
+578	2012-07-21 21:51:26.344612	103	38	ILL-Request	\N
+579	2012-07-21 21:56:44.110799	103	26	ILL-Request	\N
+580	2012-07-21 21:57:16.330174	103	45	ILL-Request	\N
+581	2012-07-21 21:58:27.262599	27	99	ILL-Request	\N
+582	2012-07-21 21:58:49.535628	27	36	ILL-Request	\N
+583	2012-07-21 21:59:11.367166	27	134	ILL-Request	\N
+584	2012-07-21 21:59:47.900049	27	91	ILL-Request	\N
+585	2012-07-21 22:00:23.866465	27	10	ILL-Request	\N
+586	2012-07-22 10:13:37.35611	30	94	ILL-Request	\N
+587	2012-07-22 10:14:16.296446	30	20	ILL-Request	\N
+588	2012-07-22 10:14:58.660137	30	99	ILL-Request	\N
+589	2012-07-22 10:16:06.636367	30	100	ILL-Request	\N
+590	2012-07-22 10:16:35.09856	30	83	ILL-Request	\N
+591	2012-07-22 10:18:32.134721	29	78	ILL-Request	\N
+592	2012-07-22 10:21:14.159172	29	\N	ILL-Request	\N
+593	2012-07-22 10:22:44.150288	29	100	ILL-Request	\N
+594	2012-07-22 10:23:46.728443	29	72	ILL-Request	\N
+595	2012-07-22 10:25:32.688657	29	83	ILL-Request	\N
+596	2012-07-22 10:27:18.054615	31	85	ILL-Request	\N
+597	2012-07-22 10:28:11.604971	31	34	ILL-Request	\N
+598	2012-07-22 10:28:38.276042	31	85	ILL-Request	\N
+599	2012-07-22 10:29:04.239542	31	85	ILL-Request	\N
+600	2012-07-22 10:29:33.901783	31	79	ILL-Request	\N
+601	2012-07-22 10:31:36.558535	34	30	ILL-Request	\N
+602	2012-07-22 10:32:59.562052	34	101	ILL-Request	\N
+603	2012-07-22 10:33:49.139791	34	92	ILL-Request	\N
+604	2012-07-22 10:34:20.199317	34	82	ILL-Request	\N
+605	2012-07-22 10:35:32.21557	34	26	ILL-Request	\N
+606	2012-07-22 10:37:19.82244	90	44	ILL-Request	\N
+607	2012-07-22 10:37:51.392898	90	101	ILL-Request	\N
+608	2012-07-22 10:38:20.203038	90	26	ILL-Request	\N
+609	2012-07-22 10:38:59.426429	90	83	ILL-Request	\N
+610	2012-07-22 10:39:30.996464	90	44	ILL-Request	\N
+611	2012-07-22 10:40:58.445872	36	25	ILL-Request	\N
+612	2012-07-22 10:41:33.845849	36	83	ILL-Request	\N
+613	2012-07-22 10:42:03.988749	36	20	ILL-Request	\N
+614	2012-07-22 10:42:32.867733	36	21	ILL-Request	\N
+615	2012-07-22 10:43:17.689392	36	68	ILL-Request	\N
+616	2012-07-22 10:44:48.078957	37	79	ILL-Request	\N
+617	2012-07-22 10:45:40.35537	37	11	ILL-Request	\N
+618	2012-07-22 10:46:50.255508	37	92	ILL-Request	\N
+619	2012-07-22 10:47:24.522898	37	99	ILL-Request	\N
+620	2012-07-22 10:48:03.737259	37	101	ILL-Request	\N
+621	2012-07-22 10:49:49.794973	38	20	ILL-Request	\N
+622	2012-07-22 10:50:37.841148	38	25	ILL-Request	\N
+623	2012-07-22 10:51:09.658754	38	38	ILL-Request	\N
+624	2012-07-22 10:51:48.840318	38	78	ILL-Request	\N
+626	2012-07-22 10:54:14.205	38	99	ILL-Request	\N
+627	2012-07-22 10:55:47.086264	40	38	ILL-Request	\N
+628	2012-07-22 10:56:35.137675	40	101	ILL-Request	\N
+629	2012-07-22 10:57:20.700234	40	21	ILL-Request	\N
+630	2012-07-22 10:57:52.893485	40	83	ILL-Request	\N
+631	2012-07-22 10:59:22.226418	39	85	ILL-Request	\N
+632	2012-07-22 11:00:01.658589	39	84	ILL-Request	\N
+633	2012-07-22 11:00:44.579223	39	101	ILL-Request	\N
+634	2012-07-22 11:01:10.534548	39	101	ILL-Request	\N
+635	2012-07-22 11:01:48.842409	39	83	ILL-Request	\N
+636	2012-07-22 11:03:38.825348	42	79	ILL-Request	\N
+637	2012-07-22 11:04:16.348835	42	79	ILL-Request	\N
+638	2012-07-22 11:05:10.65667	42	26	ILL-Request	\N
+639	2012-07-22 11:05:44.716274	42	26	ILL-Request	\N
+640	2012-07-22 11:06:28.628882	42	20	ILL-Request	\N
+641	2012-07-22 11:07:53.056224	43	101	ILL-Request	\N
+642	2012-07-22 11:08:19.035962	43	101	ILL-Request	\N
+643	2012-07-22 11:09:06.989343	43	25	ILL-Request	\N
+644	2012-07-22 11:09:49.494223	43	26	ILL-Request	\N
+645	2012-07-22 11:10:53.129969	43	34	ILL-Request	\N
+648	2012-07-22 11:28:28.782138	44	20	ILL-Request	\N
+649	2012-07-22 11:29:09.42417	44	100	ILL-Request	\N
+650	2012-07-22 11:29:52.869551	44	101	ILL-Request	\N
+651	2012-07-22 11:31:00.521931	44	78	ILL-Request	\N
+652	2012-07-22 11:32:23.433075	44	101	ILL-Request	\N
+653	2012-07-22 11:34:21.868093	98	79	ILL-Request	\N
+654	2012-07-22 11:35:22.909038	98	94	ILL-Request	\N
+655	2012-07-22 11:35:56.140495	98	83	ILL-Request	\N
+656	2012-07-22 11:37:07.323399	98	100	ILL-Request	\N
+657	2012-07-22 11:37:48.180822	98	38	ILL-Request	\N
+658	2012-07-22 11:38:25.15412	98	25	ILL-Request	\N
+659	2012-07-22 11:39:01.237802	98	38	ILL-Request	\N
+660	2012-07-22 11:40:19.501132	45	82	ILL-Request	\N
+661	2012-07-22 11:40:53.768686	45	20	ILL-Request	\N
+662	2012-07-22 11:41:27.843107	45	134	ILL-Request	\N
+663	2012-07-22 11:42:15.239098	45	31	ILL-Request	\N
+664	2012-07-22 11:43:14.69361	45	79	ILL-Request	\N
+665	2012-07-22 11:43:52.508851	45	68	ILL-Request	\N
+666	2012-07-22 11:46:02.107394	47	35	ILL-Request	\N
+667	2012-07-22 11:47:03.295993	47	30	ILL-Request	\N
+668	2012-07-22 11:48:03.534143	47	25	ILL-Request	\N
+669	2012-07-22 11:48:53.226583	47	92	ILL-Request	\N
+670	2012-07-22 11:49:26.26119	47	26	ILL-Request	\N
+671	2012-07-22 11:51:15.834451	46	25	ILL-Request	\N
+672	2012-07-22 11:52:03.412682	46	134	ILL-Request	\N
+673	2012-07-22 11:52:38.362898	46	83	ILL-Request	\N
+674	2012-07-22 11:53:15.337171	46	83	ILL-Request	\N
+675	2012-07-22 11:53:46.356832	46	84	ILL-Request	\N
+676	2012-07-22 12:10:54.296881	50	134	ILL-Request	\N
+677	2012-07-22 12:11:36.405782	50	83	ILL-Request	\N
+678	2012-07-22 12:12:19.62396	50	72	ILL-Request	\N
+679	2012-07-22 12:12:47.385903	50	99	ILL-Request	\N
+680	2012-07-22 12:13:22.604143	50	38	ILL-Request	\N
+681	2012-07-22 12:18:52.847732	51	79	ILL-Request	\N
+682	2012-07-22 12:21:58.552021	51	20	ILL-Request	\N
+683	2012-07-22 12:22:30.479767	51	\N	ILL-Request	\N
+684	2012-07-22 12:23:15.45039	51	79	ILL-Request	\N
+685	2012-07-22 12:24:07.825931	51	134	ILL-Request	\N
+686	2012-07-22 12:25:26.597788	52	99	ILL-Request	\N
+687	2012-07-22 12:26:00.713624	52	25	ILL-Request	\N
+688	2012-07-22 12:26:42.678224	52	45	ILL-Request	\N
+689	2012-07-22 12:27:09.281396	52	20	ILL-Request	\N
+690	2012-07-22 12:27:35.061693	52	84	ILL-Request	\N
+691	2012-07-22 12:28:58.556834	53	100	ILL-Request	\N
+692	2012-07-22 12:29:45.593949	53	84	ILL-Request	\N
+693	2012-07-22 12:30:18.660747	53	25	ILL-Request	\N
+694	2012-07-22 12:31:24.396436	53	98	ILL-Request	\N
+695	2012-07-22 12:31:57.123897	53	134	ILL-Request	\N
+696	2012-07-22 12:33:12.912575	54	25	ILL-Request	\N
+697	2012-07-22 12:34:05.013483	54	34	ILL-Request	\N
+698	2012-07-22 12:34:57.280079	54	38	ILL-Request	\N
+699	2012-07-22 12:35:37.17801	54	92	ILL-Request	\N
+700	2012-07-22 12:36:13.09471	54	82	ILL-Request	\N
+701	2012-07-22 12:43:00.454295	55	92	ILL-Request	\N
+702	2012-07-22 12:44:02.025028	55	30	ILL-Request	\N
+703	2012-07-22 12:44:29.478211	55	84	ILL-Request	\N
+704	2012-07-22 12:45:09.592796	55	100	ILL-Request	\N
+705	2012-07-22 12:45:44.559035	55	68	ILL-Request	\N
+706	2012-07-22 14:20:45.141652	56	92	ILL-Request	\N
+707	2012-07-22 14:21:17.158961	56	92	ILL-Request	\N
+708	2012-07-22 14:21:43.113491	56	20	ILL-Request	\N
+709	2012-07-22 14:22:09.152556	56	92	ILL-Request	\N
+710	2012-07-22 14:23:06.998648	56	92	ILL-Request	\N
+711	2012-07-22 14:24:10.418996	57	82	ILL-Request	\N
+712	2012-07-22 14:24:33.216366	57	83	ILL-Request	\N
+713	2012-07-22 14:25:22.334975	57	82	ILL-Request	\N
+714	2012-07-22 14:25:51.896118	57	25	ILL-Request	\N
+715	2012-07-22 14:26:27.63805	57	94	ILL-Request	\N
+716	2012-07-22 14:27:24.419249	58	84	ILL-Request	\N
+717	2012-07-22 14:27:46.242834	58	101	ILL-Request	\N
+718	2012-07-22 14:28:10.982017	58	84	ILL-Request	\N
+719	2012-07-22 14:28:43.608249	58	84	ILL-Request	\N
+720	2012-07-22 14:29:21.525626	58	101	ILL-Request	\N
+721	2012-07-22 14:30:48.27629	59	134	ILL-Request	\N
+722	2012-07-22 14:31:30.522056	59	25	ILL-Request	\N
+723	2012-07-22 14:32:12.144758	59	79	ILL-Request	\N
+724	2012-07-22 14:32:46.636634	59	98	ILL-Request	\N
+725	2012-07-22 14:33:44.648413	59	22	ILL-Request	\N
+726	2012-07-22 14:34:35.261303	59	30	ILL-Request	\N
+727	2012-07-22 14:35:37.073909	60	78	ILL-Request	\N
+728	2012-07-22 14:36:26.509404	60	101	ILL-Request	\N
+729	2012-07-22 14:36:48.781063	60	99	ILL-Request	\N
+730	2012-07-22 14:37:12.946813	60	83	ILL-Request	\N
+731	2012-07-22 14:39:21.234679	49	98	ILL-Request	\N
+732	2012-07-22 14:39:41.134705	49	25	ILL-Request	\N
+733	2012-07-22 14:39:57.527302	49	68	ILL-Request	\N
+734	2012-07-22 14:40:19.132838	49	25	ILL-Request	\N
+735	2012-07-22 14:40:40.82302	49	68	ILL-Request	\N
+736	2012-07-22 14:41:59.793565	61	25	ILL-Request	\N
+737	2012-07-22 14:42:19.609409	61	99	ILL-Request	\N
+738	2012-07-22 14:42:38.425965	61	78	ILL-Request	\N
+739	2012-07-22 14:43:11.512141	61	84	ILL-Request	\N
+740	2012-07-22 14:43:48.443695	61	134	ILL-Request	\N
+741	2012-07-22 14:44:41.609769	62	134	ILL-Request	\N
+742	2012-07-22 14:45:05.915837	62	20	ILL-Request	\N
+743	2012-07-22 14:45:30.104826	62	35	ILL-Request	\N
+744	2012-07-22 14:46:09.244197	62	101	ILL-Request	\N
+745	2012-07-22 14:46:40.145885	62	99	ILL-Request	\N
+746	2012-07-22 14:48:04.799001	63	10	ILL-Request	\N
+747	2012-07-22 14:48:42.430432	63	78	ILL-Request	\N
+748	2012-07-22 14:49:38.354084	63	82	ILL-Request	\N
+749	2012-07-22 14:50:09.697739	63	20	ILL-Request	\N
+750	2012-07-22 14:50:33.63657	63	94	ILL-Request	\N
+751	2012-07-22 14:51:37.732154	64	35	ILL-Request	\N
+752	2012-07-22 14:52:24.209261	64	83	ILL-Request	\N
+753	2012-07-22 14:52:44.110802	64	44	ILL-Request	\N
+754	2012-07-22 14:53:19.95126	64	100	ILL-Request	\N
+755	2012-07-22 14:53:53.92628	64	82	ILL-Request	\N
+756	2012-07-22 14:56:50.892469	65	85	ILL-Request	\N
+757	2012-07-22 14:57:39.93793	65	34	ILL-Request	\N
+758	2012-07-22 14:58:12.548316	65	25	ILL-Request	\N
+759	2012-07-22 14:58:47.248315	65	91	ILL-Request	\N
+760	2012-07-22 14:59:15.359248	65	84	ILL-Request	\N
+761	2012-07-22 15:00:29.36705	66	82	ILL-Request	\N
+762	2012-07-22 15:00:56.379373	66	99	ILL-Request	\N
+763	2012-07-22 15:01:27.172598	66	33	ILL-Request	\N
+764	2012-07-22 15:01:54.393213	66	99	ILL-Request	\N
+765	2012-07-22 15:02:32.542542	66	68	ILL-Request	\N
+766	2012-07-22 15:03:35.830387	124	84	ILL-Request	\N
+767	2012-07-22 15:04:03.417116	124	99	ILL-Request	\N
+768	2012-07-22 15:04:27.613183	124	44	ILL-Request	\N
+769	2012-07-22 15:04:57.408503	124	20	ILL-Request	\N
+770	2012-07-22 15:05:19.731885	124	20	ILL-Request	\N
+771	2012-07-22 15:06:36.169703	107	84	ILL-Request	\N
+772	2012-07-22 15:07:15.152141	107	26	ILL-Request	\N
+773	2012-07-22 15:07:48.844402	107	30	ILL-Request	\N
+774	2012-07-22 15:08:32.474476	107	26	ILL-Request	\N
+775	2012-07-22 15:09:02.88416	107	83	ILL-Request	\N
+776	2012-07-22 15:10:15.584632	67	38	ILL-Request	\N
+777	2012-07-22 15:10:49.524995	67	71	ILL-Request	\N
+778	2012-07-22 15:11:14.289853	67	25	ILL-Request	\N
+779	2012-07-22 15:11:45.058013	67	27	ILL-Request	\N
+780	2012-07-22 15:12:24.182305	67	26	ILL-Request	\N
+781	2012-07-22 15:13:41.409813	48	79	ILL-Request	\N
+782	2012-07-22 15:14:30.919667	48	31	ILL-Request	\N
+783	2012-07-22 15:15:00.404728	48	44	ILL-Request	\N
+784	2012-07-22 15:15:45.525938	48	79	ILL-Request	\N
+785	2012-07-22 15:16:20.325733	48	44	ILL-Request	\N
+786	2012-07-22 15:17:50.742512	122	134	ILL-Request	\N
+787	2012-07-22 15:18:25.492464	122	92	ILL-Request	\N
+788	2012-07-22 15:19:01.177586	122	83	ILL-Request	\N
+789	2012-07-22 15:19:38.040188	122	100	ILL-Request	\N
+790	2012-07-22 15:20:46.325311	122	30	ILL-Request	\N
+791	2012-07-22 15:22:33.883792	41	38	ILL-Request	\N
+792	2012-07-22 15:23:21.369587	41	99	ILL-Request	\N
+793	2012-07-22 15:25:20.088139	41	71	ILL-Request	\N
+794	2012-07-22 15:25:41.703471	41	92	ILL-Request	\N
+795	2012-07-22 15:26:18.819645	41	85	ILL-Request	\N
+796	2012-07-22 15:27:33.717234	68	100	ILL-Request	\N
+797	2012-07-22 15:28:03.355967	68	25	ILL-Request	\N
+798	2012-07-22 15:28:38.548615	68	25	ILL-Request	\N
+799	2012-07-22 15:29:19.603733	68	34	ILL-Request	\N
+800	2012-07-22 15:29:47.408111	68	25	ILL-Request	\N
+801	2012-07-22 16:55:17.867363	69	101	ILL-Request	\N
+802	2012-07-22 16:55:53.657496	69	36	ILL-Request	\N
+803	2012-07-22 16:56:15.96423	69	68	ILL-Request	\N
+804	2012-07-22 16:56:49.206068	69	99	ILL-Request	\N
+805	2012-07-22 16:57:37.401557	69	10	ILL-Request	\N
+806	2012-07-22 16:58:43.469428	71	84	ILL-Request	\N
+807	2012-07-22 16:59:12.698131	71	30	ILL-Request	\N
+808	2012-07-22 16:59:44.174042	71	10	ILL-Request	\N
+809	2012-07-22 17:00:12.262543	71	20	ILL-Request	\N
+810	2012-07-22 17:00:48.028553	71	101	ILL-Request	\N
+812	2012-07-22 17:02:29.92997	72	83	ILL-Request	\N
+814	2012-07-22 17:03:33.316823	72	101	ILL-Request	\N
+815	2012-07-22 17:03:58.147181	72	83	ILL-Request	\N
+816	2012-07-22 17:05:07.757028	79	84	ILL-Request	\N
+817	2012-07-22 17:05:34.36001	79	84	ILL-Request	\N
+818	2012-07-22 17:06:22.855547	79	26	ILL-Request	\N
+819	2012-07-22 17:06:55.030864	79	101	ILL-Request	\N
+820	2012-07-22 17:07:37.152351	79	101	ILL-Request	\N
+821	2012-07-22 17:09:00.472011	73	135	ILL-Request	\N
+822	2012-07-22 17:10:12.788006	73	36	ILL-Request	\N
+823	2012-07-22 17:10:44.641102	73	92	ILL-Request	\N
+824	2012-07-22 17:11:14.835518	73	25	ILL-Request	\N
+825	2012-07-22 17:11:52.167487	73	79	ILL-Request	\N
+826	2012-07-22 17:13:21.541714	75	68	ILL-Request	\N
+827	2012-07-22 17:13:55.343956	75	92	ILL-Request	\N
+828	2012-07-22 17:14:16.632264	75	82	ILL-Request	\N
+829	2012-07-22 17:14:49.103005	75	79	ILL-Request	\N
+830	2012-07-22 17:15:16.679247	75	101	ILL-Request	\N
+831	2012-07-22 17:16:19.975108	74	83	ILL-Request	\N
+832	2012-07-22 17:17:11.800289	74	78	ILL-Request	\N
+833	2012-07-22 17:18:08.699762	74	25	ILL-Request	\N
+834	2012-07-22 17:19:57.947629	74	20	ILL-Request	\N
+835	2012-07-22 17:20:33.181144	74	26	ILL-Request	\N
+836	2012-07-22 17:21:40.166244	77	68	ILL-Request	\N
+837	2012-07-22 17:22:20.822198	77	83	ILL-Request	\N
+838	2012-07-22 17:22:54.982258	77	71	ILL-Request	\N
+839	2012-07-22 17:23:48.605011	77	85	ILL-Request	\N
+840	2012-07-22 17:24:52.909386	77	20	ILL-Request	\N
+841	2012-07-22 17:26:33.3797	76	135	ILL-Request	\N
+842	2012-07-22 17:27:09.878635	76	135	ILL-Request	\N
+843	2012-07-22 17:27:53.125194	76	84	ILL-Request	\N
+844	2012-07-22 17:28:32.522704	76	84	ILL-Request	\N
+845	2012-07-22 17:29:34.144352	76	83	ILL-Request	\N
+846	2012-07-22 17:31:15.188051	80	38	ILL-Request	\N
+847	2012-07-22 17:31:51.99677	80	79	ILL-Request	\N
+848	2012-07-22 17:32:31.344932	80	84	ILL-Request	\N
+849	2012-07-22 17:33:39.646574	80	98	ILL-Request	\N
+850	2012-07-22 17:34:22.083742	80	98	ILL-Request	\N
+851	2012-07-22 17:36:00.880074	82	85	ILL-Request	\N
+852	2012-07-22 17:36:29.307683	82	26	ILL-Request	\N
+853	2012-07-22 17:36:51.056613	82	21	ILL-Request	\N
+854	2012-07-22 17:37:33.728315	82	79	ILL-Request	\N
+855	2012-07-22 17:38:35.090519	82	79	ILL-Request	\N
+856	2012-07-22 17:42:40.51645	135	99	ILL-Request	\N
+857	2012-07-22 17:43:17.249717	135	92	ILL-Request	\N
+858	2012-07-22 17:43:58.656739	135	34	ILL-Request	\N
+859	2012-07-22 17:44:29.617942	135	26	ILL-Request	\N
+860	2012-07-22 17:45:46.089002	135	92	ILL-Request	\N
+861	2012-07-22 17:46:54.773633	83	25	ILL-Request	\N
+862	2012-07-22 17:47:24.759978	83	134	ILL-Request	\N
+863	2012-07-22 17:48:18.510368	83	99	ILL-Request	\N
+864	2012-07-22 17:49:12.833728	83	36	ILL-Request	\N
+865	2012-07-22 17:49:45.644615	83	92	ILL-Request	\N
+866	2012-07-22 17:50:48.339132	84	25	ILL-Request	\N
+867	2012-07-22 17:51:23.956255	84	36	ILL-Request	\N
+868	2012-07-22 17:51:59.338996	84	25	ILL-Request	\N
+870	2012-07-22 17:53:18.326741	84	79	ILL-Request	\N
+871	2012-07-22 17:54:29.809797	85	92	ILL-Request	\N
+872	2012-07-22 17:54:59.480122	85	101	ILL-Request	\N
+873	2012-07-22 17:55:24.159629	85	78	ILL-Request	\N
+874	2012-07-22 17:55:46.316748	85	84	ILL-Request	\N
+875	2012-07-22 17:56:13.628572	85	84	ILL-Request	\N
+876	2012-07-22 17:57:18.380851	86	79	ILL-Request	\N
+877	2012-07-22 17:57:46.917925	86	25	ILL-Request	\N
+878	2012-07-22 17:58:17.362354	86	26	ILL-Request	\N
+879	2012-07-22 17:58:51.430956	86	79	ILL-Request	\N
+880	2012-07-22 17:59:27.808153	86	83	ILL-Request	\N
+881	2012-07-22 18:00:43.969988	87	134	ILL-Request	\N
+882	2012-07-22 18:01:22.027221	87	25	ILL-Request	\N
+883	2012-07-22 18:02:03.398278	87	34	ILL-Request	\N
+884	2012-07-22 18:02:39.249522	87	100	ILL-Request	\N
+885	2012-07-22 18:03:02.213798	87	83	ILL-Request	\N
+886	2012-07-22 18:04:24.349162	88	38	ILL-Request	\N
+887	2012-07-22 18:04:51.49477	88	26	ILL-Request	\N
+888	2012-07-22 18:05:39.671777	88	101	ILL-Request	\N
+889	2012-07-22 18:06:08.099991	88	94	ILL-Request	\N
+890	2012-07-22 18:06:33.430684	88	99	ILL-Request	\N
+891	2012-07-22 18:07:31.228872	89	101	ILL-Request	\N
+892	2012-07-22 18:07:57.665616	89	101	ILL-Request	\N
+893	2012-07-22 18:08:28.118291	89	99	ILL-Request	\N
+894	2012-07-22 18:09:06.672492	89	38	ILL-Request	\N
+895	2012-07-22 18:09:36.554071	89	83	ILL-Request	\N
+896	2012-07-22 18:10:43.980383	134	82	ILL-Request	\N
+897	2012-07-22 18:11:22.394323	134	44	ILL-Request	\N
+898	2012-07-22 18:11:52.622035	134	25	ILL-Request	\N
+899	2012-07-22 18:12:21.417616	134	85	ILL-Request	\N
+900	2012-07-22 18:12:51.320527	134	134	ILL-Request	\N
+901	2012-07-22 18:26:20.164037	78	34	ILL-Request	\N
+902	2012-07-22 18:27:04.092895	78	94	ILL-Request	\N
+903	2012-07-22 18:28:46.454773	78	20	ILL-Request	\N
+904	2012-07-22 18:30:31.846423	78	27	ILL-Request	\N
+905	2012-07-22 18:31:16.975347	78	26	ILL-Request	\N
+906	2012-07-22 18:33:12.038304	91	45	ILL-Request	\N
+907	2012-07-22 18:33:35.760051	91	82	ILL-Request	\N
+908	2012-07-22 18:34:02.40576	91	101	ILL-Request	\N
+909	2012-07-22 18:35:00.645186	91	83	ILL-Request	\N
+910	2012-07-22 18:35:57.418678	91	44	ILL-Request	\N
+911	2012-07-22 18:37:12.808555	92	100	ILL-Request	\N
+912	2012-07-22 18:37:44.293476	92	83	ILL-Request	\N
+913	2012-07-22 18:38:18.111347	92	101	ILL-Request	\N
+914	2012-07-22 18:39:54.790424	92	84	ILL-Request	\N
+915	2012-07-22 18:40:51.930105	92	84	ILL-Request	\N
+916	2012-07-22 18:42:11.276849	125	134	ILL-Request	\N
+917	2012-07-22 18:42:45.562642	125	83	ILL-Request	\N
+918	2012-07-22 18:43:16.332047	125	79	ILL-Request	\N
+919	2012-07-22 18:44:13.462959	125	79	ILL-Request	\N
+920	2012-07-22 18:44:58.280757	125	99	ILL-Request	\N
+921	2012-07-22 18:46:30.921806	93	84	ILL-Request	\N
+922	2012-07-22 18:47:46.480245	93	68	ILL-Request	\N
+923	2012-07-22 18:48:25.920553	93	134	ILL-Request	\N
+924	2012-07-22 18:48:57.746281	93	85	ILL-Request	\N
+925	2012-07-22 18:49:29.682257	93	83	ILL-Request	\N
+926	2012-07-22 18:50:30.927438	102	92	ILL-Request	\N
+927	2012-07-22 18:50:51.640502	102	92	ILL-Request	\N
+928	2012-07-22 18:51:21.978695	102	85	ILL-Request	\N
+929	2012-07-22 18:51:46.318623	102	83	ILL-Request	\N
+930	2012-07-22 18:52:26.056181	102	84	ILL-Request	\N
+931	2012-07-22 18:53:42.754669	120	134	ILL-Request	\N
+932	2012-07-22 18:54:08.842437	120	82	ILL-Request	\N
+933	2012-07-22 18:54:50.438684	120	25	ILL-Request	\N
+934	2012-07-22 18:56:07.045734	120	68	ILL-Request	\N
+935	2012-07-22 18:56:44.769389	120	20	ILL-Request	\N
+936	2012-07-22 18:58:39.898233	94	134	ILL-Request	\N
+937	2012-07-22 18:59:17.630428	94	45	ILL-Request	\N
+938	2012-07-22 18:59:52.130937	94	83	ILL-Request	\N
+939	2012-07-22 19:00:31.128344	94	83	ILL-Request	\N
+940	2012-07-22 19:01:15.566479	94	134	ILL-Request	\N
+941	2012-07-22 19:02:30.381314	95	33	ILL-Request	\N
+942	2012-07-22 19:03:17.343866	95	38	ILL-Request	\N
+943	2012-07-22 19:04:00.890027	95	25	ILL-Request	\N
+944	2012-07-22 19:04:29.675921	95	26	ILL-Request	\N
+945	2012-07-22 19:05:11.675151	95	36	ILL-Request	\N
+946	2012-07-22 19:06:26.262843	96	38	ILL-Request	\N
+947	2012-07-22 19:07:26.308025	96	79	ILL-Request	\N
+948	2012-07-22 19:08:50.495012	96	101	ILL-Request	\N
+949	2012-07-22 19:09:19.24079	96	84	ILL-Request	\N
+950	2012-07-22 19:10:01.410753	96	94	ILL-Request	\N
+951	2012-07-22 19:11:47.603173	97	83	ILL-Request	\N
+952	2012-07-22 19:12:20.21226	97	82	ILL-Request	\N
+953	2012-07-22 19:12:44.584676	97	135	ILL-Request	\N
+954	2012-07-22 19:13:12.996893	97	31	ILL-Request	\N
+955	2012-07-22 19:14:37.073215	97	134	ILL-Request	\N
+956	2012-07-22 19:16:34.101701	99	84	ILL-Request	\N
+957	2012-07-22 19:17:02.554366	99	79	ILL-Request	\N
+958	2012-07-22 19:17:29.417455	99	25	ILL-Request	\N
+959	2012-07-22 19:18:07.191927	99	101	ILL-Request	\N
+960	2012-07-22 19:18:56.343656	99	20	ILL-Request	\N
 \.
 
 
 --
+-- TOC entry 1905 (class 0 OID 17480)
+-- Dependencies: 152
 -- Data for Name: requests_history; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
 COPY requests_history (request_id, ts, msg_from, msg_to, status, message) FROM stdin;
-241	2011-12-12 15:50:17.764901	20	90	ILL-Request	\N
-241	2012-01-13 16:15:52.48656	90	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-241	2012-01-13 16:16:46.937581	20	90	Received	
-241	2012-01-16 13:21:54.172937	90	20	Message	MBOM has returned item but did not mark it as 'Returned'
-241	2012-01-16 13:21:54.57762	\N	\N	\N	\N
-252	2011-12-12 15:57:09.009408	20	90	ILL-Request	\N
-252	2012-01-13 16:15:54.199857	90	20	ILL-Answer|Will-Supply|being-processed-for-supply	
-252	2012-01-16 14:16:35.390033	20	90	Message	MSTE has returned item but did not mark it as 'Returned'
-252	2012-01-16 14:16:35.808689	\N	\N	\N	\N
-142	2011-12-12 14:22:52.083192	90	82	ILL-Request	\N
-142	2012-01-17 10:15:58.999977	90	82	Message	MSTE returned item but MAOW has not checked it in
-142	2012-01-17 10:15:59.014158	82	90	Checked-in	override by MSTE
-350	2011-12-14 10:04:35.95265	72	90	ILL-Request	\N
-350	2011-12-15 15:32:40.494114	90	72	ILL-Answer|Unfilled|in-use-on-loan	
-350	2012-01-17 10:17:57.662254	90	72	Message	MRA has returned the item to MSTE but did not mark it as 'Returned'
-350	2012-01-17 10:17:57.681953	72	90	Returned	override by MSTE
-350	2012-01-17 10:17:57.693088	90	72	Checked-in	
-145	2011-12-12 14:24:36.229548	90	24	ILL-Request	\N
-145	2012-01-19 15:02:05.33333	90	24	Message	MSTE returned item but MCB has not checked it in
-145	2012-01-19 15:02:05.347751	24	90	Checked-in	override by MSTE
-423	2012-02-29 13:56:19.561793	85	31	ILL-Request	\N
-423	2012-02-29 13:58:07.784152	85	31	Received	
-423	2012-02-29 13:57:44.050961	31	85	ILL-Answer|Will-Supply|being-processed-for-supply	
-423	2012-02-29 13:57:44.365463	31	85	Shipped	due 2012-03-14
-423	2012-02-29 13:58:24.798994	85	31	Renew	
-423	2012-02-29 13:59:25.457127	31	85	Renew-Answer|Ok	due 2012-03-15
-423	2012-02-29 14:00:07.388035	85	31	Returned	
-423	2012-02-29 14:00:35.432014	31	85	Checked-in	
-5	2011-12-12 11:53:36.033538	85	90	ILL-Request	\N
-5	2012-01-19 15:05:21.464686	90	85	ILL-Answer|Unfilled|on-hold	
-5	2012-05-07 09:19:41.740302	85	85	Message	Requester closed the request.
 \.
 
 
 --
+-- TOC entry 1906 (class 0 OID 17483)
+-- Dependencies: 153
 -- Data for Name: search_statistics; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
@@ -11081,1350 +11669,2652 @@ thisisatest-4376	2011-11-04 10:16:33.023842	@attr 1=4 @attr 2=3 @attr 4=2 "ducks
 
 
 --
+-- TOC entry 1907 (class 0 OID 17492)
+-- Dependencies: 154
 -- Data for Name: sources; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
 COPY sources (request_id, sequence_number, library, call_number) FROM stdin;
-1	1	90	E Mwalimu 1989
-1	2	99	undefined
-2	1	99	undefined
-2	2	101	641.3411
-3	1	90	817.54 Bla 1991
-3	2	34	791.45 BLACK
-4	1	32	J 949.407 Bul
-6	1	21	DVD 13845
-7	1	101	undefined
-8	1	39	F Steel,F Steel (pbk)
-8	2	101	undefined
-8	3	99	undefined
-8	4	48	F STE
-8	5	47	undefined
-8	6	90	Steel 1994
-8	7	25	LP Steel
-8	8	71	F Ste
-8	9	34	F/St-3
-8	10	87	LP F Ste
-9	1	101	undefined
-10	1	84	F Mit
-10	2	82	F Mit
-10	3	44	F Mit
-10	4	101	undefined
-10	5	46	undefined
-10	6	68	undefined
-10	7	24	Fic MIT
-10	8	90	Mitchell 1989
-10	9	87	F Mit
-10	10	99	undefined
-10	11	25	F Mitchell
-10	12	34	F/Mi-69
-11	1	25	Video 554
-11	2	101	undefined
-12	1	99	undefined
-12	2	100	HF/5549.5/.T7/Sil
-13	1	48	649.8
-14	1	99	undefined
-15	1	72	797.54 Yen
-16	1	101	748.2
-17	1	84	F Ste
-17	2	99	undefined
-17	3	90	Stegner 1992
-17	4	101	undefined
-17	5	46	undefined
-18	1	98	J 577.09113 Lyn
-18	2	39	J577.09113 Lynch
-18	3	25	J 577 Lynch
-18	4	34	J 577.09 Lyn
-19	1	30	undefined
-20	1	101	92
-20	2	68	undefined
-20	3	99	undefined
-21	1	83	J 629.225 McCl
-22	1	72	613.69 Ang
-23	1	84	F Boo
-23	2	83	F Boo
-23	3	100	PS 8553 Boo
-23	4	47	undefined
-23	5	87	F Boo
-23	6	99	undefined
-23	7	39	F Boon,F Boon
-23	8	98	Fic Bo
-23	9	25	F Boom
-23	10	71	F Boo
-23	11	101	undefined
-24	1	33	undefined
-24	2	47	undefined
-25	1	82	930 Bar 1988
-25	2	44	930/Bar
-25	3	98	Ref 930 Tim
-25	4	39	930 Barbarian
-25	5	99	undefined
-26	1	90	Westlake 1972
-26	2	34	F/We-52 M
-27	1	85	E BARBIE
-27	2	24	DVD 2592
-27	3	39	688.7221 Barbie
-27	4	101	undefined
-27	5	33	undefined
-28	1	68	359.9 Zinni
-28	2	71	359.96 Clancy
-28	3	46	undefined
-28	4	21	undefined
-29	1	24	F PAT LP
-29	2	48	F PAT
-29	3	33	undefined
-29	4	92	Patterson
-29	5	25	LP Patterson
-29	6	34	F/Pa-27 M
-30	1	87	F Ric #5 Hubbard's Point
-30	2	84	PB F Ric
-30	3	83	LP F Ric
-30	4	82	PB F Ric
-30	5	24	F Ric
-30	6	39	F Rice (pbk)
-30	7	34	F/Ri-36
-30	8	25	F Rice
-30	9	48	F RIC
-31	1	24	794.6 STR
-31	2	99	undefined
-31	3	101	undefined
-32	1	46	undefined
-32	2	99	undefined
-33	1	24	F PET LP
-33	2	71	Lp F Pet
-33	3	101	undefined
-34	1	20	LP/F/Barker
-35	1	101	undefined
-35	2	47	undefined
-36	1	24	574 CAM
-36	2	101	undefined
-37	1	98	J 598 Bur
-37	2	39	J598 Burnie
-37	3	33	undefined
-38	1	34	J Sewell 1980
-38	2	101	SEWELL
-38	3	99	undefined
-38	4	48	JF Sewell,SEWELL
-38	5	71	Y/ANI Sew
-38	6	25	J Sewell
-39	1	99	undefined
-40	1	20	Basement/917/Burger
-40	2	78	J 917 Bur
-41	1	39	345.730234 Curriden
-41	2	99	undefined
-42	1	71	759.11 Wit
-42	2	101	759.11,759.11
-43	1	82	J 395.122 Bay
-43	2	99	undefined
-43	3	100	BJ/1857/.C5/Bay
-44	1	99	undefined
-45	1	92	Thomas
-46	1	101	undefined
-47	1	90	Siddons 1992
-47	2	24	Fic SID
-47	3	99	undefined
-47	4	87	F Sid
-47	5	34	F/Si-1
-47	6	25	LP Siddons
-47	7	46	undefined
-47	8	47	undefined
-48	1	85	J 331.702 KALMAN
-48	2	90	J 331.702 Kal 1998
-49	1	20	Gov/E2-210/2001
-50	1	68	undefined
-51	1	84	338.2 Maa
-52	1	68	undefined
-52	2	71	Wes/F Har
-53	1	85	497.3 AHENAKEW
-53	2	92	497.3 Ahe
-54	1	92	Cook
-54	2	90	Cook 2007
-54	3	24	F COO
-54	4	101	undefined
-54	5	39	F Cook
-54	6	25	W LP Cook
-54	7	47	F COOK
-55	1	98	306 Kot
-55	2	101	undefined
-56	1	68	undefined
-56	2	83	F Mul
-56	3	84	F Mul
-56	4	82	F Mul
-56	5	85	FIC MULLER,FIC MULLER
-56	6	87	F Mul M
-56	7	98	Fic Myst Mu
-56	8	39	F Muller M
-56	9	99	undefined
-56	10	21	undefined
-57	1	34	J 745.61 Cam
-57	2	25	J 745.61
-58	1	135	F Sis
-59	1	92	Newton
-59	2	99	undefined
-60	1	82	797.122083 Kra
-60	2	99	undefined
-60	3	101	797.122
-60	4	92	797.122 Kra
-60	5	87	797. 122 083 Kra
-61	1	83	F Bur
-61	2	84	F Bur
-61	3	20	F/Burke/M
-62	1	101	undefined
-62	2	33	undefined
-63	1	99	undefined
-64	1	21	F JOHANSEN
-65	1	100	FC 106 .M9 Mog
-66	1	68	undefined
-67	1	90	333.95 Wil 1999
-67	2	101	333.95
-68	1	84	973.931 Moo
-68	2	82	973.931 Moo
-68	3	85	973.931 MOORE
-68	4	99	undefined
-68	5	21	undefined
-68	6	46	undefined
-68	7	90	817.6 Moo 2003
-68	8	101	973.931
-68	9	92	973.931 Moo
-69	1	24	J F Bry #6 saddle club
-69	2	90	J Bryant 1989
-69	3	101	undefined
-70	1	24	Fic CUS
-70	2	87	F Cus
-70	3	90	Cussler 1990
-70	4	98	Fic Myst Cu
-70	5	101	CUSSLER
-71	1	85	FIC WENTWORTH
-71	2	90	Went worth 1942
-71	3	98	LP Fic We
-71	4	99	undefined
-72	1	99	undefined
-73	1	135	J 567.91 Nor
-73	2	44	J 567.91/Nor
-73	3	68	J568 NOR
-73	4	99	undefined
-73	5	24	J 567.91 NOR
-73	6	25	J/567.91/Nor
-73	7	39	J567.91 Norman
-73	8	98	J 567.91 Nor
-73	9	34	J/567.91 Nor
-74	1	83	J 616.85 Lan
-74	2	84	J 616.85 Lan
-74	3	82	J 616.85 Lan
-74	4	90	YA 616.85 Lan 2004
-74	5	99	undefined
-75	1	68	undefined
-75	2	90	778.3 Kin 2003
-75	3	101	undefined
-75	4	39	771 King
-75	5	71	770 King
-75	6	21	undefined
-76	1	71	636 Mos
-76	2	46	undefined
-77	1	20	Drama/812/Albee
-78	1	100	HD/2769.2/.C3/Del
-79	1	84	F Sco
-79	2	83	F Sco
-79	3	82	F Sco
-79	4	44	Mys Sco
-79	5	101	undefined
-79	6	39	F Scottoline,F Scottoli (pbk)
-79	7	34	FIC SCOTT 2006 M
-79	8	48	F SCO
-79	9	33	undefined
-79	10	46	undefined
-79	11	85	FIC SCOTTOLINE,FIC SCOTTOLINE
-79	12	24	F SCO M
-79	13	92	Scottoline
-79	14	98	Fic Myst Sc
-79	15	25	W LP Scottoline
-80	1	101	undefined
-81	1	92	J 621.31 Bar
-81	2	85	J 621.31 BARTHOLOMEW
-81	3	90	J 621.31 Bar 2002
-81	4	68	undefined
-81	5	46	undefined
-82	1	84	F Sto
-82	2	92	Stone
-82	3	39	F Stone
-82	4	87	F Sto #1 Micah Dalton Series
-82	5	85	FIC STONE
-82	6	99	undefined
-83	1	24	J 531.6 OXL
-84	1	83	F Har
-84	2	84	F Har
-84	3	90	Harris 1995
-84	4	98	Fic Myst Ha
-84	5	68	undefined
-84	6	34	F/Ha-24 M
-84	7	48	F HAR
-84	8	101	HARRIS
-84	9	46	undefined
-85	1	90	SciFi  McIntyre 1981
-85	2	101	undefined
-86	1	82	929.509712 Ada
-86	2	99	undefined
-86	3	87	929. 509 712 Ada
-86	4	39	929.509712 Adams
-86	5	101	929.509712
-86	6	100	GT/3213/Ada
-87	1	68	undefined
-87	2	84	F Woo
-87	3	83	F Woo
-87	4	82	F Woo
-87	5	25	F Woodiwiss
-87	6	101	undefined
-87	7	92	LP Woodiwiss
-87	8	99	undefined
-87	9	90	Woodiwiss 2007
-87	10	34	undefined
-87	11	87	LP F Woo
-87	12	39	F Woodiwis
-88	1	30	undefined
-89	1	30	undefined
-90	1	18	FL J 594.3 MON
-91	1	92	Smith
-91	2	90	Smith 1991
-91	3	46	undefined
-91	4	99	undefined
-91	5	98	Fic Sm
-91	6	39	F Smith
-91	7	34	PBK F Smith 1992
-91	8	87	F Smi
-91	9	25	F Smith
-91	10	101	SMITH,SMITH
-92	1	68	333.91 BAK
-93	1	21	F NICKLE
-94	1	46	undefined
-95	1	99	undefined
-96	1	87	821 Eng 1961
-97	1	100	Canada/EmpImm
-98	1	30	undefined
-99	1	99	undefined
-100	1	84	005.54 Jac
-101	1	24	646.7 AUC
-101	2	25	646.7 Aucoin
-101	3	101	646.72
-102	1	85	FIC FRANCIS
-102	2	101	undefined
-102	3	98	Fic Myst Fr
-102	4	90	LP Francis 1966
-102	5	99	undefined
-102	6	39	F Francis (pbk)
-103	1	72	A/F Bom
-104	1	82	J F Key
-104	2	101	undefined
-104	3	85	T KEYES
-104	4	99	undefined
-105	1	21	undefined
-106	1	99	undefined
-107	1	100	undefined
-108	1	85	940.54 KING
-109	1	24	J F Chr
-109	2	83	J F Chr
-109	3	82	J F Chr
-109	4	84	J S Mat
-109	5	85	J CHRISTOPHER
-109	6	98	J Fic Ch
-109	7	68	undefined
-109	8	90	J Christo pher 1976
-109	9	87	J F Chr
-110	1	24	DVD 2430
-110	2	85	VID FRIED 280
-111	1	32	Br O'Con p.b
-112	1	100	undefined
-113	1	99	undefined
-113	2	92	Churchill
-113	3	90	LP Churchill 2006
-113	4	101	CHURCHI
-114	1	71	J796.35 Gut
-114	2	90	J 796.355 Gut
-114	3	47	undefined
-115	1	99	undefined
-116	1	92	J 629.2222 McK
-117	1	87	929.6 Fos
-118	1	83	J 971.01 Hud
-118	2	85	J 971 FUR
-118	3	39	J971 Fur
-118	4	47	J 381.439 FUR
-119	1	83	F Whi
-119	2	84	F Whi
-119	3	78	F Whi M
-119	4	101	Whi,Whi,Whi
-119	5	24	Fic WHI
-119	6	90	Whitney 1988
-119	7	87	F Whi
-120	1	72	333.024 Hul
-121	1	24	J F Hok
-122	1	68	undefined
-123	1	98	Fic Le
-124	1	98	Disc Wh
-125	1	83	CF Lip
-125	2	84	CF Lip
-125	3	90	ChrFic Liparulo 2006
-125	4	39	F Liparulo SF
-125	5	85	FIC LIPARULO
-125	6	99	undefined
-126	1	84	J E Cro
-126	2	83	J E Cro
-126	3	82	J E Cro
-126	4	68	undefined
-126	5	47	undefined
-126	6	85	E CRONIN,E CRONIN
-126	7	90	E Cronin 2002
-126	8	92	E Cro
-126	9	39	JE Cronin
-126	10	87	J E Cro
-126	11	101	undefined
-126	12	99	undefined
-127	1	92	T Vail
-127	2	101	undefined
-127	3	25	J Vail
-127	4	39	YF Vail #2
-128	1	68	undefined
-128	2	90	Pickard 1984
-128	3	87	LP F Pic M
-128	4	101	PICKARD
-129	1	83	J E Deg
-129	2	84	J E Deg
-129	3	82	J E Deg
-129	4	99	undefined
-129	5	47	undefined
-130	1	68	306.44 GHO
-130	2	100	PE 1074.75 Gho
-130	3	24	306.44 GHO
-131	1	92	Smith
-131	2	34	F/Sm-5
-131	3	90	Smith 1990
-131	4	25	F Smith
-131	5	87	F Smi #4 Courtneys of Africa
-131	6	39	F Smith S3V5
-132	1	98	B Fey
-133	1	92	AUD Chabon
-134	1	92	EZ 5
-134	2	90	NR Findlay 2010
-135	1	84	J E Jav
-136	1	83	F Gan
-136	2	24	Fic GAN
-136	3	101	GANN
-136	4	99	undefined
-137	1	90	J 551 Blo 1999
-137	2	68	undefined
-137	3	92	J 551.078 Blo
-138	1	87	FC DVD Boyne May 11/11
-139	1	99	undefined
-139	2	68	undefined
-139	3	21	undefined
-139	4	47	undefined
-140	1	90	DVD 791.436 IMAX Galapagos
-140	2	85	DVD GALAPAGOS 1966
-141	1	68	undefined
-141	2	85	FIC BARNES
-141	3	25	F Barnes
-141	4	87	F Bar M
-141	5	90	Barnes 1995
-141	6	34	F/Ba-26 M
-141	7	101	BARNES
-143	1	68	undefined
-143	2	99	undefined
-143	3	34	618.92 RAPEE 2008
-144	1	85	956.7044 ISIKOFF
-144	2	99	undefined
-146	1	68	undefined
-146	2	99	undefined
-146	3	101	WEBER
-147	1	83	J F Kli
-147	2	99	undefined
-147	3	85	J KLINE
-147	4	90	J Kline 2000
-147	5	98	J Pbk Kl
-147	6	46	undefined
-148	1	72	LP Bar
-149	1	85	J ROWLING,J ROWLING
-149	2	101	ROWLING
-150	1	84	FC J Row v.4
-150	2	99	undefined
-151	1	85	T 362.29 BARTER
-152	1	72	A/F Spe
-153	1	68	undefined
-153	2	83	J 793.8 MacL
-153	3	99	undefined
-153	4	21	undefined
-154	1	99	undefined
-154	2	68	undefined
-155	1	85	155.9 VAN PRAAGH
-155	2	98	155.937 Van
-155	3	90	155.937 Van 2000
-155	4	46	undefined
-156	1	24	B. HEW
-156	2	98	B Hew
-156	3	90	B Hewitt 1985
-156	4	87	B Hew
-156	5	99	undefined
-156	6	46	undefined
-157	1	98	971.273,971.273
-157	2	34	971.27 Nee
-157	3	101	971.273
-158	1	135	CF Ben v.3
-158	2	90	ChrFic Benrey 2004
-159	1	87	F Rak
-159	2	39	undefined
-160	1	24	F And SHO #4
-160	2	34	F/An-2
-161	1	92	Dial
-162	1	24	F McC M #1 Ivy Malone mystery
-162	2	90	ChrFic McCourtney 2004
-162	3	34	F/McC-13 M
-162	4	25	F McCourtney
-163	1	24	F SAN
-163	2	101	undefined
-163	3	44	Mys San
-163	4	83	F San
-163	5	84	F San
-163	6	82	F San
-163	7	135	F San
-163	8	90	Sandford 2007
-163	9	92	Sandford
-163	10	34	PBK F Sandfor 2007
-163	11	39	F Sandford,F Sandford (pbk)
-163	12	25	W F Sandford
-164	1	84	LP F For
-164	2	83	F For
-164	3	82	F For
-164	4	34	F / Fo-77
-164	5	25	F Forsyth
-164	6	46	undefined
-164	7	68	undefined
-164	8	101	FORSYTH,FORSYTH
-164	9	92	Forsyth
-164	10	85	PAPERBACK FORSYTH
-164	11	99	undefined
-164	12	87	F For
-165	1	99	undefined
-166	1	68	undefined
-166	2	85	FIC GREELEY
-166	3	24	FIC GRE
-166	4	90	Greeley 1998
-166	5	71	F Gre
-166	6	98	Fic Gr
-166	7	33	Fic Gre
-166	8	47	undefined
-167	1	71	913.37 Had
-167	2	101	undefined
-167	3	99	undefined
-168	1	21	undefined
-169	1	84	J 535 Soh
-170	1	92	305.897 Fra
-170	2	46	undefined
-170	3	100	E/98/.P99/Fra
-171	1	92	T Reeve
-171	2	99	undefined
-172	1	68	576.8 GAR
-173	1	85	248.8 LINAMEN
-173	2	90	248.8 Lin 2002
-173	3	99	undefined
-174	1	85	DVD INSIDIOUS 1486
-175	1	20	B/Morissette
-176	1	20	F/Niven/ScF-Fan
-177	1	30	undefined
-178	1	101	332.024
-178	2	99	undefined
-179	1	24	297 ISL
-179	2	99	undefined
-179	3	100	Periodical/Annals/588
-180	1	72	J 04.67 Jef
-181	1	90	Barr 1982
-181	2	101	undefined
-181	3	34	F/Ba-27
-182	1	39	YF De la Cruz #2
-183	1	68	undefined
-183	2	85	PAPERBACK KELLERMAN
-183	3	98	Fic Myst Ke
-183	4	34	F/Ke-28 M
-183	5	39	F Kellerma M (pbk)
-184	1	46	J E OCEA
-185	1	68	undefined
-185	2	90	J 811.54 Lee
-185	3	101	undefined
-185	4	46	undefined
-185	5	47	undefined
-185	6	83	J 811.54 Lee
-185	7	84	J 811.54 Lee
-185	8	82	J 811.54 Lee
-185	9	135	J 811.54 Lee
-185	10	92	J 811 Lee
-186	1	87	J F Smi
-186	2	99	undefined
-187	1	39	B James
-188	1	92	T Hyde
-188	2	99	undefined
-188	3	101	undefined
-189	1	92	746.4 Bas
-189	2	99	undefined
-190	1	30	undefined
-191	1	85	J VAIL
-192	1	18	914.690444 SAR
-193	1	87	J E Keo
-193	2	99	undefined
-193	3	47	undefined
-194	1	18	DVD E MSA # 19
-195	1	90	J Leitch 1992
-195	2	98	J Pbk Le
-195	3	48	J LEI
-196	1	46	undefined
-197	1	18	J FIC GRI
-198	1	30	undefined
-199	1	25	E Buffett
-199	2	101	undefined
-199	3	99	undefined
-200	1	68	FIC MUR
-200	2	98	Fic Mu
-200	3	87	PLS LP Block #29
-200	4	99	undefined
-200	5	101	MURDOCH
-200	6	47	undefined
-201	1	90	Smith 1994
-201	2	68	CRIME SMI
-201	3	99	undefined
-202	1	99	undefined
-203	1	100	DK/771.K2/1996
-204	1	47	ROM PBK
-205	1	20	Basement/F/Ross
-205	2	78	F Ros
-206	1	92	T Myers
-206	2	101	undefined
-207	1	78	971.21 Ber
-207	2	44	971.9 Ber
-208	1	39	J940.1 Gravett
-208	2	98	940.1 Gra,J 940.1 Gra,940.1
-208	3	92	J 940.1 Gra
-208	4	87	J 940. 1 Gra
-208	5	25	940.1 Gra
-208	6	21	undefined
-209	1	24	F Dav
-209	2	99	undefined
-209	3	98	Fic Myst Da
-209	4	71	Mys/F Dav
-209	5	39	F Davidson M
-209	6	25	F Davidson
-210	1	30	undefined
-210	2	33	Fic Hos
-211	1	85	920.071 HERMAN
-212	1	78	J 599.8846 Pat
-212	2	68	undefined
-213	1	30	297 KOR
-214	1	98	953/.6705,915.367,953.6705
-215	1	99	undefined
-216	1	92	J 599.53 Pat
-216	2	99	undefined
-217	1	68	undefined
-217	2	34	649.64 Col
-217	3	101	649.6
-217	4	98	649.64 Col
-217	5	99	undefined
-217	6	87	649.6
-217	7	48	649.6
-218	1	90	DVD Kirk 2002
-219	1	18	T FIC WIS
-220	1	87	811.54 Wee
-221	1	72	712.6 Ada
-222	1	99	undefined
-223	1	32	284.171233 Bar
-224	1	85	FIC LEDBETTER
-225	1	99	undefined
-226	1	92	658.4 Hil
-226	2	87	658.4092 Hil
-227	1	101	undefined
-227	2	99	undefined
-228	1	34	F Kingsbu 2011
-228	2	71	F Kin 
-228	3	24	F KIN #2 bailey flanigan
-229	1	87	F Oke
-229	2	98	Fic Ok
-229	3	71	F Oke #1
-229	4	34	F/Ok-2R
-229	5	25	F Oke
-230	1	34	F/Wi-72
-230	2	101	undefined
-230	3	25	W LP Wingate
-231	1	32	F Str p.b
-232	1	90	YA Carter 2004
-232	2	84	J F Car
-232	3	83	J F Car
-232	4	82	J F Car
-232	5	24	J F Car
-233	1	83	PB SCFI Tur
-233	2	84	PB SCFI Tur
-233	3	82	PB SCFI Tur
-234	1	85	LP KOONTZ
-234	2	90	Koontz 1989
-234	3	99	undefined
-234	4	68	undefined
-234	5	33	undefined
-235	1	24	747.92 Lig
-235	2	87	747.92 Lig
-235	3	39	747.92
-236	1	98	J Pbk Al
-236	2	34	FAl-5 LP
-237	1	33	J 971.064 Gib
-238	1	68	709.2 Da Vinci
-238	2	25	W 759.5 Pedretti
-238	3	46	undefined
-239	1	34	F/Co-76 W LP
-239	2	25	LP Conway
-240	1	24	F KIN #1 bailey flanigan
-240	2	39	LP F Kingsbur S10 v1
-240	3	34	F Kingsbu 2011
-240	4	25	F Kingsbury
-240	5	71	F Kin
-242	1	85	ROMANCEPB LANGAN
-243	1	99	undefined
-244	1	25	F Pratchett
-245	1	71	J625.1 Her
-245	2	101	undefined
-246	1	92	DVD 38753
-247	1	78	J 796.8 Lev
-248	1	24	J F DIX #9 pb
-248	2	84	J S Har v.9
-248	3	82	J S Har v.9
-248	4	83	J F Dix v.9
-249	1	68	undefined
-249	2	98	646.78 Gr
-249	3	24	646.78 Gra
-249	4	71	646.7 Gray
-250	1	46	undefined
-251	1	85	J TASHJIAN
-251	2	99	undefined
-251	3	25	J Tashjian
-253	1	99	undefined
-254	1	99	undefined
-255	1	84	FC DEVERAU
-255	2	87	CD Deveraux (5 discs)
-255	3	99	undefined
-256	1	24	FIC MCB
-256	2	87	F McBa M
-256	3	71	Mys/F McB
-256	4	39	TB/CD F McBain
-256	5	99	undefined
-256	6	34	F/McB-12 M
-257	1	98	Myst Pbk Ta
-257	2	87	F Tan M
-257	3	101	undefined
-258	1	99	undefined
-259	1	30	undefined
-260	1	18	398.2 Ham
-261	1	44	709.71
-261	2	20	709.71/Czernecki
-261	3	78	J 709.71220 Cze
-262	1	34	LP F Fyfield 2001
-262	2	92	Fyfield
-263	1	68	undefined
-263	2	84	LP F Dai
-263	3	99	undefined
-263	4	83	F Dai
-263	5	82	F Dai
-263	6	135	F Dai
-263	7	90	Dailey 1996
-263	8	85	LP DAILEY
-263	9	98	Fic Da
-263	10	39	C F Dailey
-263	11	87	F Dai
-263	12	25	F Dailey
-264	1	25	E McConnell
-264	2	101	undefined
-265	1	83	VIDEO HOW-TO Nor
-266	1	24	F TAS
-267	1	68	EASY READ SPO
-267	2	34	J/F/Aue
-267	3	92	Series
-267	4	101	undefined
-268	1	68	undefined
-268	2	83	F Cla
-268	3	84	F Cla
-268	4	78	F Cla
-268	5	90	Clavell 1981
-268	6	99	undefined
-268	7	101	undefined
-268	8	98	Fic Cl
-268	9	71	F Cla,F Cla
-268	10	25	F Clavell
-268	11	33	Fic Cla
-269	1	99	undefined
-269	2	100	Canada/NatLib/Annual
-270	1	98	Fic Ec
-270	2	72	A/F ECO
-271	1	72	623.821 Ran
-272	1	83	305.569 Ehr
-272	2	24	305.5690 EHR
-272	3	99	undefined
-273	1	84	PB F Tho
-273	2	83	PB F Tho
-273	3	101	undefined
-274	1	85	364.1092 PARADIS
-274	2	99	undefined
-274	3	101	undefined
-275	1	83	J S Mai v.2
-275	2	82	J S Mai v.2
-275	3	90	J Martin 2007
-275	4	24	J F MAR #2 pb. main street
-275	5	92	Series
-275	6	101	undefined
-276	1	99	undefined
-276	2	85	FIC TAPPLY
-276	3	24	F TAP M
-277	1	99	undefined
-278	1	90	J B Armstrong 1980
-279	1	99	undefined
-280	1	101	undefined
-281	1	90	Hamilton 2000
-281	2	92	Hamilton
-281	3	87	F Ham
-281	4	99	undefined
-281	5	25	F Hamilton
-281	6	101	undefined
-282	1	90	267 All 2005
-282	2	99	undefined
-283	1	92	J 551.46 MacQ
-283	2	85	J 551.46 MACQUITTY
-283	3	101	undefined
-283	4	25	551.46 MacQ
-283	5	48	J 551.46 MAC
-284	1	85	FIC MALARKEY
-284	2	99	undefined
-285	1	68	undefined
-285	2	34	F/Ja-23
-285	3	98	Myst Pbk Ja
-285	4	92	James
-285	5	39	F James M
-285	6	25	F James
-286	1	46	undefined
-287	1	68	undefined
-287	2	99	undefined
-288	1	83	F Why v.3
-288	2	84	F Why v.3
-288	3	82	F Why v.3
-289	1	90	Turow 2005
-289	2	83	F Tur
-289	3	84	F Tur
-289	4	82	F Tur
-289	5	39	F Turow
-289	6	34	F/Tu-86
-289	7	33	undefined
-289	8	68	undefined
-289	9	24	F TUR
-289	10	87	F Tur M
-289	11	85	FIC TUROW,FIC TUROW
-289	12	98	Fic Myst Tu
-289	13	92	Turow
-289	14	25	W F Turow
-290	1	99	undefined
-291	1	90	Nance 2006
-291	2	68	FIC NAN
-291	3	84	F Nan
-291	4	83	F Nan
-291	5	82	F Nan
-291	6	99	undefined
-291	7	85	FIC NANCE
-291	8	92	Nance
-291	9	101	undefined
-291	10	71	F/Nance
-291	11	25	F Nance
-292	1	85	FIC BERG,FIC BERG
-292	2	90	Berg 2000
-292	3	39	F Berg
-292	4	101	undefined
-292	5	25	F Berg
-292	6	48	F BER
-292	7	46	undefined
-292	8	68	undefined
-292	9	24	FIC BER
-292	10	87	F Ber
-292	11	98	Fic Be
-292	12	34	F/Be-45
-292	13	92	Berg
-292	14	71	F/Berg
-293	1	99	undefined
-294	1	101	undefined
-295	1	32	J 553.2 Pip
-296	1	82	F Str
-296	2	90	Strout 2008
-296	3	101	undefined
-296	4	24	F STR
-296	5	25	F Strout
-297	1	20	J/F/Brian/v. 13
-297	2	84	YA F Bri
-298	1	72	A/F   Sne
-299	1	100	F/5005/Ora,F/5005/Ora
-299	2	99	undefined
-300	1	99	undefined
-301	1	71	915.1 Bon
-301	2	101	undefined
-301	3	99	undefined
-302	1	24	636.76 MAG
-302	2	99	undefined
-303	1	85	940.3 MACMILLAN
-303	2	24	940.3141 MacM
-303	3	90	940.3 Mac 2002
-303	4	39	940.3141 Macmillan
-303	5	46	undefined
-303	6	47	undefined
-304	1	83	J E Car
-304	2	135	J E Car
-304	3	24	J E Car
-304	4	99	undefined
-304	5	90	E Carle 1990
-304	6	68	undefined
-304	7	48	E CAR
-304	8	101	undefined
-304	9	21	undefined
-305	1	24	F Cot W pb
-305	2	99	undefined
-306	1	101	920
-306	2	99	undefined
-306	3	90	944.949 Mas 1986
-306	4	98	B Mas
-307	1	99	undefined
-308	1	87	971. 06 Wai
-309	1	83	641.664 Por
-309	2	84	641.664 Por
-309	3	24	641.664 POR
-309	4	98	641.664 Por
-309	5	33	undefined
-310	1	99	undefined
-311	1	101	696.1 COR
-311	2	30	696.1 COR
-311	3	31	696.1 COR
-312	1	90	Hall 2002
-312	2	101	undefined
-313	1	24	971.273 SCO
-313	2	98	BB Sco
-313	3	99	undefined
-313	4	101	971.273,971.273
-314	1	87	J E Gar
-314	2	101	undefined
-315	1	78	J 523.482 Asi
-315	2	135	J 523.482 Asi 1990
-315	3	101	undefined
-316	1	99	undefined
-317	1	90	McNaught 1993
-317	2	98	Fic McN
-317	3	34	F/McN-23
-317	4	25	F McNaught
-317	5	87	F McN
-318	1	85	J 636.7 SJONGER
-318	2	101	undefined
-318	3	99	undefined
-318	4	92	J 636.7 Sjo
-318	5	87	J 636.707 Sjo
-319	1	25	E Lee
-320	1	30	undefined
-321	1	90	Churchill 1993
-321	2	101	undefined
-322	1	78	561.7 Sch
-323	1	48	641.555,641.555
-324	1	24	J E Bri
-324	2	90	E Bright 2003
-325	1	24	FIC EDD
-325	2	87	SF Edd #2
-325	3	68	undefined
-325	4	90	Fantasy Eddings 1982
-325	5	25	F Eddings
-326	1	24	F Ric VAM #3 pb
-326	2	71	F Ric
-326	3	68	undefined
-326	4	39	F Rice #3
-326	5	87	F Ric #3
-326	6	25	F Rice
-327	1	99	undefined
-328	1	100	undefined
-329	1	90	LP Creasey 1977
-330	1	84	J 428.2 Cle
-331	1	99	undefined
-332	1	100	JL/339/.A45/Ste
-333	1	82	OS 994.306 Que
-334	1	20	undefined
-335	1	68	undefined
-336	1	78	FL J E War
-337	1	92	745.5 Bas
-338	1	39	746.46041 Quick
-339	1	24	822 REM
-339	2	99	undefined
-339	3	90	Remarque 1930
-339	4	101	undefined
-339	5	68	undefined
-339	6	87	F Rem
-339	7	71	War/F Rem
-339	8	92	Remarque
-339	9	25	F Remarque
-339	10	98	Fic Re
-340	1	84	F Whi
-340	2	85	LP WHITE
-340	3	87	F Whi
-340	4	71	F White LP
-340	5	98	T.B. Wh
-340	6	99	undefined
-341	1	68	undefined
-341	2	99	undefined
-342	1	92	PB M
-342	2	25	F McLane
-343	1	20	LP/F/Cornwell
-344	1	32	T
-345	1	24	J 522.682 Ric
-345	2	39	J522.682 Richardson
-346	1	100	HV 6171 Koh
-347	1	21	F GREENWOOD
-348	1	71	F Tho
-348	2	68	FIC THO
-348	3	34	F Thomas 2008 c2
-348	4	48	F THO
-349	1	98	J Pbk Ba
-349	2	68	JF DOLPHIN DIARIES
-349	3	39	JF Baglio #6
-349	4	48	J DOL
-351	1	92	T Sedgwick
-351	2	99	undefined
-352	1	24	F SHR LP
-352	2	34	F Shreve 2010
-352	3	71	F Shreve
-352	4	48	F SHR
-353	1	100	Canada/AudGen/Annual/1996/c11
-354	1	92	Series
-354	2	101	undefined
-355	1	92	643.12 Rin
-355	2	83	643 Rin
-355	3	84	643 Rin
-355	4	99	undefined
-355	5	101	undefined
-356	1	101	undefined
-356	2	90	Quinn 1986
-356	3	34	undefined
-356	4	71	F Qui
-356	5	98	Fic Qu
-356	6	99	undefined
-356	7	33	undefined
-357	1	92	215 Kau
-358	1	84	F Wal
-359	1	39	F Krentz
-359	2	24	F KRE
-359	3	92	Krentz
-359	4	25	W F Krentz
-359	5	71	F/Kren
-359	6	48	F KRE
-359	7	47	F KRENTZ
-360	1	99	undefined
-361	1	39	F Delinsky
-361	2	90	LP Delinsky 1993
-361	3	85	FIC DELINSKY
-361	4	92	Delinsky
-361	5	25	LP Delinsky
-361	6	101	undefined
-362	1	83	F Adl
-362	2	84	F Adl
-362	3	92	Adler
-362	4	90	LP Adler 2006
-362	5	24	F ADL
-362	6	85	FIC ADLER
-362	7	39	F Adler
-362	8	98	Fic Ad
-363	1	83	YA F Cob
-363	2	84	YA F Cob
-363	3	24	J F COB
-363	4	92	T Coben
-363	5	90	YA Coben 2011
-363	6	39	F Coben
-363	7	87	Y F Cob
-363	8	34	F Coben 2011
-364	1	83	BR Hob
-364	2	84	BR Hob
-364	3	82	BR Hob
-364	4	24	J E Hob
-364	5	47	undefined
-364	6	101	undefined
-364	7	85	E HOBAN
-364	8	99	undefined
-364	9	90	NR Hoban 1998
-364	10	98	J E Ho
-364	11	87	J E Hob
-364	12	48	E HOB
-365	1	24	F KLE
-365	2	84	F Kle
-365	3	82	PB F Kle
-365	4	39	F Kleypas,CF Kleypas
-365	5	87	F Kle #1 Travis Series
-365	6	92	Kleypas
-365	7	34	Kleypas 2007
-365	8	25	F Kleypas
-366	1	82	J 975.941 Gib
-366	2	99	undefined
-366	3	98	910.4 GIB,975.941
-367	1	84	343.077 Sur
-367	2	83	343.077 Sur
-367	3	99	undefined
-367	4	100	Manitoba SurfRBd
-368	1	90	Conant 2005
-368	2	99	undefined
-368	3	85	FIC CONANT
-368	4	98	Myst Pbk Co
-369	1	85	PAPERBACK MARGOLIN
-369	2	34	F Mar
-369	3	21	undefined
-369	4	90	Margolin 2004
-369	5	24	F Mar
-369	6	68	undefined
-369	7	98	Fic Myst Ma
-369	8	25	W LP Margolin
-369	9	101	undefined
-369	10	87	LP F Mar M
-370	1	85	818.5403 MOORE,818.5403 MOORE
-370	2	101	817.6
-370	3	68	undefined
-370	4	25	817.6 Moore
-370	5	99	undefined
-370	6	100	PN/6288/Moo
-371	1	83	F Rus
-371	2	90	Rushdie 1983
-371	3	99	undefined
-371	4	101	RUSHDIE,RUSHDIE
-372	1	90	J Brooks 1999
-372	2	85	J BROOKS
-372	3	24	J F Bro WOL #10 pb
-372	4	101	undefined
-373	1	83	J 597.96 Gra
-373	2	84	J 597.96 Gra
-373	3	92	J 597.96 Gra
-373	4	99	undefined
-373	5	101	undefined
-374	1	98	Fic De
-374	2	34	F/De-51
-374	3	47	undefined
-374	4	87	LP F Dev
-374	5	16	Fic Dev
-374	6	39	F Deveraux
-374	7	25	F Deveraux
-374	8	71	F Dev
-374	9	48	F DEV
-374	10	33	Fic Dev
-374	11	46	undefined
-375	1	24	F STA SF #2 clone wars gambit
-376	1	72	VID   Ste
-377	1	90	E Nielsen 1992
-377	2	101	undefined
-378	1	85	641.8 ADAMS
-379	1	83	LP F Qui
-379	2	84	F Qui
-379	3	82	F Qui
-379	4	85	FIC QUICK,FIC QUICK
-379	5	34	F/Qu-4
-379	6	71	F/Qui
-379	7	68	undefined
-379	8	98	Fic Qu
-379	9	25	F Quick
-379	10	99	undefined
-379	11	46	undefined
-379	12	33	undefined
-379	13	92	LP Quick
-379	14	90	LP Quick 2001
-379	15	101	undefined
-379	16	39	F Quick
-379	17	87	F Qui
-380	1	83	J F Gam
-380	2	84	J F Gam
-380	3	82	J F Gam
-380	4	98	J Fic Ga
-380	5	39	JF Gamache
-380	6	34	J/F/Gam
-380	7	71	Y/ADV Gam
-380	8	100	PS 8563 Gam
-380	9	101	GAMACHE,GAMACHE
-381	1	71	J796.34 Gut
-381	2	101	undefined
-381	3	46	undefined
-382	1	83	J 597.92 Mar
-382	2	84	J 597.92 Mar
-382	3	101	undefined
-382	4	99	undefined
-382	5	90	J 597.92 Mar 1989
-382	6	33	undefined
-383	1	99	undefined
-383	2	39	J358.18 Hogg
-383	3	46	undefined
-384	1	24	F PAT LP
-384	2	25	F Patterson
-384	3	71	Mys/F Pat
-384	4	34	F Patters 2011
-384	5	68	CRIME PAT
-385	1	90	759.11 Ter
-385	2	68	undefined
-385	3	99	undefined
-385	4	87	759.11 Ter
-386	1	90	J 818 Chm 1986
-386	2	68	undefined
-387	1	31	undefined
-387	2	21	undefined
-388	1	98	M-1769
-389	1	83	F Kre
-389	2	84	F Kre
-389	3	99	undefined
-389	4	101	undefined
-389	5	90	Krentz 1995
-389	6	87	F Kre
-389	7	68	undefined
-389	8	98	Fic Kr
-389	9	48	F KRE
-390	1	99	undefined
-390	2	98	M-303
-391	1	99	undefined
-391	2	83	910.91634 Hus
-391	3	84	910.91634 Hus
-391	4	82	910.91634 Hus
-391	5	87	909. 09631 Hus
-391	6	85	910.9163 HUSTAK
-391	7	90	910.91634 Hus 1998
-391	8	101	910.916^34
-391	9	100	G/530/.T6/Hus
-392	1	31	302 GLA
-393	1	24	Fic FLE
-394	1	92	B Tesla
-395	1	72	181.09514 Raw
-396	1	32	811 Oli
-397	1	101	undefined
-398	1	87	LP F Cri
-399	1	99	undefined
-399	2	101	undefined
-400	1	83	371.82 Mor
-400	2	84	371.82 Mor
-400	3	82	371.82 Mor
-400	4	101	undefined
-400	5	25	371.82209549 Mortenson
-400	6	39	371.822 Morten
-400	7	90	371.829 Mor 2006
-400	8	92	371.822 Mor
-400	9	24	371.822 MOR
-400	10	87	371.822 Mor,371.822 Mor
-400	11	34	371.82 Mortens
-400	12	98	371.82209549 Mo
-400	13	68	undefined
-401	1	34	F/Cl-51W
-401	2	99	undefined
-401	3	101	undefined
-401	4	47	undefined
-402	1	85	J 578.76 MILLER-SCHROEDER
-403	1	101	undefined
-403	2	87	822. 3 Sha
-403	3	90	822.3 Lud 1962
-403	4	39	822.3 Ludowyk
-403	5	68	undefined
-403	6	47	undefined
-404	1	24	F BLA #3 suncoast chronicles
-404	2	98	Fic Bl
-404	3	90	ChrFic Blackstock 1996
-404	4	25	F Blackstock
-404	5	84	CF Bla v.3
-404	6	101	BLACKST,BLACKST
-404	7	99	undefined
-405	1	90	G 289.70947 Kla 1997
-406	1	87	F Mez
-407	1	99	undefined
-408	1	90	ChrFic Lacy 2002
-408	2	99	undefined
-408	3	101	LACY
-409	1	24	J F BRA #2 the joy of spooking
-409	2	92	J Bracegirdle
-409	3	99	undefined
-409	4	101	undefined
-410	1	98	T.B. Bl
-411	1	99	undefined
-412	1	100	PN/4888/.O25/Lee
-413	1	84	J E Bre
-413	2	83	J E Bre
-413	3	82	J E Bre
-413	4	44	E Bre
-413	5	99	undefined
-413	6	46	undefined
-413	7	85	E BRETT
-413	8	24	J E Bre
-413	9	68	undefined
-413	10	90	E Brett 2004
-413	11	92	E Bre
-413	12	71	C/F Brett
-413	13	101	BRETT
-414	1	31	JR EASY MON
-415	1	34	PBK F McNaugh
-415	2	68	undefined
-415	3	99	undefined
-416	1	68	undefined
-416	2	87	364. 1523 092 She
-416	3	24	364.1523 SHE
-416	4	100	HV/6535/.C33/She
-416	5	99	undefined
-417	1	16	Fic Lin
-417	2	84	PB F Lin
-417	3	44	Rom Lin
-417	4	68	undefined
-417	5	48	undefined
-418	1	87	J 292. 211 Ger
-419	1	84	J 989.5 Mor
-419	2	99	undefined
-420	1	84	947.7 She
-421	1	84	J E Car
-421	2	83	J E Car
-421	3	82	J E Car
-422	1	20	DVD/Operation/G
-424	1	82	J 599.658 Vog
-425	1	87	J E Car
-425	2	25	E Carle
-425	3	99	undefined
-426	1	100	Manitoba Envir Registry 3127
-427	1	46	undefined
-428	1	99	undefined
-428	2	101	E CARLE
-428	3	84	J E Car
-428	4	83	J E Car
-428	5	82	J E Car
-429	1	101	025.62 BOU
-429	2	99	undefined
-430	1	101	E CARLE
-430	2	84	J E Car
-430	3	83	J E Car
-430	4	82	J E Car
-431	1	101	025.62 BOU
-431	2	99	undefined
-432	1	84	797.122 Wil
-432	2	83	797.122 Wil
-432	3	38	797.122 WIL
-432	4	26	ANF 797.122 WIL
-432	5	35	797.1 WIL
-433	1	38	undefined
-433	2	79	undefined
-433	3	94	undefined
-434	1	85	J 636.597 HUDAK
-434	2	134	J 636.597 HUD
-434	3	94	undefined
-435	1	99	undefined
-435	2	48	YA HAW
-435	3	85	T HAWORTH-ATTARD
-435	4	38	J FIC HAW
-435	5	26	JF HAW
-435	6	46	undefined
-436	1	48	YA COL
-436	2	87	ILL Sept 30/11
-436	3	71	YADF Col
-436	4	34	YA Collins Bk1 2008,YA Collins Bk1 2008
-436	5	89	F Col
-436	6	68	TEEN FIC COL
-436	7	25	J Collins
-436	8	94	undefined
-436	9	26	AF COL,AF COL,AF COL,AF COL
-436	10	35	T COL,T COL,T COL
-436	11	27	A FIC COL
-436	12	92	T Collins,T Collins
-436	13	99	undefined
-436	14	79	Y.A. F COL,Y.A. F COL c.2,Y.A. F COL c.3
-436	15	134	YA F COL,YA F COL
-436	16	38	YA COL #1 Hunger
+466	1	99	undefined
+467	1	91	034 HAC
+468	1	101	289.9 BAR
+468	2	20	B/Barlow
+468	3	99	undefined
+469	1	101	629.89263 GUT
+470	1	34	791.45 BLACK
+470	2	94	undefined
+471	1	92	E Nev
+471	2	85	E NEVIUS
+471	3	73	JE.Nev
+471	4	79	E NEV
+472	1	44	J 595.78
+472	2	48	E NEY
+472	3	92	EZ 4
+472	4	45	undefined
+472	5	94	undefined
+473	1	99	undefined
+473	2	68	CRIME HUR
+473	3	94	undefined
+473	4	73	F.Hur
+474	1	68	728.9/H
+474	2	25	728.92209712 Hai
+474	3	34	728.92 Hai
+474	4	98	728.9220971 Hai
+474	5	79	728.922 HAI
+474	6	21	undefined
+474	7	11	undefined
+474	8	99	undefined
+474	9	94	undefined
+474	10	73	728.9220971 Hai
+475	1	135	J E McCl
+475	2	82	J E McCl
+475	3	45	undefined
+475	4	85	E MCCLOSKEY
+475	5	34	J/E/McC
+475	6	71	T/B McClo
+475	7	99	undefined
+475	8	35	E MCC
+475	9	26	EF MCC,EF MCC
+475	10	36	undefined
+476	1	73	636.8 Fri
+476	2	71	J636.8 Fri
+477	1	26	ANF 641 CAR
+477	2	16	637.3 Can
+477	3	99	undefined
+478	1	92	AUD J Deedy
+479	1	30	undefined
+480	1	99	undefined
+481	1	92	PB L
+481	2	99	undefined
+481	3	79	PB LAV
+481	4	73	F.PBMys
+482	1	99	undefined
+482	2	79	973.927 MOR
+482	3	73	B.Rea
+482	4	35	B REA
+482	5	94	undefined
+483	1	30	FIC HIL
+483	2	31	FIC HIL
+484	1	94	undefined
+485	1	92	690.8 Spe
+485	2	99	undefined
+486	1	79	undefined
+486	2	94	undefined
+486	3	38	undefined
+487	1	38	undefined
+487	2	79	undefined
+487	3	94	undefined
+488	1	38	J FIC HOR
+488	2	48	J HOR
+488	3	98	J Pbk Ho
+488	4	25	J Horvath
+488	5	68	JF HOR
+488	6	45	undefined
+488	7	99	undefined
+489	1	31	undefined
+490	1	38	BB PRE
+490	2	79	921 PRE PRE
+490	3	25	B Presley
+490	4	73	B.Pre
+490	5	71	B Pre
+490	6	33	undefined
+490	7	94	undefined
+490	8	21	undefined
+490	9	27	920 PRE
+491	1	34	FIC Walton 2006 M
+491	2	92	Walton
+491	3	68	FIC WAL
+491	4	99	undefined
+491	5	94	undefined
+491	6	79	PB WAL
+492	1	35	F BRO
+493	1	135	PB F Eva
+493	2	101	EVANO
+493	3	20	Basement/F/Evanovich/M/c.2
+493	4	78	F Eva
+493	5	84	F Eva
+493	6	82	F Eva
+493	7	44	F Eva
+493	8	83	F Eva v.14
+493	9	73	F.Eva
+493	10	25	F Evanovich
+493	11	94	undefined
+493	12	79	LP F EVA
+493	13	91	S FIC EVA
+493	14	11	undefined
+493	15	17	undefined
+493	16	48	F EVA
+493	17	38	FIC EVA
+493	18	134	F  EVA
+493	19	99	undefined
+493	20	92	Evanovich
+493	21	26	AF EVA
+494	1	30	YA FIC POR
+495	1	79	Y.A. F HAW
+495	2	92	T Hawthorne
+495	3	99	undefined
+495	4	26	JF HAW
+495	5	94	undefined
+495	6	91	S FIC HAW
+496	1	85	E BROWNE
+496	2	68	E B
+496	3	94	undefined
+496	4	21	undefined
+496	5	99	undefined
+497	1	84	796.962 Sca
+497	2	99	undefined
+498	1	30	JR B GER
+498	2	31	JR B THO
+499	1	101	92 MOO
+499	2	99	undefined
+500	1	134	398.209 SMI
+500	2	26	ANF 133.109 SMI
+500	3	73	133.1 Smi
+500	4	21	undefined
+500	5	91	A 133.1 SMI
+500	6	36	undefined
+501	1	83	J S Bai v.5
+501	2	84	J S Bai v.5
+501	3	134	J F DAD
+501	4	91	J FIC DAD
+501	5	34	J F Dadey
+501	6	35	J DAD
+501	7	68	EASY READ DAD
+501	8	94	undefined
+501	9	79	J F DAD
+501	10	25	J Dadey
+501	11	17	undefined
+502	1	48	E ADA
+502	2	38	E ADA GREEN 1
+502	3	25	E Adams
+502	4	99	undefined
+502	5	94	undefined
+502	6	35	J 629.225 ADA
+503	1	36	undefined
+504	1	38	undefined
+504	2	79	undefined
+505	1	92	Wambaugh
+505	2	25	LP Wambaugh
+505	3	94	undefined
+505	4	34	LP Rotation
+505	5	38	FIC WAM
+505	6	134	F WAM
+506	1	92	J 954 Kal
+506	2	85	J 954.221 KALMAN
+506	3	35	J 954 KAL
+507	1	26	ANF BLA 333.8232
+507	2	73	333.8 Bla
+508	1	25	F Pratchett
+508	2	99	undefined
+508	3	91	A FIC PRA
+509	1	83	LP F Rob v.3
+509	2	84	LP F Rob v.3
+509	3	82	LP F Rob v.3
+509	4	135	PB F Rob v. 3
+509	5	71	F Roberts
+509	6	91	A FIC ROB
+509	7	94	undefined
+509	8	27	A FIC ROB
+509	9	21	undefined
+509	10	26	AF ROB r
+509	11	79	PB ROB
+509	12	68	FIC ROB
+509	13	35	F ROB
+509	14	25	F Roberts
+509	15	45	undefined
+509	16	16	Fic Rob
+510	1	78	F Jan M
+510	2	99	undefined
+510	3	38	PB JAN
+510	4	85	FIC JANCE
+511	1	94	undefined
+512	1	98	347.71014 Bat
+512	2	99	undefined
+513	1	20	J/811.54/LEE
+513	2	83	J 811.54 Lee
+513	3	84	J 811.54 Lee
+513	4	82	J 811.54 Lee
+513	5	135	J 811.54 Lee
+513	6	68	E
+514	1	68	E pb
+515	1	79	J F LOR
+515	2	68	TEEN FIC LOR
+515	3	94	undefined
+515	4	11	undefined
+516	1	45	J 177.7 Pry
+517	1	134	F WHY
+517	2	68	FIC WHY
+517	3	27	A FIC WHY (1)
+517	4	79	F WHY
+517	5	92	Whyte
+517	6	98	Fic Wh
+517	7	16	Fic Why
+517	8	94	undefined
+517	9	91	A FIC WHY
+518	1	94	undefined
+518	2	99	undefined
+518	3	79	971.272 TOL
+519	1	83	343.71014 Cla
+519	2	68	343.71 PRINGLE
+519	3	99	undefined
+519	4	94	undefined
+520	1	26	ANF 595.79 PAC
+520	2	68	595.79 PAC
+521	1	20	F/Steel
+521	2	84	F Ste
+521	3	83	LP F Ste
+521	4	135	LP F Ste
+521	5	78	F Ste
+521	6	101	STEEL
+521	7	48	F STE
+521	8	98	Fic St
+521	9	71	F Ste
+521	10	38	FIC STE
+521	11	26	AF STE
+521	12	134	F STE
+521	13	91	A FIC STE
+521	14	99	undefined
+521	15	21	undefined
+521	16	94	undefined
+521	17	68	fiction
+521	18	34	F Steel 1995
+521	19	25	LP Steel
+521	20	79	F STE
+521	21	45	undefined
+521	22	16	FIC STE
+521	23	33	undefined
+522	1	83	808.88 Lau
+522	2	82	808.88 Lau
+522	3	84	808.88 Lau
+522	4	26	ANF 818.540 LAU
+522	5	99	undefined
+522	6	21	undefined
+522	7	36	undefined
+522	8	94	undefined
+522	9	17	undefined
+523	1	38	FIC DEV
+523	2	68	FIC DEV
+523	3	16	Fic Dev
+523	4	73	F.Dev
+523	5	25	F Deveraux
+523	6	26	AF DEV
+523	7	134	F DEV
+523	8	45	undefined
+523	9	17	undefined
+523	10	35	F DEV
+523	11	98	Fic De
+523	12	34	F / De-49
+523	13	94	undefined
+523	14	71	F Dev
+524	1	98	158 Bus
+524	2	25	158 Bus
+524	3	71	158 Bus
+524	4	16	158.2 Bus
+524	5	94	undefined
+525	1	26	JNF 621.36 STE
+526	1	38	FIC BOO
+526	2	94	undefined
+526	3	99	undefined
+527	1	20	Basement/F/Allen
+528	1	30	undefined
+529	1	99	undefined
+529	2	68	FIC FOR
+529	3	94	undefined
+530	1	101	818.54 DAV
+530	2	83	818.5408 Dav
+530	3	85	814 .54 DAVIES,814 .54 DAVIES
+530	4	99	undefined
+530	5	68	818 DAV
+530	6	38	FIC DAV
+530	7	94	undefined
+531	1	30	JR EASY WEB
+531	2	31	JR EASY WEB
+532	1	98	B Re
+532	2	68	791.43 REEVE
+532	3	38	B REE
+532	4	99	undefined
+532	5	73	B.Ree
+532	6	94	undefined
+532	7	11	undefined
+533	1	101	649.1 GUR
+533	2	99	undefined
+533	3	79	649 .1 GUR
+533	4	22	FRC 649.1 Gur-E
+534	1	44	P Bra
+535	1	26	AR STE
+536	1	99	undefined
+537	1	33	undefined
+537	2	85	FIC TUROW,FIC TUROW
+537	3	35	F TUR
+537	4	94	undefined
+537	5	91	A FIC TUR
+537	6	27	A FIC TUR
+537	7	92	Turow
+537	8	38	FIC TUR
+537	9	25	W F Turow
+537	10	68	FIC TUR
+537	11	98	Fic Myst Tu
+537	12	34	F/Tu-86
+537	13	16	Fic Tur
+538	1	99	undefined
+539	1	100	HT 57 Man Ser. 5 No. 1 c. 1
+540	1	20	DVD/Ocean's/PG
+541	1	84	J 567.918 Mat
+541	2	83	J 567.918 Mat
+541	3	82	J 567.918 Mat
+541	4	79	J 567.9 MAT
+542	1	94	undefined
+542	2	99	undefined
+543	1	85	E CLARKE
+544	1	44	576.5
+545	1	72	J523.45   Rin
+546	1	31	FIC BAI M
+547	1	48	F OKE
+547	2	134	F OKE
+547	3	26	AF OKE
+547	4	92	Oke
+547	5	25	LP Oke
+547	6	34	F Oke,OKE
+547	7	98	Fic Ok
+547	8	94	undefined
+547	9	22	undefined
+548	1	99	undefined
+549	1	101	CLARK
+549	2	83	CF Cla v.4
+549	3	99	undefined
+549	4	25	F Clark
+549	5	35	F CLA
+550	1	85	LP WHITE
+550	2	27	LP WHITE
+550	3	71	F White LP
+550	4	98	T.B. Wh
+550	5	99	undefined
+551	1	84	J 760 Wal
+551	2	99	undefined
+552	1	99	undefined
+552	2	26	AF RAN
+552	3	22	FICTION RAN
+553	1	91	SF FIC MAR
+554	1	20	F/Steel
+554	2	83	F Ste
+554	3	84	F Ste
+554	4	82	F Ste
+554	5	135	F Ste
+554	6	78	LP F Ste
+554	7	44	Rom Ste
+554	8	48	STEEL,STEEL
+554	9	98	LP Fic St
+554	10	25	W LP Steel
+554	11	99	undefined
+554	12	45	undefined
+554	13	16	Fic Ste
+554	14	71	LPGF Steel
+554	15	94	undefined
+554	16	33	undefined
+554	17	11	PS3569.T33828R37 2004,F STE,F STE,F STE,PS3569.T33828 R37 2004
+554	18	21	undefined
+554	19	91	A FIC STE
+554	20	26	AF STE,ALP STE
+554	21	22	undefined
+554	22	27	LP STEEL
+554	23	35	F STE
+554	24	134	F STE
+554	25	85	FIC STEEL,FIC STEEL
+554	26	38	FIC STE
+554	27	34	F/St-3
+555	1	26	947
+555	2	98	J 947 Mur
+555	3	45	undefined
+555	4	25	J 947 Murrell
+555	5	94	undefined
+556	1	79	undefined
+556	2	38	undefined
+556	3	94	undefined
+557	1	101	WESLEY
+557	2	98	Fic We
+557	3	68	fiction
+557	4	99	undefined
+557	5	94	undefined
+558	1	99	undefined
+558	2	84	F Kel
+558	3	135	F Kel
+558	4	35	F KEL
+558	5	79	F KEL
+558	6	68	CRIME KEL
+558	7	92	Kellerman
+558	8	34	F/Ke-28 M
+558	9	71	Mys/F Kellerman
+558	10	85	FIC KELLERMAN,FIC KELLERMAN
+558	11	94	undefined
+558	12	38	FIC KEL
+559	1	35	133.8 COL
+560	1	83	PB F Mor
+560	2	85	FIC MORSI
+560	3	94	undefined
+561	1	38	undefined
+561	2	79	undefined
+561	3	94	undefined
+562	1	83	J 597.92 Mar
+562	2	84	J 597.92 Mar
+562	3	33	undefined
+562	4	99	undefined
+563	1	71	F/Moore (2) Shadrach
+563	2	94	undefined
+564	1	78	J 567.97 Lin
+564	2	98	J 567.9129 Lin
+564	3	99	undefined
+564	4	91	J 567.9 LIN,REF 567.97 Lin
+565	1	79	371.1023 TEA
+565	2	94	undefined
+566	1	84	J E Bre
+566	2	83	J E Bre
+566	3	82	J E Bre
+566	4	44	E Bre
+566	5	99	undefined
+566	6	73	JE.Bre
+566	7	134	E BRE
+566	8	68	E B
+566	9	85	E BRETT
+566	10	92	E Bre
+566	11	71	C/F Brett
+566	12	35	E BRE
+566	13	26	EF BRE
+567	1	92	T Brown
+569	1	101	ROY
+569	2	85	J ROY,J ROY
+569	3	99	undefined
+569	4	17	undefined
+569	5	79	J F ROY
+569	6	38	J FIC ROY
+569	7	91	J FIC ROY
+569	8	94	undefined
+569	9	35	J ROY
+570	1	101	E TOMS
+571	1	83	J 808.81933 Pre
+571	2	84	J 808.81933 Pre
+571	3	20	J/E/Prelutsky
+571	4	26	EF PRE
+571	5	34	J/E/Pre
+571	6	27	E FIC PRE
+571	7	99	undefined
+572	1	36	undefined
+573	1	44	909.09
+574	1	84	PB SCFI Bov
+574	2	101	BOVA
+574	3	99	undefined
+574	4	38	FIC BOV
+574	5	22	undefined
+575	1	68	J551.21/W
+575	2	38	J 551.2122 WOO
+575	3	26	JNF 521.3 WOO
+575	4	94	undefined
+576	1	11	undefined
+576	2	38	MLDB-LP PIL
+576	3	34	F/Pi-64
+576	4	22	undefined
+576	5	26	AF PIL,AF PIL
+576	6	134	F PIL,F PIL
+576	7	68	FIC PIL
+576	8	25	LP Pilcher
+576	9	71	F Pil
+576	10	16	Fic Pil
+577	1	83	F Fall v.2
+577	2	25	F Fallon
+577	3	134	F FAL . FANTASY
+577	4	94	undefined
+578	1	38	undefined
+578	2	79	undefined
+578	3	94	undefined
+579	1	26	AF GRU,AF GRU
+579	2	134	F GRU
+579	3	73	F.PBGen
+579	4	11	undefined
+579	5	27	A FIC GRU
+579	6	17	undefined
+579	7	38	FIC GRU
+579	8	92	Gruen
+579	9	35	F GRU
+579	10	68	FIC GRU
+579	11	34	F Gruen 2007
+579	12	71	F Gru
+580	1	45	undefined
+580	2	71	F Ros
+580	3	98	Series Pbk Ro
+580	4	38	FIC ROS
+580	5	21	undefined
+580	6	94	undefined
+581	1	99	undefined
+582	1	36	undefined
+583	1	134	778.3 VEA
+584	1	91	A FIC SOL
+585	1	10	JNF 741.5 MAR
+586	1	94	undefined
+587	1	20	J/E/Rogers
+587	2	38	E ROG YELLOW 1
+587	3	71	C/F Rog
+588	1	99	undefined
+589	1	100	F 5050 McD
+589	2	101	971.0647 McD
+589	3	83	971.0647 MacD
+589	4	38	971.0647 McD
+589	5	99	undefined
+589	6	134	971.0647 MCD
+590	1	83	J E Joh
+590	2	84	J E Joh
+590	3	82	J E Joh
+590	4	99	undefined
+591	1	78	F Bal
+591	2	82	F Bal
+591	3	83	F Bal
+591	4	84	F Bal
+591	5	44	F Bal
+591	6	101	BALDACC
+591	7	20	F/Baldacci
+591	8	79	F BAL
+591	9	94	undefined
+591	10	68	CRIME BAL
+591	11	35	THRILLER F BAL
+591	12	34	F Baldacc 2011
+591	13	27	A FIC BAL
+591	14	38	FIC BAL
+591	15	92	LP Baldacci
+591	16	25	W LP Baldacci
+591	17	10	FIC BAL,FIC BAL
+591	18	73	F.Bal
+591	19	134	F BAL
+593	1	100	Manitoba RurDev MPB pim3 c. 2
+594	1	72	590 Bur
+595	1	83	J S But v.8
+595	2	82	J S But v.8
+595	3	84	J S But s v.8
+596	1	85	J R 599.221 HARE
+597	1	34	791.45 BLACK
+597	2	94	undefined
+598	1	85	LP GALLAGHER
+598	2	94	undefined
+599	1	85	616.02 STERN
+599	2	79	921 STE
+599	3	99	undefined
+600	1	79	PB WEB
+600	2	27	A FIC WEB
+601	1	30	FIC STE
+601	2	31	FIC STE
+602	1	101	CASTE
+602	2	92	T Castellucci
+602	3	68	TEEN FIC CAS
+602	4	99	undefined
+602	5	94	undefined
+603	1	92	641.815 Gre
+603	2	94	undefined
+604	1	82	J 507.8 Zub
+604	2	99	undefined
+604	3	94	undefined
+605	1	26	EF ALB
+605	2	38	E ALB YELLOW 8
+605	3	91	ER FIC ALB
+605	4	36	undefined
+606	1	44	YA Joh
+607	1	101	BROOKS
+607	2	85	T BROOKS,T BROOKS
+607	3	35	T BRO
+607	4	99	undefined
+607	5	79	Y.A. F BRO
+607	6	68	TEEN FIC BRO
+607	7	94	undefined
+608	1	26	JF PAU
+608	2	98	J Pbk Pa
+609	1	83	CF Gun
+609	2	84	CF Gun
+609	3	82	CF Gun
+609	4	92	Gunn
+609	5	99	undefined
+609	6	26	AF GUN
+610	1	44	F Cus
+610	2	20	F/Cussler
+610	3	99	undefined
+611	1	25	J Duane
+611	2	68	TEEN DUA
+611	3	94	undefined
+611	4	11	FICTION Duane
+611	5	99	undefined
+612	1	83	J 591.03 Din
+612	2	44	J 599.32
+612	3	20	J/599/Nature
+612	4	99	undefined
+612	5	45	undefined
+612	6	38	J 599.7357 DIN
+612	7	35	J 599.73 DIN
+612	8	71	J599.32 Din
+612	9	26	599.322
+612	10	94	undefined
+613	1	20	690.184/Decks
+613	2	78	690.184
+613	3	33	690.184 Dec
+613	4	25	690.184 Decks
+613	5	99	undefined
+613	6	85	VID DECKS 847
+613	7	94	undefined
+614	1	21	F ESSEX
+615	1	68	FIC SAW
+616	1	79	PB WHY
+616	2	134	F WHY
+616	3	11	undefined
+616	4	98	Fic Wh
+616	5	94	undefined
+617	1	11	undefined
+618	1	92	GN Cosby
+619	1	99	undefined
+619	2	94	undefined
+620	1	101	FIC GRAY
+621	1	20	F/Slaughter/M
+621	2	78	F Sla M
+621	3	25	W F Slaughter
+621	4	99	undefined
+621	5	33	undefined
+621	6	94	undefined
+621	7	45	undefined
+621	8	85	FIC SLAUGHTER,FIC SLAUGHTER
+621	9	68	CRIME SLA
+621	10	71	Mys/F Slaughter
+621	11	38	FIC SLA
+622	1	25	LP Preston
+622	2	73	F.Pre
+622	3	92	LP Preston
+622	4	79	F PRE
+622	5	134	F PRE
+622	6	26	AF PRE
+622	7	94	undefined
+622	8	34	F Preston 2010
+623	1	38	YA FRA
+623	2	10	FIC FRA
+623	3	68	FIC FRA
+623	4	94	undefined
+624	1	78	AB F Chr
+625	1	79	702.81 STE
+626	1	99	undefined
+626	2	79	702.81 STE
+627	1	38	undefined
+627	2	79	undefined
+627	3	94	undefined
+628	1	101	BUNTING
+628	2	99	undefined
+628	3	79	E BUN
+628	4	94	undefined
+629	1	21	J 398.20947 SHA
+630	1	83	796.352 MacC
+630	2	134	796.352 MCC
+630	3	10	796.35 McC
+630	4	94	undefined
+630	5	79	796.352 MCC
+630	6	11	undefined
+630	7	36	undefined
+631	1	85	E EDWARDS
+631	2	99	undefined
+631	3	94	undefined
+631	4	21	undefined
+631	5	22	undefined
+632	1	84	503 Han
+632	2	99	undefined
+633	1	101	FIC MODES
+633	2	84	F Mod
+633	3	92	Modesitt, Jr
+633	4	99	undefined
+633	5	79	F MOD
+634	1	101	TOLKIEN
+634	2	82	OS J F Tol
+634	3	84	J F Tol
+634	4	83	J F Tol
+634	5	99	undefined
+635	1	83	PB F Neg
+635	2	84	PB F Neg
+635	3	78	F NEG M
+635	4	25	F Neggers
+635	5	85	FIC NEGGERS
+635	6	38	FIC NEG
+635	7	99	undefined
+635	8	45	undefined
+635	9	34	F/Ne-31
+635	10	71	F/Neggers
+635	11	91	A FIC NEG,FIC NEG
+636	1	79	121.3 WAT
+636	2	71	undefined
+637	1	79	undefined
+637	2	38	undefined
+637	3	94	undefined
+638	1	26	ANF 914 MIC
+638	2	10	914.5 FOD
+638	3	38	945.092 ITA
+638	4	98	945 Ita
+639	1	26	JNF 811.540
+639	2	38	J 811.5408
+639	3	92	J 811.54 Boo
+639	4	99	undefined
+639	5	45	undefined
+639	6	94	undefined
+640	1	20	J/917/Canadian
+640	2	84	J 917.12 Wat
+640	3	83	J 917.12 Wat
+640	4	82	J 917.12 Wat
+640	5	44	917.12
+640	6	94	undefined
+640	7	91	917.12 WAT
+641	1	101	92 CAR
+641	2	99	undefined
+641	3	35	364.1 FOL
+642	1	101	PARKER
+642	2	82	F Par
+642	3	83	F Par
+642	4	84	F Par
+642	5	99	undefined
+642	6	92	Parker
+642	7	79	F PAR
+642	8	134	F PAR
+642	9	94	undefined
+643	1	25	J/574.626/41/Gre
+643	2	134	J 577.34 GRE
+643	3	10	JNF 574.52 GRE
+643	4	35	J 578 GRE
+643	5	92	J 577.34 Gre
+643	6	45	undefined
+643	7	98	J 574.52642 Gre
+643	8	94	undefined
+644	1	26	AF PAT
+644	2	44	Mys Pat
+644	3	20	F/Patterson
+644	4	83	F Pat
+644	5	84	F Pat
+644	6	135	F Pat
+644	7	78	F Pat Th
+644	8	82	PB F Pat
+644	9	101	PATTERS
+644	10	99	undefined
+644	11	94	undefined
+644	12	22	undefined
+644	13	10	FIC PAT
+644	14	27	A FIC PAT
+644	15	25	W LP Patterson
+644	16	85	FIC PATTERSON,FIC PATTERSON
+644	17	68	CRIME PAT
+644	18	16	FIC PAT
+644	19	71	His/F Patterson
+644	20	38	FIC PAT
+645	1	34	745.59 Joy
+645	2	99	undefined
+646	1	134	F STE
+646	2	79	F STE
+646	3	16	Fic Ste
+646	4	26	AF STE
+646	5	68	FIC STE
+646	6	34	F/St-3
+646	7	35	F STE
+646	8	99	undefined
+646	9	73	LP.PLS
+646	10	27	A FIC STE
+646	11	33	STEEL
+646	12	38	FIC STE
+646	13	22	undefined
+646	14	25	LP Steel
+646	15	10	FIC STE
+647	1	20	F/Steel
+647	2	83	F Ste
+647	3	84	F Ste
+647	4	82	F Ste
+647	5	78	F Ste
+647	6	135	PB F Ste
+647	7	101	STEEL
+647	8	44	Rom Ste
+647	9	79	F STE
+647	10	16	Fic Ste
+647	11	45	undefined
+647	12	34	F/St-3
+647	13	68	FIC STE
+648	1	20	F/Steel
+648	2	83	F Ste
+648	3	84	F Ste
+648	4	82	F Ste
+648	5	78	F Ste
+648	6	135	PB F Ste
+648	7	101	STEEL
+648	8	44	Rom Ste
+648	9	79	F STE
+648	10	71	F Ste,F STEEL,F/Steel,FIC STE,Fic,F Steel,F Ste,F Steel,FIC STE,F STE,Rom Ste,F Steel,F Ste,F/Ste,A
+648	11	68	LP FIC STE
+648	12	16	Fic Ste
+648	13	45	undefined
+648	14	34	F/St-3
+648	15	27	A FIC STE
+648	16	98	Fic St
+648	17	99	undefined
+648	18	38	FIC STE
+648	19	33	STEEL
+648	20	22	undefined
+648	21	134	F STE
+648	22	73	LP.PLS
+648	23	25	LP Steel
+648	24	10	FIC STE
+648	25	26	AF STE
+648	26	35	F STE
+649	1	100	Manitoba SpR 2001 Climate Change
+649	2	68	551.5 MAN
+649	3	99	undefined
+650	1	101	CARR
+650	2	84	F Car
+650	3	83	F Car
+650	4	26	AF CAR
+651	1	78	636 Mig
+652	1	101	92 BUT
+653	1	79	undefined
+653	2	38	undefined
+653	3	99	undefined
+654	1	94	undefined
+655	1	83	F Bla
+655	2	98	Fic Bl
+655	3	94	undefined
+655	4	99	undefined
+656	1	100	Canada CMHC heos
+656	2	99	undefined
+657	1	38	FIC LEO
+657	2	99	undefined
+657	3	27	A FIC LEO
+657	4	36	undefined
+658	1	25	F Fisher
+658	2	82	CF Fis
+658	3	84	CF Fis
+658	4	83	CF Fis
+658	5	26	AF FIS
+658	6	71	F Fis
+659	1	38	635.7 HOL
+659	2	134	635.7 HOL,635.7 HOL
+659	3	98	635.7 Hol
+659	4	45	undefined
+659	5	34	635.7 Hol
+659	6	92	635.7 Hol
+659	7	27	635 HOL
+660	1	82	LP F Dev
+660	2	44	Rom Dev
+660	3	135	PB F Dev
+660	4	71	F/Deveraux
+660	5	98	Fic De
+660	6	38	FIC DEV
+660	7	79	LP F DEV
+660	8	33	Fic Dev,DEVERAU,F,F,F,F DEVERAUX,F Dev - E,F Dev - M
+660	9	99	undefined
+660	10	94	undefined
+660	11	21	undefined
+660	12	26	AF DEV,AF DEV
+660	13	83	F Dev
+660	14	84	F Dev
+660	15	22	F DEV
+660	16	10	FIC DEV
+660	17	25	LP Deveraux
+660	18	85	LP DEVERAUX
+660	19	34	DEVERAU
+660	20	45	undefined
+660	21	16	Fic Dev
+661	1	20	Basement/F/Davies
+661	2	34	F/Da-28
+661	3	68	fiction
+661	4	98	Fic Da
+661	5	99	undefined
+661	6	94	undefined
+661	7	91	A FIC DAV
+662	1	134	GN F MAR
+662	2	99	undefined
+662	3	79	J 741.5 MAR
+662	4	94	undefined
+663	1	31	JR FIC COL
+664	1	79	LP 345.766 GRI
+664	2	35	undefined
+664	3	68	364.1523 GRI
+664	4	17	undefined
+664	5	36	undefined
+664	6	21	undefined
+664	7	22	undefined
+664	8	26	AF GRI
+664	9	134	F GRI
+664	10	92	345.7 Gri
+664	11	73	364.1523 Gri
+664	12	45	undefined
+664	13	38	345.766 GRI
+665	1	68	JF WIL
+665	2	45	undefined
+665	3	98	J Pbk Wi
+665	4	71	Y/MYS Wil
+665	5	134	J F WIL
+665	6	99	undefined
+665	7	94	undefined
+665	8	36	undefined
+665	9	91	J FIC WIL
+666	1	35	MYSTERY F ROB
+666	2	79	F ROB c.1,F ROB c.2
+666	3	134	F ROB
+666	4	26	AF ROB
+666	5	27	A FIC ROB
+667	1	30	395 MEA
+668	1	25	F Christie
+668	2	134	F CHR
+668	3	94	undefined
+668	4	34	PBK F CHRISTI
+668	5	68	CRIME CHR
+668	6	26	AF CHR m
+668	7	99	undefined
+668	8	73	F.PBMys
+668	9	91	A FIC CHR
+668	10	10	FIC CHR
+669	1	92	J B
+669	2	25	J Babbitt
+669	3	11	undefined
+669	4	17	undefined
+669	5	35	J BAB
+669	6	22	undefined
+669	7	91	J FIC BAB
+669	8	26	JF BAB
+669	9	134	J F BAB
+669	10	99	undefined
+669	11	79	J F BAB
+669	12	45	undefined
+669	13	98	J Pbk Ba
+669	14	27	J FIC BAB
+669	15	10	JF BAB
+670	1	26	ANF 646.7 HAN
+671	1	25	796.964 Russell
+671	2	73	796.964 Rus
+671	3	85	796.964 RUSSELL,796.964 RUSSELL
+671	4	35	796.96 RUS
+671	5	26	ANF 796.964 RUS
+671	6	94	undefined
+672	1	134	J F GIP
+672	2	10	JF GIP
+672	3	26	JF GIP
+672	4	45	undefined
+672	5	11	J/GIPSON
+672	6	73	JR.Gip
+672	7	94	undefined
+673	1	83	F Hem
+673	2	84	F Hem
+673	3	25	F Hemingway
+673	4	92	Hemingway
+673	5	68	FIC HEM
+673	6	79	F HEM
+673	7	38	FIC HEM
+673	8	34	F/He-37
+673	9	98	Fic He
+673	10	10	CLASSIC HEM
+673	11	33	undefined
+674	1	83	823.912 Aga
+674	2	94	undefined
+675	1	84	629.2872 Scl
+675	2	99	undefined
+675	3	21	undefined
+675	4	26	ANF 629.2 SCL
+676	1	134	623.87234 SHE
+676	2	79	623.87 SHE
+676	3	99	undefined
+676	4	92	623.87234 She
+676	5	94	undefined
+677	1	83	F Rus
+677	2	92	Russell
+677	3	79	F RUS
+677	4	94	undefined
+678	1	72	636.72 Kno
+679	1	99	undefined
+679	2	79	636.728 STA
+679	3	36	undefined
+680	1	38	undefined
+680	2	79	undefined
+680	3	94	undefined
+681	1	79	J 799.1 SZU
+681	2	26	JNF/799.109/SZU
+681	3	68	J799.1097127 SZU
+681	4	35	E SZU,J SZU
+681	5	38	E SZU Orange 5
+681	6	11	undefined
+681	7	91	ER FIC SZU
+682	1	20	J/E/Denton
+682	2	100	PS 8557 Den
+682	3	25	E Denton
+682	4	38	E McD YELLOW 7
+682	5	79	E DEN
+682	6	26	EF DEN
+682	7	10	C DEN
+682	8	94	undefined
+682	9	33	undefined
+684	1	79	F LON
+684	2	38	FIC LON
+684	3	10	FIC LON
+684	4	98	Classic Pbk Lo
+684	5	134	F LON
+684	6	94	undefined
+684	7	71	Y/ADV Lon
+684	8	16	Fic Lon
+685	1	134	F DAV
+685	2	38	FIC DAV
+685	3	25	F Davidson
+685	4	27	A FIC DAV
+685	5	73	F.Dav
+685	6	45	undefined
+685	7	98	Fic Myst Da
+685	8	71	Mys/F Dav
+686	1	99	undefined
+687	1	25	910.9163 Jas
+687	2	79	910.9163 JAS
+687	3	68	910 JAS
+687	4	34	910.9 Jas
+687	5	94	undefined
+687	6	73	910.9163 Jas
+687	7	22	undefined
+687	8	38	910.9163 JAS
+687	9	134	910.9163 JAS
+687	10	98	910.9163327 Jas
+687	11	35	B JAS
+687	12	99	undefined
+687	13	10	910.91 JAS
+687	14	26	ANF 910.91 JAS
+688	1	45	undefined
+688	2	68	917.12/L
+688	3	33	undefined
+689	1	20	F/Cussler
+689	2	83	PB F Cus v.11
+689	3	91	A FIC CUS
+689	4	35	F CUS
+689	5	26	undefined
+689	6	44	F Cus
+689	7	68	FIC CUS
+689	8	99	undefined
+689	9	94	undefined
+689	10	134	F CUS
+689	11	33	Fic Cus
+689	12	21	undefined
+690	1	84	305.9 Sha
+690	2	101	305.90695 SHA
+690	3	92	305.4 Sha
+690	4	68	305.90695082096751
+690	5	35	305.9 SHA
+691	1	100	Manitoba CultHR HRB
+691	2	99	undefined
+692	1	84	F Sil
+692	2	44	F Sil
+692	3	101	FIC SILVA
+692	4	20	F/Silva
+692	5	134	F SIL
+692	6	25	F Silva
+692	7	79	F SIL
+692	8	92	Silva
+692	9	26	AF SIL
+692	10	35	F SIL
+692	11	22	F Sil-E
+693	1	25	F Carey
+693	2	85	FIC CAREY,FIC CAREY
+694	1	98	Disc Mo
+695	1	134	J F LOW
+695	2	10	JF LOW
+695	3	11	undefined
+695	4	94	undefined
+695	5	91	J FIC LOW
+695	6	25	J Lowry
+695	7	79	J F LOW
+695	8	26	JF LOW
+695	9	68	JF LOW
+695	10	99	undefined
+695	11	92	J Lowry
+695	12	45	undefined
+695	13	98	J Fic Lo
+696	1	25	J Wilson
+696	2	68	JF
+696	3	45	undefined
+696	4	98	J Pbk Wi
+696	5	35	J WIL
+696	6	11	HV8158 .C44 1985,FICTION/WIL/1985,JF WIL,JF WIL,JF WIL,JF WIL,JF WIL,JF WIL,JF WIL,JF WIL,JF WIL,JF
+696	7	10	JF WIL,JF WIL
+696	8	26	JF WIL
+696	9	91	J FIC WIL
+697	1	34	J Sewell 1980
+697	2	25	J Sewell
+697	3	94	undefined
+697	4	91	J FIC SEW
+697	5	68	JGN 741.5 SEW
+697	6	98	J Fic Se
+697	7	99	undefined
+697	8	11	undefined
+697	9	45	undefined
+697	10	71	Y/ANI Sew
+698	1	38	undefined
+698	2	79	undefined
+698	3	94	undefined
+699	1	92	917.204 Mex
+699	2	99	undefined
+699	3	68	T820 volume 1,T820 volume 2
+699	4	94	undefined
+699	5	98	M-56
+699	6	34	972
+700	1	82	J 927.86 Fra
+700	2	84	J 927.86 Fra
+700	3	83	J 927.86 Fra
+700	4	79	J 972.86 FRA
+701	1	92	J 949.5 Ada
+701	2	85	J 949.5 ADARE
+702	1	30	JR 958.1 WHI
+702	2	31	JR 958.1 WHI
+703	1	84	F Eco
+703	2	44	F Eco
+703	3	68	fiction
+703	4	71	F Eco
+703	5	98	Fic Ec
+703	6	99	undefined
+703	7	10	FIC ECO
+704	1	100	Canada CMHC heos
+704	2	99	undefined
+704	3	92	915.904 Tha
+704	4	94	undefined
+705	1	68	J959.7 KAL
+706	1	92	595.799 Pac
+706	2	79	595.799 PAC
+706	3	26	ANF 595.79 PAC
+706	4	68	595.79 PAC
+706	5	94	undefined
+707	1	92	Vinge
+707	2	68	SF VIN
+707	3	99	undefined
+707	4	79	F VIN
+707	5	94	undefined
+708	1	20	F/Vinge/ScF-Fan
+708	2	92	Vinge
+708	3	68	SF VIN
+708	4	99	undefined
+708	5	79	PB VIN
+709	1	92	PB V
+709	2	68	SF VIN
+709	3	99	undefined
+710	1	92	PB V
+710	2	99	undefined
+710	3	79	PB VIN
+711	1	82	813.54 Asi
+711	2	79	921 ASI ASI
+712	1	83	F Asi v.3
+712	2	79	PB ASI
+712	3	26	AF ASI sf
+712	4	99	undefined
+713	1	82	F Asi
+713	2	134	F ASI . SCI-FI
+713	3	99	undefined
+713	4	68	SF ASI
+713	5	45	undefined
+713	6	38	FIC ASI
+713	7	98	Fic Sci As
+713	8	22	PS 3551 S62 N686 1990,FIC SF,PS3551.S5 N5 1990,PZ481.N52 1990,FICTION/ASI,F ASI,F ASI,F ASI,F ASI,P
+714	1	25	F Asimov
+714	2	68	SF
+714	3	79	F ASI
+714	4	26	AF ASI
+714	5	10	SF ASI
+715	1	94	undefined
+716	1	84	PB SCFI Bov
+716	2	101	BOVA
+716	3	99	undefined
+716	4	79	F BOV
+716	5	38	FIC BOV
+716	6	22	undefined
+717	1	101	BOVA
+717	2	83	PB SCFI Bov
+717	3	84	PB SCFI Bov
+717	4	82	PB SCFI Bov
+717	5	99	undefined
+718	1	84	F Bov
+718	2	82	F Bov
+718	3	99	undefined
+718	4	92	Bova
+718	5	79	PB BOV
+718	6	22	SF Bova-E
+719	1	84	F Bov
+719	2	99	undefined
+719	3	79	PB BOV
+720	1	101	FIC BOVA
+720	2	84	F Bov
+720	3	99	undefined
+720	4	79	PB BOV
+721	1	134	F CLA . SCI-FI,F CLA . SCI-FI
+721	2	25	F Clarke
+721	3	38	FIC CLA
+721	4	68	SF CLA
+721	5	10	SF CLA
+721	6	98	Fic Sci Cl
+722	1	25	F Clarke
+722	2	99	undefined
+722	3	38	FIC CLA
+723	1	79	F CLA
+723	2	85	FIC CLARKE
+724	1	98	Fic Sci Cl
+724	2	99	undefined
+724	3	26	AF CLA sf
+724	4	91	A FIC CLA
+725	1	22	F Cla-E SF
+726	1	30	undefined
+727	1	78	F Dra S. F
+727	2	101	DRAKE
+727	3	20	F/Drake/ScF-Fan
+727	4	79	PB DRA
+727	5	68	SF DRA
+727	6	99	undefined
+727	7	73	F.PBHor
+728	1	101	FIC DRAKE
+728	2	84	F Dra v.2
+728	3	83	F Dra v.2
+728	4	92	Drake
+728	5	79	PB DRA
+728	6	99	undefined
+729	1	99	undefined
+729	2	92	PB D
+730	1	83	PB SCFI Dra
+730	2	84	PB FANT Dra
+730	3	82	PB FANT Dra
+730	4	135	PB FANT Dra
+730	5	26	AF DRA sf
+730	6	99	undefined
+731	1	98	Fic Sci Ed
+731	2	71	Sc/F Edd
+731	3	134	F EDD
+731	4	10	SF EDD
+731	5	99	undefined
+732	1	25	F Eddings
+732	2	68	SF EDD
+732	3	11	undefined
+732	4	99	undefined
+732	5	79	PB EDD
+732	6	26	AF EDD sf
+732	7	91	S FIC EDD
+733	1	68	SF
+733	2	79	PB EDD
+733	3	26	AF EDD
+733	4	98	Sci Pbk Ed
+733	5	99	undefined
+733	6	91	S FIC EDD
+734	1	25	F Eddings
+734	2	85	FIC EDDINGS
+734	3	68	SF EDD
+734	4	134	F EDD . FANTASY
+734	5	99	undefined
+734	6	27	A FIC EDD BOOK 1
+735	1	68	SF EDD
+735	2	38	FIC EDD
+735	3	34	F Eddings 1994
+735	4	26	AF EDD s
+735	5	71	F Edd
+735	6	98	Sci Pbk Ed
+735	7	99	undefined
+735	8	91	A FIC EDD
+736	1	25	F Dunn
+736	2	135	F Dun
+736	3	79	PB DUN
+736	4	99	undefined
+737	1	99	undefined
+737	2	94	undefined
+738	1	78	635 Rio
+738	2	83	635 Rio
+738	3	84	635 Rio
+738	4	82	635 Rio
+738	5	135	635 Rio
+738	6	26	ANF 635 RIO
+738	7	79	635 RIO
+738	8	38	635 RIO
+738	9	16	635 Rio
+738	10	94	undefined
+738	11	27	635 RIO
+738	12	99	undefined
+739	1	84	ON ORDER
+739	2	99	undefined
+739	3	79	J 811.54 FIT
+740	1	134	307.1416 BOG
+740	2	79	921 LEH BOG
+740	3	38	B LEH
+740	4	35	B LEH
+740	5	94	undefined
+741	1	134	641.3373 BLA
+742	1	20	F/Christie/M
+742	2	101	CHRISTIE
+742	3	83	F Chr
+742	4	84	PB F Chr
+742	5	82	F Chr
+742	6	135	PB F Chr
+742	7	45	undefined
+742	8	16	Fic Chr
+742	9	34	F/Ch-46 M
+742	10	35	MYS CHR
+742	11	98	Fic Myst Ch
+742	12	26	AF CHR
+742	13	21	undefined
+742	14	22	undefined
+743	1	35	338.7 SCH
+743	2	85	647.45 SCHULTZ
+743	3	21	undefined
+743	4	98	B Sch
+743	5	99	undefined
+744	1	101	LISS
+744	2	84	F Lis
+744	3	85	FIC LISS
+744	4	68	FIC LIS
+744	5	99	undefined
+744	6	94	undefined
+745	1	99	undefined
+745	2	33	undefined
+746	1	10	JNF 741.58 JEN
+746	2	99	undefined
+746	3	21	undefined
+746	4	94	undefined
+747	1	78	J 741.56973 Wat
+747	2	83	741.5973 Wat
+747	3	82	741.5973 Wat
+747	4	35	741.5 WAT
+747	5	68	741.5973 WAT
+747	6	94	undefined
+747	7	25	J 741.5 Wat
+747	8	79	741.5973 WAT,741.5973 WAT
+747	9	134	GN F WAT
+747	10	99	undefined
+747	11	45	undefined
+747	12	26	JF WAT
+747	13	10	JF WAT
+748	1	82	OS J 741.2 Wel
+748	2	83	J 741.2 Wel
+748	3	84	J 741.2 Wel
+748	4	99	undefined
+748	5	94	undefined
+749	1	20	J/743.6/Bolognese
+749	2	79	743 BOL
+749	3	71	J743 Bol
+750	1	94	undefined
+750	2	34	745.59 McK
+750	3	26	ANF 745.594 MCK
+750	4	21	undefined
+750	5	22	undefined
+751	1	35	E NEW
+751	2	94	undefined
+752	1	83	F Mar v.4
+752	2	82	PB FANT Mar v.4
+752	3	25	F Martin
+752	4	27	A FIC MAR
+752	5	79	PB MAR,F MAR
+752	6	92	Martin
+752	7	99	undefined
+752	8	134	F MAR . FANTASY
+752	9	34	PBK F Martin 2005
+752	10	94	undefined
+752	11	26	AF MAR
+752	12	35	F MAR
+753	1	44	639.97
+754	1	100	HD 62.6 Pid 2006
+755	1	82	PB HARL Wen
+755	2	26	AR WEN
+756	1	85	690.1823 COMPLETE
+756	2	26	ANF 690/.1823 COM
+756	3	94	undefined
+757	1	34	748.59 Cow
+757	2	94	undefined
+758	1	25	690.893
+758	2	79	690.893 COM
+758	3	99	undefined
+758	4	92	690.893 Com
+758	5	38	690 .893 THE
+758	6	35	690 BLA
+758	7	94	undefined
+759	1	91	A FIC KAY
+760	1	84	F Atw
+760	2	83	F Atw
+760	3	82	F Atw
+760	4	44	F Atw
+761	1	82	641.578 Yaf
+761	2	92	641.578 Yaf
+762	1	99	undefined
+762	2	94	undefined
+763	1	33	undefined
+763	2	26	ANF 641.5 MCM
+764	1	99	undefined
+764	2	16	FL 796.54 Jac
+764	3	11	undefined
+765	1	68	796.54 MAS
+765	2	99	undefined
+765	3	94	undefined
+765	4	91	A 796.54 MAS
+766	1	84	697 Bru 1983
+766	2	99	undefined
+767	1	99	undefined
+767	2	94	undefined
+768	1	44	696.1
+768	2	101	696.1 PLU
+768	3	99	undefined
+768	4	35	696.1 TIM
+768	5	79	696.1 PLU
+768	6	71	696 Tim
+768	7	94	undefined
+768	8	26	696.1
+769	1	20	628.7/Burns/P
+769	2	84	628.7 Bur
+769	3	79	628.7 BUR
+769	4	99	undefined
+769	5	10	628.7 BUR
+770	1	20	Basement/LP/F/Plain
+770	2	78	F Pla
+770	3	83	F Pla
+770	4	84	F Pla
+770	5	25	LP Plain
+770	6	71	F Pla LP
+770	7	21	undefined
+770	8	99	undefined
+770	9	94	undefined
+770	10	33	undefined
+770	11	68	FIC PLA
+770	12	134	F PLA
+770	13	79	PB PLA
+770	14	38	FIC PLA
+770	15	16	Fic Pla
+770	16	34	F/Pl-69
+770	17	98	Fic Pl
+771	1	84	615.854 Foo
+771	2	83	615.854 Foo
+771	3	82	615.854 Foo
+771	4	26	ANF 613.2 FOO
+771	5	134	613.2 REA
+771	6	10	615.85 REA
+771	7	25	615.854 Foods
+771	8	73	615.8 Rea
+771	9	71	615.8 Rea
+771	10	21	TX 355 F69 1997,613.2 F6861,615.854 F686,QP141 F68 1997,TX355 F657 1997 fol,TX/355/.F65/1997,615.85
+772	1	26	615.8/54
+772	2	38	615.854 HAU
+772	3	68	615.8 HAU
+772	4	45	undefined
+772	5	34	615.854
+772	6	94	undefined
+773	1	30	641.5631 PIS
+773	2	31	641.5631 PIS
+774	1	26	ANF 641 PAR,ANF 641 PAR
+774	2	10	641.66 PAR
+774	3	25	641.5123 Par
+774	4	85	641.5 PARE
+774	5	33	undefined
+775	1	83	616.4 Wal
+775	2	84	616.4 Wal
+775	3	82	616.4 Wal
+775	4	20	616.4/Living
+775	5	26	ANF WAL 616.462
+775	6	92	616.462 Wal
+775	7	94	undefined
+775	8	21	undefined
+775	9	22	undefined
+776	1	38	759.11 MEL
+776	2	68	759.11/M
+776	3	94	undefined
+776	4	34	759.11 M48
+776	5	98	759.11 Mel
+776	6	99	undefined
+777	1	71	940.44 Cla
+777	2	99	undefined
+778	1	25	F Parker
+778	2	135	F Par
+778	3	83	F Par v.19
+778	4	22	undefined
+778	5	68	CRIME PAR
+778	6	98	Fic Myst Pa
+778	7	71	MYSF Park
+778	8	134	F PAR
+778	9	38	FIC PAR
+778	10	99	undefined
+778	11	94	undefined
+778	12	91	A FIC PAR
+779	1	27	920 MAN
+779	2	10	920.071 MAN
+780	1	26	AF WOO
+780	2	92	Woods
+780	3	98	Fic Myst Wo
+780	4	27	A FIC WOO
+780	5	34	F Woods 2005
+780	6	16	Fic Woo
+781	1	79	814.54 RIC
+781	2	99	undefined
+781	3	134	814.54 RIC
+781	4	94	undefined
+781	5	10	814.54 RIC
+782	1	31	undefined
+782	2	30	undefined
+783	1	44	745.6
+783	2	25	745.6197 Bar
+783	3	99	undefined
+783	4	98	745.6197 Bar
+783	5	11	745.6197,745.6197,j 745.6 Bar,745.6197 Bar,745.6 Bar,J 745.6197 Bar,J 745.6197 Bar,j 745.6 Bar,J 74
+783	6	94	undefined
+783	7	22	undefined
+784	1	79	646.2 ROA
+785	1	44	Rom Rob
+785	2	135	F Rob
+785	3	78	F ROB
+785	4	83	LP F Rob v.1
+785	5	84	LP F Rob v.1
+785	6	82	LP F Rob v.1
+785	7	71	F ROBERTS,ROB,Fic,F Roberts,F,F Rob,ROB,F Roberts,F Roberts #1,FIC ROB,F ROB,Rom Rob,F Rob,Fic Ro,F
+785	8	99	undefined
+785	9	35	F ROB
+785	10	94	undefined
+785	11	73	F.PBROM
+785	12	11	F ROBERTS,ROB,F Roberts,F,F Rob,F Rob,ROB,F Roberts,F Roberts #1,Fic Rob,ROB,A/F Rob,AF Rob,PB.ROM,
+785	13	91	A FIC ROB
+785	14	25	F Roberts
+785	15	79	PB ROB
+785	16	134	F ROB
+785	17	26	AF ROB
+785	18	16	Fic Rob
+785	19	68	FIC ROB
+785	20	45	undefined
+785	21	98	Fic Ro
+786	1	134	636.7 SUN
+786	2	99	undefined
+787	1	92	751.422 Bar
+787	2	134	751.422 BAR
+788	1	83	F Ski
+788	2	82	F Ski
+788	3	84	F Ski
+789	1	100	 2s
+789	2	99	undefined
+790	1	30	JR FIC KOR
+790	2	31	JR FIC KOR
+791	1	38	E MOR YELLOW 3
+791	2	85	E MORGAN
+791	3	99	undefined
+791	4	35	E MOR
+791	5	68	E M
+791	6	16	E Fic Mor
+791	7	94	undefined
+791	8	36	undefined
+792	1	99	undefined
+792	2	38	R 387.7 ALL
+792	3	98	387.706573 All,387.706573 All,387.706573 ALL,387.7/06573/ALLEN,387.706573 All,387.706573
+792	4	94	undefined
+792	5	91	A 387.7 ALL
+793	1	71	J621.43 Hew
+794	1	92	Tolstoy
+794	2	10	CLASSIC TOL
+794	3	73	F.Tol
+794	4	99	undefined
+794	5	26	AF TOL
+794	6	34	891.73 Tol
+794	7	94	undefined
+794	8	68	fiction
+794	9	98	Fic To
+795	1	85	J 330.1 HUDAK
+796	1	100	QL 685.5 .M3 Tay
+796	2	38	598.2971 TAY
+796	3	10	598.29 TAY
+797	1	25	F Pilcher
+797	2	134	F PIL
+797	3	27	EPL AUD PIL
+797	4	26	AF PIL,AF PIL
+797	5	73	F.PBRom
+797	6	38	FIC PIL
+797	7	68	FIC PIL
+797	8	34	F/Pi-64
+797	9	71	F Pil
+797	10	94	undefined
+798	1	25	LP Patterson
+798	2	92	LP Patterson
+798	3	45	undefined
+798	4	34	F/Pa-27 M
+798	5	71	PS3566.A822A615 2005,F PAT
+798	6	94	undefined
+798	7	16	Fic Pat
+798	8	33	undefined
+798	9	91	A FIC PAT
+798	10	26	AF PAT
+798	11	21	undefined
+798	12	22	undefined
+798	13	27	A FIC PAT
+798	14	85	LP PATTERSON
+798	15	79	F PAT
+798	16	134	F PAT,F PAT
+798	17	68	CRIME PAT
+799	1	34	F/So-4
+799	2	98	Fic So
+800	1	25	F Gabaldon
+800	2	35	F GAB
+800	3	94	undefined
+800	4	33	undefined
+800	5	91	A FIC GAB
+800	6	79	PB GAB
+800	7	99	undefined
+800	8	27	A FIC GAB
+800	9	92	Gabaldon
+800	10	134	F GAB,F GAB
+800	11	68	FIC GAB
+800	12	16	Fic Gab
+800	13	71	F Gab #4 0697
+801	1	101	J 631.4 BOU
+801	2	44	J 631.4
+801	3	83	J 631.4 Bou
+801	4	84	J 631.4 Bou
+801	5	82	J 631.4 Bou
+801	6	99	undefined
+801	7	79	J 631.4 BOU
+801	8	92	J 631.4 Bou
+801	9	94	undefined
+801	10	35	J 631.4 BOU
+802	1	36	undefined
+803	1	68	J811.07/P
+803	2	99	undefined
+803	3	94	undefined
+804	1	99	undefined
+804	2	98	J E Ja
+805	1	10	JNFF 598 ERP
+806	1	84	YA F And
+806	2	83	YA F And
+806	3	82	YA F And
+806	4	101	ANDERSO
+806	5	85	T ANDERSON
+806	6	99	undefined
+806	7	94	undefined
+807	1	30	597.0929 PAG
+807	2	31	597.0929 PAG
+808	1	10	W McM
+808	2	27	A FIC McM
+808	3	92	McMurtry
+808	4	98	FIC WEST MCM
+808	5	34	F/McM-22 W
+808	6	71	Wes/F McMurtry
+808	7	16	Fic McM
+809	1	20	F/Rosenberg/4
+809	2	83	CF Ros v.4
+809	3	84	CF Ros v.4
+809	4	101	ROSENBE
+809	5	92	Rosenberg
+809	6	99	undefined
+809	7	26	AF ROS
+809	8	35	F ROS
+809	9	94	undefined
+809	10	134	F ROS
+810	1	101	694 CAR
+810	2	99	undefined
+810	3	92	AT ILM 694 Car,AT ILM 694 Car,AT ILM 694 Car,AT ILM 694 Car,AT ILM 694 Car,AT ILM 694 Car,AT ILM 69
+810	4	68	684.08 BLA
+810	5	38	J 694 McP
+810	6	94	undefined
+810	7	21	undefined
+810	8	35	694 BLA
+811	1	83	J 811.54 Sim
+811	2	84	J 811.54 Sim
+811	3	25	J 811.54 Sim
+811	4	98	J 811.54 Sim
+811	5	38	J 811.54 SIM
+811	6	94	undefined
+811	7	99	undefined
+811	8	21	811,j 811.54 Sim,J 811.54 Sim,J E Simmie,JE Simmie,J 811.54 SIM,J 811 SIM,819.154 SIM,811.54 Sim,J/
+811	9	73	811.54 Sim
+812	1	83	J 811.54 Sim
+812	2	84	J 811.54 Sim
+812	3	25	J 811.54 Sim
+812	4	98	J 811.54 Sim
+812	5	38	J 811.54 SIM
+812	6	94	undefined
+812	7	99	undefined
+812	8	21	811,j 811.54 Sim,J 811.54 Sim,J E Simmie,JE Simmie,J 811.54 SIM,J 811 SIM,819.154 SIM,811.54 Sim,J/
+812	9	73	811.54 Sim
+813	1	101	SAMSON
+813	2	83	CF Sam
+813	3	84	CF Sam
+813	4	82	CF Sam
+813	5	71	F Sams
+813	6	99	undefined
+813	7	94	undefined
+813	8	26	AF SAM
+814	1	101	SAMSON
+814	2	83	CF Sam
+814	3	84	CF Sam
+814	4	82	CF Sam
+814	5	71	F Sams
+814	6	99	undefined
+814	7	94	undefined
+814	8	26	AF SAM
+815	1	83	F Ste
+815	2	101	STE
+815	3	16	Fic Ste
+815	4	92	Steinbeck
+815	5	68	fiction pb
+815	6	71	F Ste
+815	7	99	undefined
+815	8	98	Classic Pbk St
+815	9	38	FIC STE
+815	10	20	Basement/F/Steinbeck
+815	11	94	undefined
+815	12	79	F STE
+815	13	26	AF STE
+815	14	22	undefined
+815	15	10	FIC STE
+815	16	82	LP FIC STE
+815	17	91	S FIC STE
+815	18	73	F.Ste
+815	19	35	F STE
+815	20	84	F Ste
+815	21	25	F Steinbeck
+815	22	85	FIC STEINBECK
+816	1	84	967.57104 Hat
+816	2	79	967.57104 HAT
+816	3	94	undefined
+816	4	99	undefined
+817	1	84	J 398.2 Per
+817	2	99	undefined
+817	3	33	undefined
+817	4	91	ER FIC PER
+818	1	26	AF TOL,AF TOL,AF TOL
+818	2	45	undefined
+818	3	34	YA/To-57
+818	4	91	S FIC TOL
+819	1	101	741.5973 JOH
+819	2	99	undefined
+819	3	94	undefined
+819	4	92	GN Johns
+819	5	79	J GN JOH
+820	1	101	MCDONAL
+820	2	83	YA F McDo
+820	3	84	YA F McDo
+820	4	79	Y.A. F MCD
+820	5	92	T McDonald
+821	1	135	F McCa v. 2
+821	2	44	F McC
+821	3	83	F McCa v.2
+821	4	84	F McCa v.2
+821	5	82	F McCa v.2
+821	6	25	F McCall Smith
+821	7	92	McCall Smith
+821	8	79	LP F MCC
+821	9	71	LPGF Smi
+821	10	99	undefined
+821	11	134	F SMI
+821	12	91	A FIC MCC
+822	1	36	undefined
+823	1	92	Kinsella
+823	2	25	F Kinsella
+823	3	79	F KIN
+823	4	38	FIC KIN
+823	5	134	F KIN
+823	6	35	F KIN
+823	7	34	F Kinsell 2011
+823	8	73	F.Kin
+824	1	25	B/Her
+824	2	79	F HER
+824	3	98	B Her
+824	4	33	undefined
+824	5	94	undefined
+824	6	10	B HER
+824	7	134	636.089 HER
+824	8	38	B HER
+824	9	34	B/Her
+824	10	26	ANF 636.089092 HER B
+824	11	68	636.089 HER
+824	12	16	B Her
+825	1	79	613.7 FEK
+825	2	26	ANF 613.7 FEK
+825	3	10	613.70 FEK
+825	4	94	undefined
+825	5	21	undefined
+825	6	22	undefined
+826	1	68	FIC GAR
+826	2	72	undefined
+826	3	45	undefined
+826	4	91	A FIC MAR,FIC MAR
+827	1	92	T Black
+827	2	79	Y.A. F BLA
+827	3	99	undefined
+828	1	82	J E Bel
+828	2	99	undefined
+828	3	94	undefined
+829	1	79	E CLE
+829	2	92	E Cle
+829	3	34	E Clement
+830	1	101	undefined
+830	2	99	undefined
+830	3	79	E AHL
+830	4	94	undefined
+830	5	22	JE Ahl-E
+831	1	83	J 811.54 Sci
+831	2	84	J 811.54 Sci
+831	3	82	J 811.54 Sci
+831	4	38	J 811.54 SCI
+831	5	25	E Scieszka
+831	6	68	E
+831	7	45	undefined
+831	8	99	undefined
+832	1	78	305.2440 All
+832	2	82	817.54 All
+832	3	83	305.2440207 All
+832	4	38	817.54 ALL
+832	5	45	undefined
+832	6	98	817.54 All
+832	7	71	818 All
+832	8	94	undefined
+832	9	21	undefined
+832	10	22	undefined
+833	1	25	616.8553/Sel
+833	2	22	undefined
+834	1	20	J/E/Borden
+834	2	68	E
+834	3	99	undefined
+835	1	26	ANF 641.5971 HRE,ANF 641.5971 HRE
+835	2	85	641.5 HRECHUK
+835	3	94	undefined
+835	4	45	undefined
+836	1	68	784.4/J pb
+836	2	79	780.7971274 JOH
+836	3	99	undefined
+836	4	98	780.7971274 Joh
+836	5	71	780.797 Joh
+836	6	94	undefined
+837	1	83	J 745.5941 Des
+837	2	98	j 745.5941 Des,745.5941,745.5941,J745.5941Des,745.5941 Des,J/745.5941/DESHPANDE,j745.5/DES,745.5941
+837	3	73	745.5941Des
+838	1	71	C/F Per
+839	1	85	J 641.3 DEVINS
+840	1	20	BB/MacEwan
+840	2	83	971 MacE
+840	3	82	971 MacE
+840	4	135	971 MacE
+840	5	84	971 MacE
+840	6	79	920 MAC
+840	7	38	920.7109 McE
+840	8	68	971.2/Mac
+840	9	34	BB/M-15
+840	10	94	undefined
+840	11	71	B Col
+841	1	135	F Mil
+841	2	38	FIC MIL
+841	3	134	F MIL
+841	4	99	undefined
+841	5	68	NC M
+841	6	45	undefined
+841	7	71	F/Mil
+842	1	135	PB F Cus
+842	2	101	FIC CUSSL
+842	3	79	F CUS
+842	4	99	undefined
+842	5	26	AF CUS
+842	6	21	F Cus-M
+842	7	134	F CUS
+842	8	35	F CUS
+842	9	84	F Cus
+842	10	82	F Cus
+842	11	44	F Cus
+842	12	20	F/Cussler
+842	13	83	F Cus v.6
+842	14	25	F Cussler
+842	15	92	Cussler
+842	16	68	FIC CUS
+842	17	34	PBK F Cussler 2009
+842	18	38	FIC CUS
+842	19	94	undefined
+843	1	84	616.8 Kan
+843	2	82	616.8 Kan
+843	3	83	616.8 Kan
+843	4	99	undefined
+843	5	26	ANF 616.84 KAN
+843	6	94	undefined
+843	7	10	616.84 KAN
+844	1	84	616.8498 Cal
+844	2	83	616.8498 Cal
+844	3	99	undefined
+844	4	94	undefined
+845	1	83	J F Ale
+845	2	84	J F Ale
+845	3	82	J F Ale
+845	4	79	J F ALE
+845	5	92	J A
+845	6	99	undefined
+846	1	38	FIC ADK
+846	2	68	940.27 ADK
+847	1	79	F GRU
+847	2	38	FIC GRU
+847	3	73	F.PBGen
+847	4	34	F Gruen 2007
+847	5	68	FIC GRU
+847	6	11	undefined
+847	7	17	undefined
+847	8	71	F Gru
+847	9	27	A FIC GRU
+847	10	25	F Gruen
+847	11	35	F GRU
+847	12	10	FIC GRU,FIC GRU
+847	13	92	PB G
+847	14	134	F GRU
+847	15	26	AF GRU,AF GRU
+848	1	84	J 599.61 Wex
+848	2	78	J 599.61 Wex
+848	3	25	599.61/Wex
+848	4	26	ANF 599.6 WEX
+848	5	71	J599 Wex
+848	6	99	undefined
+848	7	21	undefined
+849	1	98	Myst Pbk Hi
+849	2	99	undefined
+850	1	98	J Pbk Pa
+850	2	71	Y/ADV Cho
+850	3	134	J F PAC
+851	1	85	J 391.009 POWE-TEMPERLEY
+851	2	99	undefined
+852	1	26	625.19
+852	2	71	J625.1 Her
+853	1	21	F BURKE
+854	1	79	F BAL
+854	2	38	FIC BAL
+854	3	27	A FIC BAL
+854	4	68	CRIME BAL
+854	5	16	Fic Bal
+854	6	11	undefined
+854	7	17	undefined
+854	8	134	F BAL
+854	9	26	AF BAL,AF BAL
+854	10	35	F BAL
+854	11	92	LP Baldacci
+854	12	34	PBK F Baldacc
+855	1	79	J 930.1028 CER
+855	2	92	J 930.1028 Cer
+855	3	99	undefined
+856	1	99	undefined
+857	1	92	746.434 Rim
+857	2	99	undefined
+858	1	34	J 031.02 Kno
+858	2	98	J 031.02 Kno
+858	3	33	undefined
+859	1	26	ANF 641.5784 SHE
+860	1	92	649.57 Gin
+860	2	99	undefined
+861	1	25	W F Coulter
+861	2	68	CRIME COU
+861	3	16	Fic Cou
+861	4	99	undefined
+861	5	26	ALP COU,AF COU
+861	6	17	undefined
+861	7	94	undefined
+861	8	33	undefined
+861	9	134	F COU
+861	10	36	undefined
+861	11	91	A FIC COU
+861	12	73	F.Cou
+861	13	79	LP F COU
+861	14	38	FIC COU
+861	15	92	Coulter
+861	16	85	FIC COULTER,FIC COULTER
+861	17	45	undefined
+861	18	34	F/Co-83
+862	1	134	F MAC
+862	2	25	W LP Macomber #4
+862	3	34	F/Ma-26
+862	4	94	undefined
+862	5	71	F/Mac
+862	6	33	F Mac,F Macomber,F Macomber #4
+862	7	91	A FIC MAC
+862	8	73	F.PBRom
+862	9	85	FIC MACOMBER,FIC MACOMBER
+862	10	35	F MAC
+862	11	11	undefined
+862	12	27	A FIC MAC
+862	13	26	AF MAC r
+862	14	45	undefined
+863	1	99	undefined
+863	2	34	undefined
+864	1	36	J 398.21 CHO
+865	1	92	627.31 Lam
+865	2	38	643 .2 LAM
+865	3	79	627.31 LAM
+865	4	98	627.31 La
+865	5	99	undefined
+866	1	25	F Proulx
+866	2	79	PB PRO
+866	3	91	S FIC PRO
+866	4	92	Proulx
+866	5	134	F PRO
+866	6	99	undefined
+866	7	21	undefined
+866	8	35	F PRO
+866	9	10	FIC PRO
+866	10	17	undefined
+867	1	36	undefined
+868	1	25	796.962 Carrier
+868	2	92	796.962 Car
+868	3	85	B RICHARD
+868	4	68	796.962 RICHARD
+868	5	134	796.962  CAR
+868	6	99	undefined
+868	7	73	B.Ric
+869	1	79	J 796.332 CRO
+869	2	35	J 796.33 CRO
+869	3	99	undefined
+869	4	22	undefined
+870	1	79	J 796.332 CRO
+870	2	35	J 796.33 CRO
+870	3	99	undefined
+870	4	22	undefined
+871	1	92	Johansen
+871	2	99	undefined
+871	3	26	AF JOH
+871	4	35	F JOH
+871	5	73	F.PBMys
+871	6	27	A FIC JOH
+872	1	101	DOUGLAS
+872	2	20	LP/F/Douglas/W
+872	3	25	LP Douglas
+872	4	85	LP DOUGLAS
+872	5	34	F/Do-74 W LP,F/Do-74 W LP
+872	6	94	undefined
+873	1	78	F Bla Ins
+873	2	20	/F/Blackstock
+873	3	83	CF Bla v.4
+873	4	84	CF Bla v.4
+873	5	82	CF Bla v.4
+873	6	25	W F Blackstock
+873	7	45	undefined
+873	8	34	F Blackst 2005
+873	9	71	Mys/F Blacks Cape 4
+873	10	99	undefined
+873	11	79	IN F BLA
+873	12	94	undefined
+873	13	91	A FIC BLA
+874	1	84	F Web
+874	2	99	undefined
+874	3	85	FIC WEBER
+874	4	92	Weber
+874	5	21	undefined
+874	6	94	undefined
+874	7	22	undefined
+875	1	84	F Cus v.4
+875	2	83	F Cus v.4
+875	3	20	F/Cussler
+875	4	134	F CUS
+875	5	26	AF CUS
+875	6	21	undefined
+875	7	22	undefined
+875	8	35	F CUS
+875	9	99	undefined
+875	10	79	F CUS
+875	11	85	FIC CUSSLER,FIC CUSSLER,FIC CUSSLER
+875	12	92	Cussler
+875	13	94	undefined
+875	14	27	A FIC CUS
+876	1	79	PB DEL
+876	2	73	LP.PLS
+876	3	35	F DEL
+876	4	34	F/De-37
+876	5	45	undefined
+876	6	68	FIC DEL
+876	7	71	F Delinsky
+876	8	16	Fic Del
+876	9	94	undefined
+876	10	91	A FIC DEL
+876	11	134	F DEL
+876	12	25	LP Delinsky
+876	13	38	FIC DEL
+876	14	85	LP DELINSKY
+876	15	26	AF DEL,AF DEL
+876	16	10	FIC DEL
+876	17	27	A FIC DEL
+877	1	25	LP Macomber
+877	2	79	PB MAC,PB MAC c.2
+877	3	91	A FIC MAC
+877	4	35	F MAC
+877	5	134	F MAC
+877	6	26	AF MAC
+877	7	73	F.PBRom
+877	8	92	LP Macomber
+877	9	34	F Macombe 2009
+877	10	71	F Mac
+878	1	26	ANF 551.46 WIN
+878	2	92	551.46 Win
+878	3	68	551.46 WIN
+878	4	94	undefined
+879	1	79	Y.A. 973.7115 GOR
+879	2	26	JNF 973.7 GOR
+879	3	99	undefined
+879	4	45	undefined
+879	5	98	J 973.7115 Gor
+879	6	94	undefined
+880	1	83	971.3112004973 Jil
+880	2	38	971.3112 JIL
+880	3	99	undefined
+880	4	91	A 971.3 JIL
+881	1	134	J F WIL
+881	2	25	J Wilson
+881	3	10	JF WIL
+881	4	11	PS8595/I29Sp/1984,PZ 7 W753 S75 1984,J FIC,PS 8595 I446 S647 1984,FICTION/WIL,JF WIL,JF WIL,JF WIL,
+881	5	45	undefined
+881	6	35	J WIL
+881	7	34	J/F/Wil
+881	8	98	J Pbk Wi
+881	9	68	JF WIL
+881	10	71	Y/Mys Wil
+882	1	25	J 811.54 Bou
+882	2	79	J 811.54 BOU
+882	3	68	Junior/C811.54/B
+882	4	34	811.54
+882	5	35	J 811.54 BOU
+882	6	73	JE.Bou
+882	7	10	C BOU
+882	8	27	J FIC BOU
+882	9	94	undefined
+882	10	45	undefined
+882	11	38	J 811.54 BOU
+883	1	34	971.27 Bro
+883	2	98	971.127 Bro
+883	3	71	971.27 Bro
+883	4	94	undefined
+884	1	100	F 5609 .S8 Bro c.3
+884	2	34	623.82 Bro
+884	3	71	386.2 Bro
+884	4	94	undefined
+884	5	99	undefined
+884	6	79	386.3097 BRO
+884	7	73	VF.Manitoba
+885	1	83	J 612.82 Swa
+885	2	84	J 612.82 Swa
+885	3	82	J 612.82 Swa
+885	4	99	undefined
+885	5	94	undefined
+885	6	36	undefined
+886	1	38	943.087 GER
+886	2	98	J 394.26943 Lor
+886	3	33	undefined
+886	4	94	undefined
+886	5	91	GER
+887	1	26	ANF 944 FRA
+887	2	10	944 TIM
+887	3	25	944 Fra
+887	4	34	914.4 FRA 2005
+887	5	38	944.08 FRA
+887	6	99	undefined
+887	7	94	undefined
+888	1	101	791.43658 PAS
+889	1	94	undefined
+890	1	99	undefined
+891	1	101	CRICHTO
+891	2	83	F Cri
+891	3	82	F Cri
+891	4	78	F Cri
+891	5	94	undefined
+891	6	21	undefined
+891	7	73	F.PBHor
+891	8	91	A FIC CRI
+891	9	84	EAL F Cri
+891	10	99	undefined
+891	11	16	Fic Cri
+891	12	68	SF CRI c2
+891	13	98	Thriller Pbk Cr
+891	14	26	AF CRI
+891	15	79	F CRI
+892	1	101	560.1762 FRA
+892	2	99	undefined
+893	1	99	undefined
+893	2	94	undefined
+894	1	38	398.2454 SHU
+894	2	45	undefined
+894	3	99	undefined
+895	1	83	001.94 Han
+895	2	101	001.94 HAN
+895	3	99	undefined
+896	1	82	F Bak
+896	2	101	BAKKER
+896	3	68	SF BAK
+896	4	71	F Bak
+896	5	11	BAKKER,F Bak,Fic BAK,F BA,F Bak,FIC BAK,F BAK,Bakker
+896	6	79	F BAK
+896	7	10	FIC BAK
+897	1	44	J Sto
+897	2	83	J S Din v.8
+897	3	84	J S Din v.8
+897	4	82	J S Din v.8
+897	5	135	J F Sto v.8
+898	1	25	E Brown
+898	2	20	J/E/Brown
+899	1	85	J 569 BROWN,J 569 BROWN
+900	1	134	796.35 BIS
+901	1	34	J/E/Wah
+901	2	22	undefined
+902	1	94	undefined
+903	1	20	J/E/Andrede
+903	2	78	J E And
+903	3	79	BB AND
+903	4	134	E AND
+903	5	99	undefined
+903	6	92	E And
+903	7	17	undefined
+903	8	91	ER FIC AND
+904	1	27	J NON FIC MCM
+904	2	92	J 597.31 McM
+904	3	11	undefined
+905	1	26	JF TUN
+906	1	45	undefined
+907	1	82	LP F McCr
+907	2	101	McCRUMB
+907	3	25	F McCrumb
+907	4	26	AF MCC
+907	5	99	undefined
+907	6	10	FIC McC
+908	1	101	919.923 ZUB
+908	2	99	undefined
+908	3	94	undefined
+909	1	83	F Bur
+909	2	84	F Bur
+909	3	82	F Bur
+909	4	101	FIC BURNA
+909	5	79	F BUR
+909	6	25	F Burnard
+909	7	134	F BUR
+909	8	10	FIC BUR
+909	9	26	AF BUR
+909	10	94	undefined
+910	1	44	909 Str
+910	2	101	909 STR
+910	3	20	909/Strange
+910	4	26	ANF 910.021 STR
+910	5	73	Ref
+910	6	99	undefined
+910	7	94	undefined
+911	1	100	HD 9049 .W3 .C2 Fai
+911	2	20	334.983311/Fairbairn
+911	3	68	334 FAI
+911	4	98	334.683311 Fai
+911	5	99	undefined
+911	6	94	undefined
+912	1	83	797.54 Sro
+912	2	84	797.54 Sro
+912	3	82	797.54 Sro
+912	4	92	797.54 Sro
+912	5	99	undefined
+912	6	26	ANF 729 SRO
+912	7	21	undefined
+912	8	38	797.54 SRO
+913	1	101	HEMINGW
+914	1	84	919.3 New
+914	2	100	O.E.C.D. 21 93 51 1
+914	3	99	undefined
+914	4	82	919.31 New 2012
+914	5	92	919.3044 New
+914	6	98	M-59
+914	7	94	undefined
+915	1	84	F Bov
+915	2	99	undefined
+916	1	134	971.27 WIL
+917	1	83	J 629.2275 Oxl
+917	2	84	J 629.2275 Oxl
+917	3	82	J 629.2275 Oxl
+917	4	25	J 629.227 Oxlade
+917	5	79	J 629.2275 OXL
+918	1	79	E LAN
+918	2	38	E LAN Green 1
+919	1	79	814.54 FER
+919	2	35	814 FER
+919	3	27	814 FER
+920	1	99	undefined
+921	1	84	791.43 Bes
+921	2	99	undefined
+922	1	68	530.12 LLO
+922	2	94	undefined
+923	1	134	J F DIX
+923	2	35	J DIX
+923	3	17	undefined
+924	1	85	940.54 PRICE
+924	2	99	undefined
+924	3	94	undefined
+925	1	83	F Fol
+925	2	84	F Fol
+925	3	82	F Fol
+925	4	78	F Fol
+925	5	44	F Fol
+925	6	20	F/Follett
+925	7	25	F Follett
+925	8	99	undefined
+925	9	17	undefined
+925	10	94	undefined
+925	11	21	undefined
+925	12	22	undefined
+925	13	38	FIC FOL
+925	14	36	undefined
+925	15	85	FIC FOLLETT
+925	16	35	F FOL
+925	17	10	FIC FOL
+925	18	68	CRIME FOL
+925	19	98	Fic Myst Fo
+925	20	79	F FOL
+925	21	134	F FOL
+925	22	26	AF FOL
+926	1	92	Mina
+926	2	34	F Mina 2011
+926	3	99	undefined
+926	4	79	F MIN
+926	5	94	undefined
+926	6	134	F MIN
+926	7	73	F.Min
+927	1	92	E Kel
+927	2	79	E KEL
+927	3	71	C/F Kel
+927	4	99	undefined
+927	5	38	E KEL Orange 8
+927	6	35	E KEL
+927	7	94	undefined
+927	8	10	C KEL
+928	1	85	BB VOAKE
+928	2	99	undefined
+928	3	94	undefined
+928	4	35	E VOA
+929	1	83	F Gou
+929	2	82	F Gou
+929	3	20	F/Goudge
+929	4	101	GOUDGE
+929	5	84	F Gou
+929	6	25	F Goudge
+929	7	99	undefined
+929	8	94	undefined
+929	9	21	undefined
+929	10	85	FIC GOUDGE,FIC GOUDGE
+929	11	79	F GOU
+929	12	68	FIC GOU
+929	13	26	AF GOU
+929	14	34	F/Go-72
+929	15	16	Fic Gou
+929	16	98	Fic Go
+929	17	35	F GOU
+930	1	84	616.97 Bru
+930	2	82	616.97 Bru
+930	3	101	641.56318 BRU
+931	1	134	F KUR . FANTASY
+931	2	99	undefined
+931	3	94	undefined
+932	1	82	YA F Plu
+932	2	84	YA F Plu
+932	3	99	undefined
+932	4	92	T Plum-Ucci
+932	5	94	undefined
+933	1	25	LP 813.54 King
+933	2	10	B KIN
+933	3	85	813.54 KING
+933	4	134	813.54 KIN
+933	5	26	AB KIN
+933	6	98	813.54 Ki
+933	7	91	A 920.71 KIN
+933	8	22	813.54
+934	1	68	625.1/B
+935	1	20	PG14/B2
+936	1	134	J 332.1 HUD
+937	1	45	undefined
+937	2	92	Gabaldon
+937	3	91	S FIC GAB
+937	4	26	AF GAB
+937	5	35	F GAB
+937	6	16	Fic Gab
+937	7	68	FIC GAB
+937	8	27	A FIC GAB
+937	9	94	undefined
+938	1	83	553.8 Pat
+938	2	99	undefined
+939	1	83	PB F Rog
+939	2	85	FIC ROGERS,FIC ROGERS
+939	3	98	Fic Pbk Ro
+939	4	71	Hist/Rom Rogers
+939	5	38	FIC ROG
+939	6	99	undefined
+940	1	134	F BER
+940	2	26	AF BER
+940	3	92	Berry
+940	4	73	F.Ber
+941	1	33	undefined
+941	2	83	F Kin
+941	3	82	F Kin
+941	4	135	F Kin
+941	5	84	F Kin
+941	6	78	F Kin Th
+941	7	20	F/King
+941	8	101	KING
+941	9	79	F KIN
+941	10	134	F KIN
+941	11	92	King
+941	12	26	AF KIN,AF KIN
+941	13	17	undefined
+941	14	21	undefined
+941	15	22	undefined
+942	1	38	J FIC KOR
+942	2	25	J Korman
+942	3	68	JF KOR
+942	4	71	Y/Adv Kor
+942	5	99	undefined
+942	6	73	T.Kor
+943	1	25	635.965 Suc
+943	2	38	635.965 SUC
+943	3	34	635.965
+943	4	94	undefined
+943	5	99	undefined
+944	1	26	AF PAU w
+944	2	94	undefined
+944	3	99	undefined
+945	1	36	undefined
+946	1	38	J 811.54 SIL
+946	2	134	F J SIL
+946	3	25	J 819.154 Sil
+946	4	26	JNF 811.5 SIL,JNF 811.5 SIL
+946	5	10	JNF 811.54 SIL
+946	6	73	819.154 Sil
+946	7	98	811.5/4,J/817/Silverstein,j 811.54 Sil,j 811.54 Sil,J 819.154 Sil,JR 819.154 SIL,J 819.1 Sil,j 811.
+946	8	45	undefined
+946	9	35	J 811.54 SIL
+946	10	92	J 819.154 Sil
+947	1	79	undefined
+947	2	45	undefined
+947	3	11	SB 439.8 W55 1997,635.952 Will,635.9525 W727 1997,SB 439.8 W55 1997,635.9525 W72c,635.9 WIL,SB439 .
+947	4	94	undefined
+948	1	101	E WOOD
+948	2	83	J E Woo
+948	3	84	J E Woo
+948	4	82	J E Woo
+948	5	92	E Woo
+949	1	84	F Par
+949	2	20	Basement/F/Paretsky/M
+949	3	92	Paretsky
+949	4	99	undefined
+949	5	91	A FIC PAR
+949	6	45	undefined
+949	7	68	CRIME PAR
+949	8	71	Mys
+949	9	10	FIC PAR
+949	10	98	Myst Pbk Pa
+949	11	38	FIC PAR
+949	12	26	AF PAR m
+950	1	94	undefined
+951	1	83	F Con
+951	2	84	F Con
+951	3	101	FIC CONNO
+951	4	92	Connolly
+952	1	82	PB F Wil
+952	2	85	FIC WILSON
+952	3	79	PB WIL
+952	4	99	undefined
+952	5	94	undefined
+953	1	135	LP F Ric
+953	2	101	RICHMAN
+953	3	99	undefined
+954	1	31	undefined
+955	1	134	F WEB . ROMANCE
+956	1	84	616.89820092 Wil
+956	2	20	B/Williams
+956	3	101	618.9285882 WIL
+956	4	25	B Williams
+956	5	79	921 WIL
+956	6	10	B WIL
+956	7	68	616.89 WILLIAMS
+956	8	92	B Williams
+956	9	98	B Wil
+957	1	79	IN F KIN
+957	2	134	F KIN
+957	3	26	AF KIN
+957	4	92	Kingsbury
+957	5	17	undefined
+958	1	25	798.4 Hillenbrand
+958	2	85	B SEABISCUIT,B SEABISCUIT
+958	3	35	798.4 HIL
+958	4	134	798.4 HIL
+958	5	68	798.4 HIL
+958	6	71	798.4 Hil
+958	7	98	798.4 Hi
+958	8	10	798.40 HIL
+958	9	73	798.25 Hil
+959	1	101	333.91 SNI
+959	2	99	undefined
+960	1	20	F/Sheldon
+960	2	78	F She M
+960	3	82	F She
+960	4	83	F She
+960	5	84	F She
+960	6	135	F She
+960	7	101	PLS LP
+960	8	35	F SHE
+960	9	11	undefined
+960	10	94	undefined
+960	11	10	FIC SHE
+960	12	27	A FIC SHE
+960	13	44	Mys She
+960	14	134	F SHE
+960	15	85	FIC SHELDON,FIC SHELDON
+960	16	38	FIC SHE
+960	17	91	A FIC SHE
+960	18	26	AF SHE
+960	19	99	undefined
 \.
 
 
 --
+-- TOC entry 1908 (class 0 OID 17498)
+-- Dependencies: 156
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: mapapp
+--
+
+COPY users (uid, username, password, lid) FROM stdin;
+41	mp	1f2dfa567dcf95833eddf7aec167fec7	68
+2	ucn	700e1a7df87286de270747390fe3788e	131
+4	mra	86b546be98d8f58d4dedfb8be7423a19	72
+5	mnha	e89aa529e06ed229d936aff5092608af	9
+6	mwrr	35bf87d7d860046786606168726cbe3f	105
+7	mserc	01998d84dca6a7bed73b967f446e2801	108
+8	mwmrc	c9a318aca851ecf75f38e30466537fb5	109
+9	mcnc	3d7f502d2b8c5ca937263c2cb777ecd4	95
+30	mdpbr	4a59d3a38128a3a31412cf4ec9c6f7a1	50
+31	mdpla	28bc3fcf58dbfbc930f18d8754a28e61	60
+32	mbi	3b5cf439e9798e9e87b59be9ba44c73e	77
+20	MHH	83496aa5fe3863677f6b3bc4c9fabb3a	35
+33	dtl	f01036d2d9d32d843afd7c8cbe07637c	1
+52	mdpmi	d5feaee643bb5d14c88eb213172dd0f1	62
+71	mbbr	e2c99dbe11324bcd3a6e5feffbfb97c4	26
+112	mw	38fed7107cee058098ca06304c1beb90	99
+113	mth	f8b1336407c5b7a06f012b63ceee438b	92
+114	mbom	a1c6edd5601e7b66b28c65f02d527405	20
+115	mwpl	381fac69d3dc8e7180674bc872f2e514	101
+116	mmow	fd8c2bcaca05c6c7fe142881b85116db	83
+117	mplp	0f630dfa1e7b0c92546a162ca2816cf4	69
+121	mwhbca	a937a4caedc24463e82993690873205c	117
+122	mesm	9002aef48c0cfca797088d022672a794	87
+123	msrn	770b1729da61981979a32a95959ccc63	46
+1	mvbb	352ace815b677744828712113ad7d014	136
+3	mhh	a4310b1057a43a419b440e2814bbe035	132
+34	mesp	feaef5abd77327167a8d491fa57c15d3	89
+35	mdper	5a0309423c01feb3f9ba07bbc374a602	54
+36	mdp	aa36dc6e81e2ac7ad03e12fedcb6a2c0	49
+37	mlb	89d021e682f117a6ff8e6fe859cdcc2d	17
+38	mdpbo	99824f1451f40d0fbf156e315182c189	52
+39	mdpfo	52f25c0475f7c1322c051b0e43811ff7	55
+40	mtsir	e6656f12e482102856eba49872da1e16	86
+42	msjb	1615e5cee94f054f04b6c7414d506d5b	11
+43	me	ab86a1e1ef70dff97959067b723c5c24	22
+44	mpm	6b9f893f526fef95aae04d527b862084	41
+45	mmnn	e7c48f5ab99d99ce62595d1764b2fb6a	45
+46	msad	35f5acf4a0198bf2be6896e2f864b348	14
+47	mrp	412ed2e9aeba86664aa62a87e296a1b5	73
+48	mdpsi	58416a5db3067c30a43b7ec6b04def19	66
+49	mmr	aa29d6984108c685bd651011d6733c00	98
+50	mmca	61944fd49aee415a16e6a7b9d6a304f8	23
+51	mrd	ed1fbbef5bfb288aa10218943f58e678	76
+53	mro	cda0fd2918d19e20ac871ed79a8d2bb0	74
+54	mdb	801693b1d56b19d77272b3c6db46a751	25
+55	ms	ee33e909372d935d190f4fcb2a92d542	19
+56	msel	c2142941567f57b7d4768b8da097f283	79
+57	msa	b9342a7d3a63c2b2d444dd9caf437f22	18
+58	mrb	13eed552a284d37f230c63de3263cf9b	31
+59	mtp	5884bf0e6464833e0550ebb13e0578e3	91
+60	mldb	d59b1f76f919957d7ec810682e54fd9e	38
+61	mwp	e8cfc01b37b8e9f27af09ffae08eae36	100
+62	msog	678d7a201c0aa484f1bd4c7f1bf6abc4	34
+63	mrip	8b5751a5a0bfec007233e4f919ed9e6d	71
+64	mwow	bde4693ca0e8c4dcfab6cdae666b1647	84
+65	mccb	e84a0c8e8704f9c6836eaca5c3b87af7	40
+66	mda	c112c8b88569f1cb2d8f22eca738a4b7	53
+67	mdpsl	8d04d64c0e07d8a697d8f7bad5c6226f	65
+68	mdpbi	ce7a7d55e812f90593ea5b4e4badd7ee	51
+69	mscl	7c697c045cfb560d8aea965539f9e57f	16
+70	mndp	9ad3be6a4f4922eb9b02dd0d052cbeeb	12
+72	mhw	ba210afe3f02f05e1ffbbeab26ceef8b	120
+73	mmvr	e3b133ee508586ec76d2fbfc02438426	93
+85	mge	33af66ec85c4eeed654987c595fde4df	29
+104	mbw	afcea21a1767d28b41b1a932b060c607	94
+108	cpl	363ccddc87d476ad5f91d9ca39d24df0	116
+109	mwj	fac2db1a64bc2a16887e9bdf17e15f8e	118
+110	mab	86ee133db2f0f3158ca63884e9f220c3	30
+111	mstp	075e7a0dd3c9593372baad0737d18a5a	36
+118	mste	f6d503a34c41b19677eca46479ae4c1d	90
+119	mstos	3bccffae5602c27b873cf2f7bfb9faff	85
+120	mwemm	167ba9f285a5461d8e9ecf3917772601	114
+10	mibr	2ee4d7b098b2cc783e396a4e56f5041e	13
+11	msl	8cf205e11d5eb3c998ac34958304c608	80
+12	mdpgv	b646bf625fae2a6b72e44d0c4b6204a3	58
+13	mdpst	31fcf7b92c33e4e76c449a93c7fdd165	107
+14	mds	60a114c91c41983174b484e188856fb3	134
+15	mwowh	e2575f1403ab8fd53a4ac4756979d47b	81
+16	mdpor	201f27b3166eb7bc3a9a0418256b61bc	63
+17	twas	f0f9b8ff2096179b21848c8ffeca7c10	121
+18	mpfn	e7c01c1eadab367993e91e53cd90e66a	122
+19	mncn	b6b492d63d1d92a2208de4585962f166	125
+21	mstr	e73b001a07fa157e3530942b607b37de	78
+22	mdpsla	3ad0891d1d96273dfb70d447b8c0842e	124
+23	mepl	988f03376abf785e0c17a70817978a88	103
+24	mch	040341797a19a29410123669d9ac748c	28
+25	mel	0ef174fc614c8d61e2d63329ef7f46c0	27
+26	mdpmc	9df8337e51fca70f2fa28e1690617d02	61
+27	mlr	fac131120365e920d07c1ef7f062c7b0	42
+28	mdpwp	4cf9f79fb2a886fa5115225034f359c3	67
+29	mllc	27adf5ccfe5686adb20e448d2bfed42e	43
+74	mstg	ec43d7793b528b089b46ba86f3fa2ccd	10
+75	asgy	478682934fb55d4fa492cbda66d72fa7	112
+76	mbac	2520d5dc90feb905b39f8fab5eccb03b	104
+77	mdpro	fee6a8e675c2d0f632368eb24895f9b8	64
+78	mgw	62a4dfbbb4de5c046cb446ebba0439ee	96
+79	mgi	2d8ba2223ae0795eb813db8aa28bf0aa	33
+80	mlpj	766038ecb8581c16ca3364ea506cd2e3	48
+81	admin	21232f297a57a5a743894a0e4a801fc3	129
+82	spruce	6e5190062ffb7269f769254b13bcc309	139
+83	mnw	a90364f2e445df4b74247c4185f6c5f9	97
+84	mwts	0cf5871b9bd01be44b36445c3341677e	106
+86	mba	91e112b7220af68fcf5be09ee837f7a7	75
+87	mssm	8ea075b7ebdac861d367954ed7bf2e91	37
+88	mesmn	73b51a4c6a5860ee266150767e665fca	88
+89	mssc	e6e241cb7e27a419c815da0651052472	111
+90	mhp	e09be4b2786fff7fe6688759c85ee635	102
+91	mbb	e899877691f405507dcd8c078df3daf3	47
+92	msag	7960d7a492308273cc9081b65f1be4c8	15
+93	maow	ccf2df3d9baceff6cadc6e64b69368d0	82
+94	mve	ba70d0e436cb672de5325dfcc6eaa8ea	21
+95	mbbb	3e7a9bbafaa2dec9d833fc067e24a455	110
+96	mdpgl	edcc2968f826bc7adfbd904e3d51b138	57
+97	mdpgp	d468211261eb3ac4a9c819b4992ff010	56
+98	mdpha	b64352f3ec2130004ef87326a489e96f	59
+99	mtpl	5f74b1c09aba48b214b07074dbcba4a3	119
+100	mwsc	34aa4390d7d495a868bb1ebd9f2c703d	113
+101	oke	0079fcb602361af76c4fd616d60f9414	115
+102	mff	119b256eea327771c1c2f9829450ae18	32
+103	mcb	dc571867053d4f69c37666db0144d898	24
+105	mmiow	b7b4d8bd4b71fedf7a521b5dab489b20	135
+106	mkl	324ddb5e2f605b34cce9110cbf390f6b	39
+107	mma	a9f9d8d4b6db81aed3933664f7352542	44
+\.
+
+
+--
+-- TOC entry 1882 (class 2606 OID 17503)
+-- Dependencies: 150 150
 -- Name: request_closed_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -12433,6 +14323,8 @@ ALTER TABLE ONLY request_closed
 
 
 --
+-- TOC entry 1880 (class 2606 OID 17505)
+-- Dependencies: 149 149
 -- Name: request_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -12441,6 +14333,8 @@ ALTER TABLE ONLY request
 
 
 --
+-- TOC entry 1884 (class 2606 OID 17507)
+-- Dependencies: 153 153
 -- Name: search_statistics_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -12449,6 +14343,8 @@ ALTER TABLE ONLY search_statistics
 
 
 --
+-- TOC entry 1876 (class 2606 OID 17509)
+-- Dependencies: 141 141
 -- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -12457,6 +14353,8 @@ ALTER TABLE ONLY libraries
 
 
 --
+-- TOC entry 1878 (class 2606 OID 17511)
+-- Dependencies: 141 141
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
 --
 
@@ -12465,6 +14363,18 @@ ALTER TABLE ONLY libraries
 
 
 --
+-- TOC entry 1886 (class 2606 OID 17513)
+-- Dependencies: 156 156
+-- Name: users_username_key; Type: CONSTRAINT; Schema: public; Owner: mapapp; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 1887 (class 2606 OID 17514)
+-- Dependencies: 1877 141 142
 -- Name: library_barcodes_borrower_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12473,6 +14383,8 @@ ALTER TABLE ONLY library_barcodes
 
 
 --
+-- TOC entry 1888 (class 2606 OID 17519)
+-- Dependencies: 150 141 1877
 -- Name: request_closed_filled_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12481,6 +14393,8 @@ ALTER TABLE ONLY request_closed
 
 
 --
+-- TOC entry 1889 (class 2606 OID 17524)
+-- Dependencies: 141 1877 151
 -- Name: requests_active_msg_from_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12489,6 +14403,8 @@ ALTER TABLE ONLY requests_active
 
 
 --
+-- TOC entry 1890 (class 2606 OID 17529)
+-- Dependencies: 151 1877 141
 -- Name: requests_active_msg_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12497,6 +14413,8 @@ ALTER TABLE ONLY requests_active
 
 
 --
+-- TOC entry 1891 (class 2606 OID 17534)
+-- Dependencies: 151 149 1879
 -- Name: requests_active_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12505,6 +14423,8 @@ ALTER TABLE ONLY requests_active
 
 
 --
+-- TOC entry 1892 (class 2606 OID 17539)
+-- Dependencies: 1877 141 152
 -- Name: requests_history_msg_from_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12513,6 +14433,8 @@ ALTER TABLE ONLY requests_history
 
 
 --
+-- TOC entry 1893 (class 2606 OID 17544)
+-- Dependencies: 152 1877 141
 -- Name: requests_history_msg_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12521,6 +14443,8 @@ ALTER TABLE ONLY requests_history
 
 
 --
+-- TOC entry 1894 (class 2606 OID 17549)
+-- Dependencies: 1881 150 152
 -- Name: requests_history_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12529,6 +14453,8 @@ ALTER TABLE ONLY requests_history
 
 
 --
+-- TOC entry 1895 (class 2606 OID 17554)
+-- Dependencies: 1877 141 154
 -- Name: sources_library_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12537,6 +14463,8 @@ ALTER TABLE ONLY sources
 
 
 --
+-- TOC entry 1896 (class 2606 OID 17559)
+-- Dependencies: 1879 149 154
 -- Name: sources_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: mapapp
 --
 
@@ -12545,6 +14473,8 @@ ALTER TABLE ONLY sources
 
 
 --
+-- TOC entry 1913 (class 0 OID 0)
+-- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
@@ -12553,6 +14483,8 @@ REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
+
+-- Completed on 2012-07-22 22:19:48 CDT
 
 --
 -- PostgreSQL database dump complete
