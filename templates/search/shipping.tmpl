@@ -84,12 +84,12 @@ $('document').ready(function(){
 
     <div id="myDiv">
       <div class="innerLeft">
-	<h3>1. Set a default due date</h3>
+	<h3>1. Set the due date</h3>
 	<div id="defaultDueDate">
-	  <form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change default'; return false;">
+	  <form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change due date'; return false;">
 	    <p>
 	      Date (yyyy-mm-dd): <input id="datepicker" type="text">
-	      <input type="submit" name="submit_default_due_date" value="Set as default"/>
+	      <input type="submit" name="submit_default_due_date" value="Apply due date"/>
 	    </p>
 	  </form>
 	</div>
