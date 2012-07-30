@@ -21,9 +21,11 @@
   <set target="stclib.dyndns-server.com:210/ils" name="symbol" value="MSCL"/>
 
 <!-- Bibliotheque Saint-Joachim -->
+<!-- Unavailable until August 7th.
   <set target="216.73.71.158:209/biblionet" name="pz:name" value="Bibliotheque Saint-Joachim (Biblionet)"/>
   <set target="216.73.71.158:209/biblionet" name="symbol" value="MLB"/>
   <set target="216.73.71.158:209/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+-->
 
 <!-- Bibliotheque Ste. Anne -->
   <set target="72.2.10.68:210/steanne_ils" name="pz:name" value="Bibliotheque Ste. Anne"/>

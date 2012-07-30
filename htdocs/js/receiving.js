@@ -120,13 +120,10 @@ function receive( requestId ) {
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
 	.success(function() {
-//	    alert('success');
 	    // print slip (single) / add to slip page (multi) / do nothing (none)
-//	    alert($('input[@name=slip]:checked').val());
 
 	    if ((!$('input[@name=slip]:checked').val()) || ($('input[@name=slip]:checked').val() == 'none')) {
 		// do not print slips
-//		alert('Do not print slips');
 	    } else {
 		if ($('input[@name=slip]:checked').val() == 'single') {
 		    $("#slip").remove();  // toast any existing slip div
@@ -138,14 +135,12 @@ function receive( requestId ) {
 			//		$("#slip").printElement({ leaveOpen:false, printMode:'iframe'});
 		    });
 		} else {
-//		    alert('Multiple slips per page');
 		    $('<div id="slip"></div>').appendTo("#multiPrint");
 		    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
 		    $("#slip").load( urlSlipWriter, function() {
 			$("#slip").append('<br /><hr class=dotted><br />');
 			$("#slip").removeAttr('id');
 			
-//			alert($("#multiPrint > div").length);
 			var para;
 			if ($("#multiPrint > div").length == 1) {
 			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
