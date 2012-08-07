@@ -1,8 +1,8 @@
 <settings target="*">
 
 <!-- Portage la Prairie Regional Library -->
-  <set target="24.79.32.253:210/Destiny" name="pz:name" value="Portage la Prairie Regional Library (Follet)"/>
-  <set target="24.79.32.253:210/Destiny" name="symbol" value="MPLP"/>
+  <set target="184.70.43.222:210/Destiny" name="pz:name" value="Portage la Prairie Regional Library (Follet)"/>
+  <set target="184.70.43.222:210/Destiny" name="symbol" value="MPLP"/>
 
 <!-- Bibliotheque Allard - Beaches Branch -->
   <set target="206.45.206.163:210/bibliobeaches" name="pz:name" value="Bibliotheque Allard - Beaches Branch"/>

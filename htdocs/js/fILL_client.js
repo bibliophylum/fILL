@@ -389,7 +389,7 @@ function renderDetails(data, marker)
 {
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
     var details = '<table>';
-    var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post"><input type="hidden" name="rm" value="request">';
+    var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
         details += '<tr><td><b>Title</b></td><td><b>:</b> '+data["md-title"];
@@ -423,24 +423,40 @@ function renderDetails(data, marker)
 	if (data["location"][i]["@name"] != undefined)
             details += '<tr><td><b>Location</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
 
-	if (data["location"][i]["md-holding"] != undefined)
-	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
-	if (data["location"][i]["md-symbol"] != undefined) {
-	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
-	    if (data["location"][i]["md-symbol"] == 'SPRUCE') {
-		if (data["location"][i]["md-locallocation"] != undefined)
-		    details += '<tr><td><b>Spruce locations</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"]  + '</td></tr>';
-		if (data["location"][i]["md-localcallno"] != undefined)
-		    details += '<tr><td><b>Spruce callno</b></td><td><b>:</b> ' + data["location"][i]["md-localcallno"]  + '</td></tr>';
+	if (data["location"][i]["md-locallocation"] != undefined) {
+	    for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
+		details += '<tr><td><b>...at</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"][lloc];
+		if (data["location"][i]["md-localcallno"] != undefined) {
+		    details += ' (' + data["location"][i]["md-localcallno"][lloc] + ')';
+		} else if (data["location"][i]["md-callnumber"] != undefined) {
+		    details += ' (' + data["location"][i]["md-callnumber"][lloc] + ')';
+		} else if (data["location"][i]["md-holding"] != undefined) {
+		    details += ' (' + data["location"][i]["md-holding"] + ')';
+		}
+		details += '</td></tr>';
 	    }
+	} else if (data["location"][i]["md-holding"] != undefined) {
+	    details += '<tr><td><b>Holding</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
+	} else {
+	    details += '<tr><td><b>Holding</b></td><td><b>:</b> No holdings information </td></tr>';
 	}
+	
+//	if (data["location"][i]["md-symbol"] != undefined) {
+//	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
+//	    if (data["location"][i]["md-symbol"] == 'SPRUCE') {
+//		if (data["location"][i]["md-locallocation"] != undefined)
+//		    details += '<tr><td><b>Spruce locations</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"]  + '</td></tr>';
+//		if (data["location"][i]["md-localcallno"] != undefined)
+//		    details += '<tr><td><b>Spruce callno</b></td><td><b>:</b> ' + data["location"][i]["md-localcallno"]  + '</td></tr>';
+//	    }
+//	}
 
 	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
 	requestForm += '<input type="hidden" name="location_' + i + '" value="' + data["location"][i]["@name"] + '">';
 	requestForm += '<input type="hidden" name="holding_' + i + '" value="' + data["location"][i]["md-holding"] + '">';
-	requestForm += '<input type="hidden" name="callno_' + i + '" value="' + data["location"][i]["md-callnumber"] + '">';
-	requestForm += '<input type="hidden" name="sprucelocation_' + i + '" value="' + data["location"][i]["md-locallocation"] + '">';
-	requestForm += '<input type="hidden" name="sprucecallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
+	requestForm += '<input type="hidden" name="callnumber_' + i + '" value="' + data["location"][i]["md-callnumber"] + '">';
+	requestForm += '<input type="hidden" name="locallocation_' + i + '" value="' + data["location"][i]["md-locallocation"] + '">';
+	requestForm += '<input type="hidden" name="localcallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
     }
 
     requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';

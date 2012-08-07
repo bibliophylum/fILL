@@ -66,7 +66,7 @@
 	    <input TYPE="radio" NAME="request_email_notification" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	</td>
-	<td>Do you want to receive email notifications for new requests?</td>
+	<td>Do you want to receive email notifications for new requests? (CURRENTLY UNAVAILABLE)</td>
       </tr><tr>
 	<td>
 	  <TMPL_IF NAME="editSlipsWithBarcodes">
@@ -78,6 +78,17 @@
 	  </TMPL_IF>
 	</td>
 	<td>Do you want to print scannable patron barcodes on the date-due slips?</td>
+      </tr><tr>
+	<td>
+	  <TMPL_IF NAME="editCentralizedILL">
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes<br/>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No<br/>
+	  <TMPL_ELSE>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes<br/>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No<br/>
+	  </TMPL_IF>
+	</td>
+	<td>Are you a headquarters library that centrally manages ILL for your branches?</td>
       </tr>
     </table>
 

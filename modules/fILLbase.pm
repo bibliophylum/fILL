@@ -1,13 +1,15 @@
 #
 #    fILL - Free/Open-Source Interlibrary Loan management system
-#    Copyright (C) 2012  David A. Christensen
+#    Copyright (C) 2012  Government of Manitoba
 #
-#    This program is free software: you can redistribute it and/or modify
+#    fILLbase.pm is a part of fILL.
+#
+#    fILL is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
+#    fILL is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
@@ -28,16 +30,6 @@ use CGI::Application::Plugin::LogDispatch;
 use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
 
-#    DRIVER         => [ 'DBI',
-#			TABLE => 'libraries',
-#			CONSTRAINTS => {
-#			    'libraries.name' => '__CREDENTIAL_1__',
-#			    'libraries.password' => '__CREDENTIAL_2__',
-#			    'libraries.active' => 1
-#			},
-#
-#    ],
-
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
 
 my %config = (
@@ -52,11 +44,6 @@ my %config = (
     STORE          => 'Session',
     POST_LOGIN_RUNMODE => 'welcome',
     LOGOUT_RUNMODE => 'logged_out',
-#    LOGIN_FORM => { 
-#	TITLE => 'Sign in to fILL',
-#	COMMENT => 'Manitoba Public Libraries ILL Management System.',
-#	FOCUS_FORM_ONLOAD => 1,
-#    }
     LOGIN_RUNMODE => 'login',
     );
 

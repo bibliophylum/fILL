@@ -10,6 +10,7 @@ sudo kill `cat /tmp/fILLreporter.pid`
 #sudo unlink /etc/apache2/sites-available/fILL.conf
 
 echo Removing existing /opt/fILL...
+# want to preserve conf, logs, report-output
 sudo rm -rf /opt/fILL/bin
 sudo rm -rf /opt/fILL/devdocs
 sudo rm -rf /opt/fILL/externals

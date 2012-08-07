@@ -30,8 +30,8 @@
   <set target="216.55.201.10:210/ils" name="symbol" value="mste"/>
 
 <!-- Lakeland Regional Library -->
-  <set target="206.45.118.101:210/InsigniaLibrary" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
-  <set target="206.45.118.101:210/InsigniaLibrary" name="symbol" value="MKL"/>
+  <set target="insigniasoftware.com:210/Lakeland" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
+  <set target="insigniasoftware.com:210/Lakeland" name="symbol" value="MKL"/>
 
 <!-- Minnedosa Regional Library -->
   <set target="insigniasoftware.com:210/minnedosa" name="pz:name" value="Minnedosa Regional Library (Insignia)"/>

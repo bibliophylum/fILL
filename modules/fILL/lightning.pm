@@ -39,7 +39,16 @@ my %SPRUCE_TO_MAPLIN = (
     'WINKLER' => 'MWOW',
     'AB' => 'MWP',
     'MWP' => 'MWP',
-);
+    'MSTOS' => 'MSTOS',
+    );
+
+my %WESTERN_MB_TO_MAPLIN = (
+    'Brandon Public Library' => 'MBW',
+    'Neepawa Public Library' => 'MNW',
+    'Carberry / North Cypress Library' => 'MCNC',
+    'Glenboro / South Cypress Library' => 'MGW',
+    'Hartney / Cameron Library' => 'MHW',
+    );
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
@@ -76,7 +85,7 @@ sub complete_the_request_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $pbarcode = $q->param('pbarcode');
+    my $pbarcode = $q->param('pbarcode') || 'no barcode';
     my $request_note = $q->param('request_note');
     my $reqid = $q->param('request_id');
     if ($pbarcode) {
@@ -170,11 +179,7 @@ sub pull_list_process {
 
 #--------------------------------------------------------------------------------
 #
-# I think the ordering of the sources needs to be based on something like:
-# select l.lid, l.name, count(rh1.request_id) as borrowed, count(rh2.request_id) as loaned from libraries l left join requests_history rh1 on rh1.msg_from=l.lid left join requests_history rh2 on rh2.msg_to=l.lid where rh1.status = 'Received' and rh2.status = 'Shipped' group by l.lid, l.name;
 #
-# that is, find how many items each library has borrowed and how many loaned.  Then calculate (loaned - borrowed) and sort by that
-# (so a library that has borrowed more than it has loaned will end up with a lower number (in fact, negative))
 sub request_process {
     my $self = shift;
     my $q = $self->query;
@@ -193,34 +198,45 @@ sub request_process {
 	    $sources{$num}{$pname} = $q->param($parm_name);
 	}
     }
+#    $self->log->debug( "request_process:\n " . Dumper( %sources ) );
 
     my @sources;
     foreach my $num (sort keys %sources) {
-	if ($sources{$num}{'symbol'} eq 'SPRUCE') {
-	    $self->log->debug( "Callno: " . $sources{$num}{'sprucecallno'} );
-	    # split the combined sprucelocation into separate locations
-	    my @locs = split /\,/, $sources{$num}{'sprucelocation'};
-	    my @callnos = split /\,/, $sources{$num}{'sprucecallno'};
-	    my %spruce_callno = ();
-	    for (my $i=0; $i < @locs; $i++) {
-		$spruce_callno{ $locs[$i] } = $callnos[$i];
+
+	my %src;
+
+#	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
+	if ($sources{$num}{'locallocation'}) {
+	    
+	    # split the combined locallocation into separate locations
+	    my @locs = split /\,/, $sources{$num}{'locallocation'};
+	    delete $sources{$num}{'locallocation'};
+	    my @callnos;
+	    # confusingly, the text string 'undefined' is passed in rather than undef
+	    if (($sources{$num}{'localcallno'}) && ($sources{$num}{'localcallno'} ne 'undefined')) {
+		@callnos = split /\,/, $sources{$num}{'localcallno'};
+	    } elsif (($sources{$num}{'callnumber'}) && ($sources{$num}{'callnumber'} ne 'undefined')) {
+		@callnos = split /\,/, $sources{$num}{'callnumber'};
 	    }
-
-	    delete $sources{$num}{'sprucelocation'};
-	    delete $sources{$num}{'sprucecallno'};
-
-	    my @holdings = split /\,/, $sources{$num}{'holding'};
-#	    $self->log->debug( Dumper(@holdings) );
-	    my %spruce_holding = ();
-	    foreach my $holding (@holdings) {
-		foreach my $key (keys %SPRUCE_TO_MAPLIN) {
-		    if ( $holding =~ m/($key) \d{14}/ ) {
-			$spruce_holding{$key} = $holding;
+	    delete $sources{$num}{'localcallno'};
+	    delete $sources{$num}{'callnumber'};
+	    my %loc_callno = ();
+	    # if there are call numbers at all, there will be one per location...
+	    for (my $i=0; $i < @locs; $i++) {
+		if (@callnos) {
+		    if ($callnos[$i] ne 'PAZPAR2_NULL_VALUE') {
+			$loc_callno{ $locs[$i] } = $callnos[$i];
+		    } else {
+			$loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
 		    }
+		} elsif ($sources{$num}{'holding'}) {
+		    # ...otherwise, there might be one single 'holding' entry
+		    $loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
+		} else {
+		    $loc_callno{ $locs[$i] } = 'No callno info';
 		}
 	    }
-#	    $self->log->debug( Dumper(%spruce_holding) );
-
+	    
 	    my %seen;
 	    foreach my $loc (@locs) {
 		next if $seen{$loc};
@@ -229,19 +245,21 @@ sub request_process {
 		foreach my $pname (keys %{$sources{$num}}) {
 		    $src{$pname} = $sources{$num}{$pname};
 		}
-		$src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
-		$src{'holding'} = $spruce_holding{ $loc };
-		$src{'callno'} = $spruce_callno{ $loc };
+		# really need to generalize this....
+		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
+		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		} elsif ($sources{$num}{'symbol'} eq 'MW') {
+		    # leave as-is... requests to all MW branches go to MW
+		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
+		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
+		} else {
+		    $src{'symbol'} = $sources{$num}{'symbol'};
+		}
+		$src{'location'} = $loc;
+		$src{'holding'} = '---';
+		$src{'callnumber'} = $loc_callno{ $loc };
 		push @sources, \%src;
 	    }
-	} else {
-	    # non-Spruce
-	    my %src;
-	    foreach my $pname (keys %{$sources{$num}}) {
-		next if (($pname eq 'sprucelocation') || ($pname eq 'sprucecallno'));
-		$src{$pname} = $sources{$num}{$pname};
-	    }
-	    push @sources, \%src;
 	}
     }
 #    $self->log->debug( Dumper(@sources) );
@@ -268,12 +286,32 @@ sub request_process {
     my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
     # ...end of atomic
 
-    # remove duplicate entries for a given library (they may have multiple holdings)
+    # re-consolidate MW locations - they handle ILL for all branches centrally
+    my $index = 0; 
+    my $cn;
+    my $primary;
+    while ($index <= $#sources ) { 
+	my $value = $sources[$index]{symbol}; 
+	if ( $value eq "MW" ) { 
+	    if ($sources[$index]{location} =~ /^Millennium/ ) {
+		$primary = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    } else {
+		$cn = $cn . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    }
+	    splice @sources, $index, 1; 
+	} else { 
+	    $index++; 
+	} 
+    }
+    $cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
+    push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
+
+    # remove duplicate entries for a given library/location (they may have multiple holdings)
     my %seen = ();
-    my @unique_sources = grep { ! $seen{ $_->{'symbol'} }++ } @sources;
+    my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
+#    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
 
     # net borrower/lender count  (loaned - borrowed)
-#    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Received' THEN 1 ELSE 0 END) as borrowed, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) AS loaned, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_history rh on rh.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_history rh on rh.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
     foreach my $src (@unique_sources) {
@@ -296,7 +334,7 @@ sub request_process {
 		       $reqid,
 		       $sequence++,
 		       $lenderID,
-		       substr($src->{"callno"},0,99),  # some libraries don't clean up copy-cat recs
+		       substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
 	    );
     }
 
@@ -541,9 +579,9 @@ sub send_notification {
 
     my $subject = "Subject: ILL Request: " . $tac[0] . "\n";
     my $content = "fILL notification\n\n";
-    $content .= "You have a new request for the follwing item:\n";
+    $content .= "You have a new request for the following item:\n";
     $content .= $tac[2] . "\t" . $tac[1] . "\t" . $tac[0] . "\n\n";
-    $content .= "fILL: https://mintaka.gotdns.org/cgi-bin/lightning.cgi\n";
+    $content .= "fILL: http://fill.sitka.bclibraries.ca/cgi-bin/lightning.cgi\n";
     $content .= "\n\n(debug): original email: $old_email\n";
 
 #    $self->log->info( "To: $to_email\n$subject$content" );

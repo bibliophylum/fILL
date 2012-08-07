@@ -57,7 +57,12 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].mailing_address;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = "";
+//        cell = row.insertCell(-1); cell.innerHTML = "";
+	// Need to set a default due date:
+	var now = new Date();
+	var d = new Date(now.getTime() + (21 * 24 * 60 * 60 * 1000)); 
+	var iso = d.toISOString();
+        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10);
         cell = row.insertCell(-1); 
 
 	var requestId = data.shipping[i].id;

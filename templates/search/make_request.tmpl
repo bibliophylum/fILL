@@ -72,16 +72,16 @@ $('document').ready(function(){
     </table>
     
     <h3>The title was found at these locations:</h3>
-    <p><em>Maplin will automatically determine which lender to try first, to minimize lender workloads.</em></p>
+    <p><em>fILL will automatically determine which lender to try first, to minimize lender workloads.</em></p>
     <table>
-      <tr><td>symbol</td><td>location</td><td>holding</td><td>callno</td><td>net loaned</td></tr>
+      <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td></tr>
       <TMPL_LOOP name="sources">
 	<tr>
 	  <!-- <TMPL_VAR name="lid"> -->
 	  <td><TMPL_VAR name="symbol"></td>
 	  <td><TMPL_VAR name="location"></td>
 	  <td><TMPL_VAR name="holding"></td>
-	  <td><TMPL_VAR name="callno"></td>
+	  <td><TMPL_VAR name="callnumber"></td>
 	  <td><TMPL_VAR name="net"></td>
 	</tr>
       </TMPL_LOOP>
