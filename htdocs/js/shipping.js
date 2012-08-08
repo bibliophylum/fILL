@@ -61,7 +61,15 @@ function build_table( data ) {
 	// Need to set a default due date:
 	var now = new Date();
 	var d = new Date(now.getTime() + (21 * 24 * 60 * 60 * 1000)); 
-	var iso = d.toISOString();
+// Doesn't work on older version of Internet Explorer...
+//	var iso = d.toISOString();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+	var iso = d.getFullYear() + '-' +
+	    ((''+month).length<2 ? '0' : '') + month + '-' +
+	    ((''+day).length<2 ? '0' : '') + day;
+
+
         cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10);
         cell = row.insertCell(-1); 
 
