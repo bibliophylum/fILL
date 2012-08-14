@@ -218,6 +218,8 @@ function unfilled( requestId ) {
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='lost' id='lost'/><label for='lost'>lost</label>");
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='non-circulating' id='non-circulating'/><label for='non-circulating'>non-circulating</label>");
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-owned' id='not-owned'/><label for='not-owned'>not-owned</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-order' id='on-order'/><label for='on-order'>on-order</label>");
+    $("#unfilledradioset").append("<input type='radio' name='radioset' value='volume-issue-not-yet-available' id='volume-issue-not-yet-available'/><label for='volume-issue-not-yet-available'>volume-issue-not-yet-available</label>");
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='not-on-shelf' id='not-on-shelf'/><label for='not-on-shelf'>not-on-shelf</label>");
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='on-reserve' id='on-reserve'/><label for='on-reserve'>on-reserve</label>");
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='poor-condition' id='poor-condition'/><label for='poor-condition'>poor-condition</label>");
