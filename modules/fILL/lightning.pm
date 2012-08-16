@@ -199,7 +199,7 @@ sub request_process {
 	    $sources{$num}{$pname} = $q->param($parm_name);
 	}
     }
-#    $self->log->debug( "request_process:\n " . Dumper( %sources ) );
+    $self->log->debug( "request_process sources hash:\n " . Dumper( %sources ) );
 
     my @sources;
     foreach my $num (sort keys %sources) {
@@ -263,7 +263,7 @@ sub request_process {
 	    }
 	}
     }
-#    $self->log->debug( Dumper(@sources) );
+#    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
     # Get this user's (requester's) library id
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -304,8 +304,11 @@ sub request_process {
 	    $index++; 
 	} 
     }
-    $cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
-    push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
+    if ($cn) {
+	$cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
+	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
+    }
+#    $self->log->debug( "request_process sources array after MW reconsolidation:\n" . Dumper(@sources) );
 
     # remove duplicate entries for a given library/location (they may have multiple holdings)
     my %seen = ();
