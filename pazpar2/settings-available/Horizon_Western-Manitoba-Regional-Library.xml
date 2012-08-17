@@ -6,7 +6,8 @@
   <set name="symbol" value="MBW"/>
 
   <!-- mapping for unqualified search -->
-  <set name="pz:cclmap:term" value="u=4 t=l,r s=al 2=102"/>  <!-- WRML doesn't support 'Any' search? -->
+  <!--set name="pz:cclmap:term" value="u=4 t=l,r s=al 2=102"/-->  <!-- WRML doesn't support 'Any' search? -->
+  <set name="pz:cclmap:term" value="u=1035 t=l,r s=al 2=102"/>  <!-- WRML doesn't support 'Any' search? Uses 'Anywhere' instead. -->
 
   <!-- field-specific mappings -->
   <set name="pz:cclmap:au" value="u=1003 s=al"/>
