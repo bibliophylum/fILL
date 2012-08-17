@@ -20,6 +20,7 @@
 */
 function build_table( data ) {
 //    alert( 'in build_table' );
+
     var myTable = document.createElement("table");
     myTable.setAttribute("id","gradient-style");
     var tHead = myTable.createTHead();
@@ -46,24 +47,48 @@ function build_table( data ) {
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
-    
-//    alert('building rows');
+
+    // is this library allowed to forward requests to its branches?
+    var canForward = false;
+    var retargets = [];
+    $.getJSON('/cgi-bin/can-forward-to-branches.cgi', { lid: $("#lid").text() },
+	      function(flags){
+		  //alert('can forward to children: '+flags.forward.canForwardToChildren+'\n');
+		  canForward = flags.forward.canForwardToChildren;
+		  retargets = flags.forward.retargets;
+		  build_rows( tBody, data, canForward, retargets );
+	      })
+	.success(function() {
+	})
+	.error(function() {
+	    alert('Unable to check forwarding ability. Continuing without.');
+	    build_rows( tBody, data, canForward, retargets );
+	})
+	.complete(function() {
+	    document.getElementById('mylistDiv').appendChild(myTable);
+	    
+	    toggleLayer("waitDiv");
+	    toggleLayer("mylistDiv");
+	});
+}
+
+function build_rows( tBody, data, canForward, retargets ) {
     for (var i=0;i<data.unhandledRequests.length;i++) 
     {
-        row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
-        cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
-        cell = row.insertCell(-1); 
-
+	row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].call_number;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].author;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
+	cell = row.insertCell(-1); 
+	
 	var divResponses = document.createElement("div");
 	divResponses.id = 'divResponses'+data.unhandledRequests[i].id;
-
+	
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Will-supply";
@@ -71,25 +96,22 @@ function build_table( data ) {
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
-//	var b2 = document.createElement("input");
-//	b2.type = "button";
-//	b2.value = "Change due date";
-//	b2.onclick = function () { alert('click!'); };
-//	divResponses.appendChild(b2);
+	if (canForward) {
+	    var b2 = document.createElement("input");
+	    b2.type = "button";
+	    b2.value = "Forward to branch";
+	    b2.onclick = make_forward_handler( requestId, retargets );
+	    divResponses.appendChild(b2);
+	}
 	
 	var b3 = document.createElement("input");
 	b3.type = "button";
 	b3.value = "Unfilled";
 	b3.onclick = make_unfilled_handler( requestId );
 	divResponses.appendChild(b3);
-
+	
 	cell.appendChild( divResponses );
     }
-    
-    document.getElementById('mylistDiv').appendChild(myTable);
-    
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
 }
 
 // Explanation of why we need a function to create the buttons' onclick handlers:
@@ -228,6 +250,103 @@ function unfilled( requestId ) {
     $("#unfilledradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
 //    $("#unfilledradioset").append("<input type='radio' name='radioset' value='responder-specific' id='responder-specific'/><label for='responder-specific'>responder-specific</label>");
     $("#unfilledradioset").buttonset('refresh');
+}
+
+function make_forward_handler( requestId, retargets ) {
+    return function() { forward( requestId, retargets ) };
+}
+
+function forward( requestId, retargets ) {
+    var row = $("#req"+requestId);
+    var ruDiv = document.createElement("div");
+    ruDiv.id = "branchForward";
+    var ruForm = document.createElement("form");
+
+    var ru = document.createElement("div");
+    ru.setAttribute('id','forwardradioset');
+    ruForm.appendChild(ru);
+    ruDiv.appendChild(ruForm);
+    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#req"+requestId));
+    $("#tmpcol").append(ruDiv);
+
+    $("#divResponses"+requestId).hide();
+    $( "<p>Select the branch to foward this request to:</p>" ).insertBefore("#forwardradioset");
+
+
+    var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
+    cButton.bind('click', function() {
+	$("#branchForward").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	//return false;
+    });
+
+    var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
+    sButton.bind('click', function() {
+	var forwardTo = $('input:radio[name=radioset]:checked').val();
+	$("#branchForward").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	
+	// Returns [{reqid: 12, msg_to: '101'}, 
+	//          {reqid: 15, msg_to: '98'},
+	// Note that nth-child uses 1-based indexing, not 0-based
+	var parms = $('#gradient-style tbody tr').map(function() {
+	    // $(this) is used more than once; cache it for performance.
+	    var $row = $(this);
+	    
+	    // For each row that's "mapped", return an object that
+	    //  describes the first and second <td> in the row.
+	    if ($row.find(':nth-child(1)').text() == requestId) {
+		var targetIndex;
+		for (var i=0; i < retargets.length; i++) {
+		    if (retargets[i].lid == forwardTo)
+			targetIndex = i;
+		}
+		return {
+		    reqid: $row.find(':nth-child(1)').text(),
+		    msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
+		    lid: $("#lid").text(),
+		    status: "ILL-Answer|Locations-provided|responder-specific",
+//		    message: "forwarded to our branch "+forwardTo
+		    message: "forwarded to our branch "+retargets[targetIndex].name
+		}
+	    } else {
+		return null;
+	    };
+	}).get();
+
+	$.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+		  function(data){
+		      // create request from borrower to new lender
+		      $.getJSON('/cgi-bin/change-request-status.cgi',
+				{ reqid: requestId,
+				  msg_to: forwardTo,
+				  lid: parms[0].msg_to,  // sending FROM whoever original was FROM (which is whoever we sent the response to
+				  status: "ILL-Request",
+				  message: ""
+				},
+				function() {
+				    // slideUp doesn't work for <tr>
+				    $("#req"+requestId).fadeOut(400, function() { $("req"+requestId).remove(); }); // toast the row
+				})
+			  .error(function() {
+			      alert('Could not create new ILL-Request.');
+			  });
+		  })
+	    .success(function() {
+		update_menu_counters( $("#lid").text() );
+	    });
+	
+    });
+
+    // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
+    $("#forwardradioset").buttonset();
+    retargets.forEach(function(target){
+	var s="<input type='radio' name='radioset' value='"+target.lid+"' id='"+target.name+"'/><label for='"+target.name+"'>"+target.library+"</label>"
+	$("#forwardradioset").append(s);
+    });
+    $("#forwardradioset").buttonset('refresh');
 }
 
 function toggleLayer( whichLayer )
