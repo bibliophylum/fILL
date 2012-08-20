@@ -1,9 +1,9 @@
-// live-requests.js
+// current.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    live-requests.js is a part of fILL.
+    current.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,10 @@ function build_table( data ) {
     for (var i=0;i<data.active.lending.length;i++) {
 	var ai = oTable_lending.fnAddData( data.active.lending[i] );
     }
+
+    for (var i=0;i<data.active.notfilled.length;i++) {
+	var ai = oTable_notfilled.fnAddData( data.active.notfilled[i] );
+    }
     toggleLayer("waitDiv");
     toggleLayer("tabs");
 }
@@ -33,7 +37,7 @@ function build_table( data ) {
 function fnFormatDetails( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
-    $.getJSON('/cgi-bin/get-live-request-details.cgi', { "reqid": oData.id },
+    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "reqid": oData.id },
 	      function(data){
 		  //alert('first success');
 	      })

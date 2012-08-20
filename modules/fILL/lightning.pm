@@ -75,7 +75,7 @@ sub setup {
 	'renew_answer'             => 'renew_answer_process',
 	'checkins'                 => 'checkins_process',
 	'history'                  => 'history_process',
-	'live_requests'            => 'live_requests_process',
+	'current'                  => 'current_process',
 	);
 }
 
@@ -531,13 +531,13 @@ sub history_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub live_requests_process {
+sub current_process {
     my $self = shift;
     my $q = $self->query;
 
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $template = $self->load_tmpl('search/live-requests.tmpl');	
+    my $template = $self->load_tmpl('search/current.tmpl');	
     $template->param( pagetitle => "Current ILLs",
 		      username => $self->authen->username,
 		      lid => $lid,
