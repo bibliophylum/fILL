@@ -20,7 +20,7 @@ my $SQL = "select can_forward_to_children from libraries where lid=?";
 my @flags = $dbh->selectrow_array($SQL, undef, $lid );
 @flags[0] = 0 unless (@flags);
 
-$SQL = "select ls.child_id as lid, l.name, l.library from library_systems ls left join libraries l on ls.child_id=l.lid where parent_id=? order by l.library";
+$SQL = "select ls.child_id as lid, l.name, l.library, l.city from library_systems ls left join libraries l on ls.child_id=l.lid where parent_id=? order by l.city";
 my $retargets;
 if (@flags[0]) {
     $retargets = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );

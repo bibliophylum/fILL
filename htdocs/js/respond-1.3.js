@@ -343,7 +343,7 @@ function forward( requestId, retargets ) {
     // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
     $("#forwardradioset").buttonset();
     retargets.forEach(function(target){
-	var s="<input type='radio' name='radioset' value='"+target.lid+"' id='"+target.name+"'/><label for='"+target.name+"'>"+target.library+"</label>"
+	var s="<input type='radio' name='radioset' value='"+target.lid+"' id='"+target.name+"'/><label for='"+target.name+"'>"+target.city+"</label>"
 	$("#forwardradioset").append(s);
     });
     $("#forwardradioset").buttonset('refresh');
