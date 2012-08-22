@@ -90,7 +90,7 @@ sub complete_the_request_process {
     my $request_note = $q->param('request_note');
     my $reqid = $q->param('request_id');
     if ($pbarcode) {
-	my $SQL = "UPDATE request SET patron_barcode=?, current_target=1 WHERE id=?";
+	my $SQL = "UPDATE request SET patron_barcode=?, current_source_sequence_number=1 WHERE id=?";
 	$self->dbh->do($SQL, undef, $pbarcode, $reqid);  # do some error checking....!
     }
     if ($request_note) {
@@ -101,7 +101,7 @@ sub complete_the_request_process {
     # get the request
     my $hr_req = $self->dbh->selectrow_hashref("SELECT * FROM request WHERE id=?",undef,$reqid);
     my $requester = $hr_req->{requester};
-    my $seq = $hr_req->{current_target}; # where are we in the sequence of sources? (sequence #)
+    my $seq = $hr_req->{current_source_sequence_number}; # where are we in the sequence of sources? (sequence #)
 
     # get the first source
     my $hr_src = $self->dbh->selectrow_hashref("SELECT * FROM sources WHERE request_id=? and sequence_number=?",undef,$reqid,$seq);
@@ -277,12 +277,12 @@ sub request_process {
 
     # These should be atomic...
     # create the request (sans patron barcode)
-    $self->dbh->do("INSERT INTO request (title,author,requester,current_target) VALUES (?,?,?,?)",
+    $self->dbh->do("INSERT INTO request (title,author,requester,current_source_sequence_number) VALUES (?,?,?,?)",
 		   undef,
 		   $title,
 		   $author,
 		   $lid,
-		   0                                   # no source yet (aka request isn't complete until patron barcode is in
+		   0           # no source yet (aka request isn't complete until patron barcode is in
 	);
     my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
     # ...end of atomic

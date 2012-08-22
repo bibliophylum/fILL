@@ -45,7 +45,7 @@ CREATE TABLE request (
     author character varying(256),
     requester integer NOT NULL,
     patron_barcode character(14),
-    current_target integer DEFAULT 1
+    current_source_sequence_number integer DEFAULT 1
 );
 
 
@@ -117,7 +117,7 @@ ALTER TABLE public.sources OWNER TO mapapp;
 -- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY request (id, title, author, requester, patron_barcode, current_target) FROM stdin;
+COPY request (id, title, author, requester, patron_barcode, current_source_sequence_number) FROM stdin;
 1	10 little rubber ducks	Carle, Eric	85	21111000001234	1
 2	The valley of the frost giants	Shura, Mary Francis	85	21111000001235	1
 4	Buddha for beginners	Asma, Stephen T	85	21111000001234	1

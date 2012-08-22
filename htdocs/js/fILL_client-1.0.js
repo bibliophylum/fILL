@@ -415,6 +415,19 @@ function renderDetails(data, marker)
     details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
 
+	// temp fix for skipping Spruce locations
+	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
+	    if (data["location"][i]["md-locallocation"] != undefined) {
+		var bail=0;
+		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
+		    if ("MSTOS" === data["location"][i]["md-locallocation"][lloc]) {
+			bail=1;
+		    }
+		}
+		if (bail) continue;
+	    }
+	}
+
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
 	if (data["location"][i]["md-medium"] != undefined)
 	    details += '<tr><td><b>Medium</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';

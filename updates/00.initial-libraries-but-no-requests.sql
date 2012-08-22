@@ -693,7 +693,7 @@ CREATE TABLE request (
     author character varying(256),
     requester integer NOT NULL,
     patron_barcode character(14),
-    current_target integer DEFAULT 1,
+    current_source_sequence_number integer DEFAULT 1,
     note character varying(80),
     canada_post_endpoint character varying(1024),
     canada_post_tracking_number character varying(40)
@@ -10627,7 +10627,7 @@ COPY reports_queue (ts, rid, lid, range_start, range_end) FROM stdin;
 -- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY request (id, title, author, requester, patron_barcode, current_target, note, canada_post_endpoint, canada_post_tracking_number) FROM stdin;
+COPY request (id, title, author, requester, patron_barcode, current_source_sequence_number, note, canada_post_endpoint, canada_post_tracking_number) FROM stdin;
 \.
 
 

@@ -17,7 +17,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
-my $SQL = "select library from sources where request_id=? and sequence_number=(select current_target from request where id=?)+1";
+my $SQL = "select library from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
 my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
 
 my $retval = 0;
@@ -30,7 +30,7 @@ if (@ary) {
     $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
     $dbh->do($SQL, undef, $reqid, $msg_from, $ary[0], 'ILL-Request');
 
-    $SQL = "UPDATE request SET current_target = current_target+1";
+    $SQL = "UPDATE request SET current_source_sequence_number = current_source_sequence_number+1";
     $dbh->do($SQL);
 
     $retval = 1;

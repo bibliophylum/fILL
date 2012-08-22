@@ -3,12 +3,14 @@
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  David A. Christensen
 
-    This program is free software: you can redistribute it and/or modify
+    unfilled.js is a part of fILL.
+
+    fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    fILL is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -34,7 +36,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Last source tried"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Currently trying #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
@@ -58,7 +60,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_target;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_source_sequence_number;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].sources;
         cell = row.insertCell(-1); 
 
@@ -68,7 +70,8 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Try next lender";
-	if (data.unfilled[i].current_target >= data.unfilled[i].sources) {
+	if (data.unfilled[i].current_source_sequence_number >= data.unfilled[i].sources) {
+	    b1.value = "No further sources";
 	    b1.disabled = "disabled";
 	}
 	var requestId = data.unfilled[i].id;
@@ -111,7 +114,6 @@ function try_next_lender( requestId ) {
 	      })
 	.success(function() {
 	    //alert('success');
-	    // print slip (single) / add to slip page (multi) / do nothing (none)
 	})
 	.error(function() {
 	    alert('error');

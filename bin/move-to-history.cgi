@@ -30,7 +30,7 @@ $dbh->{AutoCommit} = 0;  # enable transactions, if possible
 $dbh->{RaiseError} = 1;
 
 eval {
-    my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_target from request where id=?)";
+    my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_source_sequence_number from request where id=?)";
     $rClosed = $dbh->do( $SQL, undef, $reqid );
 
     $SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";

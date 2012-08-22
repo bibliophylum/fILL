@@ -210,7 +210,7 @@ CREATE TABLE request (
     author character varying(256),
     requester integer NOT NULL,
     patron_barcode character(14),
-    current_target integer DEFAULT 1
+    current_source_sequence_number integer DEFAULT 1
 );
 
 
@@ -16854,7 +16854,7 @@ COPY library_barcodes (lid, borrower, barcode) FROM stdin;
 -- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: mapapp
 --
 
-COPY request (id, title, author, requester, patron_barcode, current_target) FROM stdin;
+COPY request (id, title, author, requester, patron_barcode, current_source_sequence_number) FROM stdin;
 4	Alps and their people, The	Bullen, Susan	85	26786700000001	1
 5	Appalachian spring	Gustafson, Eleanor	85	26786700000001	1
 6	Andes [videorecording]	\N	85	26786700000001	1

@@ -77,7 +77,7 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
 
 	# try next lender (from try-next-lender.cgi)
-	$SQL = "select library from sources where request_id=? and sequence_number=(select current_target from request where id=?)+1";
+	$SQL = "select library from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
 	my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
 
 	if (@ary) {
@@ -89,7 +89,7 @@ switch( $override ) {
 	    $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
 	    $dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
 	    
-	    $SQL = "UPDATE request SET current_target = current_target+1";
+	    $SQL = "UPDATE request SET current_source_sequence_number = current_source_sequence_number+1";
 	    $dbh->do($SQL);
 	    $return_data_href->{ success } = 1;
 	    $return_data_href->{ status } = "Forwarded to next lender";
@@ -162,7 +162,7 @@ sub move_to_history {
     $dbh->{AutoCommit} = 0;  # enable transactions, if possible
     $dbh->{RaiseError} = 1;
     eval {
-	my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_target from request where id=?)";
+	my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_source_sequence_number from request where id=?)";
 	$rClosed = $dbh->do( $SQL, undef, $reqid );
 	
 	$SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";

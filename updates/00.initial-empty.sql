@@ -657,7 +657,7 @@ CREATE TABLE request (
     author character varying(256),
     requester integer NOT NULL,
     patron_barcode character(14),
-    current_target integer DEFAULT 1,
+    current_source_sequence_number integer DEFAULT 1,
     note character varying(80),
     canada_post_endpoint character varying(1024),
     canada_post_tracking_number character varying(40)
