@@ -25,6 +25,7 @@ use base 'fILLbase';
 use GD::Barcode;
 use GD::Barcode::Code39;
 use MIME::Base64;
+use Clone qw(clone);
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
@@ -199,10 +200,10 @@ sub request_process {
 	    $sources{$num}{$pname} = $q->param($parm_name);
 	}
     }
-    $self->log->debug( "request_process parms:\n" . Dumper( @parms ) );
-    foreach my $num (keys %sources) {
-	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
-    }
+#    $self->log->debug( "request_process parms:\n" . Dumper( @parms ) );
+#    foreach my $num (keys %sources) {
+#	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
+#    }
 
     my @sources;
     foreach my $num (sort keys %sources) {
@@ -318,8 +319,8 @@ sub request_process {
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 #    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
 
-    # net borrower/lender count  (loaned - borrowed)
-    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_history rh on rh.msg_from=l.lid group by l.lid, l.name order by l.name";
+    # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
+    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
     foreach my $src (@unique_sources) {
 	$src->{net} = $nblc_href->{ $src->{symbol} }{net};
