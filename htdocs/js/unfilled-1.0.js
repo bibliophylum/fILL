@@ -70,7 +70,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Try next lender";
-	if (data.unfilled[i].current_source_sequence_number >= data.unfilled[i].sources) {
+	if (+data.unfilled[i].current_source_sequence_number >= +data.unfilled[i].sources) {
 	    b1.value = "No further sources";
 	    b1.disabled = "disabled";
 	}

@@ -199,7 +199,10 @@ sub request_process {
 	    $sources{$num}{$pname} = $q->param($parm_name);
 	}
     }
-    $self->log->debug( "request_process sources hash:\n " . Dumper( %sources ) );
+    $self->log->debug( "request_process parms:\n" . Dumper( @parms ) );
+    foreach my $num (keys %sources) {
+	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
+    }
 
     my @sources;
     foreach my $num (sort keys %sources) {
