@@ -62,7 +62,7 @@
   <set target="catalogue.thompsonlibrary.com:210/ILS" name="symbol" value="MTH"/>
 
 <!-- Valley Regional Library -->
-  <set target="206.45.206.163:210/ILS" name="pz:name" value="Valley Regional Library (Insignia)"/>
+  <set target="206.45.109.104:210/ILS" name="pz:name" value="Valley Regional Library (Insignia)"/>
   <set target="206.45.109.104:210/ILS" name="symbol" value="MMVR"/>
 
 <!-- Victoria Municipal Library -->
