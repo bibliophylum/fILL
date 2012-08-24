@@ -284,6 +284,27 @@
 	    <xsl:value-of select="marc:subfield[@code='h']"/>
 	  </pz:metadata>
 	</xsl:if>
+	<!-- generic holdings info -->
+        <pz:metadata type="holding">
+	  <xsl:for-each select="marc:subfield">
+	    <xsl:if test="position() > 1">
+	      <xsl:text> </xsl:text>
+	    </xsl:if>
+	    <xsl:value-of select="."/>
+	  </xsl:for-each>
+        </pz:metadata>
+	<!-- Spruce locations -->
+	<xsl:if test="marc:subfield[@code='d']">
+	  <pz:metadata type="locallocation">
+	    <xsl:value-of select="marc:subfield[@code='d']"/>
+	  </pz:metadata>
+	</xsl:if>
+	<!-- Spruce call numbers -->
+	<xsl:if test="marc:subfield[@code='c']">
+	  <pz:metadata type="localcallno">
+	    <xsl:value-of select="marc:subfield[@code='c']"/>
+	  </pz:metadata>
+	</xsl:if>
       </xsl:for-each>
 
       <pz:metadata type="medium">
@@ -342,6 +363,28 @@
         </pz:metadata>
       </xsl:for-each>
 
+      <!-- Parklands -->
+      <xsl:for-each select="marc:datafield[@tag='982']">
+        <pz:metadata type="holding">
+	  <xsl:for-each select="marc:subfield">
+	    <xsl:if test="position() > 1">
+	      <xsl:text> </xsl:text>
+	    </xsl:if>
+	    <xsl:value-of select="."/>
+	  </xsl:for-each>
+        </pz:metadata>
+	<xsl:if test="marc:subfield[@code='b']">
+	  <pz:metadata type="locallocation">
+	    <xsl:value-of select="marc:subfield[@code='b']"/>
+	  </pz:metadata>
+	</xsl:if>
+	<xsl:if test="marc:subfield[@code='m']">
+	  <pz:metadata type="localcallno">
+	    <xsl:value-of select="marc:subfield[@code='m']"/>
+	  </pz:metadata>
+	</xsl:if>
+      </xsl:for-each>
+
       <xsl:for-each select="marc:datafield[@tag='991']">
         <pz:metadata type="holding">
 	  <xsl:for-each select="marc:subfield">
@@ -354,6 +397,7 @@
       </xsl:for-each>
 
       <!-- Maplin - holdings info -->
+<!--
       <xsl:for-each select="marc:datafield[@tag='852']">
         <pz:metadata type="holding">
 	  <xsl:for-each select="marc:subfield">
@@ -363,20 +407,18 @@
 	    <xsl:value-of select="."/>
 	  </xsl:for-each>
         </pz:metadata>
-	<!-- Spruce locations -->
 	<xsl:if test="marc:subfield[@code='d']">
 	  <pz:metadata type="locallocation">
 	    <xsl:value-of select="marc:subfield[@code='d']"/>
 	  </pz:metadata>
 	</xsl:if>
-	<!-- Spruce call numbers -->
 	<xsl:if test="marc:subfield[@code='c']">
 	  <pz:metadata type="localcallno">
 	    <xsl:value-of select="marc:subfield[@code='c']"/>
 	  </pz:metadata>
 	</xsl:if>
       </xsl:for-each>
-
+-->
       <xsl:for-each select="marc:datafield[@tag='949']">
         <pz:metadata type="holding">
 	  <xsl:for-each select="marc:subfield">

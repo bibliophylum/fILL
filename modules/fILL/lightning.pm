@@ -257,6 +257,9 @@ sub request_process {
 		    # leave as-is... requests to all MW branches go to MW
 		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
 		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
+		} elsif ($sources{$num}{'symbol'} eq 'MDA') {
+		    # temp - testing Parklands... eventually this will work like Spruce or WMRL
+		    $loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
 		}
