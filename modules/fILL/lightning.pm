@@ -311,7 +311,7 @@ sub request_process {
 	    $index++; 
 	} 
     }
-    if ($cn) {
+    if (($cn) || ($primary)) {
 	$cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
 	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
     }
