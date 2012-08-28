@@ -184,6 +184,7 @@ function unfilled( requestId ) {
     $("#divResponses"+requestId).hide();
     $( "<p>Select the reason that you cannot fill:</p>" ).insertBefore("#unfilledradioset");
 
+    $("<p>Optional message to borrower: <input type='text' name='message' size='40' maxlength='100' /></p>").insertAfter("#unfilledradioset");
 
     var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
     cButton.bind('click', function() {
@@ -196,6 +197,7 @@ function unfilled( requestId ) {
     var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
     sButton.bind('click', function() {
 	var reason = $('input:radio[name=radioset]:checked').val();
+	var optionalMessage = $('input:text[name=message]').val();
 	$("#reasonUnfilled").remove(); 
 	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
@@ -215,7 +217,7 @@ function unfilled( requestId ) {
 		    msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
 		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Unfilled|"+reason,
-		    message: ""
+		    message: optionalMessage
 		}
 	    } else {
 		return null;

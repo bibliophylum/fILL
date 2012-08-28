@@ -34,8 +34,9 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
+//    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Currently trying #"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
@@ -58,8 +59,9 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
+//        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].message;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_source_sequence_number;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].sources;
         cell = row.insertCell(-1); 
