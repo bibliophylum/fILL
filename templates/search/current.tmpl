@@ -114,10 +114,11 @@ $('document').ready(function(){
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
+        // TableTools requires Flash version 10...
 	"oTableTools": {
                 "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
 		"aButtons": [
-			"copy", "csv", "xls", "pdf",
+			"copy", "csv", "xls", "pdf", "print",
 			{
 				"sExtends":    "collection",
 				"sButtonText": "Save",
@@ -135,11 +136,11 @@ $('document').ready(function(){
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requested_by" },
-//            { "mDataProp": "requester" },
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
-            { "mDataProp": "message" },
+            { "mDataProp": "message" }
         ]
+
     });
 
     $.getJSON('/cgi-bin/get-current-requests.cgi', {lid: <TMPL_VAR name="lid">},
