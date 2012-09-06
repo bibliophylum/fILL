@@ -1,0 +1,2 @@
+sudo apt-get install libencode-perl
+sudo apt-get install libtext-unidecode-perl

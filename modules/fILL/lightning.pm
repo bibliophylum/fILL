@@ -26,6 +26,8 @@ use GD::Barcode;
 use GD::Barcode::Code39;
 use MIME::Base64;
 use Clone qw(clone);
+use Encode;
+use Text::Unidecode;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
@@ -279,8 +281,14 @@ sub request_process {
 	# go to some error page.
     }
 
-    my $title = $q->param('title');
-    my $author = $q->param('author');
+    my $title = eval { decode( 'UTF-8', $q->param('title'), Encode::FB_CROAK ) };
+    if ($@) {
+	$title = unidecode( $q->param('title') );
+    }
+    my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
+    if ($@) {
+	$title = unidecode( $q->param('author') );
+    }
 
     # These should be atomic...
     # create the request (sans patron barcode)
