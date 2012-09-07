@@ -1,5 +1,9 @@
 <settings target="*">
 
+<!-- R.M. of Argyle Public Library -->
+  <set target="www.insigniasoftware.com:210/RMArgyle" name="pz:name" value="R.M. of Argyle Public Library"/>
+  <set target="www.insigniasoftware.com:210/RMArgyle" name="symbol" value="MRA"/>
+
 <!-- Prairie Crocus Regional Library -->
   <set target="www.insigniasoftware.com:210/Rivers" name="pz:name" value="Prairie Crocus Regional Library"/>
   <set target="www.insigniasoftware.com:210/Rivers" name="symbol" value="MRIP"/>
