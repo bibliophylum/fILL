@@ -46,6 +46,13 @@ $('document').ready(function(){
         }
     });
 
+    // clicking the email address opens your default mailer (in a separate tab/window,
+    // if your default mailer is a web-mail like GMail or Yahoo)
+    $("#datatable_contacts tbody tr td:nth-child(3)").on("click", function(event){
+      var link = '/mailto.html#mailto:' + $(this).text();
+      window.open(link, 'Mailer');
+      return false;
+    });
 
 });
 
@@ -57,7 +64,7 @@ $('document').ready(function(){
   <div id="leftcontent">
     <h2>Instructions</h2>
     <ol>
-      <li>None yet.</li>
+      <li>Click on the email address to create a new email to the library.</li>
     </ol>
   </div>
 
