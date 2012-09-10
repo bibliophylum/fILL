@@ -47,6 +47,9 @@ function build_table( data ) {
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
+    // this needs to happen before the .getJSON call (which might take a moment)
+    // to ensure that the datatable-ness in respond.tmpl gets applied
+    document.getElementById('mylistDiv').appendChild(myTable);
 
     // is this library allowed to forward requests to its branches?
     var canForward = false;
@@ -65,7 +68,6 @@ function build_table( data ) {
 	    build_rows( tBody, data, canForward, retargets );
 	})
 	.complete(function() {
-	    document.getElementById('mylistDiv').appendChild(myTable);
 	    
 	    toggleLayer("waitDiv");
 	    toggleLayer("mylistDiv");
