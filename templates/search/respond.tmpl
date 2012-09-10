@@ -14,12 +14,16 @@ $.ajaxSetup ({
 $('document').ready(function(){
 
     $.getJSON('/cgi-bin/get-respond-list.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                build_table(data);
-
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
-                       "bJQueryUI": true,
+        function(data){
+            build_table(data);
+        })
+	.success(function() {
+        })
+	.error(function() {
+        })
+	.complete(function() { 
+            oTable = $('#gradient-style').dataTable({
+            "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
                        "bSort": true,
@@ -50,7 +54,8 @@ $('document').ready(function(){
 
                   });
 
-           });
+	});
+
 
     $(function() {
            update_menu_counters( <TMPL_VAR name="lid"> );
