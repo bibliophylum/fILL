@@ -287,7 +287,7 @@ sub request_process {
     }
     my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
     if ($@) {
-	$title = unidecode( $q->param('author') );
+	$author = unidecode( $q->param('author') );
     }
 
     # These should be atomic...
