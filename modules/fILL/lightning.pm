@@ -200,6 +200,7 @@ sub request_process {
 	if ($parm_name =~ /_\d+/) {
 	    my ($pname,$num) = split /_/,$parm_name;
 	    $sources{$num}{$pname} = $q->param($parm_name);
+	    $sources{$num}{$pname} = uc($sources{$num}{$pname}) if ($pname eq 'symbol');
 	}
     }
 #    $self->log->debug( "request_process parms:\n" . Dumper( @parms ) );
@@ -337,10 +338,11 @@ sub request_process {
 	$src->{net} = $nblc_href->{ $src->{symbol} }{net};
 	$src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
     }
+#    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
     # sort sources by net borrower/lender count
     my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
-#    $self->log->debug( Dumper(@sorted_sources) );
+#    $self->log->debug( "Sorted sources:\n" . Dumper(@sorted_sources) );
 
     # create the sources list for this request
     my $sequence = 1;
@@ -348,13 +350,16 @@ sub request_process {
     foreach my $src (@sorted_sources) {
 	my $lenderID = $src->{lid};
 	next unless defined $lenderID;
-	$self->dbh->do($SQL,
-		       undef,
-		       $reqid,
-		       $sequence++,
-		       $lenderID,
-		       substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
+	my $rows_added = $self->dbh->do($SQL,
+					undef,
+					$reqid,
+					$sequence++,
+					$lenderID,
+					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
 	    );
+	unless (1 == $rows_added) {
+	    $self->log->debug( "Could not add source: request_id $reqid, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
+	}
     }
 
 
