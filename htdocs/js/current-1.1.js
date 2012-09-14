@@ -79,6 +79,7 @@ function override( e, oData, oTable, nTr )
 		  if (data.status) { oTable.fnUpdate( data.status, nTr, 6 ); };
 		  if (data.message) { oTable.fnUpdate( data.message, nTr, 7 ); };
 		  if (data.alert_text) { alert(data.alert_text); };
+		  if (data.success) { oTable.fnDeleteRow( nTr ); };
 	      })
 	.success(function() {
 //	    alert('success');
@@ -120,7 +121,6 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $('#bCancel').button();
     $('#bCancel').click(function() { 
 	override( this, oData, oTable, nTr );
-	oTable.fnDeleteRow( nTr );
 	return false; 
     });
     $('#bClose').button();

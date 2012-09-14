@@ -2,6 +2,9 @@
 #
 # This needs to do error checking....
 #
+use strict;
+use warnings;
+
 use CGI;
 use DBI;
 use JSON;
@@ -29,6 +32,7 @@ $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, messa
 my $borrower_id;
 my $lender_id;
 my $status = "Message";
+my $message = "";
 my $retval;
 my $return_data_href;
 
@@ -52,16 +56,28 @@ switch( $override ) {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
-	$message = $href->{"borrower"} . " cancelled the request to " . $href->{"lender"};
-	# borrower sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
-	# force the ILL to be marked as Cancelled by the lender
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
-	# ...and move to history
-	$retval = move_to_history( $dbh, $reqid );
-	$return_data_href->{ success } = $retval;
-	$return_data_href->{ status } = "Cancelled";
-	$return_data_href->{ message } = "override";
+	# can only cancel if the lender hasn't answered yet
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status like 'ILL-Answer%';", undef, $reqid, $lender_id );
+	print STDERR "cntAnswers: $cntAnswers\n";
+	if ((defined $cntAnswers) && ($cntAnswers == 0)) {
+	    print STDERR "...so cancelling\n";
+	    $message = $href->{"borrower"} . " cancelled the request to " . $href->{"lender"};
+	    # borrower sends a message about overriding
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	    # force the ILL to be marked as Cancelled by the lender
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
+	    # ...and move to history
+	    $retval = move_to_history( $dbh, $reqid );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Cancelled";
+	    $return_data_href->{ message } = "override";
+	} else {
+	    print STDERR "...so NOT cancelling\n";
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not cancel";
+	    $return_data_href->{ message } = "Lender has already answered.";
+	    $return_data_href->{ alert_text } = "Could not cancel this request,\nlender has already answered.";
+	}
     }
 
     case "bTryNextLender" {
@@ -161,24 +177,26 @@ sub move_to_history {
 
     $dbh->{AutoCommit} = 0;  # enable transactions, if possible
     $dbh->{RaiseError} = 1;
+    my $rSuccess;
+
     eval {
 	my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_source_sequence_number from request where id=?)";
-	$rClosed = $dbh->do( $SQL, undef, $reqid );
+	my $rClosed = $dbh->do( $SQL, undef, $reqid );
 	
 	$SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
-	$rFilledBy = $dbh->do( $SQL, undef, $reqid );
+	my $rFilledBy = $dbh->do( $SQL, undef, $reqid );
 	
 	$SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
-	$rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	my $rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
 	
 	$SQL = "delete from requests_active where request_id=?;";
-	$rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	my $rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
 	
 	$SQL = "delete from sources where request_id=?;";
-	$rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	my $rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
 	
 	$SQL = "delete from request where id=?;";
-	$rRequest = $dbh->do( $SQL, undef, $reqid );
+	my $rRequest = $dbh->do( $SQL, undef, $reqid );
 	
 	$dbh->commit;   # commit the changes if we get this far
     };
