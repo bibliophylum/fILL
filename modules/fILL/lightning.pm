@@ -1,4 +1,3 @@
-#
 #    fILL - Free/Open-Source Interlibrary Loan management system
 #    Copyright (C) 2012  Government of Manitoba
 #
@@ -108,7 +107,7 @@ sub complete_the_request_process {
 
     # get the first source
     my $hr_src = $self->dbh->selectrow_hashref("SELECT * FROM sources WHERE request_id=? and sequence_number=?",undef,$reqid,$seq);
-    my $source_library = $hr_src->{library};
+    my $source_library = $hr_src->{lid};
 
     # begin the ILL conversation
     my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
@@ -159,7 +158,7 @@ sub pull_list_process {
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.library = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
+    my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
 
     my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
 
@@ -346,7 +345,7 @@ sub request_process {
 
     # create the sources list for this request
     my $sequence = 1;
-    $SQL = "INSERT INTO sources (request_id, sequence_number, library, call_number) VALUES (?,?,?,?)";
+    $SQL = "INSERT INTO sources (request_id, sequence_number, lid, call_number) VALUES (?,?,?,?)";
     foreach my $src (@sorted_sources) {
 	my $lenderID = $src->{lid};
 	next unless defined $lenderID;

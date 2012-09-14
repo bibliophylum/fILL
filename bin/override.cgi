@@ -77,7 +77,7 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
 
 	# try next lender (from try-next-lender.cgi)
-	$SQL = "select library from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
+	$SQL = "select lid from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
 	my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
 
 	if (@ary) {
