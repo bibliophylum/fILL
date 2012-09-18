@@ -105,8 +105,8 @@ switch( $override ) {
 	    $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
 	    $dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
 	    
-	    $SQL = "UPDATE request SET current_source_sequence_number = current_source_sequence_number+1";
-	    $dbh->do($SQL);
+	    $SQL = "UPDATE request SET current_source_sequence_number = current_source_sequence_number+1 where id=?";
+	    $dbh->do($SQL, undef, $reqid);
 	    $return_data_href->{ success } = 1;
 	    $return_data_href->{ status } = "Forwarded to next lender";
 	    
