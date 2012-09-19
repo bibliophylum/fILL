@@ -20,16 +20,20 @@
 */
 function build_table( data ) {
     for (var i=0;i<data.active.borrowing.length;i++) {
-	var ai = oTable_borrowing.fnAddData( data.active.borrowing[i] );
+	var ai = oTable_borrowing.fnAddData( data.active.borrowing[i], false );
     }
+    oTable_borrowing.fnDraw();
 
     for (var i=0;i<data.active.lending.length;i++) {
-	var ai = oTable_lending.fnAddData( data.active.lending[i] );
+	var ai = oTable_lending.fnAddData( data.active.lending[i], false );
     }
+    oTable_lending.fnDraw();
 
     for (var i=0;i<data.active.notfilled.length;i++) {
-	var ai = oTable_notfilled.fnAddData( data.active.notfilled[i] );
+	var ai = oTable_notfilled.fnAddData( data.active.notfilled[i], false );
     }
+    oTable_notfilled.fnDraw();
+
     toggleLayer("waitDiv");
     toggleLayer("tabs");
 }
