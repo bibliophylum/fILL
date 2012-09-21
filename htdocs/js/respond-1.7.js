@@ -51,30 +51,13 @@ function build_table( data ) {
     // to ensure that the datatable-ness in respond.tmpl gets applied
     document.getElementById('mylistDiv').appendChild(myTable);
 
-    // is this library allowed to forward requests to its branches?
-    var canForward = false;
-    var retargets = [];
-    $.getJSON('/cgi-bin/can-forward-to-branches.cgi', { lid: $("#lid").text() },
-	      function(flags){
-		  //alert('can forward to children: '+flags.forward.canForwardToChildren+'\n');
-		  canForward = flags.forward.canForwardToChildren;
-		  retargets = flags.forward.retargets;
-		  build_rows( tBody, data, canForward, retargets );
-	      })
-	.success(function() {
-	})
-	.error(function() {
-	    alert('Unable to check forwarding ability. Continuing without.');
-	    build_rows( tBody, data, canForward, retargets );
-	})
-	.complete(function() {
-	    
-	    toggleLayer("waitDiv");
-	    toggleLayer("mylistDiv");
-	});
+    build_rows( tBody, data );
+    toggleLayer("waitDiv");
+    toggleLayer("mylistDiv");
 }
 
-function build_rows( tBody, data, canForward, retargets ) {
+//function build_rows( tBody, data, canForward, retargets ) {
+function build_rows( tBody, data ) {
     for (var i=0;i<data.unhandledRequests.length;i++) 
     {
 	row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
@@ -98,11 +81,11 @@ function build_rows( tBody, data, canForward, retargets ) {
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
-	if (canForward) {
+	if (data.canForwardToChildren) {
 	    var b2 = document.createElement("input");
 	    b2.type = "button";
 	    b2.value = "Forward to branch";
-	    b2.onclick = make_forward_handler( requestId, retargets );
+	    b2.onclick = make_forward_handler( requestId, data.retargets );
 	    divResponses.appendChild(b2);
 	}
 	

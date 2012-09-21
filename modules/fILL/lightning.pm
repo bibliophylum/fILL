@@ -296,7 +296,7 @@ sub request_process {
 		   undef,
 		   $title,
 		   $author,
-		   $lid,
+		   $lid,       # requester
 		   0           # no source yet (aka request isn't complete until patron barcode is in
 	);
     my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});

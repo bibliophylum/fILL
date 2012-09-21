@@ -18,17 +18,15 @@
 */
 function build_table( data ) {
     for (var i=0;i<data.history.borrowing.length;i++) {
-	var ai = oTable_borrowing.fnAddData( data.history.borrowing[i] );
-//	var n = oTable_borrowing.fnSettings().aoData[ ai[i] ].nTr;
-//	n.setAttribute('id', data.history.borrowing[i].id); 
+	var ai = oTable_borrowing.fnAddData( data.history.borrowing[i], false );
     }
-
+    oTable_borrowing.fnDraw();
 
     for (var i=0;i<data.history.lending.length;i++) {
-	var ai = oTable_lending.fnAddData( data.history.lending[i] );
-//	var n = oTable_borrowing.fnSettings().aoData[ ai[i] ].nTr;
-//	n.setAttribute('id', data.history.borrowing[i].id); 
+	var ai = oTable_lending.fnAddData( data.history.lending[i], false );
     }
+    oTable_lending.fnDraw();
+
     toggleLayer("waitDiv");
     toggleLayer("tabs");
 }
