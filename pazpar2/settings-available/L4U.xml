@@ -49,17 +49,18 @@
   <set target="206.45.96.178:210/Default" name="symbol" value="MSRN"/>
 
 <!-- The Pas Regional Library -->
-  <set target="206.45.107.244:210/L4U_Agent" name="pz:name" value="The Pas Regional Library (L4U)"/>
-  <set target="206.45.107.244:210/L4U_Agent" name="symbol" value="MTP"/>
+  <set target="206.45.107.73:210/Default" name="pz:name" value="The Pas Regional Library (L4U)"/>
+  <set target="206.45.107.73:210/Default" name="symbol" value="MTP"/>
 
 <!-- Bibliotheque Tache -->
-  <set target="50.56.96.182:210/L4U_Agent" name="pz:name" value="The Pas Regional Library (L4U)"/>
-  <set target="50.56.96.182:210/L4U_Agent" name="symbol" value="MTP"/>
+  <set target="50.56.96.182:210/L4U_Agent" name="pz:name" value="Bibliotheque Tache (L4U)"/>
+  <set target="50.56.96.182:210/L4U_Agent" name="symbol" value="MTPL"/>
 
 <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
-  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+  <!-- <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/> -->
+  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
   <!-- field-specific mappings -->
   <set name="pz:cclmap:au" value="u=1003 s=al"/>
