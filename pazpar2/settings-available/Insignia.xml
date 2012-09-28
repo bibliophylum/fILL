@@ -21,9 +21,9 @@
   <set target="www.insigniasoftware.com:210/boyne" name="symbol" value="MCB"/>
 
 <!-- Emerson Public Library -->
-  <set target="206.45.206.163:210/ILS" name="pz:name" value="Emerson Public Library (Insignia)"/>
-  <set target="206.45.206.163:210/ILS" name="symbol" value="MEPL"/>
-  <set target="206.45.206.163:210/ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+  <set target="206.45.102.208:210/ILS" name="pz:name" value="Emerson Public Library (Insignia)"/>
+  <set target="206.45.102.208:210/ILS" name="symbol" value="MEPL"/>
+  <set target="206.45.102.208:210/ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
 <!-- Glenwood and Souris Regional Library -->
   <set target="206.45.123.156:210/ILS" name="pz:name" value="Glenwood and Souris Regional Library (Insignia)"/>
@@ -85,6 +85,7 @@
   <set name="pz:cclmap:isbn" value="u=7 2=102"/>
   <set name="pz:cclmap:issn" value="u=8 2=102"/>
   <set name="pz:cclmap:date" value="u=30 r=r 2=102"/>
+  <set name="pz:cclmap:series" value="u=5 s=al"/>
 
   <!-- Retrieval settings -->
 

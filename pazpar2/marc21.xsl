@@ -205,7 +205,7 @@
 	</pz:metadata>
       </xsl:for-each>
 
-      <xsl:for-each select="marc:datafield[@tag='440']">
+      <xsl:for-each select="marc:datafield[@tag='440' or @tag='490' or @tag='830']">
 	<pz:metadata type="series-title">
 	  <xsl:value-of select="marc:subfield[@code='a']"/>
 	</pz:metadata>
