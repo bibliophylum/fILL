@@ -66,7 +66,7 @@
   <metadata name="physical-unitsize"/>
   <metadata name="physical-specified"/>
   
-  <metadata name="series-title"/>
+  <metadata name="series-title" brief="yes" merge="no"/>
   
   <metadata name="description" brief="yes" merge="unique" rank="3"/>
   <metadata name="subject-long" rank="3"/>
