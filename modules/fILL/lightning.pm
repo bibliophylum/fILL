@@ -43,6 +43,9 @@ my %SPRUCE_TO_MAPLIN = (
     'MWP' => 'MWP',
     'MSTOS' => 'MSTOS',
     'MTSIR' => 'MTSIR',
+    'MMCA' => 'MMCA',
+    'MVE' => 'MVE',
+    'ME' => 'ME',
     );
 
 my %WESTERN_MB_TO_MAPLIN = (

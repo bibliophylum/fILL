@@ -8,18 +8,6 @@
   <set target="206.45.110.176:210/L4U_Agent" name="pz:name" value="Bette Winner Public Library (L4U)"/>
   <set target="206.45.110.176:210/L4U_Agent" name="symbol" value="MGI"/>
 
-<!-- Border Regional Library -->
-  <set target="74.113.178.216:210/Default" name="pz:name" value="Border Regional Library (L4U)"/>
-  <set target="74.113.178.216:210/Default" name="symbol" value="MVE"/>
-
-<!-- Border Regional Library - Elkhorn Branch -->
-  <set target="74.113.180.251:210/Default" name="pz:name" value="Border Regional Library - Elkhorn Branch (L4U)"/>
-  <set target="74.113.180.251:210/Default" name="symbol" value="ME"/>
-
-<!-- Border Regional Library - McAuley -->
-  <set target="199.101.57.170:210/Default" name="pz:name" value="Border Regional Library - McAuley Branch (L4U)"/>
-  <set target="199.101.57.170:210/Default" name="symbol" value="MMCA"/>
-
 <!-- Evergreen Regional Library - Arborg -->
   <set target="library.arborg.com:210/Default" name="pz:name" value="Evergreen Regional Library - Arborg (L4U)"/>
   <set target="library.arborg.com:210/Default" name="symbol" value="MAB"/>
