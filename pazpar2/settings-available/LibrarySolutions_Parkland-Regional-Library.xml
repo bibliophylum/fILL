@@ -1,6 +1,6 @@
 <!-- Parkland Regional Library -->
 
-<settings target="207.161.70.145:5666/LSPacZ">
+<settings target="64.93.97.135:5666/LSPacZ">
 
   <set name="pz:name" value="Parkland Regional Library (Library Solutions)"/>
   <set name="symbol" value="MDA"/>
