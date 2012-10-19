@@ -31,13 +31,13 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Patron / Group"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
 //    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Currently trying #"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "# sources tried"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
@@ -49,7 +49,6 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.unfilled.length;i++) 
     {
         row = tBody.insertRow(-1); row.id = 'req'+data.unfilled[i].id;
@@ -59,10 +58,9 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
-//        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].message;
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].current_source_sequence_number;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].tried;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].sources;
         cell = row.insertCell(-1); 
 
@@ -72,7 +70,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Try next lender";
-	if (+data.unfilled[i].current_source_sequence_number >= +data.unfilled[i].sources) {
+	if (+data.unfilled[i].tried >= +data.unfilled[i].sources) {
 	    b1.value = "No further sources";
 	    b1.disabled = "disabled";
 	}

@@ -94,40 +94,81 @@ sub complete_the_request_process {
     my $pbarcode = $q->param('pbarcode') || 'no barcode';
     my $request_note = $q->param('request_note');
     my $reqid = $q->param('request_id');
-    if ($pbarcode) {
-	my $SQL = "UPDATE request SET patron_barcode=?, current_source_sequence_number=1 WHERE id=?";
-	$self->dbh->do($SQL, undef, $pbarcode, $reqid);  # do some error checking....!
-    }
-    if ($request_note) {
-	my $SQL = "UPDATE request SET note=? WHERE id=?";
-	$self->dbh->do($SQL, undef, $request_note, $reqid);  # do some error checking....!
+    my $group_id = $q->param('group_id');
+    my $copies_requested = $q->param('copies_requested') || 1;
+    if (($copies_requested) && ($copies_requested > 1)) {
+	$self->dbh->do("UPDATE request_group SET copies_requested=? where group_id=?", undef, $copies_requested, $group_id);
     }
 
-    # get the request
-    my $hr_req = $self->dbh->selectrow_hashref("SELECT * FROM request WHERE id=?",undef,$reqid);
-    my $requester = $hr_req->{requester};
-    my $seq = $hr_req->{current_source_sequence_number}; # where are we in the sequence of sources? (sequence #)
-
-    # get the first source
-    my $hr_src = $self->dbh->selectrow_hashref("SELECT * FROM sources WHERE request_id=? and sequence_number=?",undef,$reqid,$seq);
-    my $source_library = $hr_src->{lid};
-
-    # begin the ILL conversation
-    my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
-    $self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
-
-    # does the selected source library want immediate notification, by email, of new requests?
-    my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM libraries WHERE lid=?",
-					     undef,$source_library);
-    if ($notify[0]) {
-	send_notification($self,$notify[1],$reqid);
+    # Get this user's (requester's) library id
+    my ($requester,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    if (not defined $requester) {
+	# should never get here...
+	# go to some error page.
     }
+
+    # Get request details from group
+    my $req_href = $self->dbh->selectrow_hashref("SELECT * FROM request_group WHERE group_id=?", undef, $group_id);
+
+    my $seq;
+
+    # get the sources
+    my @sources = @{ $self->dbh->selectall_arrayref("SELECT * FROM sources WHERE group_id=? ORDER BY sequence_number",
+						    { Slice => {} }, $group_id)
+	};
+
+    $self->log->debug( "complete_the_request sources:\n" . Dumper( @sources ) );
+    $self->log->debug( "complete_the_request # sources: " . scalar @sources );
+    $self->log->debug( "complete_the_request copies_requested: " . $copies_requested );
+
+    for ($seq=1; $seq<=$copies_requested; $seq++) {
+	last if ($seq > (scalar @sources));  # bail if we've run out of sources
+	$self->log->debug( "complete_the_request #" . $seq );
+
+	my $source_library = $sources[$seq-1]->{"lid"};
+	
+	# create the request
+	$self->dbh->do("INSERT INTO request (group_id,title,author,requester,patron_barcode,note,current_source_sequence_number) VALUES (?,?,?,?,?,?,?)",
+		       undef,
+		       $group_id,
+		       $req_href->{"title"},
+		       $req_href->{"author"},
+		       $req_href->{"requester"},
+		       $pbarcode,
+		       $request_note,
+		       $sources[$seq-1]->{"sequence_number"},
+	    );
+	my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
+	
+	# begin the ILL conversation
+	my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
+	$self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
+
+	# not sure we really need request_id in sources any more... but we do need to note that we've tried this source.
+	$self->dbh->do("UPDATE sources SET tried=true, request_id=? WHERE group_id=? AND sequence_number=?",
+		       undef, $reqid, $group_id, $sources[$seq-1]->{"sequence_number"} );
+	
+	# does the selected source library want immediate notification, by email, of new requests?
+	my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM libraries WHERE lid=?",
+						 undef,$source_library);
+	if ($notify[0]) {
+	    send_notification($self,$notify[1],$reqid);
+	}
+    }
+
+    my $trying_aref = $self->dbh->selectall_arrayref("select s.request_id, l.name as symbol, l.library, s.call_number from sources s left join libraries l on l.lid=s.lid where s.group_id=? and s.tried=true", { Slice => {} }, $group_id);
 
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",
 		      username => $self->authen->username,
 		      lid => $requester,
-		      request_id => $reqid,
+		      title => $req_href->{"title"},
+		      author => $req_href->{"author"},
+		      multiple_copies => ($copies_requested > 1) ? 1 : 0,
+		      copies_requested => $copies_requested,
+		      number_of_sources => scalar @sources,
+                      requests_made => $seq-1,
+		      trying => $trying_aref,
 	);
     return $template->output;
 }
@@ -294,15 +335,16 @@ sub request_process {
     }
 
     # These should be atomic...
-    # create the request (sans patron barcode)
-    $self->dbh->do("INSERT INTO request (title,author,requester,current_source_sequence_number) VALUES (?,?,?,?)",
-		   undef,
-		   $title,
-		   $author,
-		   $lid,       # requester
-		   0           # no source yet (aka request isn't complete until patron barcode is in
+    # create the request_group
+    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, requester) VALUES (?,?,?,?)",
+	undef,
+	1,        # default copies_requested
+	$title,
+	$author,
+	$lid,     # requester
 	);
-    my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
+    my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
+
     # ...end of atomic
 
     # re-consolidate MW locations - they handle ILL for all branches centrally
@@ -348,19 +390,19 @@ sub request_process {
 
     # create the sources list for this request
     my $sequence = 1;
-    $SQL = "INSERT INTO sources (request_id, sequence_number, lid, call_number) VALUES (?,?,?,?)";
+    $SQL = "INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)";
     foreach my $src (@sorted_sources) {
 	my $lenderID = $src->{lid};
 	next unless defined $lenderID;
 	my $rows_added = $self->dbh->do($SQL,
 					undef,
-					$reqid,
 					$sequence++,
 					$lenderID,
 					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
+					$group_id,
 	    );
 	unless (1 == $rows_added) {
-	    $self->log->debug( "Could not add source: request_id $reqid, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
+	    $self->log->debug( "Could not add source: group_id $group_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
 	}
     }
 
@@ -370,9 +412,11 @@ sub request_process {
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
-		      request_id => $reqid,
 		      title => $q->param('title') || ' ',
 		      author => $q->param('author') || ' ',
+		      group_id => $group_id,
+		      num_sources => scalar @sorted_sources,
+		      copies_requested => 1,    # default copies requested
 		      sources => \@sorted_sources,
 	);
     return $template->output;

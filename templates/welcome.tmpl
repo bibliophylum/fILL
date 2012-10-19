@@ -27,17 +27,13 @@
 
     </td>
     <td style="width:30%">
-      <h2>Notice about requesting for book clubs</h2>
+      <h2>New Functionality: Requesting multiple copies of a title</h2>
       <br/>
-      <p>To request multiple copies of a book, you will need to make multiple requests.</p>
+      <p>When making a request, you now have the option to specify the number of copies you are looking for.  Instead of entering a patron barcode, enter a short group identifier (e.g. "book club Oct") so that you can find the group of requests in the various fILL tables.</p>
       <br/>
-      <p>Once you've searched for the title,</p><br/>
-      <ol>
-	<li>Along the left-hand side, at the bottom, you can filter by "Source".  Select a library - this will show only the results for that library - and then make the request.</li>
-	<li>Go back to the search results, remove the "Source" filter (at the top of the results, under the "<< Prev | 1 | Next >>" results page navigation) by clicking on it, and then go back to step 1 (select the next source).</li>
-      </ol>
+      <p>fILL will automatically go through the list of potential sources in net-borrower/net-lender order, create a request for each copy, and give you a list of the request IDs and which library the request went to.  If a lender can't fill a request, clicking the "Try next lender" (in your Unfilled table) will send it to the next untried library in the sources list.</p>
       <br/>
-      <p>Do that for as many copies of the book as you'd like to request.</p>
+      <p>This is new functionality, and there may be bugs; let us know, and we'll tackle any issues as they arise.</p>
     </td>
   </tr>
 </table>

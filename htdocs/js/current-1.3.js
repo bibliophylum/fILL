@@ -106,6 +106,7 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
 
     sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
     sOut = sOut+'<tr><td><button id="bTryNextLender">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bNoFurtherSources">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bCancel">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
@@ -119,6 +120,11 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     });
     $('#bTryNextLender').button();
     $('#bTryNextLender').click(function() { 
+	override( this, oData, oTable, nTr );
+	return false; 
+    });
+    $('#bNoFurtherSources').button();
+    $('#bNoFurtherSources').click(function() { 
 	override( this, oData, oTable, nTr );
 	return false; 
     });

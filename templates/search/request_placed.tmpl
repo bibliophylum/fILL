@@ -26,12 +26,41 @@
   </div>
 
   <div id="middlecontent">
-    <h2>Your request has been placed</h2>
+    <TMPL_IF name="multiple_copies">
+      <h2>Your requests have been placed</h2>
+      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copies.</p>
+      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
+      <p><TMPL_VAR NAME="requests_made"> requests were made.</p>
+    <TMPL_ELSE>
+      <h2>Your request has been placed</h2>
+      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copy.</p>
+      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
+      <p><TMPL_VAR NAME="requests_made"> request was made.</p>
+    </TMPL_IF>
+
+    <br/>
     <table>
       <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
-      <tr><td>Request #</td><td>: <TMPL_VAR NAME="request_id"></td></tr>
+      <tr><td>Title</td><td>: <TMPL_VAR NAME="title"></td></tr>
+      <tr><td>Author</td><td>: <TMPL_VAR NAME="author"></td></tr>
     </table>
-    <p>Your request has been added to the first lender's pending list.</p>
+    <p>The following requests have been added to these lender's pending lists:</p>
+    <table>
+      <tr>
+	<td>request_id</td>
+	<td>symbol</td>
+	<td>library</td>
+	<td>call_number</td>
+      </tr>
+    <TMPL_LOOP name="trying">
+      <tr>
+	<td><TMPL_VAR name="request_id"></td>
+	<td><TMPL_VAR name="symbol"></td>
+	<td><TMPL_VAR name="library"></td>
+	<td><TMPL_VAR name="call_number"></td>
+      </tr>
+    </TMPL_LOOP>
+    </table>
 
   </div>
 

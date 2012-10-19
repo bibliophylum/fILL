@@ -35,21 +35,27 @@ $('document').ready(function(){
   <div id="leftcontent">
     <h2>Instructions</h2>
     <ol>
-      <li>Enter your patron's barcode</li>
-      <li>Click the "Send Request" button</li>
+      <li>Fill in the number of copies you'd like</li>
+      <li>Enter your patron's barcode or a group identifier</li>
+      <li>Click the "Complete the request" button</li>
     </ol>
   </div>
 
   <div id="middlecontent">
     <form action="/cgi-bin/lightning.cgi" method="post">
+      <h2>Number of copies</h2>
+      <p>There are <TMPL_VAR name="num_sources"> potential sources.</p>
+      <p>How many copies are you looking for?
+	<input type="text" name="copies_requested" size="4" maxlength="4" value=<TMPL_VAR name="copies_requested">>
+      </p>
       <h2>Patron barcode</h2>
-      <p>Enter the barcode number of your patron: 
+      <p>Enter the barcode number of your patron (or a group identifier if you are requesting multiple copies): 
 	<input id="pbarcode" type="text" name="pbarcode" size="14" maxlength="14">
       </p>
       <p>Enter any additional notes for the potential lenders: 
 	<input type="text" name="request_note" size="60" maxlength="80">
       </p>
-      <input type="hidden" name="request_id" value=<TMPL_VAR name="request_id">>
+      <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
       <input type="hidden" name="rm" value="complete_the_request">
       <input type="submit" value="Complete the request">
     </form>
@@ -66,7 +72,6 @@ $('document').ready(function(){
     <h3>Interlibrary Loan request details</h3>
     <table>
       <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
-      <tr><td>Request #</td><td>: <TMPL_VAR name="request_id"></td></tr>
       <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
       <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
     </table>

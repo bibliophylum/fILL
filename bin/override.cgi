@@ -80,6 +80,28 @@ switch( $override ) {
 	}
     }
 
+    case "bNoFurtherSources" {
+	# borrowing override
+	$borrower_id = $href->{"borrower_id"};
+	$lender_id = $href->{"lender_id"};
+	# can only move to history from here if there is a message saying "No further sources"
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and message='No further sources';", undef, $reqid);
+	print STDERR "cntAnswers: $cntAnswers\n";
+	if ((defined $cntAnswers) && ($cntAnswers == 1)) {
+	    print STDERR "...so no further sources, moving to history\n";
+	    $retval = move_to_history( $dbh, $reqid );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Moved to history";
+	    $return_data_href->{ message } = "";
+	} else {
+	    print STDERR "...so NOT moving to history\n";
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not move to history";
+	    $return_data_href->{ message } = "No 'No further sources' message.";
+	    $return_data_href->{ alert_text } = "Could not move this request to history,\nno 'No further sources' message.";
+	}
+    }
+
     case "bTryNextLender" {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
@@ -93,10 +115,15 @@ switch( $override ) {
 	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
 
 	# try next lender (from try-next-lender.cgi)
-	$SQL = "select lid from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
-	my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
+	my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
+	
+	$SQL = "select lid, sequence_number from sources where group_id=? and tried=false order by sequence_number";
+	my @ary = $dbh->selectrow_array( $SQL, undef, $group[0] );
 
 	if (@ary) {
+	    # mark this source as tried
+	    $dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $reqid, $group[0], $ary[1]);
+
 	    # message to requesting library
 	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
 	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "Trying next source");
@@ -105,8 +132,8 @@ switch( $override ) {
 	    $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
 	    $dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
 	    
-	    $SQL = "UPDATE request SET current_source_sequence_number = current_source_sequence_number+1 where id=?";
-	    $dbh->do($SQL, undef, $reqid);
+	    $SQL = "UPDATE request SET current_source_sequence_number=? where id=?";
+	    $dbh->do($SQL, undef, $ary[1], $reqid);
 	    $return_data_href->{ success } = 1;
 	    $return_data_href->{ status } = "Forwarded to next lender";
 	    
@@ -116,7 +143,7 @@ switch( $override ) {
 	    $return_data_href->{ success } = 0;
 	    $return_data_href->{ status } = "Message";
 	    $return_data_href->{ message } = "No further sources";
-	    $return_data_href->{ alert_text } = "There were no further sources.\nThis request will remain here until you override to cancel it.";
+	    $return_data_href->{ alert_text } = "There were no further sources.\nThis request will remain here until you acknowledge 'No further sources'\n in overrides.";
 	}
     }
 
@@ -180,23 +207,35 @@ sub move_to_history {
     my $rSuccess;
 
     eval {
-	my $SQL = "insert into request_closed (id,title,author,requester,patron_barcode,attempts) (select id,title,author,requester,patron_barcode,current_source_sequence_number from request where id=?)";
-	my $rClosed = $dbh->do( $SQL, undef, $reqid );
+	# attempts doesn't make sense any more with request_groups... need to figure out what to do here.
+	# For now, leave as-is.
+	my $SQL = "insert into request_closed (id,title,author,requester,group_id,patron_barcode,attempts) (select id,title,author,requester,group_id,patron_barcode,current_source_sequence_number from request where id=?)";
+	$dbh->do( $SQL, undef, $reqid );
 	
 	$SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
-	my $rFilledBy = $dbh->do( $SQL, undef, $reqid );
+	$dbh->do( $SQL, undef, $reqid );
 	
 	$SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
-	my $rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	$dbh->do( $SQL, undef, $reqid );
 	
-	$SQL = "delete from requests_active where request_id=?;";
-	my $rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	$SQL = "delete from requests_active where request_id=?";
+	$dbh->do( $SQL, undef, $reqid );
 	
-	$SQL = "delete from sources where request_id=?;";
-	my $rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+	my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
 	
-	$SQL = "delete from request where id=?;";
-	my $rRequest = $dbh->do( $SQL, undef, $reqid );
+	# sources.request_id is an fkey.  Can't delete the request until that's reset.
+	$SQL = "update sources set request_id=NULL where request_id=?";
+	$dbh->do( $SQL, undef, $reqid );
+	
+	$SQL = "delete from request where id=?";
+	$dbh->do( $SQL, undef, $reqid );
+		  
+	$SQL = "select count(id) from request where group_id=?";
+	my @cnt = $dbh->selectrow_arrayref( $SQL, undef, $group[0] );
+	if ((@cnt) && ($cnt[0] == 0)) {
+	    $SQL = "delete from sources where group_id=?";
+	    $dbh->do( $SQL, undef, $group[0] );
+	}
 	
 	$dbh->commit;   # commit the changes if we get this far
     };
@@ -212,3 +251,5 @@ sub move_to_history {
 
     return $rSuccess;
 }
+
+
