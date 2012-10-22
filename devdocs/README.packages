@@ -1,0 +1,23 @@
+Required debian/ubuntu packages:
+
+libdbi-perl
+libdbd-pg-perl
+libhtml-template-perl
+libmarc-perl
+libcolor-calc-perl
+libapache-htpasswd-perl
+libapache-htgroup-perl
+libcgi-application-perl
+libcgi-session-perl
+libnet-z3950-zoom-perl
+libdatetime-perl
+libgd-perl
+libgd-graph-perl
+libgd-barcode-perl
+libjson-perl
+libnet-server-perl
+libnet-telnet-perl
+libgetopt-long-descriptive-perl
+libdigest-sha-perl
+
+See also README.pazpar2 for information on installing IndexData's pazpar2 packages.

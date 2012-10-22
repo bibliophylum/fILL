@@ -1,7 +1,7 @@
 // unfilled.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
-    Copyright (C) 2012  David A. Christensen
+    Copyright (C) 2012  Government of Manitoba
 
     unfilled.js is a part of fILL.
 

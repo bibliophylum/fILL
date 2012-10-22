@@ -640,10 +640,6 @@ sub send_notification {
 
 #    $self->log->info( "Source wants an email" );
 
-    # for testing:
-    my $old_email = $to_email;
-    $to_email = 'David.Christensen@gov.mb.ca';
-
     my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
 					  undef,$reqid);
 
@@ -652,7 +648,6 @@ sub send_notification {
     $content .= "You have a new request for the following item:\n";
     $content .= $tac[2] . "\t" . $tac[1] . "\t" . $tac[0] . "\n\n";
     $content .= "fILL: http://fill.sitka.bclibraries.ca/cgi-bin/lightning.cgi\n";
-    $content .= "\n\n(debug): original email: $old_email\n";
 
 #    $self->log->info( "To: $to_email\n$subject$content" );
 

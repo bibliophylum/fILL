@@ -1,6 +1,6 @@
 #
 #    fILL - Free/Open-Source Interlibrary Loan management system
-#    Copyright (C) 2011  David A. Christensen
+#    Copyright (C) 2011  Government of Manitoba
 #
 #    info.pm is a part of fILL.
 #

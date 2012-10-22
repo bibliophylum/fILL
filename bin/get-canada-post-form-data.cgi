@@ -43,8 +43,8 @@ my $to_aref   = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $to );
 $dbh->disconnect;
 
 #my %api = ();
-#$api{username} = '8683f23ad38e2dba';       # developer API keys
-#$api{password} = 'ebc41a5e1a5f35bf88b4cd'; # use production keys when going live
+#$api{username} = '1111111111111111';       # developer API keys
+#$api{password} = '1111111111111111111111'; # use production keys when going live
 
 my %shipment = ();
 $shipment{group_id} = 'Interlibrary Loan';
@@ -60,7 +60,7 @@ $shipment{sender} = {
     city => $from_aref->[CITY],
     province => $from_aref->[PROVINCE],
     postal_code => $from_aref->[POST_CODE],
-    email_address => 'David.Christensen@gov.mb.ca',
+    email_address => 'someone@somewhere.com',
 };
 
 $shipment{destination} = {
@@ -71,7 +71,7 @@ $shipment{destination} = {
     city => $to_aref->[CITY],
     province => $to_aref->[PROVINCE],
     postal_code => $to_aref->[POST_CODE],
-    email_address => 'David.A.Christensen@gmail.com',
+    email_address => 'someone.else@somewhere.else.com',
 };
 
 $shipment{requested_shipping_point} = $shipment{sender}->{postal_code};
@@ -80,8 +80,8 @@ $shipment{customer_ref1} = 'fILL reqeust id:' . $reqid;
 $shipment{notification_email} = $shipment{destination}->{email_address};
 
 #my %credentials = ();
-#$credentials{customer_number} = '0001682093';  # this will come from DB (lender)
+#$credentials{customer_number} = '0000000000';  # this will come from DB (lender)
 #$credentials{mobo} = $credentials{customer_number}; # "mailed on behalf of" - this will come from DB (borrower)
-#$credentials{contract_id} = '0040065629';
+#$credentials{contract_id} = '0000000000';
 
 print "Content-Type:application/json\n\n" . to_json( { shipment => \%shipment });
