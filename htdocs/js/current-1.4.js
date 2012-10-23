@@ -115,7 +115,10 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     $(nDetailsRow).attr('detail','overrides');
     $('#bReceive').button();
     $('#bReceive').click(function() { 
-	override( this, oData, oTable, nTr );
+	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Shipped'.");
+	if (hasConfirmed == true) {
+	    override( this, oData, oTable, nTr );
+	}
 	return false; 
     });
     $('#bTryNextLender').button();
@@ -135,8 +138,11 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
     });
     $('#bClose').button();
     $('#bClose').click(function() { 
-	override( this, oData, oTable, nTr );
-	oTable.fnDeleteRow( nTr );
+	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Checked-in'.");
+	if (hasConfirmed == true) {
+	    override( this, oData, oTable, nTr );
+	    oTable.fnDeleteRow( nTr );
+	}
 	return false; 
     });
     $('div.innerDetails', nDetailsRow).slideDown();
@@ -157,8 +163,11 @@ function fnFormatLendingOverrides( oTable, nTr, anOpen )
     $(nDetailsRow).attr('detail','overrides');
     $('#bReturned').button();
     $('#bReturned').click(function() { 
-	override( this, oData, oTable, nTr );
-	oTable.fnDeleteRow( nTr );
+	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the borrower but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Returned'.");
+	if (hasConfirmed == true) {
+	    override( this, oData, oTable, nTr );
+//	    oTable.fnDeleteRow( nTr );
+	}
 	return false; 
     });
     $('div.innerDetails', nDetailsRow).slideDown();

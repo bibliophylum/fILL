@@ -24,7 +24,6 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
     ) or die $DBI::errstr;
 
 my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
-#my $href = $dbh->selectrow_hashref($SQL, undef, $reqid);
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $reqid);
 my $href = pop(@$aref);
 
@@ -42,14 +41,23 @@ switch( $override ) {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
-	$message = $href->{"borrower"} . " received item without " . $href->{"lender"} . " marking as 'Shipped'";
-	# borrower sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );	
-	# force the ILL to be marked as Shipped by the lender
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );
-	$return_data_href->{ success } = $retval;
-	$return_data_href->{ status } = "Shipped";
-	$return_data_href->{ message } = "override";
+	# can only force 'Shipped' if the lender hasn't already marked it as 'Shipped'
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status like 'Shipped';", undef, $reqid, $lender_id );
+	if ((defined $cntAnswers) && ($cntAnswers == 0)) {
+	    $message = $href->{"borrower"} . " received item without " . $href->{"lender"} . " marking as 'Shipped'";
+	    # borrower sends a message about overriding
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );	
+	    # force the ILL to be marked as Shipped by the lender
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Shipped', "override by $href->{borrower}" );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Shipped";
+	    $return_data_href->{ message } = "override";
+	} else {
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not force 'Shipped'";
+	    $return_data_href->{ message } = "Lender has already shipped.";
+	    $return_data_href->{ alert_text } = "Could not override this request,\nlender has already shipped.\nPlease check your Receiving list.";
+	}
     }
 
     case "bCancel" {
@@ -106,44 +114,53 @@ switch( $override ) {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
-	$message = $href->{"borrower"} . " is trying next lender";
-	# borrower sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
-	# mark the ILL as Cancelled by the borrower
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Cancelled', "override by $href->{borrower}" );	
-	# mark the cancellation as acknowleged by the lender (so the ILL does not show up on the lender's pull list / respond list)
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
+	# can only cancel if the lender hasn't answered yet
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status like 'ILL-Answer%';", undef, $reqid, $lender_id );
+	if ((defined $cntAnswers) && ($cntAnswers == 0)) {
+	    $message = $href->{"borrower"} . " is trying next lender";
+	    # borrower sends a message about overriding
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	    # mark the ILL as Cancelled by the borrower
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Cancelled', "override by $href->{borrower}" );	
+	    # mark the cancellation as acknowleged by the lender (so the ILL does not show up on the lender's pull list / respond list)
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
 
-	# try next lender (from try-next-lender.cgi)
-	my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
+	    # try next lender (from try-next-lender.cgi)
+	    my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
 	
-	$SQL = "select lid, sequence_number from sources where group_id=? and tried=false order by sequence_number";
-	my @ary = $dbh->selectrow_array( $SQL, undef, $group[0] );
+	    $SQL = "select lid, sequence_number from sources where group_id=? and tried=false order by sequence_number";
+	    my @ary = $dbh->selectrow_array( $SQL, undef, $group[0] );
 
-	if (@ary) {
-	    # mark this source as tried
-	    $dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $reqid, $group[0], $ary[1]);
-
-	    # message to requesting library
-	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
-	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "Trying next source");
+	    if (@ary) {
+		# mark this source as tried
+		$dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $reqid, $group[0], $ary[1]);
+		
+		# message to requesting library
+		$SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+		$dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "Trying next source");
+		
+		# begin the ILL conversation
+		$SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
+		$dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
+		
+		$SQL = "UPDATE request SET current_source_sequence_number=? where id=?";
+		$dbh->do($SQL, undef, $ary[1], $reqid);
+		$return_data_href->{ success } = 1;
+		$return_data_href->{ status } = "Forwarded to next lender";
 	    
-	    # begin the ILL conversation
-	    $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
-	    $dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
-	    
-	    $SQL = "UPDATE request SET current_source_sequence_number=? where id=?";
-	    $dbh->do($SQL, undef, $ary[1], $reqid);
-	    $return_data_href->{ success } = 1;
-	    $return_data_href->{ status } = "Forwarded to next lender";
-	    
+	    } else {
+		$SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+		$dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "No further sources");
+		$return_data_href->{ success } = 0;
+		$return_data_href->{ status } = "Message";
+		$return_data_href->{ message } = "No further sources";
+		$return_data_href->{ alert_text } = "There were no further sources.\nThis request will remain here until you acknowledge 'No further sources'\n in overrides.";
+	    }
 	} else {
-	    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
-	    $dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "No further sources");
 	    $return_data_href->{ success } = 0;
-	    $return_data_href->{ status } = "Message";
-	    $return_data_href->{ message } = "No further sources";
-	    $return_data_href->{ alert_text } = "There were no further sources.\nThis request will remain here until you acknowledge 'No further sources'\n in overrides.";
+	    $return_data_href->{ status } = "Could not force cancellation/try-next-lender";
+	    $return_data_href->{ message } = "Lender has already answered.";
+	    $return_data_href->{ alert_text } = "The lender has already answered; if they could not fill the request, you can try the next lender from the Unfilled page.";
 	}
     }
 
@@ -151,16 +168,25 @@ switch( $override ) {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
-	$message = $href->{"borrower"} . " returned item but " . $href->{"lender"} . " has not checked it in";
-	# borrower sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
-	# force the ILL to be marked as Checked-in by the lender
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "override by $href->{borrower}" );	
-	# ...and move to history
-	$retval = move_to_history( $dbh, $reqid );
-	$return_data_href->{ success } = $retval;
-	$return_data_href->{ status } = "Checked-in";
-	$return_data_href->{ message } = "override";
+	# can only close if the the borrower has returned but the lender hasn't checked in yet
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status='Returned' and request_id not in (select request_id from requests_active where request_id=? and status='Checked-in')", undef, $reqid, $borrower_id, $reqid );
+	if ((defined $cntAnswers) && ($cntAnswers == 1)) {
+	    $message = $href->{"borrower"} . " returned item but " . $href->{"lender"} . " has not checked it in";
+	    # borrower sends a message about overriding
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
+	    # force the ILL to be marked as Checked-in by the lender
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "override by $href->{borrower}" );	
+	    # ...and move to history
+	    $retval = move_to_history( $dbh, $reqid );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Checked-in";
+	    $return_data_href->{ message } = "override";
+	} else {
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not force check-in";
+	    $return_data_href->{ message } = "Request not returned or already checked in.";
+	    $return_data_href->{ alert_text } = "Could not close this request:\neither you have not marked the request as 'Returned'\nor the lender has already checked it in.";
+	}
     }
 
     case "bReturned" {
@@ -168,16 +194,25 @@ switch( $override ) {
 	$borrower_id = $href->{"borrower_id"};
 	$lender_id = $href->{"lender_id"};
 	$message = $href->{"borrower"} . " has returned the item to " . $href->{"lender"} . " but did not mark it as 'Returned'";
-	# lender sends a message about overriding
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, $status, $message );
-	# force the ILL to be marked as Returned by the borrower
-	$retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Returned', "override by $href->{lender}" );	
-	# lender check-in and move to history
-	$retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "" );
-	$retval = move_to_history( $dbh, $reqid );
-	$return_data_href->{ success } = $retval;
-	$return_data_href->{ status } = "Returned";
-	$return_data_href->{ message } = "override";
+	# can only Return if the the borrower has received but not yet returned
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_to=? and status='Received' and request_id not in (select request_id from requests_active where request_id=? and status='Returned')", undef, $reqid, $lender_id, $reqid );
+	if ((defined $cntAnswers) && ($cntAnswers == 1)) {
+	    # lender sends a message about overriding
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, $status, $message );
+	    # force the ILL to be marked as Returned by the borrower
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Returned', "override by $href->{lender}" );	
+	    # lender check-in and move to history
+	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Checked-in', "" );
+	    $retval = move_to_history( $dbh, $reqid );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Returned";
+	    $return_data_href->{ message } = "override";
+	} else {
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not force return";
+	    $return_data_href->{ message } = "Request not received or already returned.";
+	    $return_data_href->{ alert_text } = "Could not mark this request as Returned:\neither the borrower has not Received yet,\nor they have already marked it as 'Returned'.";
+	}
     }
 
     else {
