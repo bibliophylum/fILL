@@ -322,6 +322,14 @@ function forward( requestId, retargets ) {
 			  });
 		  })
 	    .success(function() {
+		$.getJSON('/cgi-bin/update-source-on-forward.cgi',
+			  { reqid: requestId,
+			    hq: $("#lid").text(),
+			    branch: forwardTo
+			  },
+			  function() {
+			      //alert("sources updated - branch is now source");
+			  });
 		update_menu_counters( $("#lid").text() );
 	    });
 	
