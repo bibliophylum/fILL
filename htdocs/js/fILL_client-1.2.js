@@ -393,14 +393,16 @@ function renderDetails(data, marker)
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
         details += '<tr><td><b>Title</b></td><td><b>:</b> '+data["md-title"];
-	requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + '">';
   	if (data["md-title-remainder"] !== undefined) {
-	      details += ' : <span>' + data["md-title-remainder"] + ' </span>';
-  	}
+	    details += ' : <span>' + data["md-title-remainder"] + ' </span>';
+	    requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + ': ' + data["md-title-remainder"] + '">';
+  	} else {
+	    requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + '">';
+	}
   	if (data["md-title-responsibility"] !== undefined) {
-	      details += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
+	    details += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
   	}
- 	  details += '</td></tr>';
+ 	details += '</td></tr>';
     }
     if (data["md-date"] != undefined)
         details += '<tr><td><b>Date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
