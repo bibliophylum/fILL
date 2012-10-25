@@ -25,6 +25,9 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 			PrintError => 0,
 		       }
     ) or die $DBI::errstr;
+
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $href;
 eval {
     $href = $dbh->selectrow_hashref($SQL, undef, $reqid );

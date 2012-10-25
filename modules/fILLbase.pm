@@ -68,6 +68,8 @@ sub cgiapp_init {
 		       }
     );
 
+    $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
+
     # Configure the LogDispatch session
     $self->log_config(
       LOG_DISPATCH_MODULES => [ 

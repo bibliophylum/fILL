@@ -17,6 +17,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 #my $SQL = "select lid from sources where request_id=? and sequence_number=(select current_source_sequence_number from request where id=?)+1";
 #my @ary = $dbh->selectrow_array( $SQL, undef, $reqid, $reqid );
 

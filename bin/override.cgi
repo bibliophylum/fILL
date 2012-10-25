@@ -23,6 +23,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $reqid);
 my $href = pop(@$aref);

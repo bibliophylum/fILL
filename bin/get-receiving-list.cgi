@@ -19,6 +19,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
 $dbh->disconnect;
 

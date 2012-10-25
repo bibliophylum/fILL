@@ -23,6 +23,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $retval = $dbh->do( $SQL, undef, $reqid, $msg_from, $msg_to, $status, $message );
 $dbh->disconnect;
 

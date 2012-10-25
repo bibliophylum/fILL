@@ -16,6 +16,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $SQL = "select can_forward_to_children from libraries where lid=?";
 my @flags = $dbh->selectrow_array($SQL, undef, $lid );
 @flags[0] = 0 unless (@flags);

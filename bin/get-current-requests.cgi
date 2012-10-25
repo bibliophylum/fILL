@@ -16,6 +16,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 # sql to get this library's current borrowing
 #my $SQL="select r.id, r.title, r.author, r.patron_barcode, date_trunc('second',ra.ts) as ts, ra.status, ra.message from request r left join requests_active ra on (r.id=ra.request_id) where r.requester=? and ra.ts in (select max(ts) from requests_active where (msg_from=?) or (msg_to=?) group by request_id) order by ts";
 my $SQL="select r.id, r.title, r.author, r.patron_barcode, date_trunc('second',ra.ts) as ts, (case when (ra.msg_to=?) then l1.name else l2.name end) as lender, ra.status, ra.message from request r left join requests_active ra on (r.id=ra.request_id) left join libraries l1 on (l1.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where r.requester=? and ra.ts in (select max(ts) from requests_active where (msg_from=?) or (msg_to=?) group by request_id) order by ts";

@@ -12,6 +12,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
+
 my $SQL="select rid, name, description, generator from reports where rtype=?";
 my $aref_summary   = $dbh->selectall_arrayref($SQL, { Slice => {} }, 'Summary' );
 my $aref_borrowing = $dbh->selectall_arrayref($SQL, { Slice => {} }, 'Borrowing' );
