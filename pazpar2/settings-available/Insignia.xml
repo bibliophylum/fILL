@@ -21,8 +21,8 @@
   <set target="www.insigniasoftware.com:210/boyne" name="symbol" value="MCB"/>
 
 <!-- Emerson Public Library -->
-  <set target="www.insigniasoftware.com:210/EmersonILS" name="pz:name" value="Emerson Public Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/EmersonILS" name="symbol" value="MEPL"/>
+  <set target="www.insigniasoftware.com:210/Emerson" name="pz:name" value="Emerson Public Library (Insignia)"/>
+  <set target="www.insigniasoftware.com:210/Emerson" name="symbol" value="MEPL"/>
   <!-- <set target="206.45.102.208:210/ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/> -->
 
 <!-- Glenwood and Souris Regional Library -->
