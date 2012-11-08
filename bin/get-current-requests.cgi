@@ -37,11 +37,12 @@ from requests_active ra
   left join libraries l2 on (l2.lid=ra.msg_to) 
 where 
   r.requester=?
-  and ra.ts in (select max(ts) from requests_active where (msg_from=?) or (msg_to=?) group by request_id) 
+  and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id)
 group by gid, cid, g.title, g.author, g.patron_barcode, ts, lender, ra.status, ra.message
 order by ra.ts
 ";
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $lid );
+# There will be one row per request in the chain
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
 
 # sql to get this library's current lending
 $SQL = "select 
