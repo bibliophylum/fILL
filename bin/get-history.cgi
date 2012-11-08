@@ -24,12 +24,51 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get this library's borrowing history
-my $SQL="select rc.id, rc.title, rc.author, rc.patron_barcode, date_trunc('second',rh.ts) as ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) where rc.requester=? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $start, $end );
+my $SQL="select 
+  hg.group_id as gid,
+  hc.chain_id as cid,
+  hg.title, 
+  hg.author, 
+  hg.patron_barcode, 
+  date_trunc('second',rh.ts) as ts, 
+  rh.status, 
+  rh.message 
+from requests_history rh
+  left join request_closed rc on rc.id=rh.request_id
+  left join history_chain hc on hc.chain_id = rc.chain_id
+  left join history_group hg on hg.group_id = hc.group_id
+where 
+  rc.requester=?
+  and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) 
+  and rh.ts >= ?
+  and rh.ts < ?
+group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, rh.status, rh.message 
+order by ts
+";
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $start, $end );
 
 # sql to get this library's lending history
-my $SQL="select rc.id, rc.title, rc.author, l.name as requested_by, date_trunc('second',rh.ts) as ts, rh.status, rh.message from request_closed rc left join requests_history rh on (rc.id=rh.request_id and rh.msg_from=?) left join libraries l on rc.requester = l.lid where rc.requester<>? and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) and rh.ts >= ? and rh.ts < ? order by ts";
-my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $start, $end );
+$SQL="select 
+  hc.chain_id as cid, 
+  hg.title, 
+  hg.author, 
+  l.name as requested_by, 
+  date_trunc('second',rh.ts) as ts, 
+  rh.status, 
+  rh.message 
+from requests_history rh
+  left join request_closed rc on rc.id=rh.request_id
+  left join history_chain hc on hc.chain_id = rc.chain_id
+  left join history_group hg on hg.group_id = hc.group_id
+  left join libraries l on l.lid = rc.requester
+where 
+  rc.requester<>? 
+  and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) 
+  and rh.ts >= ? 
+  and rh.ts < ? 
+order by ts
+";
+my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $start, $end );
 
 $dbh->disconnect;
 

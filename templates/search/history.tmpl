@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/history-1.1.js"></script>
+<script type="text/javascript" src="/js/history-1.2.js"></script>
 
 <script type="text/javascript">
 
@@ -69,7 +69,8 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "id" },
+            { "mDataProp": "gid" },
+            { "mDataProp": "cid" },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "patron_barcode" },
@@ -103,7 +104,7 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "id" },
+            { "mDataProp": "cid" },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requested_by" },
@@ -223,7 +224,7 @@ $('document').ready(function(){
 	  <table id="datatable_borrowing" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
+		<th></th><th>gid</th><th>cid</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -238,7 +239,7 @@ $('document').ready(function(){
 	  <table id="datatable_lending" class="display">
 	    <thead>
 	      <tr>
-		<th></th><th>id</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
+		<th></th><th>cid</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
 	      </tr>
 	    </thead>
 	    <tbody>

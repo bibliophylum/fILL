@@ -41,7 +41,7 @@ function build_table( data ) {
 function fnFormatDetails( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
-    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "reqid": oData.id },
+    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "cid": oData.cid },
 	      function(data){
 		  //alert('first success');
 	      })
@@ -57,13 +57,16 @@ function fnFormatDetails( oTable, nTr )
 	    var numDetails = data.request_details.length; 
 	    sOut = '<div class="innerDetails">'+
 		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
+		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
 	    for (var i = 0; i < numDetails; i++) {
-		var detRow = '<tr><td>'+data.request_details[i].ts+'</td>'+
+		var detRow = '<tr>'+
+		    '<td>'+data.request_details[i].request_id+'</td>'+
+		    '<td>'+data.request_details[i].ts+'</td>'+
 		    '<td>'+data.request_details[i].from+'</td>'+
 		    '<td>'+data.request_details[i].to+'</td>'+
 		    '<td>'+data.request_details[i].status+'</td>'+
-		    '<td>'+data.request_details[i].message+'</td></tr>';
+		    '<td>'+data.request_details[i].message+'</td>'+
+		    '</tr>';
 		sOut=sOut+detRow;
 	    }
 	    sOut = sOut+'</table>'+'</div>';

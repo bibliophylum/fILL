@@ -27,12 +27,14 @@
 	<xsl:when test="$title_medium">
 	  <xsl:value-of select="translate($title_medium, ' []/', '')"/>
 	</xsl:when>
+<!--
 	<xsl:when test="$fulltext_a">
 	  <xsl:text>electronic resource</xsl:text>
 	</xsl:when>
 	<xsl:when test="$fulltext_b">
 	  <xsl:text>electronic resource</xsl:text>
 	</xsl:when>
+-->
 	<xsl:when test="$journal_title">
 	  <xsl:text>article</xsl:text>
 	</xsl:when>

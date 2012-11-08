@@ -30,41 +30,9 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       }
     ) or die $DBI::errstr;
 
-my $library       = $dbh->selectrow_arrayref("select library from libraries where lid=?",undef,$lid);
+$dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-# random thoughts:
-# On the borrowing side, the number of items requested can be different than the number of ILL-Requests, if there are any message='Trying next source'
-# Need to combine historic and active into one set of numbers
-# Maybe a table format?
-# Either way, need to order the stats (probably in lifecycle order) rather than just loop through DBI arrays - it's a little confusing :-)
-
-my $hbreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_history where request_id in (select request_id from requests_history where msg_from=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-my $abreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_active where request_id in (select request_id from requests_active where msg_from=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-
-my $hlreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_history where request_id in (select request_id from requests_history where msg_to=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-my $alreqs        = $dbh->selectall_arrayref("select status, message, count(distinct request_id) from requests_active where request_id in (select request_id from requests_active where msg_to=? and status='ILL-Request' and ts>=? and ts<?) group by status, message",undef,$lid,$range_start,$range_end);
-
-$dbh->disconnect;
-
-my %borrowing;
-foreach my $aref (@$hbreqs) {
-    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
-    $borrowing{$aref->[0]} += $aref->[2];
-}
-foreach my $aref (@$abreqs) {
-    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
-    $borrowing{$aref->[0]} += $aref->[2];
-}
-
-my %lending;
-foreach my $aref (@$hlreqs) {
-    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
-    $lending{$aref->[0]} += $aref->[2];
-}
-foreach my $aref (@$alreqs) {
-    $aref->[0] = $aref->[1] if ($aref->[0] eq 'Message');
-    $lending{$aref->[0]} += $aref->[2];
-}
+my $library = $dbh->selectrow_arrayref("select library from libraries where lid=?",undef,$lid);
 
 open( OUTF, '>', $filename) or die "cannot open > $filename: $!";
 
@@ -72,16 +40,64 @@ print OUTF $library->[0] . "\n\n";
 print OUTF "Basic statistics.\n";
 print OUTF "ILL requests initiated from $range_start up to (but not including) $range_end.\n\n";
 
-print OUTF "Borrowing from other libraries\n";
-foreach my $status (keys %borrowing) {
-    print OUTF $status . "\t" . $borrowing{$status} . "\n";
-}
+my $aryref;
 
-print OUTF "\n\nLending to other libraries\n\n";
-#print OUTF Dumper($hlreqs) . "\n";
-foreach my $status (keys %lending) {
-    print OUTF $status . "\t" . $lending{$status} . "\n";
+# Borrowing
+# Note: counting stats for requests initiated within the date range, regardless of when the answers came.
+my $booksRequested = 0;
+my $requestsMade = 0;
+my $respondedUnfilled = 0;
+my $lenderShipped = 0;
+my $weCancelled;
+foreach my $tbl (qw/active history/) {
+    $aryref = $dbh->selectrow_arrayref("select count(distinct request_id), count(request_id) from requests_$tbl where msg_from=? and status='ILL-Request' and request_id in (select request_id from requests_$tbl where ts>=? and ts<?)", undef, $lid, $range_start, $range_end);
+    $booksRequested += $aryref->[0];
+    $requestsMade += $aryref->[1];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_to=? and status like 'ILL-Answer|Unfilled%' and request_id in (select request_id from requests_$tbl where ts>=? and ts<?)", undef, $lid, $range_start, $range_end);
+    $respondedUnfilled += $aryref->[0];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_to=? and status='Shipped' and request_id in (select request_id from requests_$tbl where ts>=? and ts<?)", undef, $lid, $range_start, $range_end);
+    $lenderShipped += $aryref->[0];
+
+    # To calculate the # of requests that we cancelled before receiving a reply:
+    # 1. Find the requests we initiated in that time frame (status = 'ILL-Request')
+    # 2. Ignore the requests that someone replied to (status like 'ILL-Answer%')
+    # 3. Count the entries where status = 'Cancelled'
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_from=? and status='Cancelled' and ts>=? and ts<? and request_id in (select request_id from requests_$tbl where msg_from=? and status='ILL-Request' and ts>=? and ts<?) and request_id not in (select request_id from requests_$tbl where msg_to=? and status like 'ILL-Answer%' and ts>=? and ts<?)", undef, $lid, $range_start, $range_end, $lid, $range_start, $range_end, $lid, $range_start, $range_end);
+    $weCancelled += $aryref->[0];
 }
+print OUTF "Borrowing\tbooks requested\trequests made\tlender unfilled\tlender shipped\twe cancelled\n";
+print OUTF "\t$booksRequested\t$requestsMade\t$respondedUnfilled\t$lenderShipped\t$weCancelled\n";
+
+# Lending
+# Counting answers made within the date range, regardless of when the request was initiated.
+my $requestsToLend = 0;
+my $couldNotFill = 0;
+my $shipped = 0;
+my $forwardToBranch = 0;
+my $borrowerCancelled = 0;
+foreach my $tbl (qw/active history/) {
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_to=? and status='ILL-Request' and ts>=? and ts<?", undef, $lid, $range_start, $range_end);
+    $requestsToLend += $aryref->[0];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_from=? and status like 'ILL-Answer|Unfilled%' and ts>=? and ts<?", undef, $lid, $range_start, $range_end);
+    $couldNotFill += $aryref->[0];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_from=? and status='Shipped' and ts>=? and ts<?", undef, $lid, $range_start, $range_end);
+    $shipped += $aryref->[0];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_from=? and status like 'ILL-Answer|Locations-provided%' and ts>=? and ts<?", undef, $lid, $range_start, $range_end);
+    $forwardToBranch += $aryref->[0];
+
+    $aryref = $dbh->selectrow_arrayref("select count(request_id) from requests_$tbl where msg_to=? and status='Cancelled' and ts>=? and ts<?", undef, $lid, $range_start, $range_end);
+    $borrowerCancelled += $aryref->[0];
+}
+print OUTF "Lending\trequests\tcould not fill\tshipped\tforward\tborrower cancelled\n";
+print OUTF "\t$requestsToLend\t$couldNotFill\t$shipped\t$forwardToBranch\t$borrowerCancelled\n";
+
+$dbh->disconnect;
+
 
 print OUTF "\n\n---current long-format date time goes here---\n";
 print OUTF "$rid\t$lid\t$range_start\t$range_end\t$filename\t$submitted\n";

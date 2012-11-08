@@ -7,11 +7,10 @@ use JSON;
 my $query = new CGI;
 my $reqid = $query->param('reqid');
 
-print STDERR "move-to-history: $reqid\n";
+#print STDERR "move-to-history: $reqid\n";
 
 my $rSuccess = 0;
 my $rClosed = 0;
-my $rFilledBy = 0;
 my $rHistory = 0;
 my $rActive = 0;
 my $rSources = 0;
@@ -32,34 +31,86 @@ $dbh->{AutoCommit} = 0;  # enable transactions, if possible
 $dbh->{RaiseError} = 1;
 
 eval {
-    # attempts doesn't make sense any more with request_groups... need to figure out what to do here.
-    # For now, leave as-is.
-    my $SQL = "insert into request_closed (id,title,author,requester,group_id,patron_barcode,attempts) (select id,title,author,requester,group_id,patron_barcode,current_source_sequence_number from request where id=?)";
-    $rClosed = $dbh->do( $SQL, undef, $reqid );
+    my $SQL;
+    # get the request_id, chain_id, and group_id from the (live) request
+    $SQL = "select g.group_id, c.chain_id, r.id from request_group g left join request_chain c on c.group_id = g.group_id left join request r on r.chain_id=c.chain_id where r.id=?";
+    my @gcr = $dbh->selectrow_array( $SQL, undef, $reqid );
+    print STDERR "move-to-history: gid [$gcr[0]], cid [$gcr[1]], rid [$gcr[2]]\n";
+    
+    # see if the group already exists in history
+    $SQL = "select count(group_id) from history_group where group_id=?";
+    my @hg = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
+    if ((@hg) && ($hg[0] == 0)) {
+	# not yet in history_group, so add it
+	$SQL = "insert into history_group (group_id, copies_requested, title, author, requester, patron_barcode, note) select group_id, copies_requested, title, author, requester, patron_barcode, note from request_group where group_id=?";
+	$dbh->do( $SQL, undef, $gcr[0] );
+	print STDERR "move-to-history: request_group added to history_group\n";
+    } else {
+	print STDERR "move-to-history: request_group already exists in history_group\n";
+    }
 
-    $SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
-    $rFilledBy = $dbh->do( $SQL, undef, $reqid );
+    # see if the chain already exists in history
+    $SQL = "select count(chain_id) from history_chain where chain_id=?";
+    my @hc = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
+    if ((@hc) && ($hc[0] == 0)) {
+	# not yet in history_chain, so add it
+	$SQL = "insert into history_chain (group_id, chain_id) values (?,?)";
+	$dbh->do( $SQL, undef, $gcr[0], $gcr[1] );
+	print STDERR "move-to-history: request_chain added to history_chain\n";
+    } else {
+	print STDERR "move-to-history: request_chain already exists in history_chain\n";
+    }
+
+
+    # attempts doesn't make sense any more with request_groups / request_chains... need to figure out what to do here.
+    # For now, leave as-is.
+    my $SQL = "insert into request_closed (id,requester,chain_id) (select id,requester, chain_id from request where id=?)";
+    $rClosed = $dbh->do( $SQL, undef, $reqid );
+    print STDERR "move-to-history: request inserted into request_closed\n";
 
     $SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
     $rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+    print STDERR "move-to-history: associated requests_active inserted into requests_history\n";
 
     $SQL = "delete from requests_active where request_id=?";
     $rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
-
-    my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
+    print STDERR "move-to-history: requests_active deleted for reqid $reqid\n";
 
     # sources.request_id is an fkey.  Can't delete the request until that's reset.
     $SQL = "update sources set request_id=NULL where request_id=?";
     $rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
+    print STDERR "move-to-history: sources referencing this request have been nulled\n";
 
     $SQL = "delete from request where id=?";
     $rRequest = $dbh->do( $SQL, undef, $reqid );
+    print STDERR "move-to-history: request deleted\n";
 
-    $SQL = "select count(id) from request where group_id=?";
-    my @cnt = $dbh->selectrow_arrayref( $SQL, undef, $group[0] );
+    $SQL = "select count(id) from request where chain_id=?";
+    my @cnt = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
     if ((@cnt) && ($cnt[0] == 0)) {
+	# no requests left in this chain
+	$SQL = "delete from request_chain where chain_id=?";
+	$dbh->do( $SQL, undef, $gcr[1] );
+	print STDERR "move-to-history: no requests left in this chain, chain deleted\n";
+    } else {
+	print STDERR "move-to-history: still requests in this chain, chain not deleted\n";
+    }
+    @cnt = undef;
+
+    $SQL = "select count(group_id) from request_chain where group_id=?";
+    @cnt = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
+    if ((@cnt) && ($cnt[0] == 0)) {
+	# no chains left in this group
+	$SQL = "delete from request_group where group_id=?";
+	$rChains = $dbh->do( $SQL, undef, $gcr[0] );
+	print STDERR "move-to-history: no chains left in this group, group deleted\n";
+
+	# we don't need the sources for history
 	$SQL = "delete from sources where group_id=?";
 	$rSources = ($dbh->do( $SQL, undef, $group[0] ) ? 1 : 0);
+	print STDERR "move-to-history: no further need of sources, sources deleted\n";
+    } else {
+	print STDERR "move-to-history: still chains in this group, group not deleted\n";
     }
 
     $dbh->commit;   # commit the changes if we get this far
@@ -76,4 +127,4 @@ if ($@) {
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $rSuccess, closed => $rClosed, filledby => $rFilledBy, history => $rHistory, active => $rActive, sources => $rSources, request => $rRequest } );
+print "Content-Type:application/json\n\n" . to_json( { success => $rSuccess, closed => $rClosed, history => $rHistory, active => $rActive, sources => $rSources, request => $rRequest } );

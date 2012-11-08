@@ -37,7 +37,7 @@ function fnFormatDetails( oTable, nTr )
 {
     var oData = oTable.fnGetData( nTr );
 //    alert('getting details for reqid: '+oData.id);
-    $.getJSON('/cgi-bin/get-history-details.cgi', { "reqid": oData.id },
+    $.getJSON('/cgi-bin/get-history-details.cgi', { "cid": oData.cid },
 	      function(data){
 		  //alert('first success');
 	      })
@@ -48,21 +48,21 @@ function fnFormatDetails( oTable, nTr )
 	    alert('error');
 	})
 	.complete(function(jqXHRObject) {
-//	    alert('jqHXRObject response text: '+jqXHRObject.responseText);
 	    var data = $.parseJSON(jqXHRObject.responseText)
 	    var sOut;
 	    var numDetails = data.request_history.length; 
 	    sOut = '<div class="innerDetails">'+
 		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
+		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
 	    for (var i = 0; i < numDetails; i++) {
-		var detRow = '<tr><td>'+data.request_history[i].ts+'</td>'+
+		var detRow = '<tr>'+
+		    '<td>'+data.request_history[i].request_id+'</td>'+
+		    '<td>'+data.request_history[i].ts+'</td>'+
 		    '<td>'+data.request_history[i].from+'</td>'+
-//		    '<td>'+data.request_history[i].msg_from+'</td>'+
 		    '<td>'+data.request_history[i].to+'</td>'+
-//		    '<td>'+data.request_history[i].msg_to+'</td>'+
 		    '<td>'+data.request_history[i].status+'</td>'+
-		    '<td>'+data.request_history[i].message+'</td></tr>';
+		    '<td>'+data.request_history[i].message+'</td>'+
+		    '</tr>';
 		sOut=sOut+detRow;
 	    }
 	    sOut = sOut+'</table>'+'</div>';

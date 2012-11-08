@@ -99,6 +99,12 @@ sub complete_the_request_process {
     if (($copies_requested) && ($copies_requested > 1)) {
 	$self->dbh->do("UPDATE request_group SET copies_requested=? where group_id=?", undef, $copies_requested, $group_id);
     }
+    if ($pbarcode) {
+	$self->dbh->do("UPDATE request_group SET patron_barcode=? where group_id=?", undef, $pbarcode, $group_id);
+    }
+    if ($request_note) {
+	$self->dbh->do("UPDATE request_group SET note=? where group_id=?", undef, $request_note, $group_id);
+    }
 
     # Get this user's (requester's) library id
     my ($requester,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -125,18 +131,21 @@ sub complete_the_request_process {
 	last if ($seq > (scalar @sources));  # bail if we've run out of sources
 	$self->log->debug( "complete_the_request #" . $seq );
 
+	# separate chain for each copy requested
+	$self->dbh->do("insert into request_chain (group_id) values (?)",
+		       undef,
+		       $group_id
+	    );
+	my $cid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_chain_seq'});
+	
 	my $source_library = $sources[$seq-1]->{"lid"};
 	
 	# create the request
-	$self->dbh->do("INSERT INTO request (group_id,title,author,requester,patron_barcode,note,current_source_sequence_number) VALUES (?,?,?,?,?,?,?)",
+	$self->dbh->do("INSERT INTO request (requester,current_source_sequence_number,chain_id) VALUES (?,?,?)",
 		       undef,
-		       $group_id,
-		       $req_href->{"title"},
-		       $req_href->{"author"},
 		       $req_href->{"requester"},
-		       $pbarcode,
-		       $request_note,
 		       $sources[$seq-1]->{"sequence_number"},
+		       $cid
 	    );
 	my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
 	
@@ -202,7 +211,29 @@ sub pull_list_process {
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
+    #my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
+    my $SQL="select 
+  b.barcode, 
+  g.title, 
+  g.author, 
+  g.note, 
+  date_trunc('second',ra.ts) as ts, 
+  l.name as from, 
+  l.library, 
+  s.call_number 
+from requests_active ra
+  left join request r on r.id=ra.request_id
+  left join request_chain c on c.chain_id = r.chain_id
+  left join request_group g on g.group_id = c.group_id
+  left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) 
+  left join sources s on (s.group_id = g.group_id and s.lid = ra.msg_to) 
+  left join libraries l on l.lid = ra.msg_from
+where 
+  ra.msg_to=? 
+  and ra.status='ILL-Request' 
+  and ra.request_id not in (select request_id from requests_active where msg_from=?) 
+order by s.call_number
+";
 
     my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
 
@@ -352,11 +383,16 @@ sub request_process {
     my $cn;
     my $primary;
     while ($index <= $#sources ) { 
+	if ((!exists( $sources[$index]{'symbol'} )) || (!defined( $sources[$index]{'symbol'} )) ) {
+	    $self->log->debug( "sources[" . $index . "] has no symbol:\n" . Dumper( $sources[$index] ));
+	}
 	my $value = $sources[$index]{symbol}; 
 	if ( $value eq "MW" ) { 
 	    if ($sources[$index]{location} =~ /^Millennium/ ) {
+		$primary = "" unless $primary;
 		$primary = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
 	    } else {
+		$cn = "" unless $cn;
 		$cn = $cn . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
 	    }
 	    splice @sources, $index, 1; 
@@ -379,8 +415,14 @@ sub request_process {
     my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
     foreach my $src (@unique_sources) {
-	$src->{net} = $nblc_href->{ $src->{symbol} }{net};
-	$src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+	if (exists $nblc_href->{ $src->{symbol} }) {
+	    $src->{net} = $nblc_href->{ $src->{symbol} }{net};
+	    $src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+	} else {
+	    $src->{net} = 0;
+	    $src->{lid} = undef;
+	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
+	}
     }
 #    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
@@ -640,8 +682,23 @@ sub send_notification {
 
 #    $self->log->info( "Source wants an email" );
 
-    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
-					  undef,$reqid);
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+#    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
+#					  undef,$reqid);
+
+    my $SQL="select 
+  g.title, 
+  g.author, 
+  s.call_number 
+from request r
+  left join request_chain c on c.chain_id = r.chain_id
+  left join request_group g on g.group_id = c.group_id
+  left join sources s on s.group_id = g.group_id 
+where r.id=?
+  and s.lid=?
+";
+    my @tac = $self->dbh->selectrow_array($SQL,undef,$reqid,$lid);
 
     my $subject = "Subject: ILL Request: " . $tac[0] . "\n";
     my $content = "fILL notification\n\n";

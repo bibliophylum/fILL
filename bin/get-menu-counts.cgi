@@ -22,8 +22,8 @@ my $SQL = "select count(r.id) as unfilled from request r left join requests_acti
 my @unfilled = $dbh->selectrow_array($SQL, undef, $lid );
 @unfilled[0] = 0 unless (@unfilled);
 
-$SQL = "select count(r.id) as overdue from request r left join requests_active ra on (r.id = ra.request_id) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='Shipped' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned') and ra.request_id not in (select request_id from requests_active where msg_to=101 and status='Renew-Answer|Ok') and (substring(message from 'due (.*)') < (to_char( now()::date, 'YYYY-MM-DD')))";
-my @overdue = $dbh->selectrow_array($SQL, undef, $lid, $lid );
+$SQL = "select count(r.id) as overdue from request r left join requests_active ra on (r.id = ra.request_id) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='Shipped' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned') and ra.request_id not in (select request_id from requests_active where msg_to=? and status='Renew-Answer|Ok') and (substring(message from 'due (.*)') < (to_char( now()::date, 'YYYY-MM-DD')))";
+my @overdue = $dbh->selectrow_array($SQL, undef, $lid, $lid, $lid );
 $overdue[0] = 0 unless (@overdue);
 
 $SQL = "select count(r.id) as renewals from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='Renew' and ra.request_id not in (select request_id from requests_active where msg_from=? and status like 'Renew-Answer%')";
