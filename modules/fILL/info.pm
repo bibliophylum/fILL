@@ -51,7 +51,7 @@ sub info_contacts_process {
 
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $SQL_getLibrary = "SELECT name, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE active=1 ORDER BY library";
+    my $SQL_getLibrary = "SELECT name, phone, email_address, library, mailing_address_line1, mailing_address_line2, mailing_address_line3 from libraries WHERE active=1 ORDER BY library";
 
     # Get any parameter data (ie - user is submitting a change)
     my $sort = $q->param("sort");

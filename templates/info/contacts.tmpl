@@ -32,8 +32,9 @@ $('document').ready(function(){
         "aoColumns": [
             { "mDataProp": "library", "sWidth": "25%" },
             { "mDataProp": "name", "sWidth": "5%" },
+            { "mDataProp": "phone", "sWidth": "5%" },
             { "mDataProp": "email_address", "sWidth": "30%" },
-            { "mDataProp": "mailing_address", "sWidth": "35%" }
+            { "mDataProp": "mailing_address", "sWidth": "30%" }
         ],
         "bAutoWidth": false
     });
@@ -77,7 +78,7 @@ $('document').ready(function(){
 	  <table id="datatable_contacts" width="100%">
 	    <thead>
 	      <tr>
-		<th>library</th><th>name</th><th>email_address</th><th>mailing_address</th>
+		<th>library</th><th>name</th><th>phone</th><th>email_address</th><th>mailing_address</th>
 	      </tr>
 	    </thead>
 	    <tbody>
@@ -86,6 +87,7 @@ $('document').ready(function(){
 		<tr>
 		  <td><TMPL_VAR NAME="library"></td>
 		  <td><TMPL_VAR NAME="name"></td>
+		  <td><TMPL_VAR NAME="phone"></td>
 		  <td><TMPL_VAR NAME="email_address"></td>
 		  <td>
 		    <TMPL_VAR NAME="mailing_address_line1"><br>
