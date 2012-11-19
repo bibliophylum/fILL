@@ -245,7 +245,7 @@ order by s.call_number
     }
 
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
-    $template->param( pagetitle => $self->authen->username . " Pull-list",
+    $template->param( pagetitle => "Pull-list",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
