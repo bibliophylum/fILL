@@ -101,7 +101,7 @@ function request_renewal( requestId ) {
     var myRow=$("#req"+requestId);
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(7)').text(),
+	"msg_to": myRow.find(':nth-child(9)').text(),
 	"lid": $("#lid").text(),
 	"status": "Renew",
 	"message": ""

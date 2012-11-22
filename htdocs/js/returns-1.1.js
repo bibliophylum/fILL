@@ -41,7 +41,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -90,32 +90,15 @@ function make_returns_handler( requestId ) {
 }
 
 function return_item( requestId ) {
-    // NOTE: this code will find table rows based on cell contents...
-    // ...as we now have <tr id='xxx'>, there's an easier way....
-
-    // Returns [{reqid: 12, msg_to: '101'}, 
-    //          {reqid: 15, msg_to: '98'},
-    // Note that nth-child uses 1-based indexing, not 0-based
-    var parms = $('#gradient-style tbody tr').map(function() {
-	// $(this) is used more than once; cache it for performance.
-	var $row = $(this);
-	
-	// For each row that's "mapped", return an object that
-	//  describes the first and second <td> in the row.
-	if ($row.find(':nth-child(1)').text() == requestId) {
-	    return {
-		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
-		lid: $("#lid").text(),
-		status: "Returned",
-		message: ""
-	    }
-	} else {
-	    return null;
-	};
-    }).get();
-
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(8)').text(),
+	"lid": $("#lid").text(),
+	"status": "Returned",
+	"message": ""
+    };
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })

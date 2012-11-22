@@ -28,6 +28,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
@@ -40,7 +42,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -51,6 +53,8 @@ function build_table( data ) {
     {
 //	alert (data.shipping[i].id+" "+data.shipping[i].msg_from+" "+data.shipping[i].call_number+" "+data.shipping[i].author+" "+data.shipping[i].title+" "+data.shipping[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.shipping[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].from; cell.setAttribute('title', data.shipping[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].msg_to;
@@ -102,32 +106,15 @@ function make_shipit_handler( requestId ) {
 }
 
 function shipit( requestId ) {
-    // NOTE: this code will find table rows based on cell contents...
-    // ...as we now have <tr id='xxx'>, there's an easier way....
-
-    // Returns [{reqid: 12, msg_to: '101'}, 
-    //          {reqid: 15, msg_to: '98'},
-    // Note that nth-child uses 1-based indexing, not 0-based
-    var parms = $('#gradient-style tbody tr').map(function() {
-	// $(this) is used more than once; cache it for performance.
-	var $row = $(this);
-	
-	// For each row that's "mapped", return an object that
-	//  describes the first and second <td> in the row.
-	if ($row.find(':nth-child(1)').text() == requestId) {
-	    return {
-		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
-		lid: $("#lid").text(),
-		status: "Shipped",
-		message: "due "+$row.find(':nth-child(8)').text()
-	    }
-	} else {
-	    return null;
-	};
-    }).get();
-
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(5)').text(),
+	"lid": $("#lid").text(),
+	"status": "Shipped",
+	"message": ""
+    };
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
@@ -149,9 +136,9 @@ function set_default_due_date(oForm) {
     var theTable = document.getElementById('gradient-style');
 
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[7].innerHTML = defaultDueDate;
+	theTable.tBodies[0].rows[r].cells[9].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(10)").stop(true,true).effect("highlight", {}, 2000);
     return false;
 }
 

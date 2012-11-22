@@ -30,6 +30,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
@@ -42,7 +44,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -61,6 +63,8 @@ function build_rows( tBody, data ) {
     for (var i=0;i<data.unhandledRequests.length;i++) 
     {
 	row = tBody.insertRow(-1); row.id = 'req'+data.unhandledRequests[i].id;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].gid;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].cid;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].id;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].from; cell.setAttribute('title', data.unhandledRequests[i].library);
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].msg_from;
@@ -108,32 +112,15 @@ function make_shipit_handler( requestId ) {
 }
 
 function shipit( requestId ) {
-    // NOTE: this code will find table rows based on cell contents...
-    // ...as we now have <tr id='xxx'>, there's an easier way....
-
-    // Returns [{reqid: 12, msg_to: '101'}, 
-    //          {reqid: 15, msg_to: '98'},
-    // Note that nth-child uses 1-based indexing, not 0-based
-    var parms = $('#gradient-style tbody tr').map(function() {
-	// $(this) is used more than once; cache it for performance.
-	var $row = $(this);
-	
-	// For each row that's "mapped", return an object that
-	//  describes the first and second <td> in the row.
-	if ($row.find(':nth-child(1)').text() == requestId) {
-	    return {
-		reqid: $row.find(':nth-child(1)').text(),
-		msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
-		lid: $("#lid").text(),
-		status: "ILL-Answer|Will-Supply|being-processed-for-supply",
-		message: ""
-	    }
-	} else {
-	    return null;
-	};
-    }).get();
-
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(5)').text(),
+	"lid": $("#lid").text(),
+	"status": "ILL-Answer|Will-Supply|being-processed-for-supply",
+	"message": ""
+    };
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })

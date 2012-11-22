@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/renewal-answer-1.0.js"></script>
+<script type="text/javascript" src="/js/renewal-answer-1.1.js"></script>
 
 
 <script type="text/javascript">
@@ -41,6 +41,8 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
+                           { "mDataProp": "gid" },
+                           { "mDataProp": "cid" },
                            { "mDataProp": "ID" },
                            { "mDataProp": "From" },
                            { "mDataProp": "From (ID)" },

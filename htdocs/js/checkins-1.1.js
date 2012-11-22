@@ -28,6 +28,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
@@ -38,7 +40,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -47,6 +49,8 @@ function build_table( data ) {
     for (var i=0;i<data.checkins.length;i++) 
     {
         row = tBody.insertRow(-1); row.id = 'req'+data.checkins[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.checkins[i].author;
@@ -86,7 +90,7 @@ function checkin( requestId ) {
     var myRow=$("#req"+requestId);
     var parms = {
 	reqid: requestId,
-	msg_to: myRow.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
+	msg_to: myRow.find(':nth-child(8)').text(),  // sending TO whoever original was FROM
 	lid: $("#lid").text(),
 	status: "Checked-in",
 	message: ""

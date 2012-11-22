@@ -1,9 +1,8 @@
-// renewal-answer-1.0.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    renewal-answer-1.0.js is a part of fILL.
+    renewal-answer.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,6 +28,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
@@ -41,7 +42,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -52,6 +53,8 @@ function build_table( data ) {
     {
 //	alert (data.renewRequests[i].id+" "+data.renewRequests[i].msg_from+" "+data.renewRequests[i].call_number+" "+data.renewRequests[i].author+" "+data.renewRequests[i].title+" "+data.renewRequests[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.renewRequests[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].from; cell.setAttribute('title', data.renewRequests[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].msg_from;
@@ -100,10 +103,10 @@ function renewalAnswer( requestId ) {
     var myRow=$("#req"+requestId);
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(3)').text(),
+	"msg_to": myRow.find(':nth-child(5)').text(),
 	"lid": $("#lid").text(),
 	"status": "Renew-Answer|Ok",
-	"message": "due "+myRow.find(':nth-child(8)').text()
+	"message": "due "+myRow.find(':nth-child(10)').text()
     };
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
@@ -132,7 +135,7 @@ function cannotRenew( requestId ) {
     crDiv.id = "cannotRenewMessage";
     var crForm = document.createElement("form");
     crDiv.appendChild(crForm);
-    myRow[0].cells[8].appendChild(crDiv);
+    myRow[0].cells[10].appendChild(crDiv);
 
     $("#divResponses"+requestId).hide();
 
@@ -152,7 +155,7 @@ function cannotRenew( requestId ) {
 	$("#divResponses"+requestId).show(); 
 	var parms = {
 	    "reqid": requestId,
-	    "msg_to": myRow.find(':nth-child(3)').text(),
+	    "msg_to": myRow.find(':nth-child(5)').text(),
 	    "lid": $("#lid").text(),
 	    "status": "Renew-Answer|No-renewal",
 	    "message": reason
@@ -181,9 +184,9 @@ function set_default_due_date(oForm) {
     var theTable = document.getElementById('gradient-style');
 
     for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[7].innerHTML = defaultDueDate;
+	theTable.tBodies[0].rows[r].cells[9].innerHTML = defaultDueDate;
     }
-    $("#gradient-style > tbody > tr > td:nth-child(8)").stop(true,true).effect("highlight", {}, 2000);
+    $("#gradient-style > tbody > tr > td:nth-child(10)").stop(true,true).effect("highlight", {}, 2000);
 }
 
 function toggleLayer( whichLayer )
