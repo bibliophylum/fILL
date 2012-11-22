@@ -29,6 +29,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
@@ -41,7 +43,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "As items are received, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "As items are received, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -52,6 +54,8 @@ function build_table( data ) {
     {
 //	alert (data.receiving[i].id+" "+data.receiving[i].msg_from+" "+data.receiving[i].call_number+" "+data.receiving[i].author+" "+data.receiving[i].title+" "+data.receiving[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.receiving[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.receiving[i].author;

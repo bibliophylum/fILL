@@ -29,6 +29,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
@@ -40,7 +42,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "These items are now overdue.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "These items are now overdue.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -51,6 +53,8 @@ function build_table( data ) {
     {
 //	alert (data.overdue[i].id+" "+data.overdue[i].msg_from+" "+data.overdue[i].call_number+" "+data.overdue[i].author+" "+data.overdue[i].title+" "+data.overdue[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.overdue[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].author;

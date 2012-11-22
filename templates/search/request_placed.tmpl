@@ -47,6 +47,10 @@
     <p>The following requests have been added to these lender's pending lists:</p>
     <table>
       <tr>
+	<td>gid</td>
+	<td> </td>
+	<td>cid</td>
+	<td> </td>
 	<td>request_id</td>
 	<td>symbol</td>
 	<td>library</td>
@@ -54,6 +58,10 @@
       </tr>
     <TMPL_LOOP name="trying">
       <tr>
+	<td><TMPL_VAR name="group_id"></td>
+	<td> - </td>
+	<td><TMPL_VAR name="chain_id"></td>
+	<td> - </td>
 	<td><TMPL_VAR name="request_id"></td>
 	<td><TMPL_VAR name="symbol"></td>
 	<td><TMPL_VAR name="library"></td>

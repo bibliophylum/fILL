@@ -14,6 +14,8 @@ my $today = sprintf("%4d-%02d-%02d",($year+1900),($mon+1),$mday);
 # sql to get items this library has borrowed, which are overdue
 #my $SQL = "select r.id, r.title, r.author, l.name as from, l.library, ra.msg_from, date_trunc('second',ra.ts) as ts, substring(message from 'due (.*)') as due_date, r.patron_barcode from request r left join requests_active ra on (r.id = ra.request_id) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='Shipped' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned') and ra.request_id not in (select request_id from requests_active where msg_to=? and status='Renew-Answer|Ok') and substring(message from 'due (.*)') < ? order by r.patron_barcode, r.title";
 my $SQL="select 
+  g.group_id as gid,
+  c.chain_id as cid,
   r.id, 
   g.title, 
   g.author, 

@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/unfilled-1.3.js"></script>
+<script type="text/javascript" src="/js/unfilled-1.4.js"></script>
 
 
 <script type="text/javascript">
@@ -38,6 +38,8 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
+                           { "mDataProp": "gid" },
+                           { "mDataProp": "cid" },
                            { "mDataProp": "ID" },
                            { "mDataProp": "Title" },
                            { "mDataProp": "Author" },

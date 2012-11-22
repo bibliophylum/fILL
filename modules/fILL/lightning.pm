@@ -165,7 +165,7 @@ sub complete_the_request_process {
 	}
     }
 
-    my $trying_aref = $self->dbh->selectall_arrayref("select s.request_id, l.name as symbol, l.library, s.call_number from sources s left join libraries l on l.lid=s.lid where s.group_id=? and s.tried=true", { Slice => {} }, $group_id);
+    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, l.name as symbol, l.library, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join libraries l on l.lid=s.lid where s.group_id=? and s.tried=true", { Slice => {} }, $group_id);
 
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",

@@ -28,6 +28,8 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
@@ -43,7 +45,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "13"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -52,6 +54,8 @@ function build_table( data ) {
     for (var i=0;i<data.unfilled.length;i++) 
     {
         row = tBody.insertRow(-1); row.id = 'req'+data.unfilled[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].author;

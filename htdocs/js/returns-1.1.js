@@ -1,9 +1,9 @@
-// renewals.js
+// returns.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    renewals.js is a part of fILL.
+    returns.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,52 +29,48 @@ function build_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Lender"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Lender (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Renewal"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Return to"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Return to (ID)"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Return"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "As you ask for renewals, items are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
 //    alert('building rows');
-    for (var i=0;i<data.renewals.length;i++) 
+    for (var i=0;i<data.returns.length;i++) 
     {
-//	alert (data.renewals[i].id+" "+data.renewals[i].msg_from+" "+data.renewals[i].call_number+" "+data.renewals[i].author+" "+data.renewals[i].title+" "+data.renewals[i].ts); //further debug
-        row = tBody.insertRow(-1); row.id = 'req'+data.renewals[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].id;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].title;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].patron_barcode;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].to; cell.setAttribute('title', data.renewals[i].library);
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].msg_to;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].message;
+//	alert (data.returns[i].id+" "+data.returns[i].msg_from+" "+data.returns[i].call_number+" "+data.returns[i].author+" "+data.returns[i].title+" "+data.returns[i].ts); //further debug
+        row = tBody.insertRow(-1); row.id = 'req'+data.returns[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].id;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].to; cell.setAttribute('title', data.returns[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.returns[i].msg_to;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
-	divResponses.id = 'divResponses'+data.renewals[i].id;
+	divResponses.id = 'divResponses'+data.returns[i].id;
 
-	if (data.renewals[i].status == 'Received') {
-	    var b1 = document.createElement("input");
-	    b1.type = "button";
-	    b1.value = "Ask for renewal";
-	    var requestId = data.renewals[i].id;
-	    b1.onclick = make_renewals_handler( requestId );
-	    divResponses.appendChild(b1);
-	}
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Return";
+	var requestId = data.returns[i].id;
+	b1.onclick = make_returns_handler( requestId );
+	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
     }
@@ -89,20 +85,37 @@ function build_table( data ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_renewals_handler( requestId ) {
-    return function() { request_renewal( requestId ) };
+function make_returns_handler( requestId ) {
+    return function() { return_item( requestId ) };
 }
 
-function request_renewal( requestId ) {
-    var myRow=$("#req"+requestId);
-    var parms = {
-	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(7)').text(),
-	"lid": $("#lid").text(),
-	"status": "Renew",
-	"message": ""
-    };
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+function return_item( requestId ) {
+    // NOTE: this code will find table rows based on cell contents...
+    // ...as we now have <tr id='xxx'>, there's an easier way....
+
+    // Returns [{reqid: 12, msg_to: '101'}, 
+    //          {reqid: 15, msg_to: '98'},
+    // Note that nth-child uses 1-based indexing, not 0-based
+    var parms = $('#gradient-style tbody tr').map(function() {
+	// $(this) is used more than once; cache it for performance.
+	var $row = $(this);
+	
+	// For each row that's "mapped", return an object that
+	//  describes the first and second <td> in the row.
+	if ($row.find(':nth-child(1)').text() == requestId) {
+	    return {
+		reqid: $row.find(':nth-child(1)').text(),
+		msg_to: $row.find(':nth-child(6)').text(),  // sending TO whoever original was FROM
+		lid: $("#lid").text(),
+		status: "Returned",
+		message: ""
+	    }
+	} else {
+	    return null;
+	};
+    }).get();
+
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms[0],
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
