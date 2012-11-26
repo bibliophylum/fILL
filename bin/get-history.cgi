@@ -45,7 +45,7 @@ where
 group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, rh.status, rh.message 
 order by ts
 ";
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $start, $end );
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $start, $end );
 
 # sql to get this library's lending history
 $SQL="select 
