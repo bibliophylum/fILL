@@ -39,7 +39,7 @@ from requests_history rh
   left join history_group hg on hg.group_id = hc.group_id
 where 
   rc.requester=?
-  and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) 
+  and rh.ts=(select max(ts) from requests_history rh2 left join request_closed r2 on r2.id=rh2.request_id left join history_chain hc2 on hc2.chain_id=r2.chain_id where r2.chain_id=hc.chain_id)
   and rh.ts >= ?
   and rh.ts < ?
 group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, rh.status, rh.message 

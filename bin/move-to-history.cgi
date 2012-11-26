@@ -50,6 +50,7 @@ eval {
     }
 
     # see if the chain already exists in history
+    # (this should not happen... entire chain moved at once)
     $SQL = "select count(chain_id) from history_chain where chain_id=?";
     my @hc = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
     if ((@hc) && ($hc[0] == 0)) {
@@ -58,32 +59,40 @@ eval {
 	$dbh->do( $SQL, undef, $gcr[0], $gcr[1] );
 	print STDERR "move-to-history: request_chain added to history_chain\n";
     } else {
-	print STDERR "move-to-history: request_chain already exists in history_chain\n";
+	print STDERR "move-to-history: request_chain already exists in history_chain!\n";
     }
 
+    # get all of the requests for this chain
+    $SQL = "select id from request where chain_id=?";
+    my $chained_requests_aref = $dbh->selectall_arrayref( $SQL, undef, $gcr[1] );
+    print STDERR "move-to-history: moving chain to history\n";
+    foreach my $req_aref (@$chained_requests_aref) {
+	my $chained_req = $req_aref->[0];
+	print STDERR "move-to-history: chain [" . $gcr[1] . "], request [$chained_req]\n";
 
-    # attempts doesn't make sense any more with request_groups / request_chains... need to figure out what to do here.
-    # For now, leave as-is.
-    my $SQL = "insert into request_closed (id,requester,chain_id) (select id,requester, chain_id from request where id=?)";
-    $rClosed = $dbh->do( $SQL, undef, $reqid );
-    print STDERR "move-to-history: request inserted into request_closed\n";
+	# attempts doesn't make sense any more with request_groups / request_chains... need to figure out what to do here.
+	# For now, leave as-is.
+	$SQL = "insert into request_closed (id,requester,chain_id) (select id,requester, chain_id from request where id=?)";
+	$rClosed = $dbh->do( $SQL, undef, $chained_req );
+	print STDERR "move-to-history: request [$chained_req] inserted into request_closed\n";
 
-    $SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
-    $rHistory = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
-    print STDERR "move-to-history: associated requests_active inserted into requests_history\n";
+	$SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
+	$rHistory = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "move-to-history: associated requests_active inserted into requests_history\n";
 
-    $SQL = "delete from requests_active where request_id=?";
-    $rActive = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
-    print STDERR "move-to-history: requests_active deleted for reqid $reqid\n";
+	$SQL = "delete from requests_active where request_id=?";
+	$rActive = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "move-to-history: requests_active deleted for reqid $chained_req\n";
 
-    # sources.request_id is an fkey.  Can't delete the request until that's reset.
-    $SQL = "update sources set request_id=NULL where request_id=?";
-    $rSources = ($dbh->do( $SQL, undef, $reqid ) ? 1 : 0);
-    print STDERR "move-to-history: sources referencing this request have been nulled\n";
+	# sources.request_id is an fkey.  Can't delete the request until that's reset.
+	$SQL = "update sources set request_id=NULL where request_id=?";
+	$rSources = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "move-to-history: sources referencing this request have been nulled\n";
 
-    $SQL = "delete from request where id=?";
-    $rRequest = $dbh->do( $SQL, undef, $reqid );
-    print STDERR "move-to-history: request deleted\n";
+	$SQL = "delete from request where id=?";
+	$rRequest = $dbh->do( $SQL, undef, $chained_req );
+	print STDERR "move-to-history: request deleted\n";
+    }
 
     $SQL = "select count(id) from request where chain_id=?";
     my @cnt = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
@@ -93,7 +102,8 @@ eval {
 	$dbh->do( $SQL, undef, $gcr[1] );
 	print STDERR "move-to-history: no requests left in this chain, chain deleted\n";
     } else {
-	print STDERR "move-to-history: still requests in this chain, chain not deleted\n";
+	# this should not happen.
+	print STDERR "move-to-history: strange... still requests in this chain, chain not deleted\n";
     }
     @cnt = undef;
 
