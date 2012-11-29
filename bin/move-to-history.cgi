@@ -15,6 +15,7 @@ my $rHistory = 0;
 my $rActive = 0;
 my $rSources = 0;
 my $rRequest = 0;
+my $rChains = 0;
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -117,7 +118,7 @@ eval {
 
 	# we don't need the sources for history
 	$SQL = "delete from sources where group_id=?";
-	$rSources = ($dbh->do( $SQL, undef, $group[0] ) ? 1 : 0);
+	$rSources = ($dbh->do( $SQL, undef, $gcr[0] ) ? 1 : 0);
 	print STDERR "move-to-history: no further need of sources, sources deleted\n";
     } else {
 	print STDERR "move-to-history: still chains in this group, group not deleted\n";

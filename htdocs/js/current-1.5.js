@@ -80,11 +80,12 @@ function fnFormatDetails( oTable, nTr )
 
 function override( e, oData, oTable, nTr )
 {
-    $.getJSON('/cgi-bin/override.cgi', {"reqid": oData.id, "override": e.id},
+//    $.getJSON('/cgi-bin/override.cgi', {"reqid": oData.id, "override": e.id},
+    $.getJSON('/cgi-bin/override.cgi', {"cid": oData.cid, "override": e.id},
 	      function(data){
 		  $(nTr).children('.overrides').click();
-		  if (data.status) { oTable.fnUpdate( data.status, nTr, 6 ); };
-		  if (data.message) { oTable.fnUpdate( data.message, nTr, 7 ); };
+		  if (data.status) { oTable.fnUpdate( data.status, nTr, 8 ); };
+		  if (data.message) { oTable.fnUpdate( data.message, nTr, 9 ); };
 		  if (data.alert_text) { alert(data.alert_text); };
 		  if (data.success) { oTable.fnDeleteRow( nTr ); };
 	      })

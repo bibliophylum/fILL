@@ -9,10 +9,15 @@ use CGI;
 use DBI;
 use JSON;
 use Switch;
+use Data::Dumper;
 
 my $query = new CGI;
-my $reqid = $query->param('reqid');
+#my $reqid = $query->param('reqid');   # we don't get reqid any more - now gid & cid... FIXME!
+my $gid = $query->param('gid');
+my $cid = $query->param('cid');
 my $override = $query->param('override');
+
+print STDERR "overriding cid [$cid], $override\n";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -25,9 +30,30 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $reqid);
+#my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
+my $SQL = "select 
+  ra.request_id, 
+  ra.msg_from as borrower_id, 
+  l.name as borrower, 
+  ra.msg_to as lender_id, 
+  l2.name as lender, 
+  ra.status, 
+  ra.message 
+from 
+  request_group g
+  left join request_chain c on c.group_id = g.group_id
+  left join request r on r.chain_id = c.chain_id
+  left join requests_active ra on ra.request_id = r.id
+  left join libraries l on (l.lid=ra.msg_from) 
+  left join libraries l2 on (l2.lid=ra.msg_to) 
+where 
+  c.chain_id=?
+  and status='ILL-Request' 
+order by ra.ts";
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $cid);
 my $href = pop(@$aref);
+print STDERR Dumper($href);
+my $reqid = $href->{"request_id"};
 
 $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
 my $borrower_id;
@@ -128,27 +154,27 @@ switch( $override ) {
 	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'CancelReply|Ok', "override by $href->{borrower}" );	
 
 	    # try next lender (from try-next-lender.cgi)
-	    my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
-	
-	    $SQL = "select lid, sequence_number from sources where group_id=? and tried=false order by sequence_number";
-	    my @ary = $dbh->selectrow_array( $SQL, undef, $group[0] );
+	    my @gcr = $dbh->selectrow_array("select g.group_id, c.chain_id, r.id from request r left join request_chain c on c.chain_id=r.chain_id left join request_group g on c.group_id=g.group_id where r.id=?", undef, $reqid);
 
+	    $SQL = "select lid, sequence_number from sources where group_id=? and tried=false order by sequence_number";
+	    my @ary = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
+
+	    my $retval = 0;
 	    if (@ary) {
-		# mark this source as tried
-		$dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $reqid, $group[0], $ary[1]);
-		
 		# message to requesting library
 		$SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
 		$dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "Trying next source");
 		
 		# begin the ILL conversation
-		$SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
-		$dbh->do($SQL, undef, $reqid, $borrower_id, $ary[0], 'ILL-Request');
+		$SQL = "INSERT INTO request (requester, current_source_sequence_number, chain_id) values (?,?,?)";
+		$dbh->do($SQL, undef, $borrower_id, $ary[1], $gcr[1]);
+		my $newRequestId = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
 		
-		$SQL = "UPDATE request SET current_source_sequence_number=? where id=?";
-		$dbh->do($SQL, undef, $ary[1], $reqid);
-		$return_data_href->{ success } = 1;
-		$return_data_href->{ status } = "Forwarded to next lender";
+		$SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
+		$dbh->do($SQL, undef, $newRequestId, $borrower_id, $ary[0], 'ILL-Request');
+		
+		# mark this source as tried
+		$dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $newRequestId, $gcr[0], $ary[1]);
 	    
 	    } else {
 		$SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
@@ -244,37 +270,106 @@ sub move_to_history {
     my $rSuccess;
 
     eval {
-	# attempts doesn't make sense any more with request_groups... need to figure out what to do here.
+    my $SQL;
+    # get the request_id, chain_id, and group_id from the (live) request
+    $SQL = "select g.group_id, c.chain_id, r.id from request_group g left join request_chain c on c.group_id = g.group_id left join request r on r.chain_id=c.chain_id where r.id=?";
+    my @gcr = $dbh->selectrow_array( $SQL, undef, $reqid );
+    print STDERR "override - move-to-history: gid [$gcr[0]], cid [$gcr[1]], rid [$gcr[2]]\n";
+    
+    # see if the group already exists in history
+    $SQL = "select count(group_id) from history_group where group_id=?";
+    my @hg = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
+    if ((@hg) && ($hg[0] == 0)) {
+	# not yet in history_group, so add it
+	$SQL = "insert into history_group (group_id, copies_requested, title, author, requester, patron_barcode, note) select group_id, copies_requested, title, author, requester, patron_barcode, note from request_group where group_id=?";
+	$dbh->do( $SQL, undef, $gcr[0] );
+	print STDERR "override - move-to-history: request_group added to history_group\n";
+    } else {
+	print STDERR "override - move-to-history: request_group already exists in history_group\n";
+    }
+
+    # see if the chain already exists in history
+    # (this should not happen... entire chain moved at once)
+    $SQL = "select count(chain_id) from history_chain where chain_id=?";
+    my @hc = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
+    if ((@hc) && ($hc[0] == 0)) {
+	# not yet in history_chain, so add it
+	$SQL = "insert into history_chain (group_id, chain_id) values (?,?)";
+	$dbh->do( $SQL, undef, $gcr[0], $gcr[1] );
+	print STDERR "override - move-to-history: request_chain added to history_chain\n";
+    } else {
+	print STDERR "override - move-to-history: request_chain already exists in history_chain!\n";
+    }
+
+    # get all of the requests for this chain
+    my $rClosed = 0;
+    my $rHistory = 0;
+    my $rActive = 0;
+    my $rSources = 0;
+    my $rRequest = 0;
+    my $rChains = 0;
+
+    $SQL = "select id from request where chain_id=?";
+    my $chained_requests_aref = $dbh->selectall_arrayref( $SQL, undef, $gcr[1] );
+    print STDERR "override - move-to-history: moving chain to history\n";
+    foreach my $req_aref (@$chained_requests_aref) {
+	my $chained_req = $req_aref->[0];
+	print STDERR "override - move-to-history: chain [" . $gcr[1] . "], request [$chained_req]\n";
+
+	# attempts doesn't make sense any more with request_groups / request_chains... need to figure out what to do here.
 	# For now, leave as-is.
-	my $SQL = "insert into request_closed (id,title,author,requester,group_id,patron_barcode,attempts) (select id,title,author,requester,group_id,patron_barcode,current_source_sequence_number from request where id=?)";
-	$dbh->do( $SQL, undef, $reqid );
-	
-	$SQL = "update request_closed set filled_by = (select msg_from from requests_active where request_id=? and status='Checked-in')";
-	$dbh->do( $SQL, undef, $reqid );
-	
+	$SQL = "insert into request_closed (id,requester,chain_id) (select id,requester, chain_id from request where id=?)";
+	$rClosed = $dbh->do( $SQL, undef, $chained_req );
+	print STDERR "override - move-to-history: request [$chained_req] inserted into request_closed\n";
+
 	$SQL = "insert into requests_history (request_id, ts, msg_from, msg_to, status, message) (select request_id, ts, msg_from, msg_to, status, message from requests_active where request_id=?);";
-	$dbh->do( $SQL, undef, $reqid );
-	
+	$rHistory = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "override - move-to-history: associated requests_active inserted into requests_history\n";
+
 	$SQL = "delete from requests_active where request_id=?";
-	$dbh->do( $SQL, undef, $reqid );
-	
-	my @group = $dbh->selectrow_array("select group_id from request where id=?", undef, $reqid);
-	
+	$rActive = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "override - move-to-history: requests_active deleted for reqid $chained_req\n";
+
 	# sources.request_id is an fkey.  Can't delete the request until that's reset.
 	$SQL = "update sources set request_id=NULL where request_id=?";
-	$dbh->do( $SQL, undef, $reqid );
-	
+	$rSources = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	print STDERR "override - move-to-history: sources referencing this request have been nulled\n";
+
 	$SQL = "delete from request where id=?";
-	$dbh->do( $SQL, undef, $reqid );
-		  
-	$SQL = "select count(id) from request where group_id=?";
-	my @cnt = $dbh->selectrow_arrayref( $SQL, undef, $group[0] );
-	if ((@cnt) && ($cnt[0] == 0)) {
-	    $SQL = "delete from sources where group_id=?";
-	    $dbh->do( $SQL, undef, $group[0] );
-	}
-	
-	$dbh->commit;   # commit the changes if we get this far
+	$rRequest = $dbh->do( $SQL, undef, $chained_req );
+	print STDERR "override - move-to-history: request deleted\n";
+    }
+
+    $SQL = "select count(id) from request where chain_id=?";
+    my @cnt = $dbh->selectrow_array( $SQL, undef, $gcr[1] );
+    if ((@cnt) && ($cnt[0] == 0)) {
+	# no requests left in this chain
+	$SQL = "delete from request_chain where chain_id=?";
+	$dbh->do( $SQL, undef, $gcr[1] );
+	print STDERR "override - move-to-history: no requests left in this chain, chain deleted\n";
+    } else {
+	# this should not happen.
+	print STDERR "override - move-to-history: strange... still requests in this chain, chain not deleted\n";
+    }
+    @cnt = undef;
+
+    $SQL = "select count(group_id) from request_chain where group_id=?";
+    @cnt = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
+    if ((@cnt) && ($cnt[0] == 0)) {
+	# no chains left in this group
+	$SQL = "delete from request_group where group_id=?";
+	$rChains = $dbh->do( $SQL, undef, $gcr[0] );
+	print STDERR "override - move-to-history: no chains left in this group, group deleted\n";
+
+	# we don't need the sources for history
+	$SQL = "delete from sources where group_id=?";
+	$rSources = ($dbh->do( $SQL, undef, $gcr[0] ) ? 1 : 0);
+	print STDERR "override - move-to-history: no further need of sources, sources deleted\n";
+    } else {
+	print STDERR "override - move-to-history: still chains in this group, group not deleted\n";
+    }
+
+    $dbh->commit;   # commit the changes if we get this far
     };
     if ($@) {
 	warn "Transaction aborted because $@";
