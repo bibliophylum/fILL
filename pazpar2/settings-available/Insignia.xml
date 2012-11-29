@@ -50,8 +50,8 @@
   <set target="206.45.82.29:210/ILS" name="symbol" value="MLPJ"/>
 
 <!-- Pinawa Public Library -->
-  <set target="206.45.117.102:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
-  <set target="206.45.117.102:210/Pinawa_ILS" name="symbol" value="MP"/>
+  <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
+  <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="symbol" value="MP"/>
 
 <!-- Southwestern Manitoba Regional Library -->
   <set target="www.insigniasoftware.com:210/Melita_ILS" name="pz:name" value="Southwestern Manitoba Regional Library (Insignia)"/>
