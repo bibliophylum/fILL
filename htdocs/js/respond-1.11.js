@@ -248,27 +248,21 @@ function forward( requestId, retargets ) {
 	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
 	
-	// Returns [{reqid: 12, msg_to: '101'}, 
-	//          {reqid: 15, msg_to: '98'},
 	// Note that nth-child uses 1-based indexing, not 0-based
 	var parms = $('#gradient-style tbody tr').map(function() {
 	    // $(this) is used more than once; cache it for performance.
 	    var $row = $(this);
-	    
-	    // For each row that's "mapped", return an object that
-	    //  describes the first and second <td> in the row.
-	    if ($row.find(':nth-child(1)').text() == requestId) {
+	    if ($row.find(':nth-child(3)').text() == requestId) {
 		var targetIndex;
 		for (var i=0; i < retargets.length; i++) {
 		    if (retargets[i].lid == forwardTo)
 			targetIndex = i;
 		}
 		return {
-		    reqid: $row.find(':nth-child(1)').text(),
-		    msg_to: $row.find(':nth-child(3)').text(),  // sending TO whoever original was FROM
+		    reqid: requestId,
+		    msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
 		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Locations-provided|responder-specific",
-//		    message: "forwarded to our branch "+forwardTo
 		    message: "forwarded to our branch "+retargets[targetIndex].name
 		}
 	    } else {
