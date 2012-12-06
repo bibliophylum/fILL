@@ -107,6 +107,14 @@ function make_shipit_handler( requestId ) {
 
 function shipit( requestId ) {
     var myRow=$("#req"+requestId);
+    if (myRow.find(':nth-child(10)').text().length == 0) {
+	var retVal = confirm("You have not entered a due date.  Continue without due date?");
+	if (retVal == false) {
+	    // bail out to let the user enter a due date
+ 	    return false;
+	}
+    }
+
     var parms = {
 	"reqid": requestId,
 	"msg_to": myRow.find(':nth-child(5)').text(),

@@ -24,7 +24,9 @@ my $SQL = "select
   ra.msg_from,
   ra.msg_to,
   l.name as to,
-  l.library,
+  l.library as to_library,
+  l2.name as from,
+  l2.library as from_library,
   ra.status,
   ra.message
 from requests_active ra
@@ -32,6 +34,7 @@ from requests_active ra
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join libraries l on l.lid = ra.msg_to
+  left join libraries l2 on l2.lid = ra.msg_from
 where 
   ra.request_id in (select request_id
                     from requests_active

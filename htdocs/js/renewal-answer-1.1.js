@@ -62,7 +62,17 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = "";
+	// Need to set a default due date:
+	var now = new Date();
+	var d = new Date(now.getTime() + (27 * 24 * 60 * 60 * 1000)); 
+// Doesn't work on older version of Internet Explorer...
+//	var iso = d.toISOString();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+	var iso = d.getFullYear() + '-' +
+	    ((''+month).length<2 ? '0' : '') + month + '-' +
+	    ((''+day).length<2 ? '0' : '') + day;
+        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10);
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
@@ -101,6 +111,14 @@ function make_renewalAnswer_handler( requestId ) {
 
 function renewalAnswer( requestId ) {
     var myRow=$("#req"+requestId);
+    if (myRow.find(':nth-child(10)').text().length == 0) {
+	var retVal = confirm("You have not entered a due date.  Continue without due date?");
+	if (retVal == false) {
+	    // bail out to let the user enter a due date
+ 	    return false;
+	}
+    }
+
     var parms = {
 	"reqid": requestId,
 	"msg_to": myRow.find(':nth-child(5)').text(),

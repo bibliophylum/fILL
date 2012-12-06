@@ -62,8 +62,13 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].ts;
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].to; cell.setAttribute('title', data.renewals[i].library);
-        cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].msg_to;
+	if (data.renewals[i].status.search(/Renew-Answer/) != -1) {
+            cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].from; cell.setAttribute('title', data.renewals[i].from_library);
+            cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].msg_from;
+	} else {
+            cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].to; cell.setAttribute('title', data.renewals[i].to_library);
+            cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].msg_to;
+	}
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].message;
         cell = row.insertCell(-1); 
