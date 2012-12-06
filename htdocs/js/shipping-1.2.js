@@ -112,7 +112,7 @@ function shipit( requestId ) {
 	"msg_to": myRow.find(':nth-child(5)').text(),
 	"lid": $("#lid").text(),
 	"status": "Shipped",
-	"message": ""
+	"message": "due "+myRow.find(':nth-child(10)').text()
     };
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
