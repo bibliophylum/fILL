@@ -27,13 +27,13 @@
 
     </td>
     <td style="width:30%">
-      <h2>New Functionality: Requesting multiple copies of a title</h2>
+      <h2>Fix for prematurely closed requests</h2>
       <br/>
-      <p>When making a request, you now have the option to specify the number of copies you are looking for.  Instead of entering a patron barcode, enter a short group identifier (e.g. "book club Oct") so that you can find the group of requests in the various fILL tables.</p>
+      <p>A number of requests (notably early multiple-copy requests) had been mistakenly closed when another request in the same group was closed.</p>
       <br/>
-      <p>fILL will automatically go through the list of potential sources in net-borrower/net-lender order, create a request for each copy, and give you a list of the request IDs and which library the request went to.  If a lender can't fill a request, clicking the "Try next lender" (in your Unfilled table) will send it to the next untried library in the sources list.</p>
+      <p>Those requests which should have remained active have be "un-closed" and will now show up properly.</p>
       <br/>
-      <p>This is new functionality, and there may be bugs; let us know, and we'll tackle any issues as they arise.</p>
+      <p>If you've already completed the ILL, please take a moment to return/check-in/etc those requests in fILL.</p>
     </td>
   </tr>
 </table>
