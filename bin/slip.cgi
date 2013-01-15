@@ -53,6 +53,7 @@ if ($@) {
     warn $@; # print the error
     #... # do whatever you need to deal with the error
 }
+print Dumper($href);
 
 my $slips_href;
 eval {
@@ -72,10 +73,22 @@ print "<h4>Interlibrary Loan</h4>\n";
 print '<p>for patron ' . $href->{patron_barcode} . "</p>\n";
 
 if ($slips_href->{slips_with_barcodes}) {
-    if (( $href->{patron_barcode} ) && ( $href->{patron_barcode} =~ /\d+/)) {
+#    if (( $href->{patron_barcode} ) && ( $href->{patron_barcode} =~ /^\d+$/)) {
+    if ( $href->{patron_barcode} ) {
         # generate barcodes (code39 requires '*' as start and stop characters)
-	my $bcimg = encode_base64(GD::Barcode::Code39->new( '*' . $href->{patron_barcode} . '*' )->plot->png);
-	print "<p><img id=\"bcimg\" src=\"data:image/png;base64,$bcimg\"></p>\n";
+	my $oGdBar;
+	my $bcimg;
+	eval {
+	    $oGdBar = GD::Barcode::Code39->new( '*' . $href->{patron_barcode} . '*' );
+	    die $GD::Barcode::Code39::errStr unless($oGdBar);     #Invalid Characters
+	};
+	if ($@) {
+	    # warn $@;
+	    print "<p>Unable to create scannable patron barcode image.</p>\n";
+	} else {
+	    $bcimg = encode_base64($oGdBar->plot->png);
+	    print "<p><img id=\"bcimg\" src=\"data:image/png;base64,$bcimg\"></p>\n";
+	}
     } else {
 	print "<p>Scannable patron barcode image not available.</p>\n";
     }
