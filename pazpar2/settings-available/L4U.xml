@@ -25,8 +25,8 @@
   <set target="206.45.107.155:210/Default" name="symbol" value="MFF"/>
 
 <!-- Jolys Regional Library -->
-  <set target="66.244.209.14:210/L4U_Agent" name="pz:name" value="Jolys Regional Library (L4U)"/>
-  <set target="66.244.209.14:210/L4U_Agent" name="symbol" value="MSTP"/>
+  <set target="libstp.dyndns.org:210/L4U_Agent" name="pz:name" value="Jolys Regional Library (L4U)"/>
+  <set target="libstp.dyndns.org:210/L4U_Agent" name="symbol" value="MSTP"/>
 
 <!-- Russell and District Regional Library -->
   <set target="206.45.118.129:210/Default" name="pz:name" value="Russell and District Regional Library (L4U)"/>
