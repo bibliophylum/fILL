@@ -29,21 +29,7 @@ $('document').ready(function(){
 			}
 		]
 	},
-        "aoColumns": [
-            { "mDataProp": "Year", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "MonthNum", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Month", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Borrowing: books requested", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Borrowing: actual requests made", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Borrowing: unfilled responses", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Borrowing: lender shipped", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Borrowing: we cancelled", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Lending: requests to lend", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Lending: could not fill", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Lending: shipped", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Lending: forward to branch", "sWidth": "5%", "sDefaultContent": "-" },
-            { "mDataProp": "Lending: borrower cancelled", "sWidth": "5%", "sDefaultContent": "-" },
-        ],
+        "aaSorting": [[0,"asc"],[1,"asc"]],
         "bAutoWidth": false
     });
 
@@ -121,7 +107,6 @@ $('document').ready(function(){
 	  </table>
 	</div>
       </div>
-      <p><em>Click on the 'MonthNum' column header, and then the 'Year' column header, to sort this report by year/month.  We're working on sorting this way by default.</em></p>
     </div>
 
   </div>
