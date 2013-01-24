@@ -37,11 +37,19 @@ function build_table( data ) {
 
 	
 	var divActions = document.createElement("div");
+
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Delete";
-//	b1.onclick = make_report_handler( data.reports.completed[i].rid );
+	b1.value = "View";
+	b1.onclick = make_view_handler( data.reports.completed[i].rid );
 	divActions.appendChild(b1);
+
+	var b2 = document.createElement("input");
+	b2.type = "button";
+	b2.value = "Delete";
+	b2.onclick = make_delete_handler( data.reports.completed[i].rid );
+	divActions.appendChild(b2);
+
 	$("#"+data.reports.completed[i].rcid+" td:last-child").append( divActions );
     }
 
@@ -67,11 +75,39 @@ function build_table( data ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_report_handler( generator ) {
-    return function() { report( generator ) };
+function make_view_handler( generator ) {
+    return function() { view_report( generator ) };
 }
 
-function report( rid ) {
+
+//<a href="http://www.example.com/" onclick="javascript:openWindow(this.href);return false;">Click Me</a>
+
+
+function view_report( rid ) {
+    $.getJSON('/cgi-bin/queue-report.cgi', { "lid":   lid,
+                                             "rid":   rid,
+                                             "start": d_s, 
+                                             "end":   d_e
+                                           },
+              function(data){
+		  $("tr[rid="+rid+"] td:last-child div input").remove();
+		  $("tr[rid="+rid+"] td:last-child div").append('<p>Queued.</p>');
+		  alert('Report has been queued.');
+              })
+    	.success(function() {
+       	})
+       	.error(function() {
+            alert('error');
+       	})
+       	.complete(function() {
+       	});
+}
+
+function make_delete_handler( generator ) {
+    return function() { delete_report( generator ) };
+}
+
+function delete_report( rid ) {
 /*
     $.getJSON('/cgi-bin/queue-report.cgi', { "lid":   lid,
                                              "rid":   rid,
@@ -119,4 +155,9 @@ function set_secondary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
 }
 
+function openWindow( url )
+{
+  window.open(url, '_blank');
+  window.focus();
+}
 

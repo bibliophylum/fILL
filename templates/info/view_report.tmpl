@@ -1,0 +1,115 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript">
+set_secondary_tab("menu_info_reports");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    oTable = $('#datatable_contacts').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+	"sDom": '<"H"Tfr>t<"F"ip>',
+        "iDisplayLength": 10,
+        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	"oTableTools": {
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf", "print",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	},
+        "aoColumns": [
+            { "mDataProp": "Year", "sWidth": "5%" },
+            { "mDataProp": "MonthNum", "sWidth": "5%" },
+            { "mDataProp": "Month", "sWidth": "5%" },
+            { "mDataProp": "Borrowing: books requested", "sWidth": "5%" },
+            { "mDataProp": "Borrowing: actual requests made", "sWidth": "5%" },
+            { "mDataProp": "Borrowing: unfilled responses", "sWidth": "5%" },
+            { "mDataProp": "Borrowing: lender shipped", "sWidth": "5%" },
+            { "mDataProp": "Borrowing: we cancelled", "sWidth": "5%" },
+            { "mDataProp": "Lending: requests to lend", "sWidth": "5%" },
+            { "mDataProp": "Lending: could not fill", "sWidth": "5%" },
+            { "mDataProp": "Lending: shipped", "sWidth": "5%" },
+            { "mDataProp": "Lending: forward to branch", "sWidth": "5%" },
+            { "mDataProp": "Lending: borrower cancelled", "sWidth": "5%" },
+        ],
+        "bAutoWidth": false
+    });
+
+    $('#datatable_contacts tbody tr').live('mouseover mouseout', function (event) {
+        if (event.type == 'mouseover') {
+            $(this).addClass("ui-state-hover");
+        } else {
+            $(this).removeClass("ui-state-hover");
+        }
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li> </li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="myDiv">
+      <h3>ILL Stats</h3>
+      <div>
+	<div class="dataTable_wrapper">
+	  <table id="datatable_contacts" width="100%">
+	    <thead>
+	      <tr>
+		<th>Year</th><th>MonthNum</th><th>Month</th><th>Borrowing: books requested</th><th>Borrowing: actual requests made</th><th>Borrowing: unfilled responses</th><th>Borrowing: lender shipped</th><th>Borrowing: we cancelled</th><th>Lending: requests to lend</th><th>Lending: could not fill</th><th>Lending: shipped</th><th>Lending: forward to branch</th><th>Lending: borrower cancelled</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+
+	      <TMPL_LOOP NAME="allStats">
+		<tr>
+		  <td><TMPL_VAR NAME="year"></td>
+		  <td><TMPL_VAR NAME="monthnum"></td>
+		  <td><TMPL_VAR NAME="month"></td>
+		  <td><TMPL_VAR NAME="books_requested"></td>
+		  <td><TMPL_VAR NAME="requests_made"></td>
+		  <td><TMPL_VAR NAME="responded_unfilled"></td>
+		  <td><TMPL_VAR NAME="lender_shipped"></td>
+		  <td><TMPL_VAR NAME="we_cancelled"></td>
+		  <td><TMPL_VAR NAME="requests_to_lend"></td>
+		  <td><TMPL_VAR NAME="could_not_fill"></td>
+		  <td><TMPL_VAR NAME="shipped"></td>
+		  <td><TMPL_VAR NAME="forward_to_branch"></td>
+		  <td><TMPL_VAR NAME="borrower_cancelled"></td>
+		</tr>
+	      </TMPL_LOOP>
+
+	    </tbody>
+	  </table>
+	</div>
+      </div>
+      <p><em>Click on the 'MonthNum' column header, and then the 'Year' column header, to sort this report by year/month.  We're working on sorting this way by default.</em></p>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
