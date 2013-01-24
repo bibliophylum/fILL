@@ -11,7 +11,7 @@ libcgi-application-perl
 libcgi-session-perl
 libnet-z3950-zoom-perl
 libdatetime-perl
-libgd-perl
+libgd-gd2-perl
 libgd-graph-perl
 libgd-barcode-perl
 libjson-perl
@@ -19,5 +19,14 @@ libnet-server-perl
 libnet-telnet-perl
 libgetopt-long-descriptive-perl
 libdigest-sha-perl
+libjs-jquery
+libjs-jquery-ui
 
 See also README.pazpar2 for information on installing IndexData's pazpar2 packages.
+
+All at once:
+
+sudo apt-get install libdbi-perl libdbd-pg-perl libhtml-template-perl libmarc-perl libcolor-calc-perl libapache-htpasswd-perl libapache-htgroup-perl libcgi-application-perl libcgi-session-perl libnet-z3950-zoom-perl libdatetime-perl libgd-gd2-perl libgd-graph-perl libgd-barcode-perl libjson-perl libnet-server-perl libnet-telnet-perl libgetopt-long-descriptive-perl libdigest-sha-perl libjs-jquery libjs-jquery-ui pazpar2 pazpar2-apache2 pazpar2-js
+
+
+
