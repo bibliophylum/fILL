@@ -387,6 +387,7 @@ function replaceHtml(el, html) {
 
 function renderDetails(data, marker)
 {
+    var isElectronicResource = false;
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
     var details = '<table>';
     var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
@@ -431,8 +432,11 @@ function renderDetails(data, marker)
 	}
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
-	if (data["location"][i]["md-medium"] != undefined)
+	if (data["location"][i]["md-medium"] != undefined) {
 	    details += '<tr><td><b>Medium</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
+	    if (data["location"][i]["md-medium"] == "electronicresource")
+		isElectronicResource = true;
+	}
 	if (data["location"][i]["md-series-title"] != undefined)
 	    details += '<tr><td><b>Series</b></td><td><b>:</b> ' + data["location"][i]["md-series-title"] + '</td></tr>';
 	if (data["location"][i]["md-subject"] != undefined)
@@ -476,7 +480,11 @@ function renderDetails(data, marker)
 	requestForm += '<input type="hidden" name="localcallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
     }
 
-    requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';
+    if (isElectronicResource) {
+	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
+    } else {
+	requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';
+    }
     requestForm += '</form>';
     details += '</table>';
     details_and_form += requestForm + details + '</div>';
