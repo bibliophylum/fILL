@@ -53,7 +53,7 @@ if ($@) {
     warn $@; # print the error
     #... # do whatever you need to deal with the error
 }
-print Dumper($href);
+#print Dumper($href);
 
 my $slips_href;
 eval {
