@@ -38,7 +38,11 @@ $SQL = "select count(r.id) from request r left join requests_active ra on (r.id 
 my @shipping = $dbh->selectrow_array($SQL, undef, $lid, $lid );
 @shipping[0] = 0 unless (@shipping);
 
+$SQL = "select count(prid) from patron_request where lid=?";
+my @patron_requests = $dbh->selectrow_array($SQL, undef, $lid );
+@patron_requests[0] = 0 unless (@patron_requests);
+
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], shipping => $shipping[0]} } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], shipping => $shipping[0], patron_requests => $patron_requests[0] } } );

@@ -1,0 +1,92 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript" src="/js/new-patron-requests-1.0.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_new_patron_requests");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-new-patron-requests.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+
+                build_table(data); 
+
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "prid" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "Patron" },
+                           { "mDataProp": "Card" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Actions" }
+                      ]
+
+                  });
+            });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <p>These are requests from your patrons that have come in from the public side of fILL.</p>
+    <br/>
+    <p>Verify in your ILS that the patron is in good standing.</p>
+    <br/>
+    <p>Select one of the options for handling the request.</p>
+    <br/>
+    <p>If you agree to ILL an item, a new borrowing request is automatically created - you do not need to search for it yourself.</p>
+    <br/>
+    <p>If you do NOT agree to ILL an item, make sure to tell your patron!</p>
+    <br/>
+    <p><strong>For privacy reasons, fILL does not keep these patron requests after you've dealt with them.</strong></p>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>New patron requests:</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

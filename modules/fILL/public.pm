@@ -17,10 +17,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-package fILL::lightning;
+package fILL::public;
 use warnings;
 use strict;
-use base 'fILLbase';
+use base 'publicbase';
 use GD::Barcode;
 use GD::Barcode::Code39;
 use MIME::Base64;
@@ -61,139 +61,29 @@ my %WESTERN_MB_TO_MAPLIN = (
 #
 sub setup {
     my $self = shift;
-    $self->start_mode('lightning_search_form');
+    $self->start_mode('search_form');
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'lightning_search_form'    => 'lightning_search_process',
-	'lightning_request_form'   => 'lightning_request_process',
+	'search_form'              => 'search_process',
+	'request_form'             => 'request_process',
 	'request'                  => 'request_process',
-	'complete_the_request'     => 'complete_the_request_process',
-	'pull_list'                => 'pull_list_process',
-	'respond'                  => 'respond_process',
-	'shipping'                 => 'shipping_process',
-	'unfilled'                 => 'unfilled_process',
-	'receive'                  => 'receiving_process',
-	'renewals'                 => 'renewals_process',
-	'returns'                  => 'returns_process',
-	'overdue'                  => 'overdue_process',
-	'renew_answer'             => 'renew_answer_process',
-	'checkins'                 => 'checkins_process',
-	'history'                  => 'history_process',
-	'current'                  => 'current_process',
-	'new_patron_requests'      => 'new_patron_requests_process',
+	'registration_form'        => 'registration_process',
 	);
 }
 
 #--------------------------------------------------------------------------------
 #
 #
-sub complete_the_request_process {
+sub search_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $pbarcode = $q->param('pbarcode') || 'no barcode';
-    my $request_note = $q->param('request_note');
-    my $reqid = $q->param('request_id');
-    my $group_id = $q->param('group_id');
-    my $copies_requested = $q->param('copies_requested') || 1;
-    if (($copies_requested) && ($copies_requested > 1)) {
-	$self->dbh->do("UPDATE request_group SET copies_requested=? where group_id=?", undef, $copies_requested, $group_id);
-    }
-    if ($pbarcode) {
-	$self->dbh->do("UPDATE request_group SET patron_barcode=? where group_id=?", undef, $pbarcode, $group_id);
-    }
-    if ($request_note) {
-	$self->dbh->do("UPDATE request_group SET note=? where group_id=?", undef, $request_note, $group_id);
-    }
+    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
-    # Get this user's (requester's) library id
-    my ($requester,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    if (not defined $requester) {
-	# should never get here...
-	# go to some error page.
-    }
-
-    # Get request details from group
-    my $req_href = $self->dbh->selectrow_hashref("SELECT * FROM request_group WHERE group_id=?", undef, $group_id);
-
-    my $seq;
-
-    # get the sources
-    my @sources = @{ $self->dbh->selectall_arrayref("SELECT * FROM sources WHERE group_id=? ORDER BY sequence_number",
-						    { Slice => {} }, $group_id)
-	};
-
-    $self->log->debug( "complete_the_request sources:\n" . Dumper( @sources ) );
-    $self->log->debug( "complete_the_request # sources: " . scalar @sources );
-    $self->log->debug( "complete_the_request copies_requested: " . $copies_requested );
-
-    for ($seq=1; $seq<=$copies_requested; $seq++) {
-	last if ($seq > (scalar @sources));  # bail if we've run out of sources
-	$self->log->debug( "complete_the_request #" . $seq );
-
-	# separate chain for each copy requested
-	$self->dbh->do("insert into request_chain (group_id) values (?)",
-		       undef,
-		       $group_id
-	    );
-	my $cid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_chain_seq'});
-	
-	my $source_library = $sources[$seq-1]->{"lid"};
-	
-	# create the request
-	$self->dbh->do("INSERT INTO request (requester,current_source_sequence_number,chain_id) VALUES (?,?,?)",
-		       undef,
-		       $req_href->{"requester"},
-		       $sources[$seq-1]->{"sequence_number"},
-		       $cid
-	    );
-	my $reqid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
-	
-	# begin the ILL conversation
-	my $SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
-	$self->dbh->do($SQL, undef, $reqid, $requester, $source_library, 'ILL-Request');
-
-	# not sure we really need request_id in sources any more... but we do need to note that we've tried this source.
-	$self->dbh->do("UPDATE sources SET tried=true, request_id=? WHERE group_id=? AND sequence_number=?",
-		       undef, $reqid, $group_id, $sources[$seq-1]->{"sequence_number"} );
-	
-	# does the selected source library want immediate notification, by email, of new requests?
-	my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM libraries WHERE lid=?",
-						 undef,$source_library);
-	if ($notify[0]) {
-	    send_notification($self,$notify[1],$reqid);
-	}
-    }
-
-    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, l.name as symbol, l.library, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join libraries l on l.lid=s.lid where s.group_id=? and s.tried=true", { Slice => {} }, $group_id);
-
-    my $template = $self->load_tmpl('search/request_placed.tmpl');	
-    $template->param( pagetitle => "fILL Request has been placed",
-		      username => $self->authen->username,
-		      lid => $requester,
-		      title => $req_href->{"title"},
-		      author => $req_href->{"author"},
-		      multiple_copies => ($copies_requested > 1) ? 1 : 0,
-		      copies_requested => $copies_requested,
-		      number_of_sources => scalar @sources,
-                      requests_made => $seq-1,
-		      trying => $trying_aref,
-	);
-    return $template->output;
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub lightning_search_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/lightning.tmpl');	
-    $template->param( pagetitle => "fILL Lightning Search",
+#    my $template = $self->load_tmpl('search/lightning.tmpl');	
+    my $template = $self->load_tmpl('public/search.tmpl');	
+    $template->param( pagetitle => "fILL Public Search",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
@@ -201,60 +91,6 @@ sub lightning_search_process {
     return $template->output;
 }
 
-
-#--------------------------------------------------------------------------------
-#
-#
-sub pull_list_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    # sql to get requests to this library, which this library has not responded to yet
-    #my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
-    my $SQL="select 
-  b.barcode, 
-  g.title, 
-  g.author, 
-  g.note, 
-  date_trunc('second',ra.ts) as ts, 
-  l.name as from, 
-  l.library, 
-  s.call_number 
-from requests_active ra
-  left join request r on r.id=ra.request_id
-  left join request_chain c on c.chain_id = r.chain_id
-  left join request_group g on g.group_id = c.group_id
-  left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) 
-  left join sources s on (s.group_id = g.group_id and s.lid = ra.msg_to) 
-  left join libraries l on l.lid = ra.msg_from
-where 
-  ra.msg_to=? 
-  and ra.status='ILL-Request' 
-  and ra.request_id not in (select request_id from requests_active where msg_from=?) 
-order by s.call_number
-";
-
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
-
-    # generate barcodes (code39 requires '*' as start and stop characters
-    foreach my $request (@$pulls) {
-	if (( $request->{barcode} ) && ( $request->{barcode} =~ /\d+/)) {
-	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $request->{barcode} . '*' )->plot->png);
-	}
-    }
-
-    my $template = $self->load_tmpl('search/pull_list.tmpl');	
-    $template->param( pagetitle => "Pull-list",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-		      pulls => $pulls,
-	);
-    return $template->output;
-    
-}
 
 #--------------------------------------------------------------------------------
 #
@@ -278,17 +114,39 @@ sub request_process {
 	    $sources{$num}{$pname} = uc($sources{$num}{$pname}) if ($pname eq 'symbol');
 	}
     }
-#    $self->log->debug( "request_process parms:\n" . Dumper( @parms ) );
-#    foreach my $num (keys %sources) {
-#	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
-#    }
+
+    # Get this user's (requester's) library id
+    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    if (not defined $lid) {
+	# should never get here...
+	# go to some error page.
+    }
+
+    my $title = eval { decode( 'UTF-8', $q->param('title'), Encode::FB_CROAK ) };
+    if ($@) {
+	$title = unidecode( $q->param('title') );
+    }
+    my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
+    if ($@) {
+	$author = unidecode( $q->param('author') );
+    }
+
+    # check if this is a duplicate of an existing request (e.g. patron hit 'reload')
+    if ($self->isDuplicateRequest( $pid, $lid, $title, $author )) {
+	my $template = $self->load_tmpl('public/request_placed.tmpl');	
+        $template->param( pagetitle => "Patron: Request an ILL",
+			  username => $self->authen->username,
+			  library => $library,
+			  title => $title,
+			  author => $author
+	    );
+        return $template->output;
+    }
 
     my @sources;
     foreach my $num (sort keys %sources) {
 
 	my %src;
-
-#	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
 	if ($sources{$num}{'locallocation'}) {
 	    
 	    # split the combined locallocation into separate locations
@@ -350,32 +208,16 @@ sub request_process {
     }
 #    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
-    # Get this user's (requester's) library id
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    if (not defined $lid) {
-	# should never get here...
-	# go to some error page.
-    }
-
-    my $title = eval { decode( 'UTF-8', $q->param('title'), Encode::FB_CROAK ) };
-    if ($@) {
-	$title = unidecode( $q->param('title') );
-    }
-    my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
-    if ($@) {
-	$author = unidecode( $q->param('author') );
-    }
-
     # These should be atomic...
     # create the request_group
-    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, requester) VALUES (?,?,?,?)",
+    $self->dbh->do("INSERT INTO patron_request (title, author, pid, lid) VALUES (?,?,?,?)",
 	undef,
-	1,        # default copies_requested
 	$title,
 	$author,
-	$lid,     # requester
+	$pid,     # requester
+	$lid      # requester's home library
 	);
-    my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
+    my $pr_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'patron_request_seq'});
 
     # ...end of atomic
 
@@ -405,12 +247,10 @@ sub request_process {
 	$cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
 	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
     }
-#    $self->log->debug( "request_process sources array after MW reconsolidation:\n" . Dumper(@sources) );
 
     # remove duplicate entries for a given library/location (they may have multiple holdings)
     my %seen = ();
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
-#    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
 
     # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
     my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
@@ -425,15 +265,13 @@ sub request_process {
 	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
 	}
     }
-#    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
     # sort sources by net borrower/lender count
     my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
-#    $self->log->debug( "Sorted sources:\n" . Dumper(@sorted_sources) );
 
     # create the sources list for this request
     my $sequence = 1;
-    $SQL = "INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)";
+    $SQL = "INSERT INTO patron_request_sources (sequence_number, lid, call_number, prid) VALUES (?,?,?,?)";
     foreach my $src (@sorted_sources) {
 	my $lenderID = $src->{lid};
 	next unless defined $lenderID;
@@ -442,25 +280,20 @@ sub request_process {
 					$sequence++,
 					$lenderID,
 					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
-					$group_id,
+					$pr_id,
 	    );
 	unless (1 == $rows_added) {
-	    $self->log->debug( "Could not add source: group_id $group_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
+	    $self->log->debug( "Could not add source: prid $pr_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
 	}
     }
 
 
-    my $template = $self->load_tmpl('search/make_request.tmpl');	
-    $template->param( pagetitle => "fILL Request an ILL",
+    my $template = $self->load_tmpl('public/request_placed.tmpl');	
+    $template->param( pagetitle => "Patron: Request an ILL",
 		      username => $self->authen->username,
-		      lid => $lid,
 		      library => $library,
-		      title => $q->param('title') || ' ',
-		      author => $q->param('author') || ' ',
-		      group_id => $group_id,
-		      num_sources => scalar @sorted_sources,
-		      copies_requested => 1,    # default copies requested
-		      sources => \@sorted_sources,
+		      title => $title,
+		      author => $author,
 	);
     return $template->output;
     
@@ -675,25 +508,6 @@ sub unfilled_process {
     
 }
 
-#--------------------------------------------------------------------------------
-#
-#
-sub new_patron_requests_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/new_patron_requests.tmpl');	
-    $template->param( pagetitle => "New requests from your patrons",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
 #--------------------------------------------------------------------------------------------
 sub send_notification {
     my $self = shift;
@@ -749,16 +563,234 @@ where r.id=?
 }
 
 #--------------------------------------------------------------------------------------------
-sub get_library_from_username {
+sub get_patron_from_username {
     my $self = shift;
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select p.pid, p.home_library_id, l.library from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{library});
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library});
 }
+
+#--------------------------------------------------------------------------------------------
+sub isDuplicateRequest {
+    my $self = shift;
+    my $pid = shift;
+    my $lid = shift;
+    my $title = shift;
+    my $author = shift;
+
+    my $matching = $self->dbh->selectall_arrayref(
+	"select prid from patron_request where pid=? and lid=? and title=? and author=?",
+	undef,
+	$pid, $lid, $title, $author
+	); 
+    
+    return 1 if (@$matching);
+    return undef;
+}
+
+#--------------------------------------------------------------------------------
+#
+# Patron self-registration
+#
+sub registration_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my @towns;
+    my $library_href;
+    my $patron_href;
+
+    my $region;
+    my $lid;
+    my $ask_patron_info = 0;
+    my $username_exists = 0;
+    my $openshelf_inquiry = 0;
+
+    my $now = localtime;
+    $self->log->debug( $now );
+
+    if ($q->param('clear')) {
+	$self->session->clear('region');
+	$self->session->clear('home_library_id');
+	$self->session->clear('home_library');
+	$self->session->clear('home_town');
+	$self->session->clear('home_libtype');
+	$self->session->clear('home_email');
+	$self->session->clear('patron_name');
+	$self->session->clear('patron_card');
+	$self->session->clear('patron_email');
+	$self->session->clear('patron_username');
+	$self->session->clear('patron_password');
+    }
+
+    if ($q->param('openshelf')) {
+	$openshelf_inquiry = 1;
+    }
+
+    # try to get session variable (ie - user has already chosen)
+    $self->log->debug("Do we have a region?");
+    if ($self->session->param('region')) {
+	$region = $self->session->param('region');
+	$self->log->debug("\tregion from session data");
+    } elsif ($q->param('region')) {
+	$region = $q->param('region');
+	$self->session->param('region',$region);
+	$self->log->debug("\tregion from param data, saved to session");
+    }
+
+    # Do we have a region yet?
+    if (defined $region) {
+
+	$self->log->debug("Got region.  Do we have a library id?");
+
+	# try to get town/library session variable(s)
+	if ($self->session->param('home_library_id')) {
+
+	    # already in a session variable.  load them into the href
+	    $lid = $self->session->param('home_library_id');
+	    $library_href = { 
+		lid     => $self->session->param('home_library_id'),
+		library => $self->session->param('home_library'), 
+		town    => $self->session->param('home_town'), 
+	    };
+	    $self->log->debug("\tlid from session data");
+
+	} elsif ($q->param('lid')) {
+
+	    # passed in a library id.  lookup the rest.
+	    $lid = $q->param('lid');
+	    $self->session->param('home_library_id', $lid);
+
+	    my $sql = "SELECT lid, library, town FROM libraries WHERE lid=?";
+	    $library_href = $self->dbh->selectrow_hashref($sql, undef, $lid);
+
+	    $self->session->param('home_library_id',$library_href->{lid});
+	    $self->session->param('home_library',$library_href->{library});
+	    $self->session->param('home_town',$library_href->{town});
+	    $self->log->debug("\tlid from param data, saved to session");
+
+	} elsif ($region =~ /^WINNIPEG$/) {
+	    # I hate special cases!
+	    my $sql = "SELECT lid, library, town FROM libraries WHERE library like '%Winnipeg Public%'";
+	    $library_href = $self->dbh->selectrow_hashref($sql);
+
+	    $self->session->param('home_library_id',$library_href->{lid});
+	    $self->session->param('home_library',$library_href->{library});
+	    $self->session->param('home_town',$library_href->{town});
+	    $lid = $library_href->{lid};
+	    $self->log->debug("\tlid from param data, saved to session");
+	}
+
+	# Do we have a town/library yet?
+	if (defined $lid) {
+
+	    $self->log->debug("Got a lid.  Do we have patron info?");
+	    # try to get patron info session variables
+
+	    if ($self->session->param('patron_name')) {
+		# already in a session variable.  load them into the href
+		$patron_href = { 
+		    name     => $self->session->param('patron_name'),
+		    card     => $self->session->param('patron_card'),
+		    email    => $self->session->param('patron_email'),
+		    username => $self->session->param('patron_username'),
+		    password => $self->session->param('patron_password')
+		};
+
+		$self->log->debug("\tpatron info from session data");
+
+	    } elsif ($q->param('patron_name')) {
+		$patron_href = { 
+		    name     => $q->param('patron_name'),
+		    card     => $q->param('patron_card'),
+		    email    => $q->param('patron_email'),
+		    username => $q->param('patron_username'),
+		    password => $q->param('patron_password')
+		};
+
+		eval {
+		    my $rows_affected = $self->dbh->do("INSERT INTO patrons (username, password, home_library_id, email_address, name, card) VALUES (?,md5(?),?,?,?,?)",
+						       undef,
+						       $patron_href->{username},
+						       $patron_href->{password},
+						       $self->session->param('home_library_id'),
+						       $patron_href->{email},
+						       $patron_href->{name},
+						       $patron_href->{card}
+			);
+		    $self->session->param('~logged-in', 1);
+		    $self->log->debug("\tpatron info from params");
+		    $self->log->debug( Dumper($patron_href) );
+		    
+		    return 1;
+		} or do {
+		    $self->log->debug("\tpatron username exists... ask for another");
+		    $username_exists = 1;
+		};
+
+		unless ($username_exists) {
+		    $self->session->param('patron_name', $patron_href->{name});
+		    $self->session->param('patron_card', $patron_href->{card});
+		    $self->session->param('patron_email', $patron_href->{email});
+		    $self->session->param('patron_username', $patron_href->{username});
+		    $self->session->param('patron_password', $patron_href->{password});
+		    $self->log->debug("\tpatron info saved to session");
+		}
+	    }
+
+	    if ((defined $patron_href) and ($username_exists == 0)) {
+		# do nothing
+		$self->log->debug("Got everything we need.  Let the user continue.");
+	    } else {
+		$self->log->debug("\tno patron yet... ask for it");
+		$ask_patron_info = 1;
+	    }
+
+	} else {
+	    # No town yet.  get towns list to display.
+
+	    $self->log->debug("\tno lid yet... ask for it");
+	    my $sql = "SELECT lid, town FROM libraries WHERE region=? ORDER BY town";
+	    @towns = @{ $self->dbh->selectall_arrayref($sql,
+						       { Slice => {} },
+						       $q->param('region'),
+			    )};
+	    #$self->log->debug( Dumper(@towns) );
+	}	
+	
+    } else {
+	$self->log->debug("\tno region... ask for it");
+    }
+
+    $self->log->debug("Loading template");
+    my $template = $self->load_tmpl('public/registration.tmpl');
+
+    $self->log->debug("Filling template parameters");
+    $template->param(USERNAME => 'Not yet registered.',
+		     ASK_REGION => defined($region) ? 0 : 1,
+		     ASK_TOWN   => defined($lid)    ? 0 : 1,
+		     ASK_PATRON_INFO => $ask_patron_info,
+		     USERNAME_EXISTS => $username_exists,
+		     REGION => $region,
+		     TOWNS => \@towns,
+		     LIBRARY => $library_href->{library},
+		     TOWN    => $library_href->{town},
+		     PATRON_NAME => $patron_href->{name},
+		     PATRON_CARD => $patron_href->{card},
+		     PATRON_EMAIL => $patron_href->{email},
+		     PATRON_USERNAME => $patron_href->{username},
+		     PATRON_PASSWORD => $patron_href->{password},
+		     OPENSHELF_INQUIRY => $openshelf_inquiry,
+	);
+
+    $self->log->debug("Display page");
+    return $template->output;
+}
+
 
 1; # so the 'require' or 'use' succeeds

@@ -1,0 +1,83 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript">
+  function toggleLayer( whichLayer )
+  {
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+      elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+      elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+  }
+</script>
+
+<div id="main">
+
+  <div id="leftcontent">
+  </div>
+
+  <div id="middlecontent">
+    <TMPL_IF name="multiple_copies">
+      <h2>Your requests have been placed</h2>
+      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copies.</p>
+      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
+      <p><TMPL_VAR NAME="requests_made"> requests were made.</p>
+    <TMPL_ELSE>
+      <h2>Your request has been placed</h2>
+      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copy.</p>
+      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
+      <p><TMPL_VAR NAME="requests_made"> request was made.</p>
+    </TMPL_IF>
+
+    <br/>
+    <table>
+      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Title</td><td>: <TMPL_VAR NAME="title"></td></tr>
+      <tr><td>Author</td><td>: <TMPL_VAR NAME="author"></td></tr>
+    </table>
+    <p>The following requests have been added to these lender's pending lists:</p>
+    <table>
+      <tr>
+	<td>gid</td>
+	<td> </td>
+	<td>cid</td>
+	<td> </td>
+	<td>request_id</td>
+	<td>symbol</td>
+	<td>library</td>
+	<td>call_number</td>
+      </tr>
+    <TMPL_LOOP name="trying">
+      <tr>
+	<td><TMPL_VAR name="group_id"></td>
+	<td> - </td>
+	<td><TMPL_VAR name="chain_id"></td>
+	<td> - </td>
+	<td><TMPL_VAR name="request_id"></td>
+	<td><TMPL_VAR name="symbol"></td>
+	<td><TMPL_VAR name="library"></td>
+	<td><TMPL_VAR name="call_number"></td>
+      </tr>
+    </TMPL_LOOP>
+    </table>
+
+  </div>
+
+  <div id="rightcontent">
+    <h2>Information</h2>
+    <p>If the first lender cannot fill the request, it will automatically be sent to the next lender.</p>
+    <p>If no lenders are able to fill the request, you will be notified.</p>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

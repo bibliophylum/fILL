@@ -52,6 +52,12 @@ function update_menu_counters( lid ) {
                     shipping[0].innerHTML = 'Shipping: '+data.counts.shipping;
 		}
             };
+            if (data.counts.patron_requests > 0) {
+		var patron_requests = $('#menu_borrow_new_patron_requests a');
+		if (patron_requests.length > 0) {
+                    patron_requests[0].innerHTML = 'New patron requests: '+data.counts.patron_requests;
+		}
+            };
             //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
     });
 }

@@ -1,8 +1,8 @@
 #
 #    fILL - Free/Open-Source Interlibrary Loan management system
-#    Copyright (C) 2011  Government of Manitoba
+#    Copyright (C) 2012  Government of Manitoba
 #
-#    publicbase.pm is a part of fILL.
+#    fILLbase.pm is a part of fILL.
 #
 #    fILL is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,9 +23,32 @@ use strict;
 use base 'CGI::Application';
 use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
 use CGI::Application::Plugin::Session;
-use CGI::Application::Plugin::LogDispatch;
 use CGI::Application::Plugin::Authentication;
+use CGI::Application::Plugin::Authentication::Driver::DBI;
+use CGI::Application::Plugin::Authorization;
+use CGI::Application::Plugin::LogDispatch;
+use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
+
+#{SHA}||encode(digest('mvbb','sha1'),'base64')
+
+#my %config = (
+#    DRIVER         => [ 'DBI',
+#			TABLE => 'users',
+#			CONSTRAINTS => {
+#			    'users.username' => '__CREDENTIAL_1__',
+#			    'MD5:users.password' => '__CREDENTIAL_2__'
+#			},
+#
+#    ],
+#    STORE          => 'Session',
+#    POST_LOGIN_RUNMODE => 'welcome',
+#    LOGOUT_RUNMODE => 'logged_out',
+#    LOGIN_RUNMODE => 'login',
+#    );
+#
+#fILLbase->authen->config(%config);
+#fILLbase->authen->protected_runmodes(':all');
 
 my %config = (
     DRIVER         => [ 'DBI',
@@ -48,6 +71,7 @@ publicbase->authen->config(%config);
 # protect everything but the self-registration form:
 publicbase->authen->protected_runmodes(qr/^(?!registration_)/);
 
+
 #--------------------------------------------------------------------------------
 #
 #
@@ -55,12 +79,6 @@ sub cgiapp_init {
     my $self = shift;
     
     # use the same args as DBI->connect();
-    #$self->dbh_config($data_source, $username, $auth, \%attr);
-    #$self->dbh_config("DBI:mysql:database=maplin;mysql_server_prepare=1",
-	#	      "mapapp",
-	#	      "maplin3db", 
-	#	      {LongReadLen => 65536} 
-	#);
     $self->dbh_config("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
 		       "maplin3db",
@@ -70,19 +88,53 @@ sub cgiapp_init {
 		       }
     );
 
+    $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
 
     # Configure the LogDispatch session
     $self->log_config(
       LOG_DISPATCH_MODULES => [ 
         {    module => 'Log::Dispatch::File',
                name => 'messages',
-           filename => '/opt/fILL/logs/messages_public.log',
+           filename => '/opt/fILL/logs/messages-public.log',
           min_level => 'debug'
         },
       ],
       APPEND_NEWLINE => 1,
     );
 
+    # Configure authorization
+    $self->authz->config(
+	DRIVER => [
+	    'DBI',
+	    DBH         => $self->dbh,
+	    TABLES      => [ 'libraries','library_authgroups','authgroups' ],
+	    JOIN_ON     => 'libraries.lid = library_authgroups.lid AND library_authgroups.gid = authgroups.gid',
+	    CONSTRAINTS => {
+		'libraries.name' => '__USERNAME__',
+		'authgroups.authorization_group' => '__PARAM_1__',
+	    },
+	],
+	FORBIDDEN_RUNMODE => 'forbidden',
+	);
+
+    # protect only runmodes that start with admin_
+    $self->authz->authz_runmodes(
+#	[qr/^admin_/ => 1],
+	qr/^admin_/ => 'admin',
+	reports_home_zServers_form => 'reports',
+	);
+
+#    # common runmodes
+#    $self->run_modes(
+##	'dbtest'        => 'display_db_entries',
+##	'emailtest'     => 'send_test_email',
+#
+#	'login'                      => 'login_process',
+#	'welcome'                    => 'welcome_process',
+#	'logged_out'                 => 'show_logged_out_process',
+#	'forbidden'                  => 'forbidden_process',
+#	'environment_form'           => 'environment_process',
+#	);
     # common runmodes
     $self->run_modes(
 	'loginFOO'                   => 'login_foo',
@@ -91,6 +143,7 @@ sub cgiapp_init {
 	'forbidden'                  => 'forbidden_process',
 	'environment_form'           => 'environment_process',
 	);
+
 }
 
 
@@ -101,16 +154,16 @@ sub cgiapp_prerun {
     my $self = shift;
 
     # Get a fresh page (not from cache)!
-    use POSIX qw( strftime );
+    use POSIX qw( strftime );	
     $self->header_add(
-        # date in the past
-        -expires       => 'Sat, 26 Jul 1997 05:00:00 GMT',
-        # always modified
-        -Last_Modified => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
-        # HTTP/1.0
-        -Pragma        => 'no-cache',
-        # HTTP/1.1
-        -Cache_Control => join(', ', qw(
+	# date in the past
+	-expires       => 'Sat, 26 Jul 1997 05:00:00 GMT',
+	# always modified
+	-Last_Modified => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
+	# HTTP/1.0
+	-Pragma        => 'no-cache',
+	# HTTP/1.1
+	-Cache_Control => join(', ', qw(
                         private
                         no-store
                         no-cache
@@ -119,8 +172,7 @@ sub cgiapp_prerun {
                         post-check=0
                         pre-check=0
                         )),
-        );
-
+	);
 
 } 
 
@@ -140,7 +192,9 @@ sub welcome_process {
     # The application object
     my $self = shift;
 
-    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
+    my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE name=?",
 				       undef,
 				       $self->authen->username,
 	);
@@ -150,13 +204,19 @@ sub welcome_process {
     # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
     # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
     my $template = $self->load_tmpl(	    
-	                      'public/welcome_public.tmpl',
+	                      'public/welcome.tmpl',
 			      cache => 0,
 			     );	
+    $template->param( pagetitle => 'Public fILL Welcome',
+		      username => $self->authen->username,
+		      sessionid => $self->session->id(),
+		      lid => $lid,
+		      library => $library,
+	);
 
     # Parse the template
-    $template->param(USERNAME => $self->authen->username);
-    return $template->output;
+    my $html_output = $template->output;
+    return $html_output;
 }
 
 #--------------------------------------------------------------------------------
@@ -166,22 +226,12 @@ sub show_logged_out_process {
     # The application object
     my $self = shift;
 
-    #
-    # Do some housekeeping
-    #
-    # Clear any old search results
-    $self->dbh->do("DELETE FROM marc WHERE sessionid=?",undef,$self->session->id());
-    # Clear any status results
-    $self->dbh->do("DELETE FROM status_check WHERE sessionid=?",undef,$self->session->id());
-
-    # Open the html template
-    # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
-    # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
     my $template = $self->load_tmpl(	    
 	                      'public/logged_out.tmpl',
 			      cache => 1,
 			     );	
-    $template->param( username => "Logged out. ",
+    $template->param( pagetitle => 'fILL Logged Out',
+		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
 	);
 
@@ -204,7 +254,10 @@ sub forbidden_process {
 	                      'forbidden.tmpl',
 			      cache => 1,
 			     );	
-    $template->param(USERNAME => $self->authen->username);
+    $template->param( pagetitle => 'fILL Forbidden',
+		      username => $self->authen->username,
+		      sessionid => $self->session->id(),
+	);
 
     # This would log the user out....
     # $self->session->delete();
@@ -228,10 +281,24 @@ sub environment_process {
 	    );
 	push(@loop, \%row);
     }
-    $template->param(USERNAME => $self->authen->username,
-		     env_variable_loop => \@loop
-	);
+    $template->param(pagetitle => 'fILL Environment',
+		     env_variable_loop => \@loop);
     return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------------------
+sub get_patron_from_username {
+    my $self = shift;
+    my $username = shift;
+    # Get this user's library id
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"select p.pid, p.home_library_id, l.library from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
+	undef,
+	$username
+	);
+    $self->log->debug( Dumper( $hr_id ) );
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library});
 }
 
 #--------------------------------------------------------------------------------
@@ -241,7 +308,27 @@ sub login_foo {
     my $self = shift;
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
+    $template->param( pagetitle => 'fILL public login' );
     return $template->output;
 }
+
+#--------------------------------------------------------------------------------
+#
+#
+#sub login_process {
+#    my $self = shift;
+#    my $template = $self->load_tmpl(	    
+#	                      'login.tmpl',
+#			      cache => 0,
+#			     );	
+#    $template->param( pagetitle => 'Log in to fILL',
+#	);
+#
+#    # Parse the template
+#    my $html_output = $template->output;
+#    return $html_output;
+#}
+
+
 
 1; # so the 'require' or 'use' succeeds
