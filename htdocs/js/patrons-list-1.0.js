@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     for (var i=0;i<data.patrons.length;i++) {
-	data.patrons[i].actions = '--change password--'; // add the 'actions' column
+	data.patrons[i].actions = "Click to change password"; // add the 'actions' column
 	var ai = oTable.fnAddData( data.patrons[i] );
 	var n = oTable.fnSettings().aoData[ ai[0] ].nTr;
 	var oData = oTable.fnGetData( n );
