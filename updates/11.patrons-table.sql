@@ -3,7 +3,7 @@ create sequence patrons_id_seq;
 
 create table patrons (
        pid integer not null default nextval('patrons_id_seq'::regclass),
-       username varchar(80) not null,
+       username varchar(80) unique not null,
        password varchar(80) not null,
        home_library_id integer not null,
        email_address varchar(200),

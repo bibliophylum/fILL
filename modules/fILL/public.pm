@@ -69,6 +69,7 @@ sub setup {
 	'request_form'             => 'request_process',
 	'request'                  => 'request_process',
 	'registration_form'        => 'registration_process',
+	'myaccount_form'           => 'myaccount_process',
 	);
 }
 
@@ -81,7 +82,6 @@ sub search_process {
 
     my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
-#    my $template = $self->load_tmpl('search/lightning.tmpl');	
     my $template = $self->load_tmpl('public/search.tmpl');	
     $template->param( pagetitle => "fILL Public Search",
 		      username => $self->authen->username,
@@ -302,265 +302,22 @@ sub request_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub respond_process {
+sub myaccount_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
-    my $template = $self->load_tmpl('search/respond.tmpl');	
-    $template->param( pagetitle => "Respond to ILL requests",
+    my $template = $self->load_tmpl('public/myaccount.tmpl');	
+    $template->param( pagetitle => "fILL patron account",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
+		      pid => $pid
 	);
     return $template->output;
-    
 }
 
-#--------------------------------------------------------------------------------
-#
-#
-sub shipping_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/shipping.tmpl');	
-    $template->param( pagetitle => "Shipping",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub receiving_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/receiving.tmpl');	
-    $template->param( pagetitle => "Receive items to fill your requests",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub renewals_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/renewals.tmpl');	
-    $template->param( pagetitle => "Ask for renewals on borrowed items",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub renew_answer_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/renew-answer.tmpl');	
-    $template->param( pagetitle => "Respond to renewal requests",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub returns_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/returns.tmpl');	
-    $template->param( pagetitle => "Return items to lending libraries",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub overdue_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/overdue.tmpl');	
-    $template->param( pagetitle => "Overdue items to be returned to lender",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub checkins_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/checkins.tmpl');	
-    $template->param( pagetitle => "Loan items to be checked back into your ILS",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub history_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/history.tmpl');	
-    $template->param( pagetitle => "ILL history",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub current_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/current.tmpl');	
-    $template->param( pagetitle => "Current ILLs",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub unfilled_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $template = $self->load_tmpl('search/unfilled.tmpl');	
-    $template->param( pagetitle => "Unfilled ILL requests",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------------------
-sub send_notification {
-    my $self = shift;
-    my $to_email = shift;
-    my $reqid = shift;
-
-#    $self->log->info( "Source wants an email" );
-
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-#    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
-#					  undef,$reqid);
-
-    my $SQL="select 
-  g.title, 
-  g.author, 
-  s.call_number 
-from request r
-  left join request_chain c on c.chain_id = r.chain_id
-  left join request_group g on g.group_id = c.group_id
-  left join sources s on s.group_id = g.group_id 
-where r.id=?
-  and s.lid=?
-";
-    my @tac = $self->dbh->selectrow_array($SQL,undef,$reqid,$lid);
-
-    my $subject = "Subject: ILL Request: " . $tac[0] . "\n";
-    my $content = "fILL notification\n\n";
-    $content .= "You have a new request for the following item:\n";
-    $content .= $tac[2] . "\t" . $tac[1] . "\t" . $tac[0] . "\n\n";
-    $content .= "fILL: http://fill.sitka.bclibraries.ca/cgi-bin/lightning.cgi\n";
-
-#    $self->log->info( "To: $to_email\n$subject$content" );
-
-    my $error_sendmail = 0;
-    my $sendmail = "/usr/sbin/sendmail -t";
-
-    eval {
-        open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
-        print SENDMAIL 'To: ' . $to_email;
-        print SENDMAIL $subject;
-        print SENDMAIL "Content-type: text/plain\n\n";
-        print SENDMAIL $content;
-        close(SENDMAIL);
-    };
-    if ($@) {
-        # sendmail blew up
-        $self->log->debug("sendmail blew up");
-    } else {
-#        $self->log->debug("sendmail sent request");
-    }
-
-}
 
 #--------------------------------------------------------------------------------------------
 sub get_patron_from_username {

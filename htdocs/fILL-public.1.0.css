@@ -1188,3 +1188,11 @@ a.continue:hover {
     font-weight: 600;
     text-decoration: underline;
 }
+
+
+/* DC: user editable DataTable cell */
+.user-editable {
+    text-decoration: underline;
+    font-size: 140%;
+    font-weight: 600;
+}
