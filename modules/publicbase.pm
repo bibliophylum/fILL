@@ -56,7 +56,7 @@ my %config = (
 			CONSTRAINTS => {
 			    'patrons.username' => '__CREDENTIAL_1__',
 			    'MD5:patrons.password' => '__CREDENTIAL_2__',
-			    'patrons.is_enabled' => 1
+#			    'patrons.is_enabled' => 1
 			},
 
     ],

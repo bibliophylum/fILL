@@ -80,9 +80,14 @@ sub search_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
-    my $template = $self->load_tmpl('public/search.tmpl');	
+    my $template;
+    if ($is_enabled) {
+	$template = $self->load_tmpl('public/search.tmpl');
+    } else {
+	$template = $self->load_tmpl('public/not-enabled.tmpl');
+    }
     $template->param( pagetitle => "fILL Public Search",
 		      username => $self->authen->username,
 		      lid => $lid,
@@ -116,7 +121,7 @@ sub request_process {
     }
 
     # Get this user's (requester's) library id
-    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
     if (not defined $lid) {
 	# should never get here...
 	# go to some error page.
@@ -306,7 +311,7 @@ sub myaccount_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
     $template->param( pagetitle => "fILL patron account",
@@ -325,7 +330,7 @@ sub get_patron_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select p.pid, p.home_library_id, l.library from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=?",
+	"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=?",
 	undef,
 	$username
 	);
