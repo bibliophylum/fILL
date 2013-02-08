@@ -334,7 +334,7 @@ sub get_patron_from_username {
 	undef,
 	$username
 	);
-    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library});
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
 }
 
 #--------------------------------------------------------------------------------------------
