@@ -140,9 +140,9 @@ h6
 
 #middlecontent {
   float:left;
-  width:70%;
+  width:80%;
 }
-
+/* DEPRECATED!  middlecontent has expanded from 70% to 80%
 #rightcontent {
   float:left;
   width:10%;
@@ -153,7 +153,7 @@ h6
   padding-bottom: 20px;
   color: #408040;
 }
-
+*/
 /* bottom bar */
 #nav2
 {
