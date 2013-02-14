@@ -40,11 +40,12 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Medium"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "12"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -73,6 +74,7 @@ function build_rows( tBody, data ) {
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].title;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].medium;
 	cell = row.insertCell(-1); 
 	
 	var divResponses = document.createElement("div");
@@ -226,7 +228,7 @@ function forward( requestId, retargets ) {
     ru.setAttribute('id','forwardradioset');
     ruForm.appendChild(ru);
     ruDiv.appendChild(ruForm);
-    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#req"+requestId));
+    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='11'></td></tr>").insertAfter($("#req"+requestId));
     $("#tmpcol").append(ruDiv);
 
     $("#divResponses"+requestId).hide();
