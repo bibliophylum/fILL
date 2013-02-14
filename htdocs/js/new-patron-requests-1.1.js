@@ -39,7 +39,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "These are new requests from your patrons.";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "These are new requests from your patrons.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
