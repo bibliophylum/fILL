@@ -281,7 +281,7 @@ sub move_to_history {
     my @hg = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
     if ((@hg) && ($hg[0] == 0)) {
 	# not yet in history_group, so add it
-	$SQL = "insert into history_group (group_id, copies_requested, title, author, requester, patron_barcode, note) select group_id, copies_requested, title, author, requester, patron_barcode, note from request_group where group_id=?";
+	$SQL = "insert into history_group (group_id, copies_requested, title, author, medium, requester, patron_barcode, note) select group_id, copies_requested, title, author, medium, requester, patron_barcode, note from request_group where group_id=?";
 	$dbh->do( $SQL, undef, $gcr[0] );
 	print STDERR "override - move-to-history: request_group added to history_group\n";
     } else {

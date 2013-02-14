@@ -124,9 +124,9 @@ sub complete_the_request_process {
 						    { Slice => {} }, $group_id)
 	};
 
-    $self->log->debug( "complete_the_request sources:\n" . Dumper( @sources ) );
-    $self->log->debug( "complete_the_request # sources: " . scalar @sources );
-    $self->log->debug( "complete_the_request copies_requested: " . $copies_requested );
+#    $self->log->debug( "complete_the_request sources:\n" . Dumper( @sources ) );
+#    $self->log->debug( "complete_the_request # sources: " . scalar @sources );
+#    $self->log->debug( "complete_the_request copies_requested: " . $copies_requested );
 
     for ($seq=1; $seq<=$copies_requested; $seq++) {
 	last if ($seq > (scalar @sources));  # bail if we've run out of sources
@@ -174,6 +174,7 @@ sub complete_the_request_process {
 		      lid => $requester,
 		      title => $req_href->{"title"},
 		      author => $req_href->{"author"},
+		      medium => $req_href->{"medium"},
 		      multiple_copies => ($copies_requested > 1) ? 1 : 0,
 		      copies_requested => $copies_requested,
 		      number_of_sources => scalar @sources,
@@ -283,10 +284,14 @@ sub request_process {
 #	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
 #    }
 
+    my $medium;
     my @sources;
     foreach my $num (sort keys %sources) {
 
 	my %src;
+
+	$medium = $sources{$num}{'medium'};  # fILL-client.js groups by medium, so all sources' mediums should be the same.
+	delete $sources{$num}{'medium'};
 
 #	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
 	if ($sources{$num}{'locallocation'}) {
@@ -365,14 +370,17 @@ sub request_process {
     if ($@) {
 	$author = unidecode( $q->param('author') );
     }
+    my $medium = sprintf("%.40s", $medium);
+    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
 
     # These should be atomic...
     # create the request_group
-    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, requester) VALUES (?,?,?,?)",
+    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester) VALUES (?,?,?,?,?)",
 	undef,
 	1,        # default copies_requested
 	$title,
 	$author,
+	$medium,
 	$lid,     # requester
 	);
     my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
@@ -455,8 +463,11 @@ sub request_process {
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
-		      title => $q->param('title') || ' ',
-		      author => $q->param('author') || ' ',
+#		      title => $q->param('title') || ' ',
+		      title => $title || ' ',
+#		      author => $q->param('author') || ' ',
+		      author => $author || ' ',
+		      medium => $medium,
 		      group_id => $group_id,
 		      num_sources => scalar @sorted_sources,
 		      copies_requested => 1,    # default copies requested
