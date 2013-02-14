@@ -22,7 +22,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get new (not yet handled) patron requests
-my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.lid = ?";
+my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author, pr.medium from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.lid = ?";
 my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $lid );
 if ($patronRequest) {
 
@@ -34,11 +34,12 @@ if ($patronRequest) {
 
         # These should be atomic...
         # create the request_group
-	$dbh->do("INSERT INTO request_group (copies_requested, title, author, requester, patron_barcode) VALUES (?,?,?,?,?)",
+	$dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, patron_barcode) VALUES (?,?,?,?,?,?)",
 		 undef,
 		 1,        # default copies_requested
 		 $patronRequest->{"title"},
 		 $patronRequest->{"author"},
+		 $patronRequest->{"medium"},
 		 $lid,     # requester
 		 $patronRequest->{"card"},
 	    );

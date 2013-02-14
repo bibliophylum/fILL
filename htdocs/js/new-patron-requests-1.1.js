@@ -34,6 +34,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Card"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Medium"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
@@ -53,6 +54,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].card;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].medium;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");

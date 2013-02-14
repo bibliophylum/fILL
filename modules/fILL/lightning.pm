@@ -371,7 +371,7 @@ sub request_process {
 	$author = unidecode( $q->param('author') );
     }
     my $medium = sprintf("%.40s", $medium);
-    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
+#    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
 
     # These should be atomic...
     # create the request_group

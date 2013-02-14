@@ -148,8 +148,12 @@ sub request_process {
         return $template->output;
     }
 
+    my $medium;
     my @sources;
     foreach my $num (sort keys %sources) {
+
+	$medium = $sources{$num}{'medium'};  # fILL-client.js groups by medium, so all sources' mediums should be the same.
+	delete $sources{$num}{'medium'};
 
 	my %src;
 	if ($sources{$num}{'locallocation'}) {
@@ -213,12 +217,15 @@ sub request_process {
     }
 #    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
+    my $medium = sprintf("%.40s", $medium);
+
     # These should be atomic...
     # create the request_group
-    $self->dbh->do("INSERT INTO patron_request (title, author, pid, lid) VALUES (?,?,?,?)",
+    $self->dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid) VALUES (?,?,?,?,?)",
 	undef,
 	$title,
 	$author,
+	$medium,
 	$pid,     # requester
 	$lid      # requester's home library
 	);
@@ -299,6 +306,7 @@ sub request_process {
 		      library => $library,
 		      title => $title,
 		      author => $author,
+		      medium => $medium,
 	);
     return $template->output;
     

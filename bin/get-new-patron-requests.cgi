@@ -15,6 +15,7 @@ my $SQL = "select
   p.card, 
   pr.title, 
   pr.author,
+  pr.medium,
   p.is_verified
 from 
   patron_request pr 

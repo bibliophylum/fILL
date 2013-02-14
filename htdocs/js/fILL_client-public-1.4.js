@@ -480,6 +480,7 @@ function renderDetails(data, marker)
 	requestForm += '<input type="hidden" name="callnumber_' + i + '" value="' + data["location"][i]["md-callnumber"] + '">';
 	requestForm += '<input type="hidden" name="locallocation_' + i + '" value="' + data["location"][i]["md-locallocation"] + '">';
 	requestForm += '<input type="hidden" name="localcallno_' + i + '" value="' + data["location"][i]["md-localcallno"] + '">';
+	requestForm += '<input type="hidden" name="medium_' + i + '" value="' + data["location"][i]["md-medium"] + '">';
     }
 
     if (isElectronicResource) {
