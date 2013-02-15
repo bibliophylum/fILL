@@ -105,6 +105,12 @@ function build_table( data ) {
 	}
 	divResponses.appendChild(b2);
 
+	if (data.new_patron_requests[i].has_local_copy == 1) {
+	    var p = document.createElement("p");
+	    p.innerHTML = "Title held locally";
+	    divResponses.appendChild(p);
+	}
+
 	cell.appendChild( divResponses );
     }
     

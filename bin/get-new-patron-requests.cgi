@@ -37,6 +37,18 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
+
+# any of them local?
+my $localcopy_href = $dbh->selectall_hashref("select prid from patron_request_sources where lid=?", 'prid', undef, $lid);
+
+foreach my $href (@$aref) {
+    if (exists $localcopy_href->{ $href->{prid} }) {
+	$href->{"has_local_copy"} = 1;
+    } else {
+	$href->{"has_local_copy"} = 0;
+    }
+}
+
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { new_patron_requests => $aref } );
