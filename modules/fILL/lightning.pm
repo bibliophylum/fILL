@@ -370,7 +370,7 @@ sub request_process {
     if ($@) {
 	$author = unidecode( $q->param('author') );
     }
-    my $medium = sprintf("%.40s", $medium);
+    $medium = sprintf("%.40s", $medium);
 #    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
 
     # These should be atomic...
