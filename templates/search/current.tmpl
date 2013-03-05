@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.5.js"></script>
+<script type="text/javascript" src="/js/current-1.6.js"></script>
 
 <script type="text/javascript">
 
@@ -360,6 +360,16 @@ $('document').ready(function(){
   <div id="middlecontent">
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="dialog-form" title="Change due date">
+      <p class="validateTips">Enter the due date as YYYY-MM-DD</p>
+      <form>
+	<fieldset>
+	  <label for="duedate">New due date</label>
+	  <input type="text" name="duedate" id="duedate" class="text ui-widget-content ui-corner-all" />
+	</fieldset>
+      </form>
     </div>
 
     <div id="tabs">

@@ -12,10 +12,9 @@ use Switch;
 use Data::Dumper;
 
 my $query = new CGI;
-#my $reqid = $query->param('reqid');   # we don't get reqid any more - now gid & cid... FIXME!
-my $gid = $query->param('gid');
 my $cid = $query->param('cid');
 my $override = $query->param('override');
+my $data = $query->param('data');  # some overrides may require extra data; parsing is up to specific override
 
 print STDERR "overriding cid [$cid], $override\n";
 
@@ -30,7 +29,6 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-#my $SQL = "select ra.request_id, ra.msg_from as borrower_id, l.name as borrower, ra.msg_to as lender_id, l2.name as lender, ra.status, ra.message from requests_active ra left join libraries l on (l.lid=ra.msg_from) left join libraries l2 on (l2.lid=ra.msg_to) where request_id=? and status='ILL-Request' order by ra.ts";
 my $SQL = "select 
   ra.request_id, 
   ra.msg_from as borrower_id, 
@@ -171,11 +169,15 @@ switch( $override ) {
 		my $newRequestId = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
 		
 		$SQL = "INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)";
-		$dbh->do($SQL, undef, $newRequestId, $borrower_id, $ary[0], 'ILL-Request');
+		$retval = $dbh->do($SQL, undef, $newRequestId, $borrower_id, $ary[0], 'ILL-Request');
 		
 		# mark this source as tried
 		$dbh->do("update sources set request_id=?, tried=true where group_id=? and sequence_number=?", undef, $newRequestId, $gcr[0], $ary[1]);
 	    
+		$return_data_href->{ success } = $retval;
+		$return_data_href->{ status } = "Message";
+		$return_data_href->{ message } = "Trying next source";
+
 	    } else {
 		$SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
 		$dbh->do($SQL, undef, $reqid, $borrower_id, $borrower_id, "Message", "No further sources");
@@ -241,6 +243,39 @@ switch( $override ) {
 	    $return_data_href->{ message } = "Request not received or already returned.";
 	    $return_data_href->{ alert_text } = "Could not mark this request as Returned:\neither the borrower has not Received yet,\nor they have already marked it as 'Returned'.";
 	}
+    }
+
+    case "bDueDate" {
+	# lending override
+	print STDERR "bDueDate\n";
+	$borrower_id = $href->{"borrower_id"};
+	$lender_id = $href->{"lender_id"};
+	if ($data =~ m!^((?:19|20)\d\d)[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$!) {
+	    # At this point, $1 holds the year, $2 the month and $3 the day of the date entered
+	    $message = "due " . $1 . "-" . $2 . "-" . $3;
+	    print STDERR "$data becomes $message\n";
+
+	    # can only change due date if the the borrower has not received yet
+	    my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_to=? and status='Shipped' and request_id not in (select request_id from requests_active where request_id=? and status='Received')", undef, $reqid, $borrower_id, $reqid );
+	    if ((defined $cntAnswers) && ($cntAnswers == 1)) {
+		print STDERR "ok to update, message [$message], reqid [$reqid], lender_id [$lender_id], borrower_id [$borrower_id]\n";
+		# specify message like 'due%' so we don't overwrite an overridden ship (which will have a message like 'override by XXXX')
+		$retval = $dbh->do( "update requests_active set message=? where request_id=? and msg_from=? and msg_to=? and status='Shipped' and (message like 'due%' or message='')", undef, $message, $reqid, $lender_id, $borrower_id );
+		$return_data_href->{ success } = $retval;
+		$return_data_href->{ status } = "Shipped";
+		$return_data_href->{ message } = $message;
+	    } else {
+		$return_data_href->{ success } = 0;
+		$return_data_href->{ status } = "Shipped";
+		$return_data_href->{ message } = "Cannot override - borrower has received";
+	    }
+	} else {
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Shipped";
+	    $return_data_href->{ message } = "Invalid date";
+	    $return_data_href->{ alert_text } = "Invalid date or date format.";
+	}
+	print STDERR Dumper( $return_data_href );
     }
 
     else {
