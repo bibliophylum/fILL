@@ -63,12 +63,13 @@ $('document').ready(function(){
 <!-- from header.tmpl -->
 <DIV id="header">
   <div id="logo">
-    <img src="/img/fILL.png">
+    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
 
   <div id="header_searchbar">
     <form id="searchForm" name="search">
+      <label for="query">Enter search terms:</label>
       <input id="query" type="text" size="50"/>
       <input id="button" type="submit" value="Search"/>
       <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
@@ -125,14 +126,15 @@ $('document').ready(function(){
       </div>
       <div id="ranking">
        <form name="select">
-        Sort by
+        <label for="sort">Sort by</label>
         <select name="sort" id="sort">
          <option value="relevance" selected="selected">relevance</option>
          <option value="title:1">title</option>
          <option value="date:0">newest</option>
          <option value="date:1">oldest</option>
         </select>
-        and show 
+        and 
+	<label for="perpage">show</label>
         <select name="perpage" id="perpage">
          <option value="10">10</option>
          <option value="20" selected="selected">20</option>

@@ -1,5 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head><title><TMPL_VAR name="pagetitle"></title>
 <link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css">
 <link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
@@ -10,7 +10,7 @@
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
 
 <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
 
@@ -19,7 +19,7 @@
 
 <script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
 
-<script language="JavaScript">
+<script type="text/javascript">
 
   function set_primary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
@@ -52,8 +52,7 @@
 
 <DIV id="header">
   <div id="logo">
-    <!--div id="logo_title">fILL (Maplin-4)</div-->
-    <img src="/img/fILL.png">
+    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
   <div id="header_quick_access">
@@ -71,13 +70,13 @@
 <div id="csstabs">
   <ul>
     <li id="menu_search">
-      <a href=/cgi-bin/public.cgi?rm=search_form>
+      <a href="/cgi-bin/public.cgi?rm=search_form">
       Search and request
       </a>
     </li>
 
     <li id="menu_myaccount">
-      <a href=/cgi-bin/public.cgi?rm=myaccount_form>
+      <a href="/cgi-bin/public.cgi?rm=myaccount_form">
       My Account
       </a>
     </li>

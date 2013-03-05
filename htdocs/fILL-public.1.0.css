@@ -1196,3 +1196,7 @@ a.continue:hover {
     font-size: 140%;
     font-weight: 600;
 }
+
+label {
+    color: #000;
+}
