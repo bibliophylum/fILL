@@ -235,6 +235,15 @@ $(function() {
     allFields = $( [] ).add( duedate );
     tips = $( ".validateTips" );
 
+    function updateTips( t ) {
+	tips
+	    .text( t )
+	    .addClass( "ui-state-highlight" );
+	setTimeout(function() {
+	    tips.removeClass( "ui-state-highlight", 1500 );
+	}, 500 );
+    }
+
     function checkRegexp( o, regexp, n ) {
 	if ( !( regexp.test( o.val() ) ) ) {
 	    o.addClass( "ui-state-error" );
@@ -251,7 +260,7 @@ $(function() {
 	width: 350,
 	modal: true,
 	buttons: {
-	    "Ok": function() {
+	    "Update due date": function() {
 		var bValid = true;
 		allFields.removeClass( "ui-state-error" );
 		bValid = bValid && checkRegexp( duedate, /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/, "Due date must be in YYYY-MM-DD format." );
