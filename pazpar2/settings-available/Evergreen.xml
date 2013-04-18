@@ -2,6 +2,9 @@
   <set target="catalogue.bclibraries.ca:210/SPRUCE" name="pz:name" value="Spruce Co-operative"/>
   <set target="catalogue.bclibraries.ca:210/SPRUCE" name="symbol" value="SPRUCE"/>
 
+  <set target="catalogue.bclibraries.ca:210/MWP" name="pz:name" value="Legislative Library"/>
+  <set target="catalogue.bclibraries.ca:210/MWP" name="symbol" value="MWP"/>
+
 <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
