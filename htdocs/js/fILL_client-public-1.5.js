@@ -392,6 +392,18 @@ function renderDetails(data, marker)
     var isElectronicResource = false;
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
     var details = '<table>';
+
+    if ((data["md-isbn"] != undefined) || (data["md-lccn"] != undefined)) {
+	// place for cover image
+	details += '<tr><td>';
+	if (data["md-lccn"] != undefined) {
+	    details += '<img src="http://covers.openlibrary.org/b/LCCN/' + data["md-lccn"][0] + '-M.jpg">';
+	} else if (data["md-isbn"] != undefined) {
+	    details += '<img src="http://covers.openlibrary.org/b/ISBN/' + data["md-isbn"][0] + '-M.jpg">';
+	}
+	details += '</td><td><table>';
+    }
+
     var requestForm = '<form action="/cgi-bin/public.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
@@ -415,6 +427,11 @@ function renderDetails(data, marker)
     }
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
+
+    if ((data["md-isbn"] != undefined) || (data["md-lccn"] != undefined)) {
+	details += '</table></td></tr></table>';  // end image/header table
+	details += '<table>';                     // start new table for location info
+    }
 
     var len=data["location"].length;
     details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
@@ -486,11 +503,19 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';
+	requestForm += '<input type="submit"  style="height:50px; min-width:150px" value="Click to request: ' + data["md-title"] +  '">';
     }
     requestForm += '</form>';
     details += '</table>';
-    details_and_form += requestForm + details + '</div>';
+
+//    var requestButtonAndDetailsTD = document.getElementById('request button and details');
+//    if (requestButtonAndDetailsTD) {
+//	var oldHTML = requestButtonAndDetailsTD.innerHTML;
+//	requestButtonAndDetailsTD.innerHTML = oldHTML + requestForm;
+//	details_and_form += details + '</div>';
+//    } else {
+	details_and_form += requestForm + details + '</div>';
+//    }
     return details_and_form;
 }
  //EOF
