@@ -217,7 +217,7 @@ sub request_process {
     }
 #    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
-    my $medium = sprintf("%.40s", $medium);
+    $medium = sprintf("%.40s", $medium);
 
     # These should be atomic...
     # create the request_group
