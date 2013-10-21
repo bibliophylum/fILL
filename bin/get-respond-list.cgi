@@ -20,7 +20,8 @@ my $SQL="select
   l.name as from, 
   l.library, 
   ra.msg_from, 
-  s.call_number 
+  s.call_number,
+  g.place_on_hold  
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id

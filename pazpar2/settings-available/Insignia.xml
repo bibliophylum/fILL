@@ -12,9 +12,11 @@
   <set target="216.130.92.162:210/ils" name="pz:name" value="Rapid City Regional Library"/>
   <set target="216.130.92.162:210/ils" name="symbol" value="MRA"/>
 
-<!-- Bren Del Win Centennial Library -->
+<!-- Bren Del Win Centennial Library - moved to Spruce -->
+<!--
   <set target="206.45.127.185:210/ILS" name="pz:name" value="Bren Del Win Centennial Library"/>
   <set target="206.45.127.185:210/ILS" name="symbol" value="MDB"/>
+-->
 
 <!-- Boyne Regional Library -->
   <set target="www.insigniasoftware.com:210/boyne" name="pz:name" value="Boyne Regional Library (Insignia)"/>

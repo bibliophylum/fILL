@@ -1,0 +1,97 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript" src="/js/holds-1.0.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_holds");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-holds-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                //alert (data.holds[0].id+" "+data.holds[0].title+" "+data.holds[0].author+" "+data.holds[0].patron_barcode+" "+data.holds[0].ts); //further debug
+                build_table(data); 
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "gid" },
+                           { "mDataProp": "cid" },
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron / Group" },
+                           { "mDataProp": "Timestamp" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "Status" },
+                           { "mDataProp": "Message" },
+//                           { "mDataProp": "# sources tried" },
+//                           { "mDataProp": "Total # sources" },
+//                           { "mDataProp": "Next lender?" }
+                      ]
+
+                  });
+            });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If a lending library placed a hold for you, that request will be shown here.</li>
+      <li>When the lender fills the hold (i.e. ships the title to you), it will be removed from this list and added to your 'Receiving' list.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Holds - the lending libraries have placed holds in their ILS for the following titles:</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

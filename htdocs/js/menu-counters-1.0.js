@@ -28,6 +28,12 @@ function update_menu_counters( lid ) {
                     unfilled[0].innerHTML = 'Unfilled: '+data.counts.unfilled;
 		}
             };
+            if (data.counts.holds > 0) {
+		var holds = $('#menu_borrow_holds a');
+		if (holds.length > 0) {
+                    holds[0].innerHTML = 'Holds placed: '+data.counts.holds;
+		}
+            };
             if (data.counts.overdue > 0) {
 		var overdue = $('#menu_borrow_overdue a');
 		if (overdue.length > 0) {
@@ -52,12 +58,18 @@ function update_menu_counters( lid ) {
                     shipping[0].innerHTML = 'Shipping: '+data.counts.shipping;
 		}
             };
+            if (data.counts.on_hold > 0) {
+		var on_hold = $('#menu_lend_holds a');
+		if (on_hold.length > 0) {
+                    on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold;
+		}
+            };
             if (data.counts.patron_requests > 0) {
 		var patron_requests = $('#menu_borrow_new_patron_requests a');
 		if (patron_requests.length > 0) {
                     patron_requests[0].innerHTML = 'New patron requests: '+data.counts.patron_requests;
 		}
             };
-            //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
+            //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\nholds: '+data.counts.holds+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
     });
 }

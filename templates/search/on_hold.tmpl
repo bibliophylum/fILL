@@ -1,0 +1,92 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_lend.tmpl">
+
+<script type="text/javascript" src="/js/on_hold-1.0.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_lend_holds");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-on-hold.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                build_table(data);
+
+                //$('#gradient-style').dataTable();
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "gid" },
+                           { "mDataProp": "cid" },
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Hold placed" },
+                           { "mDataProp": "Date expected" },
+                           { "mDataProp": "Response" }
+                      ]
+
+                  });
+
+           });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If you have placed a hold in your ILS for an ILL request, that request will be listed.</li>
+      <li>When you capture the hold in your ILS (i.e. you have the book in hand, ready to fill the ILL request),
+	click the 'Ready to ship' button.  This will move the request to your 'Shipping' screen.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Items waiting for hold fulfillment</h3>
+      <div id="mylistDiv"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

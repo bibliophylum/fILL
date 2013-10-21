@@ -445,7 +445,9 @@
 -->      <!-- end fILL -->
 
       <!-- other stylesheets importing this might want to define this -->
+<!--      <xsl:message>DEBUG: calling template record-hook</xsl:message> -->
       <xsl:call-template name="record-hook"/>
+<!--      <xsl:message>DEBUG: done calling template record-hook</xsl:message> -->
 
     </pz:record>    
   </xsl:template>

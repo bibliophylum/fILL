@@ -1,6 +1,6 @@
 <!-- Western Manitoba Regional Library -->
 
-<settings target="216.36.147.26:210/horizon">
+<settings target="wmrl.ipac.sirsidynix.net:210/wmrl">
 
   <set name="pz:name" value="Western Manitoba Regional Library (Horizon)"/>
   <set name="symbol" value="MBW"/>

@@ -104,7 +104,7 @@ function my_onstat(data) {
 	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
-	    debug("Search Complete");
+	    //debug("Search Complete");
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){

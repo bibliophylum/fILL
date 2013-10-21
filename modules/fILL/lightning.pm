@@ -48,6 +48,7 @@ my %SPRUCE_TO_MAPLIN = (
     'ME' => 'ME',
     'MS' => 'MS',
     'MSOG' => 'MSOG',
+    'MDB' => 'MDB',
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -75,6 +76,8 @@ sub setup {
 	'respond'                  => 'respond_process',
 	'shipping'                 => 'shipping_process',
 	'unfilled'                 => 'unfilled_process',
+	'holds'                    => 'holds_process',
+	'on_hold'                  => 'on_hold_process',
 	'receive'                  => 'receiving_process',
 	'renewals'                 => 'renewals_process',
 	'returns'                  => 'returns_process',
@@ -96,9 +99,11 @@ sub complete_the_request_process {
 
     my $pbarcode = $q->param('pbarcode') || 'no barcode';
     my $request_note = $q->param('request_note');
+    my $placeOnHold = $q->param('placeOnHold') || 'lenderPolicy';
     my $reqid = $q->param('request_id');
     my $group_id = $q->param('group_id');
     my $copies_requested = $q->param('copies_requested') || 1;
+    $self->log->debug( "group_id: [" . $group_id . "], placeOnHold: [" . $placeOnHold . "]" );
     if (($copies_requested) && ($copies_requested > 1)) {
 	$self->dbh->do("UPDATE request_group SET copies_requested=? where group_id=?", undef, $copies_requested, $group_id);
     }
@@ -107,6 +112,9 @@ sub complete_the_request_process {
     }
     if ($request_note) {
 	$self->dbh->do("UPDATE request_group SET note=? where group_id=?", undef, $request_note, $group_id);
+    }
+    if ($placeOnHold) {
+	$self->dbh->do("UPDATE request_group SET place_on_hold=? where group_id=?", undef, $placeOnHold, $group_id);
     }
 
     # Get this user's (requester's) library id
@@ -482,6 +490,25 @@ sub request_process {
 #--------------------------------------------------------------------------------
 #
 #
+sub holds_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/holds.tmpl');	
+    $template->param( pagetitle => "Lenders have placed holds",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
 sub respond_process {
     my $self = shift;
     my $q = $self->query;
@@ -490,6 +517,25 @@ sub respond_process {
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub on_hold_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/on_hold.tmpl');	
+    $template->param( pagetitle => "On hold",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,

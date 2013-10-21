@@ -143,6 +143,43 @@ h6
   width:80%;
 }
 
+/* The following are for doing 2-column within #middlecontent */
+#midcolumncontainer {
+  overflow: hidden;
+}
+
+#midleft {
+  float:left;
+  width:50%;
+  background:#9c9;
+  padding-bottom: 1000em;
+  margin-bottom: -999.5em;
+}
+
+#midright {
+  float:left;
+  width:50%;
+  background:#c99;
+  padding-bottom: 1000em;
+  margin-bottom: -999.5em;
+}
+
+#midfooter {
+  clear:both;
+  background:#ddd;
+}
+
+/* The following applies only to IE6, using the "star html" hack. */
+* html #midfooter {
+  height:1px;
+}
+
+/* This is used to provide padding without messing around with our
+   floating columns. */
+#midinner {
+    padding: 10px;
+}
+
 /* DEPRECATED!  middlecontent has expanded from 70% to 80%
 #rightcontent {
   float:left;

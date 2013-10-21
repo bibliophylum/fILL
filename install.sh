@@ -73,6 +73,7 @@ echo Updating pazpar2 xslt
 #sudo cp /opt/fILL/pazpar2/fILL.xsl /etc/pazpar2/fILL.xsl
 sudo cp /opt/fILL/pazpar2/marc21.xsl /etc/pazpar2/marc21.xsl
 sudo cp /opt/fILL/pazpar2/horizon-opac.xsl /etc/pazpar2/horizon-opac.xsl
+sudo cp /opt/fILL/pazpar2/wmrl.xsl /etc/pazpar2/wmrl.xsl
 echo Clearing pazpar2 log
 sudo unlink /opt/fILL/logs/pazpar2.log
 sudo rm /var/log/pazpar2.log
