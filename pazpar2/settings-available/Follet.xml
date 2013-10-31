@@ -1,9 +1,11 @@
 <settings target="*">
 
 <!-- Portage la Prairie Regional Library -->
+<!-- Moved to Spruce
   <set target="184.70.43.222:210/Destiny" name="pz:name" value="Portage la Prairie Regional Library (Follet)"/>
   <set target="184.70.43.222:210/Destiny" name="symbol" value="MPLP"/>
   <set target="184.70.43.222:210/Destiny" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+-->
 
 <!-- Bibliotheque Allard (combines Allard, Beaches, and Victoria Beach) -->
   <set target="206.45.206.163:210/biblioall" name="pz:name" value="Bibliotheque Allard"/>
