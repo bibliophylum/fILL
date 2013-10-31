@@ -49,6 +49,14 @@ my %SPRUCE_TO_MAPLIN = (
     'MS' => 'MS',
     'MSOG' => 'MSOG',
     'MDB' => 'MDB',
+    'MPLP' => 'MPLP',        # Portage
+    'MSSC' => 'MSSC',        # Shilo
+    'MEC' => 'UCN',
+    'MNH' => 'UCN',
+    'MSRH' => 'UCN',         # University College of the North
+    'MTK' => 'UCN',          #   libraries and campuses
+    'MTPK' => 'UCN',
+    'MWMW' => 'UCN',
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -73,6 +81,7 @@ sub setup {
 	'request'                  => 'request_process',
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
+	'current_form'             => 'current_process',
 	);
 }
 
@@ -332,6 +341,27 @@ sub myaccount_process {
 		      pid => $pid
 	);
     return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub current_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('public/current.tmpl');	
+    $template->param( pagetitle => "Current interlibrary loans",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+		      pid => $pid
+	);
+    return $template->output;
+    
 }
 
 
