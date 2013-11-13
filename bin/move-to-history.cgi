@@ -13,6 +13,7 @@ my $rSuccess = 0;
 my $rClosed = 0;
 my $rHistory = 0;
 my $rActive = 0;
+my $rSourcesHist = 0;
 my $rSources = 0;
 my $rRequest = 0;
 my $rChains = 0;
@@ -66,7 +67,7 @@ eval {
     # get all of the requests for this chain
     $SQL = "select id from request where chain_id=?";
     my $chained_requests_aref = $dbh->selectall_arrayref( $SQL, undef, $gcr[1] );
-    print STDERR "move-to-history: moving chain to history\n";
+    #print STDERR "move-to-history: moving chain to history\n";
     foreach my $req_aref (@$chained_requests_aref) {
 	my $chained_req = $req_aref->[0];
 	#print STDERR "move-to-history: chain [" . $gcr[1] . "], request [$chained_req]\n";
@@ -84,6 +85,11 @@ eval {
 	$SQL = "delete from requests_active where request_id=?";
 	$rActive = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
 	#print STDERR "move-to-history: requests_active deleted for reqid $chained_req\n";
+
+	# copy sources to sources_history - including request_id (i.e. before nulling it)
+	$SQL = "insert into sources_history (request_id, sequence_number, lid, call_number, group_id, tried) select request_id, sequence_number, lid, call_number, group_id, tried from sources where request_id=?";
+	$rSourcesHist = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
+	#print STDERR "move-to-history: sources for this request have been moved to sources history\n";
 
 	# sources.request_id is an fkey.  Can't delete the request until that's reset.
 	$SQL = "update sources set request_id=NULL where request_id=?";
@@ -116,7 +122,7 @@ eval {
 	$rChains = $dbh->do( $SQL, undef, $gcr[0] );
 	#print STDERR "move-to-history: no chains left in this group, group deleted\n";
 
-	# we don't need the sources for history
+	# the sources have already been moved to history, so delete from the 'active' sources
 	$SQL = "delete from sources where group_id=?";
 	$rSources = ($dbh->do( $SQL, undef, $gcr[0] ) ? 1 : 0);
 	#print STDERR "move-to-history: no further need of sources, sources deleted\n";
