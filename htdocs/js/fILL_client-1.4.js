@@ -423,7 +423,7 @@ function renderDetails(data, marker)
 	    if (data["location"][i]["md-locallocation"] != undefined) {
 		var bail=0;
 		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
-		    if ("MSTOS" === data["location"][i]["md-locallocation"][lloc]) {
+		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
 			bail=1;
 		    }
 		}
