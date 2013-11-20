@@ -1,9 +1,14 @@
 <settings target="*">
 
 <!-- Bibliotheque Montcalm Library -->
-  <set target="216.73.71.158:210/biblionet" name="pz:name" value="Bibliotheque Montcalm Library (Biblionet)"/>
-  <set target="216.73.71.158:210/biblionet" name="symbol" value="MSJB"/>
-  <set target="216.73.71.158:210/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+  <set target="216.73.74.21:210/biblionet" name="pz:name" value="Bibliotheque Montcalm Library (Biblionet)"/>
+  <set target="216.73.74.21:210/biblionet" name="symbol" value="MSJB"/>
+  <set target="216.73.74.21:210/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+
+<!-- Bibliotheque Saint-Joachim -->
+  <set target="216.73.74.12:210/biblionet" name="pz:name" value="Bibliotheque Saint-Joachim (Biblionet)"/>
+  <set target="216.73.74.12:210/biblionet" name="symbol" value="MLB"/>
+  <set target="216.73.74.12:210/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
 <!-- Bibliotheque Pere Champagne -->
   <set target="perechampagne.getmyip.com:210/ILS" name="pz:name" value="Bibliotheque Pere Champagne"/>
@@ -17,11 +22,6 @@
 <!-- Bibliotheque Saint-Claude -->
   <set target="stclib.dyndns-server.com:210/ils" name="pz:name" value="Bibliotheque Saint-Claude"/>
   <set target="stclib.dyndns-server.com:210/ils" name="symbol" value="MSCL"/>
-
-<!-- Bibliotheque Saint-Joachim -->
-  <set target="216.73.74.12:209/biblionet" name="pz:name" value="Bibliotheque Saint-Joachim (Biblionet)"/>
-  <set target="216.73.74.12:209/biblionet" name="symbol" value="MLB"/>
-  <set target="216.73.74.12:209/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
 <!-- Bibliotheque Ste. Anne -->
   <set target="199.204.69.199:210/steanne_ils" name="pz:name" value="Bibliotheque Ste. Anne"/>
