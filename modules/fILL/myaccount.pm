@@ -34,6 +34,7 @@ sub setup {
     $self->run_modes(
 	'myaccount_settings_form'         => 'myaccount_settings_process',
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
+	'myaccount_test_zserver_form'     => 'myaccount_test_zserver_process',
 	);
 }
 
@@ -44,9 +45,7 @@ sub myaccount_settings_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    $self->log->debug("username: " . $self->authen->username);
-    $self->log->debug("lid: $lid, library: $library");
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
     my $status;
     my @searchprefs;
 
@@ -114,7 +113,7 @@ sub myaccount_library_barcodes_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('myaccount/library-barcodes.tmpl');	
     $template->param( pagetitle => $self->authen->username . " barcodes from ILS",
@@ -126,17 +125,36 @@ sub myaccount_library_barcodes_process {
     
 }
 
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_test_zserver_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my $template = $self->load_tmpl('myaccount/test-zserver.tmpl');
+    $template->param(pagetitle => "fILL MyAccount test zServer",
+		     username     => $self->authen->username,
+		     lid          => $lid,
+		     libsym       => $symbol,
+		     library      => $library,
+	);
+    return $template->output;
+}
+
+
 #--------------------------------------------------------------------------------------------
 sub get_library_from_username {
     my $self = shift;
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{library});
+    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
 }
 
 1; # so the 'require' or 'use' succeeds

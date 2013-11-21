@@ -1,0 +1,204 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript">
+set_secondary_tab("menu_myaccount_test_zserver");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name="libsym">"},
+            function(data){
+               //alert (data.holds[0].id+" "+data.holds[0].title+" "+data.holds[0].author+" "+data.holds[0].patron_barcode+" "+data.holds[0].ts); //further debug
+               //alert('pqf:'+data.zServer_status.pqf+', #found:'+ data.zServer_status.found);
+
+               var td = document.getElementById('success');
+               if (data.success == 0) {
+                 td.textContent = "Error";
+                 td.style.backgroundColor = "lightsalmon";
+               } else if (data.success == 1) {
+                 td.textContent = "Ok";
+                 td.style.backgroundColor = "greenyellow";
+               } else {
+                 td.textContent = "Unknown status";
+                 td.style.bacgroundColor = "yellow";
+               }
+
+               var td = document.getElementById('libsym');
+               if (data.libsym != null) {
+                 td.textContent = data.libsym;
+               }
+
+               if (data.zServer_status.connection != null) {
+                 td = document.getElementById('zServer_status_connection_success');
+                 if (data.zServer_status.connection.success != null) {
+                   if (data.zServer_status.connection.success == 0) {
+                     td.textContent = "Error";
+                     td.style.backgroundColor = "lightsalmon";
+                   } else if (data.zServer_status.connection.success == 1) {
+                     td.textContent = "Ok";
+                     td.style.backgroundColor = "greenyellow";
+                   } else {
+                     td.textContent = "Unknown status";
+                     td.style.bacgroundColor = "yellow";
+                   }
+                 }
+                 if (data.zServer_status.connection.connectionString != null) {
+                   document.getElementById('zServer_status_connection_connectionString').textContent = data.zServer_status.connection.connectionString;
+                 }
+                 if (data.zServer_status.connection.status != null) {
+                   document.getElementById('zServer_status_connection_status').textContent = data.zServer_status.connection.status;
+                 }
+               }
+
+               if (data.zServer_status.search != null) {
+                 td = document.getElementById('zServer_status_search_success');
+                 if (data.zServer_status.search.success != null) {
+                   if (data.zServer_status.search.success == 0) {
+                     td.textContent = "Error";
+                     td.style.backgroundColor = "lightsalmon";
+                   } else if (data.zServer_status.search.success == 1) {
+                     td.textContent = "Ok";
+                     td.style.backgroundColor = "greenyellow";
+                   } else {
+                     td.textContent = "Unknown status";
+                     td.style.bacgroundColor = "yellow";
+                   }
+                 }
+                 if (data.zServer_status.search.type != null) {
+                   document.getElementById('zServer_status_search_type').textContent = data.zServer_status.search.type;
+                 }
+                 if (data.zServer_status.search.status != null) {
+                   document.getElementById('zServer_status_search_status').textContent = data.zServer_status.search.status;
+                 }
+                 if (data.zServer_status.search.pqf != null) {
+                   document.getElementById('zServer_status_search_pqf').textContent = data.zServer_status.search.pqf;
+                 }
+                 if (data.zServer_status.search.found != null) {
+                   document.getElementById('zServer_status_search_found').textContent = data.zServer_status.search.found;
+                 }
+               }
+
+               if (data.zServer_status.record != null) {
+                 td = document.getElementById('zServer_status_record_success');
+                 if (data.zServer_status.record.success != null) {
+                   if (data.zServer_status.record.success == 0) {
+                     td.textContent = "Error";
+                     td.style.backgroundColor = "lightsalmon";
+                   } else if (data.zServer_status.record.success == 1) {
+                     td.textContent = "Ok";
+                     td.style.backgroundColor = "greenyellow";
+                   } else {
+                     td.textContent = "Unknown status";
+                     td.style.bacgroundColor = "yellow";
+                   }
+                 }
+                 if (data.zServer_status.record.status != null) {
+                   document.getElementById('zServer_status_record_status').textContent = data.zServer_status.record.status;
+                 }
+                 if (data.zServer_status.record.author != null) {
+                   document.getElementById('zServer_status_record_author').textContent = data.zServer_status.record.author;
+                 }
+                 if (data.zServer_status.record.title != null) {
+                   document.getElementById('zServer_status_record_title').textContent = data.zServer_status.record.title;
+                 }
+               }
+
+               td = document.getElementById('log');
+               if (data.log != null) {
+                 td.textContent = data.log;
+               }
+
+           })
+	.done(function() {
+	    //alert('success!\n'+data);
+	})
+	.fail(function() {
+	    alert('error!');
+	})
+	.always(function() {
+            //alert('ajax complete');
+            toggleLayer("waitDiv");
+            toggleLayer("mylistDiv");
+	});
+});
+
+
+function toggleLayer( whichLayer )
+{
+    var elem, vis;
+    if( document.getElementById ) // this is the way the standards work
+        elem = document.getElementById( whichLayer );
+    else if( document.all ) // this is the way old msie versions work
+        elem = document.all[whichLayer];
+    else if( document.layers ) // this is the way nn4 works
+        elem = document.layers[whichLayer];
+
+    vis = elem.style;
+    // if the style.display value is blank we try to figure it out here
+    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+        vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+    //    alert('toggled ' + whichLayer);
+}
+
+function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+}
+
+function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+}
+
+</script>
+
+<div id="middlecontent">
+  <h4>Test my zServer</h4>
+
+  <div id="waitDiv">
+    Testing... <img src="/wait.gif">
+  </div>
+
+  <div id="myDiv">
+    <div id="mylistDiv">
+      <p><strong>General</strong></p>
+      <table border="1" width="100%">
+	<tr><td width="10%">success?</td><td width="80%" id="success">...</td></tr>
+	<tr><td>libsym</td><td id="libsym">...</td></tr>
+      </table>
+      <br/>
+      <p><strong>Connection</strong></p>
+      <table border="1" width="100%">
+	<tr><td width="10%">success?</td><td width="80%" id="zServer_status_connection_success">...</td></tr>
+	<tr><td>connection</td><td id="zServer_status_connection_connectionString">...</td></tr>
+	<tr><td>status</td><td id="zServer_status_connection_status">...</td></tr>
+      </table>
+      <br/>
+      <p><strong>Search</strong></p>
+      <table border="1" width="100%">
+	<tr><td width="10%">success?</td><td width="80%" id="zServer_status_search_success">...</td></tr>
+	<tr><td>type</td><td id="zServer_status_search_type">...</td></tr>
+	<tr><td>status</td><td id="zServer_status_search_status">...</td></tr>
+	<tr><td>pqf</td><td id="zServer_status_search_pqf">...</td></tr>
+	<tr><td># found</td><td id="zServer_status_search_found">...</td></tr>
+      </table>
+      <br/>
+      <p><strong>Record</strong></p>
+      <table border="1" width="100%">
+	<tr><td width="10%">success?...</td><td width="80%" id="zServer_status_record_success">...</td></tr>
+	<tr><td>status</td><td id="zServer_status_record_status">...</td></tr>
+	<tr><td>author</td><td id="zServer_status_record_author">...</td></tr>
+	<tr><td>title</td><td id="zServer_status_record_title">...</td></tr>
+      </table>
+      <br/>
+      <p><strong>Log</strong></p>
+      <p><PRE id="log">...</PRE></p>
+
+    </div>
+  </div>
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

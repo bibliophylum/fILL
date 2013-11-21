@@ -25,7 +25,7 @@
 
 <!-- Bibliotheque Ste. Anne -->
   <set target="199.204.69.199:210/steanne_ils" name="pz:name" value="Bibliotheque Ste. Anne"/>
-  <set target="199.204.69.199:210/steanne_ils" name="symbol" value="msa"/>
+  <set target="199.204.69.199:210/steanne_ils" name="symbol" value="MSA"/>
 
 <!-- settings apply to all targets-->
   <!-- mapping for unqualified search -->
