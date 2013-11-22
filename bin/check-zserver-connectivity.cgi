@@ -8,6 +8,7 @@ use Data::Dumper;
 
 my $query = new CGI;
 my $libsym = $query->param('libsym');
+my $keepLog = $query->param('log') || 0;
 my $result_href = { "success" => 0, 
 		    "libsym" => $libsym,
 		    "zServer_status" => {
@@ -56,7 +57,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 
 	$result_href = _test_zserver($result_href, $target);
 #	# temporary, for testing
-#	my $log = $result_href->{log};
+#	my $log = $result_href->{log} if ($keepLog);
 #	delete $result_href->{log};
     } else {
 	$result_href->{success} = 0;
@@ -109,9 +110,9 @@ sub _test_zserver {
     $result_href->{log} = "";
 
     $result_href->{zServer_status}{connection}{connectionString} = $connection_string;
-    $result_href->{log} .= "\n--[ Connection ]-------\n";
-    $result_href->{log} .= "$connection_string\n";
-    $result_href->{log} .= "preferredRecordSyntax set to: $preferredRecordSyntax\n";
+    $result_href->{log} .= "\n--[ Connection ]-------\n" if ($keepLog);
+    $result_href->{log} .= "$connection_string\n" if ($keepLog);
+    $result_href->{log} .= "preferredRecordSyntax set to: $preferredRecordSyntax\n" if ($keepLog);
 
     eval {
 	my $o1 = new ZOOM::Options(); $o1->option(user => $usr);
@@ -130,7 +131,7 @@ sub _test_zserver {
     if ($@) {
 	$result_href->{zServer_status}{connection}{success} = 0;
 	$result_href->{zServer_status}{connection}{status} = "Error " . $@->code() . ": " . $@->message();
-	$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n";
+	$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n" if ($keepLog);
     } else {
 	$result_href->{zServer_status}{connection}{success} = 1;
 	$result_href->{zServer_status}{connection}{status} = "Connection successful";
@@ -139,24 +140,24 @@ sub _test_zserver {
 	    eval {
 
 		$result_href->{zServer_status}{search}{pqf} = $pqf;
-		$result_href->{log} .= "\n--[ scan ]----\n";
-		$result_href->{log} .= "$pqf\n";
+		$result_href->{log} .= "\n--[ scan ]----\n" if ($keepLog);
+		$result_href->{log} .= "$pqf\n" if ($keepLog);
 		my $ss = $conn->scan_pqf($pqf);
 		$n = $ss->size();
-		$result_href->{log} .= "$n term(s) found.\n";
+		$result_href->{log} .= "$n term(s) found.\n" if ($keepLog);
 		$result_href->{zServer_status}{search}{found} = $n;
 		for my $i (1 .. $n) {
-		    $result_href->{log} .=  "\t--[Term #" . $i . " (" . ($i - 1) . "th term)]--\n";
+		    $result_href->{log} .=  "\t--[Term #" . $i . " (" . ($i - 1) . "th term)]--\n" if ($keepLog);
 		    my ($term, $occurrences) = $ss->term($i-1);
 		    my ($displayTerm, $occurrences2) = $ss->display_term($i-1);
-		    $result_href->{log} .=  "\t\t[$term]($occurrences): $displayTerm\n";
+		    $result_href->{log} .=  "\t\t[$term]($occurrences): $displayTerm\n" if ($keepLog);
 		}
 	    };
 	    if ($@) {
 		$result_href->{zServer_status}{search}{success} = 0;
 		$result_href->{zServer_status}{search}{type} = "scan";
 		$result_href->{zServer_status}{search}{status} = "Error " . $@->code() . ": " . $@->message();
-		$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n";
+		$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n" if ($keepLog);
 	    } else {
 		$result_href->{zServer_status}{search}{success} = 1;
 		$result_href->{zServer_status}{search}{type} = "scan";
@@ -166,11 +167,11 @@ sub _test_zserver {
 	    # search
 	    eval {
 		$result_href->{zServer_status}{search}{pqf} = $pqf;
-		$result_href->{log} .= "\n--[ search ]----\n";
-		$result_href->{log} .= "$pqf\n";
+		$result_href->{log} .= "\n--[ search ]----\n" if ($keepLog);
+		$result_href->{log} .= "$pqf\n" if ($keepLog);
 		$rs = $conn->search_pqf($pqf);
 		$n = $rs->size();
-		$result_href->{log} .= "$n record(s) found.\n";
+		$result_href->{log} .= "$n record(s) found.\n" if ($keepLog);
 		$result_href->{zServer_status}{search}{found} = $n;
 		
 		$n = 3 if ($n > 3); # let's be reasonable
@@ -202,10 +203,10 @@ sub _test_zserver {
 			}
 
 			
-			$result_href->{log} .= "\n\n-[Record $x]--\n";
-			$result_href->{log} .= $rs->record($x)->render();
-			$result_href->{log} .= "\nRAW DATA:\n";
-			$result_href->{log} .= $rs->record($x)->raw();
+			$result_href->{log} .= "\n\n-[Record $x]--\n" if ($keepLog);
+			$result_href->{log} .= $rs->record($x)->render() if ($keepLog);
+			$result_href->{log} .= "\nRAW DATA:\n" if ($keepLog);
+			$result_href->{log} .= $rs->record($x)->raw() if ($keepLog);
 			
 			$x++;
 		    }
@@ -215,7 +216,7 @@ sub _test_zserver {
 		$result_href->{zServer_status}{search}{success} = 0;
 		$result_href->{zServer_status}{search}{type} = "search";
 		$result_href->{zServer_status}{search}{status} = "Error " . $@->code() . ": " . $@->message();
-		$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n";
+		$result_href->{log} .= "Error " . $@->code() . ": " . $@->message() . "\n" if ($keepLog);
 	    } else {
 		$result_href->{zServer_status}{search}{success} = 1;
 		$result_href->{zServer_status}{search}{type} = "search";
