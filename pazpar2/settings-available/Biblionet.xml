@@ -14,10 +14,10 @@
   <set target="perechampagne.getmyip.com:210/ILS" name="pz:name" value="Bibliotheque Pere Champagne"/>
   <set target="perechampagne.getmyip.com:210/ILS" name="symbol" value="MNDP"/>
 
-<!-- Bibliotheque Ritchot -->
-  <set target="24.77.96.250:210/Biblionet" name="pz:name" value="Bibliotheque Ritchot (Biblionet)"/>
-  <set target="24.77.96.250:210/Biblionet" name="symbol" value="MIBR"/>
-  <set target="24.77.96.250:210/Biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
+<!-- Bibliotheque Ritchot - formerly at 24.77.96.250 -->
+  <set target="216.73.74.8:210/Biblionet" name="pz:name" value="Bibliotheque Ritchot (Biblionet)"/>
+  <set target="216.73.74.8:210/Biblionet" name="symbol" value="MIBR"/>
+  <set target="216.73.74.8:210/Biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
 <!-- Bibliotheque Saint-Claude -->
   <set target="stclib.dyndns-server.com:210/ils" name="pz:name" value="Bibliotheque Saint-Claude"/>
