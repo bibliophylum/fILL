@@ -47,6 +47,22 @@
 <script type="text/javascript">
 
 $('document').ready(function(){
+    $.getJSON('/cgi-bin/rotations-allowed.cgi', 
+        {lid: <TMPL_VAR name="lid"> },
+        function(data){
+            if (data.allowed == "1") {
+                $("#menu_rotations").show();
+            } else {
+                $("#menu_rotations").hide();
+            }
+        })
+        .success(function() {
+        })
+        .error(function() {
+        })
+        .complete(function() { 
+        });
+
   update_menu_counters( <TMPL_VAR name="lid"> );
   $("#query").focus();
 });
@@ -134,6 +150,12 @@ $('document').ready(function(){
     <li id="menu_info">
       <a href=/cgi-bin/info.cgi?rm=info_contacts_form>
       Info
+      </a>
+    </li>
+
+    <li id="menu_rotations" style="display:none;">
+      <a href="/cgi-bin/rotations.cgi?rm=receive_form">
+      Rotation manager
       </a>
     </li>
 

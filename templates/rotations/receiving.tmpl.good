@@ -1,0 +1,100 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations.tmpl">
+
+<script type="text/javascript" src="/js/rotations-1.0.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_rotations_receiving");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+  oTable = $('#datatable_scanned').dataTable({
+    "bJQueryUI": true,
+    "sPaginationType": "full_numbers",
+    "bInfo": true,
+    "bSort": true,
+    "sDom": '<"H"Tfr>t<"F"ip>',
+    // TableTools requires Flash version 10...
+    "oTableTools": {
+      "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+      "aButtons": [
+        "copy", "csv", "xls", "pdf", "print",
+        {
+        "sExtends":    "collection",
+        "sButtonText": "Save",
+        "aButtons":    [ "csv", "xls", "pdf" ]
+        }
+      ]
+    },
+    "aoColumns": [
+      { "mDataProp": "id" },
+      { "mDataProp": "barcode" },
+      { "mDataProp": "callno" },
+      { "mDataProp": "title", "sWidth": "25%" },
+      { "mDataProp": "author" },
+      { "mDataProp": "current_library", "sWidth": "5%" },
+      { "mDataProp": "previous_library", "sWidth": "5%" },
+      { "mDataProp": "timestamp" }
+      ]
+      
+    });
+
+    oTable.fnSort( [ [7,'desc'] ] );
+});
+
+function barcode_scanned( bc ) {
+//  alert('barcode scanned!\n' + bc);
+  $.getJSON('/cgi-bin/rotation-item-scanned.cgi', {lid: <TMPL_VAR name="lid">, barcode: bc },
+    function(data){
+//	alert(data.item);
+        add_row_to_table(data);
+        }
+  );
+//  alert('done.');
+};
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Scan barcodes of received titles.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+    <div id="myDiv">
+      <h3>Receive rotation titles</h3>
+      <div id="scanner">
+	<form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
+	  <p>Scan a barcode: <input type="text" name="barcode" onChange="barcode_scanned(this.value); this.value=''; this.focus(); return false;"></p>
+	  <br/>
+	</form>
+      </div>
+    </div>
+
+    <div id="scanned">
+      <h3>Scanned</h3>
+      <div class="dataTable_wrapper">
+        <table id="datatable_scanned" class="display">
+          <thead>
+            <tr>
+              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current_library</th><th>previous_library</th><th>timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

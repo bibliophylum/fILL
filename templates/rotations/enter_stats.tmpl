@@ -1,0 +1,89 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations.tmpl">
+
+<script type="text/javascript" src="/js/rotation-stats-1.0.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_rotations_circstats");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+  $.getJSON('/cgi-bin/get-current-rotation-list.cgi', {lid: <TMPL_VAR name="lid">},
+        function(data){
+            build_table(data);
+        })
+	.success(function() {
+        })
+	.error(function() {
+        })
+	.complete(function() { 
+            oTable = $('#gradient-style').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bInfo": true,
+                "bSort": true,
+                "sDom": '<"H"Tfr>t<"F"ip>',
+                // TableTools requires Flash version 10...
+	        "oTableTools": {
+                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		    "aButtons": [
+		        "copy", "csv", "xls", "pdf", "print",
+		        {
+			"sExtends":    "collection",
+			"sButtonText": "Save",
+			"aButtons":    [ "csv", "xls", "pdf" ]
+		        }
+		     ]
+        	},
+                "aoColumns": [
+                    { "mDataProp": "id" },
+                    { "mDataProp": "callno" },
+                    { "mDataProp": "title" },
+                    { "mDataProp": "author" },
+                    { "mDataProp": "barcode" },
+                    { "mDataProp": "timestamp" },
+                    { "mDataProp": "circs" },
+                ]
+
+                });
+           });
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>[TAB] will take you to the next circ stat entry field.</li>
+      <li>[ENTER] will update the stat but leave you in the same field.</li>
+      <li> </li>
+      <li>You can also scan the item's barcode into the Search box to bring up just that item.</li>
+      <li> </li>
+      <li>Items will remain on this list until the next library in the rotation receives them.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Enter circ stats</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

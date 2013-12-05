@@ -1,0 +1,20 @@
+Need to create a rotations-MARC directory under /opt/fILL
+
+$ mkdir /opt/fILL/rotations-MARC
+$ chgrp www-data /opt/fILL/rotations-MARC
+$ chmod g+w /opt/fILL/rotations-MARC
+
+Need to modify /opt/fILL/conf/fILL.conf to add:
+
+	Alias /rotations-MARC/ /opt/fILL/rotations-MARC/
+	<Directory "/opt/fILL/rotations-MARC">
+		AllowOverride None
+		Options -MultiViews +SymLinksIfOwnerMatch +Indexes
+		IndexOptions FancyIndexing HTMLTable
+		# 2.2 way:
+		#Order allow,deny
+		#Allow from all
+		# 2.4 way:
+		Require all granted
+		#Deny from 206.45.206.151  
+	</Directory>

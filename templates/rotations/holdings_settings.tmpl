@@ -1,0 +1,75 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations.tmpl">
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_rotations_holdins_setup");
+  //-->
+</script>
+
+<div id="leftcontent">
+</div>
+
+<div id="middlecontent">
+  <h4><TMPL_VAR NAME="Holdings setup"></h4>
+  <form METHOD=POST ACTION="">
+    <table>
+      <tr>
+	<td>Holdings field:</td>
+	<td>
+	  <input TYPE="text" NAME="holdings_field" SIZE="3" MAXLENGTH="3" VALUE="<TMPL_VAR NAME=holdings_field>">
+	</td>
+      </tr><tr>
+	<td>Barcode subfield:</td>
+	<td>
+	  <input TYPE="text" NAME="barcode_subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=barcode_subfield>">
+	</td>
+      </tr><tr>
+	<td>Call # subfield:</td>
+	<td>
+	  <input TYPE="text" NAME="callno_subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=callno_subfield>">
+	</td>
+      </tr><tr>
+	<td>Library subfield:</td>
+	<td>
+	  <input TYPE="text" NAME="library_subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=library_subfield>">
+	</td>
+      </tr><tr>
+	<td>Library default:</td>
+	<td>
+	  <input TYPE="text" NAME="library_default" SIZE="20" MAXLENGTH="100" VALUE="<TMPL_VAR NAME=library_default>">
+	</td>
+      </tr><tr>
+	<td>Location subfield:</td>
+	<td>
+	  <input TYPE="text" NAME="location_subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=location_subfield>">
+	</td>
+      </tr><tr>
+	<td>Location default:</td>
+	<td>
+	  <input TYPE="text" NAME="location_default" SIZE="20" MAXLENGTH="100" VALUE="<TMPL_VAR NAME=location_default>">
+	</td>
+      </tr><tr>
+	<td>Collection subfield:</td>
+	<td>
+	  <input TYPE="text" NAME="collection_subfield" SIZE="1" MAXLENGTH="1" VALUE="<TMPL_VAR NAME=collection_subfield>">
+	</td>
+      </tr>
+      </tr><tr>
+	<td>Collection default:</td>
+	<td>
+	  <input TYPE="text" NAME="collection_default" SIZE="20" MAXLENGTH="100" VALUE="<TMPL_VAR NAME=collection_default>">
+	</td>
+    </table>
+
+    <br/>
+
+    <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=lid>">
+    <input TYPE="hidden" NAME="rm" VALUE="holdings_setup_form">
+    <br />
+    <input type="submit" name="submit" value="Save settings" />
+  </form>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -21,6 +21,33 @@
 
 <script type="text/javascript">
 
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+    $.getJSON('/cgi-bin/rotations-allowed.cgi', 
+        {lid: <TMPL_VAR name="lid"> },
+        function(data){
+            if (data.allowed == "1") {
+                $("#menu_rotations").show();
+            } else {
+                $("#menu_rotations").hide();
+            }
+        })
+        .success(function() {
+        })
+        .error(function() {
+        })
+        .complete(function() { 
+        });
+});
+
+</script>
+
+
+<script type="text/javascript">
+
   function set_primary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
   }
@@ -109,6 +136,13 @@
       Info
       </a>
     </li>
+
+    <li id="menu_rotations" style="display:none;">
+      <a href="/cgi-bin/rotations.cgi?rm=receive_form">
+      Rotation manager
+      </a>
+    </li>
+
 
   </ul>
 
