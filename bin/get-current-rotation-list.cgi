@@ -7,19 +7,6 @@ use JSON;
 my $query = new CGI;
 my $lid = $query->param('lid');
 
-#my $SQL = "select 
-# r.id,
-# r.callno,
-# r.title, 
-# r.author,
-# r.barcode,
-# r. ts as timestamp
-#from 
-# rotations r
-#where 
-#  r.current_library=? 
-#";
-
 my $SQL = "select 
  r.id,
  r.callno,

@@ -1,11 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_rotations.tmpl">
 
-<script type="text/javascript" src="/js/rotation-atlibrary-1.0.js"></script>
-
-
 <script type="text/javascript">
-set_secondary_tab("menu_rotations_current");
 
 $.ajaxSetup ({  
   cache: false  
@@ -13,46 +9,46 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-  $.getJSON('/cgi-bin/get-current-rotation-list.cgi', {lid: <TMPL_VAR name="lid">},
-        function(data){
-            build_table(data);
-        })
-	.success(function() {
-        })
-	.error(function() {
-        })
-	.complete(function() { 
-            oTable = $('#gradient-style').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-                "bSort": true,
-                "sDom": '<"H"Tfr>t<"F"ip>',
-	        "iDisplayLength": 25,
-	        "bLengthChange": true,
-                // TableTools requires Flash version 10...
-	        "oTableTools": {
-                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		    "aButtons": [
-		        "copy", "csv", "xls", "pdf", "print",
-		        {
-			"sExtends":    "collection",
-			"sButtonText": "Save",
-			"aButtons":    [ "csv", "xls", "pdf" ]
-		        }
-		     ]
-        	},
-                "aoColumns": [
-                    { "mDataProp": "id" },
-                    { "mDataProp": "callno" },
-                    { "mDataProp": "title" },
-                    { "mDataProp": "author" },
-                    { "mDataProp": "barcode" },
-                    { "mDataProp": "timestamp" }
-                ]
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
 
-                });
-           });
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  set_secondary_tab("menu_rotations_current");
+
+  oTable = $('#gradient-style').dataTable({
+    "bJQueryUI": true,
+    "sPaginationType": "full_numbers",
+    "bInfo": true,
+    "bSort": true,
+    "sDom": '<"H"Tfr>t<"F"ip>',
+    "iDisplayLength": 25,
+    "bLengthChange": true,
+    // TableTools requires Flash version 10...
+    "oTableTools": {
+      "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+      "aButtons": [
+        "copy", "csv", "xls", "pdf", "print",
+        {
+        "sExtends":    "collection",
+        "sButtonText": "Save",
+        "aButtons":    [ "csv", "xls", "pdf" ]
+        }
+        ]
+      },
+      "aoColumns": [
+        { "mDataProp": "id" },
+        { "mDataProp": "callno" },
+        { "mDataProp": "title" },
+        { "mDataProp": "author" },
+        { "mDataProp": "barcode" },
+        { "mDataProp": "timestamp" }
+      ]
+      
+      });
 });
 
 </script>
@@ -69,13 +65,29 @@ $('document').ready(function(){
 
   <div id="middlecontent">
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
-
     <div id="myDiv">
-      <h3>Enter circ stats</h3>
-      <div id="mylistDiv"></div>
+      <h3>At my library</h3>
+	<table id="gradient-style">
+	  <thead>
+	    <tr><th>id</th><th>Call #</th><th>Title</th><th>Author</th><th>Barcode</th><th>Received</th></tr>
+	  </thead>
+	  <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
+	  <tbody>
+	    <TMPL_LOOP name="rotationItems">
+	      <tr>
+		<td><TMPL_VAR NAME="id"></td>
+		<td><TMPL_VAR NAME="callno"></td>
+		<td><TMPL_VAR NAME="title"></td>
+		<td><TMPL_VAR NAME="author"></td>
+		<td>
+		  <TMPL_VAR NAME="barcode"><br/>
+		    <img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>
+		</td>
+		<td><TMPL_VAR NAME="timestamp"></td>
+	      </tr>
+	    </TMPL_LOOP>
+	  </tbody>
+	</table>
     </div>
 
   </div>

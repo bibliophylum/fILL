@@ -1,6 +1,9 @@
 package fILL::rotations;
 use strict;
 use base 'fILLbase';
+use GD::Barcode;
+use GD::Barcode::Code39;
+use MIME::Base64;
 use Data::Dumper;
 
 
@@ -67,6 +70,49 @@ sub circstats_process {
 #
 #
 sub current_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $SQL = "select 
+ r.id,
+ r.callno,
+ r.title, 
+ r.author,
+ r.barcode,
+ r.ts as timestamp
+from 
+ rotations r
+ left join rotations_stats s on (s.barcode=r.barcode and s.lid=r.current_library and s.ts_start=r.ts)
+where 
+  r.current_library=? 
+";
+
+    my $aref = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
+
+    # generate barcodes (code39 requires '*' as start and stop characters
+    foreach my $rotationItem (@$aref) {
+	if (( $rotationItem->{barcode} ) && ( $rotationItem->{barcode} =~ /\d+/)) {
+	    $rotationItem->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $rotationItem->{barcode} . '*' )->plot->png);
+	}
+    }
+
+    my $template = $self->load_tmpl('rotations/at_my_library.tmpl');	
+    $template->param( pagetitle => "Rotations - at my library",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+		      rotationItems => $aref,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub current_process_orig {
     my $self = shift;
     my $q = $self->query;
 
