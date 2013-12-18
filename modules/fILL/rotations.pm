@@ -56,11 +56,19 @@ sub circstats_process {
 
     my ($lid,$symbol, $library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
+    my $hr_id = $self->dbh->selectrow_hashref(
+	"select name, library from rotations_order ro left join libraries l on l.lid=ro.to_lid where ro.from_lid=?",
+	undef,
+	$lid
+	);
+    my $reminder = "Reminder: You are sending these books to " . $hr_id->{library} . " (" . $hr_id->{name} . ")";
+
     my $template = $self->load_tmpl('rotations/enter_stats.tmpl');	
     $template->param( pagetitle => "Rotations - enter stats",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
+		      reminder => $reminder,
 	);
     return $template->output;
     

@@ -52,6 +52,10 @@ $('document').ready(function(){
 
                 });
            });
+
+	$("#reminder").css({ fontSize: 14 });	
+	$("#reminder").stop(true,true).effect("highlight", {}, 3000);
+
 });
 
 </script>
@@ -79,6 +83,7 @@ $('document').ready(function(){
 
     <div id="myDiv">
       <h3>Enter circ stats</h3>
+      <p id="reminder"><TMPL_VAR NAME="reminder"></p>
       <div id="mylistDiv"></div>
     </div>
 
