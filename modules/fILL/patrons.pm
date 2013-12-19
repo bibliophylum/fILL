@@ -46,7 +46,7 @@ sub patrons_process {
     my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('patrons/patrons.tmpl');	
-    $template->param( pagetitle => $self->authen->username . " patrons using public fILL",
+    $template->param( pagetitle => "Patrons using public fILL",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
