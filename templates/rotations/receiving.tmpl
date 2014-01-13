@@ -44,6 +44,30 @@ $('document').ready(function(){
     });
 
     oTable.fnSort( [ [7,'desc'] ] );
+
+//    $("#barcode").on("input propertychange", function() {
+    $("#barcode").on("change", function() {
+      barcode_scanned(this.value); 
+      this.value=''; 
+      this.focus(); 
+    });
+
+    // some users are reporting that the scanned barcode doesn't
+    // automatically appear in the data table (i.e. that the onChange
+    // wasn't firing.  So let's add a manual option:
+    $("#scanOk").on("click", function() {
+        // button does nothing except change focus from text input,
+        // which triggers onChange.
+//      var bc = $("#barcode").val();
+//      barcode_scanned( bc );
+      $("#barcode").focus();
+      return false;
+    });
+
+
+    // start with focus on barcode field
+    $("#barcode").focus();
+
 });
 
 function barcode_scanned( bc ) {
@@ -91,7 +115,13 @@ function downloadMarc() {
 	  <tr>
 	    <td width="80%">
 	      <form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
-		<p>Scan a barcode: <input type="text" name="barcode" onChange="barcode_scanned(this.value); this.value=''; this.focus(); return false;"></p>
+<!--
+		<p>Scan a barcode: <input type="text" name="barcode" maxlength="14" onChange="barcode_scanned(this.value); this.value=''; this.focus(); return false;"></p>
+-->
+		<p>
+		  Scan a barcode: <input id="barcode" type="text" name="barcode">
+		  <input id="scanOk" type="button" value="Ok">
+		</p>
 		<br/>
 	      </form>
 	    </td>
