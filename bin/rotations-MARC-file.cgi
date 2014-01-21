@@ -33,6 +33,7 @@ $aref = $dbh->selectall_arrayref($SQL, undef, $lid );
 $dbh->disconnect;
 
 open(MRC,'>',"/opt/fILL/rotations-MARC/$filename") or die $!;
+binmode(MRC, ":utf8");
 #open(MRC,'>',"/tmp/$filename") or die $!;
 
 foreach my $selectdata (@$aref) {
