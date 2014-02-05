@@ -51,11 +51,11 @@ my %SPRUCE_TO_MAPLIN = (
     'MDB' => 'MDB',          # Bren Del Win
     'MPLP' => 'MPLP',        # Portage
     'MSSC' => 'MSSC',        # Shilo
-    'MEC' => 'UCN',
-    'MNH' => 'UCN',
+    'MEC' => 'MEC',
+    'MNH' => 'MNH',
     'MSRH' => 'UCN',         # University College of the North
-    'MTK' => 'UCN',          #   libraries and campuses
-    'MTPK' => 'UCN',
+    'MTK' => 'MTK',          #   libraries and campuses
+    'MTPK' => 'MTPK',
     'MWMW' => 'UCN',
     );
 
