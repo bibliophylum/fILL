@@ -42,7 +42,7 @@ $('document').ready(function(){
       <li>Click the "Complete the request" button</li>
     </ol>
     <h2>Information</h2>
-    <p>Maplin asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
+    <p>fILL asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
   </div>
 
   <div id="middlecontent">
@@ -112,7 +112,7 @@ $('document').ready(function(){
 	<h3>The title was found at these locations:</h3>
 	<p><em>fILL will automatically determine which lender to try first, to minimize lender workloads.</em></p>
 	<table>
-	  <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td></tr>
+	  <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td><td></td></tr>
 	  <TMPL_LOOP name="sources">
 	    <tr>
 	      <!-- <TMPL_VAR name="lid"> -->
@@ -121,6 +121,7 @@ $('document').ready(function(){
 	      <td><TMPL_VAR name="holding"></td>
 	      <td><TMPL_VAR name="callnumber"></td>
 	      <td><TMPL_VAR name="net"></td>
+	      <td><TMPL_VAR name="msg"></td>
 	    </tr>
 	  </TMPL_LOOP>
 	</table>

@@ -111,7 +111,7 @@ sub complete_the_request_process {
     my $reqid = $q->param('request_id');
     my $group_id = $q->param('group_id');
     my $copies_requested = $q->param('copies_requested') || 1;
-    $self->log->debug( "group_id: [" . $group_id . "], placeOnHold: [" . $placeOnHold . "]" );
+#    $self->log->debug( "group_id: [" . $group_id . "], placeOnHold: [" . $placeOnHold . "]" );
     if (($copies_requested) && ($copies_requested > 1)) {
 	$self->dbh->do("UPDATE request_group SET copies_requested=? where group_id=?", undef, $copies_requested, $group_id);
     }
@@ -126,7 +126,7 @@ sub complete_the_request_process {
     }
 
     # Get this user's (requester's) library id
-    my ($requester,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($requester,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
     if (not defined $requester) {
 	# should never get here...
 	# go to some error page.
@@ -138,7 +138,7 @@ sub complete_the_request_process {
     my $seq;
 
     # get the sources
-    my @sources = @{ $self->dbh->selectall_arrayref("SELECT * FROM sources WHERE group_id=? ORDER BY sequence_number",
+    my @sources = @{ $self->dbh->selectall_arrayref("SELECT * FROM sources WHERE group_id=? and tried is null ORDER BY sequence_number",
 						    { Slice => {} }, $group_id)
 	};
 
@@ -148,7 +148,7 @@ sub complete_the_request_process {
 
     for ($seq=1; $seq<=$copies_requested; $seq++) {
 	last if ($seq > (scalar @sources));  # bail if we've run out of sources
-	$self->log->debug( "complete_the_request #" . $seq );
+#	$self->log->debug( "complete_the_request #" . $seq );
 
 	# separate chain for each copy requested
 	$self->dbh->do("insert into request_chain (group_id) values (?)",
@@ -184,7 +184,20 @@ sub complete_the_request_process {
 	}
     }
 
-    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, l.name as symbol, l.library, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join libraries l on l.lid=s.lid where s.group_id=? and s.tried=true", { Slice => {} }, $group_id);
+    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, l.name as symbol, l.library, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join libraries l on l.lid=s.lid where s.group_id=? and l.name<>? and s.tried=true", { Slice => {} }, $group_id, uc($symbol));
+
+    if ($self->is_spruce_library($symbol)) {
+	my $i = 0;
+	while ($i <= $#$trying_aref) {
+	    if ($self->is_spruce_library($trying_aref->[$i]{'symbol'})) {
+		splice @$trying_aref, $i, 1;  # toast the element (but don't increment the loop count!)
+	    } else {
+		$i++;
+	    }
+	}
+    }
+
+    $self->log->debug("trying_aref:\n" . Dumper($trying_aref));
 
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",
@@ -209,7 +222,7 @@ sub lightning_search_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/lightning.tmpl');	
     $template->param( pagetitle => "fILL Lightning Search",
@@ -228,7 +241,7 @@ sub pull_list_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
     #my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
@@ -311,9 +324,13 @@ sub request_process {
 	$medium = $sources{$num}{'medium'};  # fILL-client.js groups by medium, so all sources' mediums should be the same.
 	delete $sources{$num}{'medium'};
 
-#	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
+	if (($sources{$num}{'locallocation'}) && ($sources{$num}{'locallocation'} eq 'undefined')) { # yes, the string 'undefined'
+	    $sources{$num}{'locallocation'} = $sources{$num}{'symbol'};
+	}
+
+	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
 	if ($sources{$num}{'locallocation'}) {
-	    
+
 	    # split the combined locallocation into separate locations
 	    my @locs = split /\,/, $sources{$num}{'locallocation'};
 	    delete $sources{$num}{'locallocation'};
@@ -351,13 +368,18 @@ sub request_process {
 		foreach my $pname (keys %{$sources{$num}}) {
 		    $src{$pname} = $sources{$num}{$pname};
 		}
+		$src{'is_spruce'} = 0;
 		# really need to generalize this....
 		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
 		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		    $src{'is_spruce'} = 1;
 		} elsif ($sources{$num}{'symbol'} eq 'MW') {
 		    # leave as-is... requests to all MW branches go to MW
 		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
 		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
+		    # sometime the horizon zserver does not return local holdings info...
+		    # so force it to the original symbol and let MBW forward to branches.
+		    $src{'symbol'} = $sources{$num}{'symbol'} if (not defined $src{'symbol'});
 		} elsif ($sources{$num}{'symbol'} eq 'MDA') {
 		    # temp - testing Parklands... eventually this will work like Spruce or WMRL
 		    $loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
@@ -371,14 +393,15 @@ sub request_process {
 	    }
 	}
     }
-#    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
+    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
     # Get this user's (requester's) library id
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
     if (not defined $lid) {
 	# should never get here...
 	# go to some error page.
     }
+    my $isRequesterSpruce = $self->is_spruce_library($symbol);
 
     my $title = eval { decode( 'UTF-8', $q->param('title'), Encode::FB_CROAK ) };
     if ($@) {
@@ -459,21 +482,34 @@ sub request_process {
 
     # create the sources list for this request
     my $sequence = 1;
-    $SQL = "INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)";
+    $SQL = "INSERT INTO sources (sequence_number, lid, call_number, group_id, tried) VALUES (?,?,?,?,?)";
     foreach my $src (@sorted_sources) {
 	my $lenderID = $src->{lid};
 	next unless defined $lenderID;
+	my $isSelfRequest = $src->{'symbol'} eq $symbol ? 1 : 0;
+	my $tried = undef;
+	$tried = 1 if (($isSelfRequest) || ($isRequesterSpruce && $src->{'is_spruce'}));
+	$src->{'msg'} = "";
+	if ($isSelfRequest) {
+	    $src->{'msg'} = "You have a copy (but fILL will not try to request from you).";
+	} elsif ($isRequesterSpruce && $src->{'is_spruce'}) {
+	    $src->{'msg'} = "As a Spruce library, you've already tried other Spruce libraries (so fILL will skip this lender).";
+	}
+	delete $src->{'is_spruce'};
+#	$self->log->debug("current src:\n" . Dumper($src));
 	my $rows_added = $self->dbh->do($SQL,
 					undef,
 					$sequence++,
 					$lenderID,
 					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
 					$group_id,
+					$tried,
 	    );
 	unless (1 == $rows_added) {
 	    $self->log->debug( "Could not add source: group_id $group_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
 	}
     }
+#    $self->log->debug("sources:\n" . Dumper(@sorted_sources));
 
 
     my $template = $self->load_tmpl('search/make_request.tmpl');	
@@ -502,7 +538,7 @@ sub holds_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/holds.tmpl');	
     $template->param( pagetitle => "Lenders have placed holds",
@@ -521,7 +557,7 @@ sub respond_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
@@ -540,7 +576,7 @@ sub on_hold_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/on_hold.tmpl');	
     $template->param( pagetitle => "On hold",
@@ -559,7 +595,7 @@ sub shipping_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/shipping.tmpl');	
     $template->param( pagetitle => "Shipping",
@@ -578,7 +614,7 @@ sub receiving_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/receiving.tmpl');	
     $template->param( pagetitle => "Receive items to fill your requests",
@@ -597,7 +633,7 @@ sub renewals_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renewals.tmpl');	
     $template->param( pagetitle => "Ask for renewals on borrowed items",
@@ -616,7 +652,7 @@ sub renew_answer_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renew-answer.tmpl');	
     $template->param( pagetitle => "Respond to renewal requests",
@@ -635,7 +671,7 @@ sub returns_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/returns.tmpl');	
     $template->param( pagetitle => "Return items to lending libraries",
@@ -654,7 +690,7 @@ sub overdue_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/overdue.tmpl');	
     $template->param( pagetitle => "Overdue items to be returned to lender",
@@ -673,7 +709,7 @@ sub checkins_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/checkins.tmpl');	
     $template->param( pagetitle => "Loan items to be checked back into your ILS",
@@ -692,7 +728,7 @@ sub history_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/history.tmpl');	
     $template->param( pagetitle => "ILL history",
@@ -711,7 +747,7 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/current.tmpl');	
     $template->param( pagetitle => "Current ILLs",
@@ -730,7 +766,7 @@ sub unfilled_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/unfilled.tmpl');	
     $template->param( pagetitle => "Unfilled ILL requests",
@@ -749,7 +785,7 @@ sub new_patron_requests_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/new_patron_requests.tmpl');	
     $template->param( pagetitle => "New requests from your patrons",
@@ -769,7 +805,7 @@ sub send_notification {
 
 #    $self->log->info( "Source wants an email" );
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
 #    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
 #					  undef,$reqid);
@@ -816,16 +852,31 @@ where r.id=?
 }
 
 #--------------------------------------------------------------------------------------------
+sub is_spruce_library {
+    my $self = shift;
+    my $symbol = shift;
+
+    my $found = 0;
+    foreach my $key (keys %SPRUCE_TO_MAPLIN) {
+	if ($SPRUCE_TO_MAPLIN{$key} eq uc($symbol)) {
+	    $found = 1;
+	    last;
+	}
+    }
+    return $found;
+}
+
+#--------------------------------------------------------------------------------------------
 sub get_library_from_username {
     my $self = shift;
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select l.lid, l.library, l.name as symbol from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{library});
+    return ($hr_id->{lid}, $hr_id->{library}, $hr_id->{symbol});
 }
 
 1; # so the 'require' or 'use' succeeds
