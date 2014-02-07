@@ -328,7 +328,7 @@ sub request_process {
 	    $sources{$num}{'locallocation'} = $sources{$num}{'symbol'};
 	}
 
-	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
+#	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
 	if ($sources{$num}{'locallocation'}) {
 
 	    # split the combined locallocation into separate locations
@@ -393,7 +393,7 @@ sub request_process {
 	    }
 	}
     }
-    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
+#    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
     # Get this user's (requester's) library id
     my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -461,8 +461,15 @@ sub request_process {
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 #    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
 
+    # other branches in this regional library (if this is a regional library)
+    my $SQL = "select lid from regional_libraries_branches where rlid in (select rlid from regional_libraries_branches where lid=?)";
+    my $same_regional = $self->dbh->selectall_arrayref($SQL,undef,$lid);
+#    $self->log->debug("same regional system (array):\n" . Dumper(@$same_regional));
+    my %sameReg = map { $_->[0] => 1 } @$same_regional;
+#    $self->log->debug("same regional system:\n" . Dumper(%sameReg));
+
     # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
-    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
+    $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
     foreach my $src (@unique_sources) {
 	if (exists $nblc_href->{ $src->{symbol} }) {
@@ -473,11 +480,15 @@ sub request_process {
 	    $src->{lid} = undef;
 	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
 	}
+
+	$src->{sameRegion} = 0;
+	$src->{sameRegion} = 1 if ($sameReg{ $src->{lid} });
     }
 #    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
-    # sort sources by net borrower/lender count
-    my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
+    # sort sources by same-region-ness and then by net borrower/lender count
+#    my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
+    my @sorted_sources = sort { $b->{sameRegion} <=> $a->{sameRegion} || $a->{net} <=> $b->{net} } @unique_sources;
 #    $self->log->debug( "Sorted sources:\n" . Dumper(@sorted_sources) );
 
     # create the sources list for this request
@@ -496,6 +507,7 @@ sub request_process {
 	    $src->{'msg'} = "As a Spruce library, you've already tried other Spruce libraries (so fILL will skip this lender).";
 	}
 	delete $src->{'is_spruce'};
+	delete $src->{sameRegion};
 #	$self->log->debug("current src:\n" . Dumper($src));
 	my $rows_added = $self->dbh->do($SQL,
 					undef,
