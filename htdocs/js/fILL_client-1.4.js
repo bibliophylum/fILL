@@ -391,14 +391,19 @@ function renderDetails(data, marker)
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
     var details = '<table>';
     var requestForm = '<form action="/cgi-bin/lightning.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
+    var title;
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     if (data["md-title"] != undefined) {
-        details += '<tr><td><b>Title</b></td><td><b>:</b> '+data["md-title"];
+//        if(typeof data["md-title"] != "string")
+//            throw new Error('not a string:'+typeof data["md-title"]);
+        title = data["md-title"].toString();
+	title = title.replace(/["']/g, "");
+        details += '<tr><td><b>Title</b></td><td><b>:</b> '+title;
   	if (data["md-title-remainder"] !== undefined) {
 	    details += ' : <span>' + data["md-title-remainder"] + ' </span>';
-	    requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + ': ' + data["md-title-remainder"] + '">';
+	    requestForm += '<input type="hidden" name="title" value="' + title + ': ' + data["md-title-remainder"] + '">';
   	} else {
-	    requestForm += '<input type="hidden" name="title" value="' + data["md-title"] + '">';
+	    requestForm += '<input type="hidden" name="title" value="' + title + '">';
 	}
   	if (data["md-title-responsibility"] !== undefined) {
 	    details += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
@@ -484,7 +489,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" value="Request _' + data["md-title"] +  '_">';
+	requestForm += '<input type="submit" value="Request _' + title +  '_">';
     }
     requestForm += '</form>';
     details += '</table>';
