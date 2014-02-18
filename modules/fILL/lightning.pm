@@ -487,9 +487,21 @@ sub request_process {
 #    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
     # sort sources by same-region-ness and then by net borrower/lender count
-#    my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
     my @sorted_sources = sort { $b->{sameRegion} <=> $a->{sameRegion} || $a->{net} <=> $b->{net} } @unique_sources;
 #    $self->log->debug( "Sorted sources:\n" . Dumper(@sorted_sources) );
+
+
+    # remove garbage sources
+    my $index = 0; 
+    while ($index <= $#sorted_sources ) { 
+	my $src = $sorted_sources[$index]; 
+	if ( not defined $src->{lid} ) { 
+	    splice @sorted_sources, $index, 1; 
+	} else { 
+	    $index++; 
+	} 
+    }
+
 
     # create the sources list for this request
     my $sequence = 1;
@@ -508,7 +520,7 @@ sub request_process {
 	}
 	delete $src->{'is_spruce'};
 	delete $src->{sameRegion};
-#	$self->log->debug("current src:\n" . Dumper($src));
+	$self->log->debug("current src:\n" . Dumper($src));
 	my $rows_added = $self->dbh->do($SQL,
 					undef,
 					$sequence++,
