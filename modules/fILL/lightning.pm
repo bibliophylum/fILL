@@ -57,6 +57,8 @@ my %SPRUCE_TO_MAPLIN = (
     'MTK' => 'MTK',          #   libraries and campuses
     'MTPK' => 'MTPK',
     'MWMW' => 'UCN',
+    'MRD' => 'MRD',          # Russell
+    'MBI' => 'MBI'           # Binscarth
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
