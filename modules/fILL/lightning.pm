@@ -32,13 +32,13 @@ use Data::Dumper;
 
 my %SPRUCE_TO_MAPLIN = (
     'MWPL' => 'MWPL',
-    'ALTONA' => 'MAOW',
+    'MAOW' => 'MAOW',        # Altona
+    'MMIOW' => 'MMIOW',      # Miami
+    'MMOW' => 'MMOW',        # Morden
+    'MWOW' => 'MWOW',        # Winkler
     'BOISSEVAIN' => 'MBOM',
     'MANITOU' => 'MMA',
-    'MIAMI' => 'MMIOW',
-    'MORDEN' => 'MMOW',
     'STEROSE' => 'MSTR',
-    'WINKLER' => 'MWOW',
     'AB' => 'MWP',
     'MWP' => 'MWP',
     'MSTOS' => 'MSTOS',      # Stonewall
