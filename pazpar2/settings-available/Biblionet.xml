@@ -11,8 +11,8 @@
   <set target="216.73.74.12:210/biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
 <!-- Bibliotheque Pere Champagne -->
-  <set target="perechampagne.getmyip.com:210/ILS" name="pz:name" value="Bibliotheque Pere Champagne"/>
-  <set target="perechampagne.getmyip.com:210/ILS" name="symbol" value="MNDP"/>
+  <set target="206.45.94.64:210/ILS" name="pz:name" value="Bibliotheque Pere Champagne"/>
+  <set target="206.45.94.64:210/ILS" name="symbol" value="MNDP"/>
 
 <!-- Bibliotheque Ritchot - formerly at 24.77.96.250 -->
   <set target="216.73.74.8:210/Biblionet" name="pz:name" value="Bibliotheque Ritchot (Biblionet)"/>
