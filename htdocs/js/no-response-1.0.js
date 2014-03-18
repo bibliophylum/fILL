@@ -85,7 +85,8 @@ function build_table( data ) {
 	    b1.disabled = "disabled";
 	}
 	var requestId = data.noresponse[i].id;
-	b1.onclick = make_trynextlender_handler( requestId );
+	var chainId = data.noresponse[i].cid;
+	b1.onclick = make_trynextlender_handler( requestId, chainId );
 	divResponses.appendChild(b1);
 	
 	var b1 = document.createElement("input");
@@ -108,19 +109,26 @@ function build_table( data ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_trynextlender_handler( requestId ) {
-    return function() { try_next_lender( requestId ) };
+function make_trynextlender_handler( requestId, chainId ) {
+    return function() { try_next_lender( requestId, chainId ) };
 }
 
-function try_next_lender( requestId ) {
+function try_next_lender( requestId, chainId ) {
     var myRow=$("#req"+requestId);
+//    var parms = {
+//	reqid: requestId,
+//	lid: $("#lid").text(),
+//    }
+//    $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
+
+// Use override.cgi instead of try-next-lender.cgi - we want the override msg
     var parms = {
-	reqid: requestId,
-	lid: $("#lid").text(),
+	cid: chainId,
+	override: 'bTryNextLender',
     }
-    $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
+    $.getJSON('/cgi-bin/override.cgi', parms,
 	      function(data){
-//		  alert('change request status: '+data+'\n'+parms[0].status);
+		  if (data.alert_text) { alert(data.alert_text); };
 	      })
 	.success(function() {
 	    //alert('success');
