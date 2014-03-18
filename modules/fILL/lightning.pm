@@ -97,6 +97,7 @@ sub setup {
 	'history'                  => 'history_process',
 	'current'                  => 'current_process',
 	'new_patron_requests'      => 'new_patron_requests_process',
+	'no_response'              => 'no_response_process',
 	);
 }
 
@@ -823,7 +824,26 @@ sub new_patron_requests_process {
     
 }
 
-#--------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#
+#
+sub no_response_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/no_response.tmpl');	
+    $template->param( pagetitle => "ILL requests with no response yet",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#-------------------------------------------------------------------------------
 sub send_notification {
     my $self = shift;
     my $to_email = shift;

@@ -1,0 +1,93 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
+<script type="text/javascript" src="/js/no-response-1.0.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_borrow_noresponse");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-noresponse-list.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+
+                build_table(data); 
+
+                oTable = $('#gradient-style').dataTable({
+                       "bJQueryUI": true,
+                       "sPaginationType": "full_numbers",
+                       "bInfo": true,
+                       "bSort": true,
+                       "sDom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "oTableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "aoColumns": [
+                           { "mDataProp": "gid" },
+                           { "mDataProp": "cid" },
+                           { "mDataProp": "ID" },
+                           { "mDataProp": "Title" },
+                           { "mDataProp": "Author" },
+                           { "mDataProp": "Patron / Group" },
+                           { "mDataProp": "Req Placed" },
+                           { "mDataProp": "Age (days)" },
+                           { "mDataProp": "From" },
+                           { "mDataProp": "Status" },
+                           { "mDataProp": "# sources tried" },
+                           { "mDataProp": "Total # sources" },
+                           { "mDataProp": "Next lender?" }
+                      ]
+
+                  });
+            });
+
+    $(function() {
+           update_menu_counters( <TMPL_VAR name="lid"> );
+    });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+      <p>If a lending library has not yet responded to your request, that request will be shown here.</p><br/>
+      <p>If there are more possible lenders, you'll see a 'Try next lender' button; otherwise, you'll see the message "No further sources".</p><br/>
+      <p>You'll also have the option to cancel the request.</p><br/>
+      <p>Remember that not all libraries are open every day; it may take a few days to get a response.</p><br/>
+      <p>For any individual request, fILL sorts the list of potential lenders (a.k.a. "sources") in net-borrower/net-lender order. The Pending tab gives the first source 3 days to respond before giving you the option to try the next lender.</p><br/>
+  </div>
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>No response: the lending libraries have not yet responded to these requests</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
