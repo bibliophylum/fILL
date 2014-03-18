@@ -24,7 +24,7 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 my @gcr = $dbh->selectrow_array("select g.group_id, c.chain_id, r.id from request r left join request_chain c on c.chain_id=r.chain_id left join request_group g on c.group_id=g.group_id where r.id=?", undef, $reqid);
 
-$SQL = "select lid, sequence_number from sources where group_id=? and tried is null order by sequence_number";
+$SQL = "select lid, sequence_number from sources where group_id=? and (tried is null or tried=false) order by sequence_number";
 my @ary = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
 
 my $retval = 0;
