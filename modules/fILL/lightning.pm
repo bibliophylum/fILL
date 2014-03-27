@@ -59,6 +59,7 @@ my %SPRUCE_TO_MAPLIN = (
     'MWMW' => 'UCN',
     'MRD' => 'MRD',          # Russell
     'MBI' => 'MBI'           # Binscarth
+    'MSCL' => 'MSCL'         # St.Claude
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -495,7 +496,7 @@ sub request_process {
 
 
     # remove garbage sources
-    my $index = 0; 
+    $index = 0; 
     while ($index <= $#sorted_sources ) { 
 	my $src = $sorted_sources[$index]; 
 	if ( not defined $src->{lid} ) { 

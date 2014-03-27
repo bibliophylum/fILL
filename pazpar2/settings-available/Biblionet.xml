@@ -19,10 +19,6 @@
   <set target="216.73.74.8:210/Biblionet" name="symbol" value="MIBR"/>
   <set target="216.73.74.8:210/Biblionet" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/>
 
-<!-- Bibliotheque Saint-Claude -->
-  <set target="stclib.dyndns-server.com:210/ils" name="pz:name" value="Bibliotheque Saint-Claude"/>
-  <set target="stclib.dyndns-server.com:210/ils" name="symbol" value="MSCL"/>
-
 <!-- Bibliotheque Ste. Anne -->
   <set target="199.204.69.199:210/steanne_ils" name="pz:name" value="Bibliotheque Ste. Anne"/>
   <set target="199.204.69.199:210/steanne_ils" name="symbol" value="MSA"/>
