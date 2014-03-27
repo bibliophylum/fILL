@@ -58,8 +58,8 @@ my %SPRUCE_TO_MAPLIN = (
     'MTPK' => 'MTPK',
     'MWMW' => 'UCN',
     'MRD' => 'MRD',          # Russell
-    'MBI' => 'MBI'           # Binscarth
-    'MSCL' => 'MSCL'         # St.Claude
+    'MBI' => 'MBI',          # Binscarth
+    'MSCL' => 'MSCL',        # St.Claude
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
