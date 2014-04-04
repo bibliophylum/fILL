@@ -1,0 +1,90 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript" src="/js/moment.min.js"></script>
+<script type="text/javascript" src="/js/average-times-1.0.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_info_average_times");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $(function() {
+        $.getJSON('/cgi-bin/get-average-times.cgi', {},
+                function(data){
+                    build_table(data);
+               })
+        .success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            oTable = $('#gradient-style').dataTable({
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "bInfo": true,
+            "bSort": true,
+	    "sDom": '<"H"Tfr>t<"F"ip>',
+            "iDisplayLength": -1,
+            "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "oTableTools": {
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+		"aButtons": [
+			"copy", "csv", "xls", "pdf", "print",
+			{
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			}
+		]
+	    },
+            "aoColumns": [
+                { "mDataProp": "library", "sWidth": "15%" },
+                { "mDataProp": "request_to_response_days", "sWidth": "10%" },
+                { "mDataProp": "will_supply_to_shipped_hours", "sWidth": "10%" },
+                { "mDataProp": "shipped_to_received_days", "sWidth": "10%" },
+                { "mDataProp": "renew_to_renew_answer_days", "sWidth": "10%" },
+                { "mDataProp": "received_to_returned_days", "sWidth": "10%" },
+                { "mDataProp": "returned_to_checked_in_days", "sWidth": "10%" }
+            ],
+            "bAutoWidth": false
+        });
+
+      });
+
+      });
+
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <p>This report looks at historic requests (those that have completed their life cycles) for the last 3 months.</p><br/>
+    <p>It examines the time differences between certain events (e.g. when the borrower made the request and when the lender responded to it).</p><br/>
+    <p>You can sort the table by clicking on the column headings. Clicking a column heading a second time will reverse the sort order.</p><br/>
+    <p>Values are rounded to the nearest day (or hour, depending on the column).  A value of "0" means the events happened (on average) on the same day.  A blank means that there were no events of that type.</p><br/>
+  </div>
+
+  <div id="middlecontent">
+    <div id="waitDiv">
+      Calculating averages for each library over the last 3 months... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Average Handling Times</h3>
+      <div id="mylistDiv"></div>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

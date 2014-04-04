@@ -528,6 +528,22 @@ div#mylistDiv {
     color: #666699;
     padding: 8px;
 }
+#gradient-style td.average {
+    background: none;
+    background-color: #FFF340;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    color: #666699;
+    padding: 8px;
+}
+#gradient-style td.highlight {
+    background: none;
+    background-color: #FFE4A5;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    color: #666699;
+    padding: 8px;
+}
 #gradient-style tfoot tr td {
     background: none repeat scroll 0 0 #E8EDFF;
     color: #9999CC;

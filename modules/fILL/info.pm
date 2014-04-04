@@ -41,6 +41,7 @@ sub setup {
 	'send_pdf'                => 'send_pdf',
 	'send_report_output'      => 'send_report_output',
 	'info_new_reports_form'   => 'info_new_reports_process',
+	'info_average_times_form' => 'info_average_times_process',
 	);
 }
 
@@ -300,6 +301,24 @@ sub send_report_output {
     
     return;
 } 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_average_times_process {
+    my $self = shift;
+
+    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('info/average-times.tmpl');
+    $template->param(pagetitle => "Average Handling Times",
+		     username => $self->authen->username,
+	             lid => $lid,
+		     library => $library,
+	);
+    return $template->output;
+}
+
 
 #--------------------------------------------------------------------------------------------
 sub get_library_from_username {
