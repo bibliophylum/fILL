@@ -57,6 +57,13 @@ function build_table( data ) {
 function build_rows( tBody, data ) {
     for (var i=0;i<data.libraries.length;i++) 
     {
+	// IE displays null values as 'null' rather than blank.
+	for (var propt in data.libraries[i]) {
+	    if (data.libraries[i][propt] == null) {
+		data.libraries[i][propt] = '';
+	    }
+	}
+
 	row = tBody.insertRow(-1); row.id = 'lid'+data.libraries[i].lid;
 	cell = row.insertCell(-1); cell.innerHTML = data.libraries[i].library;
 	cell = row.insertCell(-1); cell.innerHTML = data.libraries[i].request_to_response_days;
