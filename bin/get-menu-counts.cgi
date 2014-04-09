@@ -42,6 +42,21 @@ $SQL = "select count(r.id) from request r left join requests_active ra on (r.id 
 my @on_hold = $dbh->selectrow_array($SQL, undef, $lid, $lid, $lid );
 @on_hold[0] = 0 unless (@on_hold);
 
+$SQL = "select count(r.id)
+from request r 
+  left join requests_active ra on (r.id = ra.request_id) 
+where ra.msg_to=? 
+  and ra.request_id in (select request_id from requests_active where msg_from=? and status like '%Hold-Placed%') 
+  and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Shipped') 
+  and ra.request_id not in (select request_id from requests_active where msg_from=? and status like '%being-processed-for-supply%')
+  and ra.status='Cancel'
+";
+my @on_hold_cancel = $dbh->selectrow_array($SQL, undef, $lid, $lid, $lid, $lid );
+@on_hold_cancel[0] = 0 unless (@on_hold_cancel);
+if ($on_hold_cancel[0] > 0) {
+    $on_hold[0] -= $on_hold_cancel[0];
+}
+
 $SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_from=? and ra.status like '%Will-Supply%' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Shipped')";
 my @shipping = $dbh->selectrow_array($SQL, undef, $lid, $lid );
 @shipping[0] = 0 unless (@shipping);
@@ -53,4 +68,4 @@ my @patron_requests = $dbh->selectrow_array($SQL, undef, $lid );
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], shipping => $shipping[0], patron_requests => $patron_requests[0] } } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0] } } );

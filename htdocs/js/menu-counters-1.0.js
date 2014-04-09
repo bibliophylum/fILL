@@ -58,10 +58,17 @@ function update_menu_counters( lid ) {
                     shipping[0].innerHTML = 'Shipping: '+data.counts.shipping;
 		}
             };
-            if (data.counts.on_hold > 0) {
-		var on_hold = $('#menu_lend_holds a');
-		if (on_hold.length > 0) {
-                    on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold;
+            if ((data.counts.on_hold > 0) || (data.counts.on_hold_cancel > 0)) {
+		if (data.counts.on_hold_cancel > 0) {
+		    var on_hold = $('#menu_lend_holds a');
+		    if (on_hold.length > 0) {
+			on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold+'/<strong>'+data.counts.on_hold_cancel+'</strong>';
+		    }
+		} else {
+		    var on_hold = $('#menu_lend_holds a');
+		    if (on_hold.length > 0) {
+			on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold;
+		    }
 		}
             };
             if (data.counts.patron_requests > 0) {

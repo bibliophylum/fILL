@@ -18,7 +18,8 @@ my $SQL="select
   l.name as from, 
   l.library, 
   ra.msg_to,
-  ra.message as date_expected 
+  ra.message as date_expected, 
+  (select count(request_id) from requests_active where request_id=r.id and status='Cancel') as cancel 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id

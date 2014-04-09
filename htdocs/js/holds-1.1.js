@@ -35,17 +35,15 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron / Group"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
-//    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
-//    cell = document.createElement("TH"); cell.innerHTML = "# sources tried"; row.appendChild(cell);
-//    cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
-//    cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "When the lender ships the title, it will be removed from this list and added to your 'Receiving' list.";
+    cell = row.insertCell(-1); cell.colSpan = "12"; cell.innerHTML = "When the lender ships the title, it will be removed from this list and added to your 'Receiving' list.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -61,12 +59,23 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.holds[i].msg_from;
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].from; cell.setAttribute('title', data.holds[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.holds[i].message;
-//        cell = row.insertCell(-1); cell.innerHTML = data.holds[i].tried;
-//        cell = row.insertCell(-1); cell.innerHTML = data.holds[i].sources;
-//        cell = row.insertCell(-1); 
+        cell = row.insertCell(-1); 
+
+	var divResponses = document.createElement("div");
+	divResponses.id = 'divResponses'+data.holds[i].id;
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Cancel request";
+	var requestId = data.holds[i].id;
+	b1.onclick = make_cancel_handler( requestId );
+	divResponses.appendChild(b1);
+
+	cell.appendChild( divResponses );
     }
     
     document.getElementById('mylistDiv').appendChild(myTable);
@@ -74,6 +83,40 @@ function build_table( data ) {
     toggleLayer("waitDiv");
     toggleLayer("mylistDiv");
 }
+
+// Explanation of why we need a function to create the buttons' onclick handlers:
+// http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
+// Short answer: scoping and closures
+
+function make_cancel_handler( requestId ) {
+    return function() { cancel_request( requestId ) };
+}
+
+function cancel_request( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(8)').text(),
+	"lid": $("#lid").text(),
+	"status": "Cancel",
+	"message": ""
+    };
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    update_menu_counters( $("#lid").text() );
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
 
 function toggleLayer( whichLayer )
 {

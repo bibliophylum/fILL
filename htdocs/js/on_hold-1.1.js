@@ -69,8 +69,14 @@ function build_table( data ) {
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Ready to ship";
-	b1.onclick = make_shipper_handler( requestId );
+	if (data.on_hold[i].cancel == 1) {
+	    b1.value = "Cancelled by borrower";
+	    b1.style.backgroundColor = '#F5BCA9';
+	    b1.onclick = make_cancelled_handler( requestId );
+	} else {
+	    b1.value = "Ready to ship";
+	    b1.onclick = make_shipper_handler( requestId );
+	}
 	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
@@ -110,6 +116,39 @@ function shipper( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+function make_cancelled_handler( requestId ) {
+    return function() { cancelled( requestId ) };
+}
+
+function cancelled( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(5)').text(),
+	"lid": $("#lid").text(),
+	"status": "Cancel-Reply",
+	"message": "Ok"
+    };
+    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    $.getJSON('/cgi-bin/move-to-history.cgi', { 'reqid' : requestId },
+		      function(data){
+			  //alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
+		      });
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    update_menu_counters( $("#lid").text() );
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
