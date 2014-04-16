@@ -34,7 +34,7 @@ if ($patronRequest) {
 
         # These should be atomic...
         # create the request_group
-	$dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, patron_barcode) VALUES (?,?,?,?,?,?)",
+	$dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, patron_barcode, patron_generated) VALUES (?,?,?,?,?,?,?)",
 		 undef,
 		 1,        # default copies_requested
 		 $patronRequest->{"title"},
@@ -42,6 +42,7 @@ if ($patronRequest) {
 		 $patronRequest->{"medium"},
 		 $lid,     # requester
 		 $patronRequest->{"card"},
+		 1,        # patron_generated
 	    );
 	my $group_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
 	
