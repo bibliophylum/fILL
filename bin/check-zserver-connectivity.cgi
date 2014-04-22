@@ -6,6 +6,8 @@ use ZOOM;
 use MARC::Record;
 use Data::Dumper;
 
+no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~") has been made experimental.
+
 my $query = new CGI;
 my $libsym = $query->param('libsym');
 my $keepLog = $query->param('log') || 0;
@@ -40,6 +42,8 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # pre-Perl 5.10, you'd have to use something like (untested):
     #    @SpruceLibraries = grep (/\Q$libsym\E/,@SpruceLibraries);
     #    if (scalar @SpruceLibraries == 1) { $libsym = "SPRUCE" }
+
+    # smartmatch has been made 'experimental'....
     if ($libsym ~~ @SpruceLibraries) {
 	$libsym = "SPRUCE";
     }
