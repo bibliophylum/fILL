@@ -83,7 +83,7 @@ function downloadMarc() {
 //    var jqxhr = $.get('/cgi-bin/rotations-MARC-file.cgi', {lid: <TMPL_VAR name="lid"> },
   $.getJSON('/cgi-bin/rotations-MARC-file.cgi', {lid: <TMPL_VAR name="lid"> },
     function(data){
-	alert(data.filename);
+	// alert(data.filename);
 	window.open( '/rotations-MARC/' );
         }
   );
@@ -101,7 +101,7 @@ function downloadMarc() {
     <ol>
       <li>Scan barcodes of received titles.</li>
       <li> </li>
-      <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items currently at your library, suitable for importing into your ILS.</li>
+      <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items you have received within the last month, suitable for importing into your ILS.</li>
       <li> </li>
       <li>Go to the <a href="/rotations-MARC/" style="text-decoration: underline" target="_blank">Download folder</a></li>
     </ol>
@@ -126,7 +126,7 @@ function downloadMarc() {
 	      </form>
 	    </td>
 	    <td>
-	      <p>Get a file of MARC records with all rotation items currently at your library.</p>
+	      <p>Get a file of MARC records with all rotation items you have received within the last month.</p>
 	      <input type="button" value="Download MARC records" onClick="downloadMarc(); return false;">
 	    </td>
       </div>

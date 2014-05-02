@@ -28,7 +28,7 @@ $SQL = "select holdings_field,barcode_subfield,callno_subfield,library_subfield,
 $holdings = $dbh->selectrow_hashref($SQL, undef, $lid );
 #print Dumper($holdings);
 
-$SQL = "select marc, barcode, callno from rotations where current_library=?";
+$SQL = "select marc, barcode, callno from rotations where current_library=? and ts >= (now() - interval '1 month')";
 $aref = $dbh->selectall_arrayref($SQL, undef, $lid );
 $dbh->disconnect;
 
