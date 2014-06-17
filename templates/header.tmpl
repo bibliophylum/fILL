@@ -40,6 +40,10 @@ $('document').ready(function(){
         .error(function() {
         })
         .complete(function() { 
+            // hack for admin:
+            if (<TMPL_VAR name="lid"> === 101) {
+              $("#menu_rotations_admin").show();
+            }
         });
 });
 
@@ -140,6 +144,12 @@ $('document').ready(function(){
     <li id="menu_rotations" style="display:none;">
       <a href="/cgi-bin/rotations.cgi?rm=receive_form">
       Rotation manager
+      </a>
+    </li>
+
+    <li id="menu_rotations_admin" style="display:none;">
+      <a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">
+      Rotations Admin
       </a>
     </li>
 

@@ -1,0 +1,83 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
+
+<script type="text/javascript" src="/js/rotation-reports-1.0.js"></script>
+
+<script type="text/javascript">
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+  set_secondary_tab("menu_rotations_report_received_counts");
+
+  $.getJSON('/cgi-bin/get-rotations-received-counts.cgi', {lid: <TMPL_VAR name="lid">},
+        function(data){
+            build_received_counts_table(data);
+        })
+	.success(function() {
+        })
+	.error(function() {
+        })
+	.complete(function() { 
+            oTable = $('#gradient-style').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bInfo": true,
+                "bSort": true,
+                "sDom": '<"H"Tfr>t<"F"ip>',
+                "iDisplayLength": 50,
+                "bLengthChange": true,
+                // TableTools requires Flash version 10...
+                "oTableTools": {
+                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                    "aButtons": [
+                      "copy", "csv", "xls", "pdf", "print",
+                      {
+                          "sExtends":    "collection",
+                          "sButtonText": "Save",
+                          "aButtons":    [ "csv", "xls", "pdf" ]
+                      }
+                   ]
+                },
+                "aoColumns": [
+                    { "mDataProp": "library" },
+                    { "mDataProp": "symbol" },
+                    { "mDataProp": "count" }
+                ]
+          });
+      });
+});
+
+</script>
+
+
+<div id="main">
+
+  <div id="leftcontent">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Count of rotation titles that libraries have received in the last two months.</li>
+    </ol>
+  </div>
+
+  <div id="middlecontent">
+
+  <div id="middlecontent">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>Count of rotation titles that libraries have received in the last two months.</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
