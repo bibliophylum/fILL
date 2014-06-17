@@ -8,28 +8,35 @@ my $query = new CGI;
 my $lid = $query->param('lid');
 
 my $SQL="select
+ l.library,
+ l.name,
+ s.ts_start::date,
+ s.ts_end::date,
  r.title,
  r.callno,
  r.barcode,
- l.library,
- l.name,
  s.circs 
 from
  rotations r
  inner join rotations_stats s on s.barcode=r.barcode
  left join libraries l on l.lid=s.lid 
 group by
+ l.library,
+ l.name,
+ s.ts_start::date,
+ s.ts_end::date,
  r.title,
  r.callno,
  r.barcode,
- l.library,
- l.name,
  s.circs 
 order by
- r.title,
- r.barcode,
  l.library,
- l.name";
+ l.name,
+ s.ts_start::date,
+ s.ts_end::date,
+ r.title,
+ r.barcode
+";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",

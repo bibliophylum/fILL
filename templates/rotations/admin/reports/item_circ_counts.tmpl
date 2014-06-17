@@ -43,11 +43,13 @@ $('document').ready(function(){
                    ]
                 },
                 "aoColumns": [
+                    { "mDataProp": "library" },
+                    { "mDataProp": "name" },
+                    { "mDataProp": "ts_start" },
+                    { "mDataProp": "ts_end" },
                     { "mDataProp": "title" },
                     { "mDataProp": "callno" },
                     { "mDataProp": "barcode" },
-                    { "mDataProp": "library" },
-                    { "mDataProp": "name" },
                     { "mDataProp": "circs" }
                 ]
           });
@@ -65,8 +67,6 @@ $('document').ready(function(){
       <li>Circs by item and library.</li>
     </ol>
   </div>
-
-  <div id="middlecontent">
 
   <div id="middlecontent">
 

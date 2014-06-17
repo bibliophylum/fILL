@@ -64,16 +64,18 @@ function build_item_circ_counts_table( data ) {
     // cell = row.insertCell(-1); cell.innerHTML = "ID";
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
+    cell = document.createElement("TH"); cell.innerHTML = "library"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "name"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ts_start"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ts_end"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "callno"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "barcode"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "library"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "name"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "circs"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = "";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -82,11 +84,13 @@ function build_item_circ_counts_table( data ) {
     for (var i=0;i<data.rotations_item_circ_counts.length;i++) 
     {
         row = tBody.insertRow(-1); row.id = 'ric'+data.rotations_item_circ_counts[i].barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].library;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].name;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].ts_start;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].ts_end;
         cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].callno;
         cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].barcode;
-        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].library;
-        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].name;
         cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_circ_counts[i].circs;
     }
     
