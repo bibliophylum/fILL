@@ -84,9 +84,16 @@ function build_table( data ) {
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Sent";
+	b1.value = "Sent - mark item as shipped.";
+	b1.style.fontSize = "150%";
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
+	
+	var b2 = document.createElement("input");
+	b2.type = "button";
+	b2.value = "Oops! Return this to the Respond list.";
+	b2.onclick = make_unship_handler( requestId );
+	divResponses.appendChild(b2);
 	
 	cell.appendChild( divResponses );
     }
@@ -123,6 +130,35 @@ function shipit( requestId ) {
 	"message": "due "+myRow.find(':nth-child(10)').text()
     };
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    update_menu_counters( $("#lid").text() );
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+function make_unship_handler( requestId ) {
+    return function() { unship( requestId ) };
+}
+
+function unship( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	"reqid": requestId,
+	"msg_to": myRow.find(':nth-child(5)').text(),
+	"lid": $("#lid").text(),
+	"status": "Unship",
+	"message": ''
+    };
+    $.getJSON('/cgi-bin/revoke-will-supply-status.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
 	      })
