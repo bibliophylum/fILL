@@ -10,7 +10,8 @@
   <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
   <script type="text/javascript" src="/js/pz2.js"></script>
   <script type="text/javascript" src="/js/fILL_client-public-1.5.js"></script>
-<script language="JavaScript">
+
+<script type="text/javascript">
 
   function set_primary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
@@ -67,6 +68,7 @@ $('document').ready(function(){
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
 
+<!--
   <div id="header_searchbar">
     <form id="searchForm" name="search">
       <label for="query">Enter search terms:</label>
@@ -75,15 +77,15 @@ $('document').ready(function(){
       <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
     </form>
   </div>
-
+-->
   <div id="header_quick_access">
     <ul>
-      <li><a href="?rm=welcome">Home</a></li>
+      <li><a href="?rm=about_form">Home</a></li>
       <li><TMPL_VAR NAME="username"> </li>
       <li><a href="?authen_logout=1">Log out</a></li>
     </ul>
     <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <p style="display: none;" id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
 </DIV>
 
@@ -108,12 +110,33 @@ $('document').ready(function(){
       </a>
     </li>
 
+    <li id="menu_about">
+      <a href="/cgi-bin/public.cgi?rm=about_form">
+      About fILL
+      </a>
+    </li>
+
   </ul>
 
 </div>
 
 <!-- end header.tmpl -->
-  <div id="switchmenu">
+
+<script type="text/javascript">
+  set_primary_tab("menu_search");
+</script>
+
+
+  <div id="body_searchbar">
+    <form id="searchForm" name="search">
+      <label for="query">Enter search terms:</label>
+      <input id="query" type="text" size="50"/>
+      <input id="button" type="submit" value="Search"/>
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;"/>
+    </form>
+  </div>
+
+  <div id="switchmenu" style="display: none">
    <a href="#" onclick="switchView('recordview')">Record Browser</a>
    <span> | </span>
    <a href="#" onclick="switchView('targetview')">Target Info</a>

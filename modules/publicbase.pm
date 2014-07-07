@@ -62,7 +62,8 @@ my %config = (
     ],
     STORE          => 'Session',
     LOGIN_RUNMODE  => 'loginFOO',
-    POST_LOGIN_RUNMODE => 'welcome',
+    POST_LOGIN_CALLBACK => \&update_login_date,
+    POST_LOGIN_RUNMODE => 'search_form',
     LOGOUT_RUNMODE => 'logged_out',
     );
 
@@ -188,35 +189,36 @@ sub error {
 #--------------------------------------------------------------------------------
 #
 #
-sub welcome_process {
+#sub welcome_process {
+sub update_login_date {
     # The application object
     my $self = shift;
 
     my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
-    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE name=?",
+    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
 				       undef,
 				       $self->authen->username,
 	);
 
+#    # Open the html template
+#    # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
+#    # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
+#    my $template = $self->load_tmpl(	    
+#	                      'public/welcome.tmpl',
+#			      cache => 0,
+#			     );	
+#    $template->param( pagetitle => 'Public fILL Welcome',
+#		      username => $self->authen->username,
+#		      sessionid => $self->session->id(),
+#		      lid => $lid,
+#		      library => $library,
+#	);
+#
+#    # Parse the template
+#    my $html_output = $template->output;
+#    return $html_output;
 
-    # Open the html template
-    # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
-    # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
-    my $template = $self->load_tmpl(	    
-	                      'public/welcome.tmpl',
-			      cache => 0,
-			     );	
-    $template->param( pagetitle => 'Public fILL Welcome',
-		      username => $self->authen->username,
-		      sessionid => $self->session->id(),
-		      lid => $lid,
-		      library => $library,
-	);
-
-    # Parse the template
-    my $html_output = $template->output;
-    return $html_output;
 }
 
 #--------------------------------------------------------------------------------

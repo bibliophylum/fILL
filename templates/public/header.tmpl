@@ -57,12 +57,12 @@
   </div>
   <div id="header_quick_access">
     <ul>
-      <li><a href="?rm=welcome">Home</a></li>
+      <li><a href="?rm=about_form">Home</a></li>
       <li><TMPL_VAR NAME="username"> </li>
       <li><a href="?authen_logout=1">Log out</a></li>
     </ul>
     <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <p style="display: none;" id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
 </DIV>
 
@@ -84,6 +84,12 @@
     <li id="menu_current">
       <a href="/cgi-bin/public.cgi?rm=current_form">
       Current borrowing
+      </a>
+    </li>
+
+    <li id="menu_about">
+      <a href="/cgi-bin/public.cgi?rm=about_form">
+      About fILL
       </a>
     </li>
 

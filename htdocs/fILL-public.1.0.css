@@ -258,7 +258,7 @@ div.wait
 #csstabs li.current_tab a 
 {
   color: #000000;
-  background-color: #dbe3ff;
+  background-color: #ffffff;
   border: 1px outset #bfffe4 ;
   padding: 4px ;
   text-decoration: none ;
@@ -353,7 +353,7 @@ a.extern {
     color: #CC6600;
 }
 
-a:hover {
+a.hover {
     text-decoration: underline;
 }
 
@@ -372,9 +372,21 @@ a.crossout:hover {
     font-size: large;
 }
 
+#body_searchbar {
+/*    float: left; */
+    width: 60%;
+    padding:10px 10px 10px 12px;
+    line-height: 40px;
+/*    border: 1px solid #000000; */ /* just to see the div */
+/*    border-top: 1px solid  #06266f; */
+    color: #ffffff;
+    font-size: large;
+    margin: 0 auto;
+}
+
 input#button,input#help {
-    border: 3px outset #4671d5;
-    background-color: #4671d5;
+    border: 3px outset #408040;
+    background-color: #408040;
     padding: 2px;
     width: 6em;
     color: #FFFFFF;
@@ -389,6 +401,29 @@ input#query {
     border: 2px inset #6c8cd5;
     padding: 3px;
     font-size: 12px;
+}
+
+table.primary_info {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+table.secondary_info {
+    font-size: 12px;
+    font-weight: normal;
+    color: #06266f;
+    display: none;
+}
+
+#showLocDet {
+    text-decoration: underline;
+    display: block;
+}
+
+#hideLocDet {
+    text-decoration: underline;
+    display: none;
 }
 
 div.termtitle {

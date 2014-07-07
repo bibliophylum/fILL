@@ -85,6 +85,7 @@ sub setup {
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
+	'about_form'               => 'about_process',
 	);
 }
 
@@ -368,7 +369,27 @@ sub current_process {
 }
 
 
-#--------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#
+#
+sub about_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('public/about.tmpl');	
+    $template->param( pagetitle => "About fILL",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+#		      pid => $pid
+	);
+    return $template->output;
+}
+
+
+#----------------------------------------------------------------------------------------
 sub get_patron_from_username {
     my $self = shift;
     my $username = shift;
@@ -381,7 +402,7 @@ sub get_patron_from_username {
     return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
 }
 
-#--------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------
 sub isDuplicateRequest {
     my $self = shift;
     my $pid = shift;
