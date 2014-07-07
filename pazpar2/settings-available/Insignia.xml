@@ -3,10 +3,12 @@
 <!-- R.M. of Argyle Public Library -->
   <set target="www.insigniasoftware.com:210/RMArgyle" name="pz:name" value="R.M. of Argyle Public Library"/>
   <set target="www.insigniasoftware.com:210/RMArgyle" name="symbol" value="MBA"/>
+  <set target="www.insigniasoftware.com:210/RMArgyle" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Prairie Crocus Regional Library -->
   <set target="www.insigniasoftware.com:210/Rivers" name="pz:name" value="Prairie Crocus Regional Library"/>
   <set target="www.insigniasoftware.com:210/Rivers" name="symbol" value="MRIP"/>
+  <set target="www.insigniasoftware.com:210/Rivers" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Rapid City Regional Library -->
   <set target="216.130.92.162:210/ils" name="pz:name" value="Rapid City Regional Library"/>
@@ -15,23 +17,27 @@
 <!-- Boyne Regional Library -->
   <set target="www.insigniasoftware.com:210/boyne" name="pz:name" value="Boyne Regional Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/boyne" name="symbol" value="MCB"/>
+  <set target="www.insigniasoftware.com:210/boyne" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Emerson Public Library -->
   <set target="www.insigniasoftware.com:210/Emerson" name="pz:name" value="Emerson Public Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/Emerson" name="symbol" value="MEPL"/>
   <!-- <set target="206.45.102.208:210/ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/> -->
+  <set target="www.insigniasoftware.com:210/Emerso" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Jake Epp Library -->
   <set target="216.55.201.10:210/ils" name="pz:name" value="Jake Epp Library (Insignia)"/>
   <set target="216.55.201.10:210/ils" name="symbol" value="mste"/>
 
 <!-- Lakeland Regional Library -->
-  <set target="insigniasoftware.com:210/Lakeland" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
-  <set target="insigniasoftware.com:210/Lakeland" name="symbol" value="MKL"/>
+  <set target="www.insigniasoftware.com:210/Lakeland" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
+  <set target="www.insigniasoftware.com:210/Lakeland" name="symbol" value="MKL"/>
+  <set target="www.insigniasoftware.com:210/Lakeland" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Minnedosa Regional Library -->
-  <set target="insigniasoftware.com:210/minnedosa" name="pz:name" value="Minnedosa Regional Library (Insignia)"/>
-  <set target="insigniasoftware.com:210/minnedosa" name="symbol" value="MMR"/>
+  <set target="www.insigniasoftware.com:210/minnedosa" name="pz:name" value="Minnedosa Regional Library (Insignia)"/>
+  <set target="www.insigniasoftware.com:210/minnedosa" name="symbol" value="MMR"/>
+  <set target="www.insigniasoftware.com:210/minnedosa" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- North Norfolk MacGregor Library -->
   <set target="206.45.94.71:210/ILS" name="pz:name" value="North Norfolk MacGregor Library (Insignia)"/>
@@ -40,6 +46,7 @@
 <!-- Pauline Johnson Library -->
   <set target="www.insigniasoftware.com:210/PJPL_ILS" name="pz:name" value="Pauline Johnson Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/PJPL_ILS" name="symbol" value="MLPJ"/>
+  <set target="www.insigniasoftware.com:210/PJPL_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Pinawa Public Library -->
   <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
@@ -48,10 +55,12 @@
 <!-- Southwestern Manitoba Regional Library -->
   <set target="www.insigniasoftware.com:210/Melita_ILS" name="pz:name" value="Southwestern Manitoba Regional Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/Melita_ILS" name="symbol" value="MESM"/>
+  <set target="www.insigniasoftware.com:210/Melita_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Pierson Library -->
   <set target="www.insigniasoftware.com:210/Pierson_ILS" name="pz:name" value="Pierson Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/Pierson_ILS" name="symbol" value="MESP"/>
+  <set target="www.insigniasoftware.com:210/Pierson_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Thompson Public Library -->
   <set target="catalogue.thompsonlibrary.com:210/ILS" name="pz:name" value="Thompson Public Library (Insignia)"/>
@@ -60,6 +69,7 @@
 <!-- Valley Regional Library -->
   <set target="www.insigniasoftware.com:210/Morris_ILS" name="pz:name" value="Valley Regional Library (Insignia)"/>
   <set target="www.insigniasoftware.com:210/Morris_ILS" name="symbol" value="MMVR"/>
+  <set target="www.insigniasoftware.com:210/Morris_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Victoria Municipal Library -->
   <set target="208.92.138.194:210/ILS" name="pz:name" value="Victoria Municipal Library (Insignia)"/>
@@ -68,7 +78,8 @@
 <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->
-  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+<set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
+<!--  <set name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/> -->
 
   <!-- field-specific mappings -->
   <set name="pz:cclmap:au" value="u=1003 s=al"/>
