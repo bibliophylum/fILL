@@ -6,7 +6,9 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
-  <link rel="stylesheet" href="/fILL-public.1.0.css"></link>
+<!--  <link rel="stylesheet" href="/fILL-public.1.0.css"></link> -->
+  <link rel="stylesheet" href="/fILL-public-accessible.1.0.css"></link>
+  <link rel="stylesheet" href="/fILL-public-datatables.1.0.css"></link>
   <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
   <script type="text/javascript" src="/js/pz2.js"></script>
   <script type="text/javascript" src="/js/fILL_client-public-1.5.js"></script>
@@ -41,11 +43,9 @@
 </script>
 
 <script type="text/javascript">
-
-$('document').ready(function(){
-  $("#query").focus();
-});
-
+  $('document').ready(function(){
+    $("#query").focus();
+  });
 </script>
 
  </head>
@@ -62,79 +62,53 @@ $('document').ready(function(){
   </div>
 
 <!-- from header.tmpl -->
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
-  </div>
 
-<!--
-  <div id="header_searchbar">
-    <form id="searchForm" name="search">
-      <label for="query">Enter search terms:</label>
-      <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
-    </form>
-  </div>
--->
-  <div id="header_quick_access">
-    <ul>
-      <li><a href="?rm=about_form">Home</a></li>
-      <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
+<div id="container">
+  <!--ARIA MARKER 'BANNER'-->
+  <header role="banner">
+    <h1><span class="fill">f</span>ILL</h1> <p>connecting libraries. serving patrons.</p>
+    <a href="?authen_logout=1"><button class="butlink">log out</button></a>
+  </header>
+  
+  <!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation">
+    <ul class="nav inline-items">
+      <li><a href="/cgi-bin/public.cgi?rm=search_form">home</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=myaccount_form">my account</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=current_form">current borrowing</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=about_form">help</a></li>
     </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p style="display: none;" id="lid"><TMPL_VAR NAME="lid"></p>
+  </nav>
+
+  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+  <div id="aside" role="complimentary">
+    <div id="stat"></div>
+    <div id="leftcontent"></div>
+    <div id="termlist"></div>
   </div>
-</DIV>
 
-<!-- div id="nav1" -->
-<div id="csstabs">
-  <ul>
-    <li id="menu_search">
-      <a href="/cgi-bin/public.cgi?rm=search_form">
-      Search and request
-      </a>
-    </li>
+  <div id="search-container">
 
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/public.cgi?rm=myaccount_form">
-      My Account
-      </a>
-    </li>
+    <!--***************ARIA MARKER 'SEARCH'***************-->
+    <div id="search" role="search">
+      <form id="searchForm" name="search">
+	<h2>search manitoba libraries:</h2>
+	<input id="query" type="text" size="50px" value="<TMPL_VAR name='query'>">
+	<input id="button" type="submit" value="search" class="butlink">
+      </form>
+    </div>
 
-    <li id="menu_current">
-      <a href="/cgi-bin/public.cgi?rm=current_form">
-      Current borrowing
-      </a>
-    </li>
+    <main>
 
-    <li id="menu_about">
-      <a href="/cgi-bin/public.cgi?rm=about_form">
-      About fILL
-      </a>
-    </li>
+<!-- Begin content -->
 
-  </ul>
-
-</div>
 
 <!-- end header.tmpl -->
-
+<!--
 <script type="text/javascript">
   set_primary_tab("menu_search");
 </script>
-
-
-  <div id="body_searchbar">
-    <form id="searchForm" name="search">
-      <label for="query">Enter search terms:</label>
-      <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;"/>
-    </form>
-  </div>
+-->
 
   <div id="switchmenu" style="display: none">
    <a href="#" onclick="switchView('recordview')">Record Browser</a>
@@ -145,15 +119,19 @@ $('document').ready(function(){
   <div id="recordview">
    <table width="100%" border="0" cellpadding="6" cellspacing="0">
     <tr>
-     <td width="250" valign="top">
-       <div id="stat"></div>
-       <div id="termlist"></div>
-     </td>
      <td valign="top">
-      <div id="onlybooks">
-	<p style="background-color: #A2CD5A;">Note that, while items of all types (DVD, CD, etc) may be listed, individual libraries may not allow interlibrary loan of audiovisual matierial at this time.</p>
+      <div id="AVnotice">
+	<table>
+	  <tr>
+	    <td>
+	      <img src="/img/Blue exclamation mark.png" alt="exclamation icon" style="float:left; vertical-align:middle"/>
+	    </td><td>
+	      <p>Note that, while items of all types (DVD, CD, etc) may be listed, individual libraries may not allow interlibrary loan of audiovisual matierial at this time.</p>
+	    </td>
+	  </tr>
+	</table>
       </div>
-      <div id="ranking">
+      <div id="ranking" style="clear:left; display:none">
        <form name="select">
         <label for="sort">Sort by</label>
         <select name="sort" id="sort">
@@ -187,20 +165,15 @@ $('document').ready(function(){
    </div>
   </div>
   
-  <div id="footer">
-      <div id="stat"></div>
-      <!--
-      <span>Copyright &copy; 1999-2010 by <a href="http://www.indexdata.com">Index Data</a></span> 
-      -->
-  </div>
 
 <!-- End content -->
+    </main>
+  </div> <!-- search-container -->
+</div> <!-- container -->
+<footer role="contentinfo">
+	Copyright © Site name, 20XX
+	<TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library">
+</footer>
 
-<div id="nav2">
-  <ul>
-    <li><a href="?authen_logout=1">Log out</a></li>
-  </ul>
-</div>
-
- </body>
+</body>
 </html>

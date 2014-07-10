@@ -190,9 +190,12 @@ function my_onbytarget(data) {
 function domReady () 
 { 
     document.search.onsubmit = onFormSubmitEventHandler;
-    document.search.query.value = '';
+//    document.search.query.value = '';
     document.select.sort.onchange = onSelectDdChange;
     document.select.perpage.onchange = onSelectDdChange;
+    if (document.search.query.value) {
+	$("#button").click();
+    }
 }
 
 // when search button pressed
@@ -218,6 +221,14 @@ function resetPage()
 {
     curPage = 1;
     totalRec = 0;
+    var AVnotice = document.getElementById('AVnotice');
+    if (AVnotice) {
+	AVnotice.style.display = 'none';
+    }
+    var ranking = document.getElementById('ranking');
+    if (ranking) {
+	ranking.style.display = 'block';
+    }
 }
 
 function triggerSearch ()

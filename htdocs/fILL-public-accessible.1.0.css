@@ -1,0 +1,195 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+h2 {
+	display: inline;
+	color: #395751;
+	font-size: 1.2em;
+	text-transform: capitalize;
+}
+
+h3 {
+	
+	color: #486660;
+	font-size: 1em;
+	text-transform: capitalize;
+}
+
+
+#container
+{
+	margin: auto;
+	padding: 1%;
+	width: 100%;
+	background: #fff;
+}
+
+header
+{
+	background: #fff;
+	background-image: url("img/fill07.png");
+	background-repeat: no-repeat;
+	padding: 20px;
+	display: block;
+	height: 125px;
+}
+
+header h1 { 
+	margin-left: 45px;
+	display: inline;
+	font-size: 5em;
+	color: #525252;
+}
+
+header p {
+	margin-left: 20px;
+	display: inline;
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #525252;
+	text-transform: capitalize;
+}
+
+nav
+{
+	float: left;
+	width: 100%;
+	background: #395751;
+	margin-bottom: 10px;
+}
+
+nav ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+nav ul li
+{
+	list-style-type: none;
+	display: inline;
+}
+
+nav li a
+{
+	display: block;
+	float: left;
+	padding: 5px 10px;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	
+	border-right: 2px solid #fff;
+}
+
+nav li a:hover { background: #383; }
+
+#content-container
+{
+	float: left;
+	width: 100%;
+	background: #FFF;
+}
+#search-container {
+	clear: right;
+	float: right;
+	width: 80%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 0; 
+  	padding: 0; 
+  	background: #fff;
+}
+
+#search
+
+{
+	clear: right;
+	float: right;
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 1px solid  #ccc; 
+  	padding: 1.25em; 
+  	background: #dedcd1;
+}
+
+main
+{
+	clear: right;
+	float: right;
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 1px solid  #ccc; 
+  	padding: 1.25em; 
+  	background: #dedcd1;
+}
+
+#aside
+{
+	float: left;
+	width: 18%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 1px solid  #ccc; 
+  	padding: 1.25em; 
+  	background: #dedcd1; 
+}
+
+#aside p {
+
+	font-size: .8em;
+}
+
+footer
+{
+	clear: both;
+	display: block;
+	background: #486660;
+	text-align: center;
+	color: #fff;
+	padding: 20px;
+	height: 1%;
+}
+
+.butlink {
+	float: right;
+	padding: 5px;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #395751;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+.logo-name {
+	font-size: 3em;
+}
+
+.fill {
+	color:#fff; 
+	font-family: 
+	sans-serif, trebuchet;
+}
+
+input {
+	margin-left: 20px;
+}
+
+/*------------------------------------------------------*/
+/* from Ohio Web Library */
+#progress_empty {
+    float: left !important;
+}
+#progress_filler {
+    float: left !important;
+}
+#stat {
+    width: 250px;
+}
+/*------------------------------------------------------*/

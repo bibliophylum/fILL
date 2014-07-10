@@ -6,13 +6,15 @@
 
 <script type="text/javascript">
 
-set_primary_tab("menu_myaccount");
+//set_primary_tab("menu_myaccount");
 
 $.ajaxSetup ({  
   cache: false  
 });  
 
 $('document').ready(function(){
+
+    $('#leftcontent').html( "<h2>Instructions</h2><br/><p>Click on an underlined value to edit it.</p><br/><p>If 'is_enabled' is 0, your librarian has disabled your account.</p><br/><p>If 'is_verified' is 0, your librarian has not yet verified your account.</p>" );
 
     oTable = $('#datatable_myaccount').dataTable({
         "bJQueryUI": true,
@@ -95,7 +97,7 @@ $('document').ready(function(){
 
 
 <div id="main">
-
+<!--
   <div id="leftcontent">
     <h2>Instructions</h2>
     <br/>
@@ -105,7 +107,7 @@ $('document').ready(function(){
     <br/>
     <p>If 'is_verified' is 0, your librarian has not yet verified your account.</p>
   </div>
-
+-->
   <div id="middlecontent">
 
     <div id="waitDiv">

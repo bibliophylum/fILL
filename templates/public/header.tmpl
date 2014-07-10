@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><title><TMPL_VAR name="pagetitle"></title>
-<link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css">
+<!-- <link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css"> -->
 <link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/fILL-public-accessible.1.0.css">
+<link type="text/css" rel="stylesheet" href="/fILL-public-datatables.1.0.css">
+
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
@@ -50,50 +53,42 @@
 </head>
 <body class="example_alt_pagination">
 
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
-  </div>
-  <div id="header_quick_access">
-    <ul>
-      <li><a href="?rm=about_form">Home</a></li>
-      <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
+<div id="container">
+  <!--ARIA MARKER 'BANNER'-->
+  <header role="banner">
+    <h1><span class="fill">f</span>ILL</h1> <p>connecting libraries. serving patrons.</p>
+    <a href="?authen_logout=1"><button class="butlink">log out</button></a>
+  </header>
+  
+  <!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation">
+    <ul class="nav inline-items">
+      <li><a href="/cgi-bin/public.cgi?rm=search_form">home</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=myaccount_form">my account</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=current_form">current borrowing</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=about_form">help</a></li>
     </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p style="display: none;" id="lid"><TMPL_VAR NAME="lid"></p>
+  </nav>
+
+  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+  <div id="aside" role="complimentary">
+    <div id="stat"></div>
+    <div id="leftcontent"></div>
+    <div id="termlist"></div>
   </div>
-</DIV>
 
-<!-- div id="nav1" -->
-<div id="csstabs">
-  <ul>
-    <li id="menu_search">
-      <a href="/cgi-bin/public.cgi?rm=search_form">
-      Search and request
-      </a>
-    </li>
+  <div id="search-container">
 
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/public.cgi?rm=myaccount_form">
-      My Account
-      </a>
-    </li>
+    <!--***************ARIA MARKER 'SEARCH'***************-->
+    <div id="search" role="search">
+      <form action="/cgi-bin/public.cgi" method="post" name="search">
+	<h2>search manitoba libraries:</h2>
+	<input id="query" type="text" name="query" size="50px">
+	<input id="rm" type="hidden" name="rm" value="search_form">
+	<input id="button" type="submit" value="search" class="butlink">
+      </form>
+    </div>
 
-    <li id="menu_current">
-      <a href="/cgi-bin/public.cgi?rm=current_form">
-      Current borrowing
-      </a>
-    </li>
+    <main>
 
-    <li id="menu_about">
-      <a href="/cgi-bin/public.cgi?rm=about_form">
-      About fILL
-      </a>
-    </li>
-
-  </ul>
-
-</div>
-
+<!-- Begin content -->

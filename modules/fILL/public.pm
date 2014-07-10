@@ -96,6 +96,9 @@ sub search_process {
     my $self = shift;
     my $q = $self->query;
 
+    my $query = $q->param("query") || '';
+    $self->log->debug( "search_process parm:\n" . Dumper($query) );
+
     my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
     my $template;
@@ -108,6 +111,7 @@ sub search_process {
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
+		      query => $query,
 	);
     return $template->output;
 }
