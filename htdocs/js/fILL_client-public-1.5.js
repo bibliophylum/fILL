@@ -462,7 +462,7 @@ function renderDetails(data, marker)
 
 
     details += '<a id="showLocDet" href="javascript:void(0)" onclick="toggleLocationDetails();">Show location details...</a>'
-    details += '<a id="hideLocDet" href="javascript:void(0)" onclick="toggleLocationDetails();">Hide location details...</a>'
+    details += '<a id="hideLocDet" style="display:none" href="javascript:void(0)" onclick="toggleLocationDetails();">Hide location details...</a>'
     details += '<table class="secondary_info">';  // start new table for location info
 
 
@@ -534,7 +534,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit"  style="height:50px; min-width:150px; font-weight:bold" value="Click to request: ' + title +  '">';
+	requestForm += '<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to request: ' + title +  '">';
     }
     requestForm += '</form>';
     details += '</table>';
