@@ -80,8 +80,8 @@ sub setup {
     $self->mode_param('rm');
     $self->run_modes(
 	'search_form'              => 'search_process',
-	'request_form'             => 'request_process',
-	'request'                  => 'request_process',
+#	'request_form'             => 'request_process',
+#	'request'                  => 'request_process',
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
@@ -119,6 +119,7 @@ sub search_process {
 
 #--------------------------------------------------------------------------------
 #
+# DEPRECATED - moved to bin/make-patron-request.cgi so it can be called ajaxially...
 #
 sub request_process {
     my $self = shift;
@@ -407,7 +408,7 @@ sub get_patron_from_username {
 }
 
 #----------------------------------------------------------------------------------------
-sub isDuplicateRequest {
+sub isDuplicateRequest_DEPRECATED {
     my $self = shift;
     my $pid = shift;
     my $lid = shift;

@@ -76,21 +76,16 @@ function my_onshow(data) {
 
         if (hit.recid == curDetRecId) {
 	    $recDiv.append( renderDetails(curDetRecData) );
+	    // handle the form submission:
+	    $("#request_form").submit(function( event ) {
+		$("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+		request();
+		event.preventDefault();
+	    });
 	}
 	$newResults.append( $recDiv );
     }
     $("#results").replaceWith( $newResults );
-
-// Hmm.  Never see the alert, and the form actually gets submitted....
-//    $("#request_form").submit(function( event ) {
-////	if ( $( "input:first" ).val() === "correct" ) {
-////	    $( "span" ).text( "Validated..." ).show();
-////	    return;
-////	}
-////	$( "span" ).text( "Not valid!" ).show().fadeOut( 1000 );
-//	alert("button clicked!");
-//	event.preventDefault();
-//    });
 }
 
 //function my_onstat(data) {
@@ -176,6 +171,14 @@ function my_onrecord(data) {
     // convert the DOM elm returned from getElementById into a jQuery object,
     // and append the detail div jQuery object returned from renderDetails.
     $(recordDiv).append( $detDiv );
+
+    // handle the form submission:
+    $("#request_form").submit(function( event ) {
+	$("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+	request();
+	event.preventDefault();
+    });
+
 }
 
 function my_onbytarget(data) {
@@ -517,7 +520,7 @@ function secondaryDetails(data) {
 }
 
 function buildRequestForm(data) {
-    var requestForm = '<form id="request_form" action="/cgi-bin/public.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
+    var requestForm = '<form id="request_form" action="" method="post">';
     var isElectronicResource = false;
 
     var title;
@@ -566,17 +569,18 @@ function renderDetails(data, marker)
 			       "id": "det_"+data.recid
 			     });
     
-    $detDiv.append( buildRequestForm(data) );
-
-    var $primary = $('<div>', { "id": "primary" } ).appendTo( $detDiv );  // return correct div to 'primary' var
-    $detDiv.append( $('<div>', { "id": "confirm", "style": "display:none" }));
-    $detDiv.append( $('<div>', { "id": "confirmed", "style": "display:none" }));
-
-    var $table = $('<table></table>', { "id" : "detTable" } ).appendTo( $primary );
+    var $table = $('<table></table>', { "id" : "detTable" } ).appendTo( $detDiv );
     var $tr = $('<tr></tr>').appendTo( $table );
     $tr.append( coverImage(data["md-lccn"],data["md-isbn"]) );  // image td
-    var $td = $('<td></td>').append( primaryDetails(data) );
-    $td.appendTo( $tr );
+
+    var $td = $('<td></td>').appendTo( $tr );
+    var $primary = $('<div>', { "id": "primary" } ).appendTo( $td );  // return correct div to 'primary' var
+//    $td.append( $('<div>', { "id": "confirm", "style": "display:none" }));
+    $td.append( $('<div>', { "id": "confirmed", "style": "display:none" }));
+    $td.append( $('<div>', { "id": "couldNotCancel", "style": "display:none" }));
+
+    $primary.append( buildRequestForm(data) );
+    $primary.append( primaryDetails(data) );
 
     var $showLocDet = $('<a>', { "id": "showLocDet",
 				 "href": "javascript:void(0)",
@@ -639,34 +643,77 @@ function toggleLocationDetails() {
 }
 
 
-// copied from shipit handler in respond.js...
-// NOT YET FUNCTIONAL!
-function make_request_handler( requestId ) {
-    return function() { request( requestId ) };
-}
-
-function request( requestId ) {
-    var myRow=$("#req"+requestId);
-    var parms = {
-	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
-	"lid": $("#lid").text(),
-	"status": "ILL-Answer|Will-Supply|being-processed-for-supply",
-	"message": ""
-    };
-    $.getJSON('/cgi-bin/change-request-status.cgi', parms,
+function request() {
+    var $myForm=$("#request_form");
+    $.getJSON('/cgi-bin/make-patron-request.cgi', $myForm.serialize(),
 	      function(data){
-//		  alert('change request status: '+data+'\n'+parms[0].status);
+//		  alert('...');
 	      })
-	.success(function() {
-	    update_menu_counters( $("#lid").text() );
+	.success(function( data ) {
+//	    alert('success');
+	    $("#confirmed").empty();
+	    
+	    var $cancelForm = $('<form>', { "id": "cancel_form", 
+					    "action": "",
+					    "method": "post"
+					  });
+	    $cancelForm.append('<input type="hidden" name="prid" value="'+data.prid+'">');
+	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to cancel this request.">');
+	    $("#confirmed").append( $cancelForm );
+
+	    $("#confirmed").append('<h2>Your request has been placed</h2>');
+	    var $table = $('<table>').appendTo($("#confirmed"));
+	    $table.append('<tr><td>Requesting user</td><td>:'+data.user+'</td></tr>');
+	    $table.append('<tr><td>Title</td><td>:'+data.title+'</td></tr>');
+	    $table.append('<tr><td>Author</td><td>:'+data.author+'</td></tr>');
+	    $table.append('<tr><td>Medium</td><td>: <font style="background-color: yellow;">'+data.medium+'</font></td></tr>');
+	    $("#confirmed").append('<p>Your librarian will see if another Manitoba public library is able to lend this title to '+data.library+' at this time.</p>');
+
+
+	    // handle the form submission:
+	    $("#cancel_form").submit(function( event ) {
+		cancel_request();
+		event.preventDefault();
+	    });
+
+	    $("#primary").toggle();
+	    $("#confirmed").toggle();
 	})
 	.error(function() {
-	    alert('error');
+	    alert('error: could not make this request at this time');
 	})
 	.complete(function() {
-	    // slideUp doesn't work for <tr>
-	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+//	    alert('complete');
+	});
+}
+
+
+function cancel_request() {
+    var $myForm=$("#cancel_form");
+    $.getJSON('/cgi-bin/cancel-patron-request.cgi', $myForm.serialize(),
+	      function(data){
+//		  alert('...');
+	      })
+	.success(function( data ) {
+//	    alert('success');
+	    if (data.success) {
+		$("#primary").toggle();
+		$("#confirmed").toggle();
+	    } else {
+		// The librarian has already handled the request.
+		$("#couldNotCancel").empty();
+		$("#couldNotCancel").append('<h2>Unable to cancel</h2>');
+		$("#couldNotCancel").append('<p>Your library has already processed this request.</p>');
+		$("#couldNotCancel").append('<p>Contact your library to have them cancel the request.</p>');
+		$("#confirmed").toggle();
+		$("#couldNotCancel").toggle();
+	    }
+	})
+	.error(function() {
+	    alert('error: could not cancel this request at this time');
+	})
+	.complete(function() {
+//	    alert('complete');
 	});
 }
 
