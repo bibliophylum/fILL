@@ -80,12 +80,11 @@ sub setup {
     $self->mode_param('rm');
     $self->run_modes(
 	'search_form'              => 'search_process',
-#	'request_form'             => 'request_process',
-#	'request'                  => 'request_process',
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
+	'contact_form'             => 'contact_process',
 	);
 }
 
@@ -116,222 +115,6 @@ sub search_process {
     return $template->output;
 }
 
-
-#--------------------------------------------------------------------------------
-#
-# DEPRECATED - moved to bin/make-patron-request.cgi so it can be called ajaxially...
-#
-sub request_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my @inParms = $q->param;
-    my @parms;
-    my %sources;
-    foreach my $parm_name (@inParms) {
-	my %p;
-	$p{parm_name} = $parm_name;
-	$p{parm_value} = $q->param($parm_name);
-	push @parms, \%p;
-
-	if ($parm_name =~ /_\d+/) {
-	    my ($pname,$num) = split /_/,$parm_name;
-	    $sources{$num}{$pname} = $q->param($parm_name);
-	    $sources{$num}{$pname} = uc($sources{$num}{$pname}) if ($pname eq 'symbol');
-	}
-    }
-
-    # Get this user's (requester's) library id
-    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
-    if (not defined $lid) {
-	# should never get here...
-	# go to some error page.
-    }
-
-    my $title = eval { decode( 'UTF-8', $q->param('title'), Encode::FB_CROAK ) };
-    if ($@) {
-	$title = unidecode( $q->param('title') );
-    }
-    my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
-    if ($@) {
-	$author = unidecode( $q->param('author') );
-    }
-
-    # check if this is a duplicate of an existing request (e.g. patron hit 'reload')
-    if ($self->isDuplicateRequest( $pid, $lid, $title, $author )) {
-	my $template = $self->load_tmpl('public/request_placed.tmpl');	
-        $template->param( pagetitle => "Patron: Request an ILL",
-			  username => $self->authen->username,
-			  library => $library,
-			  title => $title,
-			  author => $author
-	    );
-        return $template->output;
-    }
-
-    my $medium;
-    my @sources;
-    foreach my $num (sort keys %sources) {
-
-	$medium = $sources{$num}{'medium'};  # fILL-client.js groups by medium, so all sources' mediums should be the same.
-	delete $sources{$num}{'medium'};
-
-	my %src;
-	if ($sources{$num}{'locallocation'}) {
-	    
-	    # split the combined locallocation into separate locations
-	    my @locs = split /\,/, $sources{$num}{'locallocation'};
-	    delete $sources{$num}{'locallocation'};
-	    my @callnos;
-	    # confusingly, the text string 'undefined' is passed in rather than undef
-	    if (($sources{$num}{'localcallno'}) && ($sources{$num}{'localcallno'} ne 'undefined')) {
-		@callnos = split /\,/, $sources{$num}{'localcallno'};
-	    } elsif (($sources{$num}{'callnumber'}) && ($sources{$num}{'callnumber'} ne 'undefined')) {
-		@callnos = split /\,/, $sources{$num}{'callnumber'};
-	    }
-	    delete $sources{$num}{'localcallno'};
-	    delete $sources{$num}{'callnumber'};
-	    my %loc_callno = ();
-	    # if there are call numbers at all, there will be one per location...
-	    for (my $i=0; $i < @locs; $i++) {
-		if (@callnos) {
-		    if ($callnos[$i] ne 'PAZPAR2_NULL_VALUE') {
-			$loc_callno{ $locs[$i] } = $callnos[$i];
-		    } else {
-			$loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
-		    }
-		} elsif ($sources{$num}{'holding'}) {
-		    # ...otherwise, there might be one single 'holding' entry
-		    $loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
-		} else {
-		    $loc_callno{ $locs[$i] } = 'No callno info';
-		}
-	    }
-	    
-	    my %seen;
-	    foreach my $loc (@locs) {
-		next if $seen{$loc};
-		$seen{$loc} = 1;
-		my %src;
-		foreach my $pname (keys %{$sources{$num}}) {
-		    $src{$pname} = $sources{$num}{$pname};
-		}
-		# really need to generalize this....
-		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
-		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
-		} elsif ($sources{$num}{'symbol'} eq 'MW') {
-		    # leave as-is... requests to all MW branches go to MW
-		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
-		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
-		} elsif ($sources{$num}{'symbol'} eq 'MDA') {
-		    # temp - testing Parklands... eventually this will work like Spruce or WMRL
-		    $loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
-		} else {
-		    $src{'symbol'} = $sources{$num}{'symbol'};
-		}
-		$src{'location'} = $loc;
-		$src{'holding'} = '---';
-		$src{'callnumber'} = $loc_callno{ $loc };
-		push @sources, \%src;
-	    }
-	}
-    }
-#    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
-
-    $medium = sprintf("%.40s", $medium);
-
-    # These should be atomic...
-    # create the request_group
-    $self->dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid) VALUES (?,?,?,?,?)",
-	undef,
-	$title,
-	$author,
-	$medium,
-	$pid,     # requester
-	$lid      # requester's home library
-	);
-    my $pr_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'patron_request_seq'});
-
-    # ...end of atomic
-
-    # re-consolidate MW locations - they handle ILL for all branches centrally
-    my $index = 0; 
-    my $cn;
-    my $primary;
-    while ($index <= $#sources ) { 
-	if ((!exists( $sources[$index]{'symbol'} )) || (!defined( $sources[$index]{'symbol'} )) ) {
-	    $self->log->debug( "sources[" . $index . "] has no symbol:\n" . Dumper( $sources[$index] ));
-	}
-	my $value = $sources[$index]{symbol}; 
-	if ( $value eq "MW" ) { 
-	    if ($sources[$index]{location} =~ /^Millennium/ ) {
-		$primary = "" unless $primary;
-		$primary = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
-	    } else {
-		$cn = "" unless $cn;
-		$cn = $cn . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
-	    }
-	    splice @sources, $index, 1; 
-	} else { 
-	    $index++; 
-	} 
-    }
-    if (($cn) || ($primary)) {
-	$cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
-	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
-    }
-
-    # remove duplicate entries for a given library/location (they may have multiple holdings)
-    my %seen = ();
-    my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
-
-    # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
-    my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
-    my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
-    foreach my $src (@unique_sources) {
-	if (exists $nblc_href->{ $src->{symbol} }) {
-	    $src->{net} = $nblc_href->{ $src->{symbol} }{net};
-	    $src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
-	} else {
-	    $src->{net} = 0;
-	    $src->{lid} = undef;
-	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
-	}
-    }
-
-    # sort sources by net borrower/lender count
-    my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
-
-    # create the sources list for this request
-    my $sequence = 1;
-    $SQL = "INSERT INTO patron_request_sources (sequence_number, lid, call_number, prid) VALUES (?,?,?,?)";
-    foreach my $src (@sorted_sources) {
-	my $lenderID = $src->{lid};
-	next unless defined $lenderID;
-	my $rows_added = $self->dbh->do($SQL,
-					undef,
-					$sequence++,
-					$lenderID,
-					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
-					$pr_id,
-	    );
-	unless (1 == $rows_added) {
-	    $self->log->debug( "Could not add source: prid $pr_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
-	}
-    }
-
-
-    my $template = $self->load_tmpl('public/request_placed.tmpl');	
-    $template->param( pagetitle => "Patron: Request an ILL",
-		      username => $self->authen->username,
-		      library => $library,
-		      title => $title,
-		      author => $author,
-		      medium => $medium,
-	);
-    return $template->output;
-    
-}
 
 #--------------------------------------------------------------------------------
 #
@@ -399,6 +182,40 @@ sub about_process {
 }
 
 
+#--------------------------------------------------------------------------------
+#
+#
+sub contact_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $hr_lib = $self->dbh->selectrow_hashref(
+	"select library, email_address, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone from libraries where lid=?",
+	undef,
+	$lid
+	);
+    
+    my $template = $self->load_tmpl('public/contact.tmpl');	
+    $template->param( pagetitle => "Contact",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+		      email_address => $hr_lib->{email_address},
+		      mailing_address_line1 => $hr_lib->{mailing_address_line1},
+		      mailing_address_line2 => $hr_lib->{mailing_address_line2},
+		      mailing_address_line3 => $hr_lib->{mailing_address_line3},
+		      city => $hr_lib->{city},
+		      province => $hr_lib->{province},
+		      post_code => $hr_lib->{post_code},
+		      phone => $hr_lib->{phone}
+#		      pid => $pid
+	);
+    return $template->output;
+}
+
+
 #----------------------------------------------------------------------------------------
 sub get_patron_from_username {
     my $self = shift;
@@ -410,24 +227,6 @@ sub get_patron_from_username {
 	$username
 	);
     return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
-}
-
-#----------------------------------------------------------------------------------------
-sub isDuplicateRequest_DEPRECATED {
-    my $self = shift;
-    my $pid = shift;
-    my $lid = shift;
-    my $title = shift;
-    my $author = shift;
-
-    my $matching = $self->dbh->selectall_arrayref(
-	"select prid from patron_request where pid=? and lid=? and title=? and author=?",
-	undef,
-	$pid, $lid, $title, $author
-	); 
-    
-    return 1 if (@$matching);
-    return undef;
 }
 
 #--------------------------------------------------------------------------------
