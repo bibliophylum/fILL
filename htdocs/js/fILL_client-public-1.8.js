@@ -603,7 +603,7 @@ function renderDetails(data, marker)
 
     return $detDiv;
 }
-
+/*
 function renderDetails_old(data, marker)
 {
     var details = '';
@@ -628,7 +628,7 @@ function renderDetails_old(data, marker)
     var details_and_form = '<div class="details" id="det_'+data.recid+'">' + requestForm + details + '</div>';
     return details_and_form;
 }
-
+*/
 
 function toggleLocationDetails() {
 //    var lTable = document.getElementById("locationDetails");

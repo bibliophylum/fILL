@@ -445,6 +445,10 @@ tr.even {
 	background-color: white;
 }
 
+tr.no-alternating {
+	background-color: #dedcd1;
+}
+
 
 
 

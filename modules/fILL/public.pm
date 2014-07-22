@@ -342,12 +342,17 @@ sub myaccount_process {
 
     my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
+    my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
+    my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $lid, $pid );
+
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
     $template->param( pagetitle => "fILL patron account",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
-		      pid => $pid
+		      pid => $pid,
+		      name => $href->{name},
+		      is_enabled => ($href->{is_enabled} ? "Active" : "Disabled by your library")
 	);
     return $template->output;
 }
