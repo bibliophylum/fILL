@@ -17,7 +17,7 @@ div.login div {
   border: none;
 }
 div.login .login_header {
-  background: #408040;
+  background: #395751;
   border-bottom: 1px solid #1b2236;
 /*  height: 1.5em; */
   padding: 0.45em;
@@ -27,14 +27,14 @@ div.login .login_header {
   font-weight: bold;
 }
 div.login .login_content {
-  background: #caff70;
+  background: #dedcd1;
   padding: 0.8em;
   border-top: 1px solid white;
   border-bottom: 1px solid #565656;
 /*  font-size: 80%; */
 }
 div.login .login_footer {
-  background: #a2cd5a;
+  background: #dedcd1;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
   text-align: left;
@@ -135,25 +135,26 @@ ul.message li.warning {
 }
 
 div.login_center {
-  width: 30%;
+  width: 60%;
   margin: 0px auto;
-}
-
-.linkbutton {
-  font: bold 14px Arial;
-  text-decoration: none;
-  background-color: #EEEEEE;
-  color: #333333;
-  padding: 2px 6px 2px 6px;
-  border-top: 1px solid #CCCCCC;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #CCCCCC;
+  border: 1px solid #000;
 }
 
 
 /* ]]&gt; */--&gt;
 </style>
+
+<script type="text/javascript">
+  
+$('document').ready(function(){
+
+    $("#search").hide();
+    $(".inline-items").children().hide();
+    $(".inline-items").children(":contains('home')").show();
+
+});
+
+</script>
 
 <p><br/></p>
 
@@ -163,9 +164,6 @@ div.login_center {
       <div class="login">
 	<div class="login_header">
 	  Sign in to fILL
-	  <ul class="message">
-	    <li>Manitoba Public Libraries<br/>Interlibrary-Loan Management System.</li>
-	  </ul>
 	</div>
 	<div class="login_content">
 	  <fieldset>
@@ -176,14 +174,13 @@ div.login_center {
             <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
 	  </fieldset>
 	  <br/>
-	  <p>Don't have an account?
-	    <a class="linkbutton" href="?rm=registration_form">Register!</a>
-	  </p>
+          <input type="submit" class="butlink" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+	  <p>If you cannot remember your user name or password, <br/>please contact your local public library.</p>
 	</div>
 	<div class="login_footer">
-	  <div class="buttons">
-            <input type="submit" class="button" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-	  </div>
+	  <p>Not a user?
+	    <a href="?rm=registration_form">Sign up for an account!</a>
+	  </p>
 	</div>
       </div>
       <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
