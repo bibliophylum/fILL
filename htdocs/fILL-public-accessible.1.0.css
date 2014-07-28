@@ -166,6 +166,16 @@ footer
 	text-transform: uppercase;
 }
 
+.butlinkleft {
+	float: left;
+	padding: 5px;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #395751;
+	color: #fff;
+	text-transform: uppercase;
+}
+
 .logo-name {
 	font-size: 3em;
 }

@@ -235,6 +235,17 @@ sub get_patron_from_username {
 #
 sub registration_process {
     my $self = shift;
+    my $template = $self->load_tmpl('public/registration.tmpl');
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+# Patron self-registration
+#
+sub registration_process_DEPRECATED {
+    my $self = shift;
     my $q = $self->query;
 
     my @towns;
@@ -407,8 +418,8 @@ sub registration_process {
     my $template = $self->load_tmpl('public/registration.tmpl');
 
     $self->log->debug("Filling template parameters");
-    $template->param(USERNAME => 'Not yet registered.',
-		     ASK_REGION => defined($region) ? 0 : 1,
+#    $template->param(USERNAME => 'Not yet registered.',
+    $template->param(ASK_REGION => defined($region) ? 0 : 1,
 		     ASK_TOWN   => defined($lid)    ? 0 : 1,
 		     ASK_PATRON_INFO => $ask_patron_info,
 		     USERNAME_EXISTS => $username_exists,

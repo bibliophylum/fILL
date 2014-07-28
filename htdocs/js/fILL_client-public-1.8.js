@@ -222,6 +222,7 @@ function onFormSubmitEventHandler()
     loadSelect();
     triggerSearch();
     submitted = true;
+    $("#image").hide();
     return false;
 }
 
