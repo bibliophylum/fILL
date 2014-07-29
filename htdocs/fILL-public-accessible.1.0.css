@@ -137,8 +137,7 @@ main
 	display: inline;
 	border: 1px solid  #ccc; 
   	padding: 1.25em; 
-  	background: red; 
-  	/*background: #dedcd1;*/ 
+  	background: #dedcd1; 
 }
 
 #aside p {
