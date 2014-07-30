@@ -54,10 +54,11 @@ h3 {
 
 #container
 {
+	
 	margin: auto;
-	padding: 1%;
+	padding: ;
 	width: 100%;
-	min-width: 480px;
+	min-width: ;
 }
 
 header
@@ -109,7 +110,7 @@ nav li a
 
 /* Navigation link states */
 /* unvisted link */
- nav li a:link {
+nav li a:link {
  	background: #395751;
  	text-decoration: none;
 	color: #fff;
@@ -131,49 +132,48 @@ nav li a:active {
 }
 
 #search-container {
-	float: right;
 	width: 100%;
-	margin-bottom: 1.5em;
-	margin-top: 1em;
 	display: block;
-	background: #dedcd1;
+}
+
+#search
+{
+	float: left;
+	width: 100%;
+	display: inline;
+  	min-width: 480px;
+  	margin-bottom: 1.2em;
+	display: block;
+	background: #f3f3f3;
+	border: 1px solid  #c9c9c9;   
+  	padding: 1.25em; 
+}
+
+#main-container {	
+	width: 100%;
+	display: inline;
+}
+
+.main
+{
+	float: left;
+	margin-bottom: 1em;
+	width: 100%;
+	background: #f3f3f3;
 	border: 1px solid  #c9c9c9;   
   	padding: 1.25em; 
   	
 }
 
-#search
-{
-	display: inline;
-	width: 100%;
-	margin-bottom: 1em;
-	display: inline;
-  	min-width: 480px;
-}
-
-main
-{
-	clear: ;
-	float: right;
-	width: 80%;
-	margin-bottom: 1em;
-	display: inline;
-	background: #dedcd1;
-	border: 1px solid  #c9c9c9;   
-  	padding: 1.25em; 
-  	min-width: 480px;
-}
-
-#aside
+.aside
 {
 	float: left;
 	width: 18%;
-	min-width: 100px;
 	margin-bottom: 1.5em;
 	display: inline;
 	border: 1px solid  #c9c9c9; 
   	padding: 1.25em; 
-  	background: #dedcd1; 
+  	background: #f3f3f3; 
 }
 
 #aside p 
@@ -238,7 +238,7 @@ footer
 	font-size: 1.2em;
 	font-weight: bold;
 	line-height: 0px;
-	color: #383;
+	color: #505050;
 	text-transform: capitalize;
 }
 
