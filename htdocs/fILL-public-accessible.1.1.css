@@ -224,16 +224,6 @@ footer
 	background-color: red;
 }
 
-.details {
-	padding-right: 1em;
-	
-}
-
-.secondary_info {
-	background-color: #ffffba;
-	font-size: .7em;
-	color: #505050;
-}
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
@@ -271,11 +261,14 @@ footer
 .details {
     border: 1px solid #000000;
     border-radius: 10px;
+    padding: 1em;
 }
 
 .secondary_info {
     display: none;
-    background-color: #efdd6f;
+	background-color: #ffffba;
+	font-size: .7em;
+	color: #505050;
 }
 
 /*------------------------------------------------------*/
