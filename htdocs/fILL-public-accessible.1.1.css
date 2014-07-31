@@ -56,7 +56,7 @@ h3 {
 {
 	
 	margin: auto;
-	padding: ;
+	padding: 1%;
 	width: 100%;
 	min-width: ;
 }
@@ -71,6 +71,7 @@ input {
 	margin: 5px 0px 0px 0px;
 	width: 290px;
 	height: 2em;
+	font-size: 1em;
 }
 
 nav
@@ -140,9 +141,11 @@ nav li a:active {
 {
 	float: left;
 	width: 100%;
+	height: ;
 	display: inline;
   	min-width: 480px;
   	margin-bottom: 1.2em;
+  	vertical-align: middle;
 	display: block;
 	background: #f3f3f3;
 	border: 1px solid  #c9c9c9;   
@@ -156,9 +159,8 @@ nav li a:active {
 
 .main
 {
-	float: left;
-	margin-bottom: 1em;
-	width: 100%;
+	float: right;
+	width: 80%;
 	background: #f3f3f3;
 	border: 1px solid  #c9c9c9;   
   	padding: 1.25em; 
@@ -222,6 +224,16 @@ footer
 	background-color: red;
 }
 
+.details {
+	padding-right: 1em;
+	
+}
+
+.secondary_info {
+	background-color: #ffffba;
+	font-size: .7em;
+	color: #505050;
+}
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
