@@ -5,17 +5,18 @@
   -webkit-box-sizing: border-box; 
   box-sizing: border-box;
   font-family: sans-serif;
+  font-size: 1em;
 }
 
 /* unvisted link */
  a:link {
  	text-decoration: none;
-	color: #395751;
+	color: #183935;
 }
 
 /* visited link */
  a:visited {
-	color: #395751;
+	color: #183935;
 }
 
 /* mouse over link */
@@ -26,7 +27,7 @@
 
 /*selected link */
  a:active {
-	color: #395751;
+	color: #183935;
 
 }
 
@@ -69,7 +70,7 @@ header
 
 input {
 	margin: 5px 0px 0px 0px;
-	width: 290px;
+	width: ;
 	height: 2em;
 	font-size: 1em;
 }
@@ -82,7 +83,7 @@ nav
 	margin-bottom: .5em;
 	min-width: 480px;
 	font-size: 1.2em;
-	border-bottom: #383 solid 10px;
+	border-bottom: #06a0ca solid 10px;
 }
 
 nav ul
@@ -112,23 +113,23 @@ nav li a
 /* Navigation link states */
 /* unvisted link */
 nav li a:link {
- 	background: #395751;
+ 	background: #183935;
  	text-decoration: none;
 	color: #fff;
 }
 /* visited link */
 nav li a:visited {
-	background: #395751;
+	background: #183935;
 	color: #fff;
 }
 /* mouse over link */
 nav li a:hover { 
-	background: #383; 
+	background: #06a0ca; 
 	color: #fff;
 }
 /*selected link */
 nav li a:active {
-	background: #395751;
+	background: #183935;
 	color: #fff;
 }
 
@@ -146,9 +147,8 @@ nav li a:active {
   	min-width: 480px;
   	margin-bottom: 1.2em;
   	vertical-align: middle;
+  	text-align: center;
 	display: block;
-	background: #f3f3f3;
-	border: 1px solid  #c9c9c9;   
   	padding: 1.25em; 
 }
 
@@ -157,73 +157,109 @@ nav li a:active {
 	display: inline;
 }
 
-.main
+#main
 {
 	float: right;
-	width: 80%;
-	background: #f3f3f3;
-	border: 1px solid  #c9c9c9;   
+	width: 80%; 
   	padding: 1.25em; 
-  	
 }
 
-.aside
+#aside
 {
 	float: left;
 	width: 18%;
 	margin-bottom: 1.5em;
 	display: inline;
-	border: 1px solid  #c9c9c9; 
   	padding: 1.25em; 
-  	background: #f3f3f3; 
+  	font-size: .8em;
 }
 
-#aside p 
+.main-info-left
 {
-	font-size: .8em;
+	float: left;
+	width: 70%;
+	margin-bottom: 1em;
+	display: inline;
+  	padding: 1.25em; 
+  	min-width: 480px;
+}
+
+.main-info-right
+{
+	float: right;
+	width: 70%;
+	margin-bottom: 1em;
+	display: inline;
+  	padding: 1.25em; 
+  	min-width: 480px;
+}
+
+#aside-img-right
+{
+	
+	float: right;
+	width: 28%;
+	min-width: 200px;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 1.25em; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	
+	float: left;
+	width: 28%;
+	min-width: 200px;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 1.25em;
+  	font-size: 1.2em; 
+}
+
+.tone-box 
+{
+	background: #f3f3f3;
+	border: 1px solid  #c9c9c9;  
 }
 
 footer
 {
 	clear: both;
 	display: block;
-	background: #486660;
+	background: #d9efec;
 	text-align: center;
-	color: #fff;
-	padding: 2px;
+	padding: .5em;
 	font-size: .8em;
-	height: 1%;
 }
 
-/* button links styling*/
+/* button links styling
 .butlink {
 	float: right;
 	padding: 5px;
 	border: 1px solid #000;
 	margin-left: 20px;
-	background-color: #395751;
+	background-color: #183935;
 	color: #fff;
 	text-transform: uppercase;
 	width: 90px;
 }
+*/
 
-/* unvisted link */
-.butlink a:link {
-	background-color: #395751;
+button {
+	font-size: ;
 }
-/* visited link */
-.butlink a:visited {
-	background-color: #395751;
-}
-/* mouse over link */
-.butlink a:hover {
-	background-color: #383;
-}
-/*selected link */
-.butlink a:active {
-	background-color: red;
+.button-left {
+	float: left;
+	margin-right: 1em;
 }
 
+.button-right {
+	float: right;
+	margin-left: 1em; 
+
+}
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
@@ -271,6 +307,9 @@ footer
 	color: #505050;
 }
 
+.login {
+	display: block;
+}
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
 #progress_empty {
