@@ -3,7 +3,7 @@
 <head><title><TMPL_VAR name="pagetitle"></title>
 <!-- <link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css"> -->
 <link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
-<link type="text/css" rel="stylesheet" href="/fILL-public-accessible.1.0.css">
+<link type="text/css" rel="stylesheet" href="/fILL-public-accessible.1.1.css">
 <link type="text/css" rel="stylesheet" href="/fILL-public-datatables.1.0.css">
 
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
@@ -56,7 +56,7 @@
 <div id="container">
   <!--ARIA MARKER 'BANNER'-->
   <header role="banner">
-    <h1><span class="fill">f</span>ILL</h1> <p>connecting libraries. serving patrons.</p>
+    <img src="/img/fill-logo.png" class="fill-logo" alt="fill"> <p class="fill-tagline">connecting libraries. serving patrons.</p>
     <a href="?authen_logout=1"><button class="butlink">log out</button></a>
   </header>
   
@@ -71,15 +71,7 @@
     </ul>
   </nav>
 
-  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-  <div id="aside" role="complimentary">
-    <div id="stat"></div>
-    <div id="leftcontent"></div>
-    <div id="termlist"></div>
-  </div>
-
   <div id="search-container">
-
     <!--***************ARIA MARKER 'SEARCH'***************-->
     <div id="search" role="search">
       <form action="/cgi-bin/public.cgi" method="post" name="search">
@@ -89,7 +81,16 @@
 	<input id="button" type="submit" value="search" class="butlink">
       </form>
     </div>
+  </div> <!-- search-container -->
 
-    <main>
+  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+  <div id="aside" class="aside" role="complimentary">
+    <div id="stat"></div>
+    <div id="leftcontent"></div>
+    <div id="termlist"></div>
+  </div>
+
+
+    <main class="main" id="main" role="main">
 
 <!-- Begin content -->
