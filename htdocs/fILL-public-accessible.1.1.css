@@ -286,6 +286,30 @@ button {
 	float: right;
 	text-align: right;
 }
+/*** FILL TABLE STYLES **/
+
+#fill-table {
+	border: 2px solid #505050;
+
+}
+
+#fill-table td {
+	width: 100%;
+	background: #ffffba;
+	border: 1px solid #fff;
+	color: #505050;
+	padding: .5em;
+	border-collapse: collapse;
+}
+
+#fill-table th {
+	width: auto;
+	background: #ffffba;
+	border: 1px solid #fff;
+	color: #000;
+	padding: .5em;
+	border-collapse: collapse;
+}
 
 .bison 
 {

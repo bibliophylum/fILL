@@ -66,12 +66,12 @@ $('document').ready(function(){
 <div id="main">
   <div id="myDiv">
     <h3>My Account</h3>
-    <table id="myaccount" width="100%">
-      <tr><td>Name</td><td><TMPL_VAR name="name"></td></tr>
-      <tr><td>fILL username</td><td><TMPL_VAR name="username"></td></tr>
-      <tr><td>Home library</td><td><TMPL_VAR name="library"></td></tr>
-      <tr><td>Account status</td><td><TMPL_VAR name="is_enabled"></td></tr>
-      <tr><td>fILL Patron ID#</td><td id="pid"><TMPL_VAR name="pid"></td></tr>
+    <table id="fill-table">
+      <tr><th scope="row">Name</td><td><TMPL_VAR name="name"></td></tr>
+      <tr><th scope="row">fILL username</td><td><TMPL_VAR name="username"></td></tr>
+      <tr><th scope="row">Home library</td><td><TMPL_VAR name="library"></td></tr>
+      <tr><th scope="row">Account status</td><td><TMPL_VAR name="is_enabled"></td></tr>
+      <tr><th scope="row">fILL Patron ID#</td><td id="pid"><TMPL_VAR name="pid"></td></tr>
     </table>
   </div>
   
