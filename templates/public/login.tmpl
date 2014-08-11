@@ -1,148 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-<style type="text/css">
-&lt;!--/* &lt;![CDATA[ */
-div.login {
-  width: 25em;
-  margin: auto;
-  padding: 3px;
-  font-weight: bold;
-  border: 2px solid #445588;
-  color: #303c5f;
-  font-family: sans-serif;
-}
-div.login div {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-div.login .login_header {
-  background: #395751;
-  border-bottom: 1px solid #1b2236;
-/*  height: 1.5em; */
-  padding: 0.45em;
-  text-align: left;
-  color: #fff;
-  font-size: 120%;
-  font-weight: bold;
-}
-div.login .login_content {
-  background: #dedcd1;
-  padding: 0.8em;
-  border-top: 1px solid white;
-  border-bottom: 1px solid #565656;
-/*  font-size: 80%; */
-}
-div.login .login_footer {
-  background: #dedcd1;
-  border-top: 1px solid white;
-  border-bottom: 1px solid white;
-  text-align: left;
-  padding: 0;
-  margin: 0;
-  min-height: 2.8em;
-}
-div.login fieldset {
-  margin: 0;
-  padding: 0;
-  border: none;
-  width: 100%;
-}
-div.login label {
-  clear: left;
-  float: left;
-  padding: 0.6em 1em 0.6em 0;
-  width: 8em;
-  text-align: right;
-}
-/* image courtesy of http://www.famfamfam.com/lab/icons/silk/  */
-#authen_loginfield {
-  background-color: #fff;
-  border-top: solid 1px #565656;
-  border-left: solid 1px #565656;
-  border-bottom: solid 1px #a2aac4;
-  border-right: solid 1px #a2aac4;
-  padding: 2px 0 2px 18px;
-  margin: 0.3em 0;
-  width: 12em;
-}
-/* image courtesy of http://www.famfamfam.com/lab/icons/silk/  */
-#authen_passwordfield {
-  background-color: #fff;
-  border-top: solid 1px #565656;
-  border-left: solid 1px #565656;
-  border-bottom: solid 1px #a2aac4;
-  border-right: solid 1px #a2aac4;
-  padding: 2px 0 2px 18px;
-  margin: 0.3em 0;
-  width: 12em;
-}
-#authen_rememberuserfield {
-  clear: left;
-/*  margin-left: 8em; */
-}
-#authen_loginfield:focus {
-  background-color: #ffc;
-  color: #000;
-}
-#authen_passwordfield:focus {
-  background-color: #ffc;
-  color: #000;
-}
-div.login a {
-/*  font-size: 80%; */
-  color: #303c5f;
-}
-div.login div.buttons input {
-  border-top: solid 2px #a2aac4;
-  border-left: solid 2px #a2aac4;
-  border-bottom: solid 2px #565656;
-  border-right: solid 2px #565656;
-  background-color: #d0d5e1;
-  padding: .2em 1em ;
-/*  font-size: 80%; */
-  font-weight: bold;
-  color: #303c5f;
-}
-div.login div.buttons {
-  display: block;
-  margin: 8px 4px;
-  width: 100%;
-}
-#authen_loginbutton {
-  float: right;
-  margin-right: 1em;
-}
-#authen_registerlink {
-  display: block;
-}
-#authen_forgotpasswordlink {
-  display: block;
-}
-ul.message {
-  margin-top: 0;
-  margin-bottom: 0;
-  list-style: none;
-  font-size: 100%;
-}
-ul.message li {
-  padding: 0px;
-  margin: 0px;
-  font-style: italic;
-}
-ul.message li.warning {
-  color: red;
-}
-
-div.login_center {
-  width: 60%;
-  margin: 0px auto;
-  border: 1px solid #000;
-}
-
-
-/* ]]&gt; */--&gt;
-</style>
 
 <script type="text/javascript">
   
@@ -156,39 +13,34 @@ $('document').ready(function(){
 
 </script>
 
-<p><br/></p>
+<form action="/cgi-bin/public.cgi" method="post" name="loginform">
+  <div class="login">
+          <div class="login-content">
+                    <div class="login-header">
+            <h2>Sign in to fILL</h2>
+          </div>
+            <fieldset name="login">
+                    <label for="authen_username">User Name</label>
+                    <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
+                    <label for="authen_password">Password</label>
+                    <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
+            </fieldset>
+            <fieldset>
+                    <input type="submit" class="button-left" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+                    <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
 
-<div>
-  <div class="login_center">
-    <form action="/cgi-bin/public.cgi" method="post" name="loginform">
-      <div class="login">
-	<div class="login_header">
-	  Sign in to fILL
-	</div>
-	<div class="login_content">
-	  <fieldset>
-            <label for="authen_username">User Name</label>
-            <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
-            <label for="authen_password">Password</label>
-            <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
-            <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
-	  </fieldset>
-	  <br/>
-          <input type="submit" class="butlink" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-	  <p>If you cannot remember your user name or password, <br/>please contact your local public library.</p>
-	</div>
-	<div class="login_footer">
-	  <p>Not a user?
-	    <a href="?rm=registration_form">Sign up for an account!</a>
-	  </p>
-	</div>
-      </div>
+            </fieldset>
+          </div>
+          <div class="login-footer">
+            <p>Not a user?
+              <a href="?rm=registration_form">Sign up for an account!</a>
+            </p>
+            <p>If you cannot remember your user name or password, please contact your local public library.</p>
+          </div>
+  </div><!--div class login-->
       <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
       <input type="hidden" value="authen_login" name="rm">
-    </form>
-  </div>
-
-</div>
+</form>
 
 <script language="JavaScript" type="text/javascript">
   $('#csstabs').hide();

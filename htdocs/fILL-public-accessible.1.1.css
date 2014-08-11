@@ -290,6 +290,7 @@ button {
 
 #fill-table {
 	border: 2px solid #505050;
+	font-family: inherit;
 
 }
 
@@ -316,6 +317,81 @@ button {
 	display: block;
 	margin: auto;
 }
+/*------------login styles---------------------------------*/
+
+.login {
+  width: 50%;
+  margin: auto;
+}
+
+.login-content {
+
+  border: 2px solid #505050;
+  background-color: #f3f3f3;
+  font-size: 1em;
+  font-family: sans-serif;
+}
+
+.login p {
+  padding: .8em;
+
+}
+
+.login-header {
+  color: #fff;
+  background-color: #183935;
+  font-size: 1em;
+  padding: .4em;
+}
+
+.login-footer {
+  display: block;
+  margin: auto;
+}
+
+div.login fieldset {
+  margin: 1em 0em 0em 0em;
+  padding: 5px;
+  border: none;
+  width: 100%;
+  
+}
+div.login label {
+  display: block;
+  clear: left;
+  float: left;
+  text-align: left;
+  padding: 0;
+  width: 8em;
+  text-align: right;
+  font-size: 1em;
+}
+
+div.login input {
+  margin-left: 20px;
+}
+
+/* image courtesy of http://www.famfamfam.com/lab/icons/silk/  */
+#authen_loginfield {
+  background-color: #fff;
+  border-top: solid 1px #565656;
+  border-left: solid 1px #565656;
+  border-bottom: solid 1px #a2aac4;
+  border-right: solid 1px #a2aac4;
+  padding: 2px 0 2px 18px;
+  margin: 0.3em 1.5em;
+  width: 12em;
+}
+/* image courtesy of http://www.famfamfam.com/lab/icons/silk/  */
+#authen_passwordfield {
+  background-color: #fff;
+  border-top: solid 1px #565656;
+  border-left: solid 1px #565656;
+  border-bottom: solid 1px #a2aac4;
+  border-right: solid 1px #a2aac4;
+  padding: 2px 0 2px 18px;
+  margin: 0.3em 1.5em;
+  width: 12em;
 
 /*------------------------------------------------------*/
 .details {

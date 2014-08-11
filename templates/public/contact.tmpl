@@ -4,9 +4,7 @@
     set_primary_tab("menu_contact");
 </script>
 
-<table cellpadding=20>
-  <tr>
-    <td valign="top">
+<div id="main-info-left">
       <p>If you require additional help requesting an item using fILL please visit or contact your local public library.</p>
       <div>
 	<h3><TMPL_VAR name="library"></h3>
@@ -17,19 +15,10 @@
 	<TMPL_VAR name="mailing_address_line2"><br/>
 	<TMPL_VAR name="mailing_address_line3"><br/>
 	<TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code"></p>
-      </div>
-    </td>
-    <td style="width:385px"> <!-- image is 375px wide -->
-      <img src='/img/card_catalogue.jpg' alt="picture of a library card catalogue"/>
-      <br/>
-      <p class="short_instruction">
-	Photo by Flickr user haaaley.  http://flickr.com/photos/misshaley/515045131/
-      </p>
-      <p class="short_instruction">
-	Used under a Creative Commons Attribution-Noncommercial-Sharalike license.
-      </p>
-    </td>
-  </tr>
-</table>
+</div>
+
+<div id="aside-img-right">
+      <img src='/img/logos/WPL-Card.png' alt="picture of a library card catalogue"/>
+</div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
