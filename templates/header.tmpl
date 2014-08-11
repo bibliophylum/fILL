@@ -82,7 +82,7 @@ $('document').ready(function(){
 
 <!--**************ARIA MARKER 'BANNER'**************-->
   <header role="banner">
-      <div class="fill-info"><button class="butlink" href="#">log out</button><p>User: awoodward</p><p>Western Manitoba Regional Library - Brandon</p></div>
+      <div class="fill-info"><button class="button-left" href="#">log out</button><p>User: awoodward</p><p>Western Manitoba Regional Library - Brandon</p></div>
       <div><img class="fill-logo" alt="fILL" src="images/fill05.png"><!--<h1><span class="fill">f</span>ILL</h1>--></div>
       <div class="fill-tagline"><p class="fill-tagline">connecting libraries.<wbr> serving patrons.</p></div>
       
@@ -108,6 +108,23 @@ $('document').ready(function(){
       <li><a href="#">contact</a></li>
     </ul>
   </nav>
+
+<!--old code-->
+<DIV id="header">
+  <div id="logo">
+    <img src="/img/fILL-logo.png" class="fill-logo" alt="f i l l free open source software interlibrary loan management system">
+    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
+  </div>
+  <div id="header_quick_access">
+    <ul>
+      <li><a href="?rm=welcome">Home</a></li>
+      <li><TMPL_VAR NAME="username"> </li>
+      <li><a href="?authen_logout=1">Log out</a></li>
+    </ul>
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
+  </div>
+</DIV>
 
 <!-- div id="nav1" -->
 <div id="csstabs">
