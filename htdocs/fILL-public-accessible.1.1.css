@@ -55,10 +55,9 @@ h3 {
 
 #container
 {
-	
 	margin: auto;
-	padding: 1%;
-	width: 100%;
+	padding: ;
+	width: 90%;
 	min-width: ;
 }
 
@@ -150,6 +149,7 @@ nav li a:active {
   	text-align: center;
 	display: block;
   	padding: 1.25em; 
+  	border: 1px dashed red;
 }
 
 #main-container {	
@@ -162,6 +162,7 @@ nav li a:active {
 	float: right;
 	width: 80%; 
   	padding: 1.25em; 
+  	border: 1px dashed red;
 }
 
 #aside
@@ -172,6 +173,7 @@ nav li a:active {
 	display: inline;
   	padding: 1.25em; 
   	font-size: .8em;
+  	border: 1px dashed red;
 }
 
 .main-info-left
