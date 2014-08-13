@@ -69,7 +69,7 @@
   <!--ARIA MARKER 'BANNER'-->
   <header role="banner">
     <img src="/img/fill-logo.png" class="fill-logo" alt="fill"> <p class="fill-tagline">connecting libraries. serving patrons.</p>
-    <a href="?authen_logout=1"><button class="butlink">log out</button></a>
+    <a href="?authen_logout=1"><button class="button-right">log out</button></a>
   </header>
   
   <!--***************ARIA MARKER 'NAVIGATION'***************-->
@@ -176,12 +176,8 @@
 <!-- End content -->
     </main>
 </div> <!-- container -->
-<footer role="contentinfo">
-	Copyright © Site name, 20XX
-	<div id="username"><TMPL_VAR name="username"></div>
-	<TMPL_VAR name="lid">
-	<TMPL_VAR name="library">
-</footer>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
 
 </body>
 </html>
