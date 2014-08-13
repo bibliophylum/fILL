@@ -172,7 +172,6 @@ nav li a:active {
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 1.25em; 
-  	font-size: .8em;
   	border: 1px dashed red;
 }
 
@@ -288,17 +287,18 @@ button {
 	float: right;
 	text-align: right;
 }
-/*** FILL TABLE STYLES **/
+/*** FILL #fill-table STYLES **/
 
-#fill-table {
+#fill-#fill-table {
 	border: 2px solid #505050;
 	font-family: inherit;
 
 }
 
+/*
 #fill-table td {
 	width: 100%;
-	background: #ffffba;
+	background: #f0ead3;
 	border: 1px solid #fff;
 	color: #505050;
 	padding: .5em;
@@ -307,13 +307,38 @@ button {
 
 #fill-table th {
 	width: auto;
-	background: #ffffba;
+	background: #f0ead3;
 	border: 1px solid #fff;
 	color: #000;
 	padding: .5em;
 	border-collapse: collapse;
 }
+*/
 
+#fill-table {
+  	border-collapse: collapse;
+  	width: 100%;
+	background: #f0ead3;
+	color: #505050;
+	padding: .5em;
+}
+#fill-table td, #fill-table th {
+  border: 1px solid #fff;
+}
+#fill-table tr:first-child th {
+  border-top: 0;
+}
+#fill-table tr:last-child td {
+  border-bottom: 0;
+}
+#fill-table tr td:first-child,
+#fill-table tr th:first-child {
+  border-left: 0;
+}
+#fill-table tr td:last-child,
+#fill-table tr th:last-child {
+  border-right: 0;
+}
 .bison 
 {
 	display: block;
@@ -395,8 +420,7 @@ div.login input {
   margin: 0.3em 1.5em;
   width: 12em;
 
-#divChangePass {
-	display:none; 
+#divChangePass { 
 	border:1px solid #000000;
 	padding: .8em;
 }
