@@ -64,13 +64,11 @@ $('document').ready(function(){
 <style type="text/css">
 
 #aside, #stat, #leftcontent, #termlist, .aside {
-    display: none;
+    display: none;!important
 }
 
 </style>
 
-
-<div id="main">
   <div id="myDiv">
     <h3>My Account</h3>
     <table id="fill-table">
@@ -84,7 +82,7 @@ $('document').ready(function(){
   
   <a id="showChangePassButton" class="button-left" href="javascript:void(0)" onclick="toggleChangePassDiv()">Change password</a>
 
-  <div id="divChangePass" style="display:none; border:1px solid #000000;">
+  <div id="divChangePass">
     <form id="changePassword_form" name="changePassword" action="" method="post">
       <table>
 	<tr>
@@ -105,7 +103,5 @@ $('document').ready(function(){
       <input id="cancel" type="button" value="Cancel" class="butlink">
     </form>
   </div>
-
-</div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

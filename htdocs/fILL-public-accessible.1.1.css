@@ -393,6 +393,11 @@ div.login input {
   margin: 0.3em 1.5em;
   width: 12em;
 
+#divChangePass {
+	display:none; 
+	border:1px solid #000000;
+	padding: .8em;
+}
 /*------------------------------------------------------*/
 .details {
     border: 1px solid #000000;
