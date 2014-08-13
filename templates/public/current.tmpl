@@ -1,5 +1,9 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <script type="text/javascript" src="/js/public-requests-1.0.js"></script>
+<link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/fILL-public-accessible.1.1.css">
+<link type="text/css" rel="stylesheet" href="/fILL-public-datatables.1.0.css">
+
 
 <script type="text/javascript">
 
@@ -103,27 +107,24 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
+<!--remove markup after review <div id="main">
   <div id="middlecontent">
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
-    </div>
+    </div>-->
 
-    <div id="mylistDiv">
+<div id="mylistDiv">
       <h4>Current borrowing</h4>
-      <div class="dataTable_wrapper">
-	<table id="datatable_borrowing" class="display">
-	  <thead>
-	    <tr>
-	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Status Updated</th><th> </th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  </tbody>
-	</table>
-      </div>
-    </div>
-    
+  <div class="dataTable_wrapper">
+  	<table id="fill-table">
+  	  <thead>
+  	    <tr>
+  	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Status Updated</th><th> </th>
+  	    </tr>
+  	  </thead>
+  	  <tbody>
+  	  </tbody>
+  	</table>    
   </div>
 </div>
 
