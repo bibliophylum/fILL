@@ -178,7 +178,7 @@ nav li a:active {
 #main-info-left
 {
 	float: left;
-	width: 70%;
+	width: 68%;
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
@@ -188,7 +188,7 @@ nav li a:active {
 #main-info-right
 {
 	float: right;
-	width: 70%;
+	width: 68%;
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
@@ -199,7 +199,7 @@ nav li a:active {
 {
 	
 	float: right;
-	width: 28%;
+	width: 25%;
 	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
@@ -211,7 +211,7 @@ nav li a:active {
 {
 	
 	float: left;
-	width: 28%;
+	width: 25%;
 	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
