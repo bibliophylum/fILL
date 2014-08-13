@@ -81,7 +81,7 @@ nav
 	width: 100%;
 	margin-bottom: .5em;
 	min-width: 480px;
-	font-size: 1.2em;
+	font-size: 1.4em;
 	border-bottom: #06a0ca solid 10px;
 }
 
@@ -105,7 +105,7 @@ nav li a
 	padding: 5px 10px;
 	text-decoration: none;
 	text-transform: uppercase;
-	border-right: 5px solid #fff;
+	border-right: 10px solid #fff;
 	border-top: #fff solid 5px;
 }
 
