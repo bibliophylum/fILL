@@ -175,7 +175,7 @@ nav li a:active {
   	border: 1px dashed red;
 }
 
-.main-info-left
+#main-info-left
 {
 	float: left;
 	width: 70%;
@@ -185,7 +185,7 @@ nav li a:active {
   	min-width: 480px;
 }
 
-.main-info-right
+#main-info-right
 {
 	float: right;
 	width: 70%;
