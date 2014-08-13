@@ -68,8 +68,8 @@
 <div id="container">
   <!--ARIA MARKER 'BANNER'-->
   <header role="banner">
-    <img src="/img/fill-logo.png" class="fill-logo" alt="fill"> <p class="fill-tagline">connecting libraries. serving patrons.</p>
-    <a href="?authen_logout=1"><button class="button-right">log out</button></a>
+        <a href="?authen_logout=1"><button class="button-right">log out</button></a>
+        <img src="/img/fill-logo.png" class="fill-logo" alt="fill"> <p class="fill-tagline">connecting libraries. serving patrons.</p>
   </header>
   
   <!--***************ARIA MARKER 'NAVIGATION'***************-->
@@ -88,22 +88,21 @@
     <!--***************ARIA MARKER 'SEARCH'***************-->
     <div id="search" role="search">
       <form id="searchForm" name="search">
-	<h2>search:</h2>
-	<input id="query" type="text" size="50px" value="<TMPL_VAR name='query'>">
-	<input id="button" type="submit" value="go" class="">
+	<input id="query" type="text" size="50px" placeholder="Seach" value="<TMPL_VAR name='query'>">
+	<input id="button" type="submit" value="Go" class="">
       </form>
     </div>
   </div> <!-- search-container -->
 
   <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-  <div id="aside" class="aside" role="complimentary">
+  <div id="aside" class="tone-box" role="complimentary">
     <div id="image"></div>
     <div id="stat"></div>
     <div id="leftcontent"></div>
     <div id="termlist"></div>
   </div>
 
-    <main class="main" id="main" role="main">
+  <main id="main" class="tone-box" role="main">
 
 <!-- Begin content -->
 
