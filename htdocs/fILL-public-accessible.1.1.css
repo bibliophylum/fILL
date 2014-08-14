@@ -149,7 +149,7 @@ nav li a:active {
   	text-align: center;
 	display: block;
   	padding: 1.25em; 
-  	border: 1px dashed red;
+  	border-bottom: 1px dashed #505050;
 }
 
 #main-container {	
@@ -236,6 +236,7 @@ footer
 	text-align: center;
 	padding: .5em;
 	font-size: .8em;
+	margin-top: 1em;
 }
 
 /* button links styling

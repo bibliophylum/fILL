@@ -69,7 +69,7 @@ $('document').ready(function(){
 
 </style>
 
-  <div id="container">
+<div id="container">
     <h3>My Account</h3>
     <table id="fill-table">
       <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
@@ -78,7 +78,6 @@ $('document').ready(function(){
       <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
       <tr><th scope="row">fILL Patron ID#</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
     </table>
-  </div>
   
   <a id="showChangePassButton" class="button-left" href="javascript:void(0)" onclick="toggleChangePassDiv()">Change password</a>
 
@@ -102,6 +101,7 @@ $('document').ready(function(){
       <input id="changePassword" type="submit" value="Change" class="butlink">
       <input id="cancel" type="button" value="Cancel" class="butlink">
     </form>
+  </div>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
