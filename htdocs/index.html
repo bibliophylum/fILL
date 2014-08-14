@@ -15,32 +15,18 @@
         <p class="fill-tagline">connecting libraries, serving patrons.</p>
   </div>
 
-  <div id="main-info-welcome">
-          <div id="tonebox">
-            <p>Welcome to fILL, the Manitoba Public Library Interlibrary-Loan System</p>
-            <p>There are separate login pages for:</p>
-      	     <a href="/cgi-bin/public.cgi" id="butlink" class="button-left">Library Patrons</a>
-      	     <a href="/cgi-bin/lightning.cgi" id="butlink" class="button-left">Library Staff</a>
-           </div>
-  <p>Fill is being redesign to make it easier to search for the books you want here in Mantioba.  To make this better we, WANT YOUR FEEDBACK about our new site.</p>
+  <div id="main-info-welcome" class="tone-box">
+          <h1>Welcome!</h1>
+          <p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
+          <p>There are separate login pages for:</p>
+    	     <a href="/cgi-bin/public.cgi" id="butlink" class="button-left">Library Patrons</a>
+    	     <a href="/cgi-bin/lightning.cgi" id="butlink" class="button-left">Library Staff</a>
   </div>
 </div>
 
 <!-- End content -->
-<footer role="contentinfo">
-<div id="nav2">
-  
-    <a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
 
-  <p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
-</div>
-</footer>
-  <img class="bison" alt="Manitoba Bison Logo" title="Service provided by the Government of Manitoba" src="/img/manitoba.gif">
-
-</body>
-</html>
-
-<!--<TMPL_INCLUDE NAME="footer.tmpl"> need to link this if possible-->
+<TMPL_INCLUDE NAME="footer.tmpl">
 
 </body>
 </html>

@@ -262,7 +262,7 @@ footer
 
 
 #butlink {
-	padding: .5em;
+	padding: 5px;
 	border: 1px solid #000;
 	margin-left: 20px;
 	background-color: #183935;
@@ -270,7 +270,7 @@ footer
 	text-transform: uppercase;
 }
 #butlink a {
-	padding: .5em;
+	padding: 5px;
 	display: inline;
 	border: 1px solid #000;
 	margin-left: 20px;
