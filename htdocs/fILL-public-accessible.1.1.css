@@ -198,8 +198,9 @@ nav li a:active {
 #main-info-welcome 
 {
 	float: right;
+	display: block;
 	width: 50%;
-	font-size: 2em;
+	font-size: 1.5em;
 	margin-bottom: 1em;
 	margin-top: 100px;
 	display: inline;
@@ -248,6 +249,10 @@ nav li a:active {
 	border: 1px solid  #c9c9c9;  
 }
 
+.clear-box {
+ font-size: 1em;
+}
+
 footer
 {
 	clear: both;
@@ -262,7 +267,7 @@ footer
 
 
 #butlink {
-	padding: .8em;
+	padding: .5em;
 	border: 1px solid #000;
 	margin-left: 20px;
 	background-color: #183935;
@@ -270,7 +275,7 @@ footer
 	text-transform: uppercase;
 }
 #butlink a {
-	padding: .8em;
+	padding: .5em;
 	display: inline;
 	border: 1px solid #000;
 	margin-left: 20px;
