@@ -3,21 +3,21 @@
 <script type="text/javascript">
     set_primary_tab("menu_contact");
 </script>
-
-<div id="main-info-left" class="tone-box">
-    <p>If you require additional help requesting an item using fILL please visit or contact your local public library.</p>
-	<div>
-		<h3><TMPL_VAR name="library"></h3>
-		<p>Phone: <TMPL_VAR name="phone"></p>
-		<p>Email: <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
-		<p>Address:<br/>
-		<TMPL_VAR name="mailing_address_line1"><br/>
-		<TMPL_VAR name="mailing_address_line2"><br/>
-		<TMPL_VAR name="mailing_address_line3"><br/>
-		<TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code"></p>
+<div id="container">
+	<div id="main-info-left">
+	    <p>If you require additional help requesting an item using fILL please visit or contact your local public library.</p>
+		<div class="tone-box">
+			<h3><TMPL_VAR name="library"></h3>
+			<p>Phone: <TMPL_VAR name="phone"></p>
+			<p>Email: <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
+			<p>Address:<br/>
+			<TMPL_VAR name="mailing_address_line1"><br/>
+			<TMPL_VAR name="mailing_address_line2"><br/>
+			<TMPL_VAR name="mailing_address_line3"><br/>
+			<TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code"></p>
+		</div>
 	</div>
 </div>
-
 <div id="aside-img-right">
       <img src='/img/logos/WPL-Card.png' alt="picture of a library card catalogue"/>
 </div>
