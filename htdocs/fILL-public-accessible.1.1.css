@@ -201,6 +201,7 @@ nav li a:active {
 	width: 50%;
 	font-size: 2em;
 	margin-bottom: 1em;
+	margin-top: 100px;
 	display: inline;
   	padding: 1.25em; 
   	min-width: 480px;
@@ -210,6 +211,7 @@ nav li a:active {
 	float: left;
 	width: 45%;
 	margin-bottom: 1.5em;
+	margin-top: 100px;
 	display: inline;
   	padding: 1.25em; 
 }
@@ -258,7 +260,7 @@ footer
 	margin-top: 1em;
 }
 
-/* button links styling
+
 .butlink {
 	float: right;
 	padding: 5px;
@@ -269,7 +271,7 @@ footer
 	text-transform: uppercase;
 	width: 90px;
 }
-*/
+
 
 button {
 	font-size: 1em;
