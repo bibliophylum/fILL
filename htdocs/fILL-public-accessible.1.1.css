@@ -82,7 +82,7 @@ nav
 	margin-bottom: .5em;
 	min-width: 480px;
 	font-size: 1.4em;
-	border-bottom: #06a0ca solid 10px;
+	border-bottom: #06a0ca solid 5px;
 }
 
 nav ul
@@ -112,7 +112,7 @@ nav li a
 /* Navigation link states */
 /* unvisted link */
 nav li a:link {
- 	background: #183935;
+ 	background: #183935;/*main dark green colour*/
  	text-decoration: none;
 	color: #fff;
 }
@@ -213,7 +213,7 @@ nav li a:active {
 	margin-bottom: 1.5em;
 	margin-top: 100px;
 	display: inline;
-  	padding: 1.25em; 
+  	padding: ; 
 }
 
 #aside-img-right
@@ -261,15 +261,13 @@ footer
 }
 
 
-.butlink {
-	float: right;
+#butlink {
 	padding: 5px;
 	border: 1px solid #000;
 	margin-left: 20px;
 	background-color: #183935;
-	color: #fff;
+	color: #fff;!important
 	text-transform: uppercase;
-	width: 90px;
 }
 
 
