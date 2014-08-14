@@ -199,7 +199,7 @@ nav li a:active {
 {
 	float: right;
 	width: 50%;
-	font-size: 3em;
+	font-size: 2em;
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
@@ -272,9 +272,14 @@ footer
 */
 
 button {
-	font-size: ;
+	font-size: 1em;
 }
 .button-left {
+	float: left;
+	margin-right: 1em;
+}
+
+.tone-box.button-left {
 	float: left;
 	margin-right: 1em;
 }
