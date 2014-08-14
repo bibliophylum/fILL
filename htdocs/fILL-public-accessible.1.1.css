@@ -195,6 +195,25 @@ nav li a:active {
   	min-width: 480px;
 }
 
+#main-info-welcome 
+{
+	float: right;
+	width: 50%;
+	font-size: 3em;
+	margin-bottom: 1em;
+	display: inline;
+  	padding: 1.25em; 
+  	min-width: 480px;
+}
+
+#aside-img-welcome {
+	float: left;
+	width: 45%;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 1.25em; 
+}
+
 #aside-img-right
 {
 	

@@ -9,40 +9,25 @@
 
 <div id="container">
 <!--header template from index file-->
-  <!--***************ARIA MARKER 'BANNER'***************-->
-  <header role="banner">
-        <a href="?authen_logout=1"><button class="button-right">log out</button></a>
-        <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries. serving patrons.</p>
-  </header>
 
+  <div id="aside-img-welcome">
+        <img src='/img/fill-logo.png'/>
+        <p class="fill-tagline">connecting libraries, serving patrons.</p>
+  </div>
 
-<div id="aside-img-left">
-      <img src='/img/card_catalogue.jpg' />
-
-      <p class="short_instruction">
-	       Photo by Flickr user haaaley. http://flickr.com/photos/misshaley/515045131/
-      </p><br />
-      <p class="short_instruction">
-	       Used under a Creative Commons Attribution-Noncommercial-Sharalike license.
-      </p>
-</div>
-
-<div id="main-info-right" class="tone-box">
-        <h1>Welcome!</h1>
-        <br />
-        <p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
-        <br />
-        <p>There are separate login pages for:</p>
-        <br />
-        <p>
-  	     <a class="button-left" href="/cgi-bin/public.cgi">Patrons of Manitoba Public Libraries</a>
-  	     <a class="button-left" href="/cgi-bin/lightning.cgi">Library staff</a>
-        </p>
+  <div id="main-info-welcome" class="tone-box">
+          <h1>Welcome!</h1>
+          <p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
+          <p>There are separate login pages for:</p>
+          <br />
+    	     <a href="/cgi-bin/public.cgi"><button class="button-left">Patrons of Manitoba Public Libraries</a>
+    	     <a href="/cgi-bin/lightning.cgi"><button class="button-left">Library staff</a>
+  </div>
 </div>
 
 <!-- End content -->
+
 <TMPL_INCLUDE NAME="footer.tmpl">
-</div>
 
 </body>
 </html>
