@@ -203,9 +203,11 @@ nav li a:active {
 	font-size: 1.5em;
 	margin-bottom: 1em;
 	margin-top: 100px;
-	display: inline;
+	
   	padding: 1.25em; 
   	min-width: 480px;
+  	background: #f3f3f3;
+	border: 1px solid  #c9c9c9;  
 }
 
 #aside-img-welcome {
