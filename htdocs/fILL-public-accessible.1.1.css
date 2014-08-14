@@ -199,11 +199,11 @@ nav li a:active {
 {
 	float: right;
 	display: block;
+	clear: all;
 	width: 50%;
 	font-size: 1.5em;
 	margin-bottom: 1em;
-	margin-top: 100px;
-	
+	margin-top: 1em;
   	padding: 1.25em; 
   	min-width: 480px;
   	background: #f3f3f3;
