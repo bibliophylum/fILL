@@ -231,6 +231,7 @@ footer
 {
 	clear: both;
 	display: block;
+	width: 100%;
 	background: #d9efec;
 	text-align: center;
 	padding: .5em;
