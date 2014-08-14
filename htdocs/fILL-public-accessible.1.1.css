@@ -200,6 +200,7 @@ nav li a:active {
 {
 	float: right;
 	display: block;
+	clear: right;
 	width: 50%;
 	font-size: 1.5em;
 	margin-bottom: ;
