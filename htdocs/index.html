@@ -15,7 +15,7 @@
         <p class="fill-tagline">connecting libraries, serving patrons.</p>
   </div>
 
-  <div id="main-info-welcome" class="tone-box">
+  <div id="main-info-welcome">
           <h1>Welcome!</h1>
           <p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
           <p>There are separate login pages for:</p>
@@ -29,8 +29,21 @@
 </div>
 
 <!-- End content -->
+<!-- End content -->
+<footer role="contentinfo">
+<div id="nav2">
+  
+    <a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
 
-<TMPL_INCLUDE NAME="footer.tmpl">
+  <p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
+</div>
+</footer>
+  <img class="bison" alt="Manitoba Bison Logo" title="Service provided by the Government of Manitoba" src="/img/manitoba.gif">
+
+</body>
+</html>
+
+<!--<TMPL_INCLUDE NAME="footer.tmpl">-->
 
 </body>
 </html>
