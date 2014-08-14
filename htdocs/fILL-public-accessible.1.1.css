@@ -199,22 +199,22 @@ nav li a:active {
 {
 	float: right;
 	display: block;
-	clear: all;
+	clear: left;
 	width: 50%;
 	font-size: 1.5em;
 	margin-bottom: 1em;
 	margin-top: 1em;
   	padding: 1.25em; 
-  	min-width: 480px;
   	background: #f3f3f3;
 	border: 1px solid  #c9c9c9;  
 }
 
 #aside-img-welcome {
 	float: left;
-	width: 45%;
+	clear: right;
+	width: 40%;
 	margin-bottom: 1.5em;
-	margin-top: 100px;
+	margin-top: 2em;
 	display: inline;
   	padding: ; 
 }
