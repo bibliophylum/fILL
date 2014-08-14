@@ -269,7 +269,14 @@ footer
 	color: #fff;!important
 	text-transform: uppercase;
 }
-
+#butlink a {
+	padding: 5px;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #183935;
+	color: #fff;!important
+	text-transform: uppercase;
+}
 
 button {
 	font-size: 1em;
