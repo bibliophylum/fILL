@@ -366,7 +366,6 @@ button {
 #fill-table {
   	border-collapse: collapse;
   	width: 70%;
-  	float: left;
 	background: #f0ead3;
 	border: 2px solid #505050;
 	color: #505050;
@@ -377,7 +376,7 @@ button {
 	padding: 1em;
 }
 
-#fill-table {
+#fill-table th {
 	font-weight: bold;
 	font-size: 1.2em;
 }
