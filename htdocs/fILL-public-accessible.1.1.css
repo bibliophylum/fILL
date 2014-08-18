@@ -373,6 +373,11 @@ button {
 	color: #505050;
 	padding: .5em;
 }
+
+#fill-table td {
+	padding: 1em;
+}
+
 #fill-table td, #fill-table th {
   border: 1px solid #fff;
 }
