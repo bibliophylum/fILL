@@ -422,19 +422,28 @@ button {
 
 .login-header {
   background-color: #183935;
+  line-height: 2em;
+  height: 2em;
 }
 
 .login-header-title {
   color: #fff;
   font-size: 2em;
   padding: 1em;
-  line-height: 2em;
-  height: 2em;
+
 }
 
 .login-footer {
   display: block;
   margin: auto;
+}
+
+fieldset input {
+	vertical-align: middle;
+}
+
+fieldset input span {
+	 vertical-align: middle;
 }
 
 div.login fieldset {
@@ -448,15 +457,14 @@ div.login label {
   display: block;
   clear: left;
   float: left;
-  text-align: left;
+  text-align: center;
   padding: 0;
   width: 8em;
-  text-align: right;
   font-size: 1em;
 }
 
 div.login input {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 /* image courtesy of http://www.famfamfam.com/lab/icons/silk/  */
