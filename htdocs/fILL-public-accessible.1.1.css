@@ -436,12 +436,6 @@ button {
   display: block;
   margin: auto;
 }
-#login-clear {
-	display: block;
-	clear: all;
-	height: 1px;
-	width: 100%;
-}
 
 div.login fieldset {
   margin: 1em 0em 0em 0em;
