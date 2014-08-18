@@ -402,6 +402,7 @@ button {
 
 .login {
   display: block;
+  clear: all;
   width: 50%;
   margin: auto;
 }
@@ -425,8 +426,8 @@ button {
 
 .login-header-title {
   color: #fff;
-  font-size: 1em;
-  padding: .4em;
+  font-size: 2em;
+  padding: 1em;
 }
 
 .login-footer {
