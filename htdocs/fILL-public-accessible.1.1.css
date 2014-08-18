@@ -343,11 +343,6 @@ button {
 }
 /*** FILL #fill-table STYLES **/
 
-#fill-#fill-table {
-	border: 2px solid #505050;
-	font-family: inherit;
-
-}
 
 /*
 #fill-table td {
@@ -371,8 +366,10 @@ button {
 
 #fill-table {
   	border-collapse: collapse;
-  	width: 100%;
+  	width: 70%;
+  	margin: auto;
 	background: #f0ead3;
+	border: 2px solid #505050;
 	color: #505050;
 	padding: .5em;
 }
@@ -422,14 +419,13 @@ button {
 
 .login-header {
   background-color: #183935;
-  line-height: 3em;
   height: 3em;
 }
 
 .login-header-title {
   color: #fff;
   font-size: 2em;
-  padding: 1em;
+  padding: ;
 
 }
 
