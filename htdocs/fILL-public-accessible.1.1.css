@@ -420,8 +420,11 @@ button {
 }
 
 .login-header {
-  color: #fff;
   background-color: #183935;
+}
+
+.login-header-title {
+  color: #fff;
   font-size: 1em;
   padding: .4em;
 }
