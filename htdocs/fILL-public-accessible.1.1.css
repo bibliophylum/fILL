@@ -277,6 +277,7 @@ footer
 	margin-top: 1em;
 }
 
+
 #butlink {
 	padding: .8em;
 	border: 1px solid #000;
@@ -403,7 +404,6 @@ button {
   display: block;
   width: 50%;
   margin: auto;
-  clear: all;
 }
 
 .login-content {
@@ -420,15 +420,10 @@ button {
 }
 
 .login-header {
-  background-color: #183935;
-  height: 70px;
-  line-height: 70px;
-}
-
-.login-header h2 {
   color: #fff;
+  background-color: #183935;
   font-size: 1em;
-  padding: .5em;
+  padding: .4em;
 }
 
 .login-footer {
@@ -484,7 +479,6 @@ div.login input {
 	border:1px solid #000000;
 	padding: .8em;
 }
-
 /*------------------------------------------------------*/
 .details {
     border: 1px solid #000000;
@@ -493,6 +487,7 @@ div.login input {
 }
 
 .secondary_info {
+    display: none;
 	background-color: #ffffba;
 	font-size: .7em;
 	color: #505050;

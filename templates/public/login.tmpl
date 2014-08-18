@@ -16,25 +16,21 @@ $('document').ready(function(){
 <form action="/cgi-bin/public.cgi" method="post" name="loginform">
   <div class="login">
           <div class="login-content">
-
-            <div class="login-header">
-              <h2>Sign in to fILL</h2>
-            </div>
-
+                    <div class="login-header">
+            <h2>Sign in to fILL</h2>
+          </div>
             <fieldset name="login">
-                    <label for="authen_username">User Name
-                    <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"></label><br>
+                    <label for="authen_username">User Name</label>
+                    <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
                     <label for="authen_password">Password</label>
                     <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
             </fieldset>
-
             <fieldset>
                     <input type="submit" class="button-left" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
                     <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
-            </fieldset>
 
+            </fieldset>
           </div>
-          
           <div class="login-footer">
             <p>Not a user?
               <a href="?rm=registration_form">Sign up for an account!</a>
@@ -42,7 +38,6 @@ $('document').ready(function(){
             <p>If you cannot remember your user name or password, please contact your local public library.</p>
           </div>
   </div><!--div class login-->
-
       <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
       <input type="hidden" value="authen_login" name="rm">
 </form>
