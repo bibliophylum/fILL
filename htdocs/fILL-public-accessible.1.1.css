@@ -218,14 +218,9 @@ nav li a:active {
   	padding: ; 
 }
 
-#aside-img-welcome img {
-	margin: 0;
-  	padding: 0; 
-}
 
 #aside-img-right
 {
-	
 	float: right;
 	width: 27%;
 	min-width: 200px;
@@ -252,7 +247,7 @@ nav li a:active {
 .tone-box 
 {
 	background: #f3f3f3;
-	border: 1px solid  #c9c9c9;  
+	border-bottom: 3px solid  #c9c9c9;  
 }
 
 .welcome-box {
