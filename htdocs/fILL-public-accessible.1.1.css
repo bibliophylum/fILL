@@ -52,7 +52,6 @@ h3 {
 	text-transform: capitalize;
 }
 
-
 #container
 {
 	margin: auto;
@@ -367,7 +366,7 @@ button {
 #fill-table {
   	border-collapse: collapse;
   	width: 70%;
-  	margin: auto;
+  	float: left;
 	background: #f0ead3;
 	border: 2px solid #505050;
 	color: #505050;
@@ -376,6 +375,11 @@ button {
 
 #fill-table td {
 	padding: 1em;
+}
+
+#fill-table {
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
 #fill-table td, #fill-table th {
