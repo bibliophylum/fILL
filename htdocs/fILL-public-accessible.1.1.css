@@ -400,6 +400,7 @@ button {
 /*------------login styles---------------------------------*/
 
 .login {
+  display: block;
   width: 50%;
   margin: auto;
   clear: all;
