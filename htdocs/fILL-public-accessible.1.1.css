@@ -401,14 +401,14 @@ button {
 /*------------login styles---------------------------------*/
 
 .login {
-  display: block;
-  clear: all;
   width: 50%;
   margin: auto;
 }
 
 .login-content {
-
+  display: block;
+  clear: all;
+  margin-top: 20px;
   border: 2px solid #505050;
   background-color: #f3f3f3;
   font-size: 1em;
