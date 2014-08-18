@@ -428,6 +428,8 @@ button {
   color: #fff;
   font-size: 2em;
   padding: 1em;
+  line-height: 2em;
+  height: 2em;
 }
 
 .login-footer {
