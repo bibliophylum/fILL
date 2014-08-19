@@ -499,13 +499,13 @@ div.login input {
 	padding: .8em;
 }
 /*------------------------------------------------------*/
-.details {
+.record .details {
     border: 1px solid #000000;
     border-radius: 10px;
     padding: 1em;
 }
 
-.secondary_info {
+table .secondary_info {
     display: none;
 	background-color: #ffffba;
 	font-size: .7em;
