@@ -416,7 +416,7 @@ button {
 .login-content {
   display: block;
   clear: all;
-  margin-top: 30px;
+  margin-top: 40px;
   border: 2px solid #505050;
   background-color: #f3f3f3;
   font-size: 1em;
@@ -435,7 +435,7 @@ button {
 .login-header-title {
   color: #fff;
   font-size: 2em;
-  padding: ;
+  padding: .5em;
 
 }
 
