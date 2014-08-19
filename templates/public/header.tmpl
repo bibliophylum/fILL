@@ -73,15 +73,21 @@
     </ul>
   </nav>
 
-  <div id="search-container">
-    <!--***************ARIA MARKER 'SEARCH'***************-->
-    <div id="search" role="search">
-	<input id="query" type="text" placeholder="Search" name="query" size="50px">
-	<input id="rm" type="hidden" name="rm" value="search_form">
-	<input id="button" type="submit" value="Go" class="">
-      </form>
-    </div>
-  </div> <!-- search-container -->
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+
+  <div id="search" role="search">
+        <form id="searchForm" name="search">
+          <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+          <input id="button" type="submit" value="Go" class="">
+        </form>
+  </div>
+
+</div> <!-- search-container -->
+
+
+
+
 
 </div><!--container div-->
 <!-- Begin content -->
