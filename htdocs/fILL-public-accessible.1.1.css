@@ -298,6 +298,7 @@ footer
 
 button {
 	font-size: 1em;
+	margin: .5em;
 }
 .button-left {
 	float: left;
