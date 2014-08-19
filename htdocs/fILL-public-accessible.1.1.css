@@ -510,18 +510,32 @@ div.login input {
 	border:1px solid #000000;
 	padding: .8em;
 }
-/*------------------------------------------------------*/
-#main .details #detTable {
+/*-------SEARCH RESULTS STYLES-----------------*/
+
+#results {
+	background-color: red;
+	padding: 0;
+	margin: 0;
+}
+
+#detTable {
     border: 1px solid #000000;
     border-radius: 10px;
     padding: 1em;
+    margin: 0;
 }
-
-#main .details table.secondary_info {
+.details {
+	background-color: green;
+	padding: 0;
+	margin: 0;
+}
+.secondary_info {
     display: none;
 	background-color: #ffffba;
 	font-size: .7em;
 	color: #505050;
+	padding-right: 0;
+	margin: 0;
 }
 
 /*------------------------------------------------------*/
