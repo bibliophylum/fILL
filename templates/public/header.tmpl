@@ -54,10 +54,11 @@
 <body class="example_alt_pagination">
 
 <div id="container">
-  <!--ARIA MARKER 'BANNER'-->
+<!--header template from public folder-->
+  <!--***************ARIA MARKER 'BANNER'***************-->
   <header role="banner">
-    <img src="/img/fill-logo.png" class="fill-logo" alt="fill"> <p class="fill-tagline">connecting libraries. serving patrons.</p>
-    <a href="?authen_logout=1"><button class="butlink">log out</button></a>
+        <a href="?authen_logout=1"><button class="button-right">log out</button></a>
+        <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries. serving patrons.</p>
   </header>
   
   <!--***************ARIA MARKER 'NAVIGATION'***************-->
@@ -67,6 +68,7 @@
       <li><a href="/cgi-bin/public.cgi?rm=myaccount_form">my account</a></li>
       <li><a href="/cgi-bin/public.cgi?rm=current_form">current borrowing</a></li>
       <li><a href="/cgi-bin/public.cgi?rm=about_form">help</a></li>
+      <li><a href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
       <li><a href="/cgi-bin/public.cgi?rm=contact_form">contact</a></li>
     </ul>
   </nav>
@@ -74,23 +76,12 @@
   <div id="search-container">
     <!--***************ARIA MARKER 'SEARCH'***************-->
     <div id="search" role="search">
-      <form action="/cgi-bin/public.cgi" method="post" name="search">
-	<h2>search manitoba libraries:</h2>
-	<input id="query" type="text" name="query" size="50px">
+	<input id="query" type="text" placeholder="Search" name="query" size="50px">
 	<input id="rm" type="hidden" name="rm" value="search_form">
-	<input id="button" type="submit" value="search" class="butlink">
+	<input id="button" type="submit" value="Go" class="">
       </form>
     </div>
   </div> <!-- search-container -->
 
-  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-  <div id="aside" class="aside" role="complimentary">
-    <div id="stat"></div>
-    <div id="leftcontent"></div>
-    <div id="termlist"></div>
-  </div>
-
-
-    <main class="main" id="main" role="main">
-
+</div><!--container div-->
 <!-- Begin content -->

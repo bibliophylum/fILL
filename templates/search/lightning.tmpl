@@ -83,7 +83,8 @@ $('document').ready(function(){
   </div>
 
 <!-- from header.tmpl -->
-<DIV id="header">
+<TMPL_INCLUDE NAME="header.tmpl">
+<!--<DIV id="header">
   <div id="logo">
     <img src="/img/fILL.png">
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
@@ -95,7 +96,7 @@ $('document').ready(function(){
       <input id="button" type="submit" value="Search"/>
       <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
     </form>
-  </div>
+  </div>-->
 
   <div id="header_quick_access">
     <ul>
@@ -178,7 +179,7 @@ $('document').ready(function(){
   </div>
  
   <div id="recordview">
-   <table width="100%" border="0" cellpadding="6" cellspacing="0">
+   <table class="fill-table" width="100%" border="0" cellpadding="6" cellspacing="0">
     <tr>
      <td width="250" valign="top">
        <div id="stat"></div>

@@ -72,59 +72,67 @@ $('document').ready(function(){
 
 </script>
 
+<div id="container">
+  <div id="main">
 
-<div id="main">
+      <div id="waitDiv">
+        Loading... <img src="/wait.gif">
+      </div>
 
-  <div id="waitDiv">
-    Loading... <img src="/wait.gif">
-  </div>
+      <div id="region">
+      </div>
+    <p> </p>
 
-  <div id="region">
-  </div>
-  <p> </p>
+      <div id="libraries" style="display:none; clear:both;">
+      </div>
+    <p> </p>
 
-  <div id="libraries" style="display:none; clear:both;">
-  </div>
-  <p> </p>
+    <div id="registration" style="display:none; clear:both; border: 1px solid #000">
+      <br/>
+      <h2>Registration form</h2>
+      <form id="registration_form" action="/cgi-bin/register-patron.cgi" method="POST">
 
-  <div id="registration" style="display:none; clear:both; border: 1px solid #000">
+        <table id="fill-table">
+        	<tr>
+        	  <th>Home library</th>
+        	  <td><p id="home_library"></p></td>
+        	</tr>
+          <tr>
+        	  <th>Your name</th>
+        	  <td><input type="text" id="patron_name" name="patron_name"></td>
+        	</tr>
+          <tr>
+        	  <th>Library card number</th>
+        	  <td><input type="text" id="barcode" name="patron_card"></td>
+        	</tr>
+          <tr>
+        	  <th>Email address</th>
+        	  <td><input type="text" id="email_address" name="patron_email"></td>
+        	</tr>
+          <tr>
+        	  <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
+        	</tr>
+          <tr>
+        	  <th>Username</th>
+        	  <td><input type="text" id="username" name="patron_username" size=30 maxlength=50></td>
+        	  <td><p id="username_message"></p></td>
+        	</tr>
+          <tr>
+        	  <th>Password</th>
+        	  <td><input type="text" id="password" name="patron_password" size=30 maxlength=50></td>
+        	</tr>
+        </table>
+
+        <input id="home_library_town" type="hidden">
+        <input id="submitRegistration" type="submit" value="Submit" class="butlink">
+      </form>
+    </div>
     <br/>
-    <h2>Registration form</h2>
-    <form id="registration_form" action="/cgi-bin/register-patron.cgi" method="POST">
-      <table>
-	<tr>
-	  <td>Home library</td>
-	  <td><p id="home_library"></p></td>
-	</tr><tr>
-	  <td>Your name</td>
-	  <td><input type="text" id="patron_name" name="patron_name"></td>
-	</tr><tr>
-	  <td>Library card number</td>
-	  <td><input type="text" id="barcode" name="patron_card"></td>
-	</tr><tr>
-	  <td>Email address</td>
-	  <td><input type="text" id="email_address" name="patron_email"></td>
-	</tr><tr>
-	  <td colspan="2">You also need to choose a username and password for this system:</td>
-	</tr><tr>
-	  <td>Username</td>
-	  <td><input type="text" id="username" name="patron_username" size=30 maxlength=50></td>
-	  <td><p id="username_message"></p></td>
-	</tr><tr>
-	  <td>Password</td>
-	  <td><input type="text" id="password" name="patron_password" size=30 maxlength=50></td>
-	</tr>
-      </table>
-      <input id="home_library_town" type="hidden">
-      <input id="submitRegistration" type="submit" value="Submit" class="butlink">
-    </form>
-  </div>
-  <br/>
 
-  <div id="complete" style="display:none; clear:both;">
-  </div>
-  <p> </p>
+    <div id="complete" style="display:none; clear:both;">
+    </div>
+    <p> </p>
 
-</div>
-
+  </div><!-- div id main -->
+</div><!-- div id container -->
 <TMPL_INCLUDE NAME="footer_public.tmpl">

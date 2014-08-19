@@ -61,23 +61,27 @@ $('document').ready(function(){
 });
 
 </script>
+<style type="text/css">
 
+/*#aside, #stat, #leftcontent, #termlist, .aside {
+    display: none;!important
+}*/
 
-<div id="main">
-  <div id="myDiv">
+</style>
+
+<div id="container">
     <h3>My Account</h3>
-    <table id="myaccount" width="100%">
-      <tr><td>Name</td><td><TMPL_VAR name="name"></td></tr>
-      <tr><td>fILL username</td><td><TMPL_VAR name="username"></td></tr>
-      <tr><td>Home library</td><td><TMPL_VAR name="library"></td></tr>
-      <tr><td>Account status</td><td><TMPL_VAR name="is_enabled"></td></tr>
-      <tr><td>fILL Patron ID#</td><td id="pid"><TMPL_VAR name="pid"></td></tr>
+    <table id="fill-table">
+      <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
+      <tr><th scope="row">fILL username</th><td><TMPL_VAR name="username"></td></tr>
+      <tr><th scope="row">Home library</th><td><TMPL_VAR name="library"></td></tr>
+      <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
+      <tr><th scope="row">fILL Patron ID#</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
     </table>
-  </div>
   
-  <a id="showChangePassButton" class="butlink" href="javascript:void(0)" onclick="toggleChangePassDiv()">Change password</a>
+  <a id="showChangePassButton" class="button-left" href="javascript:void(0)" onclick="toggleChangePassDiv()">Change password</a>
 
-  <div id="divChangePass" style="display:none; border:1px solid #000000;">
+  <div id="divChangePass">
     <form id="changePassword_form" name="changePassword" action="" method="post">
       <table>
 	<tr>
@@ -98,7 +102,6 @@ $('document').ready(function(){
       <input id="cancel" type="button" value="Cancel" class="butlink">
     </form>
   </div>
-
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

@@ -80,9 +80,39 @@ $('document').ready(function(){
 </head>
 <body class="example_alt_pagination">
 
+<!--**************ARIA MARKER 'BANNER'**************-->
+  <header role="banner">
+      <div class="fill-info"><button class="button-right" href="#">log out</button><p>User: awoodward</p><p>Western Manitoba Regional Library - Brandon</p></div>
+      <div><img class="fill-logo" alt="fILL" src="images/fill05.png"><!--<h1><span class="fill">f</span>ILL</h1>--></div>
+      <div class="fill-tagline"><p class="fill-tagline">connecting libraries.<wbr> serving patrons.</p></div>
+      
+  </header>
+  <div id="header_quick_access">
+    <ul>
+      <li><a href="?rm=welcome">Home</a></li>
+      <li><TMPL_VAR NAME="username"> </li>
+      <li><a href="?authen_logout=1">Log out</a></li>
+    </ul>
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
+  </div>
+</DIV>
+
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation">
+    <ul class="nav inline-items">
+      <li><a href="#">home</a></li>
+      <li><a href="#">my account</a></li>
+      <li><a href="#">current borrowing</a></li>
+      <li><a href="#">help</a></li>
+      <li><a href="#">contact</a></li>
+    </ul>
+  </nav>
+
+<!--old code-->
 <DIV id="header">
   <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l free open source software interlibrary loan management system">
+    <img src="/img/fILL-logo.png" class="fill-logo" alt="f i l l free open source software interlibrary loan management system">
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
   <div id="header_quick_access">

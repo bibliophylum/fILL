@@ -84,6 +84,7 @@ sub setup {
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
+	'faq_form'				   => 'faq_process',
 	'contact_form'             => 'contact_process',
 	);
 }
@@ -173,6 +174,26 @@ sub about_process {
 
     my $template = $self->load_tmpl('public/about.tmpl');	
     $template->param( pagetitle => "About fILL",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+#		      pid => $pid
+	);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub faq_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('public/faq.tmpl');	
+    $template->param( pagetitle => "FAQ fILL",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,

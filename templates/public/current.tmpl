@@ -102,29 +102,28 @@ $('document').ready(function(){
 
 </script>
 
+<div id="container">
 
-<div id="main">
-  <div id="middlecontent">
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
-
-    <div id="mylistDiv">
-      <h4>Current borrowing</h4>
-      <div class="dataTable_wrapper">
-	<table id="datatable_borrowing" class="display">
-	  <thead>
-	    <tr>
-	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Status Updated</th><th> </th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  </tbody>
-	</table>
+    <div id="middlecontent">
+      <div id="waitDiv">
+        Loading... <img src="/wait.gif">
       </div>
+
+      <div id="mylistDiv">
+        <h4>Current borrowing</h4>
+      <div class="dataTable_wrapper">
+
+      	<table id="datatable_borrowing" class="display">
+      	  <thead>
+      	    <tr>
+      	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Status Updated</th><th> </th>
+      	    </tr>
+      	  </thead>
+      	  <tbody>
+      	  </tbody>
+      	</table>
     </div>
-    
-  </div>
+
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
