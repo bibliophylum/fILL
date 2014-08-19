@@ -106,7 +106,7 @@ nav li a
 	text-decoration: none;
 	text-transform: uppercase;
 	border-right: 10px solid #fff;
-	border-top: #fff solid 5px;
+	
 }
 
 /* Navigation link states */
@@ -251,7 +251,7 @@ nav li a:active {
 }
 
 .lighter-box {
-	opacity: 0.5;
+	
 }
 
 .welcome-box {
