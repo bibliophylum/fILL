@@ -430,7 +430,7 @@ function coverImage(lccn,isbn) {
 }
 
 function primaryDetails(data) {
-    var primary = '<table class="primary_info">';
+    var primary = '<table class="primary_info" style="border: 1px solid #505050; border-radius: 10px; padding: 1em;">';
 
     var title;
     if (data["md-title"] != undefined) {
