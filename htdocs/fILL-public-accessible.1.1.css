@@ -519,7 +519,7 @@ div.login input {
     margin: 0;
 }
 
-table.secondary_info {
+.secondary_info {
     display: none;
 	background-color: #ffffba;
 	font-size: .7em;
