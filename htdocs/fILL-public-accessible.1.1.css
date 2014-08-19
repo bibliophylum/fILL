@@ -101,8 +101,8 @@ nav li a
 {
 	margin-right: 10px;
 	-moz-border-radius: 0px;
-	-webkit-border-radius: 3px 3px 0px 0px;
-	border-radius: 3px 3px 0px 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px 0px 0px;
 	display: block;
 	float: left;
 	padding: 5px 10px;
