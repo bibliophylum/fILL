@@ -84,25 +84,27 @@
     </ul>
   </nav>
 
-  <div id="search-container">
-    <!--***************ARIA MARKER 'SEARCH'***************-->
-    <div id="search" role="search">
-      <form id="searchForm" name="search">
-	<input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
-	<input id="button" type="submit" value="Go" class="">
-      </form>
-    </div>
-  </div> <!-- search-container -->
 
-  <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-  <div id="aside" class="tone-box" role="complimentary">
-    <div id="image"></div>
-    <div id="stat"></div>
-    <div id="leftcontent"></div>
-    <div id="termlist"></div>
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
+    <form id="searchForm" name="search">
+      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="button" type="submit" value="Go" class="">
+    </form>
   </div>
+</div> <!-- search-container -->
 
-  <main id="main" class="tone-box" role="main">
+<!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+<div id="aside" class="tone-box" role="complimentary">
+  <div id="image"></div>
+  <div id="stat"></div>
+  <div id="leftcontent"></div>
+  <div id="termlist"></div>
+</div>
+
+<!--***************ARIA MARKER 'MAIN'***************-->
+<main id="main" class="tone-box" role="main">
 
 <!-- Begin content -->
 
