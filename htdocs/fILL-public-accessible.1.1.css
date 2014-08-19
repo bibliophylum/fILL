@@ -49,7 +49,7 @@ h3 {
 	
 	color: #486660;
 	font-size: 1em;
-	text-transform: capitalize;
+	text-transform: ;
 }
 
 #container
@@ -423,7 +423,6 @@ button {
 
 .login p {
   padding: .8em;
-
 }
 
 .login-header {
@@ -499,23 +498,19 @@ div.login input {
 	padding: .8em;
 }
 /*------------------------------------------------------*/
-.record .details {
+#main #results .details {
     border: 1px solid #000000;
     border-radius: 10px;
     padding: 1em;
 }
 
-table .secondary_info {
+table.secondary_info {
     display: none;
 	background-color: #ffffba;
 	font-size: .7em;
 	color: #505050;
 }
 
-.login {
-	display: block;
-	margin: auto;
-}
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
 #progress_empty {
