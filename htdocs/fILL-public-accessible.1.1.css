@@ -250,6 +250,10 @@ nav li a:active {
 	border-bottom: 3px solid  #c9c9c9;  
 }
 
+.lighter-box {
+	opacity: 0.5;
+}
+
 .welcome-box {
 	font-size: 1em;
 	border: 0px;
