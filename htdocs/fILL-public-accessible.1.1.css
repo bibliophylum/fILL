@@ -504,7 +504,7 @@ div.login input {
 }
 
 #main.tone-box .details table.secondary_info {
-    display: ;
+    display: none;
 	background-color: #ffffba;
 	font-size: .7em;
 	color: #505050;
