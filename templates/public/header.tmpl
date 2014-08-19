@@ -55,39 +55,33 @@
 
 <div id="container">
 <!--header template from public folder-->
-  <!--***************ARIA MARKER 'BANNER'***************-->
-  <header role="banner">
-        <a href="?authen_logout=1"><button class="button-right">log out</button></a>
-        <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries. serving patrons.</p>
-  </header>
+<!--***************ARIA MARKER 'BANNER'***************-->
+<header role="banner">
+  <a href="?authen_logout=1"><button class="button-right">log out</button></a>
+  <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries. serving patrons.</p>
+</header>
   
-  <!--***************ARIA MARKER 'NAVIGATION'***************-->
-  <nav role="navigation">
-    <ul class="nav inline-items">
-      <li><a href="/cgi-bin/public.cgi?rm=search_form">home</a></li>
-      <li><a href="/cgi-bin/public.cgi?rm=myaccount_form">my account</a></li>
-      <li><a href="/cgi-bin/public.cgi?rm=current_form">current borrowing</a></li>
-      <li><a href="/cgi-bin/public.cgi?rm=about_form">help</a></li>
-      <li><a href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
-      <li><a href="/cgi-bin/public.cgi?rm=contact_form">contact</a></li>
-    </ul>
-  </nav>
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+<nav role="navigation">
+  <ul class="nav inline-items">
+    <li><a href="/cgi-bin/public.cgi?rm=search_form">home</a></li>
+    <li><a href="/cgi-bin/public.cgi?rm=myaccount_form">my account</a></li>
+    <li><a href="/cgi-bin/public.cgi?rm=current_form">current borrowing</a></li>
+    <li><a href="/cgi-bin/public.cgi?rm=about_form">help</a></li>
+    <li><a href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
+    <li><a href="/cgi-bin/public.cgi?rm=contact_form">contact</a></li>
+  </ul>
+</nav>
 
 <!--***************ARIA MARKER 'SEARCH'***************-->
 <div id="search-container">
-
   <div id="search" role="search">
-        <form id="searchForm" name="search">
-          <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
-          <input id="button" type="submit" value="Go" class="">
-        </form>
+    <form id="searchForm" name="search">
+      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="button" type="submit" value="Go" class="">
+    </form>
   </div>
-
 </div> <!-- search-container -->
-
-
-
-
 
 </div><!--container div-->
 <!-- Begin content -->
