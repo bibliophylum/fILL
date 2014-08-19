@@ -498,14 +498,14 @@ div.login input {
 	padding: .8em;
 }
 /*------------------------------------------------------*/
-#main #results .details {
+.details #detTable {
     border: 1px solid #000000;
     border-radius: 10px;
     padding: 1em;
 }
 
-table.secondary_info {
-    display: none;
+.details table.secondary_info {
+    display: ;
 	background-color: #ffffba;
 	font-size: .7em;
 	color: #505050;
