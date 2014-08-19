@@ -309,6 +309,9 @@ button {
 .button-left {
 	float: left;
 	margin-right: 1em;
+	font-size: 1.2em;
+	margin: .5em;
+	padding: .3em;
 }
 
 .tone-box.button-left {
@@ -319,6 +322,9 @@ button {
 .button-right {
 	float: right;
 	margin-left: 1em; 
+    font-size: 1.2em;
+	margin: .5em;
+	padding: .3em;
 
 }
 .fill {
