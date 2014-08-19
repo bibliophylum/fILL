@@ -71,7 +71,7 @@ function my_onshow(data) {
 	    $recDiv.append( $('<span>' + hit["md-title-remainder"] + ' </span>') );
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-	    $recDiv.append( $('<span><i>'+hit["md-title-responsibility"]+'</i></span>') );
+	    $recDiv.append( $('<span>'+hit["md-title-responsibility"]+'</span>') );
       	}
 
         if (hit.recid == curDetRecId) {
@@ -441,7 +441,7 @@ function primaryDetails(data) {
 	    primary += ' : <span>' + data["md-title-remainder"] + ' </span>';
 	}
   	if (data["md-title-responsibility"] !== undefined) {
-	    primary += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
+	    primary += ' <span>'+ data["md-title-responsibility"] +'</span>';
   	}
  	primary += '</td></tr>';
     }
