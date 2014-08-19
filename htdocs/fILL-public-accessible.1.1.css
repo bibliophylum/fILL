@@ -46,6 +46,7 @@ h2 {
 }
 
 h3 {
+	
 	color: #486660;
 	font-size: 1em;
 	text-transform: ;
@@ -81,7 +82,7 @@ nav
 	margin-bottom: .5em;
 	min-width: 480px;
 	font-size: 1.4em;
-	border-bottom: #000 solid 5px;
+	border-bottom: #06a0ca solid 5px;
 }
 
 nav ul
