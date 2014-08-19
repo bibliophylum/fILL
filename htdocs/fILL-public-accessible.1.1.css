@@ -274,6 +274,7 @@ footer
 	clear: both;
 	display: block;
 	width: 100%;
+	border-bottom: 5px solid #aabdba;
 	background: #d9efec;
 	text-align: center;
 	padding: .5em;
