@@ -151,7 +151,7 @@ nav li a:active {
   	text-align: center;
 	display: block;
   	padding: 1.25em; 
-  	border-bottom: 1px dashed #505050;
+  	border-bottom: 1px solid #f8f8f8;
 }
 
 #main-container {	
