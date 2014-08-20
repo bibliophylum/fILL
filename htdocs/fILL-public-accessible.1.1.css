@@ -512,14 +512,15 @@ div.login input {
 }
 /*-------SEARCH RESULTS STYLES-----------------*/
 
+.details {
+	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: #f8f8f8; margin-left: 5px;
+}
 
 .secondary_info {
-/*styles moved to fill_client-public.js*/
+	display: none; width: 100%; background-color: #f5f5f5; font-size: .8em; color: #505050;"
 }
 
-.primary_info {
-	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: red; margin: 0px;
-}
+
 
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
