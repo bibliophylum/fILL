@@ -77,8 +77,11 @@
 <!--***************ARIA MARKER 'SEARCH'***************-->
 <div id="search-container">
   <div id="search" role="search">
-    <form id="searchForm" name="search">
-      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+    <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
+      <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
+	search_process to feed the *real* search page -->
+      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="rm" type="hidden" name="rm" value="search_form">
       <input id="button" type="submit" value="Go" class="">
     </form>
   </div>

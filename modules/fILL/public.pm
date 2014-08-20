@@ -96,6 +96,8 @@ sub search_process {
     my $self = shift;
     my $q = $self->query;
 
+    # pull the form's parameter named "query", so we can stuff it into the search template
+    # (so the search page can automatically do the search)
     my $query = $q->param("query") || '';
     $self->log->debug( "search_process parm:\n" . Dumper($query) );
 
