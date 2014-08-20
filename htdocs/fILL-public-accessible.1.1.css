@@ -332,6 +332,7 @@ button {
 .fill-logo {
 	display: inline;
 	width: 200px;
+	border: 0px;
 }
 
 .fill-tagline 
@@ -413,6 +414,7 @@ button {
 {
 	display: block;
 	margin: auto;
+	border: 0px;
 }
 /*------------login styles---------------------------------*/
 
