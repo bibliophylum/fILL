@@ -305,9 +305,9 @@ button {
 }
 .button-left {
 	float: left;
-	margin-right: 1em;
+	clear: right;
 	font-size: 1.2em;
-	margin: .5em;
+	margin: 1em;
 	padding: .3em;
 }
 
@@ -318,9 +318,8 @@ button {
 
 .button-right {
 	float: right;
-	margin-left: 1em; 
     font-size: 1.2em;
-	margin: .5em;
+	margin: 1em;
 	padding: .3em;
 
 }
@@ -513,8 +512,10 @@ div.login input {
 /*-------SEARCH RESULTS STYLES-----------------*/
 
 .primary_info {
+	width: 100%;
 	margin: 1em;
 	background-color: #f5f5f5;
+	padding: .7em;
 }
 
 .details {
