@@ -512,8 +512,12 @@ div.login input {
 }
 /*-------SEARCH RESULTS STYLES-----------------*/
 
+.primary {
+	margin: 1em;
+}
+
 .details {
-	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: #f8f8f8; margin: 5px;
+	border: 1px solid #fff; border-radius: 10px; padding: 1em; background-color: #fff; margin: 5px;
 }
 
 .secondary_info {
