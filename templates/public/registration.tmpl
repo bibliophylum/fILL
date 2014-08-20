@@ -73,7 +73,11 @@ $('document').ready(function(){
 </script>
 
 <div id="container">
-  <div id="main">
+  <div id="aside-img-left">
+    <img src="/img/registration.jpg" alt="A fit man in white polo shirt standing on subway platform looking at a tablet with red headphones in">
+  </div>
+
+  <div id="main-info-right" class="tone-box">
 
       <div id="waitDiv">
         Loading... <img src="/wait.gif">
@@ -87,7 +91,7 @@ $('document').ready(function(){
       </div>
     <p> </p>
 
-    <div id="registration" style="display:none; clear:both; border: 1px solid #000">
+    <div id="registration" style="display:none; clear:both;">
       <br/>
       <h2>Registration form</h2>
       <form id="registration_form" action="/cgi-bin/register-patron.cgi" method="POST">

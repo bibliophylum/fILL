@@ -465,7 +465,7 @@ function primaryDetails(data) {
 }
 
 function secondaryDetails(data) {
-    var secondary = '<table class="secondary_info" style="display: none; width: 100%; background-color: #f5f5f5; font-size: .7em; color: #505050;">';  // start new table for location info
+    var secondary = '<table class="secondary_info">';  // start new table for location info
 
     var len=data["location"].length;
     for (var i=0; i<len; i++) {
