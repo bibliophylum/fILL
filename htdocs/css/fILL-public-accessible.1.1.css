@@ -305,6 +305,7 @@ button {
 }
 .button-left {
 	float: left;
+	clear: right;
 	margin-right: 1em;
 	font-size: 1.2em;
 	margin: .5em;
