@@ -312,6 +312,17 @@ button {
 	padding-top: 20px;
 }
 
+.fill-button
+{
+	float: left;
+	clear: right;
+	font-size: 1.2em;
+	margin: 1em;
+	padding: .3em 1em;
+	color: red;/*dev purposes, remove later*/
+}
+
+}
 .tone-box.button-left {
 	float: left;
 	margin-right: 1em;
