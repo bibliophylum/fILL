@@ -514,10 +514,11 @@ div.login input {
 
 .primary {
 	margin: 1em;
+	background-color: #f5f5f5;
 }
 
 .details {
-	border: 1px solid #fff; border-radius: 10px; padding: 1em; background-color: #fff; margin: 5px;
+	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: #fff; margin: 5px;
 }
 
 .secondary_info {
