@@ -513,6 +513,9 @@ div.login input {
 }
 /*-------SEARCH RESULTS STYLES-----------------*/
 
+.primary {
+	margin-left: 1em;
+}
 
 .secondary_info {
 /*styles moved to fill_client-public.js*/
