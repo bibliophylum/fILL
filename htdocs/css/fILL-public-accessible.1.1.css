@@ -506,6 +506,7 @@ div.login input {
 }
 
 #divChangePass { 
+	display: none;
 	padding: .8em;
   	width: 70%;
   	margin: 1em;
