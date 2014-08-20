@@ -33,8 +33,7 @@
 
 img 
 {
-	height: auto;
-	max-width: 100%;
+
 }
 
 h2 {
@@ -522,7 +521,7 @@ div.login input {
 }
 
 .primary_info {
-	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: red;
+	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: red; margin: 0px;
 }
 
 /*------------------------------------------------------*/
