@@ -171,7 +171,7 @@ nav li a:active {
 	width: 18%;
 	margin-bottom: 1.5em;
 	display: inline;
-  	padding: 1.25em; 
+  	padding: 0px; 
   	border: 1px dashed red;
 }
 
@@ -226,14 +226,13 @@ nav li a:active {
 	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
-  	padding: 1.25em; 
+  	padding: 0px; 
   	font-size: 1.2em;
   	border: 1px dashed red;
 }
 
 #aside-img-left
 {
-	
 	float: left;
 	width: 27%;
 	min-width: 200px;
