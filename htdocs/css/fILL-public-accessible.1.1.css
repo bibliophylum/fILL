@@ -513,9 +513,10 @@ div.login input {
 /*-------SEARCH RESULTS STYLES-----------------*/
 
 .primary_info {
+	width: 100%;
 	margin: 1em;
 	background-color: #f5f5f5;
-	padding: .5em;
+	padding: .7em;
 }
 
 .details {
