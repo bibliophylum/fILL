@@ -517,10 +517,6 @@ div.login input {
 /*styles moved to fill_client-public.js*/
 }
 
-.record .details {
-	border: 1px solid #505050; border-radius: 10px; padding: 1em;
-}
-
 .primary_info {
 	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: red; margin: 0px;
 }
