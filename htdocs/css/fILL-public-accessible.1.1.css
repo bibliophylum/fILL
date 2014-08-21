@@ -35,7 +35,6 @@ img
 {
 	height: auto;
 	max-width: 100%;
-	border-bottom: 3px solid #505050;
 }
 
 h2 {
@@ -151,7 +150,7 @@ nav li a:active {
   	text-align: center;
 	display: block;
   	padding: 1.25em; 
-  	border-bottom: 1px solid #f8f8f8;
+  	border-bottom: 1px solid #e0e0e0;
 }
 
 #main-container {	
@@ -323,7 +322,6 @@ button {
 	font-size: 1.2em;
 	margin: 1em;
 	padding: .3em;
-	padding-top: 20px;
 }
 
 #fill-button
