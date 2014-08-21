@@ -1,5 +1,45 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<style type="text/css">
 
+#fill-table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: 1em;
+  background: #f3f3f3;
+  border: 2px solid #505050;
+  color: #505050;
+  padding: .5em;
+}
+
+#fill-table td {
+  padding: 1em;
+}
+
+#fill-table th {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+#fill-table td, #fill-table th {
+  border: 1px solid #fff;
+}
+#fill-table tr:first-child th {
+  border-top: 0;
+}
+#fill-table tr:last-child td {
+  border-bottom: 0;
+}
+#fill-table tr td:first-child,
+#fill-table tr th:first-child {
+  border-left: 0;
+}
+#fill-table tr td:last-child,
+#fill-table tr th:last-child {
+  border-right: 0;
+}
+
+
+</style>
 <div id="container">
 
   <table class="fill-table">
