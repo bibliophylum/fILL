@@ -527,6 +527,12 @@ div.login input {
 	color: #505050;
 	padding: .5em;
 }
+
+.fill-subtext {
+	font-size: .8em;
+	color: #505050;
+}
+
 /*-------SEARCH RESULTS STYLES-----------------*/
 
 .primary_info {
