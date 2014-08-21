@@ -459,7 +459,7 @@ function primaryDetails(data) {
 	    primary += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][0]["md-medium"] + '</font></b></td></tr>';
 	}
     }
-    primary += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
+    primary += '<tr><td><b>Locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     primary += '</table>';
     return primary;
 }
