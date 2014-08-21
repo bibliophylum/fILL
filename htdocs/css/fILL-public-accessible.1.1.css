@@ -289,16 +289,38 @@ footer
 }
 
 #butlink a:visited {
+	padding: .5em;
+	display: inline;
+	border: 1px solid #000;
+	margin-left: 20px;
 	background-color: #183935;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: uppercase;
 }
 
 #butlink a:hover {
+	padding: .5em;
+	display: inline;
+	border: 1px solid #000;
+	margin-left: 20px;
 	background-color: #06a0ca;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: uppercase;
 }
 
 #butlink a:active {
 	background-color: #183935;
 	font-style: bold;
+	padding: .5em;
+	display: inline;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #183935;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: uppercase;
 }
 
 button {
