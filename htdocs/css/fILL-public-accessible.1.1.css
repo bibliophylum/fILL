@@ -312,7 +312,7 @@ button {
 	padding-top: 20px;
 }
 
-.fill-button
+#fill-button
 {
 	font-size: 1.2em;
 	margin: 1em;
@@ -418,12 +418,14 @@ button {
 #fill-table tr th:last-child {
   border-right: 0;
 }
+
 .bison 
 {
 	display: block;
 	margin: auto;
 	border: 0px;
 }
+
 /*------------login styles---------------------------------*/
 
 .login {
@@ -454,7 +456,6 @@ button {
   color: #fff;
   font-size: 2em;
   padding: .5em;
-
 }
 
 .login-footer {
