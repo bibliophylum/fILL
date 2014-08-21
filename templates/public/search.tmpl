@@ -6,7 +6,6 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
-<!--  <link rel="stylesheet" href="/fILL-public.1.0.css"></link> -->
   <link rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"></link>
   <link rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
   <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
@@ -90,6 +89,10 @@
   <div id="search" role="search">
     <form id="searchForm" name="search">
       <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
+	   domReady() function to automatically do the search, if the user had 
+	   filled in the search box from a different page.
+	-->
       <input id="fill-button" type="submit" value="GO">
     </form>
   </div>
