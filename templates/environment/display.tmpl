@@ -1,18 +1,21 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-<table border=1>
-  <tr>
-    <td>ENV variable</td>
-    <td>Value</td>
-  </tr>
+<div id="container">
 
-  <TMPL_LOOP NAME="env_variable_loop">
+  <table class="fill-table" border=1>
     <tr>
-      <td><TMPL_VAR NAME="name"></td>
-      <td><TMPL_VAR NAME="value"></td>
+      <td>ENV variable</td>
+      <td>Value</td>
     </tr>
-  </TMPL_LOOP>
 
-</table>
+    <TMPL_LOOP NAME="env_variable_loop">
+      <tr>
+        <td><TMPL_VAR NAME="name"></td>
+        <td><TMPL_VAR NAME="value"></td>
+      </tr>
+    </TMPL_LOOP>
+
+  </table>
+</container>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
