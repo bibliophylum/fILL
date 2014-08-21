@@ -35,7 +35,6 @@ img
 {
 	height: auto;
 	max-width: 100%;
-	border-bottom: 3px solid #505050;
 }
 
 h2 {
@@ -216,6 +215,7 @@ nav li a:active {
 	margin-top: 1em;
 	display: inline;
   	padding: 0px; 
+  	border-bottom: 3px solid #505050;
 }
 
 
@@ -228,6 +228,7 @@ nav li a:active {
 	display: inline;
   	padding: 0px; 
   	font-size: 1.2em;
+  	border-bottom: 3px solid #505050;
 }
 
 #aside-img-left
@@ -319,7 +320,6 @@ button {
 	padding: .3em 1em;
 }
 
-}
 .tone-box.button-left {
 	float: left;
 	margin-right: 1em;
