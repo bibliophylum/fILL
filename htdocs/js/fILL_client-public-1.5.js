@@ -418,7 +418,7 @@ function renderDetails(data, marker)
 	details += '<table class="primary_info">';
     }
 
-    var requestForm = '<form action="/cgi-bin/public.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
+    var requestForm = '<form action="/cgi-bin/public-original.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     var title;
     if (data["md-title"] != undefined) {
@@ -463,7 +463,7 @@ function renderDetails(data, marker)
 
     details += '<a id="showLocDet" href="javascript:void(0)" onclick="toggleLocationDetails();">Show location details...</a>'
     details += '<a id="hideLocDet" style="display:none" href="javascript:void(0)" onclick="toggleLocationDetails();">Hide location details...</a>'
-    details += '<table class="secondary_info">';  // start new table for location info
+    details += '<table class="secondary_info" style="display:none">';  // start new table for location info
 
 
     for (var i=0; i<len; i++) {

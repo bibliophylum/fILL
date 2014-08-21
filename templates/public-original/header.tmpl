@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title><TMPL_VAR name="pagetitle"></title>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-original.1.0.css">
+<link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-chill/jquery-ui-1.8.16.custom.css"/>
+<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
+
+<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+
+<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/ZeroClipboard.js" charset="utf-8" type="text/javascript"></script>
+<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js" charset="utf-8" type="text/javascript"></script>
+
+<script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
+
+<script type="text/javascript">
+
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+</script>
+
+<!-- Google analytics -->
+<!--
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21021258-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+-->
+</head>
+<body class="example_alt_pagination">
+
+<DIV id="header">
+  <div id="logo">
+    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
+    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
+  </div>
+  <div id="header_quick_access">
+    <ul>
+      <li><a href="?rm=welcome">Home</a></li>
+      <li><TMPL_VAR NAME="username"> </li>
+      <li><a href="?authen_logout=1">Log out</a></li>
+    </ul>
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
+  </div>
+</DIV>
+
+<!-- div id="nav1" -->
+<div id="csstabs">
+  <ul>
+    <li id="menu_search">
+      <a href="/cgi-bin/public-original.cgi?rm=search_form">
+      Search and request
+      </a>
+    </li>
+
+    <li id="menu_myaccount">
+      <a href="/cgi-bin/public-original.cgi?rm=myaccount_form">
+      My Account
+      </a>
+    </li>
+
+    <li id="menu_current">
+      <a href="/cgi-bin/public-original.cgi?rm=current_form">
+      Current borrowing
+      </a>
+    </li>
+
+  </ul>
+
+</div>
+
