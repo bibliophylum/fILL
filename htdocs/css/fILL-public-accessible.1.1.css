@@ -277,16 +277,6 @@ footer
 	margin-top: 1em;
 }
 
-
-#butlink {
-	padding: .8em;
-	border: 1px solid #000;
-	margin-left: 20px;
-	background-color: #183935;
-	color: #fff;!important
-	text-transform: uppercase;
-}
-
 #butlink a:link {
 	padding: .5em;
 	display: inline;
