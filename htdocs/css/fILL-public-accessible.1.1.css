@@ -287,7 +287,8 @@ footer
 	color: #fff;!important
 	text-transform: uppercase;
 }
-#butlink a {
+
+#butlink a:link {
 	padding: .5em;
 	display: inline;
 	border: 1px solid #000;
@@ -298,8 +299,17 @@ footer
 	text-transform: uppercase;
 }
 
+#butlink a:visited {
+	background-color: #183935;
+}
+
 #butlink a:hover {
 	background-color: #06a0ca;
+}
+
+#butlink a:active {
+	background-color: #183935;
+	font-style: bold;
 }
 
 button {
