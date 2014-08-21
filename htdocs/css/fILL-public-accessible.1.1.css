@@ -277,17 +277,7 @@ footer
 	margin-top: 1em;
 }
 
-
 #butlink {
-	padding: .8em;
-	border: 1px solid #000;
-	margin-left: 20px;
-	background-color: #183935;
-	color: #fff;!important
-	text-transform: uppercase;
-}
-
-#butlink a:link {
 	padding: .5em;
 	display: inline;
 	border: 1px solid #000;
@@ -298,15 +288,19 @@ footer
 	text-transform: uppercase;
 }
 
-#butlink a:visited {
+#butlink:link {
 	background-color: #183935;
 }
 
-#butlink a:hover {
+#butlink:visited {
+	background-color: #183935;
+}
+
+#butlink:hover {
 	background-color: #06a0ca;
 }
 
-#butlink a:active {
+#butlink:active {
 	background-color: #183935;
 	font-style: bold;
 }
@@ -316,6 +310,7 @@ button {
 	margin: .5em;
 	padding: .3em;
 }
+
 .button-left {
 	float: left;
 	clear: right;
@@ -371,28 +366,8 @@ button {
 	float: right;
 	text-align: right;
 }
+
 /*** FILL #fill-table STYLES **/
-
-
-/*
-#fill-table td {
-	width: 100%;
-	background: #f0ead3;
-	border: 1px solid #fff;
-	color: #505050;
-	padding: .5em;
-	border-collapse: collapse;
-}
-
-#fill-table th {
-	width: auto;
-	background: #f0ead3;
-	border: 1px solid #fff;
-	color: #000;
-	padding: .5em;
-	border-collapse: collapse;
-}
-*/
 
 #fill-table {
   	border-collapse: collapse;

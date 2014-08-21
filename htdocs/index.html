@@ -4,45 +4,36 @@
 <!--<link type="text/css" rel="stylesheet" href="/fILL.1.0.css">-->
 <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
 </head>
-
 <body>
-
 <div id="container">
 <!--header template from index file-->
 <div><br /></div>
-  <div id="aside-img-welcome">
-        <img src='/img/fill-logo.png' style="border:0px;"/>
-        <p class="fill-tagline">connecting libraries, serving patrons.</p>
-  </div>
-
-  <div id="main-info-welcome">
-          <p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
-          <p>There are separate login pages for:</p>
-    	     <a href="/cgi-bin/public-original.cgi" id="butlink" class="button-left">Library Patrons</a>
-    	     <a href="/cgi-bin/public.cgi" id="butlink" class="button-left">BETA: Patrons new look</a>
-    	     <a href="/cgi-bin/lightning.cgi" id="butlink" class="button-left">Library Staff</a>
-  </div>
-  <div class="welcome-box">
-  <p>Fill is being redesigned to make it easier to search for the books you want here in Mantioba.<br />To make this better we, <strong>WANT YOUR FEEDBACK</strong> about our new site.
-  </p>
-  </div>
+<div id="aside-img-welcome">
+<img src='/img/fill-logo.png' style="border:0px;"/>
+<p class="fill-tagline">connecting libraries, serving patrons.</p>
 </div>
-
+<div id="main-info-welcome">
+<p>Welcome to the Manitoba Public Libraries Interlibrary-loan system.</p>
+<p>There are separate login pages for:</p>
+<a href="/cgi-bin/public.cgi" id="butlink" >Library Patrons</a>
+<a href="/cgi-bin/lightning.cgi" id="butlink" >Library Staff</a>
+</div>
+<div class="welcome-box">
+<p>Fill is being redesigned to make it easier to search for the books you want here in Mantioba.<br />To make this better we, <strong>WANT YOUR FEEDBACK</strong> about our new site.
+</p>
+</div>
+</div>
 <!-- End content -->
 <!-- End content -->
 <footer role="contentinfo">
 <div id="nav2">
-  
-    <a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
-
-  <p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
+<a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
+<p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
 </div>
 </footer>
-  <img class="bison" alt="Manitoba Bison Logo" title="Service provided by the Government of Manitoba" src="/img/manitoba.gif">
-
+<img class="bison" alt="Manitoba Bison Logo" title="Service provided by the Government of Manitoba" src="/img/manitoba.gif">
 </body>
 </html>
-
 <!--<TMPL_INCLUDE NAME="footer.tmpl">-->
-
-
+</body>
+</html>
