@@ -277,7 +277,7 @@ footer
 	margin-top: 1em;
 }
 
-#butlink a:link {
+#butlink {
 	padding: .5em;
 	display: inline;
 	border: 1px solid #000;
@@ -288,15 +288,19 @@ footer
 	text-transform: uppercase;
 }
 
-#butlink a:visited {
+#butlink:link {
 	background-color: #183935;
 }
 
-#butlink a:hover {
+#butlink:visited {
+	background-color: #183935;
+}
+
+#butlink:hover {
 	background-color: #06a0ca;
 }
 
-#butlink a:active {
+#butlink:active {
 	background-color: #183935;
 	font-style: bold;
 }
