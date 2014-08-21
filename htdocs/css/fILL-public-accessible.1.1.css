@@ -299,6 +299,10 @@ footer
 	text-transform: uppercase;
 }
 
+#butlink a:hover {
+	background-color: #06a0ca;
+}
+
 button {
 	font-size: 1.2em;
 	margin: .5em;
