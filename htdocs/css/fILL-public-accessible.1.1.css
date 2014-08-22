@@ -200,6 +200,7 @@ nav li a:active {
 	display: block;
 	clear: right;
 	width: 50%;
+	height: auto;
 	font-size: 1.5em;
 	margin-bottom: ;
 	margin-top: 1em;
@@ -211,6 +212,7 @@ nav li a:active {
 #aside-img-welcome {
 	float: left;
 	width: 40%;
+	height: auto;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
 	display: inline;
@@ -258,6 +260,7 @@ nav li a:active {
 	display: block;
 	clear: right;
 	width: 50%;
+	height: auto;
 	margin-bottom: 1em;
 	margin-top: 1em;
   	padding: 1.25em; 
@@ -318,7 +321,7 @@ footer
 }
 
 button {
-	font-size: 1.2em;
+	font-size: 1.4em;
 	margin: .5em;
 	padding: .3em;
 }
@@ -326,14 +329,14 @@ button {
 .button-left {
 	float: left;
 	clear: right;
-	font-size: 1.2em;
+	font-size: 1.4em;
 	margin: 1em;
 	padding: .3em;
 }
 
 #fill-button
 {
-	font-size: 1.2em;
+	font-size: 1.4em;
 	margin: 1em;
 	padding: .3em 1em;
 }
@@ -346,7 +349,7 @@ button {
 
 .button-right {
 	float: right;
-    font-size: 1.2em;
+    font-size: 1.4em;
 	margin: 1em;
 	padding: .3em;
 
