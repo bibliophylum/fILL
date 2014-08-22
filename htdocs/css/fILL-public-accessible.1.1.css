@@ -269,11 +269,11 @@ nav li a:active {
 	width: 170;
 	border: 3px solid #fff;
 	margin-top: 1em;
-	margin: auto;
+	margin: 1em auto 0 auto;
 }
 
 .covers:hover {
-	border: 2px solid #d0d0d0;
+	border: 3px solid #a0a0a0;
 }
 
 footer
