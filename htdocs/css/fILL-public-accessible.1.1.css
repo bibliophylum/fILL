@@ -291,9 +291,8 @@ footer
 
 #butlink {
 	padding: .5em;
-	display: inline;
 	border: 1px solid #000;
-	margin-left: 20px;
+	margin: 10px;
 	background-color: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
