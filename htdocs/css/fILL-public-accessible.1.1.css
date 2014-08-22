@@ -267,7 +267,9 @@ nav li a:active {
 .covers {
 	height: 225;
 	width: 170;
-	border: 2px solid #fff;
+	border: 3px solid #fff;
+	margin-top: 1em;
+	margin: auto;
 }
 
 .covers:hover {
