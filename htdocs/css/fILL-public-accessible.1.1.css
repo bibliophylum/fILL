@@ -298,6 +298,7 @@ footer
 
 #butlink:hover {
 	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
 }
 
 #butlink:active {
