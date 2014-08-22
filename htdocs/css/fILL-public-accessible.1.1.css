@@ -264,6 +264,17 @@ nav li a:active {
 	border: 0px; 
 }
 
+.covers {
+	display: inline;
+	height: 225;
+	width: 170;
+	border: 2px solid #fff;
+}
+
+.covers:hover {
+	border: 2px solid #d0d0d0;
+}
+
 footer
 {
 	clear: both;
