@@ -265,7 +265,6 @@ nav li a:active {
 }
 
 .covers {
-	display: inline;
 	height: 225;
 	width: 170;
 	border: 2px solid #fff;
