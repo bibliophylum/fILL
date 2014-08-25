@@ -557,7 +557,10 @@ div.login input {
 }
 
 .details {
-	border: 1px solid #505050; border-radius: 10px; padding: 1em; background-color: #fff; margin: 5px;
+	border: 1px 0px solid #505050; 
+	padding: 1em; 
+	background-color: #f3f3f3; 
+	margin: 5px;
 }
 
 .secondary_info {
