@@ -268,11 +268,11 @@ nav li a:active {
 }
 
 .covers {
-	height: 225px;
+	height: 215px;
 	width: 170px;
 	border: 3px solid #f3f3f3;
 	margin-top: 1em;
-	margin: 1em .5em 0em .5em;
+	margin: 1em .4em 0em .4em;
 }
 
 .covers:hover {
