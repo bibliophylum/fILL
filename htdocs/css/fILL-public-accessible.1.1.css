@@ -276,8 +276,8 @@ nav li a:active {
 }
 
 .covers:hover {
-	border-bottom: 3px solid #c0c0c0; 
-	border-left: 3px solid #c0c0c0;
+	border: 3px outset #c0c0c0; 
+
 }
 
 footer
