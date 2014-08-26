@@ -292,10 +292,11 @@ footer
 	padding: .5em;
 	font-size: .8em;
 	margin-top: 1em;
+
 }
 
 #footer-container {
-	background-color: #fff;
+	background-color: red;
 }
 
 #butlink {
