@@ -178,6 +178,10 @@ nav li a:active {
   	padding: 1em; 
 }
 
+#aside img {
+	padding: 0em;
+}
+
 #main-info-left
 {
 	float: left;
