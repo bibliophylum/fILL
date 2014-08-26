@@ -111,7 +111,6 @@ nav li a
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
-	text-transform: uppercase;
 }
 
 /* Navigation link states */
@@ -301,7 +300,7 @@ footer
 	background-color: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 
 #butlink:link {
@@ -336,6 +335,13 @@ button {
 	padding: .3em;
 }
 
+.button-right {
+	float: right;
+    font-size: 1.4em;
+	margin: 1em;
+	padding: .3em;
+}
+
 #fill-button
 {
 	font-size: 1.4em;
@@ -349,13 +355,6 @@ button {
 	margin-right: 1em;
 }
 
-.button-right {
-	float: right;
-    font-size: 1.4em;
-	margin: 1em;
-	padding: .3em;
-
-}
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
