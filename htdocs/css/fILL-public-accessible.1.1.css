@@ -430,8 +430,8 @@ button {
 	border: 0px;
 }
 
-.bison-container {
-	background: #fff;
+#bison-container {
+	background-color: #fff;
 }
 
 .note {
