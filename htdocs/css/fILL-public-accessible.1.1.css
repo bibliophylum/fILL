@@ -430,6 +430,10 @@ button {
 	border: 0px;
 }
 
+.bison-container {
+	background: #fff;
+}
+
 .note {
 	font-size: .5em;
 	color: #b3b3b3;
