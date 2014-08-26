@@ -63,11 +63,13 @@ h3 {
 	width: 90%;
 	height: auto;
 	min-width: ;
+	
 }
 
 header
 {
 	display: block;
+	background: #c3c3c3;
 	
 }
 
@@ -167,6 +169,7 @@ nav li a:active {
 	float: right;
 	width: 80%; 
   	padding: 1.25em; 
+  	background: #c3c3c3;
 }
 
 #aside
