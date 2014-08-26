@@ -137,6 +137,11 @@ nav li a:active {
 	color: #fff;
 }
 
+nav li a.current_tab {
+	background: #06a0ca; 
+	color: #fff;
+}
+
 #search-container {
 	width: 100%;
 	display: block;
