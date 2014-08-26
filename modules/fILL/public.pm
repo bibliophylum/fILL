@@ -228,7 +228,7 @@ sub contact_process {
 		      email_address => $hr_lib->{email_address},
 		      mailing_address_line1 => $hr_lib->{mailing_address_line1},
 		      mailing_address_line2 => $hr_lib->{mailing_address_line2},
-		      mailing_address_line3 => $hr_lib->{mailing_address_line3},
+#		      mailing_address_line3 => $hr_lib->{mailing_address_line3},   # redundant; info is in city/province/post_code.  Removed from template.
 		      city => $hr_lib->{city},
 		      province => $hr_lib->{province},
 		      post_code => $hr_lib->{post_code},
