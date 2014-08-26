@@ -558,15 +558,15 @@ div.login input {
 }
 
 .details {
-	border-top: 1px solid #505050; 
-	border-bottom: 1px solid #505050;
+	border-top: 1px solid #b3b3b3; 
+	border-bottom: 1px solid #b3b3b3;
 	padding: 1em; 
 	background-color: #f3f3f3; 
 	margin: 5px;
 }
 
 .secondary_info {
-	display: none; width: 100%; background-color: #f5f5f5; font-size: .8em; color: #505050;"
+	display: none; width: 100%; background-color: #f3f3f3; font-size: .8em; color: #505050;"
 }
 
 #pager {
