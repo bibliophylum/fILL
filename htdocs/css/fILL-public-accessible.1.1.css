@@ -157,6 +157,7 @@ nav li a:active {
 	display: block;
   	padding: 1.25em; 
   	border-bottom: 1px solid #e0e0e0;
+  	background: #e3e3e3;
 }
 
 #main-container {	
@@ -169,7 +170,6 @@ nav li a:active {
 	float: right;
 	width: 80%; 
   	padding: 1.25em; 
-  	background: #c3c3c3;
 }
 
 #aside
