@@ -32,7 +32,7 @@
 }
 
 body {
-	background-color: #d3d3d3;
+	background-color: #f3f3f3;
 }
 
 img 
@@ -542,13 +542,6 @@ div.login input {
 	border: 2px solid #505050;
 	color: #505050;
 	padding: .5em;
-}
-
-.fill-subtext {
-	font-size: .8em;
-	color: #505050;
-	background-color: #f5f5f5;
-	width: 90%;
 }
 
 /*-------SEARCH RESULTS STYLES-----------------*/
