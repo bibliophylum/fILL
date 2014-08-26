@@ -86,10 +86,10 @@ function register_patron() {
 		  if (data.success === 0) {
 		      $("#complete").append("<h3>There was a problem creating your account.</h3><p>Please contact your local library.</p>");
 		  } else {
-		      $("#complete").append("<h3>Your account has been created.</h3><p>Click the 'Log in to fILL' button to begin.</p>");
+		      $("#complete").append("<h3>Your account has been created.</h3>");
 		      $("input").prop('disabled', true);
 		      $("#submitRegistration").hide();
-		      $("#complete").append('<a class="butlink" href="/cgi-bin/public.cgi">Log in to fILL</a>');
+		      $("#complete").append('<button><a href="/cgi-bin/public.cgi">Log in to fILL</a></button>');
 
 		  }
 		  $("#complete").show();
