@@ -68,9 +68,7 @@ h3 {
 
 header
 {
-	display: block;
-	background: #c3c3c3;
-	
+	display: block;	
 }
 
 input {
@@ -554,12 +552,12 @@ div.login input {
 	margin: 1em;
 	background-color: #e3e3e3;
 	padding: .7em;
-	border: 2px solid #fff;
+	border: 2px solid #b3b3b3;
 }
 
 .details {
 	border-top: 1px solid #b3b3b3; 
-	border-bottom: 1px solid #b3b3b3;
+	border-bottom: 1px solid #ffffff;
 	padding: 1em; 
 	background-color: #f3f3f3; 
 	margin: 5px;
