@@ -551,12 +551,19 @@ div.login input {
         margin-bottom: 1em;
 }
 
+#reqeust_form_div {
+        float: left;
+	clear: left;
+}
+
 .primary_info {
 	width: 100%;
 	margin: 1em;
 	background-color: #e3e3e3;
 	padding: .7em;
 	border: 2px solid #b3b3b3;
+	float: left;
+	clear: left;
 }
 
 .details {
