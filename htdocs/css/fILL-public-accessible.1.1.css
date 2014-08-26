@@ -548,12 +548,23 @@ div.login input {
 
 /*-------SEARCH RESULTS STYLES-----------------*/
 
+.record {
+        margin-bottom: 1em;
+}
+
+#reqeust_form_div {
+        float: left;
+	clear: left;
+}
+
 .primary_info {
 	width: 100%;
 	margin: 1em;
 	background-color: #e3e3e3;
 	padding: .7em;
 	border: 2px solid #b3b3b3;
+	float: left;
+	clear: left;
 }
 
 .details {
@@ -565,7 +576,11 @@ div.login input {
 }
 
 .secondary_info {
-	display: none; width: 100%; background-color: #f3f3f3; font-size: .8em; color: #505050;"
+	display: none; 
+	width: 100%; 
+	background-color: #f3f3f3; 
+	font-size: .8em; 
+	color: #505050;
 }
 
 #pager {
