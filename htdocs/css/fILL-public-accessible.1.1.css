@@ -264,8 +264,9 @@ nav li a:active {
 	clear: right;
 	width: 50%;
 	height: auto;
-	margin: 1em;
+	padding: 1em;
 	border: 3px solid #f3f3f3;
+	margin: 1em;
 
 }
 
