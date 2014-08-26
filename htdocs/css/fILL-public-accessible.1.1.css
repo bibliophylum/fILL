@@ -111,6 +111,7 @@ nav li a
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
+	text-transform: capitalize;
 }
 
 /* Navigation link states */
