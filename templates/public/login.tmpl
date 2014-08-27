@@ -12,10 +12,9 @@ $('document').ready(function(){
 });
 
 </script>
-
-<div class="login">
+<div id="container">
 <form action="/cgi-bin/public.cgi" method="post" name="loginform">
-
+  <div class="login">
           <div class="login-content">
                     <div class="login-header">
             <span class="login-header-title">Sign in to fILL</span>
@@ -50,5 +49,5 @@ $('document').ready(function(){
 <script language="JavaScript" type="text/javascript">
   document.loginform.authen_username.focus();
 </script>
-
+</div>
 <TMPL_INCLUDE NAME="footer.tmpl">
