@@ -351,7 +351,7 @@ button {
 	margin: 1em;
 	padding: .3em;
 }
-
+block:
 #fill-button
 {
 	font-size: 1.4em;
@@ -370,8 +370,10 @@ button {
 }
 
 #patron_header_info {
+    display: block;
     float: right;
-    font-size: .7em;
+    text-align: right;
+    font-size: .8em;
     margin: 1em;
     padding: .3em;
 }
