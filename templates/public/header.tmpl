@@ -63,7 +63,7 @@
   </div>
 
   <div id="logout_button_div">
-    <a href="?authen_logout=1"><button class="button-right">log out</button></a>
+    <a href="?authen_logout=1"><button id="fill-button">log out</button></a>
   </div>
 
   <div id="patron_header_info">
@@ -99,7 +99,7 @@
 	search_process to feed the *real* search page -->
       <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
       <input id="rm" type="hidden" name="rm" value="search_form">
-      <input id="button" type="submit" value="Go" class="">
+      <input id="fill-button" type="submit" value="Go">
     </form>
   </div>
 </div> <!-- search-container -->
