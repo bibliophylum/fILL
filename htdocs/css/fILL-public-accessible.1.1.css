@@ -479,6 +479,8 @@ button {
 /*------------login styles---------------------------------*/
 
 .login {
+  display: block;
+  clear: all;
   width: 50%;
   margin: auto;
 }
