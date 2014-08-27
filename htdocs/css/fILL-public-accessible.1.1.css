@@ -230,7 +230,7 @@ nav li a.current_tab {
 	height: auto;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
-	display: inline;
+	display: table-cell;
   	padding: 0px; 
 }
 
