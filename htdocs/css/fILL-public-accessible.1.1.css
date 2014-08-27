@@ -28,11 +28,14 @@
 /*selected link */
  a:active {
 	color: #183935;
-
 }
 
-body {
-	background-color: #f3f3f3;
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f3f3f3;
 }
 
 img 
