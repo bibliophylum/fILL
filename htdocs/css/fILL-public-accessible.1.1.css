@@ -356,7 +356,7 @@ button {
 	padding: .3em;
 }
 
-#fill-button
+button#fill-button
 {
 	font-size: 1.4em;
 	margin: 1em;
@@ -365,7 +365,7 @@ button {
 	background: #e3e3e3;
 }
 
-#fill-button:hover {
+button#fill-button:hover {
 	background: #d3d3d3;
 	color: #383;
 }
