@@ -496,7 +496,7 @@ button {
   clear: all;
   margin-top: 40px;
   border: 2px solid #505050;
-  background-color: #f3f3f3;
+  background: #e3e3e3;
   font-size: 1em;
   font-family: sans-serif;
 }
