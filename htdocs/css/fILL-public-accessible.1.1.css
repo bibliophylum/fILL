@@ -375,7 +375,9 @@ button {
 
 #patron_header_info {
     display: block;
+    clear: all;
     float: right;
+    color: #505050;
     text-align: right;
     font-size: .8em;
     margin: 1em;
