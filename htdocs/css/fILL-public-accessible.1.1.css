@@ -357,6 +357,8 @@ button {
 	font-size: 1.4em;
 	margin: 1em;
 	padding: .3em 1em;
+	border: 1px solid black;
+	background: c3c3c3
 }
 
 }
