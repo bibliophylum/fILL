@@ -233,7 +233,7 @@ nav li a.current_tab {
 	margin-top: 1em;
 	display: block;
 	overflow: auto;
-  	padding: 0px; 
+  	padding-bottom: 10px; 
 }
 
 
