@@ -217,7 +217,7 @@ nav li a.current_tab {
 	margin-bottom: ;
 	margin-top: 1em;
   	padding: 1.25em; 
-  	background: #f3f3f3;
+  	background: #e3e3e3;
 	border: 1px solid  #c9c9c9;  
 }
 
@@ -274,7 +274,6 @@ nav li a.current_tab {
 	height: auto;
 	padding: 1em;
 	margin: 1em 0em;
-
 }
 
 .covers {
