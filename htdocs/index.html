@@ -10,13 +10,44 @@
 <body>
 
 <div id="container">
-<TMPL_INCLUDE NAME="header.tmpl">
-<!--header template from index file-->
+<!--***************ARIA MARKER 'BANNER'***************-->
+<header role="banner">
+  <div id="header_logo_div">
+    <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries, serving patrons.</p>
+  </div>
+
+  <div id="logout_button_div">
+    <a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a>
+  </div>
+
+  <div id="patron_header_info">
+    <!-- The id="username" div is necessary: the username gets extracted (in 
+	 fILL_client-public-x.y.js), and passed to the code that allows the patron 
+	 to make an ILL request (we need to know who is making the request :-)
+	 It doesn't have to be *here*, but it has to be somewhere....
+      -->
+    <div id="username"><TMPL_VAR name="username"></div>
+    <p><TMPL_VAR name="library"></p>
+    <p style="display:none"><TMPL_VAR name="lid"></p>
+  </div>
+
+</header>
+  
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+<nav role="navigation">
+  <ul class="nav inline-items">
+    <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
+    <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
+    <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
+    <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">Help</a></li>
+    <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
+    <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
+  </ul>
+</nav>
 
 <div id="aside-img-welcome">
 	<img src='/img/fill-logo.png'>
 	<p class="fill-tagline">connecting libraries, serving patrons.</p>
-	<p>&nbsp;<br /></p>
 </div>
 
 <div id="main-info-welcome">
