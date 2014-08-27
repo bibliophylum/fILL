@@ -213,6 +213,7 @@ nav li a.current_tab {
 {
 	float: right;
 	width: 50%;
+	display: inline;
 	height: auto;
 	font-size: 1.5em;
 	margin-bottom: ;
