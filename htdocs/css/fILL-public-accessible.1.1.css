@@ -352,13 +352,17 @@ button {
 	padding: .3em;
 }
 
-#fill-button
+#fill-button a:link
 {
 	font-size: 1.4em;
 	margin: 1em;
 	padding: .3em 1em;
 	border: 1px solid black;
-	background: c3c3c3
+	background: #e3e3e3;
+}
+
+#fill-button:hover {
+	background: #d3d3d3;
 }
 
 #header_logo_div {
