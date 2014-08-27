@@ -225,13 +225,13 @@ nav li a.current_tab {
 }
 
 #aside-img-welcome {
-	float: left;
+	float: none;
 	width: 40%;
 	height: auto;
 	min-height: 100% !important;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
-	display: block;
+	display: inline;
 	overflow: auto;
   	padding-bottom: 10px; 
 }
