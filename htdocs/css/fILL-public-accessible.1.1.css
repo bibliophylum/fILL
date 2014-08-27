@@ -228,6 +228,7 @@ nav li a.current_tab {
 	float: left;
 	width: 40%;
 	height: auto;
+	min-height: 100% !important;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
 	display: block;
