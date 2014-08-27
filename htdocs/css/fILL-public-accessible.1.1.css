@@ -359,6 +359,21 @@ button {
 	padding: .3em 1em;
 }*/
 
+#header_logo_div {
+    float: left;
+}
+
+#logout_button_div {
+    float: right;
+}
+
+#patron_header_info {
+    float: right;
+    font-size: .7em;
+    margin: 1em;
+    padding: .3em;
+}
+
 }
 .tone-box.button-left {
 	float: left;
