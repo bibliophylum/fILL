@@ -72,7 +72,7 @@ h3 {
 header
 {
 	display: block;	
-	padding-top: 1em;
+	padding-top:;
 }
 
 nav
@@ -300,37 +300,70 @@ footer
 
 input[type=text]
 {
-    background-color: #BFBDBD;
-    border:solid 1px #BFBDBD;
-    color: #979797;
-    height: 28px;
+	margin: .5em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
     padding-left:10px;
-    width: 191px;
-    box-shadow: 2px 2px 0 #828181 inset;
-}
-input[type=button]
-{
-    background-color: #1E1E1E;
-    color: #979797;
-    height: 24px;
-    width: 103px;
-    color: #bbbbbb;
-    text-transform:uppercase;
-    box-shadow:-1px 2px #6E6B6A inset;
+    width: auto;
+    border: 1px solid #e3e3e3;
 }
 
-input[type=button], input[type=text]
+input[type=password]
+{
+	margin: .5em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: auto;
+}
+
+input[type=submit]
+{
+    margin: .5em;
+	padding: .3em 1em;
+    background-color: #183935;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=submit]:hover
+{
+    background-color: #06a0ca;
+}
+
+input[type=submit], input[type=text], input[type=password]
 {
     border: 0;
     border-radius:5px;
-    font-family: Sansation,Arial;
+}
+
+#fill-button {
+    margin: .5em;
+	padding: .3em 1em;
+    background-color: #183935;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
+}
+
+#fill-button:hover {
+	background: #06a0ca;
 }
 
 #butlink {
 	padding: .5em;
 	border: 1px solid #000;
 	margin: 10px;
-	background-color: #183935;
+	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -338,7 +371,7 @@ input[type=button], input[type=text]
 }
 
 #butlink:link {
-	background-color: #183935;
+	color: #fff;
 }
 
 #butlink:visited {
@@ -376,25 +409,13 @@ button {
 	padding: .3em;
 }
 
-#fill-button:link {
-	font-size: 1.4em;
-	margin: 1em;
-	padding: .3em 1em;
-	border: 1px solid black;
-	background: #e3e3e3;
-}
-
-#fill-button:hover {
-	background: #d3d3d3;
-	color: #383;
-}
-
 #header_logo_div {
     float: left;
 }
 
 #logout_button_div {
     float: right;
+    display: inline;
 }
 
 #patron_header_info {
@@ -501,6 +522,10 @@ button {
 .indent {
     padding-left: .5cm;
     color: #505050;
+}
+
+.clear {
+	clear: both;
 }
 
 /*------------login styles---------------------------------*/
@@ -618,7 +643,7 @@ div.login input {
 
 .primary_info {
 	width: 95%;
-	margin: 1em;
+	margin: .5em;
 	background-color: #e3e3e3;
 	padding: .7em;
 	border: 2px solid #b3b3b3;

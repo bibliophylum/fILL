@@ -65,26 +65,31 @@
 <!-- from header.tmpl -->
 
 <div id="container">
-  <!--ARIA MARKER 'BANNER'-->
+
+  <!--***************ARIA MARKER 'BANNER'***************-->
   <header role="banner">
+
+    <div id="logout_button_div">
+      <a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a>
+    </div>
+
+    <div class="clear">
+      <div id="patron_header_info">
+    <!-- The id="username" div is necessary: the username gets extracted (in 
+         fILL_client-public-x.y.js), and passed to the code that allows the patron 
+         to make an ILL request (we need to know who is making the request :-)
+         It doesn't have to be *here*, but it has to be somewhere....
+      -->
+          <div id="username"><TMPL_VAR name="username"></div>
+          <p><TMPL_VAR name="library"></p>
+          <p style="display:none"><TMPL_VAR name="lid"></p>
+      </div>
+    </div>
     <div id="header_logo_div">
       <a href="/"><img src="/img/fill-logo.png" class="fill-logo" alt="fill"></a><p class="fill-tagline">connecting libraries, serving patrons.</p>
-      </div>
+    </div>
 
-      <div id="logout_button_div">
-      <a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a>
-      </div>
 
-      <div id="patron_header_info">
-	<!-- The id="username" div is necessary: the username gets extracted (in 
-	     fILL_client-public-x.y.js), and passed to the code that allows the patron 
-	     to make an ILL request (we need to know who is making the request :-)
-	     It doesn't have to be *here*, but it has to be somewhere....
-	  -->
-	<div id="username"><TMPL_VAR name="username"></div>
-	<p><TMPL_VAR name="library"></p>
-	<p style="display:none"><TMPL_VAR name="lid"></p>
-      </div>
 
   </header>
   
@@ -111,7 +116,7 @@
 	   domReady() function to automatically do the search, if the user had 
 	   filled in the search box from a different page.
 	-->
-      <input id="fill-button" type="submit" value="GO">
+      <input type="submit" value="GO">
     </form>
   </div>
 </div> <!-- search-container -->
@@ -147,12 +152,12 @@
     <div id="AVnotice">
      <h2>Available At Your Local Library</h2><br>
 
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/1.Jim Crace-Harvest.jpg"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/7.Colm Toibin-The Testament of Mary.jpg"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/27.Ruth Ozeki-A Tale For The Time Being.jpg"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/68.Noviolet-Bulawayo-We-Need-New-Names.jpg"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/73.Eleanor Catton-The Luminaries.jpg"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/90.Jhumpa-Lahiri-The-Lowland.jpg"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/1.png"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/7.png"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/27.png"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/68.png"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/73.png"></a>
+        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/90.png"></a>
         
       </div>
       <!--
