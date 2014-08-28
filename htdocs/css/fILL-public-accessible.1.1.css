@@ -307,6 +307,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
+    border: 1px solid #e3e3e3;
 }
 
 input[type=password]
