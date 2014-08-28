@@ -350,11 +350,12 @@ input[type=submit], input[type=text]
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
 }
 
 #fill-button:hover {
-	background: #d3d3d3;
-	color: #383;
+	background: #06a0ca;
 }
 
 #butlink {
