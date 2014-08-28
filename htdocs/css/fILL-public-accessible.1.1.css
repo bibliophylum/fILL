@@ -69,10 +69,48 @@ h3 {
 	
 }
 
+/**HEADER STYLES**/
+
 header
 {
 	display: block;	
-	padding-top:;
+	padding-top: 1em;
+}
+
+#fill-logo {
+	float: left;
+	display: inline;
+	width: 200px;
+	border: 0px;
+}
+
+#fill-tagline 
+{
+	float: left;
+	display: inline;
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 0px;
+	color: #505050;
+	text-transform: capitalize;
+	margin-bottom: 1em;
+}
+
+#logout-button {
+    float: right;
+    display: inline;
+}
+
+#patron-info {
+    float: right;
+    display: inline;
+    clear: right;
+    color: #505050;
+    text-align: right;
+    font-size: .8em;
+    margin: 1em;
+    padding: .3em;
 }
 
 nav
@@ -409,53 +447,16 @@ button {
 	padding: .3em;
 }
 
-#header_logo {
-    float: left;
-}
-
-#logout_button {
-    float: right;
-    display: inline;
-}
-
-#patron_header_info {
-    display: block;
-    clear: all;
-    float: right;
-    color: #505050;
-    text-align: right;
-    font-size: .8em;
-    margin: 1em;
-    padding: .3em;
-}
-
-}
 .tone-box.button-left {
 	float: left;
 	margin-right: 1em;
 }
 
+/*discontinued for text based fill logo
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
-}
-
-#fill-logo {
-	display: inline;
-	width: 200px;
-	border: 0px;
-}
-
-#fill-tagline 
-{
-	display: block;
-	font-size: 1.2em;
-	font-weight: bold;
-	line-height: 0px;
-	color: #505050;
-	text-transform: capitalize;
-	margin-bottom: 1em;
-}
+}*/
 
 .fill-info 
 {
