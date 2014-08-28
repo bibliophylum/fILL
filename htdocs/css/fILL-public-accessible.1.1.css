@@ -510,6 +510,10 @@ button {
     color: #505050;
 }
 
+.clear {
+	clear: both;
+}
+
 /*------------login styles---------------------------------*/
 
 .login {
