@@ -309,6 +309,17 @@ input[type=text]
     width: auto;
 }
 
+input[type=password]
+{
+	margin: .5em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: auto;
+}
+
 input[type=submit]
 {
     margin: .5em;
