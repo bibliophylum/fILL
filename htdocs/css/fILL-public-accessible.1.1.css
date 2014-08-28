@@ -323,7 +323,7 @@ input[type=password]
 input[type=submit]
 {
     margin: .5em;
-	padding: .3em;
+	padding: .3em 1em;
     background-color: #183935;
     color: #fff;
     font-size: 1.4em;
@@ -340,6 +340,21 @@ input[type=submit], input[type=text]
 {
     border: 0;
     border-radius:5px;
+}
+
+#fill-button {
+    margin: .5em;
+	padding: .3em;
+    background-color: #183935;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+#fill-button:hover {
+	background: #d3d3d3;
+	color: #383;
 }
 
 #butlink {
@@ -390,21 +405,6 @@ button {
     font-size: 1.4em;
 	margin: 1em;
 	padding: .3em;
-}
-
-#fill-button {
-    margin: .5em;
-	padding: .3em;
-    background-color: #183935;
-    color: #fff;!important
-    font-size: 1.4em;
-    width: auto;
-    text-transform:capitalize;
-}
-
-#fill-button:hover {
-	background: #d3d3d3;
-	color: #383;
 }
 
 #header_logo_div {
