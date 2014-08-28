@@ -414,6 +414,7 @@ button {
 
 #logout_button_div {
     float: right;
+    display: inline;
 }
 
 #patron_header_info {
