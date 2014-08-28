@@ -41,19 +41,19 @@ $('document').ready(function(){
         event.preventDefault();
     });
 
-    $( "#username" ).blur(function() {
+    $( "#reg_username" ).blur(function() {
 
-        if ($("#username").val() === undefined || $("#username").val().length == 0) {
+        if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
             // nothing to check yet
         } else {
-            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#username").val() },
+            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
                 function(data){
                     if (data.exists == 1) {
-                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
-                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
-                        $("#username").focus();
+                        $("#reg_username_message").text("Sorry, that username is taken.  Please try a different username.");
+                        $("#reg_username_message").stop(true,true).effect("highlight", {}, 2000);
+                        $("#reg_username").focus();
                     } else {
-                        $("#username_message").text("Username is unique, good!");
+                        $("#reg_username_message").text("Username is unique, good!");
                     }
                 })
             .success(function() {
@@ -119,7 +119,9 @@ $('document').ready(function(){
         	</tr>
           <tr>
         	  <th>Username</th>
-        	  <td><input type="text" id="username" name="patron_username" size=30 maxlength=50><br><p id="username_message"></p></td>
+		  <!-- this id="username" was conflicting with the username in the header,
+		    so I've renamed this one to "reg_username". -->
+        	  <td><input type="text" id="reg_username" name="patron_username" size=30 maxlength=50><br><p id="username_message"></p></td>
         	</tr>
           <tr>
         	  <th>Password</th>
@@ -128,7 +130,8 @@ $('document').ready(function(){
         </table>
 
         <input id="home_library_town" type="hidden">
-        <input class="button-left" type="submit" value="Submit">
+	<!-- id "submitRegistration" is used in patron-registration-1.0.js to identify the button -->
+        <input id="submitRegistration" class="button-left" type="submit" value="Submit">
       </form>
     </div>
     <br/>

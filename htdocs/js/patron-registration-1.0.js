@@ -77,7 +77,7 @@ function register_patron() {
 	"patron_name":   $("#patron_name").val(),
 	"patron_card":   $("#barcode").val(),
 	"email_address": $("#email_address").val(),
-	"username":      $("#username").val(),
+	"username":      $("#reg_username").val(),
 	"password":      $("#password").val()
     };
     $.getJSON('/cgi-bin/register-patron.cgi', parms,
@@ -89,8 +89,8 @@ function register_patron() {
 		      $("#complete").append("<h3>Your account has been created.</h3>");
 		      $("input").prop('disabled', true);
 		      $("#submitRegistration").hide();
-		      $("#complete").append('<button><a href="/cgi-bin/public.cgi">Log in to fILL</a></button>');
-
+//		      $("#complete").append('<button><a href="/cgi-bin/public.cgi">Log in to fILL</a></button>');
+		      $("#complete").append('<a id="fill-button" role="button" type="button" href="/cgi-bin/public.cgi">Log in to fILL</a>');
 		  }
 		  $("#complete").show();
               })
@@ -169,9 +169,9 @@ function ValidateForm(){
         emailID.focus();
         return false;
     }
-    if ($("#username").val() === undefined || $("#username").val().length == 0) {
+    if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
 	alert("Please choose a user name for your account.");
-	$("#username").focus();
+	$("#reg_username").focus();
 	return false;
     }
     return true
