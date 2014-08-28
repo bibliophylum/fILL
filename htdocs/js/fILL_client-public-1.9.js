@@ -64,6 +64,7 @@ function my_onshow(data) {
         var hit = data.hits[i];
 
 	var $recDiv = $('<div/>', { 'class': "record", 'id': "recdiv_"+hit.recid });
+	$recDiv.append( $('<hr>') );
 	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
 	$recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 
@@ -83,7 +84,6 @@ function my_onshow(data) {
 		event.preventDefault();
 	    });
 	}
-	$recDiv.append( $('<hr>') );
 	$newResults.append( $recDiv );
     }
     $("#results").replaceWith( $newResults );
