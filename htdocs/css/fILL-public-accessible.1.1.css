@@ -302,19 +302,23 @@ input[type=text]
 {
     background-color: #fff;
     border:solid 1px #BFBDBD;
-    height: auto;
+    height: 1.4em;
     padding-left:10px;
     width: auto;
 }
 
 input[type=submit]
 {
-    background-color: #1E1E1E;
+    background-color: #383;
     color: #fff;
-    height: auto;
+    height: 1.4em;
     width: auto;
-    color: #fff;
     text-transform:capitalize;
+}
+
+input[type=submit]:hover
+{
+    background-color: #06a0ca;
 }
 
 input[type=submit], input[type=text]
