@@ -482,6 +482,10 @@ button {
 	color: #b3b3b3;
 }
 
+.indent {
+    padding-left: .5cm;
+}
+
 /*------------login styles---------------------------------*/
 
 .login {

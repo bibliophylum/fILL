@@ -64,14 +64,14 @@ function my_onshow(data) {
         var hit = data.hits[i];
 
 	var $recDiv = $('<div/>', { 'class': "record", 'id': "recdiv_"+hit.recid });
-//	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
+	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
 	$recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 
 	if (hit["md-title-remainder"] !== undefined) {
-	    $recDiv.append( $('<span>' + hit["md-title-remainder"] + ' </span>') );
+	    $recDiv.append( $('<span class="indent">' + hit["md-title-remainder"] + ' </span>') );
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-	    $recDiv.append( $('<span>'+hit["md-title-responsibility"]+'</span>') );
+	    $recDiv.append( $('<span class="indent">'+hit["md-title-responsibility"]+'</span>') );
       	}
 
         if (hit.recid == curDetRecId) {
@@ -83,6 +83,7 @@ function my_onshow(data) {
 		event.preventDefault();
 	    });
 	}
+	$recDiv.append( $('<hr>') );
 	$newResults.append( $recDiv );
     }
     $("#results").replaceWith( $newResults );
