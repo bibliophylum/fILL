@@ -381,11 +381,11 @@ button {
 	padding: .3em;
 }
 
-#fill-button:link {
+#fill-button {
     margin: .5em;
 	padding: .3em;
     background-color: #183935;
-    color: #fff;
+    color: #fff;!important
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
