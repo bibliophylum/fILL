@@ -302,16 +302,16 @@ input[type=text]
 {
     background-color: #fff;
     border:solid 1px #BFBDBD;
-    height: 1.4em;
+    height: 2em;
     padding-left:10px;
     width: auto;
 }
 
 input[type=submit]
 {
-    background-color: #383;
+    background-color: #183935;
     color: #fff;
-    height: 1.4em;
+    height: 2em;
     width: auto;
     text-transform:capitalize;
 }
