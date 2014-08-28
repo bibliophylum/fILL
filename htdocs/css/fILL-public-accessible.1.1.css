@@ -79,6 +79,7 @@ header
 
 #fill-logo {
 	float: left;
+	clear: none;
 	display: inline;
 	width: 200px;
 	border: 0px;
@@ -99,13 +100,14 @@ header
 
 #logout-button {
     float: right;
+	clear: none;
     display: inline;
 }
 
 #patron-info {
     float: right;
-    display: inline;
     clear: right;
+    display: inline;
     color: #505050;
     text-align: right;
     font-size: .8em;
