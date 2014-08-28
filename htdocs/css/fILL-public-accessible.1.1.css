@@ -308,7 +308,7 @@ input[type=text]
     width: 191px;
     box-shadow: 2px 2px 0 #828181 inset;
 }
-input[type=button]
+input[type=submit]
 {
     background-color: #1E1E1E;
     color: #979797;
@@ -319,7 +319,7 @@ input[type=button]
     box-shadow:-1px 2px #6E6B6A inset;
 }
 
-input[type=button], input[type=text]
+input[type=submit], input[type=text]
 {
     border: 0;
     border-radius:5px;
