@@ -302,7 +302,7 @@ input[type=text]
 {
     background-color: #fff;
     border:solid 1px #BFBDBD;
-    height: 1.4em;
+    font-size: 1.4em;
     padding-left:10px;
     width: auto;
 }
@@ -313,7 +313,7 @@ input[type=submit]
 	padding: .3em;
     background-color: #183935;
     color: #fff;
-    height: 1.4em;
+    font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
 }
@@ -333,7 +333,7 @@ input[type=submit], input[type=text]
 	padding: .5em;
 	border: 1px solid #000;
 	margin: 10px;
-	background-color: #183935;
+	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -341,7 +341,7 @@ input[type=submit], input[type=text]
 }
 
 #butlink:link {
-	background-color: #183935;
+	color: #fff;
 }
 
 #butlink:visited {
@@ -384,7 +384,7 @@ button {
 	padding: .3em;
     background-color: #183935;
     color: #fff;
-    height: 2em;
+    font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
 }
