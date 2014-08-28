@@ -296,6 +296,35 @@ footer
 	font-size: .8em;
 	margin-top: 1em;
 }
+/*--Button and input styles--*/
+
+input[type=text]
+{
+    background-color: #BFBDBD;
+    border:solid 1px #BFBDBD;
+    color: #979797;
+    height: 28px;
+    padding-left:10px;
+    width: 191px;
+    box-shadow: 2px 2px 0 #828181 inset;
+}
+input[type=button]
+{
+    background-color: #1E1E1E;
+    color: #979797;
+    height: 24px;
+    width: 103px;
+    color: #bbbbbb;
+    text-transform:uppercase;
+    box-shadow:-1px 2px #6E6B6A inset;
+}
+
+input[type=button], input[type=text]
+{
+    border: 0;
+    border-radius:5px;
+    font-family: Sansation,Arial;
+}
 
 #butlink {
 	padding: .5em;
