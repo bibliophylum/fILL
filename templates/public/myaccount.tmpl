@@ -68,40 +68,40 @@ $('document').ready(function(){
 }*/
 
 </style>
-
-<div id="container">
-    <h2>My Account</h2>
-    <table id="fill-table">
-      <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
-      <tr><th scope="row">fILL username</th><td><TMPL_VAR name="username"></td></tr>
-      <tr><th scope="row">Home library</th><td><TMPL_VAR name="library"></td></tr>
-      <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
-      <tr><th scope="row">fILL Patron Identification</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
-    </table>
-  
-  <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left" role="button" type="button">Change password</a>
-
-  <div id="divChangePass">
-    <form id="changePassword_form" name="changePassword" action="" method="post">
-      <table>
-	<tr>
-	  <td>Current password:</td>
-	  <td><input type="password" name="pass" id="pass"></td>
-	</tr>
-	<tr>
-	  <td>New password:</td>
-	  <td><input type="password" name="newpass" id="newpass"></td>
-	</tr>
-	<tr>
-	  <td>Re-type new password:</td>
-	  <td><input type="password" name="newpass2" id="newpass2"></td>
-	</tr>
+<div class="clear">
+  <div id="container">
+      <h2>My Account</h2>
+      <table id="fill-table">
+        <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
+        <tr><th scope="row">fILL username</th><td><TMPL_VAR name="username"></td></tr>
+        <tr><th scope="row">Home library</th><td><TMPL_VAR name="library"></td></tr>
+        <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
+        <tr><th scope="row">fILL Patron Identification</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
       </table>
-      <input type="hidden" name="pid" value=<TMPL_VAR name="pid">
-      <input id="changePassword" type="submit" value="Change" class="fill-button">
-      <input id="cancel" type="button" value="Cancel" class="butlink">
-    </form>
+    
+    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left" role="button" type="button">Change password</a>
+
+    <div id="divChangePass">
+      <form id="changePassword_form" name="changePassword" action="" method="post">
+        <table>
+  	<tr>
+  	  <td>Current password:</td>
+  	  <td><input type="password" name="pass" id="pass"></td>
+  	</tr>
+  	<tr>
+  	  <td>New password:</td>
+  	  <td><input type="password" name="newpass" id="newpass"></td>
+  	</tr>
+  	<tr>
+  	  <td>Re-type new password:</td>
+  	  <td><input type="password" name="newpass2" id="newpass2"></td>
+  	</tr>
+        </table>
+        <input type="hidden" name="pid" value=<TMPL_VAR name="pid">
+        <input id="changePassword" type="submit" value="Change" class="fill-button">
+        <input id="cancel" type="button" value="Cancel" class="butlink">
+      </form>
+    </div>
   </div>
 </div>
-
 <TMPL_INCLUDE NAME="footer.tmpl">
