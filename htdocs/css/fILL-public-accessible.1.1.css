@@ -293,7 +293,7 @@ nav li a.current_tab {
 	margin: 3px;
 }
 .covers:hover {
-	border: 3px outset #c0c0c0; 
+	border: 3px dashed #c0c0c0; 
 
 }
 
