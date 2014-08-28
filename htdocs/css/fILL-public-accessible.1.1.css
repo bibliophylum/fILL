@@ -75,19 +75,6 @@ header
 	padding-top: 1em;
 }
 
-input[type="text"] {
- 	margin: 5px 0px 0px 0px;
-	width: auto;
-	height: 2em;
-	font-size: 1em;
-}
-
-input[type="submit"] {
- 	font-size: 1.4em;
-	margin: .5em;
-	padding: .3em;
-}
-
 nav
 {
 	display: block;
