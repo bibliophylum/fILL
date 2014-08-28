@@ -87,8 +87,8 @@ header
 #fill-tagline 
 {
 	float: left;
+	clear: left;
 	display: inline;
-	display: block;
 	font-size: 1.2em;
 	font-weight: bold;
 	line-height: 0px;
