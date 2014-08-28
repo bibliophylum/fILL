@@ -83,6 +83,7 @@ header
 	display: inline;
 	width: 200px;
 	border: 0px;
+	border: 1px dashed red;
 }
 
 #fill-tagline 
@@ -96,12 +97,14 @@ header
 	color: #505050;
 	text-transform: capitalize;
 	margin-bottom: 1em;
+	border: 1px dashed red;
 }
 
 #logout-button {
     float: right;
 	clear: none;
     display: inline;
+    border: 1px dashed red;
 }
 
 #patron-info {
@@ -113,6 +116,7 @@ header
     font-size: .8em;
     margin: 1em;
     padding: .3em;
+    border: 1px dashed red;
 }
 
 nav
