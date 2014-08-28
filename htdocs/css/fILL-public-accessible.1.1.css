@@ -71,10 +71,21 @@ h3 {
 
 /**HEADER STYLES**/
 
-header
-{
+header {
 	display: ;	
 	padding-top: 1em;
+}
+
+#header-left {
+	float: left;
+	width: 49%;
+	display: inline;
+}
+
+#header-right {
+ 	float: right;
+ 	width: 49%;
+ 	display: inline;
 }
 
 #fill-logo {
