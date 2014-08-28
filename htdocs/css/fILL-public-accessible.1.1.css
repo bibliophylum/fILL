@@ -409,11 +409,11 @@ button {
 	padding: .3em;
 }
 
-#header_logo_div {
+#header_logo {
     float: left;
 }
 
-#logout_button_div {
+#logout_button {
     float: right;
     display: inline;
 }
