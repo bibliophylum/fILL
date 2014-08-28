@@ -27,19 +27,8 @@ $('document').ready(function(){
         "sPaginationType": "full_numbers",
         "bInfo": true,
       	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        // TableTools requires Flash version 10...
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
         "aoColumns": [
             {
                "mDataProp": null,
