@@ -300,10 +300,9 @@ footer
 
 input[type=text]
 {
-    background-color: #BFBDBD;
+    background-color: #fff;
     border:solid 1px #BFBDBD;
-    color: #979797;
-    height: 28px;
+    height: auto;
     padding-left:10px;
     width: 191px;
     box-shadow: 2px 2px 0 #828181 inset;
@@ -311,7 +310,7 @@ input[type=text]
 input[type=submit]
 {
     background-color: #1E1E1E;
-    color: #979797;
+    color: #fff;
     height: 24px;
     width: 103px;
     color: #bbbbbb;
@@ -323,7 +322,6 @@ input[type=submit], input[type=text]
 {
     border: 0;
     border-radius:5px;
-    font-family: Sansation,Arial;
 }
 
 #butlink {
