@@ -302,16 +302,18 @@ input[type=text]
 {
     background-color: #fff;
     border:solid 1px #BFBDBD;
-    height: 2em;
+    height: 1.4em;
     padding-left:10px;
     width: auto;
 }
 
 input[type=submit]
 {
+    margin: .5em;
+	padding: .3em;
     background-color: #183935;
     color: #fff;
-    height: 2em;
+    height: 1.4em;
     width: auto;
     text-transform:capitalize;
 }
@@ -378,11 +380,13 @@ button {
 }
 
 #fill-button:link {
-	font-size: 1.4em;
-	margin: 1em;
-	padding: .3em 1em;
-	border: 1px solid black;
-	background: #e3e3e3;
+    margin: .5em;
+	padding: .3em;
+    background-color: #183935;
+    color: #fff;
+    height: 2em;
+    width: auto;
+    text-transform:capitalize;
 }
 
 #fill-button:hover {
