@@ -440,13 +440,13 @@ button {
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
 }
 
-.fill-logo {
+#fill-logo {
 	display: inline;
 	width: 200px;
 	border: 0px;
 }
 
-.fill-tagline 
+#fill-tagline 
 {
 	display: block;
 	font-size: 1.2em;
@@ -462,6 +462,7 @@ button {
 	display: inline;
 	float: right;
 	text-align: right;
+	background: red;/*dev test remove later*/
 }
 
 /*** FILL #fill-table STYLES **/
