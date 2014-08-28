@@ -304,18 +304,17 @@ input[type=text]
     border:solid 1px #BFBDBD;
     height: auto;
     padding-left:10px;
-    width: 191px;
-    box-shadow: 2px 2px 0 #828181 inset;
+    width: auto;
 }
+
 input[type=submit]
 {
     background-color: #1E1E1E;
     color: #fff;
-    height: 24px;
-    width: 103px;
-    color: #bbbbbb;
-    text-transform:uppercase;
-    box-shadow:-1px 2px #6E6B6A inset;
+    height: auto;
+    width: auto;
+    color: #fff;
+    text-transform:capitalize;
 }
 
 input[type=submit], input[type=text]
