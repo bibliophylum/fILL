@@ -284,9 +284,8 @@ nav li a.current_tab {
 	min-height: 100% !important;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
-	display: block;
-	overflow: auto;
-  	padding-bottom: 10px; 
+	display: inline;
+  	padding-bottom: 1em; 
 }
 
 #main-info-welcome 
