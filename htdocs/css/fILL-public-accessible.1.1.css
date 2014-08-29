@@ -235,7 +235,7 @@ nav li a.current_tab {
 #progress_empty {
 	position:relative;
 	height:20px;
-	width:90%;
+	width:75%;
 	background-color:#e3e3e3;
 	border:1px solid #b3b3b3;
 	padding:0px;
@@ -249,7 +249,7 @@ nav li a.current_tab {
 	padding:0px;
 	position:relative;
 	margin-right:200px;
-	margin-top:-21px;
+	margin-top:-20px;
 }
 
 
