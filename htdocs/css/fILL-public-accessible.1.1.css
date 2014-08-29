@@ -237,8 +237,8 @@ nav li a.current_tab {
 #progress_empty {
 	position:relative;
 	height:20px;
-	width:70%;
-	max-width: 175px;
+	width:60%;
+	max-width: 160px;
 	background-color:#f3f3f3;
 	border:1px solid #b3b3b3;
 	padding:0px;
