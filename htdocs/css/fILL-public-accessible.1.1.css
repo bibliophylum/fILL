@@ -584,7 +584,6 @@ button {
   margin: auto;
 }
 
-/*
 fieldset input {
 	vertical-align: middle;
 }
@@ -615,6 +614,7 @@ div.login input {
   margin-left: 10px;
 }
 
+/*
 image courtesy of http://www.famfamfam.com/lab/icons/silk/ 
 #authen_loginfield {
   background-color: #fff;
