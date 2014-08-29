@@ -69,6 +69,7 @@ function prep_registration_form( but ) {
     $("#home_library").text( but.innerHTML );
     $("#home_library_town").val( but.innerHTML );
     $("#registration").show();
+    $("#patron_name").focus();
 }
 
 function register_patron() {
