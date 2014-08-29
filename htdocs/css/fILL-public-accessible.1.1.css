@@ -211,11 +211,6 @@ nav li a.current_tab {
   	border-bottom: 5px solid #e3e3e3;
 }
 
-#main-container {	
-	width: 100%;
-	display: inline;
-}
-
 #main
 {
 	float: right;
@@ -329,7 +324,7 @@ nav li a.current_tab {
 	height: 220px;
 	width: 150px;
 	border: 3px solid #e3e3e3;
-	margin-top: 1em;
+	margin-top: 2em;
 	margin: 3px;
 }
 .covers:hover {
