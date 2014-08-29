@@ -361,6 +361,7 @@ input[type=text]
     padding-left:10px;
     width: auto;
     border: 1px solid #e3e3e3;
+    box-shadow: 2px 2px 0 #e3e3e3 inset;
 }
 
 input[type=password]
