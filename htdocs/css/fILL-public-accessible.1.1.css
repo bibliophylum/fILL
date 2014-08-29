@@ -234,14 +234,14 @@ nav li a.current_tab {
 
 #progress_empty {
 	position:relative;
-	height:15px;
+	height:20px;
 	width:90%;
 	background-color:#e3e3e3;
 	border:1px solid #b3b3b3;
 	padding:0px;
 }
 #progress_filler {
-	height:14px;
+	height:20px;
 	width:;/*is styled in, 'fill-client-public.js'*/
 	left:1px;
 	background-color:#b3b3b3;
