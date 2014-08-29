@@ -215,6 +215,7 @@ nav li a.current_tab {
 {
 	float: right;
 	width: 80%; 
+	min-width: 380px;
   	padding: 1.25em; 
   	margin-bottom: 1em;
 }
@@ -223,7 +224,7 @@ nav li a.current_tab {
 {
 	float: left;
 	width: 18%;
-	min-width: 210px;
+	min-width: 180px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 1em; 
