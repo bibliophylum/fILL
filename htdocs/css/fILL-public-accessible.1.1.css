@@ -360,7 +360,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    box-shadow: 2px 2px 0 #d3d3d3 inset;
+    box-shadow: 2px 2px 0 #c3c3c3 inset;
 }
 
 input[type=password]
@@ -372,6 +372,7 @@ input[type=password]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
+    box-shadow: 2px 2px 0 #c3c3c3 inset;
 }
 
 input[type=submit]
@@ -558,7 +559,7 @@ button {
   display: block;
   clear: all;
   margin-top: 40px;
-  border: 2px solid #505050;
+  border: 2px solid #c3c3c3;
   background: #e3e3e3;
   font-size: 1em;
   font-family: sans-serif;
