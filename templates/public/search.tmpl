@@ -96,8 +96,8 @@
       <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
       <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
       <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
-    <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
-    <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
+      <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
+      <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
       <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
       <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
     </ul>
@@ -112,8 +112,11 @@
       <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
 	   domReady() function to automatically do the search, if the user had 
 	   filled in the search box from a different page.
+
+	   If you change the id here, change it in fILL_client-public too,
+	   or the automatic search won't fire.
 	-->
-      <input type="submit" value="GO">
+      <input id="search-submit-button" type="submit" value="GO">
     </form>
   </div>
 </div> <!-- search-container -->

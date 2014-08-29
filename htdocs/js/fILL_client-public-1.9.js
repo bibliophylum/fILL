@@ -212,7 +212,7 @@ function domReady ()
     if (document.search.query.value) {
 	// if we're coming from the search box on another page,
 	// d.s.q will have a value.  Click the submit button...
-	$("#fill-button").click();
+	$("#search-submit-button").click();
     }
 }
 
