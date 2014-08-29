@@ -360,8 +360,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    border: 1px solid #e3e3e3;
-    box-shadow: 2px 2px 0 #e3e3e3 inset;
+    box-shadow: 2px 2px 0 #d3d3d3 inset;
 }
 
 input[type=password]
