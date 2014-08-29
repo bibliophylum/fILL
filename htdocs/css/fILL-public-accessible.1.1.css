@@ -216,6 +216,7 @@ nav li a.current_tab {
 	float: right;
 	width: 80%; 
   	padding: 1.25em; 
+  	margin-bottom: 1em;
 }
 
 #aside
