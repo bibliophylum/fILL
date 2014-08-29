@@ -385,10 +385,6 @@ input[type=submit]
     text-transform:capitalize;
 }
 
-#query input[type=text] {
-	border: 1px solid #e3e3e3;
-}
-
 input[type=submit]:hover
 {
     background-color: #06a0ca;
