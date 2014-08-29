@@ -49,11 +49,11 @@ $('document').ready(function(){
             $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
                 function(data){
                     if (data.exists == 1) {
-                        $("#reg_username_message").text("Sorry, that username is taken.  Please try a different username.");
-                        $("#reg_username_message").stop(true,true).effect("highlight", {}, 2000);
+                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
+                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
                         $("#reg_username").focus();
                     } else {
-                        $("#reg_username_message").text("Username is unique, good!");
+                        $("#username_message").text("Username is unique, good!");
                     }
                 })
             .success(function() {
