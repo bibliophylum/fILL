@@ -308,7 +308,7 @@ nav li a.current_tab {
 	width: 50%;
 	height: auto;
 	padding: 1em;
-	margin: 1em 0em;
+	margin-bottom: 1em;
 }
 
 #aside-img-right
