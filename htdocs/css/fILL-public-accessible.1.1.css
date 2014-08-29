@@ -277,18 +277,6 @@ nav li a.current_tab {
   	min-width: 480px;
 }
 
-#main-info-welcome 
-{
-	float: left;
-	width: 50%;
-	height: auto;
-	font-size: 1.5em;
-	margin: 1em;
-  	padding: 1.25em; 
-  	background: #e3e3e3;
-	border: 1px solid  #c9c9c9;  
-}
-
 #aside-img-welcome {
 	float: left;
 	width: 40%;
@@ -301,6 +289,28 @@ nav li a.current_tab {
   	padding-bottom: 10px; 
 }
 
+#main-info-welcome 
+{
+	float: left;
+	width: 50%;
+	height: auto;
+	font-size: 1.5em;
+	margin: 1em;
+  	padding: 1.25em; 
+  	background: #e3e3e3;
+	border: 1px solid  #c9c9c9;  
+}
+
+.welcome-box {
+	font-size: 1em;
+	border: 0px;
+ 	float: left;
+	display: block;
+	width: 50%;
+	height: auto;
+	padding: 1em;
+	margin: 1em 0em;
+}
 
 #aside-img-right
 {
@@ -332,18 +342,6 @@ nav li a.current_tab {
 
 .lighter-box {
 	
-}
-
-.welcome-box {
-	font-size: 1em;
-	border: 0px;
- 	float: right;
-	display: block;
-	clear: right;
-	width: 50%;
-	height: auto;
-	padding: 1em;
-	margin: 1em 0em;
 }
 
 .covers {
