@@ -565,7 +565,7 @@ button {
 	clear: both;
 }
 
-object {
+.fill-help {
 	width: 100%;
 	min-width: 480px;
 	margin: auto;
