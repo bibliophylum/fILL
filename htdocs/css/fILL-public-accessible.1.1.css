@@ -506,7 +506,7 @@ button {
 #fill-table {
   	border-collapse: collapse;
   	width: 70%;
-  	margin: 1em;
+  	margin: 1em auto;
 	background: #e3e3e3;
 	border: 2px solid #b3b3b3;
 	color: #505050;
