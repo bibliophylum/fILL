@@ -480,6 +480,11 @@ button {
 	cursor: pointer;
 }
 
+.butlink-left:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
 .button-right {
 	float: right;
     font-size: 1.4em;
