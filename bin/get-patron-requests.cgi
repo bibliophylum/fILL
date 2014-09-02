@@ -38,8 +38,8 @@ my $SQL="select
         when ra.status='Cancelled' then 'Your library has cancelled the request to that lender.  They may try again with a different lender.'
         else ra.status
   end) as status,
-  date_trunc('second',ra.ts) as ts, 
-  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as libraries_tried
+  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as libraries_tried,
+  date_trunc('second',ra.ts) as ts 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
@@ -66,9 +66,9 @@ $SQL = "select
   title,
   author,
   '-1' as lender,
-  'Pending' as status,
-  date_trunc('second',ts) as ts,
-  'Loan requests have not yet been made.' as libraries_tried
+  'New request' as status,
+  'Your librarian has not yet seen this request.' as libraries_tried,
+  date_trunc('second',ts) as ts
 from
   patron_request
 where 

@@ -54,8 +54,7 @@ function my_onshow(data) {
     pager.innerHTML = "";
     pager.innerHTML +='<hr/><div style="float: right">Displaying: ' 
                     + (data.start + 1) + ' to ' + (data.start + data.num) +
-                     ' of ' + data.merged + ' (found: ' 
-                     + data.total + ')</div>';
+                     ' of ' + data.merged + '</div>';
     drawPager(pager);
 
     var $newResults = $('<div/>', { 'id': "results" });
@@ -133,14 +132,14 @@ function my_onstat(data) {
 
 function my_onterm(data) {
     var termlists = [];
-    termlists.push('<br><hr/><b>Refine your search by:</b>');
-    termlists.push('<hr/><div class="termtitle">.::Subjects</div>');
+    termlists.push('<br><hr/><b>Refine search by:</b>');
+    termlists.push('<hr/><div class="termtitle">Subjects</div>');
     for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
               + data.subject[i].freq + ')</span><br/>');
     }
      
-    termlists.push('<hr/><div class="termtitle">.::Authors</div>');
+    termlists.push('<hr/><div class="termtitle">Authors</div>');
     for (var i = 0; i < data.author.length && i < AuthorMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'au\', this.firstChild.nodeValue);return false;">' 
                             + data.author[i].name 
@@ -558,7 +557,7 @@ function buildRequestForm(data) {
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" class="button-left" value="Click to Request">';
+	requestForm += '<input type="submit" class="button-left" value="Click to request">';
     }
     requestForm += '</form></div>';
 
@@ -654,21 +653,21 @@ function request() {
 	.success(function( data ) {
 //	    alert('success');
 	    $("#confirmed").empty();
+	    $("#confirmed").append('<h2>Your request has been placed.</h2>');
 	    
 	    var $cancelForm = $('<form>', { "id": "cancel_form", 
 					    "action": "",
 					    "method": "post"
 					  });
 	    $cancelForm.append('<input type="hidden" name="prid" value="'+data.prid+'">');
-	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to cancel this request.">');
+	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to cancel this request">');
 	    $("#confirmed").append( $cancelForm );
 
-	    $("#confirmed").append('<h2>Your request has been placed</h2>');
 	    var $table = $('<table>').appendTo($("#confirmed"));
 	    $table.append('<tr><td>Requesting user</td><td>:'+data.user+'</td></tr>');
 	    $table.append('<tr><td>Title</td><td>:'+data.title+'</td></tr>');
 	    $table.append('<tr><td>Author</td><td>:'+data.author+'</td></tr>');
-	    $table.append('<tr><td>Medium</td><td>: <font style="background-color: yellow;">'+data.medium+'</font></td></tr>');
+	    $table.append('<tr><td>Format</td><td>:<font style="background-color: yellow;">'+data.medium+'</font></td></tr>');
 	    $("#confirmed").append('<p>Your librarian will see if another Manitoba public library is able to lend this title to '+data.library+' at this time.</p>');
 
 

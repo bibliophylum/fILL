@@ -501,6 +501,14 @@ button {
 	background: red;/*dev test remove later*/
 }
 
+/* Search page / search results */
+div.termtitle {
+    margin: 4px;
+    font-weight: bold;
+}
+
+
+
 /*** FILL #fill-table STYLES **/
 
 #fill-table {
