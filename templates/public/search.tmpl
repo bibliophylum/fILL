@@ -43,9 +43,18 @@
 
 <script type="text/javascript">
   $('document').ready(function(){
+
     $("#image").append("<img src=/img/fill-search.jpg>");
 
     $("#query").focus();
+
+    $(".coverlink").click(function( event ) {
+        event.preventDefault();
+        var $title = $(this).attr("title");
+        $("#query").val( $title );
+        $("#search-submit-button").click();
+    });
+
   });
 </script>
 
@@ -152,12 +161,27 @@
     <div id="AVnotice">
      <h2>Available At Your Local Library</h2><br>
 
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/1.png"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/7.png"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/27.png"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/68.png"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/73.png"></a>
-        <a href="/"><img class="covers" alt="Man Booker shortlist 2013 book cover" title="" src="/img/covers/90.png"></a>
+        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
+	     The keywords to search for are taken from the "title" attribute.
+	-->
+        <a href="#" class="coverlink" title="Jim Crace Harvest" >
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover"src="/img/covers/1.png">
+	</a>
+        <a href="#" class="coverlink" title="Colm Toibin The Testamant of Mary">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/7.png">
+	</a>
+        <a href="#" class="coverlink" title="Ruth Ozeki A Tale for the Time Being">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/27.png">
+	</a>
+        <a href="#" class="coverlink" title="NoViolet Bulawayo We Need New Names">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/68.png">
+	</a>
+        <a href="#" class="coverlink" title="Eleanor Catton The Luminaries">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover"src="/img/covers/73.png">
+	</a>
+        <a href="#" class="coverlink" title="Jhumpa Lahiri The Lowland">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover"src="/img/covers/90.png">
+	</a>
         
       </div>
       <!--
