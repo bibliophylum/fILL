@@ -113,15 +113,16 @@ $('document').ready(function(){
         	  </tbody>
         	</table>
       </div>
+      </div><!--div id main-->
       <div id="aside">
         <table id="fill-table">
           
 <thead><th>What the 'status' means:</th><th>?</th></thead>
-<tr><td>ILL-Request Your library has requested it.</td></tr>
+<tr><td>ILL-Request </td><td>Your library has requested it.</td></tr>
 <tr><td>ILL-Answer|Will-supply</td><td>The lender will lend it.</td></tr>
 <tr><td>ILL-Answer|Hold-placed</td><td>The lender has placed a hold for you. They estimate that it will be shipped on the date shown in the 'message' column.</td></tr>
-<tr><td>ILL-Answer|Unfilled The lender cannot lend it. Your library will try another lender if possible.</td></tr>
-<tr><td>Shipped The lender has shipped it to your library.</td></tr>
+<tr><td>ILL-Answer|Unfilled </td><td>The lender cannot lend it. Your library will try another lender if possible.</td></tr>
+<tr><td>Shipped </td><td>The lender has shipped it to your library.</td></tr>
 <tr><td>Received</td><td>Your library has received it from the lender, and should be contacting you soon.</td></tr>
 <tr><td>Returned </td><td> Your library has returned it to the lender.</td></tr>
 <tr><td>Checked-in  </td><td>The lender has received the returned book.</td></tr>
@@ -131,7 +132,7 @@ $('document').ready(function(){
 
         </table>
       </div><!-- div id aside-->
-      </div><!--div id main-->
+      
   </div>
 </div>
 <TMPL_INCLUDE NAME="footer.tmpl">
