@@ -565,6 +565,11 @@ button {
 	clear: both;
 }
 
+.fill-help {
+	width: 100%;
+	text-align: center;
+}
+
 /*------------login styles---------------------------------*/
 
 .login {
