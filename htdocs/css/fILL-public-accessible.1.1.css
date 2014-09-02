@@ -470,9 +470,14 @@ button {
 .button-left {
 	float: left;
 	clear: right;
+	padding: .5em;
+	border: 1px solid #000;
+	margin: 10px;
+	background: #183935;
+	color: #fff;!important
 	font-size: 1.4em;
-	margin: 1em;
-	padding: .3em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .button-right {
