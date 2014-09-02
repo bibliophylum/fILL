@@ -567,7 +567,8 @@ button {
 
 .fill-help {
 	width: 100%;
-	text-align: center;
+	min-width: 480px;
+	margin: auto;
 }
 
 /*------------login styles---------------------------------*/
