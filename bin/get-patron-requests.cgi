@@ -59,6 +59,31 @@ order by ra.ts desc
 my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid, $lid );
 
 
+
+# Get patron requests that the library hasn't handled yet:
+$SQL = "select 
+  '-1' as cid,
+  title,
+  author,
+  '-1' as lender,
+  'Pending' as status,
+  date_trunc('second',ts) as ts,
+  'Loan requests have not yet been made.' as libraries_tried
+from
+  patron_request
+where 
+  lid=?
+  and pid=?
+order by ts desc";
+
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+
+# add to aref_borr:
+foreach my $href (@$aref) {
+    push @$aref_borr, $href;
+}
+
+
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { active => $aref_borr } );
