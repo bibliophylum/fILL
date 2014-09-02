@@ -92,7 +92,7 @@ $('document').ready(function(){
 </script>
 <div class="clear">
   <div id="container">
-<main>
+<div id="main">
       <div id="middlecontent">
         <div id="waitDiv">
           Loading... <img src="/wait.gif">
@@ -113,8 +113,8 @@ $('document').ready(function(){
         	  </tbody>
         	</table>
       </div>
-      <aside>
-        <table class="fill-table">
+      <div id="aside">
+        <table id="fill-table">
           
 <thead><th>What the 'status' means:</th><th>?</th></thead>
 <tr><td>ILL-Request Your library has requested it.</td></tr>
@@ -130,8 +130,8 @@ $('document').ready(function(){
 </td></tr>
 
         </table>
-      </aside>
-      </main>
+      </div><!-- div id aside-->
+      </div><!--div id main-->
   </div>
 </div>
 <TMPL_INCLUDE NAME="footer.tmpl">
