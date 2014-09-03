@@ -137,7 +137,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: .3em 0em .5em 0em;
+	margin: .5em 0em;
 	min-width: 480px;
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
@@ -145,7 +145,7 @@ nav
 
 nav ul
 {
-	margin: 0px;
+	margin-top: .5em;
 	padding: 0px;
 }
 
@@ -297,21 +297,15 @@ nav li a.current_tab {
 	float: left;
 	width: 50%;
 	height: auto;
-	font-size: 1.5em;
 	margin: .9em;
-  	padding: 1.25em; 
-  	background: #e3e3e3;
-	border: 1px solid  #c9c9c9;  
+  	padding: 1.25em;  
 }
 
-.welcome-box {
-	font-size: 1em;
+#welcome-box {
+	font-size: 1.2em;
 	border: 0px;
- 	float: left;
-	display: block;
-	width: 50%;
 	height: auto;
-	padding: 1em 0em;
+	padding: 1em;
 	margin-top: 1em;
 }
 
@@ -375,7 +369,7 @@ footer
 
 input[type=text]
 {
-	margin: .5em;
+	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
@@ -387,7 +381,7 @@ input[type=text]
 
 input[type=password]
 {
-	margin: .5em;
+	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
@@ -479,6 +473,13 @@ button {
 	font-size: 1.4em;
 	margin: .5em;
 	padding: .3em;
+	border: 1px solid #000;
+	margin: 10px;
+	background: #183935;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .button-left:link {
@@ -660,7 +661,7 @@ div.login fieldset {
 div.login label {
   text-align: center;
   padding: 0;
-  margin: 0em 1em;
+  margin-left: 1em;
   width: 8em;
   font-size: 1em;
 }
@@ -751,10 +752,14 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 /* from Ohio Web Library */
 #progress_empty {
     float: left !important;
+    overflow: hidden;
 }
+
 #progress_filler {
     float: left !important;
+    overflow: hidden;
 }
+
 #stat {
     width: 250px;
 }
