@@ -104,11 +104,10 @@ header {
 {
 	float: left;
 	clear: left;
-	display: inline;
+	display: block;
 	height: 2em;
-	font-size: 1.2em;
+	font-size: 1em;
 	font-weight: bold;
-	
 	color: #505050;
 	text-transform: capitalize;
 	margin-bottom: 1em;
