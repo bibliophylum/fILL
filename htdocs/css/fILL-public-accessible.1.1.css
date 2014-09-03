@@ -106,11 +106,11 @@ header {
 	clear: left;
 	display: block;
 	height: 2em;
-	font-size: 1em;
+	font-size: 1.1em;
 	font-weight: bold;
 	color: #505050;
 	text-transform: capitalize;
-	margin-bottom: 1em;
+	margin-bottom: .5em;
 }
 
 #logout-button {
