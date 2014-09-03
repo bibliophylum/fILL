@@ -137,7 +137,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin-bottom: .5em;
+	margin: .3em 0em .5em 0em;
 	min-width: 480px;
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
@@ -298,7 +298,7 @@ nav li a.current_tab {
 	width: 50%;
 	height: auto;
 	font-size: 1.5em;
-	margin: 1em;
+	margin: .9em;
   	padding: 1.25em; 
   	background: #e3e3e3;
 	border: 1px solid  #c9c9c9;  
