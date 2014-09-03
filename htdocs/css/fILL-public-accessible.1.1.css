@@ -311,7 +311,7 @@ nav li a.current_tab {
 	display: block;
 	width: 50%;
 	height: auto;
-	padding: 1em;
+	padding: 1em 0em;
 	margin-top: 1em;
 }
 
