@@ -659,12 +659,9 @@ div.login fieldset {
   
 }
 div.login label {
-  display: block;
-  clear: left;
-  float: left;
-  color: red;/*dev test*/
   text-align: center;
   padding: 0;
+  margin: 0em 1em 0em 2em;
   width: 8em;
   font-size: 1em;
 }
