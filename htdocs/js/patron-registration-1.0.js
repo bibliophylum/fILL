@@ -18,12 +18,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 function build_region_div( data ) {
     $("#region").empty();
     $("#region").append("<p>Which region of Manitoba do you live in?</p><br/>");
     for (var i=0;i<data.regions.length;i++) {
-//        alert(data.regions[i][0]);
 	$('<button/>', { "id": "region_"+data.regions[i][0],
 			 "type": "button",
 			 "class": "butlinkleft",
