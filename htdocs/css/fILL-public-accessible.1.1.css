@@ -295,7 +295,7 @@ nav li a.current_tab {
 	width: 50%;
 	height: auto;
 	font-size: 1.5em;
-	margin: 1em;
+	margin: ;
   	padding: 1.25em; 
   	background: #e3e3e3;
 	border: 1px solid  #c9c9c9;  
@@ -309,7 +309,7 @@ nav li a.current_tab {
 	width: 50%;
 	height: auto;
 	padding: 1em;
-	margin-bottom: 1em;
+	margin-top: 1em;
 }
 
 #aside-img-right
