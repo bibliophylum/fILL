@@ -395,7 +395,7 @@ input[type=password]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    box-shadow: 2px 2px 0 #c3c3c3 inset;
+    border: 2px #c3c3c3 solid;
 }
 
 input[type=submit]
@@ -661,7 +661,7 @@ div.login fieldset {
 div.login label {
   text-align: center;
   padding: 0;
-  margin: 0em 1em 0em 2em;
+  margin: 0em 1em;
   width: 8em;
   font-size: 1em;
 }
