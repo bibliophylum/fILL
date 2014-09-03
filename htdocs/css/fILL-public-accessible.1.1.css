@@ -480,7 +480,7 @@ button {
 	cursor: pointer;
 }
 
-.butlink-left:hover {
+.button-left:hover {
 	background-color: #06a0ca;
 	border: 1px solid #06a0ca;
 }
