@@ -379,7 +379,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    border: 2px 2px 0 #c3c3c3 inset;
+    border: 2px #c3c3c3 solid;
 }
 
 input[type=password]
