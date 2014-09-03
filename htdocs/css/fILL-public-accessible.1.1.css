@@ -301,7 +301,7 @@ nav li a.current_tab {
   	padding: 1.25em;  
 }
 
-.welcome-box {
+#welcome-box {
 	font-size: 1.2em;
 	border: 0px;
 	height: auto;
