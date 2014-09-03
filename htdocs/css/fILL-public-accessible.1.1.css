@@ -467,7 +467,7 @@ button {
 	padding: .3em;
 }
 
-.button-left {
+.button-left:link {
 	float: left;
 	clear: right;
 	padding: .5em;
