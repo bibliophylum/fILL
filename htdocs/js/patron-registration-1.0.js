@@ -26,7 +26,7 @@ function build_region_div( data ) {
 //        alert(data.regions[i][0]);
 	$('<button/>', { "id": "region_"+data.regions[i][0],
 			 "type": "button",
-			 "class": "butlinkleft",
+			 "class": "button-left",
 			 "text": data.regions[i][0],
 			 click: function() { get_libraries( this ); }
 		       }).appendTo($("#region"));
@@ -56,7 +56,7 @@ function build_libraries_div( data ) {
     for (var i=0;i<data.city.length;i++) {
 	$('<button/>', { "id": "city_"+data.city[i][0],
 			 "type": "button",
-			 "class": "butlinkleft",
+			 "class": "button-left",
 			 "text": data.city[i][0],
 			 click: function() { prep_registration_form( this ); }
 		       }).appendTo($("#libraries"));
