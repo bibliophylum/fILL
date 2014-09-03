@@ -73,13 +73,16 @@ h3 {
 /**HEADER STYLES**/
 
 header {
+	position: relative;
 	display: ;	
 	padding-top: 1em;
+	height: ;
 }
 
 #header-left {
 	float: left;
 	width: 49%;
+	height: auto;
 	display: inline;
 }
 
@@ -102,6 +105,7 @@ header {
 	float: left;
 	clear: left;
 	display: inline;
+	height: 2em;
 	font-size: 1.2em;
 	font-weight: bold;
 	line-height: 0px;
@@ -379,7 +383,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    box-shadow: 2px 2px 0 #c3c3c3 inset;
+    border: 2px #c3c3c3 solid;
 }
 
 input[type=password]
@@ -398,6 +402,8 @@ input[type=submit]
 {
     margin: .5em;
 	padding: .3em 1em;
+	border: 1px #183935 solid;
+	border-radius: 5px;
     background-color: #183935;
     color: #fff;
     font-size: 1.4em;
@@ -407,7 +413,16 @@ input[type=submit]
 
 input[type=submit]:hover
 {
-    background-color: #06a0ca;
+    margin: .5em;
+	padding: .3em 1em;
+	border: 1px #06a0ca solid;
+	border-radius: 5px;
+	background-color: #06a0ca;
+	color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
 }
 
 input[type=submit], input[type=text], input[type=password]
@@ -647,6 +662,7 @@ div.login label {
   display: block;
   clear: left;
   float: left;
+  color: red;/*dev test*/
   text-align: center;
   padding: 0;
   width: 8em;
