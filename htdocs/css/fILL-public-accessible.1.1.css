@@ -375,7 +375,7 @@ footer
 
 input[type=text]
 {
-	margin: .5em;
+	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
@@ -387,7 +387,7 @@ input[type=text]
 
 input[type=password]
 {
-	margin: .5em;
+	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
@@ -660,7 +660,7 @@ div.login fieldset {
 div.login label {
   text-align: center;
   padding: 0;
-  margin: 0em 1em;
+  margin-left: 1em;
   width: 8em;
   font-size: 1em;
 }
