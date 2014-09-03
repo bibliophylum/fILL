@@ -137,7 +137,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: .3em 0em .5em 0em;
+	margin: .5em 0em;
 	min-width: 480px;
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
@@ -145,7 +145,7 @@ nav
 
 nav ul
 {
-	margin: 0px;
+	margin-top: .5em;
 	padding: 0px;
 }
 
