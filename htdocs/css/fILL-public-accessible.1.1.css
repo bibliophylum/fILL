@@ -751,10 +751,14 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 /* from Ohio Web Library */
 #progress_empty {
     float: left !important;
+    overflow: hidden;
 }
+
 #progress_filler {
     float: left !important;
+    overflow: hidden;
 }
+
 #stat {
     width: 250px;
 }
