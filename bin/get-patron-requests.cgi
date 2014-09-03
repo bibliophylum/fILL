@@ -30,12 +30,16 @@ my $SQL="select
   (case when ra.status='ILL-Request' then 'Your library has requested it.'
         when ra.status like 'ILL-Answer|Will-Supply%' then 'The lender will lend it.'
         when ra.status like 'ILL-Answer|Hold-Placed%' then 'The lender has placed a hold for you. They expect to have it for you by '||ra.message 
-        when ra.status='ILL-Answer|Unfilled' then 'The lender cannot lend it.  Your library will try another lender if possible.'
+        when ra.status like 'ILL-Answer|Unfilled%' then 'The lender cannot lend it.  Your library will try another lender if possible.'
         when ra.status='Shipped' then 'The lender has shipped it to your library.'
         when ra.status='Received' then 'Your library has received it from the lender, and should be contacting you soon.'
         when ra.status='Returned' then 'Your library has returned it to the lender.'
         when ra.status='Checked-in' then 'The lender has received the returned book.'
         when ra.status='Cancelled' then 'Your library has cancelled the request to that lender.  They may try again with a different lender.'
+        when ra.status like 'ILL-Answer|Locations-provided%' then 'The lender is forwarding your request to one of its branches.'
+        when ra.status='Renew' then 'Your library has asked the lender for a renewal of the loan, and is waiting for a reply.'
+        when ra.status='Renew-Answer|No-renewal' then 'The lender cannot give you a renewal on the loan.  They need it back.'
+        when ra.status='Renew-Answer|Ok' then 'The lender has given you a renewal on the loan.  The item is now '||ra.message
         else ra.status
   end) as status,
   'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as libraries_tried,
