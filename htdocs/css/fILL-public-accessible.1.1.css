@@ -73,9 +73,10 @@ h3 {
 /**HEADER STYLES**/
 
 header {
+	position: relative;
 	display: ;	
 	padding-top: 1em;
-	height: auto;
+	height: ;
 }
 
 #header-left {
@@ -104,7 +105,7 @@ header {
 	float: left;
 	clear: left;
 	display: inline;
-	height: auto;
+	height: 2em;
 	font-size: 1.2em;
 	font-weight: bold;
 	line-height: 0px;
