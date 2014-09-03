@@ -301,6 +301,14 @@ nav li a.current_tab {
   	padding: 1.25em;  
 }
 
+.welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em 0em;
+	margin-top: 1em;
+}
+
 #aside-img-right
 {
 	float: right;
