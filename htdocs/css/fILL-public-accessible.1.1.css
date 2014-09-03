@@ -398,6 +398,8 @@ input[type=submit]
 {
     margin: .5em;
 	padding: .3em 1em;
+	border: 1px #183935 solid;
+	border-radius: 5px;
     background-color: #183935;
     color: #fff;
     font-size: 1.4em;
@@ -407,9 +409,11 @@ input[type=submit]
 
 input[type=submit]:hover
 {
-    background-color: #06a0ca;
     margin: .5em;
 	padding: .3em 1em;
+	border: 1px #06a0ca solid;
+	border-radius: 5px;
+	background-color: #06a0ca;
 	color: #fff;
     font-size: 1.4em;
     width: auto;
