@@ -408,6 +408,13 @@ input[type=submit]
 input[type=submit]:hover
 {
     background-color: #06a0ca;
+    margin: .5em;
+	padding: .3em 1em;
+	color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
 }
 
 input[type=submit], input[type=text], input[type=password]
