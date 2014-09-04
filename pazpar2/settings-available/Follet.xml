@@ -1,5 +1,9 @@
 <settings target="*">
 
+<!-- Jolys Regional Library -->
+  <set target="library.rrvsd.ca:210/main" name="pz:name" value="Jolys Regional Library (Follet)"/>
+  <set target="library.rrvsd.ca:210/main" name="symbol" value="MSTP"/>
+
 <!-- Bibliotheque Allard (combines Allard, Beaches, and Victoria Beach) -->
   <set target="184.70.44.134:210/biblioall" name="pz:name" value="Bibliotheque Allard"/>
   <set target="184.70.44.134:210/biblioall" name="symbol" value="MSTG"/>
