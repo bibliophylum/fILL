@@ -1,135 +1,107 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<script type="text/javascript" src="/js/public-myaccount-1.0.js"></script>
-
-
 <script type="text/javascript">
-<!-- set_secondary_tab("menu_patrons"); -->
+
+set_primary_tab("menu_myaccount");
 
 $.ajaxSetup ({  
   cache: false  
 });  
 
+function toggleChangePassDiv() {
+  $("#divChangePass").toggle();
+  $("#showChangePassButton").toggle();
+  return false;
+}
+
+function change_password() {
+  var $myForm=$("#changePassword_form");
+  $.getJSON('/cgi-bin/change-patron-password.cgi', $myForm.serialize(),
+            function(data){
+//                alert('...');
+            })
+      .success(function( data ) {
+          if (data.success) {
+              alert('Your password has been changed.');
+          } else {
+              alert('Your password could not be changed.\nPlease contact your library.');
+          }
+          $("#pass").val("");
+          $("#newpass").val("");
+          $("#newpass2").val("");
+          toggleChangePassDiv();
+      })
+      .error(function( data ) {
+          alert('Error changing password.');
+      })
+      .complete(function() {
+      });
+}
+
 $('document').ready(function(){
 
-    oTable = $('#datatable_myaccount').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 10,
-        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            { "mDataProp": "setting", "sWidth": "20%" },
-            { "mDataProp": "value", "sWidth": "80%" }
-        ],
-        "bAutoWidth": false
+    $("#changePassword_form").submit(function( event ) {
+      if ( $("#newpass").val() === $("#newpass2").val() ) {
+          change_password();
+      } else {
+          alert("Retyped password doesn't match original new password.");
+          $("#newpass").val("");
+          $("#newpass2").val("");
+          $("#newpass").focus();
+      }
+      event.preventDefault();
     });
 
-    $.getJSON('/cgi-bin/get-patron-account.cgi', {lid: <TMPL_VAR name="lid">, pid: <TMPL_VAR name="pid"> },
-            function(data){
-                build_table(data);
-           })
-	.success(function() {
-	    //alert('success');
-	    /* Apply the jEditable handlers to the table */
-
-	    //$('td:eq(2)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron-myaccount.cgi', {
-	    $('.user-editable', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron-myaccount.cgi', {
-         	"submitdata": function ( value, settings ) {
-	            //alert('1. value: '+value+'\nsettings: '+settings+'\nusersetting: '+this.parentNode.getAttribute('id')+'\n');
-	            return {
-		        "pid": <TMPL_VAR name="pid">,
-		        "lid": <TMPL_VAR name="lid">,
-	                "usersetting": this.parentNode.getAttribute('id')
-		    };
-        	},
-	        "callback": function( sValue, y ) {
-	            //alert('2. sValue: '+sValue);
-	            var obj = jQuery.parseJSON( sValue );
-	            //alert('3. data: '+obj.data);
-		    var aPos = oTable.fnGetPosition( this );
-		    oTable.fnUpdate( obj.data, aPos[0], aPos[1] );
-	        },
-	        "indicator": 'Saving...',
-	        "tooltip": 'Click to edit...',
-	        "select": true,
-	        "height": "14px",
-	        "width": "100%"
-            } );
-
-	})
-	.error(function() {
-	    //alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
-	});
-
-
-    $('#datatable_myaccount tbody tr').live('mouseover mouseout', function (event) {
-        if (event.type == 'mouseover') {
-            $(this).addClass("ui-state-hover");
-        } else {
-            $(this).removeClass("ui-state-hover");
-        }
-    });
+    $("#cancel").click(function( event ) {
+      $("#divChangePass").toggle();
+      $("#showChangePassButton").toggle();
+      event.preventDefault();
+    });  
 
 });
 
 </script>
+<style type="text/css">
 
+/*#aside, #stat, #leftcontent, #termlist, .aside {
+    display: none;!important
+}*/
 
-<div id="main">
+</style>
+<div class="clear">
+  <div id="container">
+      <h2>My Account</h2>
+      <table id="fill-table">
+        <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
+        <tr><th scope="row">Username</th><td><TMPL_VAR name="username"></td></tr>
+        <tr><th scope="row">Home library</th><td><TMPL_VAR name="library"></td></tr>
+        <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
+        <tr><th scope="row">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
+      </table>
+    
+    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left" role="button" type="button">Change password</a>
 
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <br/>
-    <p>Click on an underlined value to edit it.</p>
-    <br/>
-    <p>If 'is_enabled' is 0, your librarian has disabled your account.</p>
-    <br/>
-    <p>If 'is_verified' is 0, your librarian has not yet verified your account.</p>
-  </div>
-
-  <div id="middlecontent">
-
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
+    <div id="divChangePass">
+      <form id="changePassword_form" name="changePassword" action="" method="post">
+        <table>
+  	<tr>
+  	  <td>Current password:</td>
+  	  <td><input type="password" name="pass" id="pass"></td>
+  	</tr>
+  	<tr>
+  	  <td>New password:</td>
+  	  <td><input type="password" name="newpass" id="newpass"></td>
+  	</tr>
+  	<tr>
+  	  <td>Re-type new password:</td>
+  	  <td><input type="password" name="newpass2" id="newpass2"></td>
+  	</tr>
+        </table>
+        <input type="hidden" name="pid" value=<TMPL_VAR name="pid">
+        <input id="changePassword" type="submit" value="Change" class="fill-button">
+        <input id="cancel" type="button" value="Cancel" class="butlink">
+      </form>
     </div>
-
-    <div id="myDiv">
-      <h3>My Account</h3>
-      <div id="mylistDiv">
-	<div class="dataTable_wrapper">
-	  <table id="datatable_myaccount" width="100%">
-	    <thead>
-	      <tr>
-		<th>Setting</th><th>Value</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
-    </div>
-
   </div>
-
 </div>
-
 <TMPL_INCLUDE NAME="footer.tmpl">

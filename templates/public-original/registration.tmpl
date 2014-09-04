@@ -1,0 +1,227 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<script language = "Javascript">
+/**
+ * DHTML email validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
+ */
+
+function echeck(str) {
+
+    var at="@"
+    var dot="."
+    var lat=str.indexOf(at)
+    var lstr=str.length
+    var ldot=str.indexOf(dot)
+    if (str.indexOf(at)==-1){
+       alert("Invalid E-mail ID")
+       return false
+    }
+
+    if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
+       alert("Invalid E-mail ID")
+       return false
+    }
+
+    if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
+        alert("Invalid E-mail ID")
+        return false
+    }
+
+    if (str.indexOf(at,(lat+1))!=-1){
+        alert("Invalid E-mail ID")
+        return false
+    }
+
+    if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
+        alert("Invalid E-mail ID")
+        return false
+    }
+
+    if (str.indexOf(dot,(lat+2))==-1){
+        alert("Invalid E-mail ID")
+        return false
+    }
+
+    if (str.indexOf(" ")!=-1){
+        alert("Invalid E-mail ID")
+        return false
+    }
+
+    return true					
+}
+
+
+function ValidateForm(){
+    var emailID=document.frmPatronInfo.patron_email
+
+    if ((emailID.value==null)||(emailID.value=="")){
+        alert("Please Enter your Email ID")
+        emailID.focus()
+        return false
+    }
+    if (echeck(emailID.value)==false){
+        emailID.value=""
+        emailID.focus()
+        return false
+    }
+    return true
+}
+</script>
+
+<div id="main">
+   <TMPL_IF NAME="openshelf_inquiry">
+     <script type="text/javascript">
+       <!--
+	   window.location = "http://www.gov.mb.ca/chc/pls/"
+       //-->
+     </script>
+     Redirecting to the Government of Manitoba / Public Library Services Branch web site at
+     <a href="http://www.gov.mb.ca/chc/pls/">http://www.gov.mb.ca/chc/pls/</a>
+   </TMPL_IF>
+
+   <div id="region_map">
+      <map name="imgmap"> 
+        <area shape="poly" coords="10,12,145,16,144,104,165,109,171,167,189,196,215,181,218,225,232,235,219,268,283,341,255,362,234,307,7,302,10,14" href="/cgi-bin/public-original.cgi?rm=registration_form&clear=1&region=PARKLAND" alt="PARKLAND"> 
+        <area shape="poly" coords="164,20,158,98,176,100,179,159,229,179,232,221,245,239,232,268,295,335,291,373,330,390,354,373,386,375,409,338,393,320,398,294,413,284,408,245,416,234,323,17,168,21" href="/cgi/bin/public-original.cgi?rm=registration_form&clear=1&region=INTERLAKE" alt="INTERLAKE"> 
+        <area shape="poly" coords="336,20,497,12,499,39,441,41,433,185,511,187,520,504,359,511,360,423,375,411,376,396,413,346,431,338,402,319,405,302,422,285,418,248,425,238,341,23" href="/cgi/bin/public-original.cgi?rm=registration_form&clear=1&region=EASTMAN" alt="EASTMAN"> 
+        <area shape="poly" coords="445,47,510,45,572,99,512,180,439,181,446,50" href="/cgi-bin/public-original.cgi?rm=registration_form&clear=1&region=NORMAN" alt="NORMAN"> 
+        <area shape="poly" coords="178,313,234,314,255,369,286,355,284,383,323,398,327,415,344,416,346,512,182,514,183,488,204,494,226,472,215,460,213,378,203,373,201,354,177,352,178,316" href="/cgi-bin/public-original.cgi?rm=registration_form&clear=1&region=CENTRAL" alt="CENTRAL"> 
+        <area shape="poly" coords="12,312,169,318,171,360,192,362,194,384,206,469,213,474,204,487,177,482,175,512,9,508,10,315" href="/cgi-bin/public-original.cgi?rm=registration_form&clear=1&region=WESTMAN" alt="WESTMAN"> 
+        <area shape="poly" coords="328,398,358,381,379,385,371,399,369,411,352,420,351,412,332,410" href="/cgi-bin/public-original.cgi?rm=registration_form&clear=1&region=WINNIPEG" alt="WINNIPEG">
+      </map> 
+
+      <p> 
+	<!-- img src="/img/regional_map.gif" width="345" height="312" alt="Move mouse over image" usemap="#imgmap" --> 
+	<img src="/img/regional_map.gif" alt="Map of regions" usemap="#imgmap"> 
+      </p>  
+    </div> 
+
+    <TMPL_IF NAME=ask_region>
+      <div class="choices" id="choose_region">
+	<p>1. Which region is your library in?</p>
+	<a href="?rm=registration_form&region=CENTRAL">CENTRAL</a><br />
+	<a href="?rm=registration_form&region=EASTMAN">EASTMAN</a><br />
+	<a href="?rm=registration_form&region=INTERLAKE">INTERLAKE</a><br />
+	<a href="?rm=registration_form&region=NORMAN">NORMAN</a><br />
+	<a href="?rm=registration_form&region=PARKLAND">PARKLAND</a><br />
+	<a href="?rm=registration_form&region=WESTMAN">WESTMAN</a><br />
+	<a href="?rm=registration_form&region=WINNIPEG">WINNIPEG</a><br />
+      </div>
+
+    <TMPL_ELSE>
+
+      <div class="choices">
+	<p>NOTE: If you do not yet have a membership with your local library, you need to do that first!</p>
+      </div>
+
+      <div class="choices">
+	<p><a href="?rm=registration_form&clear=1">Start again</a></p>
+	<br />
+	<p>1. Which region is your library in?</p>
+	<p><TMPL_VAR NAME=region></p>
+	<br />
+      </div>
+
+      <TMPL_IF NAME=ask_town>
+	<div class="choices" id="choose_town">
+	  <p>2. Which town is your library in?</p>
+	  <TMPL_LOOP NAME="towns">
+	    <a class="choose_town" href="?rm=registration_form&lid=<TMPL_VAR NAME=lid>"><TMPL_VAR NAME=town></a>, 
+	  </TMPL_LOOP>      
+	</div>
+
+	<div class="choices">
+	  <p>NOTE: If your municipality does not provide you with library service, you have some options:</p>
+	  <ul>
+	    <li>Notifying your local council if access is important to you.</li>
+	    <li>Contacting your nearest public library to enquire about Non-Resident membership</li>
+	    <li>Registering for a limited books-by-mail service through the <a href="?rm=registration_form&clear=1&openshelf=1">Open Shelf Program</a></li>
+	  </ul>
+	</div>
+
+      <TMPL_ELSE>
+
+	<div class="choices">
+	  <p>2. Which town is your library in?</p>
+	  <p><TMPL_VAR NAME=town></p>
+	  <p><TMPL_VAR NAME=library></p>
+	  <br />
+	</div>
+
+	<TMPL_IF NAME=ask_patron_info>
+	  <div class="choices" id="patron_info">
+	    <p>3. Your librarian needs to know who you are:</p>
+	    <form name="frmPatronInfo" method="post" action="" onSubmit="return ValidateForm()">
+	      <p>Your name:</p>
+	      <input type="text" name="patron_name" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_name>">
+	      <p>Your library card #:</p>
+	      <input type="text" name="patron_card" size=14 maxlength=14 value="<TMPL_VAR NAME=patron_card>">
+	      <p>Your email address:</p>
+	      <input type="text" name="patron_email" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_email>">
+	      <br />
+	      <p>You also need to choose a username and password for this system:</p>
+
+	      <TMPL_IF NAME=username_exists>
+		<div>
+		  <p><font color="#CC0000">Sorry, that username is taken.</font></p>
+		  <p>Please try a different username</p>
+		</div>
+		<br />
+	      </TMPL_IF>
+
+	      <p>Username:</p>
+	      <input type="text" name="patron_username" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_username>">
+	      <p>Password:</p>
+	      <input type="text" name="patron_password" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_password>">
+	      <input type="hidden" name="rm" value="registration_form">
+              <input type="submit" name="Submit" value="Submit">
+	    </form>
+	  </div>
+
+	  <TMPL_IF NAME=username_exists>
+	    <script type="text/javascript">
+	      document.frmPatronInfo.patron_username.focus();
+	    </script>
+	    <TMPL_ELSE>
+	      <script type="text/javascript">
+		document.frmPatronInfo.patron_name.focus();
+	      </script>
+	  </TMPL_IF>
+
+	<TMPL_ELSE>
+
+	  <div class="choices">
+	    <p>3. Your librarian needs to know who you are:</p>
+	    <p>Your name:</p>
+	    <p><TMPL_VAR NAME=patron_name></p>
+	    <p>Your library card #</p>
+	    <p><TMPL_VAR NAME=patron_card></p>
+	    <p>Your email address:</p>
+	    <p><TMPL_VAR NAME=patron_email></p>
+	    <br />
+	    <p>You also need to choose a username and password for this system:</p>
+	    <p>Username: <TMPL_VAR NAME=patron_username></p>
+	    <p>Password: <TMPL_VAR NAME=patron_password></p>
+	  </div>
+
+	  <div class="choices">
+	    <p>
+	      <a href="?rm=registration_form&clear=1">Start again</a> if you'd like to change any of your information.
+	    </p>
+	    <br />
+	    <p>
+	      If your information is correct, <a class="continue" href="?rm=search_form">log in</a> to Maplin.
+	    </p>
+	  </div>
+
+	</TMPL_IF>
+
+      </TMPL_IF>
+
+    </TMPL_IF>
+
+    <!--div style="clear:both;"></div-->
+
+</div>
+
+<TMPL_INCLUDE NAME="footer_public.tmpl">

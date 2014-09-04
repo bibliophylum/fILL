@@ -1,42 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
- 
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title><TMPL_VAR name="pagetitle"></title>
-  <link rel="stylesheet" href="/fILL.1.0.css"></link>
-  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-  <script type="text/javascript" src="/js/pz2.js"></script>
-  <script type="text/javascript" src="/js/fILL_client-1.4.js"></script>
-  <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
-<script language="JavaScript">
-
-  function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-</script>
-
-<!-- Google analytics -->
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-21021258-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+<TMPL_INCLUDE NAME="header.tmpl">
+<script type="text/javascript" src="/js/pz2.js"></script>
+<script type="text/javascript" src="/js/fILL_client-1.4.js"></script>
 
 <script type="text/javascript">
   function searchHelp(e) {
@@ -47,123 +11,13 @@
 <script type="text/javascript">
 
 $('document').ready(function(){
-    $.getJSON('/cgi-bin/rotations-allowed.cgi', 
-        {lid: <TMPL_VAR name="lid"> },
-        function(data){
-            if (data.allowed == "1") {
-                $("#menu_rotations").show();
-            } else {
-                $("#menu_rotations").hide();
-            }
-        })
-        .success(function() {
-        })
-        .error(function() {
-        })
-        .complete(function() { 
-        });
-
-  update_menu_counters( <TMPL_VAR name="lid"> );
+  $("#header_searchbar").show();
   $("#query").focus();
 });
 
 </script>
 
- </head>
- 
- <body onload="domReady();">
 
-  <div id="noscript">
-    <noscript>
-	<p>Your browser does not support or allow execution of scripts required by this site to work properly.</p>
-	<p>If you run Internet Explorer 6+ or FireFox 2.0+ and see this message ensure the JavaScript is enabled in your browser.</p>
-	<p>If you run Internet Explorer 7 add the site to the Trusted Sites group.</p>
-	<p>Finally, check your personal firewall settings.</p>
-    </noscript>
-  </div>
-
-<!-- from header.tmpl -->
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fILL.png">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
-  </div>
-
-  <div id="header_searchbar">
-    <form id="searchForm" name="search">
-      <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
-    </form>
-  </div>
-
-  <div id="header_quick_access">
-    <ul>
-      <li><a href="?rm=welcome">Home</a></li>
-      <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
-    </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
-  </div>
-</DIV>
-
-<!-- div id="nav1" -->
-<div id="csstabs">
-  <ul>
-    <li id="menu_borrow">
-      <a href=/cgi-bin/lightning.cgi?rm=lightning_search_form>
-      Borrowing from other libraries
-      </a>
-    </li>
-
-    <li id="menu_lend">
-      <a href=/cgi-bin/lightning.cgi?rm=pull_list>
-      Lending to other libraries
-      </a>
-    </li>
-
-    <li id="menu_borrow_current">
-      <a href=/cgi-bin/lightning.cgi?rm=current>
-      Current ILLs
-      </a>
-    </li>
-
-    <li id="menu_borrow_history">
-      <a href=/cgi-bin/lightning.cgi?rm=history>
-      History
-      </a>
-    </li>
-
-    <li id="menu_myaccount">
-      <a href=/cgi-bin/myaccount.cgi?rm=myaccount_settings_form>
-      My Account
-      </a>
-    </li>
-
-    <li id="menu_patrons">
-      <a href=/cgi-bin/patrons.cgi?rm=patrons_form>
-      Patrons
-      </a>
-    </li>
-
-    <li id="menu_info">
-      <a href=/cgi-bin/info.cgi?rm=info_contacts_form>
-      Info
-      </a>
-    </li>
-
-    <li id="menu_rotations" style="display:none;">
-      <a href="/cgi-bin/rotations.cgi?rm=receive_form">
-      Rotation manager
-      </a>
-    </li>
-
-  </ul>
-
-</div>
-
-<!-- end header.tmpl -->
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 <script type="text/javascript">
   <!--
@@ -178,7 +32,7 @@ $('document').ready(function(){
   </div>
  
   <div id="recordview">
-   <table width="100%" border="0" cellpadding="6" cellspacing="0">
+   <table class="fill-table" width="100%" border="0" cellpadding="6" cellspacing="0">
     <tr>
      <td width="250" valign="top">
        <div id="stat"></div>
@@ -225,14 +79,5 @@ $('document').ready(function(){
       -->
   </div>
 
-<!-- End content -->
 
-<div id="nav2">
-  <ul>
-    <li><a href=/cgi-bin/maplin3.cgi?rm=environment_form>ENV display</a></li>
-    <li><a href="?authen_logout=1">Log out</a></li>
-  </ul>
-</div>
-
- </body>
-</html>
+<TMPL_INCLUDE NAME="footer.tmpl">

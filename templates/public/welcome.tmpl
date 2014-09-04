@@ -1,29 +1,22 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-<table cellpadding=20>
-  <tr>
-    <td style="width:385px"> <!-- image is 375px wide -->
-      <img src='/img/card_catalogue.jpg' alt="picture of a library card catalogue"/>
-      <br/>
-      <p class="short_instruction">
-	Photo by Flickr user haaaley.  http://flickr.com/photos/misshaley/515045131/
-      </p>
-      <p class="short_instruction">
-	Used under a Creative Commons Attribution-Noncommercial-Sharalike license.
-      </p>
-    </td>
-    <td>
+<div id="aside-img-left">
+      <img src='/img/library-dude.png' alt="picture of a man next to library shelves"/>
+</div>
+
+<div id="main-info-right" class="tone-box">
+
       <h1>Welcome!</h1>
       <br />
-      <p>Welcome to the Manitoba public libraries interlibrary-loan requesting system.</p>
+      <p>Welcome to the Manitoba public libraries interlibrary loan requesting system.</p>
       <br />
       <p>
 	fILL enables you to quickly search the catalogues of many Manitoba public libraries at once.  When you find an item
 	that you'd like to request, it allows you to ask your home library to try to get it for you.
       </p>
       <br/>
-      <strong>See the status of your Interlibrary Loan requests!</strong>
-      <p>Click on the new menu item, <strong>Current borrowing</strong>, to see the status of all Interlibrary Loan requests
+      <strong>See the status of your interlibrary loan requests!</strong>
+      <p>Click on the new menu item, <strong>Current borrowing</strong>, to see the status of all interlibrary loan requests
 	that you currently have active.
       </p>
       <p>From this screen, you will be able to tell whether another library has been able to fill your request, when they
@@ -43,11 +36,12 @@
       </p>
       <br/>
       <br />
+
+</div><!--main-info-right-->
+
       <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
       <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
 
-    </td>
-  </tr>
-</table>
+
 
 <TMPL_INCLUDE NAME="footer.tmpl">

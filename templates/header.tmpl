@@ -1,23 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head><title><TMPL_VAR name="pagetitle"></title>
-<link type="text/css" rel="stylesheet" href="/fILL.1.0.css">
-<link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
-<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
-<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
-<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
-<link type="text/css" rel="stylesheet" href="/css/fILL-chill/jquery-ui-1.8.16.custom.css"/>
-<link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
-<script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js"></script>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
-<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/ZeroClipboard.js" charset="utf-8" type="text/javascript"></script>
-<script src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js" charset="utf-8" type="text/javascript"></script>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title><TMPL_VAR name="pagetitle"></title>
+  <link type="text/css" rel="stylesheet" href="/css/fILL.1.0.css">
+  <link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
+  <link type="text/css" rel="stylesheet" href="/css/fILL-chill/jquery-ui-1.8.16.custom.css"/>
+  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
+  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
+  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
+  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
 
-<script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
+  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
+  <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+  <script type="text/javascript" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/ZeroClipboard.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
+
 
 <script type="text/javascript">
 
@@ -45,6 +50,8 @@ $('document').ready(function(){
               $("#menu_rotations_admin").show();
             }
         });
+
+    update_menu_counters( <TMPL_VAR name="lid"> );
 });
 
 </script>
@@ -78,13 +85,23 @@ $('document').ready(function(){
 </script>
 
 </head>
-<body class="example_alt_pagination">
+<body class="example_alt_pagination" onload="domReady();">
 
 <DIV id="header">
   <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l free open source software interlibrary loan management system">
+    <img src="/img/fILL.png" class="fill-logo" alt="f i l l free open source software interlibrary loan management system">
     <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
   </div>
+
+  <!-- Not displayed on any page except lightning (at the moment) -->
+  <div id="header_searchbar" style="display: none">
+    <form id="searchForm" name="search">
+      <input id="query" type="text" size="50"/>
+      <input id="button" type="submit" value="Search"/>
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
+    </form>
+  </div>
+
   <div id="header_quick_access">
     <ul>
       <li><a href="?rm=welcome">Home</a></li>

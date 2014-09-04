@@ -1,13 +1,17 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<div class="clear">
 
-<h1>Logged out</h1>
-<p>
-<p>Logged in as [<TMPL_VAR NAME="username">]</p>
-<p>Session id [<TMPL_VAR NAME="sessionid">]</p>
-<form METHOD=POST ACTION="">
-     <input TYPE="hidden" NAME="rm" VALUE="search_form">
-     <input type="submit" name="submit" value="Log in" />
-</form>
+	<div id="container">
+		<h1>Logged out</h1>
+		<p>Logged in as [<TMPL_VAR NAME="username">]</p>
+		<p>Session id [<TMPL_VAR NAME="sessionid">]</p>
+		<form METHOD=POST ACTION="">
+		     <input TYPE="hidden" NAME="rm" VALUE="search_form">
+		     <input type="submit" name="submit" value="Log in" />
+		</form>
+	</div>
+
+</div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

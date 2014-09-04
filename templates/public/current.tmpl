@@ -3,11 +3,21 @@
 
 <script type="text/javascript">
 
+set_primary_tab("menu_current");
+
 $.ajaxSetup ({  
   cache: false  
 });  
 
 $('document').ready(function(){
+
+    $("#leftcontent").html('<p>How an interlibrary loan works:</p>');
+    $("#leftcontent").append('<p>You ask your library to request a book from another library (the "lender") by doing a search here.</p>');
+    $("#leftcontent").append('<p>Your library asks the lender if they can borrow it.</p>');
+    $("#leftcontent").append('<p>If the lender says yes, they ship the book to your library.</p>');
+    $("#leftcontent").append('<p>When your library receives it, they will contact you to let you know that you can pick it up.</p>');
+    $("#leftcontent").append('<br/><p>If the lender can\'t send it, your library will try another lender (if the book was found somewhere else)</p>');
+    $("#leftcontent").append('<br/><p>If the lender placed a hold on the book, it is probably out to one of their own patrons.  When they get it back, they will send it to your library.</p>')
 
     var anOpenBorrowing = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
@@ -17,33 +27,20 @@ $('document').ready(function(){
         "sPaginationType": "full_numbers",
         "bInfo": true,
       	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        // TableTools requires Flash version 10...
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
         "aoColumns": [
             {
                "mDataProp": null,
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
-            { "mDataProp": "lender" },
-            { "mDataProp": "ts" },
             { "mDataProp": "status" },
-            { "mDataProp": "message" },
-            { "mDataProp": "currently_trying" },
-            { "mDataProp": "libraries" }
+            { "mDataProp": "libraries_tried" },
+            { "mDataProp": "ts" }
         ]
 
     });
@@ -55,11 +52,14 @@ $('document').ready(function(){
 	.success(function() {
 	    //alert('success');
 	})
-	.error(function() {
+	.error(function(data) {
 	    alert('error');
 	})
 	.complete(function() {
             //alert('ajax complete');
+            // The following is necessary in order to resize the datatable with the
+            // hidden 'cid' column (which is necessary for the detail drill-down):
+            $('#datatable_borrowing').width("100%");
 	});
 
 
@@ -91,50 +91,28 @@ $('document').ready(function(){
 
 </script>
 
+<div id="container">
 
-<div id="main">
+      <div id="middlecontent">
+        <div id="waitDiv">
+          Loading... <img src="/wait.gif">
+        </div>
 
-  <div id="leftcontent">
-    <strong>What the 'status' means:</strong>
-    <table style="border:1px solid black;border-collapse:collapse;">
-      <colgroup>
-	<col span="1" style="width: 40%;">
-	<col span="1" style="width: 60%;">
-      </colgroup>
-       <tr><td style="border:1px solid black;">ILL-Request</td><td style="border:1px solid black;">Your library has requested it.</td></tr>
-      <tr><td style="border:1px solid black;">ILL-Answer|Will-supply</td><td style="border:1px solid black;">The lender will lend it.</td></tr>
-      <tr><td style="border:1px solid black;">ILL-Answer|Hold-placed</td><td style="border:1px solid black;">The lender has placed a hold for you.  They estimate that it will be shipped on the date shown in the 'message' column.</td></tr>
-      <tr><td style="border:1px solid black;">ILL-Answer|Unfilled</td><td style="border:1px solid black;">The lender cannot lend it.  Your library will try another lender if possible.</td></tr>
-      <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">The lender has shipped it to your library.</td></tr>
-      <tr><td style="border:1px solid black;">Received</td><td style="border:1px solid black;">Your library has received it from the lender, and should be contacting you soon.</td></tr>
-      <tr><td style="border:1px solid black;">Returned</td><td style="border:1px solid black;">Your library has returned it to the lender.</td></tr>
-      <tr><td style="border:1px solid black;">Checked-in</td><td style="border:1px solid black;">The lender has received the returned book.</td></tr>
-      <tr><td style="border:1px solid black;">Message</td><td style="border:1px solid black;">General status message.</td></tr>
-      <tr><td style="border:1px solid black;">Cancelled</td><td style="border:1px solid black;">Your library has cancelled the request to that lender.  They may try again with a different lender.</td></tr>
-    </table>
-  </div>
+        <div id="mylistDiv">
+          <h2>Current borrowing</h2>
+          <br />
+        <div class="dataTable_wrapper">
 
-  <div id="middlecontent">
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
-
-    <div id="mylistDiv">
-      <h4>Current borrowing</h4>
-      <div class="dataTable_wrapper">
-	<table id="datatable_borrowing" class="display">
-	  <thead>
-	    <tr>
-	      <th></th><th>title</th><th>author</th><th>lender</th><th>time stamp</th><th>status</th><th>message</th><th>currently trying #</th><th>libraries which have the title</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  </tbody>
-	</table>
+        	<table id="datatable_borrowing" class="display">
+        	  <thead>
+        	    <tr>
+        	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Details</th><th>Status Updated</th>
+        	    </tr>
+        	  </thead>
+        	  <tbody>
+        	  </tbody>
+        	</table>
       </div>
-    </div>
-    
   </div>
-</div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

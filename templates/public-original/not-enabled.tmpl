@@ -1,0 +1,33 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<table cellpadding=20>
+  <tr>
+    <td style="width:385px"> <!-- image is 375px wide -->
+      <img src='/img/card_catalogue.jpg' />
+      <br/>
+      <p class="short_instruction">
+	Photo by Flickr user haaaley.  http://flickr.com/photos/misshaley/515045131/
+      </p>
+      <p class="short_instruction">
+	Used under a Creative Commons Attribution-Noncommercial-Sharalike license.
+      </p>
+    </td>
+    <td>
+      <h1>We're sorry</h1>
+      <br />
+      <p><TMPL_VAR NAME="library"> has disabled your account.</p>
+      <br />
+      <p>Please contact the library.</p>
+      <br/>
+      <br/>
+      <br/>
+      <p>Thank-you</p>
+      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+      <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+
+    </td>
+  </tr>
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
+ 

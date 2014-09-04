@@ -106,7 +106,7 @@ function my_onstat(data) {
 	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
-	    debug("Search Complete");
+	    //debug("Search Complete");
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){
@@ -190,9 +190,12 @@ function my_onbytarget(data) {
 function domReady () 
 { 
     document.search.onsubmit = onFormSubmitEventHandler;
-    document.search.query.value = '';
+//    document.search.query.value = '';
     document.select.sort.onchange = onSelectDdChange;
     document.select.perpage.onchange = onSelectDdChange;
+    if (document.search.query.value) {
+	$("#button").click();
+    }
 }
 
 // when search button pressed
@@ -218,6 +221,14 @@ function resetPage()
 {
     curPage = 1;
     totalRec = 0;
+    var AVnotice = document.getElementById('AVnotice');
+    if (AVnotice) {
+	AVnotice.style.display = 'none';
+    }
+    var ranking = document.getElementById('ranking');
+    if (ranking) {
+	ranking.style.display = 'block';
+    }
 }
 
 function triggerSearch ()
@@ -391,20 +402,23 @@ function renderDetails(data, marker)
 {
     var isElectronicResource = false;
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
-    var details = '<table>';
+    var details = '';
+//    var details = '<table>';
 
     if ((data["md-isbn"] != undefined) || (data["md-lccn"] != undefined)) {
 	// place for cover image
-	details += '<tr><td>';
+	details += '<table><tr><td>';
 	if (data["md-lccn"] != undefined) {
 	    details += '<img src="http://covers.openlibrary.org/b/LCCN/' + data["md-lccn"][0] + '-M.jpg">';
 	} else if (data["md-isbn"] != undefined) {
 	    details += '<img src="http://covers.openlibrary.org/b/ISBN/' + data["md-isbn"][0] + '-M.jpg">';
 	}
-	details += '</td><td><table>';
+	details += '</td><td><table class="primary_info">';
+    } else {
+	details += '<table class="primary_info">';
     }
 
-    var requestForm = '<form action="/cgi-bin/public.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
+    var requestForm = '<form action="/cgi-bin/public-original.cgi" method="post" target="_blank"><input type="hidden" name="rm" value="request">';
     if (marker) details += '<tr><td>'+ marker + '</td></tr>';
     var title;
     if (data["md-title"] != undefined) {
@@ -431,31 +445,45 @@ function renderDetails(data, marker)
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
 
+    var len=data["location"].length;
+    if (len > 0) {
+	if ((data["location"][0]["md-medium"] != undefined)) {
+	    details += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][0]["md-medium"] + '</font></b></td></tr>';
+	}
+    }
+    details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
+
     if ((data["md-isbn"] != undefined) || (data["md-lccn"] != undefined)) {
+	// i.e. there was (potentially) a cover image
 	details += '</table></td></tr></table>';  // end image/header table
-	details += '<table>';                     // start new table for location info
+    } else {
+	details += '</table>';
     }
 
-    var len=data["location"].length;
-    details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
+
+    details += '<a id="showLocDet" href="javascript:void(0)" onclick="toggleLocationDetails();">Show location details...</a>'
+    details += '<a id="hideLocDet" style="display:none" href="javascript:void(0)" onclick="toggleLocationDetails();">Hide location details...</a>'
+    details += '<table class="secondary_info" style="display:none">';  // start new table for location info
+
+
     for (var i=0; i<len; i++) {
 
 	// temp fix for skipping Spruce locations
-	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
-	    if (data["location"][i]["md-locallocation"] != undefined) {
-		var bail=0;
-		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
-		    if ("MSTOS" === data["location"][i]["md-locallocation"][lloc]) {
-			bail=1;
-		    }
-		}
-		if (bail) continue;
-	    }
-	}
+//	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
+//	    if (data["location"][i]["md-locallocation"] != undefined) {
+//		var bail=0;
+//		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
+//		    if ("MSTOS" === data["location"][i]["md-locallocation"][lloc]) {
+//			bail=1;
+//		    }
+//		}
+//		if (bail) continue;
+//	    }
+//	}
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
 	if (data["location"][i]["md-medium"] != undefined) {
-	    details += '<tr><td><b>Medium</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
+	    details += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	    if (data["location"][i]["md-medium"] == "electronicresource")
 		isElectronicResource = true;
 	}
@@ -506,7 +534,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit"  style="height:50px; min-width:150px" value="Click to request: ' + title +  '">';
+	requestForm += '<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to request: ' + title +  '">';
     }
     requestForm += '</form>';
     details += '</table>';
@@ -521,4 +549,18 @@ function renderDetails(data, marker)
 //    }
     return details_and_form;
 }
+
+
+function toggleLocationDetails() {
+//    var lTable = document.getElementById("locationDetails");
+//    lTable.style.display = (lTable.style.display == "table") ? "none" : "table";
+
+//    $('.secondary_info').css('display', 'table')
+
+    $('#showLocDet').toggle();
+    $('#hideLocDet').toggle();
+    $('.secondary_info').toggle();
+    return false;
+}
+
  //EOF

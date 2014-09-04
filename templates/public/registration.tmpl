@@ -1,227 +1,181 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<script type="text/javascript" src="/js/patron-registration-1.0.js"></script>
 
-<script language = "Javascript">
-/**
- * DHTML email validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
- */
+<!-- A bit of custom css for this page only -->
+<style type="text/css">
+  div + div { margin-bottom: 10px; }
+</style>
 
-function echeck(str) {
+<script type="text/javascript">
 
-    var at="@"
-    var dot="."
-    var lat=str.indexOf(at)
-    var lstr=str.length
-    var ldot=str.indexOf(dot)
-    if (str.indexOf(at)==-1){
-       alert("Invalid E-mail ID")
-       return false
-    }
+//set_primary_tab("menu_current");
 
-    if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-       alert("Invalid E-mail ID")
-       return false
-    }
+$.ajaxSetup ({  
+  cache: false  
+});  
 
-    if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-        alert("Invalid E-mail ID")
-        return false
-    }
+$('document').ready(function(){
 
-    if (str.indexOf(at,(lat+1))!=-1){
-        alert("Invalid E-mail ID")
-        return false
-    }
+    $("#search").hide();
+    $(".inline-items").children().hide();
+    $(".inline-items").children(":contains('home')").show();
 
-    if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-        alert("Invalid E-mail ID")
-        return false
-    }
+    $.getJSON('/cgi-bin/get-map-regions.cgi', 
+            function(data){
+                build_region_div(data);
+           })
+        .success(function() {
+            //alert('success');
+        })
+        .error(function(data) {
+            alert('error');
+        })
+        .complete(function() {
+            //alert('ajax complete');
+        });
 
-    if (str.indexOf(dot,(lat+2))==-1){
-        alert("Invalid E-mail ID")
-        return false
-    }
+    $("#registration_form").submit(function( event ) {
+        if (ValidateForm()) {
+            register_patron();
+        }
+        event.preventDefault();
+    });
 
-    if (str.indexOf(" ")!=-1){
-        alert("Invalid E-mail ID")
-        return false
-    }
+    $( "#reg_username" ).blur(function() {
 
-    return true					
-}
+        if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
+            // nothing to check yet
+        } else {
+            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
+                function(data){
+                    if (data.exists == 1) {
+                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
+                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
+                        $("#reg_username").focus();
+                    } else {
+                        $("#username_message").text("Username is unique, good!");
+                    }
+                })
+            .success(function() {
+                //alert('success');
+            })
+            .error(function(data) {
+                alert('error');
+            })
+            .complete(function() {
+                //alert('ajax complete');
+            });
+        }
+    });
 
 
-function ValidateForm(){
-    var emailID=document.frmPatronInfo.patron_email
+    $( "#password2" ).blur(function() {
 
-    if ((emailID.value==null)||(emailID.value=="")){
-        alert("Please Enter your Email ID")
-        emailID.focus()
-        return false
-    }
-    if (echeck(emailID.value)==false){
-        emailID.value=""
-        emailID.focus()
-        return false
-    }
-    return true
-}
+        if ($("#password").val() === undefined 
+           || $("#password").val().length == 0 
+           || $("#password2").val() === undefined 
+           || $("#password2").val().length == 0) {
+
+            alert("Please enter a password, and then re-type the password.");
+            $("#password").focus();
+
+        } else {
+            if ($("#password").val() === $("#password2").val()) {
+                $("#password_message").text("Passwords match, good!");
+            } else {
+
+                $("#password_message").text("Your re-typed password did not match your origial password.  Please enter (and then re-type) a new password.");
+                $("#password_message").stop(true,true).effect("highlight", {}, 2000);
+                $("#password").focus();
+
+            }
+        }
+    });
+
+});
+
 </script>
 
-<div id="main">
-   <TMPL_IF NAME="openshelf_inquiry">
-     <script type="text/javascript">
-       <!--
-	   window.location = "http://www.gov.mb.ca/chc/pls/"
-       //-->
-     </script>
-     Redirecting to the Government of Manitoba / Public Library Services Branch web site at
-     <a href="http://www.gov.mb.ca/chc/pls/">http://www.gov.mb.ca/chc/pls/</a>
-   </TMPL_IF>
+<div id="container">
+  <div id="aside-img-left">
+    <img src="/img/fill-registration.jpg" alt="man sitting in a chair relaxing and reading a book">
+    <p class="note">Image care of <a href="https://www.flickr.com/photos/alancleaver/4297809244/">Alan Cleaver</a></p>
+  </div>
 
-   <div id="region_map">
-      <map name="imgmap"> 
-        <area shape="poly" coords="10,12,145,16,144,104,165,109,171,167,189,196,215,181,218,225,232,235,219,268,283,341,255,362,234,307,7,302,10,14" href="public.cgi?rm=registration_form&clear=1&region=PARKLAND" alt="PARKLAND"> 
-        <area shape="poly" coords="164,20,158,98,176,100,179,159,229,179,232,221,245,239,232,268,295,335,291,373,330,390,354,373,386,375,409,338,393,320,398,294,413,284,408,245,416,234,323,17,168,21" href="public.cgi?rm=registration_form&clear=1&region=INTERLAKE" alt="INTERLAKE"> 
-        <area shape="poly" coords="336,20,497,12,499,39,441,41,433,185,511,187,520,504,359,511,360,423,375,411,376,396,413,346,431,338,402,319,405,302,422,285,418,248,425,238,341,23" href="public.cgi?rm=registration_form&clear=1&region=EASTMAN" alt="EASTMAN"> 
-        <area shape="poly" coords="445,47,510,45,572,99,512,180,439,181,446,50" href="public.cgi?rm=registration_form&clear=1&region=NORMAN" alt="NORMAN"> 
-        <area shape="poly" coords="178,313,234,314,255,369,286,355,284,383,323,398,327,415,344,416,346,512,182,514,183,488,204,494,226,472,215,460,213,378,203,373,201,354,177,352,178,316" href="public.cgi?rm=registration_form&clear=1&region=CENTRAL" alt="CENTRAL"> 
-        <area shape="poly" coords="12,312,169,318,171,360,192,362,194,384,206,469,213,474,204,487,177,482,175,512,9,508,10,315" href="public.cgi?rm=registration_form&clear=1&region=WESTMAN" alt="WESTMAN"> 
-        <area shape="poly" coords="328,398,358,381,379,385,371,399,369,411,352,420,351,412,332,410" href="public.cgi?rm=registration_form&clear=1&region=WINNIPEG" alt="WINNIPEG">
-      </map> 
+  <div id="main-info-right" class="tone-box">
 
-      <p> 
-	<!-- img src="/img/regional_map.gif" width="345" height="312" alt="Move mouse over image" usemap="#imgmap" --> 
-	<img src="/img/regional_map.gif" alt="Map of regions" usemap="#imgmap"> 
-      </p>  
-    </div> 
-
-    <TMPL_IF NAME=ask_region>
-      <div class="choices" id="choose_region">
-	<p>1. Which region is your library in?</p>
-	<a href="?rm=registration_form&region=CENTRAL">CENTRAL</a><br />
-	<a href="?rm=registration_form&region=EASTMAN">EASTMAN</a><br />
-	<a href="?rm=registration_form&region=INTERLAKE">INTERLAKE</a><br />
-	<a href="?rm=registration_form&region=NORMAN">NORMAN</a><br />
-	<a href="?rm=registration_form&region=PARKLAND">PARKLAND</a><br />
-	<a href="?rm=registration_form&region=WESTMAN">WESTMAN</a><br />
-	<a href="?rm=registration_form&region=WINNIPEG">WINNIPEG</a><br />
+      <div id="waitDiv">
+        Loading... <img src="/wait.gif">
       </div>
 
-    <TMPL_ELSE>
-
-      <div class="choices">
-	<p>NOTE: If you do not yet have a membership with your local library, you need to do that first!</p>
+      <div id="region">
       </div>
+    <p> </p>
 
-      <div class="choices">
-	<p><a href="?rm=registration_form&clear=1">Start again</a></p>
-	<br />
-	<p>1. Which region is your library in?</p>
-	<p><TMPL_VAR NAME=region></p>
-	<br />
+      <div id="libraries" style="display:none; clear:both;">
       </div>
+    <p> </p>
 
-      <TMPL_IF NAME=ask_town>
-	<div class="choices" id="choose_town">
-	  <p>2. Which town is your library in?</p>
-	  <TMPL_LOOP NAME="towns">
-	    <a class="choose_town" href="?rm=registration_form&lid=<TMPL_VAR NAME=lid>"><TMPL_VAR NAME=town></a>, 
-	  </TMPL_LOOP>      
-	</div>
+    <div id="registration" style="display:none; clear:both;">
+      <br/>
+      <h2>Registration form</h2>
+      <form id="registration_form" action="/cgi-bin/register-patron.cgi" method="POST">
 
-	<div class="choices">
-	  <p>NOTE: If your municipality does not provide you with library service, you have some options:</p>
-	  <ul>
-	    <li>Notifying your local council if access is important to you.</li>
-	    <li>Contacting your nearest public library to enquire about Non-Resident membership</li>
-	    <li>Registering for a limited books-by-mail service through the <a href="?rm=registration_form&clear=1&openshelf=1">Open Shelf Program</a></li>
-	  </ul>
-	</div>
+	<!-- NOTE: the input field ids are used in the register_patron function
+	     in patron-registration-1.0.js to pull the data from the fields and
+	     create the paramters to the ajaxy cgi-bin/register-patron.cgi
 
-      <TMPL_ELSE>
+	     This form's submit is captured (above, in the document.ready() function)
+	     to do some minimal validation before actually submitting.
+	  -->
 
-	<div class="choices">
-	  <p>2. Which town is your library in?</p>
-	  <p><TMPL_VAR NAME=town></p>
-	  <p><TMPL_VAR NAME=library></p>
-	  <br />
-	</div>
+        <table id="fill-table">
+          <tr>
+        	  <th>Home library</th>
+        	  <td><p id="home_library"></p></td>
+        	</tr>
+          <tr>
+        	  <th>Your name</th>
+        	  <td><input type="text" id="patron_name"></td>
+        	</tr>
+          <tr>
+        	  <th>Library card number</th>
+        	  <td><input type="text" id="barcode"></td>
+        	</tr>
+          <tr>
+        	  <th>Email address</th>
+        	  <td><input type="text" id="email_address"></td>
+        	</tr>
+          <tr>
+        	  <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
+        	</tr>
+          <tr>
+        	  <th>Username</th>
+		  <!-- this id="username" was conflicting with the username in the header,
+		    so I've renamed this one to "reg_username". -->
+        	  <td><input type="text" id="reg_username" size=30 maxlength=50><br><p id="username_message"></p></td>
+        	</tr>
+          <tr>
+        	  <th>Password</th>
+        	  <td><input type="password" id="password" size=30 maxlength=50></td>
+        	</tr>
+          <tr>
+        	  <th>Re-type Password</th>
+        	  <td><input type="password" id="password2" size=30 maxlength=50><br><p id="password_message"></p></td>
+        	</tr>
+        </table>
 
-	<TMPL_IF NAME=ask_patron_info>
-	  <div class="choices" id="patron_info">
-	    <p>3. Your librarian needs to know who you are:</p>
-	    <form name="frmPatronInfo" method="post" action="" onSubmit="return ValidateForm()">
-	      <p>Your name:</p>
-	      <input type="text" name="patron_name" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_name>">
-	      <p>Your library card #:</p>
-	      <input type="text" name="patron_card" size=14 maxlength=14 value="<TMPL_VAR NAME=patron_card>">
-	      <p>Your email address:</p>
-	      <input type="text" name="patron_email" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_email>">
-	      <br />
-	      <p>You also need to choose a username and password for this system:</p>
+        <input id="home_library_town" type="hidden">
+	<!-- id "submitRegistration" is used in patron-registration-1.0.js to identify the button -->
+        <input id="submitRegistration" class="button-left" type="submit" value="Submit">
+      </form>
+    </div>
+    <br/>
 
-	      <TMPL_IF NAME=username_exists>
-		<div>
-		  <p><font color="#CC0000">Sorry, that username is taken.</font></p>
-		  <p>Please try a different username</p>
-		</div>
-		<br />
-	      </TMPL_IF>
+    <div id="complete" style="display:none; clear:both;">
+    </div>
+    <p> </p>
 
-	      <p>Username:</p>
-	      <input type="text" name="patron_username" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_username>">
-	      <p>Password:</p>
-	      <input type="text" name="patron_password" size=30 maxlength=50 value="<TMPL_VAR NAME=patron_password>">
-	      <input type="hidden" name="rm" value="registration_form">
-              <input type="submit" name="Submit" value="Submit">
-	    </form>
-	  </div>
-
-	  <TMPL_IF NAME=username_exists>
-	    <script type="text/javascript">
-	      document.frmPatronInfo.patron_username.focus();
-	    </script>
-	    <TMPL_ELSE>
-	      <script type="text/javascript">
-		document.frmPatronInfo.patron_name.focus();
-	      </script>
-	  </TMPL_IF>
-
-	<TMPL_ELSE>
-
-	  <div class="choices">
-	    <p>3. Your librarian needs to know who you are:</p>
-	    <p>Your name:</p>
-	    <p><TMPL_VAR NAME=patron_name></p>
-	    <p>Your library card #</p>
-	    <p><TMPL_VAR NAME=patron_card></p>
-	    <p>Your email address:</p>
-	    <p><TMPL_VAR NAME=patron_email></p>
-	    <br />
-	    <p>You also need to choose a username and password for this system:</p>
-	    <p>Username: <TMPL_VAR NAME=patron_username></p>
-	    <p>Password: <TMPL_VAR NAME=patron_password></p>
-	  </div>
-
-	  <div class="choices">
-	    <p>
-	      <a href="?rm=registration_form&clear=1">Start again</a> if you'd like to change any of your information.
-	    </p>
-	    <br />
-	    <p>
-	      If your information is correct, <a class="continue" href="?rm=search_form">log in</a> to Maplin.
-	    </p>
-	  </div>
-
-	</TMPL_IF>
-
-      </TMPL_IF>
-
-    </TMPL_IF>
-
-    <!--div style="clear:both;"></div-->
-
-</div>
-
-<TMPL_INCLUDE NAME="footer_public.tmpl">
+  </div><!-- div id main-info-right -->
+</div><!-- div id container -->
+<TMPL_INCLUDE NAME="footer.tmpl">

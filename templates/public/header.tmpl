@@ -1,8 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><title><TMPL_VAR name="pagetitle"></title>
-<link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css">
-<link type="text/css" rel="stylesheet" href="/feedstyles.1.1.css">
+
+<!--[if lt IE 9]>
+  <script>
+    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+      "figure,footer,header,main,mark,menu,meter,nav,output," +
+      "progress,section,time,video").split(',');
+    for (var i = 0; i < e.length; i++) {
+      document.createElement(e[i]);
+    }
+  </script>
+<![endif]-->
+
+<!-- <link type="text/css" rel="stylesheet" href="/fILL-public.1.0.css"> -->
+<link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
+
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
 <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
@@ -50,44 +65,58 @@
 </head>
 <body class="example_alt_pagination">
 
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
+<div id="container">
+<!--header template from public folder-->
+
+<!--***************ARIA MARKER 'BANNER'***************-->
+<header role="banner">
+
+  <div id="header-left">
+    <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
+    <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
   </div>
-  <div id="header_quick_access">
-    <ul>
-      <li><a href="?rm=welcome">Home</a></li>
-      <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
-    </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
+
+  <div id="header-right">
+    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a></div>
+    <div id="patron-info">
+  <!-- The id="username" div is necessary: the username gets extracted (in 
+       fILL_client-public-x.y.js), and passed to the code that allows the patron 
+       to make an ILL request (we need to know who is making the request :-)
+       It doesn't have to be *here*, but it has to be somewhere....
+    -->
+        <div id="username"><TMPL_VAR name="username"></div>
+        <p><TMPL_VAR name="library"></p>
+        <p style="display:none"><TMPL_VAR name="lid"></p>
+    </div>
   </div>
-</DIV>
 
-<!-- div id="nav1" -->
-<div id="csstabs">
-  <ul>
-    <li id="menu_search">
-      <a href="/cgi-bin/public.cgi?rm=search_form">
-      Search and request
-      </a>
-    </li>
-
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/public.cgi?rm=myaccount_form">
-      My Account
-      </a>
-    </li>
-
-    <li id="menu_current">
-      <a href="/cgi-bin/public.cgi?rm=current_form">
-      Current borrowing
-      </a>
-    </li>
-
+</header>
+    
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+<nav role="navigation">
+  <ul class="nav inline-items">
+    <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
+    <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
+    <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
+    <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
+    <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
+    <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
+    <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
   </ul>
+</nav>
 
-</div>
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
+    <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
+      <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
+	search_process to feed the *real* search page -->
+      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="rm" type="hidden" name="rm" value="search_form">
+      <input type="submit" value="Go">
+    </form>
+  </div>
+</div> <!-- search-container -->
 
+</div><!--container div-->
+<!-- Begin content -->

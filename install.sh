@@ -44,6 +44,8 @@ cp -R templates /opt/fILL/templates
 cp -R testing /opt/fILL/testing
 cp -R updates /opt/fILL/updates
 
+sudo chgrp -R devel /opt/fILL/*
+
 #echo Allowing write to message logs...
 #sudo chmod ugo+w /opt/fILL/logs/graphing.log
 #sudo chmod ugo+w /opt/fILL/logs/messages.log

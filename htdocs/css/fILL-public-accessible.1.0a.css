@@ -1,0 +1,310 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* unvisted link */
+ a:link {
+ 	text-decoration: none;
+	color: #395751;
+}
+/* visited link */
+ a:visited {
+	color: #395751;
+}
+/* mouse over link */
+ a:hover {
+ 	text-decoration: underline;
+	color: ##383;
+}
+/*selected link */
+ a:active {
+	color: #395751;
+}
+
+img 
+{
+	height: auto;
+	max-width: 100%;
+}
+
+h2 {
+	display: inline;
+	border-bottom: .5em;
+	color: #383;
+	font-size: 1.2em;
+	text-transform: capitalize;
+}
+
+h3 {
+	
+	color: #486660;
+	font-size: 1em;
+	text-transform: capitalize;
+}
+
+
+#container
+{
+	margin: auto;
+	padding: 1%;
+	width: 100%;
+	min-width: 480px;
+}
+
+header
+{
+	display: block;
+}
+
+input {
+	margin: 5px 0px 0px 0px;
+	width: 290px;
+	height: 2em;
+}
+
+
+nav
+{
+	float: left;
+	width: 100%;
+	margin-bottom: .5em;
+	min-width: 480px;
+	font-size: 1.2em;
+	border-bottom: #383 solid 10px;
+}
+
+nav ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+nav ul li
+{
+	list-style-type: none;
+	display: inline;
+}
+
+nav li a
+{
+	margin: 0px;
+	display: block;
+	float: left;
+	padding: 5px 10px;
+	text-decoration: none;
+	text-transform: uppercase;
+	border-right: 5px solid #fff;
+	border-top: #fff solid 5px;
+}
+
+/* Navigation link states */
+/* unvisted link */
+ nav li a:link {
+ 	background: #395751;
+ 	text-decoration: none;
+	color: #fff;
+}
+/* visited link */
+nav li a:visited {
+	background: #395751;
+	color: #fff;
+}
+/* mouse over link */
+nav li a:hover { 
+	background: #383; 
+	color: #fff;
+}
+/*selected link */
+nav li a:active {
+	background: #395751;
+	color: #fff;
+}
+
+#content-container
+{
+	float: left;
+	width: 100%;
+	background: #FFF;
+}
+#search-container {
+	clear: right;
+	float: right;
+	width: 80%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 0; 
+  	padding: 0; 
+  	background: #fff;
+}
+
+#search
+{
+	clear: right;
+	float: right;
+	width: 100%;
+	margin-bottom: 1em;
+	display: inline;
+	border: 1px solid  #c9c9c9;  
+  	padding: 1.25em; 
+  	background: #dedcd1;
+  	min-width: 480px;
+}
+
+main
+{
+	clear: right;
+	float: right;
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 1px solid  #ccc; 
+  	padding: 1.25em; 
+  	background: #dedcd1;
+}
+
+main
+{
+	clear: right;
+	float: right;
+	width: 80%;
+	margin-bottom: 1em;
+	display: inline;
+	border: 1px solid  #c9c9c9; 
+  	padding: 1.25em; 
+  	background: #dedcd1;
+  	min-width: 480px;
+}
+
+#aside
+{
+	float: left;
+	width: 18%;
+	min-width: 100px;
+	margin-bottom: 1.5em;
+	display: inline;
+	border: 1px solid  #c9c9c9; 
+  	padding: 1.25em; 
+  	background: #dedcd1; 
+}
+
+#aside p {
+
+	font-size: .8em;
+}
+
+footer
+{
+	clear: both;
+	display: block;
+	background: #486660;
+	text-align: center;
+	color: #fff;
+	padding: 2px;
+	font-size: .8em;
+	height: 1%;
+}
+
+/* button links styling*/
+.butlink {
+	float: right;
+	padding: 5px;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #395751;
+	color: #fff;
+	text-transform: uppercase;
+	width: 90px;
+}
+
+.butlinkleft {
+	float: left;
+	padding: 5px;
+	border: 1px solid #000;
+	margin-left: 20px;
+	background-color: #395751;
+	color: #fff;
+	text-transform: uppercase;
+	width: 90px;
+}
+
+/* unvisted link */
+.butlink a:link {
+	background-color: #395751;
+}
+/* visited link */
+.butlink a:visited {
+	background-color: #395751;
+}
+/* mouse over link */
+.butlink a:hover {
+	background-color: #383;
+}
+/*selected link */
+.butlink a:active {
+	background-color: red;
+}
+
+.fill {
+	color:#fff; 
+	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+}
+
+.fill-logo {
+	display: inline;
+	width: 200px;
+}
+
+.fill-tagline 
+{
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 0px;
+	color: #383;
+	text-transform: capitalize;
+}
+
+.fill-info 
+{
+	display: inline;
+	float: right;
+	text-align: right;
+}
+
+.bison 
+{
+	display: block;
+	margin: auto;
+}
+
+
+.logo-name {
+	font-size: 3em;
+}
+
+/*------------------------------------------------------*/
+.details {
+    border: 1px solid #000000;
+    border-radius: 10px;
+}
+
+.secondary_info {
+    display: none;
+    background-color: #efdd6f;
+}
+
+/*------------------------------------------------------*/
+/* from Ohio Web Library */
+#progress_empty {
+    float: left !important;
+}
+#progress_filler {
+    float: left !important;
+}
+#stat {
+    width: 250px;
+}
+/*------------------------------------------------------*/

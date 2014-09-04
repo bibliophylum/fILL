@@ -6,11 +6,25 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
-  <link rel="stylesheet" href="/fILL-public.1.0.css"></link>
+
+<!--[if lt IE 9]>
+  <script>
+    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+      "figure,footer,header,main,mark,menu,meter,nav,output," +
+      "progress,section,time,video").split(',');
+    for (var i = 0; i < e.length; i++) {
+      document.createElement(e[i]);
+    }
+  </script>
+<![endif]-->
+
+  <link rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"></link>
+  <link rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
   <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
   <script type="text/javascript" src="/js/pz2.js"></script>
-  <script type="text/javascript" src="/js/fILL_client-public-1.5.js"></script>
-<script language="JavaScript">
+  <script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
+
+<script type="text/javascript">
 
   function set_primary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
@@ -40,11 +54,20 @@
 </script>
 
 <script type="text/javascript">
+  $('document').ready(function(){
 
-$('document').ready(function(){
-  $("#query").focus();
-});
+    $("#image").append("<img src=/img/fill-search.jpg>");
 
+    $("#query").focus();
+
+    $(".coverlink").click(function( event ) {
+        event.preventDefault();
+        var $title = $(this).attr("title");
+        $("#query").val( $title );
+        $("#search-submit-button").click();
+    });
+
+  });
 </script>
 
  </head>
@@ -61,76 +84,119 @@ $('document').ready(function(){
   </div>
 
 <!-- from header.tmpl -->
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fILL.png" alt="f i l l interlibrary loan management system">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
-  </div>
 
-  <div id="header_searchbar">
+<div id="container">
+
+  <!--***************ARIA MARKER 'BANNER'***************-->
+  <header role="banner">
+
+    <div id="header-left">
+      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
+      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+    </div>
+
+    <div id="header-right">
+      <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a></div>
+      <div id="patron-info">
+    <!-- The id="username" div is necessary: the username gets extracted (in 
+         fILL_client-public-x.y.js), and passed to the code that allows the patron 
+         to make an ILL request (we need to know who is making the request :-)
+         It doesn't have to be *here*, but it has to be somewhere....
+      -->
+          <div id="username"><TMPL_VAR name="username"></div>
+          <p><TMPL_VAR name="library"></p>
+          <p style="display:none"><TMPL_VAR name="lid"></p>
+      </div>
+    </div>
+
+  </header>
+  
+  <!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation">
+    <ul class="nav inline-items">
+      <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
+      <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
+      <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
+      <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
+      <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
+      <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
+      <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
+    </ul>
+  </nav>
+
+
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
     <form id="searchForm" name="search">
-      <label for="query">Enter search terms:</label>
-      <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
+      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
+	   domReady() function to automatically do the search, if the user had 
+	   filled in the search box from a different page.
+
+	   If you change the id here, change it in fILL_client-public too,
+	   or the automatic search won't fire.
+	-->
+      <input id="search-submit-button" type="submit" value="Go">
     </form>
   </div>
+</div> <!-- search-container -->
 
-  <div id="header_quick_access">
-    <ul>
-      <li><a href="?rm=welcome">Home</a></li>
-      <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
-    </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
-  </div>
-</DIV>
+<!--***************ARIA MARKER 'MAIN'***************-->
+<main id="main" class="tone-box" role="main">
 
-<!-- div id="nav1" -->
-<div id="csstabs">
-  <ul>
-    <li id="menu_search">
-      <a href="/cgi-bin/public.cgi?rm=search_form">
-      Search and request
-      </a>
-    </li>
+<!-- Begin content -->
 
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/public.cgi?rm=myaccount_form">
-      My Account
-      </a>
-    </li>
-
-    <li id="menu_current">
-      <a href="/cgi-bin/public.cgi?rm=current_form">
-      Current borrowing
-      </a>
-    </li>
-
-  </ul>
-
-</div>
 
 <!-- end header.tmpl -->
-  <div id="switchmenu">
+
+<script type="text/javascript">
+  set_primary_tab("menu_search");
+</script>
+
+
+  <div id="switchmenu" style="display: none">
    <a href="#" onclick="switchView('recordview')">Record Browser</a>
    <span> | </span>
    <a href="#" onclick="switchView('targetview')">Target Info</a>
   </div>
  
   <div id="recordview">
-   <table width="100%" border="0" cellpadding="6" cellspacing="0">
-    <tr>
-     <td width="250" valign="top">
-       <div id="stat"></div>
-       <div id="termlist"></div>
-     </td>
-     <td valign="top">
-      <div id="onlybooks">
-	<p style="background-color: #A2CD5A;">Note that, while items of all types (DVD, CD, etc) may be listed, individual libraries may not allow interlibrary loan of audiovisual matierial at this time.</p>
+    <div id="AVnotice">
+     <h2>Featured</h2><br>
+
+        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
+	     The keywords to search for are taken from the "title" attribute.
+	-->
+        <a href="#" class="coverlink" title="Jim Crace Harvest" >
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/1.png">
+	</a>
+        <a href="#" class="coverlink" title="Colm Toibin The Testamant of Mary">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/7.png">
+	</a>
+        <a href="#" class="coverlink" title="Ruth Ozeki A Tale for the Time Being">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/27.png">
+	</a>
+        <a href="#" class="coverlink" title="NoViolet Bulawayo We Need New Names">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/68.png">
+	</a>
+        <a href="#" class="coverlink" title="Eleanor Catton The Luminaries">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/73.png">
+	</a>
+        <a href="#" class="coverlink" title="Jhumpa Lahiri The Lowland">
+	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/90.png">
+	</a>
+       <p><strong>Man Booker 2013 shortlist</strong></p> 
       </div>
-      <div id="ranking">
+      <!--
+
+	      <img src="/img/Blue exclamation mark.png" alt="exclamation icon" style="float:left; vertical-align:middle; border:0px"/>
+	    
+	      <p>Note that, while items of all types (DVD, CD, etc) may be listed, individual libraries may not allow interlibrary loan of audiovisual matierial at this time.</p>
+
+      -->
+
+      <div id="ranking" style="clear:left; display:none">
        <form name="select">
         <label for="sort">Sort by</label>
         <select name="sort" id="sort">
@@ -150,12 +216,11 @@ $('document').ready(function(){
         per page.
        </form>
       </div>
+
       <div id="pager"></div>
       <div id="navi"></div>
+      <p>Click on a title for more information.</p>
       <div id="results"></div>
-     </td>
-    </tr>
-   </table>
   </div>
   
   <div id="targetview" style="display: none">
@@ -164,20 +229,21 @@ $('document').ready(function(){
    </div>
   </div>
   
-  <div id="footer">
-      <div id="stat"></div>
-      <!--
-      <span>Copyright &copy; 1999-2010 by <a href="http://www.indexdata.com">Index Data</a></span> 
-      -->
-  </div>
 
 <!-- End content -->
+</main>
 
-<div id="nav2">
-  <ul>
-    <li><a href="?authen_logout=1">Log out</a></li>
-  </ul>
+<!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+<div id="aside" class="tone-box" role="complimentary">
+  <div id="image"></div>
+  <div id="stat"></div>
+  <div id="leftcontent"></div>
+  <div id="termlist"></div>
 </div>
 
- </body>
+</div> <!-- container -->
+<div><br></div>
+<TMPL_INCLUDE NAME="footer.tmpl">
+
+</body>
 </html>
