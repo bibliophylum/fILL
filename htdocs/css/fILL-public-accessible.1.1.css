@@ -25,6 +25,12 @@
 	color: #383;
 }
 
+/*focus over link*/
+a:focus {
+	text-decoration: none;
+	color: #383;
+}
+
 /*selected link */
  a:active {
 	color: #183935;
@@ -190,6 +196,12 @@ nav li a:active {
 	color: #fff;
 }
 
+/* focus over link */
+nav li a:focus { 
+	background: #06a0ca; 
+	color: #fff;
+}
+
 nav li a.current_tab {
 	background: #06a0ca; 
 	color: #fff;
@@ -351,7 +363,10 @@ nav li a.current_tab {
 }
 .covers:hover {
 	border: 3px dashed #c0c0c0; 
+}
 
+.covers:focus {
+	border: 3px dashed #c0c0c0; 
 }
 
 footer
@@ -418,7 +433,20 @@ input[type=submit]:hover
     width: auto;
     text-transform:capitalize;
 }
+
+input[type=submit]:focus
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border: 1px #06a0ca solid;
+	border-radius: 5px;
+	background-color: #06a0ca;
+	color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
 }
+
 
 input[type=submit], input[type=text], input[type=password]
 {
@@ -442,6 +470,10 @@ input[type=submit], input[type=text], input[type=password]
 	background: #06a0ca;
 }
 
+#fill-button:focus {
+	background: #06a0ca;
+}
+
 #butlink {
 	padding: .5em;
 	border: 1px solid #000;
@@ -462,6 +494,11 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+#butlink:focus {
 	background-color: #06a0ca;
 	border: 1px solid #06a0ca;
 }
@@ -498,6 +535,11 @@ button {
 }
 
 .button-left:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+.button-left:focus {
 	background-color: #06a0ca;
 	border: 1px solid #06a0ca;
 }
