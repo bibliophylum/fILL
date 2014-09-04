@@ -1,2 +1,5 @@
 *~
 *.dump
+*.orig
+*.tar.gz
+*blocks-2014-*
