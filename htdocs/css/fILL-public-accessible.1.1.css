@@ -405,6 +405,7 @@ input[type=password]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
+    min-width: 480px;
     border: 2px #c3c3c3 solid;
 }
 
