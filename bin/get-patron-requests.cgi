@@ -43,7 +43,8 @@ my $SQL="select
         else ra.status
   end) as status,
   'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details,
-  date_trunc('second',ra.ts) as ts 
+  date_trunc('second',ra.ts) as ts,
+  -1 as declined_id 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
@@ -72,7 +73,8 @@ $SQL = "select
   '-1' as lender,
   'New request' as status,
   'Your librarian has not yet seen this request.' as details,
-  date_trunc('second',ts) as ts
+  date_trunc('second',ts) as ts,
+  -1 as declined_id
 from
   patron_request
 where 
@@ -101,7 +103,8 @@ $SQL = "select
         when reason='other' then 'Reason given: '||message
         else reason||'. '||message
   end) as details,
-  date_trunc('second',ts) as ts
+  date_trunc('second',ts) as ts,
+  prid as declined_id
 from
   patron_requests_declined
 where 
