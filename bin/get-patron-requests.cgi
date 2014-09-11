@@ -88,6 +88,35 @@ foreach my $href (@$aref) {
 }
 
 
+# Get patron requests that the library has declined to create:
+$SQL = "select 
+  '-1' as cid,
+  title,
+  author,
+  '-1' as lender,
+  'Declined' as status,
+  (case when reason='held-locally' then 'Your library has this locally. '||message
+        when reason='blocked' then 'There is a problem with your library account. '||message
+        when reason='on-order' then 'Your library is purchasing this title. '||message 
+        when reason='other' then 'Reason given: '||message
+        else reason||'. '||message
+  end) as libraries_tried,
+  date_trunc('second',ts) as ts
+from
+  patron_requests_declined
+where 
+  lid=?
+  and pid=?
+order by ts desc";
+
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+
+# add to aref_borr:
+foreach my $href (@$aref) {
+    push @$aref_borr, $href;
+}
+
+
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { active => $aref_borr } );
