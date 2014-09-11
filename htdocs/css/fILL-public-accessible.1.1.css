@@ -72,7 +72,7 @@ h3 {
 	padding: ;
 	width: 90%;
 	height: auto;
-	min-width: 480px;
+	
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
@@ -144,7 +144,7 @@ nav
 	float: left;
 	width: 100%;
 	margin: .5em 0em;
-	min-width: 480px;
+	
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
 }
@@ -209,7 +209,7 @@ nav li a.current_tab {
 
 #search-container {
 	width: 100%;
-	min-width: 480px;
+	
 	display: block;
 }
 
@@ -219,7 +219,7 @@ nav li a.current_tab {
 	width: 100%;
 	height: ;
 	display: inline;
-  	min-width: 480px;
+  	
   	margin-bottom: 1.2em;
   	vertical-align: middle;
   	text-align: center;
@@ -281,7 +281,7 @@ nav li a.current_tab {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #main-info-right
@@ -291,7 +291,7 @@ nav li a.current_tab {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #aside-img-welcome {
@@ -392,7 +392,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    min-width: 480px;
+    
     border: 2px #c3c3c3 solid;
 }
 
@@ -405,7 +405,7 @@ input[type=password]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    min-width: 480px;
+    
     border: 2px #c3c3c3 solid;
 }
 
@@ -645,7 +645,7 @@ div.termtitle {
 
 .fill-help {
 	width: 100%;
-	min-width: 480px;
+	
 	margin: auto;
 }
 
@@ -809,3 +809,139 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
     width: 250px;
 }
 /*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) 
+
+{
+
+button {
+	font-size: 1.2em;
+}	
+
+#header-left {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+#header-right {
+	float: left;
+ 	width: 100%;
+ 	margin-top: 1em;
+ 	display: block;
+}
+
+nav li a
+{
+	margin: .5em;
+	display: block;
+	float: left;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+input[type=text]
+{
+	margin: .5em 1em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: 80%;
+    border: 2px #c3c3c3 solid;
+}
+
+#search-container {
+	width: 100%;
+	display: block;
+}
+
+#main
+{
+	display: block;
+	width: 100%; 
+  	padding: 1.25em; 
+  	margin-bottom: 1em;
+}
+
+#aside
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 1em; 
+}
+
+#main-info-left
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em; 
+  	
+}
+
+#main-info-right
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em;  	
+}
+
+#aside-img-welcome {
+
+	width: 100%;
+	height: auto;
+	min-height: 100% !important;
+	margin-bottom: 1.5em;
+	margin-top: 1em;
+	display: block;
+  	padding-bottom: 1em; 
+}
+
+#main-info-welcome 
+{
+	width: 100%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+}
+
+#welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+}
+
+#aside-img-right
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px;
+  	font-size: 1.2em; 
+}
+
+footer {
+	width: 100%;
+	display: block;
+}
+
+
+}
