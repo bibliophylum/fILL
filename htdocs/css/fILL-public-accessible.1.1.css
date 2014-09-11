@@ -839,6 +839,18 @@ nav li a
 	text-decoration: none;
 }
 
+input[type=text]
+{
+	margin: .5em 1em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: 80%;
+    border: 2px #c3c3c3 solid;
+}
+
 #main
 {
 	display: block;
