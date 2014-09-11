@@ -872,6 +872,68 @@ input[type=text]
   	padding: 1em; 
 }
 
+#main-info-left
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em; 
+  	
+}
+
+#main-info-right
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em;  	
+}
+
+#aside-img-welcome {
+
+	width: 100%;
+	height: auto;
+	min-height: 100% !important;
+	margin-bottom: 1.5em;
+	margin-top: 1em;
+	display: block;
+  	padding-bottom: 1em; 
+}
+
+#main-info-welcome 
+{
+	width: 100%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+}
+
+#welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+}
+
+#aside-img-right
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px;
+  	font-size: 1.2em; 
+}
+
 footer {
 	width: 100%;
 	display: block;
