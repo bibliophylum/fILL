@@ -42,7 +42,7 @@ my $SQL="select
         when ra.status='Renew-Answer|Ok' then 'The lender has given you a renewal on the loan.  The item is now '||ra.message
         else ra.status
   end) as status,
-  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as libraries_tried,
+  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details,
   date_trunc('second',ra.ts) as ts 
 from requests_active ra
   left join request r on r.id=ra.request_id
@@ -71,7 +71,7 @@ $SQL = "select
   author,
   '-1' as lender,
   'New request' as status,
-  'Your librarian has not yet seen this request.' as libraries_tried,
+  'Your librarian has not yet seen this request.' as details,
   date_trunc('second',ts) as ts
 from
   patron_request
@@ -100,7 +100,7 @@ $SQL = "select
         when reason='on-order' then 'Your library is purchasing this title. '||message 
         when reason='other' then 'Reason given: '||message
         else reason||'. '||message
-  end) as libraries_tried,
+  end) as details,
   date_trunc('second',ts) as ts
 from
   patron_requests_declined

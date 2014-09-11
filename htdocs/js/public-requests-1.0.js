@@ -20,7 +20,27 @@
 */
 function build_table( data ) {
     for (var i=0;i<data.active.length;i++) {
+	data.active[i].action="";
 	var ai = oTable_borrowing.fnAddData( data.active[i], false );
+	if (data.active[i].status == 'Declined') {
+	    var n = oTable_borrowing.fnSettings().aoData[ ai[0] ].nTr;
+	    /* n is now the TR that you added - so it can be modified */
+	    var oData = oTable_borrowing.fnGetData( n );
+	    n.setAttribute('id', 'declined'+data.active[i].ts);
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+data.active[i].ts;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Delete";
+	    var requestTS = data.active[i].ts;
+	    b1.onclick = make_seenit_handler( requestTS );
+	    divActions.appendChild(b1);
+
+//	    $(n).find(':last-child').appendChild( divActions );
+	} else {
+	}
     }
     oTable_borrowing.fnDraw();
 
@@ -65,6 +85,14 @@ function fnFormatDetails( oTable, nTr )
             $('div.innerDetails', nDetailsRow).slideDown();
 
 	});
+}
+
+function make_seenit_handler( requestTS ) {
+    return function() { seenit( requestTS ) };
+}
+
+function seenit( requestTS ) {
+    $("#declined"+requestTS).fadeOut(400, function() { $(this).remove(); }); // toast the row
 }
 
 function toggleLayer( whichLayer )
