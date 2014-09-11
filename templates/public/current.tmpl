@@ -39,11 +39,14 @@ $('document').ready(function(){
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "status" },
-            { "mDataProp": "libraries_tried" },
-            { "mDataProp": "ts" }
+            { "mDataProp": "details" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "action" }
         ]
 
     });
+
+
 
     $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, lid: <TMPL_VAR name="lid">},
             function(data){
@@ -107,7 +110,7 @@ $('document').ready(function(){
         	<table id="datatable_borrowing" class="display">
         	  <thead>
         	    <tr>
-        	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Details</th><th>Status Updated</th>
+        	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Details</th><th>Status Updated</th><th>Action</th>
         	    </tr>
         	  </thead>
         	  <tbody>
