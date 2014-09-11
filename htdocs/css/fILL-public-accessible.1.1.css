@@ -809,3 +809,56 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
     width: 250px;
 }
 /*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) 
+
+{
+	
+#header-left {
+	
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+#header-right {
+
+ 	width: 100%;
+ 	display: block;
+}
+
+nav li a
+{
+	margin: .5em;
+	display: block;
+	float: left;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+#main
+{
+	display: block;
+	width: 100%; 
+  	padding: 1.25em; 
+  	margin-bottom: 1em;
+}
+
+#aside
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 1em; 
+}
+
+footer {
+	width: 100%;
+	display: block;
+}
+
+
+}
