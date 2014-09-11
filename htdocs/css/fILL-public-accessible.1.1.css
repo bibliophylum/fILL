@@ -816,17 +816,25 @@ and (min-device-width : 320px)
 and (max-device-width : 480px) 
 
 {
-	
+
+* {
+	font-size: 1.2em;
+}
+
+button {
+	font-size: 2em;
+}	
+
 #header-left {
-	
 	width: 100%;
 	height: auto;
 	display: block;
 }
 
 #header-right {
-
+	float: left;
  	width: 100%;
+ 	margin-top: 1em;
  	display: block;
 }
 
