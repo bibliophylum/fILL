@@ -1,3 +1,5 @@
+
+
 *, *:before, *:after {
   -moz-box-sizing: border-box; 
   -webkit-box-sizing: border-box; 
@@ -70,14 +72,16 @@ h3 {
 	padding: ;
 	width: 90%;
 	height: auto;
+	
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
 /**HEADER STYLES**/
 
 header {
-	margin-top: 1em;
-	padding-top: .5em;
+	position: relative;
+	display: ;	
+	padding-top: 1em;
 	height: ;
 }
 
@@ -139,7 +143,8 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: ;
+	margin: .5em 0em;
+	
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
 }
@@ -158,13 +163,13 @@ nav ul li
 
 nav li a
 {
-	margin-right: .8em;
+	margin-right: 10px;
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 5px 5px 0px 0px;
 	border-radius: 5px 5px 0px 0px;
 	display: block;
 	float: left;
-	padding: .2em .5em;
+	padding: 5px 10px;
 	text-decoration: none;
 }
 
@@ -383,7 +388,7 @@ input[type=text]
 	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
-    border:solid 2px #b3b3b3;
+    border:solid 1px #505050;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -396,7 +401,7 @@ input[type=password]
 	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
-	border:solid 2px #b3b3b3;
+    border:solid 1px #505050;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -408,7 +413,7 @@ input[type=submit]
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 2px #183935 solid;
+	border: 1px #183935 solid;
 	border-radius: 5px;
     background-color: #183935;
     color: #fff;
@@ -421,7 +426,7 @@ input[type=submit]:hover
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 2px #06a0ca solid;
+	border: 1px #06a0ca solid;
 	border-radius: 5px;
 	background-color: #06a0ca;
 	color: #fff;
@@ -434,7 +439,7 @@ input[type=submit]:focus
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 2px #06a0ca solid;
+	border: 1px #06a0ca solid;
 	border-radius: 5px;
 	background-color: #06a0ca;
 	color: #fff;
@@ -446,8 +451,8 @@ input[type=submit]:focus
 
 input[type=submit], input[type=text], input[type=password]
 {
+    border: 0;
     border-radius:5px;
-    border: 2px solid inherit;
 }
 
 #fill-button {
@@ -805,47 +810,30 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 }
 /*------------------------------------------------------*/
 /*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
-@-ms-viewport {
-	width: device-width;
-}
 
-@media screen 
-and (max-width : 65em) 
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) 
 
 {
-
-#container
-{
-	margin: .5em;
-	padding: ;
-	width: 95%;
-	height: auto;
-	clear: both;  /* start fresh with floatiness within the container */
-}
-
-button {
-	font-size: 1.2em;
-	margin: 1em;
-}	
-
+	
 #header-left {
+	
 	width: 100%;
 	height: auto;
 	display: block;
 }
 
 #header-right {
-	float: left;
+
  	width: 100%;
- 	margin-top: 1em;
  	display: block;
 }
 
 nav li a
 {
-	margin: .3em;
+	margin: .5em;
 	display: block;
-	font-size: 1.2em;
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
@@ -853,99 +841,35 @@ nav li a
 
 input[type=text]
 {
-	margin: .5em .5em;
+	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
     font-size: 1.4em;
-    padding-left:.7em;
-    width: 90%;
+    padding-left:10px;
+    width: 80%;
     border: 2px #c3c3c3 solid;
 }
 
 #search-container {
 	width: 100%;
 	display: block;
-	margin: 1em;
-}
-
-.login {
-  display: block;
-  clear: all;
-  width: 100%;
-  margin: auto;
 }
 
 #main
 {
 	display: block;
-	width: 95%; 
-  	padding: 1em; 
+	width: 100%; 
+  	padding: 1.25em; 
   	margin-bottom: 1em;
 }
 
 #aside
 {
-	width: 95%;
+	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 1em; 
-}
-
-#main-info-left
-{
-	width: 100%;
-	margin-bottom: 1em;
-	display: block;
-  	padding: 1.25em; 
-  	
-}
-
-#main-info-right
-{
-	width: 100%;
-	margin-bottom: 1em;
-	display: block;
-  	padding: 1.25em;  	
-}
-
-#aside-img-welcome {
-
-	display: none;
-}
-
-#main-info-welcome 
-{
-	width: 100%;
-	height: auto;
-	margin: .9em;
-  	padding: 1.25em;  
-}
-
-#welcome-box {
-	font-size: 1.2em;
-	border: 0px;
-	height: auto;
-	padding: 1em;
-	margin-top: 1em;
-}
-
-#aside-img-right
-{
-	width: 100%;
-	margin-bottom: 1.5em;
-	display: block;
-  	padding: 0px; 
-  	font-size: 1.2em;
-}
-
-#aside-img-left
-{
-	width: 100%;
-	margin-bottom: 1.5em;
-	display: block;
-  	padding: 0px;
-  	font-size: 1.2em; 
 }
 
 footer {
@@ -953,15 +877,5 @@ footer {
 	display: block;
 }
 
-.record {
-        margin-bottom: 1em;
-        font-size: 1.2em;
-}
-.record 
-.primary_info {
-	text-align: left;
-}
 
-.secondary_info {
-	text-align: left;
 }
