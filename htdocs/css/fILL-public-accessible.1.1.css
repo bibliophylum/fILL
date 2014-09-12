@@ -968,4 +968,12 @@ footer {
         font-size: 1.2em;
 }
 
+.primary_info {
+	text-align: left;
+}
+
+.secondary_info {
+	text-align: left;
+}
+
 }
