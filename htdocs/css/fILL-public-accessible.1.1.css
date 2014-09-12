@@ -812,8 +812,8 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 /*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
 
 @media screen 
-and (min-width : 320px) 
-and (max-width : 480px) 
+and (min-width : 25em;) 
+and (max-width : 45em;) 
 
 {
 
@@ -953,5 +953,9 @@ footer {
 	display: block;
 }
 
+.record {
+        margin-bottom: 1em;
+        font-size: 1.2em;
+}
 
 }
