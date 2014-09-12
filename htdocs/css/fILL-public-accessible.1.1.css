@@ -72,7 +72,6 @@ h3 {
 	padding: ;
 	width: 90%;
 	height: auto;
-	
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
@@ -816,8 +815,19 @@ and (max-width : 50em)
 
 {
 
+#container
+{
+	margin: auto;
+	padding: ;
+	width: 95%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+	text-align: center;
+}
+
 button {
 	font-size: 1.2em;
+	margin: auto;
 }	
 
 #header-left {
@@ -859,6 +869,7 @@ input[type=text]
 #search-container {
 	width: 100%;
 	display: block;
+	margin: auto;
 }
 
 .login {
@@ -874,6 +885,7 @@ input[type=text]
 	display: block;
 	width: 100%; 
   	padding: 1.25em; 
+  	margin: auto;
   	margin-bottom: 1em;
 }
 
@@ -907,8 +919,7 @@ input[type=text]
 	width: 100%;
 	height: auto;
 	min-height: 100% !important;
-	margin-bottom: 1.5em;
-	margin-top: 1em;
+	margin: auto;
 	display: block;
   	padding-bottom: 1em; 
 }
