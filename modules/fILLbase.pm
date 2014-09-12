@@ -163,11 +163,11 @@ sub welcome_process {
     # The application object
     my $self = shift;
 
-    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $rows_affected = $self->dbh->do("UPDATE libraries SET last_login=NOW() WHERE name=?",
+    my $rows_affected = $self->dbh->do("UPDATE libraries SET last_login=NOW() WHERE lid=?",
 				       undef,
-				       $self->authen->username,
+				       $lid,
 	);
 
 
@@ -289,12 +289,12 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
 	undef,
 	$username
 	);
     $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{lid}, $hr_id->{library});
+    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
 }
 
 
