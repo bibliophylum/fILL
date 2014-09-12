@@ -845,19 +845,26 @@ nav li a
 
 input[type=text]
 {
-	margin: .5em 1em;
+	margin: .5em .5em;
 	padding: .3em;
     background-color: #fff;
     border:solid 1px #505050;
     font-size: 1.4em;
     padding-left:10px;
-    width: 80%;
+    width: 90%;
     border: 2px #c3c3c3 solid;
 }
 
 #search-container {
 	width: 100%;
 	display: block;
+}
+
+.login {
+  display: block;
+  clear: all;
+  width: 100%;
+  margin: auto;
 }
 
 #main
