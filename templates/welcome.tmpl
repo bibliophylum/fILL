@@ -1,5 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<div id="container">
+
 <main id="main-left" class="tone-box" role="main">
 	<h1>Welcome User!</h1>
 	<br />
@@ -35,36 +37,35 @@
 	<p style="text-decoration : underline;"><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></p>
 </main>
 
-<div id="main-right" class="tone-box" role="complimentary">
-
-	<h3>Accidentally said "Will-Supply"?</h3>
-	<p>The Shipping screen now has an <strong>Oops! Return this to the Respond list</strong> button.</p>
-	<p>This will remove the item from the Shipping list and place it back in the Respond list, where you can then mark it as unfilled.</p></br>
-	<h3>Cancelling a hold</h3>
-	<p>Borrowers: if a lender has placed a hold for you, that item will show up in the "Borrowing..." | "Holds placed" screen.</p>
-	<p>You can cancel a request that has a hold placed by clicking the <strong>Cancel request</strong> button for it.</p>
-	<p>Lenders: if you have a hold placed in your ILS for a borrower and the borrower cancels the request, it still shows up in your "Lending..." | "On hold" screen.  Instead of the usual "Ready to ship" button (which moves the request to your Shipping screen), that request will now have a <strong>Cancelled by borrower</strong> button, which will close the request and move it to history.  You should then (in your ILS) cancel the hold / check the item back in.</p></br>
-	<p>The "Lending..." | "On hold" tab indicates if you have any borrower requests that have been cancelled, by adding a "/1" after the number of on-hold requests.  So, for example, if you have 5 requests that you have placed holds for, and borrowers have cancelled 2 of those, the tab will show "On hold 3/2" - three active and two cancelled requests.</p>
-	
-	<h3>Requests that have not (yet) been responded to</h3>
-	<p>There is a new tab under Borrowing: <strong>Pending</strong>.  This is a list of requests you have made that have not had a response yet.</p>
-	<p>This will make it easier for you to try the next lender or cancel the request.</p>
-	<p>For any individual request, fILL sorts the list of potential lenders (a.k.a. "sources") in net-borrower/net-lender order.  The Pending tab gives the first source 3 days to respond before giving you the option to try the next lender.</p>
-	
-	
-	<h3>Holds</h3>
-	<p>fILL now supports holds handling, in the ILL-standard way!</p>
-	<p>The User's Guide has been updated with more-detailed information, but here are the highlights:</p>
-	
-	<h4>Borrowing: Asking for holds</h4>
-	
-	<p>When requesting an ILL, you can now ask the lender if they are willing to place a hold on the title for you.  If the lender places a hold (in their ILS) for you, that request will show up in the new <strong>Borrowing | Holds Placed</strong> tab. When they ship the item, the request automatically moves to your Borrowing | Receiving tab.</p>
-	
-	<h4>Lending: Placing holds</h4>
-	
-	<p>Your Lending | Respond list gives you a new option: "Hold placed".  If the borrower has asked if you are willing to place a hold for them, you can (at your discretion) place the hold in your ILS and then indicate here that you've done so.  Any holds you've placed will show up in the new <strong>Lending | On hold</strong> tab.  When the hold is ready, mark it as "Ready to ship" and it will move to your Lending | Shipping list.
-	</p>
- 
-</div>
+	<div id="main-right" class="tone-box" role="complimentary">
+		<h3>Accidentally said "Will-Supply"?</h3>
+		<p>The Shipping screen now has an <strong>Oops! Return this to the Respond list</strong> button.</p>
+		<p>This will remove the item from the Shipping list and place it back in the Respond list, where you can then mark it as unfilled.</p></br>
+		<h3>Cancelling a hold</h3>
+		<p>Borrowers: if a lender has placed a hold for you, that item will show up in the "Borrowing..." | "Holds placed" screen.</p>
+		<p>You can cancel a request that has a hold placed by clicking the <strong>Cancel request</strong> button for it.</p>
+		<p>Lenders: if you have a hold placed in your ILS for a borrower and the borrower cancels the request, it still shows up in your "Lending..." | "On hold" screen.  Instead of the usual "Ready to ship" button (which moves the request to your Shipping screen), that request will now have a <strong>Cancelled by borrower</strong> button, which will close the request and move it to history.  You should then (in your ILS) cancel the hold / check the item back in.</p></br>
+		<p>The "Lending..." | "On hold" tab indicates if you have any borrower requests that have been cancelled, by adding a "/1" after the number of on-hold requests.  So, for example, if you have 5 requests that you have placed holds for, and borrowers have cancelled 2 of those, the tab will show "On hold 3/2" - three active and two cancelled requests.</p>
+		
+		<h3>Requests that have not (yet) been responded to</h3>
+		<p>There is a new tab under Borrowing: <strong>Pending</strong>.  This is a list of requests you have made that have not had a response yet.</p>
+		<p>This will make it easier for you to try the next lender or cancel the request.</p>
+		<p>For any individual request, fILL sorts the list of potential lenders (a.k.a. "sources") in net-borrower/net-lender order.  The Pending tab gives the first source 3 days to respond before giving you the option to try the next lender.</p>
+		
+		
+		<h3>Holds</h3>
+		<p>fILL now supports holds handling, in the ILL-standard way!</p>
+		<p>The User's Guide has been updated with more-detailed information, but here are the highlights:</p>
+		
+		<h4>Borrowing: Asking for holds</h4>
+		
+		<p>When requesting an ILL, you can now ask the lender if they are willing to place a hold on the title for you.  If the lender places a hold (in their ILS) for you, that request will show up in the new <strong>Borrowing | Holds Placed</strong> tab. When they ship the item, the request automatically moves to your Borrowing | Receiving tab.</p>
+		
+		<h4>Lending: Placing holds</h4>
+		
+		<p>Your Lending | Respond list gives you a new option: "Hold placed".  If the borrower has asked if you are willing to place a hold for them, you can (at your discretion) place the hold in your ILS and then indicate here that you've done so.  Any holds you've placed will show up in the new <strong>Lending | On hold</strong> tab.  When the hold is ready, mark it as "Ready to ship" and it will move to your Lending | Shipping list.
+		</p>
+	</div>	
+</div><!--div id container-->
 
 <TMPL_INCLUDE NAME="footer.tmpl">
