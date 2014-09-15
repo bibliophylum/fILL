@@ -916,12 +916,7 @@ input[type=text]
 
 #aside-img-welcome {
 
-	width: 100%;
-	height: auto;
-	min-height: 100% !important;
-	margin: auto;
-	display: block;
-  	padding-bottom: 1em; 
+	display: none;
 }
 
 #main-info-welcome 
@@ -967,7 +962,7 @@ footer {
         margin-bottom: 1em;
         font-size: 1.2em;
 }
-
+.record 
 .primary_info {
 	text-align: left;
 }
