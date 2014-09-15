@@ -77,6 +77,14 @@ nav li a.current_tab {
 	color: #fff;
 }
 
+#csssubmenu {
+	margin: auto;
+	padding: ;
+	width: 90%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+}
+
 #csssubmenu ul
 {
   background-color: #caff70;
@@ -185,7 +193,7 @@ h3 {
 	padding: ;
 	width: 90%;
 	height: auto;
-	min-width: 480px;
+	
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
@@ -254,7 +262,7 @@ header {
 
 #search-container {
 	width: 100%;
-	min-width: 480px;
+	
 	display: block;
 }
 
@@ -264,7 +272,7 @@ header {
 	width: 100%;
 	height: ;
 	display: inline;
-  	min-width: 480px;
+  	
   	margin-bottom: 1.2em;
   	vertical-align: middle;
   	text-align: center;
@@ -326,7 +334,7 @@ header {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #main-info-right
@@ -336,7 +344,7 @@ header {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #aside-img-welcome {
@@ -434,7 +442,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    min-width: 480px;
+    
     border: 2px #c3c3c3 solid;
 }
 
@@ -659,7 +667,7 @@ div.termtitle {
 
 .fill-help {
 	width: 100%;
-	min-width: 480px;
+	
 	margin: auto;
 }
 
