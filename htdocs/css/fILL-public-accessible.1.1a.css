@@ -2,7 +2,19 @@
 
 /***---Start of new library client side CSS--**/
 
+#main-left {
+	width: 48%;
+	margin: auto;
+	float: left;
+	display: inline;
+}
 
+#main-right {
+	width: 48%;
+	margin: auto;
+	float: left;
+	display: inline;
+}
 
 
 /***---End of new library client side CSS--**/
