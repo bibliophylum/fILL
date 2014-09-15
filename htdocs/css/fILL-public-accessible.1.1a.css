@@ -3,17 +3,19 @@
 /***---Start of new library client side CSS--**/
 
 #main-left {
-	width: 35%;
+	width: 30%;
 	padding: 1em;
 	float: left;
 	display: inline;
+	margin-bottom: 1em;
 }
 
 #main-right {
-	width: 60%;
+	width: 65%;
 	padding: 1em;
 	float: right;
 	display: inline;
+	margin-bottom: 1em;
 }
 
 
