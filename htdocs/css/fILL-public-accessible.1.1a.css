@@ -3,14 +3,14 @@
 /***---Start of new library client side CSS--**/
 
 #main-left {
-	width: 30%;
+	width: 35%;
 	padding: 1em;
 	float: left;
 	display: inline;
 }
 
 #main-right {
-	width: 65%;
+	width: 60%;
 	padding: 1em;
 	float: right;
 	display: inline;
