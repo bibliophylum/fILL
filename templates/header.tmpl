@@ -91,11 +91,11 @@ $('document').ready(function(){
 
 <body class="example_alt_pagination" onload="domReady();">
 
-<DIV id="header">
-  <div id="logo">
-    <img src="/img/fill-logo.png" class="fill-logo" alt="f i l l free open source software interlibrary loan management system">
-    <div id="logo_slogan">Manitoba Public Libraries ILL management system</div>
-  </div>
+<div id="header">
+    <div id="header-left">
+      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
+      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+    </div>
 
   <!-- Not displayed on any page except lightning (at the moment) -->
   <div id="header_searchbar" style="display: none">
@@ -115,7 +115,8 @@ $('document').ready(function(){
     <p id="library_name"><TMPL_VAR NAME="library"></p>
     <p id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
-</DIV>
+
+</div><!--Div id header-->
 
 <!-- div id="nav1" -->
 <div id="csstabs">
@@ -176,6 +177,8 @@ $('document').ready(function(){
 
 
   </ul>
-  </div>
 </div>
+
+</div><!--container div-->
+<!-- Begin content -->
 

@@ -3,16 +3,16 @@
 /***---Start of new library client side CSS--**/
 
 #main-left {
-	width: 48%;
-	margin: auto;
+	width: 45%;
+
 	float: left;
 	display: inline;
 }
 
 #main-right {
-	width: 48%;
-	margin: auto;
-	float: left;
+	width: 45%;
+
+	float: right;
 	display: inline;
 }
 
