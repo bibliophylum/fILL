@@ -262,7 +262,6 @@ header {
 
 #search-container {
 	width: 100%;
-	
 	display: block;
 }
 
@@ -442,7 +441,6 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    
     border: 2px #c3c3c3 solid;
 }
 
@@ -482,7 +480,6 @@ input[type=submit]:hover
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
-}
 }
 
 input[type=submit], input[type=text], input[type=password]
@@ -579,7 +576,7 @@ button {
 	margin-right: 1em;
 }
 
-/*discontinued for text based fill logo
+/*discontinued from text based fill logo
 .fill {
 	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
