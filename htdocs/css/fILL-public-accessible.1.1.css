@@ -809,6 +809,9 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 }
 /*------------------------------------------------------*/
 /*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+	width: device-width;
+}
 
 @media screen 
 and (max-width : 65em) 
