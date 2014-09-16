@@ -820,17 +820,16 @@ and (max-width : 65em)
 
 #container
 {
-	margin: auto;
+	margin: .5em;
 	padding: ;
 	width: 95%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
-	text-align: center;
 }
 
 button {
 	font-size: 1.2em;
-	margin: auto;
+	margin: 1em;
 }	
 
 #header-left {
@@ -864,7 +863,7 @@ input[type=text]
     background-color: #fff;
     border:solid 1px #505050;
     font-size: 1.4em;
-    padding-left:10px;
+    padding-left:.7em;
     width: 90%;
     border: 2px #c3c3c3 solid;
 }
@@ -872,7 +871,7 @@ input[type=text]
 #search-container {
 	width: 100%;
 	display: block;
-	margin: auto;
+	margin: 1em;
 }
 
 .login {
@@ -886,15 +885,14 @@ input[type=text]
 {
 	float: left;
 	display: block;
-	width: 100%; 
-  	padding: 1.25em; 
-  	margin: auto;
+	width: 95%; 
+  	padding: 1em; 
   	margin-bottom: 1em;
 }
 
 #aside
 {
-	width: 100%;
+	width: 95%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 1em; 
