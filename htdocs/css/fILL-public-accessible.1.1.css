@@ -447,7 +447,7 @@ input[type=submit]:focus
 
 input[type=submit], input[type=text], input[type=password]
 {
-    border:solid 1px #b3b3b3;
+    border:solid 2px #b3b3b3;
     border-radius:5px;
 }
 
