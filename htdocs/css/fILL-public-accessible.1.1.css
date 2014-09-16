@@ -165,7 +165,7 @@ nav li a
 	border-radius: 5px 5px 0px 0px;
 	display: block;
 	float: left;
-	padding: .2em 5em;
+	padding: .2em .5em;
 	text-decoration: none;
 }
 
@@ -847,7 +847,6 @@ nav li a
 	margin: .3em;
 	display: block;
 	font-size: 1.2em;
-	font-weight: bold;
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
