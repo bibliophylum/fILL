@@ -95,25 +95,21 @@ $('document').ready(function(){
 
 
 <div id="main">
-
-  <div id="leftcontent">
     <h2>Instructions</h2>
     <ol>
       <li>Click on the barcode column to enter the barcode from your ILS.</li>
     </ol>
-  </div>
-
-  <div id="middlecontent">
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
 
     <div id="myDiv">
-      <h3>Library barcodes from your ILS</h3>
-      <div id="mylistDiv">
-	<div class="dataTable_wrapper">
-	  <table id="datatable_barcodes" width="100%">
+    <h3>Library barcodes from your ILS</h3>
+    <div id="mylistDiv">
+	  <div class="dataTable_wrapper">
+	  
+    <table id="datatable_barcodes" width="100%">
 	    <thead>
 	      <tr>
 		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th>
@@ -122,12 +118,10 @@ $('document').ready(function(){
 	    <tbody>
 	    </tbody>
 	  </table>
-	</div>
-      </div>
+
+	  </div>
     </div>
-
-  </div>
-
+    </div>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
