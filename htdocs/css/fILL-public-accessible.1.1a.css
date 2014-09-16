@@ -27,45 +27,46 @@
 	width: 100%;
 	height: auto;
 	color: #fff;
+	font-size: 1.2em;
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
 #csssubmenu ul
 {
-  background-color: #a2aac4;
-  text-align: center;
-  margin: 0em;
-  padding: 0.4em;
-  list-style: none;
+  	background-color: #a2aac4;
+  	text-align: center;
+  	margin: 0em;
+  	padding: 0.4em;
+  	list-style: none;
 }
 #csssubmenu ul li 
 {
-
-  padding: 0 ;
-  display: inline ;
-  text-align: center ;
-  list-style: none ;
+	margin-right: .3em;
+  	padding: 0 ;
+  	display: inline ;
+  	text-align: center ;
+  	list-style: none ;
 }
 
 #csssubmenu li a
 {
-  margin: .5em, 1em ;
-  background-color: #06a0ca;
-  padding: 3px ;
-  text-decoration: none ;
-  display: inline ;
+  	margin: .5em, 1em ;
+  	background-color: #06a0ca;
+  	padding: 3px ;
+  	text-decoration: none ;
+  	display: inline ;
 }
 #csssubmenu li a:hover {
-  color: #003399;
-  background-color: #fff ;
+  	color: #003399;
+  	background-color: #fff ;
 }
 #csssubmenu li.current_tab a
 {
-  color: #000 ;
-  background-color: #fff ;
-  padding: 3px ;
-  text-decoration: none ;
-  display: inline ;
+  	color: #000 ;
+  	background-color: #fff ;
+  	padding: 3px ;
+  	text-decoration: none ;
+  	display: inline ;
 }
 
 /***---End of new library client side CSS--**/

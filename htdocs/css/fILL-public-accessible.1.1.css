@@ -80,7 +80,6 @@ h3 {
 header {
 	padding-top: 1em;
 	height: ;
-	background-color: 
 }
 
 #header-left {
@@ -166,7 +165,7 @@ nav li a
 	border-radius: 5px 5px 0px 0px;
 	display: block;
 	float: left;
-	padding: .5em 1em;
+	padding: .2em 5em;
 	text-decoration: none;
 }
 
