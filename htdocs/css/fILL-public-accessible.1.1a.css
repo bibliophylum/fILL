@@ -22,68 +22,9 @@
 	margin-bottom: 1em;
 }
 
-nav
-{
-	display: block;
-	float: left;
-	width: 100%;
-	margin: .5em 0em;
-	font-size: 1.4em;
-	border-bottom: #06a0ca solid 5px;
-}
-
-nav ul
-{
-	margin-top: .5em;
-	padding: 0px;
-}
-
-nav ul li
-{
-	list-style-type: none;
-	display: inline;
-}
-
-nav li a
-{
-	margin: 5px;
-	display: block;
-	float: left;
-	padding: 5px 10px;
-	text-decoration: none;
-}
-
-/* Navigation link states */
-/* unvisted link */
-nav li a:link {
- 	background: #183935;/*main dark green colour*/
- 	text-decoration: none;
-	color: #fff;
-}
-/* visited link */
-nav li a:visited {
-	background: #183935;
-	color: #fff;
-}
-/* mouse over link */
-nav li a:hover { 
-	background: #06a0ca; 
-	color: #fff;
-}
-/*selected link */
-nav li a:active {
-	background: #183935;
-	color: #fff;
-}
-
-nav li a.current_tab {
-	background: #06a0ca; 
-	color: #fff;
-}
-
 #csssubmenu {
-	margin: auto;
-	padding: ;
+	margin: .5em 1em;
+	padding: .5em;
 	width: 90%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
@@ -91,7 +32,7 @@ nav li a.current_tab {
 
 #csssubmenu ul
 {
-  background-color: #caff70;
+  background-color: #a2aac4;
   text-align: center;
   margin: 0em;
   padding: 0.4em;
@@ -104,12 +45,12 @@ nav li a.current_tab {
   display: inline ;
   text-align: center ;
   list-style: none ;
-  font-family: Arial, Helvetica, sans-serif ;
 }
+
 #csssubmenu li a
 {
   color: #003399 ;
-  background-color: #dbe3ff;
+  background-color: #06a0ca;
   border: 1px outset #bfffe4 ;
   padding: 3px ;
   text-decoration: none ;

@@ -141,8 +141,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: .5em 0em;
-	
+	margin: ;
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
 }
@@ -161,7 +160,7 @@ nav ul li
 
 nav li a
 {
-	margin-right: 10px;
+	margin-right: 1em;
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 5px 5px 0px 0px;
 	border-radius: 5px 5px 0px 0px;
