@@ -384,7 +384,7 @@ input[type=text]
 	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
-    border:solid 1px #505050;
+    border:solid 1px #b3b3b3;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -397,7 +397,7 @@ input[type=password]
 	margin: .5em 1em;
 	padding: .3em;
     background-color: #fff;
-    border:solid 1px #505050;
+    border:solid 1px #b3b3b3;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -447,7 +447,7 @@ input[type=submit]:focus
 
 input[type=submit], input[type=text], input[type=password]
 {
-    border:solid 1px #505050;
+    border:solid 1px #b3b3b3;
     border-radius:5px;
 }
 
