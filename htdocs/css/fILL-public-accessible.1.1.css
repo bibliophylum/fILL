@@ -811,7 +811,7 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 /*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
 
 @media screen 
-and (max-width : 50em) 
+and (max-width : 55em) 
 
 {
 
