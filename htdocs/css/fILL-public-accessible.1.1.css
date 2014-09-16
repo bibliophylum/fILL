@@ -78,10 +78,9 @@ h3 {
 /**HEADER STYLES**/
 
 header {
-	position: relative;
-	display: ;	
 	padding-top: 1em;
 	height: ;
+	background-color: 
 }
 
 #header-left {
@@ -883,7 +882,6 @@ input[type=text]
 
 #main
 {
-	float: left;
 	display: block;
 	width: 95%; 
   	padding: 1em; 
