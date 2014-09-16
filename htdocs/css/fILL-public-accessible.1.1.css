@@ -409,7 +409,7 @@ input[type=submit]
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #183935 solid;
+	border: 2px #183935 solid;
 	border-radius: 5px;
     background-color: #183935;
     color: #fff;
@@ -422,7 +422,7 @@ input[type=submit]:hover
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #06a0ca solid;
+	border: 2px #06a0ca solid;
 	border-radius: 5px;
 	background-color: #06a0ca;
 	color: #fff;
@@ -435,7 +435,7 @@ input[type=submit]:focus
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #06a0ca solid;
+	border: 2px #06a0ca solid;
 	border-radius: 5px;
 	background-color: #06a0ca;
 	color: #fff;
@@ -448,6 +448,7 @@ input[type=submit]:focus
 input[type=submit], input[type=text], input[type=password]
 {
     border-radius:5px;
+    border: 2px solid;
 }
 
 #fill-button {
