@@ -19,6 +19,13 @@ $('document').ready(function(){
 
 
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+<main id="main" class="tone-box" role="main">
+
+<!-- Begin content -->
+
+
+<!-- end header.tmpl -->
+
 <script type="text/javascript">
   <!--
   set_secondary_tab("menu_borrow_lightning");
@@ -30,15 +37,9 @@ $('document').ready(function(){
    <span> | </span>
    <a href="#" onclick="switchView('targetview')">Target Info</a>
   </div>
- 
   <div id="recordview">
-   <table class="fill-table" width="100%" border="0" cellpadding="6" cellspacing="0">
-    <tr>
-     <td width="250" valign="top">
        <div id="stat"></div>
        <div id="termlist"></div>
-     </td>
-     <td valign="top">
       <div id="ranking">
        <form name="select">
         Sort by
@@ -61,9 +62,7 @@ $('document').ready(function(){
       <div id="pager"></div>
       <div id="navi"></div>
       <div id="results"></div>
-     </td>
-    </tr>
-   </table>
+
   </div>
   
   <div id="targetview" style="display: none">
@@ -71,7 +70,7 @@ $('document').ready(function(){
        No information available yet.
    </div>
   </div>
-  
+ </main> 
   <div id="footer">
       <div id="stat"></div>
       <!--
