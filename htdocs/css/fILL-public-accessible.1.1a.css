@@ -26,7 +26,6 @@
 	padding: .5em;
 	width: 100%;
 	height: auto;
-	color: #fff;
 	font-size: 1.2em;
 	clear: both;  /* start fresh with floatiness within the container */
 }
@@ -52,6 +51,7 @@
 {
   	margin: .5em, 1em ;
   	background-color: #06a0ca;
+  	color: #fff;
   	padding: 3px ;
   	text-decoration: none ;
   	display: inline ;
