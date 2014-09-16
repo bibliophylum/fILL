@@ -23,10 +23,10 @@
 }
 
 #csssubmenu {
-	margin: .5em 1em;
 	padding: .5em;
-	width: 90%;
+	width: 100%;
 	height: auto;
+	color: #fff;
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
@@ -40,7 +40,7 @@
 }
 #csssubmenu ul li 
 {
-  margin: 0 ;
+  margin: .5em, 1em ;
   padding: 0 ;
   display: inline ;
   text-align: center ;
@@ -51,7 +51,6 @@
 {
   color: #003399 ;
   background-color: #06a0ca;
-  border: 1px outset #bfffe4 ;
   padding: 3px ;
   text-decoration: none ;
   display: inline ;
@@ -64,7 +63,6 @@
 {
   color: #000 ;
   background-color: #fff ;
-  border: 1px outset #bfffe4 ;
   padding: 3px ;
   text-decoration: none ;
   display: inline ;
