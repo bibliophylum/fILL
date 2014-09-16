@@ -25,6 +25,12 @@
 	color: #383;
 }
 
+/*focus over link*/
+a:focus {
+	text-decoration: none;
+	color: #383;
+}
+
 /*selected link */
  a:active {
 	color: #183935;
@@ -66,7 +72,6 @@ h3 {
 	padding: ;
 	width: 90%;
 	height: auto;
-	min-width: 480px;
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
@@ -138,7 +143,7 @@ nav
 	float: left;
 	width: 100%;
 	margin: .5em 0em;
-	min-width: 480px;
+	
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
 }
@@ -190,6 +195,12 @@ nav li a:active {
 	color: #fff;
 }
 
+/* focus over link */
+nav li a:focus { 
+	background: #06a0ca; 
+	color: #fff;
+}
+
 nav li a.current_tab {
 	background: #06a0ca; 
 	color: #fff;
@@ -197,7 +208,7 @@ nav li a.current_tab {
 
 #search-container {
 	width: 100%;
-	min-width: 480px;
+	
 	display: block;
 }
 
@@ -207,7 +218,7 @@ nav li a.current_tab {
 	width: 100%;
 	height: ;
 	display: inline;
-  	min-width: 480px;
+  	
   	margin-bottom: 1.2em;
   	vertical-align: middle;
   	text-align: center;
@@ -220,7 +231,7 @@ nav li a.current_tab {
 {
 	float: right;
 	width: 80%; 
-	min-width: 250px;
+	min-width: 400px;
   	padding: 1.25em; 
   	margin-bottom: 1em;
 }
@@ -229,7 +240,7 @@ nav li a.current_tab {
 {
 	float: left;
 	width: 18%;
-	min-width: 150px;
+	min-width: 180px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 1em; 
@@ -269,7 +280,7 @@ nav li a.current_tab {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #main-info-right
@@ -279,7 +290,7 @@ nav li a.current_tab {
 	margin-bottom: 1em;
 	display: inline;
   	padding: 1.25em; 
-  	min-width: 480px;
+  	
 }
 
 #aside-img-welcome {
@@ -351,7 +362,10 @@ nav li a.current_tab {
 }
 .covers:hover {
 	border: 3px dashed #c0c0c0; 
+}
 
+.covers:focus {
+	border: 3px dashed #c0c0c0; 
 }
 
 footer
@@ -377,7 +391,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    min-width: 480px;
+    
     border: 2px #c3c3c3 solid;
 }
 
@@ -390,6 +404,7 @@ input[type=password]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
+    
     border: 2px #c3c3c3 solid;
 }
 
@@ -418,7 +433,20 @@ input[type=submit]:hover
     width: auto;
     text-transform:capitalize;
 }
+
+input[type=submit]:focus
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border: 1px #06a0ca solid;
+	border-radius: 5px;
+	background-color: #06a0ca;
+	color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
 }
+
 
 input[type=submit], input[type=text], input[type=password]
 {
@@ -442,6 +470,10 @@ input[type=submit], input[type=text], input[type=password]
 	background: #06a0ca;
 }
 
+#fill-button:focus {
+	background: #06a0ca;
+}
+
 #butlink {
 	padding: .5em;
 	border: 1px solid #000;
@@ -462,6 +494,11 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+#butlink:focus {
 	background-color: #06a0ca;
 	border: 1px solid #06a0ca;
 }
@@ -498,6 +535,11 @@ button {
 }
 
 .button-left:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+.button-left:focus {
 	background-color: #06a0ca;
 	border: 1px solid #06a0ca;
 }
@@ -602,7 +644,7 @@ div.termtitle {
 
 .fill-help {
 	width: 100%;
-	min-width: 480px;
+	
 	margin: auto;
 }
 
@@ -766,3 +808,167 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
     width: 250px;
 }
 /*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+
+@media screen 
+and (max-width : 50em) 
+
+{
+
+#container
+{
+	margin: auto;
+	padding: ;
+	width: 95%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+	text-align: center;
+}
+
+button {
+	font-size: 1.2em;
+	margin: auto;
+}	
+
+#header-left {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+#header-right {
+	float: left;
+ 	width: 100%;
+ 	margin-top: 1em;
+ 	display: block;
+}
+
+nav li a
+{
+	margin: .3em;
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	float: left;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+input[type=text]
+{
+	margin: .5em .5em;
+	padding: .3em;
+    background-color: #fff;
+    border:solid 1px #505050;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: 90%;
+    border: 2px #c3c3c3 solid;
+}
+
+#search-container {
+	width: 100%;
+	display: block;
+	margin: auto;
+}
+
+.login {
+  display: block;
+  clear: all;
+  width: 100%;
+  margin: auto;
+}
+
+#main
+{
+	float: left;
+	display: block;
+	width: 100%; 
+  	padding: 1.25em; 
+  	margin: auto;
+  	margin-bottom: 1em;
+}
+
+#aside
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 1em; 
+}
+
+#main-info-left
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em; 
+  	
+}
+
+#main-info-right
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em;  	
+}
+
+#aside-img-welcome {
+
+	display: none;
+}
+
+#main-info-welcome 
+{
+	width: 100%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+}
+
+#welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+}
+
+#aside-img-right
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px;
+  	font-size: 1.2em; 
+}
+
+footer {
+	width: 100%;
+	display: block;
+}
+
+.record {
+        margin-bottom: 1em;
+        font-size: 1.2em;
+}
+.record 
+.primary_info {
+	text-align: left;
+}
+
+.secondary_info {
+	text-align: left;
+}
+
+}
