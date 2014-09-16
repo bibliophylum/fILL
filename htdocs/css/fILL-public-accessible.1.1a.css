@@ -40,7 +40,7 @@
 }
 #csssubmenu ul li 
 {
-  margin: .5em, 1em ;
+
   padding: 0 ;
   display: inline ;
   text-align: center ;
@@ -49,7 +49,7 @@
 
 #csssubmenu li a
 {
-  color: #003399 ;
+  margin: .5em, 1em ;
   background-color: #06a0ca;
   padding: 3px ;
   text-decoration: none ;
