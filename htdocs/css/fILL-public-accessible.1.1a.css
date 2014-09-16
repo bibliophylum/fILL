@@ -990,7 +990,7 @@ input[type=text]
     background-color: #fff;
     border:solid 1px #505050;
     font-size: 1.4em;
-    padding-left:10px;
+    padding-left:.7em;
     width: 90%;
     border: 2px #c3c3c3 solid;
 }
@@ -1012,15 +1012,14 @@ input[type=text]
 {
 	float: left;
 	display: block;
-	width: 100%; 
-  	padding: 1.25em; 
-  	margin: auto;
+	width: 95%; 
+  	padding: 1em; 
   	margin-bottom: 1em;
 }
 
 #aside
 {
-	width: 100%;
+	width: 95%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 1em; 
