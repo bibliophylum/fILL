@@ -19,6 +19,7 @@ $('document').ready(function(){
 
 
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
+
 <main id="main" class="tone-box" role="main">
 
 <!-- Begin content -->
@@ -36,14 +37,6 @@ $('document').ready(function(){
    <a href="#" onclick="switchView('recordview')">Record Browser</a>
    <span> | </span>
    <a href="#" onclick="switchView('targetview')">Target Info</a>
-  </div>
-
-<!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-<div id="aside" class="tone-box" role="complimentary">
- 
-  <div id="recordview">
-       <div id="stat"></div>
-       <div id="termlist"></div>
   </div>
 
       <div id="ranking">
@@ -77,6 +70,15 @@ $('document').ready(function(){
    </div>
   </div>
  </main> 
+
+ <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+<div id="aside" class="tone-box" role="complimentary">
+  <div id="recordview">
+       <div id="stat"></div>
+       <div id="termlist"></div>
+  </div>
+</div>
+
   <div id="footer">
       <div id="stat"></div>
       <!--
