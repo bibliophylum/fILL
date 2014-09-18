@@ -73,15 +73,6 @@ $('document').ready(function(){
 
 <div role="main">
 
-
-    <h2>Instructions</h2>
-    <ol>
-      <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
-      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
-      <li>Hover over a library's symbol to see the full name of the library.</li>
-    </ol>
-    <hr/>
-
     <h3>Unfilled codes</h3>
     <table style="border:1px solid black;border-collapse:collapse;">
       <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
@@ -107,9 +98,15 @@ $('document').ready(function(){
     <div id="myDiv">
       <h3>Respond to requests</h3>
       <div id="mylistDiv"></div>
-
     </div>
 
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
+      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
+      <li>Hover over a library's symbol to see the full name of the library.</li>
+    </ol>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

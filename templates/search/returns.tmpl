@@ -63,13 +63,6 @@ $('document').ready(function(){
 
 <div role="main">
 
-    <h2>Instructions</h2>
-    <ol>
-      <li>If you try to check a book into your ILS, and your ILS doesn't have a record of that book, it's likely an ILL.</li>
-      <li>Find the book on this screen, click 'Return', and send it back to the lending library using the return slip that came with it.</li>
-    </ol>
-  </div>
-
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
@@ -80,6 +73,14 @@ $('document').ready(function(){
       <div id="mylistDiv"></div>
     </div>
 
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If you try to check a book into your ILS, and your ILS doesn't have a record of that book, it's likely an ILL.</li>
+      <li>Find the book on this screen, click 'Return', and send it back to the lending library using the return slip that came with it.</li>
+    </ol>
+  </div>
+  
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
