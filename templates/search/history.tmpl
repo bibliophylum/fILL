@@ -181,16 +181,8 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
+<div role="main">
 
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Borrowing and lending history</li>
-    </ol>
-  </div>
-
-  <div id="middlecontent">
     <div>
       <h3>Specify a date range</h3>
       <form>
@@ -249,7 +241,14 @@ $('document').ready(function(){
       </div>
 
     </div>
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Borrowing and lending history</li>
+    </ol>
   </div>
+
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

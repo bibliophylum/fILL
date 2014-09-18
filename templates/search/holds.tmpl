@@ -69,12 +69,6 @@ $('document').ready(function(){
 
 <div role="main">
 
-    <h2>Instructions</h2>
-    <ol>
-      <li>If a lending library placed a hold for you, that request will be shown here.</li>
-      <li>When the lender fills the hold (i.e. ships the title to you), it will be removed from this list and added to your 'Receiving' list.</li>
-    </ol>
-
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
@@ -83,7 +77,13 @@ $('document').ready(function(){
       <h3>Holds - the lending libraries have placed holds in their ILS for the following titles:</h3>
       <div id="mylistDiv"></div>
     </div>
-
+    
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>If a lending library placed a hold for you, that request will be shown here.</li>
+      <li>When the lender fills the hold (i.e. ships the title to you), it will be removed from this list and added to your 'Receiving' list.</li>
+    </ol>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

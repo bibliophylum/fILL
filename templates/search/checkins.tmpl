@@ -60,17 +60,7 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
-
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>This is a list of loans you have made to other libraries, where the borrowing library has returned the item.</li>
-      <li>When the item arrives in the mail, check it in here and in your ILS.</li>
-    </ol>
-  </div>
-
-  <div id="middlecontent">
+<div role="main">
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
@@ -82,6 +72,12 @@ $('document').ready(function(){
       <div id="mylistDiv"></div>
     </div>
 
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>This is a list of loans you have made to other libraries, where the borrowing library has returned the item.</li>
+      <li>When the item arrives in the mail, check it in here and in your ILS.</li>
+    </ol>
   </div>
 
 </div>

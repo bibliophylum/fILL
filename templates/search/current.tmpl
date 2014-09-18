@@ -348,16 +348,10 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
+<div role="main">
 
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Current interlibrary loans: borrowing and lending</li>
-    </ol>
-  </div>
 
-  <div id="middlecontent">
+
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
@@ -426,7 +420,14 @@ $('document').ready(function(){
       </div>
 
     </div>
-  </div>
+
+    <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Current interlibrary loans: borrowing and lending</li>
+    </ol>
+    </div>
+    
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

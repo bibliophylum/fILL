@@ -60,7 +60,16 @@ $('document').ready(function(){
 
 <div role="main">
 
-  <div id="leftcontent">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <h3>New patron requests:</h3>
+      <div id="mylistDiv"></div>
+    </div>
+
+  <div id="instructions" class="tone=box">
     <h2>Instructions</h2>
     <p>These are requests from your patrons that have come in from the public side of fILL.</p>
     
@@ -73,19 +82,6 @@ $('document').ready(function(){
     <p>If you do NOT agree to ILL an item, make sure to tell your patron!</p>
     
     <p><strong>For privacy reasons, fILL does not keep these patron requests after you've dealt with them.</strong></p>
-  </div>
-
-  <div id="middlecontent">
-
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
-
-    <div id="myDiv">
-      <h3>New patron requests:</h3>
-      <div id="mylistDiv"></div>
-    </div>
-
   </div>
 
 </div>

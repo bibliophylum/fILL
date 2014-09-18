@@ -62,17 +62,7 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
-
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <p>If you have placed a hold in your ILS for an ILL request, that request will be listed.</p><br/>
-    <p>When you capture the hold in your ILS (i.e. you have the book in hand, ready to fill the ILL request),
-      click the 'Ready to ship' button.  This will move the request to your 'Shipping' screen.</p><br/>
-    <p>If you see a 'Cancelled by borrower' button instead, this means that you don't need to ship the book.  Click the button, and check the book back into your ILS.</p>
-  </div>
-
-  <div id="middlecontent">
+<div role="main">
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
@@ -81,9 +71,14 @@ $('document').ready(function(){
     <div id="myDiv">
       <h3>Items waiting for hold fulfillment</h3>
       <div id="mylistDiv"></div>
-
     </div>
 
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <p>If you have placed a hold in your ILS for an ILL request, that request will be listed.</p><br/>
+    <p>When you capture the hold in your ILS (i.e. you have the book in hand, ready to fill the ILL request),
+      click the 'Ready to ship' button.  This will move the request to your 'Shipping' screen.</p><br/>
+    <p>If you see a 'Cancelled by borrower' button instead, this means that you don't need to ship the book.  Click the button, and check the book back into your ILS.</p>
   </div>
 
 </div>

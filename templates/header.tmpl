@@ -175,26 +175,19 @@ $('document').ready(function(){
   </ul>
 </nav>
 
-
-  <div id="header_searchbar" style="display: none">
+  <!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
+    <div id="header_searchbar" style="display: none">
     <form id="searchForm" name="search">
       <input id="query" type="text" size="50"/>
       <input id="button" type="submit" value="Search"/>
       <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
     </form>
+    </div>
   </div>
+</div>
 
-  <!--***************ARIA MARKER 'SEARCH'***************-->
-<div id="search-container">
-  <div id="search" role="search">
-    <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
-      <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
-  search_process to feed the *real* search page -->
-      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
-      <input id="rm" type="hidden" name="rm" value="search_form">
-      <input type="submit" value="Go">
-    </form>
-  </div>
-</div> <!-- search-container -->
+
 <!-- Begin content -->
 

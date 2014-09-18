@@ -22,13 +22,6 @@
 
 <div id="main">
 
-  <div id="leftcontent">
-    <h2>Information</h2>
-    <p>If the first lender cannot fill the request, it will automatically be sent to the next lender.</p>
-    <p>If no lenders are able to fill the request, you will be notified.</p>
-  </div>
-
-  <div id="middlecontent">
     <TMPL_IF name="multiple_copies">
       <h2>Your requests have been placed</h2>
       <p>You've asked for <TMPL_VAR NAME="copies_requested"> copies.</p>
@@ -74,6 +67,10 @@
     </TMPL_LOOP>
     </table>
 
+<div id="instructions" class="tone-box">
+    <h2>Information</h2>
+    <p>If the first lender cannot fill the request, it will automatically be sent to the next lender.</p>
+    <p>If no lenders are able to fill the request, you will be notified.</p>
   </div>
 
 </div>
