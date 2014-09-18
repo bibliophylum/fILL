@@ -71,9 +71,9 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
+<div role="main">
 
-  <div id="leftcontent">
+
     <h2>Instructions</h2>
     <ol>
       <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
@@ -81,7 +81,7 @@ $('document').ready(function(){
       <li>Hover over a library's symbol to see the full name of the library.</li>
     </ol>
     <hr/>
-    <br />
+
     <h3>Unfilled codes</h3>
     <table style="border:1px solid black;border-collapse:collapse;">
       <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
@@ -97,9 +97,8 @@ $('document').ready(function(){
       <tr><td style="border:1px solid black;">policy-problem</td><td style="border:1px solid black;">It is against our policies to loan this.</td></tr>
       <tr><td style="border:1px solid black;">other</td><td style="border:1px solid black;">Any other reason.</td></tr>
     </table>
-  </div>
 
-  <div id="middlecontent">
+
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
@@ -110,8 +109,6 @@ $('document').ready(function(){
       <div id="mylistDiv"></div>
 
     </div>
-
-  </div>
 
 </div>
 
