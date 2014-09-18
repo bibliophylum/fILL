@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    //create a new WebSocket object.
+    var wsUri = "wss://localhost/app/ws/";  
+    websocket = new WebSocket(wsUri);
+   
+    websocket.onopen = function(ev) { // connection is open
+        $('#message_box').append("<div class=\"system_msg\">Connected!</div>"); //notify user
+    }
+
+    //#### Message received from server?
+    websocket.onmessage = function(ev) {
+        var msg = JSON.parse(ev.data); //chat-server.pl sends JSON data
+        var type = msg.type; //message type
+        var umsg = msg.message; //message text
+        var uname = msg.name; //user name
+        var ucolor = msg.color; //color
+
+        if(type == 'usermsg')
+        {
+            $('#message_box').append("<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>");
+        }
+        if(type == 'system')
+        {
+            $('#message_box').append("<div class=\"system_msg\">"+umsg+"</div>");
+        }
+       
+        $('#message').val(''); //reset text
+    };
+   
+    websocket.onerror   = function(ev){$('#message_box').append("<div class=\"system_error\">Error Occurred - "+ev.data+"</div>");};
+    websocket.onclose   = function(ev){$('#message_box').append("<div class=\"system_msg\">Connection Closed</div>");};
+
+
+
+
+    $("#message").keypress(function (e) {
+        if (e.which == 13) {
+            $("#send-btn").click();
+            return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
+        }
+    });
+
+    $("#send-btn").click(function(){         //use clicks message send button  
+        var mymessage = $('#message').val();
+        var myname = $('#name').val();
+        var mycolor = $('#color').val();
+        var myroom = "group";
+       
+        if(myname == ""){ //empty name?
+            alert("Enter your Name please!");
+            return;
+        }
+        if(mymessage == ""){ //emtpy message?
+            alert("Enter Some message Please!");
+            return;
+        }
+       
+        //prepare json data
+        var msg = {
+          message: mymessage,
+          name: myname,
+          color: mycolor,
+          room: myroom
+        };
+        //convert and send data to server
+        websocket.send(JSON.stringify(msg));
+    });
+   
+}); // end document.onReady()
+</script>
+
+</head>
+
+<body>
+
+<div class="chat_wrapper">
+<div class="message_box" id="message_box"></div>
+<div>
+<input type="text" name="name" id="name" placeholder="Your Name" maxlength="10" style="width:20%" value="Librarian" />
+<input type="text" name="color" id="color" maxlength="10" style="width:20%" value="22C704" />
+</div>
+<div class="panel">
+<input type="text" name="message" id="message" placeholder="Message" maxlength="80" style="width:60%" />
+<button id="send-btn">Send</button>
+</div>
+</div>
+
+</body>
+</html>

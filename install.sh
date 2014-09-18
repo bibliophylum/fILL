@@ -3,11 +3,11 @@
 #echo Disabling existing site...
 #sudo a2dissite fILL.conf
 
-echo Stopping reporter...
-sudo kill `cat /tmp/fILLreporter.pid`
-
 #echo Unlinking fILL configuration...
 #sudo unlink /etc/apache2/sites-available/fILL.conf
+
+echo Stopping chat daemon
+sudo /etc/init.d/fILL-chat-server stop
 
 echo Removing existing /opt/fILL...
 # want to preserve conf, logs, report-output
@@ -84,8 +84,8 @@ sudo ln -s /var/log/pazpar2.log /opt/fILL/logs/pazpar2.log
 echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
-echo Restarting reporter daemon
-sudo /opt/fILL/services/fILLreporter.pl
+echo Starting chat daemon
+sudo /etc/init.d/fILL-chat-server start
 
 #echo Enabling site...
 #sudo a2ensite fILL.conf
