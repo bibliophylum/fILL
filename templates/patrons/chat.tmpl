@@ -38,10 +38,7 @@ $('document').ready(function(){
         connections["syschan"].sendJoiningMessage();
     });
 
-//    $("#send-btn").click( partial( chatSendMsg, "syschan" ));
-//    $("#send-btn").click( partial( connections["syschan"].chatSendMsg, "syschan" ));
-
-   $("#send-btn").click( function(){ connections["syschan"].chatSendMsg(); });
+    $("#send-btn").click( function(){ connections["syschan"].chatSendMsg(); });
    
 }); // end document ready
 

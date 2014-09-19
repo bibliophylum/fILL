@@ -121,6 +121,7 @@ Net::WebSocket::Server->new(
 			# find the connection for that library id
 			my $libconn;
 			foreach my $u (keys %{$channels{"syschan"}}) {
+			    next if ($u eq $user); # skip if we're the library
 			    if ($channels{"syschan"}{$u}{"lid"} == $lid) {
 
 				$libconn = $channels{"syschan"}{$u}{"conn"};

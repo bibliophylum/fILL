@@ -41,9 +41,9 @@ function Channel( channel ) {
 Channel.prototype.send = function (message, callback) {
     var self = this;
     this.waitForConnection(function () {
-	alert("Connection ok, sending ["+message+"]");
+	//alert("Connection ok, sending ["+message+"]");
         self.ws.send(message);  // use the ws send()
-	alert("Sent.");
+	//alert("Sent.");
         if (typeof callback !== 'undefined') {
           callback();
         }
@@ -76,10 +76,10 @@ Channel.prototype.sendJoiningMessage = function() {
 };
 
 Channel.prototype.chatSendMsg = function(){         //user clicks message send button  
-    var mymessage = $('#message').val();
+    var mymessage = $('#message-'+this.name).val();
     var myname = $("#username").text();
     var mylid = $("#lid").text();
-    var mycolor = "260CEB";
+    var mycolor = "03A706";
     var channel = this.name;
 
     //alert("chatSendMsg: message ["+mymessage+"], channel ["+channel+"]");
@@ -130,8 +130,7 @@ function wsOnMessage(ev, channel) {
 	var newChannel = umsg;  // chat server gives channel name in umsg
 
         // open new connection
-//	connections[newChannel] = wsNew(newChannel); // sets up connections[newChannel]
-	connections[newChannel] = new Channel(newChannel); // sets up connections[newChannel]
+	connections[newChannel] = new Channel(newChannel); 
 
 	// create a new message box with the id of the channel
 	var $div = $("<div/>", 
@@ -156,11 +155,10 @@ function wsOnMessage(ev, channel) {
 	  }).appendTo($panel);
 
 	$("#send-btn-"+newChannel).on( "click", function() {
-//	    partial( chatSendMsg, newChannel )
-	    connections[newChannel].ws.chatSendMsg();
+	    connections[newChannel].chatSendMsg();
 	});
 	
-	$("#message"+newChannel).keypress(function (e) {
+	$("#message-"+newChannel).keypress(function (e) {
             if (e.which == 13) {
 		$("#send-btn-"+newChannel).click();
 		return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
