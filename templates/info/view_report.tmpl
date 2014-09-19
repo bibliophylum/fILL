@@ -46,38 +46,13 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
-
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li> </li>
-    </ol>
-    <h3>Borrowing</h3>
-    <table style="border:1px solid black;border-collapse:collapse;">
-      <tr><td style="border:1px solid black;">Books requested</td><td style="border:1px solid black;"># titles you've requested.</td></tr>
-      <tr><td style="border:1px solid black;">Actual requests</td><td style="border:1px solid black;">including retrying unfilleds, etc</td></tr>
-      <tr><td style="border:1px solid black;">Unfilled responses</td><td style="border:1px solid black;"># times libraries could not fill (actual) requests</td></tr>
-      <tr><td style="border:1px solid black;">Lender shipped</td><td style="border:1px solid black;">books physically received from lenders.</td></tr>
-      <tr><td style="border:1px solid black;">We cancelled</td><td style="border:1px solid black;">Requests you cancelled.</td></tr>
-    </table>
-    <h3>Lending</h3>
-    <table style="border:1px solid black;border-collapse:collapse;">
-      <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;"># requests other libraries have made to you</td></tr>
-      <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;"># times you responded 'unfilled'</td></tr>
-      <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">books you sent out.</td></tr>
-      <tr><td style="border:1px solid black;">Forward to branch</td><td style="border:1px solid black;"># requests you've forwarded to one of your branches</td></tr>
-      <tr><td style="border:1px solid black;">Borrower cancelled</td><td style="border:1px solid black;"># requests that the borrower cancelled before you could respond.</td></tr>
-    </table>
-  </div>
-
-  <div id="middlecontent">
+<div role="main">
 
     <div id="myDiv">
-      <h3>ILL Stats</h3>
-      <div>
+      <h2>ILL Stats</h2>
+
 	<div class="dataTable_wrapper">
-	  <table id="datatable_report" width="100%">
+	  <table id="datatable_report">
 	    <thead>
 	      <tr>
 		<th>Year</th><th>MonthNum</th><th>Month</th><th>Borrowing: books requested</th><th>Borrowing: actual requests made</th><th>Borrowing: unfilled responses</th><th>Borrowing: lender shipped</th><th>Borrowing: we cancelled</th><th>Lending: requests to lend</th><th>Lending: could not fill</th><th>Lending: shipped</th><th>Lending: forward to branch</th><th>Lending: borrower cancelled</th>
@@ -106,9 +81,29 @@ $('document').ready(function(){
 	    </tbody>
 	  </table>
 	</div>
-      </div>
-    </div>
+  </div>
 
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+
+    <h3>Borrowing</h3>
+    <table id="fill-table">
+      <tr><td style="border:1px solid black;">Books requested</td><td style="border:1px solid black;"># titles you've requested.</td></tr>
+      <tr><td style="border:1px solid black;">Actual requests</td><td style="border:1px solid black;">including retrying unfilleds, etc</td></tr>
+      <tr><td style="border:1px solid black;">Unfilled responses</td><td style="border:1px solid black;"># times libraries could not fill (actual) requests</td></tr>
+      <tr><td style="border:1px solid black;">Lender shipped</td><td style="border:1px solid black;">books physically received from lenders.</td></tr>
+      <tr><td style="border:1px solid black;">We cancelled</td><td style="border:1px solid black;">Requests you cancelled.</td></tr>
+    </table>
+
+    <h3>Lending</h3>
+    <table id="fill-table">
+      <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;"># requests other libraries have made to you</td></tr>
+      <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;"># times you responded 'unfilled'</td></tr>
+      <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">books you sent out.</td></tr>
+      <tr><td style="border:1px solid black;">Forward to branch</td><td style="border:1px solid black;"># requests you've forwarded to one of your branches</td></tr>
+      <tr><td style="border:1px solid black;">Borrower cancelled</td><td style="border:1px solid black;"># requests that the borrower cancelled before you could respond.</td></tr>
+    </table>
   </div>
 
 </div>
