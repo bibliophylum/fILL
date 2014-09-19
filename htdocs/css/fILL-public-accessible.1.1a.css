@@ -23,7 +23,8 @@
 }
 
 #csssubmenu {
-	padding: .5em;
+  background-color: #a2aac4;
+	padding: 0em;
 	width: 100%;
 	height: auto;
 	font-size: 1.2em;
@@ -32,7 +33,7 @@
 
 #csssubmenu ul
 {
-  	background-color: #a2aac4;
+  	
   	text-align: center;
   	margin: 0em;
   	padding: 0.4em;
@@ -40,7 +41,7 @@
 }
 #csssubmenu ul li 
 {
-	margin-right: .3em;
+	 margin-right: .3em;
   	padding: 0 ;
   	display: inline ;
   	text-align: center ;
@@ -49,7 +50,7 @@
 
 #csssubmenu li a
 {
-  	margin: ;
+  	margin: 0em;
   	background-color: #06a0ca;
   	color: #fff;
   	padding: 3px ;
