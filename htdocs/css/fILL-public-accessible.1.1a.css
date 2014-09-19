@@ -52,6 +52,9 @@
 #csssubmenu li a
 {
   	margin: 0em;
+      -moz-border-radius: 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
   	background-color: #06a0ca;
   	color: #fff;
   	padding: .3em ;
