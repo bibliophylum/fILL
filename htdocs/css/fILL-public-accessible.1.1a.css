@@ -24,7 +24,7 @@
 
 #csssubmenu {
   background-color: #a2aac4;
-	padding: 0em;
+	margin-bottom: 1em;
 	width: 100%;
 	height: auto;
 	font-size: 1.2em;
@@ -74,6 +74,11 @@
     margin: 1em;
     display: block;
     padding: 1.25em; 
+}
+
+.header-library-info ul li {
+  display:inline;
+  text-align: right;
 }
 /***---End of new library client side CSS--**/
 
