@@ -106,8 +106,8 @@ function my_onstat(data) {
     if(stat != null){
 	if(data.activeclients != 0){
 	    stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
-	    stat.innerHTML += '<div id="progress_empty" style="position:relative;height:20px;width:150px;background-color:#cccccc;border:1px solid black;padding:0px;">';
-	    stat.innerHTML += '<div id="progress_filler" style="height:20px;width:'+(((data.clients - data.activeclients) / data.clients)*150)+'px;left:1px;background-color:#607D8B;padding-top:5px;padding:0px;position:relative;margin-right:200px;margin-top:-21px;"/>';
+	    stat.innerHTML += '<div id="progress_empty" >'; //Styles moved to CSS
+	    stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*150)+'px;/>'; //Styles moved to CSS
 	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
