@@ -24,7 +24,7 @@
 
 #csssubmenu {
   background-color: #06a0ca;
-	margin: 1em;
+	margin: 1em 0em;
   padding-top: .5em;
   width: 100%;
 	height: auto;
@@ -41,7 +41,7 @@
 }
 #csssubmenu ul li 
 {
-	 margin-right: .3em;
+	 margin: 0em .2em .3em .2em;
    border-right: 1px solid #505050;
   	padding: 0 ;
   	display: inline ;
