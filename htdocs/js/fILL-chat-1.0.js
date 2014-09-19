@@ -1,0 +1,204 @@
+// fILL-chat.js
+/*
+    fILL - Free/Open-Source Interlibrary Loan management system
+    Copyright (C) 2012  Government of Manitoba
+
+    fILL-chat.js is a part of fILL.
+
+    fILL is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    fILL is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+var connections;
+
+function Channel( channel ) {
+    //create a new WebSocket object.
+    var wsUri = "wss://localhost/app/ws/";  
+    var websocket = new WebSocket(wsUri);
+    websocket.onmessage = function(ev){ wsOnMessage(ev, channel) };
+    websocket.onopen    = function(ev){ wsOnOpen(ev, channel) };
+    websocket.onerror   = function(ev){ wsOnError(ev, channel) };
+    websocket.onclose   = function(ev){ wsOnClose(ev, channel) };
+
+    this.name = channel;
+    this.ws = websocket;
+}
+
+//------------------------------------------------------------------------------
+// instance methods
+//    
+
+Channel.prototype.send = function (message, callback) {
+    var self = this;
+    this.waitForConnection(function () {
+	alert("Connection ok, sending ["+message+"]");
+        self.ws.send(message);  // use the ws send()
+	alert("Sent.");
+        if (typeof callback !== 'undefined') {
+          callback();
+        }
+    }, 1000);
+};
+
+Channel.prototype.waitForConnection = function(callback, interval) {
+    if (this.ws.readyState === 1) {
+        callback();
+    } else {
+        var that = this;
+        setTimeout(function () {
+            that.waitForConnection(callback);
+        }, interval);
+    }
+};
+
+Channel.prototype.sendJoiningMessage = function() {
+    // Send a "joining" message JUST so we can get history
+    var msg = {
+      message: "joining",
+      name: $("#username").text(),
+      lid: $("#lid").text(),
+      color: "03A706",
+      channel: this.name
+    };
+
+    //convert and send data to server
+    this.send(JSON.stringify(msg));    // NOT this.ws.send(...)
+};
+
+Channel.prototype.chatSendMsg = function(){         //user clicks message send button  
+    var mymessage = $('#message').val();
+    var myname = $("#username").text();
+    var mylid = $("#lid").text();
+    var mycolor = "260CEB";
+    var channel = this.name;
+
+    //alert("chatSendMsg: message ["+mymessage+"], channel ["+channel+"]");
+
+    if(mymessage == ""){ //emtpy message?
+        alert("Enter Some message Please!");
+        return;
+    }
+       
+    //prepare json data
+    var msg = {
+      message: mymessage,
+      name: myname,
+      color: mycolor,
+      channel: channel
+    };
+    //convert and send data to server
+    this.send(JSON.stringify(msg));  // NOT this.ws.send(...)
+};
+
+
+
+//------------------------------------------------------------------------------
+// websocket callbacks
+//    
+function wsOnOpen(ev, channel) {
+    //notify user
+    $('#'+channel).append("<div class=\"system_msg\">"+connections[channel].name+" Connected!</div>");
+}
+
+//#### Message received from server?
+function wsOnMessage(ev, channel) {
+    var msg = JSON.parse(ev.data); //chat-server.pl sends JSON data
+    var type = msg.type; //message type
+    var umsg = msg.message; //message text
+    var uname = msg.name; //user name
+    var ucolor = msg.color; //color
+
+    if(type == 'usermsg')
+    {
+        $("#"+channel).append(
+	    "<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>"
+	);
+    }
+
+    if(type == 'system')
+    {
+	var newChannel = umsg;  // chat server gives channel name in umsg
+
+        // open new connection
+//	connections[newChannel] = wsNew(newChannel); // sets up connections[newChannel]
+	connections[newChannel] = new Channel(newChannel); // sets up connections[newChannel]
+
+	// create a new message box with the id of the channel
+	var $div = $("<div/>", 
+		     {id: newChannel, 
+		      class: "message_box", 
+		      style: "border:1px solid; float:left; width:250px;"
+		     }).appendTo("#chatbox");
+	var $panel = $("<div/>",
+		       {class: "panel"}
+		      ).appendTo($div);
+	$("<input/>",
+	  {type: "text",
+	   name: "message",
+	   id: "message-"+newChannel,
+	   maxlength: 80
+	  }).appendTo($panel);
+
+	$("<input/>", 
+	  {id:"send-btn-"+newChannel,
+	   type: "button",
+	   value: "Send"
+	  }).appendTo($panel);
+
+	$("#send-btn-"+newChannel).on( "click", function() {
+//	    partial( chatSendMsg, newChannel )
+	    connections[newChannel].ws.chatSendMsg();
+	});
+	
+	$("#message"+newChannel).keypress(function (e) {
+            if (e.which == 13) {
+		$("#send-btn-"+newChannel).click();
+		return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
+            }
+	});
+
+	$("#"+newChannel).append(
+	    "<div class=\"system_msg\">system: new channel "+newChannel+"</div>"
+	);
+
+        // get the history for the new ws
+        connections[newChannel].sendJoiningMessage();
+
+    }
+       
+    $('#message').val(''); //reset text
+};
+   
+function wsOnError(ev, channel) { 
+    $('#'+channel).append("<div class=\"system_error\">Error Occurred - "+ev.data+"</div>");
+};
+
+function wsOnClose(ev, channel) {
+    $('#'+channel).append("<div class=\"system_msg\">Connection Closed</div>");
+};
+
+
+
+//------------------------------------------------------------------------------
+// util
+//    
+
+// https://stackoverflow.com/questions/321113/how-can-i-pre-set-arguments-in-javascript-function-call-partial-function-appli
+function partial(func /*, 0..n args */) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return function() {
+    var allArguments = args.concat(Array.prototype.slice.call(arguments));
+    return func.apply(this, allArguments);
+  };
+}
+

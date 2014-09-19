@@ -8,6 +8,7 @@
 
 echo Stopping chat daemon
 sudo /etc/init.d/fILL-chat-server stop
+sudo cat /dev/null > /opt/fILL/logs/chat-server.pl.log
 
 echo Removing existing /opt/fILL...
 # want to preserve conf, logs, report-output

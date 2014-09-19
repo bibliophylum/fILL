@@ -50,7 +50,7 @@ $(document).ready(function(){
         var mymessage = $('#message').val();
         var myname = $('#name').val();
         var mycolor = $('#color').val();
-        var myroom = "group";
+        var mychannel = "syschan";
        
         if(myname == ""){ //empty name?
             alert("Enter your Name please!");
@@ -66,7 +66,7 @@ $(document).ready(function(){
           message: mymessage,
           name: myname,
           color: mycolor,
-          room: myroom
+          channel: mychannel
         };
         //convert and send data to server
         websocket.send(JSON.stringify(msg));

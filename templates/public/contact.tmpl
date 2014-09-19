@@ -52,10 +52,11 @@ $(document).ready(function(){
         var msg = {
           message: "joining",
           name: $("#username").text(),
+          lid: $("#lid").text(),
           color: "7F6D6D",
-          room: "group"
+<!--      channel: "syschan" -->
+          channel: $("#lid").text() + "-" + $("#username").text()
         };
-<!--      room: $("#lid").text() + "-" + $("#username").text() -->
         //convert and send data to server
         websocket.send(JSON.stringify(msg));
         
@@ -64,14 +65,13 @@ $(document).ready(function(){
         $("#chatbox").toggle();
     });
 
-    $("#send-btn").click(function(){         //use clicks message send button  
+    $("#send-btn").click(function(){         //user clicks message send button  
         var mymessage = $('#message').val();
-<!--        var myname = $('#name').val(); -->
         var myname = $("#username").text();
-<!--        var mycolor = $('#color').val(); -->
+        var mylid = $("#lid").text();
         var mycolor = "260CEB";
-        var myroom = "group";
-<!--    var myroom = $("#lid").text() + "-" + $("#username").text(); -->
+<!--        var mychannel = "syschan"; -->
+        var mychannel = $("#lid").text() + "-" + $("#username").text();
 
         if(mymessage == ""){ //emtpy message?
             alert("Enter Some message Please!");
@@ -82,14 +82,15 @@ $(document).ready(function(){
         var msg = {
           message: mymessage,
           name: myname,
+          lid: mylid,
           color: mycolor,
-          room: myroom
+          channel: mychannel
         };
         //convert and send data to server
         websocket.send(JSON.stringify(msg));
     });
    
-}); // end document.onReady()
+}); // end document ready
 </script>
 
 
@@ -103,9 +104,9 @@ $(document).ready(function(){
 	  <p>Email: <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
 	  <p>Address:<br/>
 	    <TMPL_VAR name="mailing_address_line1"><br/>
-	      <TMPL_VAR name="mailing_address_line2"><br/>
-		<!--			<TMPL_VAR name="mailing_address_line3"><br/> -->
-		<TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code">
+	    <TMPL_VAR name="mailing_address_line2"><br/>
+	    <!-- <TMPL_VAR name="mailing_address_line3"><br/> -->
+	    <TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code">
 	  </p>
 	</div>
 

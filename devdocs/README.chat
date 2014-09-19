@@ -1,0 +1,37 @@
+Need to install package libfile-pid-perl:
+$ sudo aptitude install libfile-pid-perl
+
+Copy fILL/externals/fILL-chat-server to init.d:
+$ sudo cp ~/prj/fILL/externals/fILL-chat-server /etc/init.d
+$ sudo chmod +x /etc/init.d/fILL-chat-server
+
+Add this to /opt/fILL/conf/fILL.conf (in virtualhost 443, right at the end):
+# Note, this is the preferred ProxyPass configuration, and *should* be equivalent
+# to the same inline version below, but it does NOT WORK!
+#<Location /app/ws/>
+#        ProxyPass wss://localhost:8443/app/ws
+#        ProxyPassReverse wss://localhost:8443/app/ws
+#</Location>
+#<Location /app/>
+#        ProxyPass https://localhost:8443/app/
+#        ProxyPassReverse https://localhost:8443/app/
+#</Location>
+
+# NOTE: Pay strict attention to the slashes "/" or lack thereof!
+# WebSocket url endpoint
+        ProxyPass /app/ws/ wss://localhost:8088/app/ws
+        ProxyPassReverse /app/ws/ wss://localhost:8088/app/ws
+
+        # Everything else
+  	ProxyPass /app/ https://localhost:8088/app/
+	ProxyPassReverse /app/ https://localhost:8088/app/
+
+
+
+Libraries automatically join channel 'syschan' when they log in.  This lets the chat server know that 
+they are on (so that when a patron of that library creates a chat, the chat server can look up the 
+proper connection for the library).
+
+Libraries can communicate with other libraries on syschan.
+
+Patrons will have dedicated channels, so they are talking one-on-one with their library.

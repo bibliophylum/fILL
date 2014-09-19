@@ -1,23 +1,28 @@
 #!/usr/bin/perl -w
 #
+# fILL chat-server.pl
+#
+#    fILL - Free/Open-Source Interlibrary Loan management system
+#    Copyright (C) 2012  Government of Manitoba
+#
+#    chat-server.pl is a part of fILL.
+#
+#    fILL is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    fILL is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# daemonization based on
 # mydaemon.pl by Andrew Ault, www.andrewault.net
 #
-# Free software. Use this as you wish.
-#
-# Throughout this template "mydaemon" is used where the name of your daemon should
-# be, replace occurrences of "mydaemon" with the name of your daemon.
-#
-# This name will also be the exact name to give this file (WITHOUT a ".pl" extension).
-#
-# It is also the exact name to give the start-stop script that will go into the
-# /etc/init.d/ directory.
-#
-# It is also the name of the log file in the /var/log/ directory WITH a ".log"
-# file extension.
-#
-# Replace "# do something" with your super useful code.
-#
-# Use "# logEntry("log something");" to log whatever your need to see in the log.
 #
 use strict;
 use warnings;
@@ -35,7 +40,8 @@ my $daemonName    = "chat-server.pl";
 my $dieNow        = 0;                                     # used for "infinte loop" construct - allows daemon mode to gracefully exit
 my $sleepMainLoop = 120;                                    # number of seconds to wait between "do something" execution after queue is clear
 my $logging       = 1;                                     # 1= logging is on
-my $logFilePath   = "/var/log/";                           # log file path
+#my $logFilePath   = "/var/log/";                           # log file path
+my $logFilePath   = "/opt/fILL/logs/";                     # log file path
 my $logFile       = $logFilePath . $daemonName . ".log";
 my $pidFilePath   = "/var/run/";                           # PID file path
 my $pidFile       = $pidFilePath . $daemonName . ".pid";
@@ -80,7 +86,7 @@ if ($logging) {
 #}
  
 #--- the actual server code -------------------------------------------------
-my %rooms = ();
+my %channels = ();
 my $maxHistory = 20;
 my %history = ();
 
@@ -95,18 +101,43 @@ Net::WebSocket::Server->new(
 		print LOG "$msg\n";
 		my $hrefFromClient = decode_json $msg;
 
-		my $room = $hrefFromClient->{'room'};
+		my $channel = $hrefFromClient->{'channel'};
 		my $user = $hrefFromClient->{'name'};
+		my $lid  = $hrefFromClient->{'lid'};
 
-		# Add to known connections for this room,
+		# Add to known connections for this channel,
 		# if it's not already there.
-		# This will autovivify $rooms{$room}, which is good.
-		unless (exists $rooms{$room}{$user}) {
-		    $rooms{$room}{$user} = $conn;
+		# This will autovivify $channels{$channel}, which is good.
+		unless (exists $channels{$channel}{$user}{"conn"}) {
+		    $channels{$channel}{$user}{"conn"} = $conn;
+		    $channels{$channel}{$user}{"lid"} = $lid;
 
 		    # new member will need to see history...
-		    foreach my $histMsg (@{ $history{$room} }) {
-			$rooms{$room}{$user}->send_utf8( $histMsg );
+		    foreach my $histMsg (@{ $history{$channel} }) {
+			$channels{$channel}{$user}{"conn"}->send_utf8( $histMsg );
+		    }
+
+		    unless ($channel eq "syschan") {
+			# find the connection for that library id
+			my $libconn;
+			foreach my $u (keys %{$channels{"syschan"}}) {
+			    if ($channels{"syschan"}{$u}{"lid"} == $lid) {
+
+				$libconn = $channels{"syschan"}{$u}{"conn"};
+
+				# notify library that user is opening a chat:
+				# send a system message to library on syschan,
+				# (library will create new connection)
+				my %hash = ( 
+				    'type' => 'system',
+				    'message' => $channel,
+				    'name' => $user
+				    );
+				$libconn->send_utf8( encode_json \%hash );
+
+				last; # remove this if there are more than 1 user per lib
+			    }
+			}
 		    }
 		}
 
@@ -114,18 +145,19 @@ Net::WebSocket::Server->new(
 		my $href = { 
 		    'type' => 'usermsg',
 		    'name' => $user,
+                    'lid' => $lid,
 		    'message' => $hrefFromClient->{'message'},
 		    'color' => $hrefFromClient->{'color'}
 		};
 		my $outgoing_msg = encode_json $href;
 
 		# add to history
-		push @{ $history{$room} }, $outgoing_msg;
-		shift @{ $history{$room} } if (scalar(@{ $history{$room} }) > $maxHistory);
+		push @{ $history{$channel} }, $outgoing_msg;
+		shift @{ $history{$channel} } if (scalar(@{ $history{$channel} }) > $maxHistory);
 
-		# send the message to everyone in the room
-		foreach my $uid (keys %{$rooms{$room}} ) {
-		    $rooms{$room}{$uid}->send_utf8( $outgoing_msg );
+		# send the message to everyone in the channel
+		foreach my $uid (keys %{$channels{$channel}} ) {
+		    $channels{$channel}{$uid}{"conn"}->send_utf8( $outgoing_msg );
 		}
 
 #		# test "system" messages....
@@ -134,7 +166,7 @@ Net::WebSocket::Server->new(
 #		    'message' => 'System: your message has been sent.'
 #		    );
 #		# just back to the originator.
-#               $rooms{$room}{$user}->send_utf8( encode_json \%hash );
+#               $channels{$channel}{$user}{"conn"}->send_utf8( encode_json \%hash );
             },
         );
     },
