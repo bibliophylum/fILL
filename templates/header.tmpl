@@ -116,6 +116,18 @@ $('document').ready(function(){
   </div><!--Div header-right-->
   </div><!--Div id header-->
 
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
+    <div id="header_searchbar" style="display: none">
+    <form id="searchForm" name="search">
+      <input id="query" type="text" size="50"/>
+      <input id="button" type="submit" value="Search"/>
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
+    </form>
+    </div>
+  </div>
+</div>
 
 <nav role="navigation">
   <ul class="nav inline-items">
@@ -175,18 +187,6 @@ $('document').ready(function(){
   </ul>
 </nav>
 
-  <!--***************ARIA MARKER 'SEARCH'***************-->
-<div id="search-container">
-  <div id="search" role="search">
-    <div id="header_searchbar" style="display: none">
-    <form id="searchForm" name="search">
-      <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
-    </form>
-    </div>
-  </div>
-</div>
 
 
 <!-- Begin content -->
