@@ -94,24 +94,12 @@ function downloadMarc() {
 </script>
 
 
-<div id="main">
+<div role="main">
 
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Scan barcodes of received titles.</li>
-      <li> </li>
-      <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items you have received within the last month, suitable for importing into your ILS.</li>
-      <li> </li>
-      <li>Go to the <a href="/rotations-MARC/" style="text-decoration: underline" target="_blank">Download folder</a></li>
-    </ol>
-  </div>
-
-  <div id="middlecontent">
     <div id="myDiv">
       <h3>Receive rotation titles</h3>
       <div id="scanner">
-	<table width="100%">
+	<table id="fill-table">
 	  <tr>
 	    <td width="80%">
 	      <form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
@@ -145,7 +133,17 @@ function downloadMarc() {
           </tbody>
         </table>
       </div>
-    </div>
+
+  <div id="instructions">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Scan barcodes of received titles.</li>
+      <li> </li>
+      <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items you have received within the last month, suitable for importing into your ILS.</li>
+      <li> </li>
+      <li>Go to the <a href="/rotations-MARC/" style="text-decoration: underline" target="_blank">Download folder</a></li>
+    </ol>
+  </div>
 
 </div>
 

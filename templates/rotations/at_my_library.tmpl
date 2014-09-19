@@ -54,20 +54,11 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
-
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Items will remain on this list until the next library in the rotation receives them.</li>
-    </ol>
-  </div>
-
-  <div id="middlecontent">
+<div role="main">
 
     <div id="myDiv">
       <h3>At my library</h3>
-	<table id="gradient-style">
+	<table id="fill-table">
 	  <thead>
 	    <tr><th>id</th><th>Call #</th><th>Title</th><th>Author</th><th>Barcode</th><th>Received</th></tr>
 	  </thead>
@@ -90,7 +81,12 @@ $('document').ready(function(){
 	</table>
     </div>
 
-  </div>
+    <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Items will remain on this list until the next library in the rotation receives them.</li>
+    </ol>
+    </div>
 
 </div>
 

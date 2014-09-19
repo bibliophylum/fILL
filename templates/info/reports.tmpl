@@ -226,16 +226,9 @@ $('document').ready(function(){
 </script>
 
 
-<div id="main">
+<div role="main">
 
-  <div id="leftcontent">
-    <h2>Instructions</h2>
-    <ol>
-      <li>None yet.</li>
-    </ol>
-  </div>
-
-  <div id="middlecontent" lid=<TMPL_VAR name="lid">>
+  <div lid=<TMPL_VAR name="lid">>
 
     <div id="myDiv">
       <h3>Reports</h3>
@@ -331,6 +324,14 @@ $('document').ready(function(){
 
     </div>
   </div>
+
+  <div id="instrutions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>None yet.</li>
+    </ol>
+  </div>
+
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
