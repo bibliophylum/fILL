@@ -23,7 +23,7 @@
 }
 
 #csssubmenu {
-  background-color: #a2aac4;
+  background-color: #06a0ca;
 	margin-bottom: 1em;
 	width: 100%;
 	height: auto;
@@ -33,15 +33,15 @@
 
 #csssubmenu ul
 {
-  	
   	text-align: center;
   	margin: 0em;
-  	padding: 0.4em;
+  	padding-bottom: 0.4em;
   	list-style: none;
 }
 #csssubmenu ul li 
 {
 	 margin-right: .3em;
+   border-right: 1px solid #505050;
   	padding: 0 ;
   	display: inline ;
   	text-align: center ;
@@ -76,10 +76,6 @@
     padding: 1.25em; 
 }
 
-.header-library-info ul li {
-  display:inline;
-  text-align: right;
-}
 /***---End of new library client side CSS--**/
 
 
