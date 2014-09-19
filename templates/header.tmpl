@@ -104,12 +104,12 @@ $('document').ready(function(){
 
 
   <div id="header_quick_access" class="header-library-info">
+      <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a></div>
     <ul>
       <li><TMPL_VAR NAME="username"> </li>
-      <li><a href="?authen_logout=1">Log out</a></li>
+      <li id="library_name"><TMPL_VAR NAME="library"></li>
+      <li id="lid"><TMPL_VAR NAME="lid"></li>
     </ul>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
   </div>
 
   </div><!--Div header-right-->
