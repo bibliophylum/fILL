@@ -26,7 +26,7 @@ $('document').ready(function(){
 //    connections["syschan"] = wsNew("syschan");
     connections["syschan"] = new Channel("syschan");
 
-    $("#message").keypress(function (e) {
+    $("#message-syschan").keypress(function (e) {
         if (e.which == 13) {
             $("#send-btn").click();
             return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
@@ -54,7 +54,7 @@ $('document').ready(function(){
   <div id="chatbox" class="chat_wrapper">
     <div class="message_box" id="syschan" style="display:none; border:1px solid; float:left; width:250px">
       <div class="panel">
-	<input type="text" name="message" id="message" placeholder="Message" maxlength="80"/>
+	<input type="text" name="message" id="message-syschan" placeholder="Message" maxlength="80"/>
 	<button id="send-btn">Send</button>
     </div>
 </div>  </div> <!-- chat_wrapper -->

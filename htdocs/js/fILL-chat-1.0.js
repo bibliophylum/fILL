@@ -118,15 +118,19 @@ function wsOnMessage(ev, channel) {
     var uname = msg.name; //user name
     var ucolor = msg.color; //color
 
-    if(type == 'usermsg')
-    {
+    if (type == 'usermsg') {
         $("#"+channel).append(
 	    "<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>"
 	);
     }
 
-    if(type == 'system')
-    {
+    if (type == 'close') {
+	// patron has closed their chat, so toast this chat window.
+	$("#"+channel).remove();
+	// need to delete connections[channel], too.
+    };
+
+    if (type == 'system') {
 	var newChannel = umsg;  // chat server gives channel name in umsg
 
         // open new connection

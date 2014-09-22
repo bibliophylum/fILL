@@ -86,6 +86,7 @@ if ($logging) {
 #}
  
 #--- the actual server code -------------------------------------------------
+my $DEBUG = 0;
 my %channels = ();
 my $maxHistory = 20;
 my %history = ();
@@ -94,9 +95,62 @@ Net::WebSocket::Server->new(
     listen => 8088,
     on_connect => sub {
         my ($serv, $conn) = @_;
+	print LOG "on_connect\n";
         $conn->on(
+	    handshake => sub {
+		my ($handshake) = @_;
+		print LOG "handshake\n" . Dumper($handshake) . "\n-----------\n" if ($DEBUG);
+	    },
+	    ready => sub {
+		print LOG "ready\n-----------\n";
+	    },
+	    disconnect => sub {
+		my ($code, $reason) = @_;
+		print LOG "disconnect code\n" . Dumper($code) . "\nreason [$reason]\n-----------\n" if ($DEBUG);
+		# remove connection from all channels           ... might need to remove all connections from channel if it isn't syschan....
+		my @del = ();
+		foreach my $channel (keys %channels) {
+		    foreach my $user (keys %{$channels{$channel}}) {
+			if ($channels{$channel}{$user}{"conn"} == $conn) {
+			    push @del, [ $channel, $user ];
+			}
+		    }
+		}
+
+		foreach my $cu (@del) {
+		    print LOG "deleting " . $cu->[1] . " from " . $cu->[0] . "\n";
+		    delete $channels{$cu->[0]}{$cu->[1]};
+
+		    my $count = keys %{$channels{$cu->[0]}}; # keys evaluated in scalar context == count of keys
+		    if (($cu->[0] ne "syschan") && ($count < 2)) {
+			my @remaining_user = keys %{$channels{$cu->[0]}};
+			my $lib = $remaining_user[0];
+			# notify library that user has closed chat:
+			# send a system message to library on syschan
+			print LOG "informing $lib that " . $cu->[1] . " has left " . $cu->[0] . "\n";
+			my %hash = ( 
+			    'type' => 'close',
+			    'message' => $cu->[0],
+			    'name' => $cu->[1]
+			    );
+			$channels{$cu->[0]}{$lib}{"conn"}->send_utf8( encode_json \%hash );
+
+			print LOG "deleting " . $lib . " from " . $cu->[0] . "\n";
+			delete $channels{$cu->[0]}{$lib};
+			delete $channels{$cu->[0]};
+			delete $history{$cu->[0]};
+		    }
+		}
+
+	    },
+	    pong => sub {
+		my ($message) = @_;
+		print LOG "pong message\n" . Dumper($message) . "\n-----------\n" if ($DEBUG);
+	    },
+
             utf8 => sub {
                 my ($conn, $msg) = @_;
+		print LOG "utf8\n";
 
 		print LOG "$msg\n";
 		my $hrefFromClient = decode_json $msg;
@@ -112,12 +166,18 @@ Net::WebSocket::Server->new(
 		    $channels{$channel}{$user}{"conn"} = $conn;
 		    $channels{$channel}{$user}{"lid"} = $lid;
 
+		    print LOG "add $user to $channel\n";
+
 		    # new member will need to see history...
 		    foreach my $histMsg (@{ $history{$channel} }) {
 			$channels{$channel}{$user}{"conn"}->send_utf8( $histMsg );
 		    }
 
-		    unless ($channel eq "syschan") {
+		    my $count = keys %{$channels{$channel}}; # keys evaluated in scalar context == count of keys
+		    if (($channel ne "syschan") && ($count < 2)) {
+			# we need to figure out who the user's library is, and tell that library to
+			# connect to this new channel, too.
+
 			# find the connection for that library id
 			my $libconn;
 			foreach my $u (keys %{$channels{"syschan"}}) {
@@ -129,6 +189,7 @@ Net::WebSocket::Server->new(
 				# notify library that user is opening a chat:
 				# send a system message to library on syschan,
 				# (library will create new connection)
+				print LOG "asking $u to join $channel\n";
 				my %hash = ( 
 				    'type' => 'system',
 				    'message' => $channel,
@@ -168,8 +229,13 @@ Net::WebSocket::Server->new(
 #		    );
 #		# just back to the originator.
 #               $channels{$channel}{$user}{"conn"}->send_utf8( encode_json \%hash );
+
+		print LOG "\n-----------\n" if ($DEBUG);
             },
         );
+    },
+    on_shutdown => sub {
+	print LOG "shutting down\n";
     },
 )->start;
 
