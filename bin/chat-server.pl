@@ -90,6 +90,7 @@ my $DEBUG = 0;
 my %channels = ();
 my $maxHistory = 20;
 my %history = ();
+my @colors = ("7FFF00","0000FF","A52A2A","FFD700","F08080","556B2F","FF8C00","9932CC","9ACD32","EE82EE");
 
 Net::WebSocket::Server->new(
     listen => 8088,
@@ -107,7 +108,8 @@ Net::WebSocket::Server->new(
 	    disconnect => sub {
 		my ($code, $reason) = @_;
 		print LOG "disconnect code\n" . Dumper($code) . "\nreason [$reason]\n-----------\n" if ($DEBUG);
-		# remove connection from all channels           ... might need to remove all connections from channel if it isn't syschan....
+
+		# remove connection from all channels
 		my @del = ();
 		foreach my $channel (keys %channels) {
 		    foreach my $user (keys %{$channels{$channel}}) {
@@ -119,6 +121,36 @@ Net::WebSocket::Server->new(
 
 		foreach my $cu (@del) {
 		    print LOG "deleting " . $cu->[1] . " from " . $cu->[0] . "\n";
+		    my $lid = $channels{$cu->[0]}{$cu->[1]}{"lid"};
+
+		    if ($cu->[0] eq "syschan") {
+			# return that color to the pool
+			push @colors, $channels{"syschan"}{$cu->[1]}{"color"};
+
+			# library leaving syschan message
+			my $href = { 
+			    'type' => 'usermsg',
+			    'name' => $cu->[1],
+			    'lid' => $lid,
+			    'message' => "has left the conversation.",
+			    'color' => "#A4A4A4"
+			};
+			my $outgoing_msg = encode_json $href;
+			
+			# add to history
+			print LOG "add " . $cu->[1] . " leaving message to history\n";
+			push @{ $history{"syschan"} }, $outgoing_msg;
+			shift @{ $history{"syschan"} } if (scalar(@{ $history{"syschan"} }) > $maxHistory);
+			
+			# send the message to everyone (else) in the channel
+			print LOG "tell syschan that " . $cu->[1] . " has left\n";
+			foreach my $uid (keys %{$channels{"syschan"}} ) {
+			    if ($uid ne $cu->[1]) {  # not safe to send to disconnected user
+				$channels{"syschan"}{$uid}{"conn"}->send_utf8( $outgoing_msg );
+			    }
+			}
+		    }
+
 		    delete $channels{$cu->[0]}{$cu->[1]};
 
 		    my $count = keys %{$channels{$cu->[0]}}; # keys evaluated in scalar context == count of keys
@@ -139,6 +171,7 @@ Net::WebSocket::Server->new(
 			delete $channels{$cu->[0]}{$lib};
 			delete $channels{$cu->[0]};
 			delete $history{$cu->[0]};
+
 		    }
 		}
 
@@ -159,14 +192,37 @@ Net::WebSocket::Server->new(
 		my $user = $hrefFromClient->{'name'};
 		my $lid  = $hrefFromClient->{'lid'};
 
+		print LOG "add $user to $channel\n";
+
 		# Add to known connections for this channel,
 		# if it's not already there.
 		# This will autovivify $channels{$channel}, which is good.
 		unless (exists $channels{$channel}{$user}{"conn"}) {
 		    $channels{$channel}{$user}{"conn"} = $conn;
 		    $channels{$channel}{$user}{"lid"} = $lid;
+		    if ($channel eq "syschan") {
+			if (scalar @colors) {
+			    $channels{"syschan"}{$user}{"color"} = shift @colors;
+			} else {
+			    $channels{"syschan"}{$user}{"color"} = "000000";
+			}
+		    } else {
+			my $count = keys %{$channels{$channel}}; # keys evaluated in scalar context == count of keys
+			if ($count == 1) {
+			    $channels{$channel}{$user}{"color"} = "000000";
+			} else {
+			    $channels{$channel}{$user}{"color"} = "7FFF00";
+			}
+		    }
+		    print LOG "set $user color\n";
+		    my $href = { 'type' => 'color','name' => $user,'lid' => $lid,
+				 'message' => "set color", 
+				 'color' => $channels{$channel}{$user}{'color'}
+		    };
+		    my $outgoing_msg = encode_json $href;
+		    $channels{$channel}{$user}{"conn"}->send_utf8( $outgoing_msg );
 
-		    print LOG "add $user to $channel\n";
+
 
 		    # new member will need to see history...
 		    foreach my $histMsg (@{ $history{$channel} }) {
@@ -203,13 +259,14 @@ Net::WebSocket::Server->new(
 		    }
 		}
 
-		# turn the incomming message into an outgoing message
+		# turn the incomming message into an outgoing messag
 		my $href = { 
 		    'type' => 'usermsg',
 		    'name' => $user,
                     'lid' => $lid,
 		    'message' => $hrefFromClient->{'message'},
-		    'color' => $hrefFromClient->{'color'}
+#		    'color' => $hrefFromClient->{'color'}
+		    'color' => $channels{$channel}{$user}{'color'}
 		};
 		my $outgoing_msg = encode_json $href;
 

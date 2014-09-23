@@ -31,6 +31,7 @@ function Channel( channel ) {
     websocket.onclose   = function(ev){ wsOnClose(ev, channel) };
 
     this.name = channel;
+    this.color = "808080";
     this.ws = websocket;
 }
 
@@ -67,7 +68,7 @@ Channel.prototype.sendJoiningMessage = function() {
       message: "joining",
       name: $("#username").text(),
       lid: $("#lid").text(),
-      color: "03A706",
+      color: this.color,
       channel: this.name
     };
 
@@ -79,7 +80,7 @@ Channel.prototype.chatSendMsg = function(){         //user clicks message send b
     var mymessage = $('#message-'+this.name).val();
     var myname = $("#username").text();
     var mylid = $("#lid").text();
-    var mycolor = "03A706";
+    var mycolor = this.color;
     var channel = this.name;
 
     //alert("chatSendMsg: message ["+mymessage+"], channel ["+channel+"]");
@@ -126,8 +127,31 @@ function wsOnMessage(ev, channel) {
 
     if (type == 'close') {
 	// patron has closed their chat, so toast this chat window.
-	$("#"+channel).remove();
+//	$("#"+channel).remove();
 	// need to delete connections[channel], too.
+
+	$("#panel-"+channel).toggle(); // hide the input controls
+
+	$("<input/>", 
+	  {id:"close-btn-"+channel,
+	   type: "button",
+	   value: "Close"
+	  }).appendTo($("#"+channel));
+
+	$("#close-btn-"+channel).on( "click", function() {
+	    $("#"+channel).remove();
+	    // remove from connections:
+	    //var index = array.indexOf(channel); // not supported in IE8 or lower!
+	    var index = $.inArray(channel, connections); // yay for jQuery!
+	    if (index > -1) {
+		connections.splice(index, 1);
+	    }
+	});
+    };
+
+    if (type == 'color') {
+	// server sent a color assignment
+	connections[umsg].color = ucolor;
     };
 
     if (type == 'system') {
@@ -143,8 +167,9 @@ function wsOnMessage(ev, channel) {
 		      style: "border:1px solid; float:left; width:250px;"
 		     }).appendTo("#chatbox");
 	var $panel = $("<div/>",
-		       {class: "panel"}
-		      ).appendTo($div);
+		       {id: "panel-"+newChannel,
+			class: "panel"
+		       }).appendTo($div);
 	$("<input/>",
 	  {type: "text",
 	   name: "message",
@@ -160,6 +185,8 @@ function wsOnMessage(ev, channel) {
 
 	$("#send-btn-"+newChannel).on( "click", function() {
 	    connections[newChannel].chatSendMsg();
+	    $("#message-"+newChannel).val("");
+	    $("#message-"+newChannel).focus();
 	});
 	
 	$("#message-"+newChannel).keypress(function (e) {

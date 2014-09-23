@@ -23,7 +23,6 @@ $('document').ready(function(){
 
     set_secondary_tab("menu_patrons_chat");
 
-//    connections["syschan"] = wsNew("syschan");
     connections["syschan"] = new Channel("syschan");
 
     $("#message-syschan").keypress(function (e) {
@@ -36,6 +35,8 @@ $('document').ready(function(){
     $("#start-chat").click( function(){
         $("#syschan").toggle();
         connections["syschan"].sendJoiningMessage();
+        $("#message-syschan").val("");
+        $("#message-syschan").focus();
     });
 
     $("#send-btn").click( function(){ connections["syschan"].chatSendMsg(); });

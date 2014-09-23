@@ -22,12 +22,13 @@ $(document).ready(function(){
         var uname = msg.name; //user name
         var ucolor = msg.color; //color
 
-        if(type == 'usermsg')
-        {
+        if (type == 'color') {
+            // do nothing
+        }
+        if (type == 'usermsg') {
             $('#message_box').append("<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>");
         }
-        if(type == 'system')
-        {
+        if (type == 'system') {
             $('#message_box').append("<div class=\"system_msg\">"+umsg+"</div>");
         }
        
