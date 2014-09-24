@@ -155,10 +155,13 @@
   color: #fff;
 }
 
-#csssubmenu li a.current_tab {
-  background: #4373a1; 
-  color: #fff;
-}
+#csssubmenu li.current_tab a
+{
+    color: #000 ;
+    background-color: #f3f3f3 ;
+    padding: .3em ;
+    text-decoration: none ;
+    display: inline ;
 
 #instructions {
     margin: 1em;
