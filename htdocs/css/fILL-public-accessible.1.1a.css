@@ -184,6 +184,11 @@
   background-color: #ff0000;
   box-shadow: 1px 1px 2px #b3b3b3;
 }
+
+div[role="main"] {
+  display: block;
+}
+
 /***---End of new library client side CSS--**/
 
 
