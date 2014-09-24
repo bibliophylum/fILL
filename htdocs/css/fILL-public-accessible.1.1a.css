@@ -186,9 +186,9 @@
 }
 
 #center {
+  margin-top: 1em;
   display: block;
   clear: left;
-  background: red;
 }
 
 /***---End of new library client side CSS--**/
