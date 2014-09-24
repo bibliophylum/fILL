@@ -159,9 +159,7 @@
 {
     color: #000 ;
     background-color: #f3f3f3 ;
-    padding: .3em ;
-    text-decoration: none ;
-    display: inline ;
+}
 
 #instructions {
     margin: 1em;
