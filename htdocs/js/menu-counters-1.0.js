@@ -74,7 +74,20 @@ function update_menu_counters( lid ) {
             if (data.counts.patron_requests > 0) {
 		var patron_requests = $('#menu_borrow_new_patron_requests a');
 		if (patron_requests.length > 0) {
-                    patron_requests[0].innerHTML = 'New patron requests: '+data.counts.patron_requests;
+                    patron_requests[0].innerHTML = 'New patron requests: '<div style="
+  font-size: .8em;
+  font-family: sans-serif;
+  padding: .2em;
+  margin: .2em;
+  -moz-border-radius: 0px;
+    -webkit-border-radius: .5em;
+  border-radius: .5em;
+  width: .7em;
+  height: .7em;
+  color: #fff;
+  background-color: #ff0000;
+  box-shadow: 1px 1px 2px #b3b3b3;">
+  +data.counts.patron_requests;</div>
 		}
             };
             //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\nholds: '+data.counts.holds+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
