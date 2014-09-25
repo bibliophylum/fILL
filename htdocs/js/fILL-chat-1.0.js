@@ -126,9 +126,8 @@ function wsOnMessage(ev, channel) {
     }
 
     if (type == 'close') {
-	// patron has closed their chat, so toast this chat window.
-//	$("#"+channel).remove();
-	// need to delete connections[channel], too.
+	// note: if the same patron re-opens chat before the librarian
+	// has closed the window, bad things happen.  FIXME!
 
 	$("#panel-"+channel).toggle(); // hide the input controls
 
