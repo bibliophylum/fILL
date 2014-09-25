@@ -74,7 +74,7 @@ function update_menu_counters( lid ) {
             if (data.counts.patron_requests > 0) {
 		var patron_requests = $('#menu_borrow_new_patron_requests a');
 		if (patron_requests.length > 0) {
-                    patron_requests[0].innerHTML = 'New patron requests: '+data.counts.patron_requests;
+                    patron_requests[0].innerHTML = 'New patron requests: <span class="circle">'+data.counts.patron_requests+'</span>';
 		}
             };
             //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\nholds: '+data.counts.holds+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
