@@ -55,7 +55,7 @@ function update_menu_counters( lid ) {
             if (data.counts.shipping > 0) {
 		var shipping = $('#menu_lend_shipping a');
 		if (shipping.length > 0) {
-                    shipping[0].innerHTML = 'Shipping: <span class="cirlce">'+data.counts.shipping'</span>';
+                    shipping[0].innerHTML = 'Shipping: <span class="cirlce">'+data.counts.shipping+'</span>';
 		}
             };
             if ((data.counts.on_hold > 0) || (data.counts.on_hold_cancel > 0)) {
