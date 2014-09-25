@@ -22,62 +22,173 @@
 	margin-bottom: 1em;
 }
 
-#csssubmenu {
-  background-color: #06a0ca;
-	margin: 1em 0em;
-  padding-top: .5em;
+#lib-nav
+{
+  background-color: ;
+  display: block;
+  float: left;
   width: 100%;
-	height: auto;
-	font-size: 1.2em;
-	clear: both;  /* start fresh with floatiness within the container */
+  margin: 0em;
+  font-size: 1.4em;
+  border-bottom: #4373a1 solid 5px;
+}
+
+#lib-nav ul
+{
+  margin-top: .5em;
+  padding: 0px;
+}
+
+#lib-nav ul li
+{
+  list-style-type: none;
+  display: inline;
+}
+
+#lib-nav li a
+{
+  margin-right: .8em;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  display: block;
+  float: left;
+  padding: .2em .5em;
+  text-decoration: none;
+}
+
+/* #lib-navigation link states */
+/* unvisted link */
+#lib-nav li a:link {
+  background: #0f4072;/*main dark green colour*/
+  text-decoration: none;
+  color: #fff;
+}
+/* visited link */
+#lib-nav li a:visited {
+  background: #0f4072;
+  color: #fff;
+}
+/* mouse over link */
+#lib-nav li a:hover { 
+  background: #4373a1; 
+  color: #fff;
+}
+/*selected link */
+#lib-nav li a:active {
+  background: #0f4072;
+  color: #fff;
+}
+
+/* focus over link */
+#lib-nav li a:focus { 
+  background: #4373a1; 
+  color: #fff;
+}
+
+#lib-nav li a.current_tab {
+  background: #4373a1; 
+  color: #fff;
+}
+
+
+#csssubmenu 
+{
+  margin-bottom: 1em;
+  background-color: #4373a1;
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0em;
+  font-size: 1em;
 }
 
 #csssubmenu ul
 {
-  	text-align: center;
-  	margin-top: .5em;
-  	padding-bottom: 0em;
-  	list-style: none;
+  margin-top: .5em;
+  padding: 0px;
 }
-#csssubmenu ul li 
+
+#csssubmenu ul li
 {
-	 margin: 0em .2em .3em .2em;
-   border-right: 1px solid #505050;
-  	padding: 0 ;
-  	display: inline ;
-  	text-align: center ;
-  	list-style: none ;
+  list-style-type: none;
+  display: inline;
 }
 
 #csssubmenu li a
 {
-  	margin: 0em;
-      -moz-border-radius: 0px;
+  margin: 0em .4em;
+  -moz-border-radius: 0px;
   -webkit-border-radius: 5px 5px 0px 0px;
   border-radius: 5px 5px 0px 0px;
-  	background-color: #06a0ca;
-  	color: #fff;
-  	padding: .3em ;
-  	text-decoration: none ;
-  	display: inline ;
+  display: block;
+  float: left;
+  padding: .2em .5em;
+  text-decoration: none;
 }
-#csssubmenu li a:hover {
-  	color: #003399;
-  	background-color: #f3f3f3 ;
+
+/* #lib-navigation link states */
+/* unvisted link */
+#csssubmenu li a:link {
+  background: #6a99c9;/*main dark green colour*/
+  text-decoration: none;
+  color: #fff;
 }
+/* visited link */
+#csssubmenu li a:visited {
+  background: #6a99c9;
+  color: #fff;
+}
+/* mouse over link */
+#csssubmenu li a:hover { 
+  background: #f3f3f3; 
+  color: #505050;
+}
+/*selected link */
+#csssubmenu li a:active {
+  background: #6a99c9;
+  color: #fff;
+}
+
+/* focus over link */
+#csssubmenu li a:focus { 
+  background: #4373a1; 
+  color: #fff;
+}
+
 #csssubmenu li.current_tab a
 {
-  	color: #000 ;
-  	background-color: #f3f3f3 ;
-  	padding: .3em ;
-  	text-decoration: none ;
-  	display: inline ;
+    color: #000 ;
+    background-color: #f3f3f3 ;
 }
 
 #instructions {
     margin: 1em;
     display: block;
     padding: 1.25em; 
+}
+
+/* Circle has been created to highlight alerts */
+
+.circle {
+  font-size: .8em;
+  font-family: sans-serif;
+  padding: .2em;
+  margin: .2em;
+  -moz-border-radius: 0px;
+    -webkit-border-radius: .5em;
+  border-radius: .5em;
+  width: .7em;
+  height: .7em;
+  color: #fff;
+  background-color: #ff0000;
+  box-shadow: 1px 1px 2px #b3b3b3;
+}
+
+#center {
+  margin-top: 1em;
+  display: block;
+  clear: left;
 }
 
 /***---End of new library client side CSS--**/
