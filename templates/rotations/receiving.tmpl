@@ -99,7 +99,7 @@ function downloadMarc() {
     <div id="myDiv">
       <h3>Receive rotation titles</h3>
       <div id="scanner">
-	<table id="fill-table">
+	<table id="fill-table" class="fill-library-table">
 	  <tr>
 	    <td width="80%">
 	      <form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
@@ -134,13 +134,11 @@ function downloadMarc() {
         </table>
       </div>
 
-  <div id="instructions">
+  <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
     <ol>
       <li>Scan barcodes of received titles.</li>
-      <li> </li>
       <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items you have received within the last month, suitable for importing into your ILS.</li>
-      <li> </li>
       <li>Go to the <a href="/rotations-MARC/" style="text-decoration: underline" target="_blank">Download folder</a></li>
     </ol>
   </div>

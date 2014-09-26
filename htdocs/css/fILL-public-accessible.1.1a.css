@@ -191,6 +191,10 @@
   clear: left;
 }
 
+.fill-library-table {
+  width: 100%;
+}
+
 /***---End of new library client side CSS--**/
 
 
