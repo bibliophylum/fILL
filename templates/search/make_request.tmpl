@@ -33,21 +33,20 @@ $('document').ready(function(){
 <div id="center" role="main">
 
     <form action="/cgi-bin/lightning.cgi" method="post">
-      <div id="midcolumncontainer">
-	<div id="midleft">
-	  <div id="midinner">
+
+<!--SECTION-->
+<div id="midleft">
 	    <h2>Required</h2>
 	    <br/>
 	    <h3>Patron barcode</h3>
 	    <p>Enter the barcode number of your patron (or a group identifier if you are requesting multiple copies): 
 	      <input id="pbarcode" type="text" name="pbarcode" size="14" maxlength="14">
 	    </p>
-	    <br/><br/><br/>
 	    <input type="submit" style="height:50px; min-width:150px; top:75%; display:block; margin:0 auto;" value="Complete the request">
-	  </div>
 	</div>
-	<div id="midright">
-	  <div id="midinner">
+
+<!--SECTION-->
+<div id="midright">
 	    <h2>Optional</h2>
 	    <br/>
 	    <h3>Number of copies</h3>
@@ -68,7 +67,7 @@ $('document').ready(function(){
 	    <p>Enter any additional notes for the potential lenders: 
 	      <input type="text" name="request_note" size="60" maxlength="80">
 	    </p>
-	  </div>
+
 	</div>
       </div>
       <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
@@ -86,6 +85,8 @@ $('document').ready(function(){
 
     <div id="midfooter">
       <div id="midinner">
+
+<!--SECTION-->
 	<h2>Information</h2>
 	<h3>Interlibrary Loan request details</h3>
 	<table>
