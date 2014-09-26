@@ -69,15 +69,21 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "gid" },
-            { "mDataProp": "cid" },
+            { "mDataProp": "gid", "bVisible": false },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "patron_barcode" },
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
             { "mDataProp": "message" }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_borrowing").css("width","100%");
+        }
+
 
     });
 
@@ -104,7 +110,7 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "cid" },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requested_by" },
@@ -112,7 +118,13 @@ $('document').ready(function(){
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
             { "mDataProp": "message" }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_lending").css("width","100%");
+        }
+
     });
 
     var d_s;

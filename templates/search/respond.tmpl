@@ -23,7 +23,7 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-            oTable = $('#gradient-style').dataTable({
+            oTable = $('#respond-table').dataTable({
             "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -42,21 +42,25 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
+                           { "mDataProp": "gid", "bVisible": false },
+                           { "mDataProp": "cid", "bVisible": false },
+                           { "mDataProp": "ID", "bVisible": false },
                            { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "From (ID)", "bVisible": false },
                            { "mDataProp": "Call #" },
                            { "mDataProp": "Author" },
                            { "mDataProp": "Title" },
                            { "mDataProp": "Note" },
                            { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Medium" },
+                           { "mDataProp": "Format" },
                            { "mDataProp": "Hold requested?" },
                            { "mDataProp": "Response" }
-                      ]
-
+                      ],
+                      "fnInitComplete": function() {
+                           // this handles a bug(?) in this version of datatables;
+                           // hidden columns caused the table width to be set to 100px, not 100%
+                           $("#respond-table").css("width","100%");
+                      }
                   });
 
 	});

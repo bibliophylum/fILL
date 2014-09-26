@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.6.js"></script>
+<script type="text/javascript" src="/js/current-1.7.js"></script>
 
 <script type="text/javascript">
 
@@ -55,8 +55,8 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "gid" },
-            { "mDataProp": "cid" },
+            { "mDataProp": "gid", "bVisible": false },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "patron_barcode" },
@@ -68,7 +68,12 @@ $('document').ready(function(){
               "sClass": "overrides center",
               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_borrowing").css("width","100%");
+        }
 
     });
 
@@ -95,7 +100,7 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "cid" },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requested_by" },
@@ -107,7 +112,13 @@ $('document').ready(function(){
               "sClass": "overrides center",
               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_lending").css("width","100%");
+        }
+
     });
 
     oTable_notfilled = $('#datatable_notfilled').dataTable({
@@ -134,14 +145,20 @@ $('document').ready(function(){
                "sClass": "control center",
                "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
             },
-            { "mDataProp": "cid" },
+            { "mDataProp": "cid", "bVisible": false },
             { "mDataProp": "title" },
             { "mDataProp": "author" },
             { "mDataProp": "requested_by" },
             { "mDataProp": "ts" },
             { "mDataProp": "status" },
             { "mDataProp": "message" }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_notfilled").css("width","100%");
+        }
+
 
     });
 
@@ -375,7 +392,7 @@ $('document').ready(function(){
 	<!--     <div id="mylistDiv">  -->
 	<h4>Current borrowing</h4>
 	<div class="dataTable_wrapper">
-	  <table id="datatable_borrowing" class="display">
+	  <table id="datatable_borrowing" class="display" width="100%">
 	    <thead>
 	      <tr>
 		<th></th><th>gid</th><th>cid</th><th>title</th><th>author</th><th>patron_barcode</th><th>lender</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>

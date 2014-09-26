@@ -21,7 +21,7 @@
 function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","receiving-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

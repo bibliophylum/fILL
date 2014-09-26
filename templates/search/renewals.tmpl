@@ -19,7 +19,7 @@ $('document').ready(function(){
                 build_table(data);
 
                 //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#renewals-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -38,19 +38,25 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
+                           { "mDataProp": "gid", "bVisible": false },
+                           { "mDataProp": "cid", "bVisible": false },
+                           { "mDataProp": "ID", "bVisible": false },
                            { "mDataProp": "Title" },
                            { "mDataProp": "Author" },
                            { "mDataProp": "Patron" },
                            { "mDataProp": "Timestamp" },
                            { "mDataProp": "Lender" },
-                           { "mDataProp": "Lender (ID)" },
+                           { "mDataProp": "Lender (ID)", "bVisible": false },
                            { "mDataProp": "Status" },
                            { "mDataProp": "Message" },
                            { "mDataProp": "Renewal" }
-                      ]
+                      ],
+                      "fnInitComplete": function() {
+                         // this handles a bug(?) in this version of datatables;
+                         // hidden columns caused the table width to be set to 100px, not 100% 
+                         $("#renewals-table").css("width","100%");
+                      }
+
 
                   });
            });

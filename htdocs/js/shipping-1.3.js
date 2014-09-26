@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","shipping-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

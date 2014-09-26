@@ -18,8 +18,7 @@ $('document').ready(function(){
                 //alert (data.returns[0].id+" "+data.returns[0].msg_from+" "+data.returns[0].call_number+" "+data.returns[0].author+" "+data.returns[0].title+" "+data.returns[0].ts); //further debug
                 build_table(data);
 
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#returns-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -38,17 +37,21 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
+                           { "mDataProp": "gid", "bVisible": false },
+                           { "mDataProp": "cid", "bVisible": false },
+                           { "mDataProp": "ID", "bVisible": false },
                            { "mDataProp": "Title" },
                            { "mDataProp": "Author" },
                            { "mDataProp": "Timestamp" },
                            { "mDataProp": "Return to" },
-                           { "mDataProp": "Return to (ID)" },
+                           { "mDataProp": "Return to (ID)", "bVisible": false },
                            { "mDataProp": "Return" }
-                      ]
-
+                      ],
+                      "fnInitComplete": function() {
+                          // this handles a bug(?) in this version of datatables;
+                          // hidden columns caused the table width to be set to 100px, not 100%
+                          $("#returns-table").css("width","100%");
+                      }
                   });
            });
 

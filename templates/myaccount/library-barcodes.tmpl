@@ -36,13 +36,19 @@ $('document').ready(function(){
 		]
 	},
         "aoColumns": [
-            { "mDataProp": "lid", "sWidth": "5%" },
-            { "mDataProp": "borrower", "sWidth": "5%" },
+            { "mDataProp": "lid", "sWidth": "5%", "bVisible": false },
+            { "mDataProp": "borrower", "sWidth": "5%", "bVisible": false },
             { "mDataProp": "name", "sWidth": "15%" },
             { "mDataProp": "library", "sWidth": "50%" },
             { "mDataProp": "barcode", "sWidth": "15%" }
         ],
-        "bAutoWidth": false
+        "bAutoWidth": false,
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_barcodes").css("width","100%");
+        }
+
     });
 
     $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: <TMPL_VAR name="lid">},
@@ -110,7 +116,7 @@ $('document').ready(function(){
               <table id="datatable_barcodes" width="100%">
         	  <thead>
         	  <tr>
-        		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th>
+        		<th>lid</th><th>borrower</th><th>symbol</th><th>library</th><th>barcode</th>
         	  </tr>
         	  </thead>
         	  <tbody>

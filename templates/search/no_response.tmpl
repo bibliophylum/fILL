@@ -18,7 +18,8 @@ $('document').ready(function(){
 
                 build_table(data); 
 
-                oTable = $('#gradient-style').dataTable({
+//                oTable = $('#gradient-style').dataTable({
+                oTable = $('#pending-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -26,34 +27,38 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
                  "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-               "aButtons": [
-            "copy", "csv", "xls", "pdf", "print",
-            {
-        "sExtends":    "collection",
-        "sButtonText": "Save",
-        "aButtons":    [ "csv", "xls", "pdf" ]
-            }
-               ]
+                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                    "aButtons": [
+                       "copy", "csv", "xls", "pdf", "print",
+                       {
+                          "sExtends":    "collection",
+                          "sButtonText": "Save",
+                          "aButtons":    [ "csv", "xls", "pdf" ]
+                       }
+                    ]
                  },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Patron / Group" },
-                           { "mDataProp": "Req Placed" },
-                           { "mDataProp": "Age (days)" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "Status" },
-                           { "mDataProp": "# sources tried" },
-                           { "mDataProp": "Total # sources" },
-                           { "mDataProp": "Next lender?" }
-                      ]
-
-                  });
-            });
+                 "aoColumns": [
+                    { "mDataProp": "gid", "bVisible": false },
+                    { "mDataProp": "cid", "bVisible": false },
+                    { "mDataProp": "ID", "bVisible": false },
+                    { "mDataProp": "Title" },
+                    { "mDataProp": "Author" },
+                    { "mDataProp": "Patron / Group" },
+                    { "mDataProp": "Req Placed" },
+                    { "mDataProp": "Age (days)" },
+                    { "mDataProp": "From" },
+                    { "mDataProp": "Status" },
+                    { "mDataProp": "# sources tried" },
+                    { "mDataProp": "Total # sources" },
+                    { "mDataProp": "Next lender?" }
+                ],
+                "fnInitComplete": function() {
+                   // this handles a bug(?) in this version of datatables;
+                   // hidden columns caused the table width to be set to 100px, not 100%
+                   $("#pending-table").css("width","100%");
+                }
+          });
+    });
 
     $(function() {
            update_menu_counters( <TMPL_VAR name="lid"> );

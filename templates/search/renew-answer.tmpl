@@ -21,8 +21,7 @@ $('document').ready(function(){
                 //alert (data.renewRequests[0].id+" "+data.renewRequests[0].msg_from+" "+data.renewRequests[0].call_number+" "+data.renewRequests[0].author+" "+data.renewRequests[0].title+" "+data.renewRequests[0].ts); //further debug
                 build_table(data);
 
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#renewal-answer-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -41,19 +40,23 @@ $('document').ready(function(){
 		           ]
         	       },
                        "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
+                           { "mDataProp": "gid", "bVisible": false },
+                           { "mDataProp": "cid", "bVisible": false },
+                           { "mDataProp": "ID", "bVisible": false },
                            { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)" },
+                           { "mDataProp": "From (ID)", "bVisible": false },
                            { "mDataProp": "Call #" },
                            { "mDataProp": "Author" },
                            { "mDataProp": "Title" },
                            { "mDataProp": "Timestamp" },
                            { "mDataProp": "Due date" },
                            { "mDataProp": "Response" }
-                      ]
-
+                      ],
+                      "fnInitComplete": function() {
+                           // this handles a bug(?) in this version of datatables;
+                           // hidden columns caused the table width to be set to 100px, not 100%
+                           $("#renewal-answer-table").css("width","100%");
+                      }
                   });
            });
 
