@@ -1,4 +1,4 @@
-/**This is a duplicate off the current CSS file to test changes to the library side, any new classes or IDs etc will be added in a special section below**/
+/**This is to test changes to the library side, any new classes or IDs etc will be added in a special section below**/
 
 /***---Start of new library client side CSS---**/
 
@@ -21,6 +21,7 @@
 	display: inline;
 	margin-bottom: 1em;
 }
+
 
 #lib-nav
 {
@@ -57,10 +58,10 @@
   text-decoration: none;
 }
 
-/* #lib-navigation link states */
+/* #lib-Navigation link states */
 /* unvisted link */
 #lib-nav li a:link {
-  background: #0f4072;/*main dark green colour*/
+  background: #0f4072;
   text-decoration: none;
   color: #fff;
 }
@@ -71,7 +72,7 @@
 }
 /* mouse over link */
 #lib-nav li a:hover { 
-  background: #4373a1; 
+  background: #6a99c9; 
   color: #fff;
 }
 /*selected link */
@@ -91,11 +92,9 @@
   color: #fff;
 }
 
-
 #csssubmenu 
 {
-  margin-bottom: 1em;
-  background-color: #4373a1;
+  background-color: #6b99cc;
   display: block;
   float: left;
   width: 100%;
@@ -127,16 +126,16 @@
   text-decoration: none;
 }
 
-/* #lib-navigation link states */
+/* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #6a99c9;/*main dark green colour*/
+  background: #4373a1;
   text-decoration: none;
   color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #6a99c9;
+  background: #4373a1;
   color: #fff;
 }
 /* mouse over link */
@@ -146,7 +145,7 @@
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #6a99c9;
+  background: #4373a1;
   color: #fff;
 }
 
@@ -155,6 +154,8 @@
   background: #4373a1; 
   color: #fff;
 }
+
+
 
 #csssubmenu li.current_tab a
 {
@@ -178,11 +179,10 @@
   -moz-border-radius: 0px;
     -webkit-border-radius: .5em;
   border-radius: .5em;
-  min-width: 1em;
-  height: .7em;
+  padding: 0px 4px;
   color: #fff;
   background-color: #ff0000;
-  box-shadow: 1px 1px 3px #999;
+  box-shadow: 2px 2px 2px #777;
 }
 
 #center {
