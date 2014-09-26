@@ -163,7 +163,7 @@
 }
 
 #instructions {
-    margin: 1em;
+    margin: 0em 1em 1em 1em;
     display: block;
     padding: 1.25em; 
 }
@@ -178,7 +178,7 @@
   -moz-border-radius: 0px;
     -webkit-border-radius: .5em;
   border-radius: .5em;
-  width: .7em;
+  min-width: 1em;
   height: .7em;
   color: #fff;
   background-color: #ff0000;
