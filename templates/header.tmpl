@@ -124,61 +124,18 @@ $('document').ready(function(){
   </div>
 </div>
 
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
 <nav role="navigation" id="lib-nav">
-  <ul class="nav inline-items">
-    <li id="menu_borrow">
-      <a href="/cgi-bin/lightning.cgi?rm=lightning_search_form">
-      Borrowing
-      </a>
-    </li>
-
-    <li id="menu_lend">
-      <a href="/cgi-bin/lightning.cgi?rm=pull_list">
-      Lending
-      </a>
-    </li>
-
-    <li id="menu_borrow_current_requests">
-      <a href="/cgi-bin/lightning.cgi?rm=current">
-      Current
-      </a>
-    </li>
-
-    <li id="menu_borrow_history">
-      <a href="/cgi-bin/lightning.cgi?rm=history">
-      History
-      </a>
-    </li>
-
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">
-      Account
-      </a>
-    </li>
-
-    <li id="menu_patrons">
-      <a href="/cgi-bin/patrons.cgi?rm=patrons_form">
-      Patrons
-      </a>
-    </li>
-
-    <li id="menu_info">
-      <a href="/cgi-bin/info.cgi?rm=info_contacts_form">
-      Info
-      </a>
-    </li>
-
-    <li id="menu_rotations" style="display:none;">
-      <a href="/cgi-bin/rotations.cgi?rm=receive_form">
-      Rotation Manager
-      </a>
-    </li>
-
-    <li id="menu_rotations_admin" style="display:none;">
-      <a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">
-      Rotations Admin
-      </a>
-    </li>
+  <ul class="lib-nav-primary inline-items">
+    <li><a id="menu_borrow" href="/cgi-bin/lightning.cgi?rm=lightning_search_form">Borrowing</a></li>
+    <li><a id="menu_lend" href="/cgi-bin/lightning.cgi?rm=pull_list">Lending</a></li>
+    <li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
+    <li><a id="menu_history" href="/cgi-bin/lightning.cgi?rm=history">History</a></li>
+    <li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
+    <li><a id="menu_patrons" href="/cgi-bin/patrons.cgi?rm=patrons_form">Patrons</a></li>
+    <li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Info</a></li>
+    <li id="menu_rotations" style="display:none;"><a href="/cgi-bin/rotations.cgi?rm=receive_form">Rotation Manager</a></li>
+    <li id="menu_rotations_admin" style="display:none;"><a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">Rotations Admin</a></li>
   </ul>
 </nav>
 
