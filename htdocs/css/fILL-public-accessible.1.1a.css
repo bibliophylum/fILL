@@ -163,7 +163,7 @@
 }
 
 #instructions {
-    margin: 1em;
+    margin: 0em 1em 1em 1em;
     display: block;
     padding: 1.25em; 
 }
@@ -178,17 +178,21 @@
   -moz-border-radius: 0px;
     -webkit-border-radius: .5em;
   border-radius: .5em;
-  width: .7em;
+  min-width: 1em;
   height: .7em;
   color: #fff;
   background-color: #ff0000;
-  box-shadow: 1px 1px 2px #b3b3b3;
+  box-shadow: 1px 1px 3px #999;
 }
 
 #center {
   margin-top: 1em;
   display: block;
   clear: left;
+}
+
+.table-width-lib {
+  width: 90%;
 }
 
 /***---End of new library client side CSS--**/

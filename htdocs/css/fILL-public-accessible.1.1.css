@@ -580,7 +580,6 @@ div.termtitle {
 
 #fill-table {
   	border-collapse: collapse;
-  	width: 70%;
   	margin: 1em auto;
 	background: #e3e3e3;
 	border: 2px solid #b3b3b3;
@@ -613,6 +612,10 @@ div.termtitle {
 #fill-table tr td:last-child,
 #fill-table tr th:last-child {
   border-right: 0;
+}
+
+.table-width-pub {
+	width: 70%;
 }
 
 .bison 
