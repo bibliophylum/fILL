@@ -191,8 +191,8 @@
   clear: left;
 }
 
-.library-table {
-  width: 100%;!important
+.table-width-lib {
+  width: 90%;
 }
 
 /***---End of new library client side CSS--**/
