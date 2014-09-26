@@ -61,7 +61,13 @@ $('document').ready(function() {
              { "mDataProp": "Requested by" },
              { "mDataProp": "Requestor note" },
              { "mDataProp": "Your barcode for the requesting library" }
-        ]
+        ],
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#pull-list").css("width","100%");
+        }
+
   });
 
   $(function() {
