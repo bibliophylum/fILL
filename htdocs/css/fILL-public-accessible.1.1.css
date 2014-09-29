@@ -51,19 +51,27 @@ img
 	border: 0px;
 }
 
+h1 {
+	display: inline;
+	margin-bottom: .5em;
+	color: #183935;
+	font-size: 1.4em;
+	text-transform: capitalize;
+}
+
 h2 {
 	display: inline;
-	border-bottom: .5em;
-	color: #383;
+	margin-bottom-bottom: .5em;
+	color: #183935;
 	font-size: 1.2em;
 	text-transform: capitalize;
 }
 
 h3 {
 	
-	color: #486660;
+	color: #183935;
 	font-size: 1em;
-	text-transform: ;
+	font-style: bold;
 }
 
 #container
@@ -143,7 +151,6 @@ nav
 	width: 100%;
 	margin: ;
 	font-size: 1.4em;
-	border-bottom: #06a0ca solid 5px;
 }
 
 nav ul
