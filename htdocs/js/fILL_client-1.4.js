@@ -419,7 +419,7 @@ function renderDetails(data, marker)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
 
     var len=data["location"].length;
-    details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
+    details += '<tr><td><b>locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
 
 	// temp fix for skipping Spruce locations
@@ -488,7 +488,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" value="Request _' + title +  '_">';
+	requestForm += '<input type="submit" value="Click To Request">';
     }
     requestForm += '</form>';
     details += '</table>';
