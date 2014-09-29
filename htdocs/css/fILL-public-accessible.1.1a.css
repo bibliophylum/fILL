@@ -30,7 +30,7 @@ lib-nav-primary
   width: 100%;
   margin: 0em;
   font-size: 1.4em;
-  border-bottom: #6a99c9 solid 5px;
+  border-bottom: #4363a1 solid 5px;
 }
 
 lib-nav-primary ul
@@ -72,12 +72,12 @@ lib-nav-primary li a:visited {
 }
 /* mouse over link */
 lib-nav-primary li a:hover { 
-  background: #6a99c9; 
+  background: #4363a1; 
   color: #fff;
 }
 /*selected link */
 lib-nav-primary li a:active {
-  background: #0f4072;
+  background: #4363a1;
   color: #fff;
 }
 
