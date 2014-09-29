@@ -70,7 +70,7 @@ function my_onshow(data) {
 	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-    	    html.push('<span><i>'+hit["md-title-responsibility"]+'</i></span>');
+    	    html.push('<span>'+hit["md-title-responsibility"]+'</span>');
       	}
 
         if (hit.recid == curDetRecId) {
@@ -125,13 +125,13 @@ function my_onstat(data) {
 function my_onterm(data) {
     var termlists = [];
     termlists.push('<br><hr/><b>Refine your search by:</b>');
-    termlists.push('<hr/><div class="termtitle">.::Subjects</div>');
+    termlists.push('<hr/><div class="termtitle">Subjects</div>');
     for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
               + data.subject[i].freq + ')</span><br/>');
     }
      
-    termlists.push('<hr/><div class="termtitle">.::Authors</div>');
+    termlists.push('<hr/><div class="termtitle">Authors</div>');
     for (var i = 0; i < data.author.length && i < AuthorMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'au\', this.firstChild.nodeValue);return false;">' 
                             + data.author[i].name 
@@ -140,7 +140,7 @@ function my_onterm(data) {
                             + ')</span><br/>');
     }
 
-    termlists.push('<hr/><div class="termtitle">.::Sources</div>');
+    termlists.push('<hr/><div class="termtitle">Sources</div>');
     for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
         termlists.push('<a href="#" target_id='+data.xtargets[i].id
             + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
@@ -405,7 +405,7 @@ function renderDetails(data, marker)
 	    requestForm += '<input type="hidden" name="title" value="' + title + '">';
 	}
   	if (data["md-title-responsibility"] !== undefined) {
-	    details += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
+	    details += ' <span>'+ data["md-title-responsibility"] +'</span>';
   	}
  	details += '</td></tr>';
     }
