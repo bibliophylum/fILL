@@ -98,10 +98,9 @@ function my_onstat(data) {
     var stat = document.getElementById('stat');
     if(stat != null){
 	if(data.activeclients != 0){
-	    stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
-	    stat.innerHTML += '<div id="progress_empty" style="position:relative;height:20px;width:150px;background-color:#cccccc;border:1px solid black;padding:0px;">';
-	    stat.innerHTML += '<div id="progress_filler" style="height:20px;width:'+(((data.clients - data.activeclients) / data.clients)*150)+'px;left:1px;background-color:#607D8B;padding-top:5px;padding:0px;position:relative;margin-right:200px;margin-top:-21px;"/>';
-	    stat.innerHTML += '</div></div><br />';
+        stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
+        stat.innerHTML += '<div id="progress_empty" style="">'; //Further styles for progress_empty in css
+        stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*130)+'px;"/>';//Further styles for progress filler in css	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
