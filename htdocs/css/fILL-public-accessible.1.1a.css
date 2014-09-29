@@ -30,7 +30,7 @@
   width: 100%;
   margin: 0em;
   font-size: 1.4em;
-  border-bottom: #4373a1 solid 5px;
+  border-bottom: #6a99c9 solid 5px;
 }
 
 #lib-nav-primary ul
@@ -48,28 +48,28 @@
 }
 /* visited link */
 #lib-nav-primary li a:visited {
-  background: #0f4072;
+  background: #6a99c9;
   color: #fff;
 }
 /* mouse over link */
 #lib-nav-primary li a:hover { 
-  background: #4373a1; 
+  background: #6a99c9; 
   color: #fff;
 }
 /*selected link */
 #lib-nav-primary li a:active {
-  background: #4373a1;
+  background: #6a99c9;
   color: #fff;
 }
 
 /* focus over link */
 #lib-nav-primary li a:focus { 
-  background: #4373a1; 
+  background: #6a99c9; 
   color: #fff;
 }
 
 #lib-nav-primary li a.current_tab {
-  background: #4373a1; 
+  background: #6a99c9; 
   color: #fff;
 }
 
