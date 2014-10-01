@@ -53,6 +53,7 @@ $SQL="select
   hg.title, 
   hg.author, 
   l.name as requested_by, 
+  l.library,
   date_trunc('second',rh.ts) as ts, 
   rh.status, 
   rh.message 

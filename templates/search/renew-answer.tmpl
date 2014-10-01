@@ -29,7 +29,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -39,19 +39,10 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid", "bVisible": false },
-                           { "mDataProp": "cid", "bVisible": false },
-                           { "mDataProp": "ID", "bVisible": false },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)", "bVisible": false },
-                           { "mDataProp": "Call #" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Due date" },
-                           { "mDataProp": "Response" }
-                      ],
+                       "columnDefs": [ {
+                           "targets": [0,1,2,4],
+                           "visible": false
+                       } ],
                       "fnInitComplete": function() {
                            // this handles a bug(?) in this version of datatables;
                            // hidden columns caused the table width to be set to 100px, not 100%

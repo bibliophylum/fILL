@@ -18,7 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-function build_table( data ) {
+function build_table_orig( data ) {
     for (var i=0;i<data.active.borrowing.length;i++) {
 	var ai = oTable_borrowing.fnAddData( data.active.borrowing[i], false );
     }
@@ -38,10 +38,168 @@ function build_table( data ) {
     toggleLayer("tabs");
 }
 
-function fnFormatDetails( oTable, nTr )
+function build_table( data ) {
+    build_table_borrowing( data );
+    build_table_lending( data );
+    build_table_notfilled( data );
+    
+    toggleLayer("waitDiv");
+    toggleLayer("tabs");
+}
+
+function build_table_borrowing( data ) {
+    var myTable = document.createElement("table");
+    myTable.setAttribute("id","datatable_borrowing");
+    var tHead = myTable.createTHead();
+    var row = tHead.insertRow(-1);
+    var cell;
+    // Can't just use:
+    // cell = row.insertCell(-1); cell.innerHTML = "ID";
+    // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
+    
+    cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "patron_barcode"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "lender"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
+    
+    var tFoot = myTable.createTFoot();
+    row = tFoot.insertRow(-1);
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "table footer text";
+    
+    // explicit creation of TBODY element to make IE happy
+    var tBody = document.createElement("TBODY");
+    myTable.appendChild(tBody);
+    
+    for (var i=0;i<data.active.borrowing.length;i++) 
+    {
+        row = tBody.insertRow(-1); row.id = 'borr'+data.active.borrowing[i].gid+'-'+data.active.borrowing[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = null;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].gid;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].patron_barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].lender; cell.setAttribute('title', data.active.borrowing[i].library_name);
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].status;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.borrowing[i].message;
+        cell = row.insertCell(-1); cell.innerHTML = null;
+    }
+    
+    document.getElementById('tabs-1').appendChild(myTable);
+}
+
+function build_table_lending( data ) {
+    var myTable = document.createElement("table");
+    myTable.setAttribute("id","datatable_lending");
+    var tHead = myTable.createTHead();
+    var row = tHead.insertRow(-1);
+    var cell;
+    // Can't just use:
+    // cell = row.insertCell(-1); cell.innerHTML = "ID";
+    // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
+    
+    cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "requested_by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
+    
+    var tFoot = myTable.createTFoot();
+    row = tFoot.insertRow(-1);
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "table footer text";
+    
+    // explicit creation of TBODY element to make IE happy
+    var tBody = document.createElement("TBODY");
+    myTable.appendChild(tBody);
+    
+    for (var i=0;i<data.active.lending.length;i++) 
+    {
+        row = tBody.insertRow(-1); row.id = 'lend'+data.active.lending[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = null;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].requested_by; cell.setAttribute('title', data.active.lending[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].status;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.lending[i].message;
+        cell = row.insertCell(-1); cell.innerHTML = null;
+    }
+    
+    document.getElementById('tabs-2').appendChild(myTable);
+}
+
+function build_table_notfilled( data ) {
+    var myTable = document.createElement("table");
+    myTable.setAttribute("id","datatable_notfilled");
+    var tHead = myTable.createTHead();
+    var row = tHead.insertRow(-1);
+    var cell;
+    // Can't just use:
+    // cell = row.insertCell(-1); cell.innerHTML = "ID";
+    // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
+    
+    cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "requested_by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    
+    var tFoot = myTable.createTFoot();
+    row = tFoot.insertRow(-1);
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "table footer text";
+    
+    // explicit creation of TBODY element to make IE happy
+    var tBody = document.createElement("TBODY");
+    myTable.appendChild(tBody);
+    
+    for (var i=0;i<data.active.notfilled.length;i++) 
+    {
+        row = tBody.insertRow(-1); row.id = 'nf'+data.active.notfilled[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = null;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].cid;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].author;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].requested_by; cell.setAttribute('title', data.active.notfilled[i].library);
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].status;
+        cell = row.insertCell(-1); cell.innerHTML = data.active.notfilled[i].message;
+    }
+    
+    document.getElementById('tabs-3').appendChild(myTable);
+}
+
+function fnFormatDetails( $tbl, nTr )
 {
-    var oData = oTable.fnGetData( nTr );
-    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "cid": oData.cid },
+    var oTable = $tbl.dataTable();
+    var aData = oTable.fnGetData( nTr ); 
+
+    var cid;
+    var id = $tbl.attr("id");
+    if (id == "datatable_borrowing") {
+        cid = aData[2];
+    } else if (id == "datatable_lending") {
+        cid = aData[1];
+    } else if (id == "datatable_notfilled") {
+        cid = aData[1];
+    }
+
+    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "cid": cid },
 	      function(data){
 		  //alert('first success');
 	      })
@@ -73,7 +231,6 @@ function fnFormatDetails( oTable, nTr )
             var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
 	    $(nDetailsRow).attr('detail','conversation');
             $('div.innerDetails', nDetailsRow).slideDown();
-
 	});
 }
 
@@ -107,8 +264,9 @@ function override( e, oData, localData, oTable, nTr )
 	});
 }
 
-function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
+function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 {
+    var oTable = $tbl.dataTable();
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -159,8 +317,9 @@ function fnFormatBorrowingOverrides( oTable, nTr, anOpen )
 }
 
 
-function fnFormatLendingOverrides( oTable, nTr, anOpen )
+function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 {
+    var oTable = $tbl.dataTable();
     var oData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -197,6 +356,96 @@ function fnFormatLendingOverrides( oTable, nTr, anOpen )
     $('div.innerDetails', nDetailsRow).slideDown();
 }
 
+function activate_detail_control( $tbl, anOpen ) {
+
+    $tbl.on("click", "td.control", function() {
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpen );
+      var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+
+      if (i === -1) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails($tbl, nTr);
+        anOpen.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length == 0) {
+          // must be overrides that is open.  close it and open the conversation
+	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            $tbl.fnClose( nTr );
+            anOpen.splice( i, 1 );
+
+   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            fnFormatDetails($tbl, nTr);
+            anOpen.push( nTr );
+          } );
+          
+	} else {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            $tbl.fnClose( nTr );
+            anOpen.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+}
+
+function activate_overrides_control( $tbl, anOpen ) {
+
+    $tbl.on("click", "td.overrides", function() {           // reduce bubble-up
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpen );
+      var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+
+      if ( i === -1 ) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+        var id = $tbl.attr("id");
+        if (id == "datatable_borrowing") {
+          fnFormatBorrowingOverrides($tbl, nTr, anOpen);
+        } else if (id == "datatable_lending") {
+          fnFormatLendingOverrides($tbl, nTr, anOpen);
+        }
+        anOpen.push( nTr );
+      }
+      else {
+
+        // If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="overrides"]');
+        if (rOpen.length == 0) {
+          // must be conversation that is open.  close it and open the overrides
+          $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            $tbl.fnClose( nTr );
+            anOpen.splice( i, 1 );
+
+            $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+            var id = $tbl.attr("id");
+            if (id == "datatable_borrowing") {
+              fnFormatBorrowingOverrides($tbl, nTr, anOpen);
+            } else if (id == "datatable_lending") {
+              fnFormatLendingOverrides($tbl, nTr, anOpen);
+            }
+            anOpen.push( nTr );
+          } );
+          
+        } else {
+          // overrides is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            $tbl.fnClose( nTr );
+            anOpen.splice( i, 1 );
+          } );
+        }
+      }
+    });
+
+}
 
 function toggleLayer( whichLayer )
 {

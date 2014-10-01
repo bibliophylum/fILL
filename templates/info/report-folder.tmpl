@@ -38,7 +38,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "oTableTools": {
-             "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+             "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
              "aButtons": [
 		"copy", "csv", "xls", "pdf", "print",
 		{
@@ -48,18 +48,13 @@ $('document').ready(function(){
 		}
 	    ]
     	},
-        "aoColumns": [
-            { "mDataProp": "rcid", "sWidth": "10%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "range_start", "sWidth": "10%" },
-            { "mDataProp": "range_end", "sWidth": "10%" },
-            { "mDataProp": "download", "sWidth": "15%" },
-            { "mDataProp": "actions", "sWidth": "15%" }
-        ],
         "bAutoWidth": false
     });
 
-    $('#datatable_completed tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_completed tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_completed tbody tr", function() {  // suggested replacement
+    $("#datatable_completed tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
@@ -96,7 +91,10 @@ $('document').ready(function(){
         "bAutoWidth": false
     });
 
-    $('#datatable_queued tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_queued tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_queued tbody tr", function() {  // suggested replacement
+    $("#datatable_queued tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
