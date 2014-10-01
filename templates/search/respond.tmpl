@@ -59,6 +59,15 @@ $('document').ready(function(){
            update_menu_counters( <TMPL_VAR name="lid"> );
     });
 
+    $("#bToggleUnfilledCodes").on("click", function() {
+	  $("#unfilled-codes").toggle();
+	  if ( $("#unfilled-codes").is(":visible") ) {
+	      $("#bToggleUnfilledCodes").prop('value',"Hide the Unfilled codes");
+          } else {
+	      $("#bToggleUnfilledCodes").prop('value',"Show the Unfilled codes");
+          }
+    });
+
 });
 
 </script>
@@ -66,6 +75,10 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 <br />
+  <div id="toggle-unfilled-codes">
+    <input type="button" id="bToggleUnfilledCodes" value="Show the Unfilled codes">
+  </div>
+   <div id="unfilled-codes" style="display:none">
     <h3>Unfilled codes</h3>
     <table id="fill-table" class="table-width-lib">
       <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
@@ -81,7 +94,7 @@ $('document').ready(function(){
       <tr><td style="border:1px solid black;">policy-problem</td><td style="border:1px solid black;">It is against our policies to loan this.</td></tr>
       <tr><td style="border:1px solid black;">other</td><td style="border:1px solid black;">Any other reason.</td></tr>
     </table>
-
+  </div>
 
 
     <div id="waitDiv">
