@@ -110,13 +110,13 @@
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #4373a1;
+  background: #0f4072;
   text-decoration: none;
   color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #4373a1;
+  background: #0f4072;
   color: #fff;
 }
 /* mouse over link */
@@ -126,13 +126,13 @@
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #4373a1;
+  background: #0f4072;
   color: #fff;
 }
 
 /* focus over link */
 #csssubmenu li a:focus { 
-  background: #4373a1; 
+  background: #0f4072; 
   color: #fff;
 }
 
