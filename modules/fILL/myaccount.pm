@@ -55,7 +55,7 @@ sub myaccount_settings_process {
 
 	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
 
-	$self->dbh->do("UPDATE libraries SET email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, request_email_notification=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
+	$self->dbh->do("UPDATE libraries SET email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
 		       undef,
 		       $q->param("email_address"),
 		       $q->param("library"),
@@ -63,7 +63,6 @@ sub myaccount_settings_process {
 		       $q->param("city"),
 		       $q->param("province"),
 		       $q->param("post_code"),
-		       $q->param("request_email_notification"),
 		       $q->param("slips_with_barcodes"),
 		       $q->param("centralized_ill"),
 		       $lid
@@ -75,7 +74,7 @@ sub myaccount_settings_process {
     }
 
     # Get the form data
-    my $SQL_getLibrary = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, request_email_notification, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
+    my $SQL_getLibrary = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
     my $href = $self->dbh->selectrow_hashref(
 	$SQL_getLibrary,
 	{},
@@ -98,7 +97,6 @@ sub myaccount_settings_process {
 		     editCity     => $href->{city},
 		     editProvince => $href->{province},
 		     editPostalCode => $href->{post_code},
-		     editRequestEmailNotification => $href->{request_email_notification},
 		     editSlipsWithBarcodes => $href->{slips_with_barcodes},
 		     editCentralizedILL => $href->{centralized_ill},
 	);
