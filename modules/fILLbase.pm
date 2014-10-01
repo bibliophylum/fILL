@@ -250,16 +250,10 @@ sub forbidden_process {
 #
 sub login_process {
     my $self = shift;
-    my $template = $self->load_tmpl(	    
-	                      'login.tmpl',
-			      cache => 0,
-			     );	
-    $template->param( pagetitle => 'Log in to fILL',
-	);
-
-    # Parse the template
-    my $html_output = $template->output;
-    return $html_output;
+    $self->session_delete; # toast any old session info
+    my $template = $self->load_tmpl('login.tmpl',cache => 0);	
+    $template->param( pagetitle => 'Log in to fILL');
+    return $template->output;
 }
 
 
