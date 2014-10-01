@@ -49,7 +49,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Enabled?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Verified?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last login"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "# requests"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Number of requests"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Change password"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();

@@ -62,9 +62,9 @@ function build_table_borrowing( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "patron_barcode"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "patron barcode"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "lender"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
@@ -110,8 +110,8 @@ function build_table_lending( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "requested_by"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "requested by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
@@ -155,8 +155,8 @@ function build_table_notfilled( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "requested_by"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "ts"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "requested by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
     

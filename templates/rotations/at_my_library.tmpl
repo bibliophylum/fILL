@@ -19,7 +19,7 @@ $('document').ready(function(){
 
   set_secondary_tab("menu_rotations_current");
 
-  oTable = $('#gradient-style').dataTable({
+  oTable = $('#at-my-library').dataTable({
     "bJQueryUI": true,
     "sPaginationType": "full_numbers",
     "bInfo": true,
@@ -27,19 +27,13 @@ $('document').ready(function(){
     "sDom": '<"H"Tfr>t<"F"ip>',
     "iDisplayLength": 25,
     "bLengthChange": true,
-    // TableTools requires Flash version 10...
     "oTableTools": {
-      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-      "aButtons": [
-        "copy", "csv", "xls", "pdf", "print",
-        {
-        "sExtends":    "collection",
-        "sButtonText": "Save",
-        "aButtons":    [ "csv", "xls", "pdf" ]
-        }
-        ]
-      }
-      
+      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+      },
+    "columnDefs": [{
+      "targets": 0,
+      "visible": false
+    }]
    });
 });
 
@@ -49,12 +43,11 @@ $('document').ready(function(){
 <div id="center" role="main">
 
     <div id="myDiv">
-      <h3>At my library</h3>
-	<table id="fill-table">
+	<table id="at-my-library">
 	  <thead>
-	    <tr><th>id</th><th>Call #</th><th>Title</th><th>Author</th><th>Barcode</th><th>Received</th></tr>
+	    <tr><th>id</th><th>Callno</th><th>Title</th><th>Author</th><th>Barcode</th><th>Received</th></tr>
 	  </thead>
-	  <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
+	  <tfoot><tr><td colspan="6">You can print this and take it to the stacks.</td></tr></tfoot>
 	  <tbody>
 	    <TMPL_LOOP name="rotationItems">
 	      <tr>

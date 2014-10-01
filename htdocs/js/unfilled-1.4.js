@@ -34,18 +34,16 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron / Group"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
-//    cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "# sources tried"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Trying source"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "13"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "12"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -64,8 +62,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].message;
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].tried;
-        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].sources;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].tried+' of '+data.unfilled[i].sources;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");

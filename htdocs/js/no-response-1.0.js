@@ -20,7 +20,6 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-//    myTable.setAttribute("id","gradient-style");
     myTable.setAttribute("id","pending-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
@@ -39,13 +38,12 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Age (days)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "To"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "# sources tried"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Total # sources"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Trying source"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "13"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "12"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -64,8 +62,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].age;
         cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].to; cell.setAttribute('title', data.noresponse[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].tried;
-        cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].sources;
+        cell = row.insertCell(-1); cell.innerHTML = data.noresponse[i].tried+' of '+data.noresponse[i].sources;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");

@@ -34,7 +34,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return to"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return to (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return"; row.appendChild(cell);

@@ -20,19 +20,15 @@ $('document').ready(function(){
     "sDom": '<"H"Tfr>t<"F"ip>',
     // TableTools requires Flash version 10...
     "oTableTools": {
-      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-      "aButtons": [
-        "copy", "csv", "xls", "pdf", "print",
-        {
-        "sExtends":    "collection",
-        "sButtonText": "Save",
-        "aButtons":    [ "csv", "xls", "pdf" ]
-        }
-      ]
-    } 
-    });
+      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+    },
+    "columnDefs": [{
+      "targets": 0,
+      "visible": false
+    }] 
+  });
 
-    oTable.fnSort( [ [7,'desc'] ] );
+  oTable.fnSort( [ [7,'desc'] ] );
 
 //    $("#barcode").on("input propertychange", function() {
     $("#barcode").on("change", function() {
@@ -115,7 +111,7 @@ function downloadMarc() {
         <table id="datatable_scanned" class="display">
           <thead>
             <tr>
-              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current_library</th><th>previous_library</th><th>timestamp</th>
+              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current library</th><th>previous library</th><th>last update</th>
             </tr>
           </thead>
           <tbody>

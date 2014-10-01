@@ -39,7 +39,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Format"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Hold requested?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
