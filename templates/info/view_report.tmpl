@@ -19,7 +19,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -30,10 +30,18 @@ $('document').ready(function(){
 		]
 	},
         "aaSorting": [[0,"asc"],[1,"asc"]],
-        "bAutoWidth": false
+        "bAutoWidth": true,
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_report").css("width","100%");
+        }
     });
 
-    $('#datatable_report tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_report tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_report tbody tr", function() {  // suggested replacement
+    $("#datatable_report tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {

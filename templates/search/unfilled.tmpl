@@ -27,7 +27,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -37,21 +37,10 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid", "bVisible": false },
-                           { "mDataProp": "cid", "bVisible": false },
-                           { "mDataProp": "ID", "bVisible": false },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Patron / Group" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "Status" },
-                           { "mDataProp": "Message" },
-                           { "mDataProp": "# sources tried" },
-                           { "mDataProp": "Total # sources" },
-                           { "mDataProp": "Next lender?" }
-                      ],
+                       "columnDefs": [ {
+                           "targets": [0,1,2],
+                           "visible": false
+                       } ],
                       "fnInitComplete": function() {
                          // this handles a bug(?) in this version of datatables;
                          // hidden columns caused the table width to be set to 100px, not 100% 

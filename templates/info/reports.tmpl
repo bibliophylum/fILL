@@ -51,7 +51,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -61,17 +61,13 @@ $('document').ready(function(){
 			}
 		]
 	},
-        "aoColumns": [
-            { "mDataProp": "rid", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "45%" },
-            { "mDataProp": "generator", "sWidth": "15%" },
-            { "mDataProp": "actions", "sWidth": "15%" }
-        ],
         "bAutoWidth": false
     });
 
-    $('#datatable_summary tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_summary tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_summary tbody tr", function() {  // suggested replacement
+    $("#datatable_summary tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
@@ -89,7 +85,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -99,17 +95,13 @@ $('document').ready(function(){
 			}
 		]
 	},
-        "aoColumns": [
-            { "mDataProp": "rid", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "45%" },
-            { "mDataProp": "generator", "sWidth": "15%" },
-            { "mDataProp": "actions", "sWidth": "15%" }
-        ],
         "bAutoWidth": false
     });
 
-    $('#datatable_borrowing tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_borrowing tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_borrowing tbody tr", function() {  // suggested replacement
+    $("#datatable_borrowing tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
@@ -127,7 +119,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -137,17 +129,13 @@ $('document').ready(function(){
 			}
 		]
 	},
-        "aoColumns": [
-            { "mDataProp": "rid", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "45%" },
-            { "mDataProp": "generator", "sWidth": "15%" },
-            { "mDataProp": "actions", "sWidth": "15%" }
-        ],
         "bAutoWidth": false
     });
 
-    $('#datatable_lending tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_lending tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_lending tbody tr", function() {  // suggested replacement
+    $("#datatable_lending tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
@@ -165,7 +153,7 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -175,17 +163,13 @@ $('document').ready(function(){
 			}
 		]
 	},
-        "aoColumns": [
-            { "mDataProp": "rid", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "description", "sWidth": "45%" },
-            { "mDataProp": "generator", "sWidth": "15%" },
-            { "mDataProp": "actions", "sWidth": "15%" }
-        ],
         "bAutoWidth": false
     });
 
-    $('#datatable_narrative tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_narrative tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_narrative tbody tr", function() {  // suggested replacement
+    $("#datatable_narrative tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {

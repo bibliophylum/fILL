@@ -22,32 +22,23 @@ $('document').ready(function(){
     var anOpenBorrowing = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
-    oTable_borrowing = $('#datatable_borrowing').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-        "searching": false,
-	"sDom": '<"H"r>t<"F"ip>',
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "cid", "bVisible": false },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "status" },
-            { "mDataProp": "libraries_tried" },
-            { "mDataProp": "ts" }
-        ]
-
-    });
-
     $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
+
+                oTable_borrowing = $('#datatable_borrowing').dataTable({
+                 "bJQueryUI": true,
+                 "sPaginationType": "full_numbers",
+                 "bInfo": true,
+      	         "bSort": true,
+                 "searching": false,
+	         "sDom": '<"H"r>t<"F"ip>',
+                 "columnDefs": [{
+                   "targets": [0,3],
+                   "visible": false
+                 }]
+               });
+
            })
 	.success(function() {
 	    //alert('success');
@@ -63,7 +54,10 @@ $('document').ready(function(){
 	});
 
 
-    $('#datatable_borrowing td.control').live( 'click', function () {
+//    $('#datatable_borrowing td.control').live( 'click', function () {        // deprecated in jquery 1.7
+//    $(document).on("click", "#datatable_borrowing td.control", function() {  // suggested replacement
+    $("#datatable_borrowing").on("click", "td.control", function() {           // reduce bubble-up
+
       var nTr = this.parentNode;
       var i = $.inArray( nTr, anOpenBorrowing );
 
@@ -98,21 +92,10 @@ $('document').ready(function(){
           Loading... <img src="/wait.gif">
         </div>
 
-        <div id="mylistDiv">
+	<div id="myDiv">
           <h2>Current borrowing</h2>
           <br />
-        <div class="dataTable_wrapper">
-
-        	<table id="datatable_borrowing" class="display">
-        	  <thead>
-        	    <tr>
-        	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Details</th><th>Status Updated</th>
-        	    </tr>
-        	  </thead>
-        	  <tbody>
-        	  </tbody>
-        	</table>
-
+        <div id="mylistDiv"></div>
   </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

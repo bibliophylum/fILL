@@ -10,7 +10,7 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    oTable = $('#datatable_contacts').dataTable({
+    var oTable = $('#datatable_contacts').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "bInfo": true,
@@ -18,43 +18,32 @@ $('document').ready(function(){
 	"sDom": '<"H"Tfr>t<"F"ip>',
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            { "mDataProp": "library", "sWidth": "25%" },
-            { "mDataProp": "name", "sWidth": "5%" },
-            { "mDataProp": "phone", "sWidth": "15%" },
-            { "mDataProp": "email_address", "sWidth": "25%" },
-            { "mDataProp": "mailing_address", "sWidth": "25%" }
-        ],
+        "tableTools": {
+           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+        },
         "bAutoWidth": false
     });
 
-//    $('#datatable_contacts tbody tr').live('mouseover mouseout', function (event) {
-//        if (event.type == 'mouseover') {
-//            $(this).addClass("ui-state-hover");
-//        } else {
-//            $(this).removeClass("ui-state-hover");
-//        }
-//    });
+<!--
+//    $('#datatable_contacts tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_contacts tbody tr", function() {  // suggested replacement
+    $("#datatable_contacts tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
+        if (event.type == 'mouseover') {
+            $(this).addClass("ui-state-hover");
+        } else {
+            $(this).removeClass("ui-state-hover");
+        }
+    });
+-->
 
     // clicking the email address opens your default mailer (in a separate tab/window,
     // if your default mailer is a web-mail like GMail or Yahoo)
-    $("#datatable_contacts tbody tr td:nth-child(3)").on("click", function(event){
+    $("#datatable_contacts tbody tr td:nth-child(4)").on("click", function(event){
       var link = '/mailto.html#mailto:' + $(this).text();
       window.open(link, 'Mailer');
       return false;
     });
-
 });
 
 </script>
@@ -82,8 +71,8 @@ $('document').ready(function(){
 		  <td><TMPL_VAR NAME="email_address"></td>
 		  <td>
 		    <TMPL_VAR NAME="mailing_address_line1"><br>
-		      <TMPL_VAR NAME="mailing_address_line2"><br>
-			<TMPL_VAR NAME="mailing_address_line3">
+		    <TMPL_VAR NAME="mailing_address_line2"><br>
+		    <TMPL_VAR NAME="mailing_address_line3">
 		  </td>
 		</tr>
 	      </TMPL_LOOP>

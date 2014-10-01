@@ -34,7 +34,7 @@ $('document').ready(function(){
             "iDisplayLength": -1,
             "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -44,15 +44,6 @@ $('document').ready(function(){
 			}
 		]
 	    },
-            "aoColumns": [
-                { "mDataProp": "library", "sWidth": "15%" },
-                { "mDataProp": "request_to_response_days", "sWidth": "10%" },
-                { "mDataProp": "will_supply_to_shipped_hours", "sWidth": "10%" },
-                { "mDataProp": "shipped_to_received_days", "sWidth": "10%" },
-                { "mDataProp": "renew_to_renew_answer_days", "sWidth": "10%" },
-                { "mDataProp": "received_to_returned_days", "sWidth": "10%" },
-                { "mDataProp": "returned_to_checked_in_days", "sWidth": "10%" }
-            ],
             "bAutoWidth": false
         });
 
