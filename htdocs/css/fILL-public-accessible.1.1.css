@@ -129,7 +129,6 @@ header {
     float: right;
 	clear: none;
     display: inline;
-  
 }
 
 #patron-info {
@@ -467,10 +466,17 @@ input[type=submit], input[type=text], input[type=password]
     border: 2px solid inherit;
 }
 
+.public-button {
+	background-color: #183935;
+}
+
+.library-button {
+	background-color: #0f4072;
+}
+
 #fill-button {
     margin: .5em;
 	padding: .3em 1em;
-    background-color: #183935;
     color: #fff;
     font-size: 1.4em;
     width: auto;
@@ -491,7 +497,6 @@ input[type=submit], input[type=text], input[type=password]
 	padding: .5em;
 	border: 1px solid #000;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -503,7 +508,7 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:visited {
-	background-color: #183935;
+
 }
 
 #butlink:hover {
