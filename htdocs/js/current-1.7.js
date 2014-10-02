@@ -235,10 +235,10 @@ function fnFormatDetails( $tbl, nTr )
 }
 
 
-function override( e, oData, localData, oTable, nTr )
+function override( e, cid, localData, oTable, nTr )
 {
 //    alert("cid: "+oData.cid+"\noverride: "+e.id+"\ndata: "+localData);
-    $.getJSON('/cgi-bin/override.cgi', {"cid": oData.cid, "override": e.id, "data":localData},
+    $.getJSON('/cgi-bin/override.cgi', {"cid": cid, "override": e.id, "data":localData},
 	      function(data){
 		  $(nTr).children('.overrides').click();
 		  // lending table has different number of columns than borrowing table
@@ -267,7 +267,7 @@ function override( e, oData, localData, oTable, nTr )
 function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 {
     var oTable = $tbl.dataTable();
-    var oData = oTable.fnGetData( nTr );
+    var aData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
@@ -285,30 +285,30 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
     $('#bReceive').click(function() { 
 	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Shipped'.");
 	if (hasConfirmed == true) {
-	    override( this, oData, null, oTable, nTr );
+	    override( this, aData[2], null, oTable, nTr );
 	}
 	return false; 
     });
     $('#bTryNextLender').button();
     $('#bTryNextLender').click(function() { 
-	override( this, oData, null, oTable, nTr );
+	override( this, aData[2], null, oTable, nTr );
 	return false; 
     });
     $('#bNoFurtherSources').button();
     $('#bNoFurtherSources').click(function() { 
-	override( this, oData, null, oTable, nTr );
+	override( this, aData[2], null, oTable, nTr );
 	return false; 
     });
     $('#bCancel').button();
     $('#bCancel').click(function() { 
-	override( this, oData, null, oTable, nTr );
+	override( this, aData[2], null, oTable, nTr );
 	return false; 
     });
     $('#bClose').button();
     $('#bClose').click(function() { 
 	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Checked-in'.");
 	if (hasConfirmed == true) {
-	    override( this, oData, null, oTable, nTr );
+	    override( this, aData[2], null, oTable, nTr );
 	    oTable.fnDeleteRow( nTr );
 	}
 	return false; 
@@ -320,7 +320,7 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 {
     var oTable = $tbl.dataTable();
-    var oData = oTable.fnGetData( nTr );
+    var aData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
@@ -336,7 +336,7 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
     $('#bReturned').click(function() { 
 	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the borrower but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Returned'.");
 	if (hasConfirmed == true) {
-	    override( this, oData, null, oTable, nTr );
+	    override( this, aData[1], null, oTable, nTr );
 //	    oTable.fnDeleteRow( nTr );
 	}
 	return false; 
@@ -347,7 +347,7 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 	.click(function() {
 	    $( "#dialog-form" )
 		.data('fromButton',this)
-		.data('oData',oData)
+		.data('aData',aData)
 		.data('oTable',oTable)
 		.data('nTr',nTr)
 		.dialog( "open" );
