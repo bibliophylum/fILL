@@ -465,11 +465,11 @@ input[type=submit], input[type=text], input[type=password]
     border: 2px solid inherit;
 }
 
-.public-button {
+.public-style {
 	background-color: #183935;
 }
 
-.library-button {
+.library-style {
 	background-color: #0f4072;
 }
 
@@ -494,7 +494,7 @@ input[type=submit], input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid #000;
+	border: 1px solid inherit;
 	margin: 10px;
 	color: #fff;!important
 	font-size: 1.4em;
