@@ -659,7 +659,7 @@ function request() {
 					    "method": "post"
 					  });
 	    $cancelForm.append('<input type="hidden" name="prid" value="'+data.prid+'">');
-	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="Click to cancel this request.">');
+	    $cancelForm.append('<input type="submit" id="butlink" class="button-left public-style" value="Click to cancel this request.">');
 	    $("#confirmed").append( $cancelForm );
 
 	    $("#confirmed").append('<h2>Your request has been placed</h2>');
