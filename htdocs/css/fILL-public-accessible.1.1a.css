@@ -174,6 +174,36 @@
   width: 90%;
 }
 
+/*-- specific to make_request.tmp --*/
+#toptwo {
+    width: 100%;
+    float: left;
+    background-color: #b8ffb8;  /* apply bg to containing div */
+}
+
+#midleft {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+}
+
+#midright {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+    background-color: #ffcccc;
+}
+
+#midfooter {
+    width: 100%;
+    padding: 1em;
+    clear: both;
+    margin-bottom: 1em;
+}
+
+
 /***---End of new library client side CSS--**/
 
 
