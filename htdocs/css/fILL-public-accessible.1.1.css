@@ -467,10 +467,26 @@ input[type=submit], input[type=text], input[type=password]
 
 .public-style {
 	background-color: #183935;
+	margin: .5em;
+	padding: .3em 1em;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
 }
 
 .library-style {
 	background-color: #0f4072;
+	margin: .5em;
+	padding: .3em 1em;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
 }
 
 #fill-button {
