@@ -522,7 +522,6 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:active {
-	background-color: #183935;
 	font-style: bold;
 }
 
@@ -532,7 +531,6 @@ button {
 	padding: .3em;
 	border: 1px solid #000;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -545,7 +543,6 @@ button {
 	padding: .5em;
 	border: 1px solid #000;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
