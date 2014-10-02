@@ -538,6 +538,14 @@ button {
 .button-left:link {
 	float: left;
 	clear: right;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
+	margin: 10px;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .button-left:hover {
@@ -553,6 +561,14 @@ button {
 .button-right {
 	float: right;
 	clear: left;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
+	margin: 10px;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .tone-box.button-left {
