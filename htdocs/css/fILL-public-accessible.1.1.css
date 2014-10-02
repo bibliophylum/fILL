@@ -129,7 +129,6 @@ header {
     float: right;
 	clear: none;
     display: inline;
-  
 }
 
 #patron-info {
@@ -427,7 +426,6 @@ input[type=submit]
 	padding: .3em 1em;
 	border: 2px #183935 solid;
 	border-radius: 5px;
-    background-color: #183935;
     color: #fff;
     font-size: 1.4em;
     width: auto;
@@ -467,10 +465,17 @@ input[type=submit], input[type=text], input[type=password]
     border: 2px solid inherit;
 }
 
+.public-style {
+	background-color: #183935;
+}
+
+.library-style {
+	background-color: #0f4072;
+}
+
 #fill-button {
     margin: .5em;
 	padding: .3em 1em;
-    background-color: #183935;
     color: #fff;
     font-size: 1.4em;
     width: auto;
@@ -489,9 +494,8 @@ input[type=submit], input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid #000;
+	border: 1px solid inherit;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -503,7 +507,7 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:visited {
-	background-color: #183935;
+
 }
 
 #butlink:hover {
@@ -517,7 +521,6 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:active {
-	background-color: #183935;
 	font-style: bold;
 }
 
@@ -525,9 +528,7 @@ button {
 	font-size: 1.4em;
 	margin: .5em;
 	padding: .3em;
-	border: 1px solid #000;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -537,10 +538,10 @@ button {
 .button-left:link {
 	float: left;
 	clear: right;
-	padding: .5em;
-	border: 1px solid #000;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -559,9 +560,15 @@ button {
 
 .button-right {
 	float: right;
-    font-size: 1.4em;
-	margin: 1em;
+	clear: left;
+	font-size: 1.4em;
+	margin: .5em;
 	padding: .3em;
+	margin: 10px;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .tone-box.button-left {
