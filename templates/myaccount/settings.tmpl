@@ -14,43 +14,38 @@
     <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
  
       
-	Email address:
+	<p>Email address:</p>
 	
 	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
 	
-      
-	Library:
+     	<h3>Interlibrary Loan Mailing address</h3> 
+	<p>Library:</p>
 	
 	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
 	
-      
-	Interlibrary Loan Mailing address
-	
-	  
-	    
-	      Street address or PO Box Number:
+	      <p>Street address or PO Box Number:</p>
 	      
 		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
 	      
 	    
-	      Town/City:
+	      <p>Town/City:</p>
 	      
 		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>">
 	      
 	    
-	      Province:
+	      <p>Province:</p>
 	      
 		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>">
 	      
 	    
-	      Postal code:
+	      <p>Postal code:</p>
 	      
 		<input TYPE="text" NAME="post_code" SIZE="6" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
 	      
 	    
 	
 
-    <table id="fill-table">
+    <table id="fill-table" class="">
       
 	
 	  <TMPL_IF NAME="editSlipsWithBarcodes">
@@ -61,7 +56,7 @@
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	
-	Do you want to print scannable patron barcodes on the date-due slips?
+	<h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
       
 	
 	  <TMPL_IF NAME="editCentralizedILL">
@@ -72,7 +67,7 @@
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	
-	Are you a headquarters library that centrally manages ILL for your branches?
+	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>
       
     </table>
 

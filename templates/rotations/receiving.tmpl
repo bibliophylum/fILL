@@ -84,9 +84,8 @@ function downloadMarc() {
     <div id="myDiv">
       <h3>Receive rotation titles</h3>
       <div id="scanner">
-	<table id="fill-table" class="table-width-lib">
-	  <tr>
-	    <td width="80%">
+
+	<div class="tone-box">
 	      <form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
 <!--
 		<p>Scan a barcode: <input type="text" name="barcode" maxlength="14" onChange="barcode_scanned(this.value); this.value=''; this.focus(); return false;"></p>
@@ -97,11 +96,10 @@ function downloadMarc() {
 		</p>
 		<br/>
 	      </form>
-	    </td>
-	    <td>
+	
 	      <p>Get a file of MARC records with all rotation items you have received within the last month.</p>
-	      <input type="button" value="Download MARC records" onClick="downloadMarc(); return false;">
-	    </td>
+	      <input type="button" value="Download MARC records" onClick="downloadMarc(); return false;" class="library-style">
+      </div>
       </div>
     </div>
 

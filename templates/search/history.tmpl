@@ -83,18 +83,14 @@ $('document').ready(function(){
 <div id="center" role="main">
 
     <div><br />
-      <h3>Specify a date range</h3>
+      <h3>View history</h3>
       <form>
-	<table cellspacing="20">
-	  <tr>
-	    <td>
-	      View history from (yyyy-mm-dd): <input id="startdate" type="text">
-	      <br>up to (but not including) (yyyy-mm-dd): <input id="enddate" type="text">
-	    </td><td>
-	      <input id="dateButton" type="button" value="Fetch requests within this date range">
-	    </td>
-	  </tr>
-	</table>
+
+	      <p>From:</p> <input id="startdate" type="text">
+	      <p>To: (confusing fix xyz)</p> <input id="enddate" type="text">
+        <br />
+	      <input id="dateButton" type="button" value="Fetch requests within this date range" class="library-style">
+
       </form>
     </div>
 
