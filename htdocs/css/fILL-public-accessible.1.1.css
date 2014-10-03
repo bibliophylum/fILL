@@ -564,12 +564,11 @@ button {
 
 .button-left:hover {
 	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
+
 }
 
 .button-left:focus {
 	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
 }
 
 .button-right {
