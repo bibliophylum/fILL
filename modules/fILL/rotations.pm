@@ -77,7 +77,7 @@ sub circstats_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub current_process {
+sub current_process_orig {
     my $self = shift;
     my $q = $self->query;
 
@@ -120,7 +120,7 @@ where
 #--------------------------------------------------------------------------------
 #
 #
-sub current_process_orig {
+sub current_process {
     my $self = shift;
     my $q = $self->query;
 

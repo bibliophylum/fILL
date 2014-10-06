@@ -51,19 +51,27 @@ img
 	border: 0px;
 }
 
+h1 {
+	display: inline;
+	margin-bottom: .5em;
+	color: #183935;
+	font-size: 1.4em;
+	text-transform: capitalize;
+}
+
 h2 {
 	display: inline;
-	border-bottom: .5em;
-	color: #383;
+	margin-bottom-bottom: .5em;
+	color: #183935;
 	font-size: 1.2em;
 	text-transform: capitalize;
 }
 
 h3 {
 	
-	color: #486660;
+	color: #183935;
 	font-size: 1em;
-	text-transform: ;
+	font-style: bold;
 }
 
 #container
@@ -122,7 +130,7 @@ header {
     float: right;
 	clear: none;
     display: inline;
-  
+    color: #fff;
 }
 
 #patron-info {
@@ -145,7 +153,6 @@ nav
 	margin: .5em 0em;
 	
 	font-size: 1.4em;
-	border-bottom: #06a0ca solid 5px;
 }
 
 nav ul
@@ -172,40 +179,48 @@ nav li a
 	text-decoration: none;
 }
 
-/* Navigation link states */
+#pub-nav-primary {
+	display: block;
+	float: left;
+	width: 100%;
+	margin: ;
+	font-size: 1.4em;
+	border-bottom: #06a0ca solid 5px;
+}
+
+/* #pub-nav-primaryigation link states */
 /* unvisted link */
-nav li a:link {
+#pub-nav-primary li a:link {
  	background: #183935;/*main dark green colour*/
  	text-decoration: none;
 	color: #fff;
 }
 /* visited link */
-nav li a:visited {
+#pub-nav-primary li a:visited {
 	background: #183935;
 	color: #fff;
 }
 /* mouse over link */
-nav li a:hover { 
+#pub-nav-primary li a:hover { 
 	background: #06a0ca; 
 	color: #fff;
 }
 /*selected link */
-nav li a:active {
+#pub-nav-primary li a:active {
 	background: #183935;
 	color: #fff;
 }
 
 /* focus over link */
-nav li a:focus { 
+#pub-nav-primary li a:focus { 
 	background: #06a0ca; 
 	color: #fff;
 }
 
-nav li a.current_tab {
+#pub-nav-primary li a.current_tab {
 	background: #06a0ca; 
 	color: #fff;
 }
-
 #search-container {
 	width: 100%;
 	
@@ -414,7 +429,6 @@ input[type=submit]
 	padding: .3em 1em;
 	border: 1px #183935 solid;
 	border-radius: 5px;
-    background-color: #183935;
     color: #fff;
     font-size: 1.4em;
     width: auto;
@@ -448,8 +462,32 @@ input[type=submit]:focus
 }
 
 
-input[type=submit], input[type=text], input[type=password]
+input[type=text], input[type=password]
 {
+    border: 0;
+    border-radius:5px;
+}
+
+.public-style {
+	background-color: #183935;
+	margin: .5em;
+	padding: .3em 1em;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
+}
+
+.library-style {
+	background-color: #0f4072;
+	margin: .5em;
+	padding: .3em 1em;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
     border: 0;
     border-radius:5px;
 }
@@ -457,7 +495,6 @@ input[type=submit], input[type=text], input[type=password]
 #fill-button {
     margin: .5em;
 	padding: .3em 1em;
-    background-color: #183935;
     color: #fff;
     font-size: 1.4em;
     width: auto;
@@ -476,9 +513,8 @@ input[type=submit], input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid #000;
+	border: 1px solid inherit;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -490,7 +526,7 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:visited {
-	background-color: #183935;
+
 }
 
 #butlink:hover {
@@ -504,17 +540,14 @@ input[type=submit], input[type=text], input[type=password]
 }
 
 #butlink:active {
-	background-color: #183935;
-	font-style: bold;
+	
 }
 
 button {
 	font-size: 1.4em;
 	margin: .5em;
 	padding: .3em;
-	border: 1px solid #000;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -524,10 +557,10 @@ button {
 .button-left:link {
 	float: left;
 	clear: right;
-	padding: .5em;
-	border: 1px solid #000;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
 	margin: 10px;
-	background: #183935;
 	color: #fff;!important
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -536,19 +569,24 @@ button {
 
 .button-left:hover {
 	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
+
 }
 
 .button-left:focus {
 	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
 }
 
 .button-right {
 	float: right;
-    font-size: 1.4em;
-	margin: 1em;
+	clear: left;
+	font-size: 1.4em;
+	margin: .5em;
 	padding: .3em;
+	margin: 10px;
+	color: #fff;!important
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
 }
 
 .tone-box.button-left {
@@ -582,7 +620,6 @@ div.termtitle {
 
 #fill-table {
   	border-collapse: collapse;
-  	width: 70%;
   	margin: 1em auto;
 	background: #e3e3e3;
 	border: 2px solid #b3b3b3;
@@ -615,6 +652,10 @@ div.termtitle {
 #fill-table tr td:last-child,
 #fill-table tr th:last-child {
   border-right: 0;
+}
+
+.table-width-pub {
+	width: 70%;
 }
 
 .bison 
@@ -660,7 +701,6 @@ div.termtitle {
 .login-content {
   display: block;
   clear: all;
-  margin-top: 40px;
   border-bottom: 5px solid #b3b3b3;
   background: #e3e3e3;
   font-size: 1em;
@@ -971,4 +1011,3 @@ footer {
 	text-align: left;
 }
 
-}

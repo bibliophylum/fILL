@@ -1,13 +1,23 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<script type="text/javascript">
+$('document').ready(function(){
+
+    $("#search").hide();
+    $(".inline-items").children().hide();
+//    $(".inline-items").children(":contains('home')").show();
+    $("#fill-button").hide();  // hide the logout button, as it makes no sense here
+
+});
+</script>
+
 <div class="clear">
  <form action="/cgi-bin/lightning.cgi" method="post" name="loginform">
   <div class="login">
+  <div class="login-content">
   	<div class="login-header">
   	  <span class="login-header-title">Sign in to fILL</span>
   	</div>
-
-	<div class="login-content">
 	  <fieldset>
             <label for="authen_username">User Name</label>
             <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
@@ -18,9 +28,9 @@
 	</div>
 
 	<div class="login-footer">
-	  <div class="buttons">
-      <input type="submit" class="button-left" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-	  </div>
+
+      <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton fill-button">
+	 
 	</div>
 
   </div>

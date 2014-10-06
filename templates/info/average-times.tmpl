@@ -25,7 +25,7 @@ $('document').ready(function(){
 	    alert('error');
 	})
 	.complete(function() {
-            oTable = $('#gradient-style').dataTable({
+            oTable = $('#average-times-table').dataTable({
             "bJQueryUI": true,
             "sPaginationType": "full_numbers",
             "bInfo": true,
@@ -34,7 +34,7 @@ $('document').ready(function(){
             "iDisplayLength": -1,
             "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		"aButtons": [
 			"copy", "csv", "xls", "pdf", "print",
 			{
@@ -44,15 +44,6 @@ $('document').ready(function(){
 			}
 		]
 	    },
-            "aoColumns": [
-                { "mDataProp": "library", "sWidth": "15%" },
-                { "mDataProp": "request_to_response_days", "sWidth": "10%" },
-                { "mDataProp": "will_supply_to_shipped_hours", "sWidth": "10%" },
-                { "mDataProp": "shipped_to_received_days", "sWidth": "10%" },
-                { "mDataProp": "renew_to_renew_answer_days", "sWidth": "10%" },
-                { "mDataProp": "received_to_returned_days", "sWidth": "10%" },
-                { "mDataProp": "returned_to_checked_in_days", "sWidth": "10%" }
-            ],
             "bAutoWidth": false
         });
 
@@ -65,7 +56,7 @@ $('document').ready(function(){
 </script>
 
 
-<div role="main">
+<div id="center" role="main">
 
     <div id="waitDiv">
       Calculating averages for each library over the last 3 months... <img src="/wait.gif">
@@ -76,7 +67,7 @@ $('document').ready(function(){
       <div id="mylistDiv"></div>
   </div>
 
-  <div id="instructions">
+  <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
     <ul>
     <li>This report looks at historic requests (those that have completed their life cycles) for the last 3 months.</li>

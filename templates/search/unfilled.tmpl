@@ -19,7 +19,7 @@ $('document').ready(function(){
                 build_table(data); 
 
                 //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#unfilled-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -27,7 +27,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -37,21 +37,15 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Patron / Group" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "Status" },
-                           { "mDataProp": "Message" },
-                           { "mDataProp": "# sources tried" },
-                           { "mDataProp": "Total # sources" },
-                           { "mDataProp": "Next lender?" }
-                      ]
+                       "columnDefs": [ {
+                           "targets": [0,1,2],
+                           "visible": false
+                       } ],
+                      "fnInitComplete": function() {
+                         // this handles a bug(?) in this version of datatables;
+                         // hidden columns caused the table width to be set to 100px, not 100% 
+                         $("#unfilled-table").css("width","100%");
+                      }
 
                   });
             });
@@ -71,11 +65,10 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
+    <div id="waitDiv"><br/>      Loading... <img src="/wait.gif">
     </div>
 
-    <div id="myDiv">
+    <div id="myDiv"><br />
       <h3>Unfilled: the lending libraries were unable to fill these requests</h3>
       <div id="mylistDiv"></div>
     </div>

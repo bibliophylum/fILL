@@ -22,7 +22,7 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-            oTable = $('#gradient-style').dataTable({
+            oTable = $('#enter-stats-table').dataTable({
                 "bJQueryUI": true,
                 "sPaginationType": "full_numbers",
                 "bInfo": true,
@@ -30,28 +30,14 @@ $('document').ready(function(){
                 "sDom": '<"H"Tfr>t<"F"ip>',
                 // TableTools requires Flash version 10...
 	        "oTableTools": {
-                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		    "aButtons": [
-		        "copy", "csv", "xls", "pdf", "print",
-		        {
-			"sExtends":    "collection",
-			"sButtonText": "Save",
-			"aButtons":    [ "csv", "xls", "pdf" ]
-		        }
-		     ]
+                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
         	},
-                "aoColumns": [
-                    { "mDataProp": "id" },
-                    { "mDataProp": "callno" },
-                    { "mDataProp": "title" },
-                    { "mDataProp": "author" },
-                    { "mDataProp": "barcode" },
-                    { "mDataProp": "timestamp" },
-                    { "mDataProp": "circs" },
-                ]
-
-                });
-           });
+	        "columnDefs": [{
+	          "targets": 0,
+                  "visible": false
+                }]
+            });
+        });
 
 	$("#reminder").css({ fontSize: 14 });	
 	$("#reminder").stop(true,true).effect("highlight", {}, 3000);
@@ -68,7 +54,7 @@ $('document').ready(function(){
     </div>
 
     <div id="myDiv">
-      <h3>Enter circ stats</h3>
+      <h3>Enter circulation stats</h3>
       <p id="reminder"><TMPL_VAR NAME="reminder"></p>
       <div id="mylistDiv"></div>
     </div>
@@ -76,12 +62,10 @@ $('document').ready(function(){
   <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
     <ol>
-      <li>[TAB] will take you to the next circ stat entry field.</li>
-      <li>[ENTER] will update the stat but leave you in the same field.</li>
-      <li> </li>
+      <li>[Tab] will take you to the next circ stat entry field.</li>
+      <li>[Enter] will update the stat but leave you in the same field.</li>
       <li>You can also scan the item's barcode into the Search box to bring up just that item.</li>
-      <li> </li>
-      <li>Items will remain on this list until the next library in the rotation receives them.</li>
+       <li>Items will remain on this list until the next library in the rotation receives them.</li>
     </ol>
   </div>
 

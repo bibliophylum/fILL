@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","new-patron-requests-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -29,7 +29,7 @@ function build_table( data ) {
     // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
     
     cell = document.createElement("TH"); cell.innerHTML = "prid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Card"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);

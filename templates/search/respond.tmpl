@@ -23,7 +23,7 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-            oTable = $('#gradient-style').dataTable({
+            oTable = $('#respond-table').dataTable({
             "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -31,7 +31,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -41,22 +41,15 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)" },
-                           { "mDataProp": "Call #" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Note" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Medium" },
-                           { "mDataProp": "Hold requested?" },
-                           { "mDataProp": "Response" }
-                      ]
-
+                       "columnDefs": [ {
+                           "targets": [0,1,2,4],
+                           "visible": false
+                       } ],
+                      "fnInitComplete": function() {
+                           // this handles a bug(?) in this version of datatables;
+                           // hidden columns caused the table width to be set to 100px, not 100%
+                           $("#respond-table").css("width","100%");
+                      }
                   });
 
 	});
@@ -66,15 +59,28 @@ $('document').ready(function(){
            update_menu_counters( <TMPL_VAR name="lid"> );
     });
 
+    $("#bToggleUnfilledCodes").on("click", function() {
+	  $("#unfilled-codes").toggle();
+	  if ( $("#unfilled-codes").is(":visible") ) {
+	      $("#bToggleUnfilledCodes").prop('value',"Hide the Unfilled codes");
+          } else {
+	      $("#bToggleUnfilledCodes").prop('value',"Show the Unfilled codes");
+          }
+    });
+
 });
 
 </script>
 
 
 <div id="center" role="main">
-
+<br />
+  <div id="toggle-unfilled-codes">
+    <input type="button" id="bToggleUnfilledCodes" value="Show the Unfilled codes" class="library-style">
+  </div>
+   <div id="unfilled-codes" style="display:none">
     <h3>Unfilled codes</h3>
-    <table id="fill-table">
+    <table id="fill-table" class="table-width-lib">
       <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
       <tr><td style="border:1px solid black;">in-process</td><td style="border:1px solid black;">Not ready for loan.</td></tr>
       <tr><td style="border:1px solid black;">lost</td><td style="border:1px solid black;">Item has been declared missing.</td></tr>
@@ -88,7 +94,7 @@ $('document').ready(function(){
       <tr><td style="border:1px solid black;">policy-problem</td><td style="border:1px solid black;">It is against our policies to loan this.</td></tr>
       <tr><td style="border:1px solid black;">other</td><td style="border:1px solid black;">Any other reason.</td></tr>
     </table>
-
+  </div>
 
 
     <div id="waitDiv">

@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","checkins-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -33,7 +33,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Back from"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Back from (ID)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Check-in"; row.appendChild(cell);

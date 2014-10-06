@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.6.js"></script>
+<script type="text/javascript" src="/js/current-1.7.js"></script>
 
 <script type="text/javascript">
 
@@ -8,146 +8,117 @@ $.ajaxSetup ({
 });  
 
 $('document').ready(function(){
+    set_primary_tab("menu_current");
 
-    // This is the bit that makes TableTools work on tabs
-    // (from https://github.com/DataTables/TableTools/blob/master/tabs.html)
-    $(function() {
-        $( "#tabs" ).tabs( {
-            "show": function(event, ui) {
-                var jqTable = $('table.display', ui.panel);
-                if ( jqTable.length > 0 ) {
-                    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
-                    if ( oTableTools != null && oTableTools.fnResizeRequired() ) {
-                        jqTable.dataTable().fnAdjustColumnSizing();
-                        oTableTools.fnResizeButtons();
-                    }
-                }
-            }
-        });
-    });
+    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
+    $("#tabs").tabs( {
+        "activate": function(event, ui) {
+            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        }
+    } );
+  
 
     var anOpenBorrowing = [];
     var anOpenLending = [];
     var anOpenNotfilled = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
-    oTable_borrowing = $('#datatable_borrowing').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        // TableTools requires Flash version 10...
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "gid" },
-            { "mDataProp": "cid" },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "patron_barcode" },
-            { "mDataProp": "lender" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "status" },
-            { "mDataProp": "message" },
-            { "mDataProp": null,
-              "sClass": "overrides center",
-              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            }
-        ]
-
-    });
-
-    oTable_lending = $('#datatable_lending').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "cid" },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "requested_by" },
-//            { "mDataProp": "requester" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "status" },
-            { "mDataProp": "message" },
-            { "mDataProp": null,
-              "sClass": "overrides center",
-              "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            }
-        ]
-    });
-
-    oTable_notfilled = $('#datatable_notfilled').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        // TableTools requires Flash version 10...
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "cid" },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "requested_by" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "status" },
-            { "mDataProp": "message" }
-        ]
-
-    });
-
     $.getJSON('/cgi-bin/get-current-requests.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
+
+                oTable_borrowing = $('#datatable_borrowing').dataTable({
+                 "bJQueryUI": true,
+                 "sPaginationType": "full_numbers",
+                 "bInfo": true,
+      	         "bSort": true,
+	         "sDom": '<"H"Tfr>t<"F"ip>',
+                 // TableTools requires Flash version 10...
+	         "tableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	         },
+                 "columnDefs": [{
+                     "targets": 0,
+                     "data": null,
+                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                     "className": "control center"
+                   },
+                   {
+                     "targets": [1,2],
+                     "visible": false
+                   },
+                   {
+                     "targets": -1,
+                     "data": null,
+                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                     "className": "overrides center"
+                }],
+                "fnInitComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_borrowing").css("width","100%");
+                }
+              });
+
+              oTable_lending = $('#datatable_lending').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bInfo": true,
+                "bSort": true,
+ 	        "sDom": '<"H"Tfr>t<"F"ip>',
+	        "oTableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	        },
+                "columnDefs": [{
+                    "targets": 0,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "control center"
+                  },
+                  {
+                    "targets": 1,
+                    "visible": false
+                  },
+                  {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "overrides center"
+                }],
+                "fnInitComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_lending").css("width","100%");
+                }
+              });
+
+              oTable_notfilled = $('#datatable_notfilled').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bInfo": true,
+      	        "bSort": true,
+	        "sDom": '<"H"Tfr>t<"F"ip>',
+                // TableTools requires Flash version 10...
+	        "oTableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	        },
+                "columnDefs": [{
+                    "targets": 0,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "control center"
+                  },
+                  {
+                    "targets": 1,
+                    "visible": false
+                }],
+                "fnInitComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_notfilled").css("width","100%");
+                }
+              });
+
            })
 	.success(function() {
 	    //alert('success');
@@ -157,213 +128,40 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-	});
 
+	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
+	    activate_detail_control( $("#datatable_notfilled"), anOpenNotfilled );
 
-    $('#datatable_borrowing td.control').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
+	    activate_overrides_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_overrides_control( $("#datatable_lending"),   anOpenLending   );
+	    activate_overrides_control( $("#datatable_notfilled"), anOpenNotfilled );
 
-      if (i === -1) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_borrowing, nTr);
-        anOpenBorrowing.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="conversation"]');
-	if (rOpen.length == 0) {
-          // must be overrides that is open.  close it and open the conversation
-	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-
-            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
-   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
-            fnFormatDetails(oTable_borrowing, nTr);
-            anOpenBorrowing.push( nTr );
-          } );
-          
-	} else {
-          // conversation is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
-    $('#datatable_lending td.control').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenLending );
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_lending, nTr);
-        anOpenLending.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="conversation"]');
-	if (rOpen.length == 0) {
-          // must be overrides that is open.  close it and open the conversation
-	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_lending.fnClose( nTr );
-            anOpenLending.splice( i, 1 );
-
-            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
-   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
-            fnFormatDetails(oTable_lending, nTr);
-            anOpenLending.push( nTr );
-          } );
-          
-	} else {
-          // conversation is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_lending.fnClose( nTr );
-            anOpenLending.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
-    $('#datatable_notfilled td.control').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenNotfilled );
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_notfilled, nTr);
-        anOpenNotfilled.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="conversation"]');
-	if (rOpen.length == 0) {
-          // must be overrides that is open.  close it and open the conversation
-	  $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_notfilled.fnClose( nTr );
-            anOpenNotfilled.splice( i, 1 );
-
-            //$('img', this).attr( 'src', sImageUrl+"details_close.png" );
-   	    $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_close.png" );
-            fnFormatDetails(oTable_notfilled, nTr);
-            anOpenNotfilled.push( nTr );
-          } );
-          
-	} else {
-          // conversation is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_notfilled.fnClose( nTr );
-            anOpenNotfilled.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
-    $('#datatable_borrowing td.overrides').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
-
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatBorrowingOverrides(oTable_borrowing, nTr, anOpenBorrowing);
-        anOpenBorrowing.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="overrides"]');
-	if (rOpen.length == 0) {
-          // must be conversation that is open.  close it and open the overrides
-	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-
-   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
-            fnFormatBorrowingOverrides(oTable_borrowing, nTr, anOpenBorrowin);
-            anOpenBorrowing.push( nTr );
-          } );
-          
-	} else {
-          // overrides is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
-    $('#datatable_lending td.overrides').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenLending );
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatLendingOverrides(oTable_lending, nTr, anOpenLending);
-        anOpenLending.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="overrides"]');
-	if (rOpen.length == 0) {
-          // must be conversation that is open.  close it and open the overrides
-	  $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_lending.fnClose( nTr );
-            anOpenLending.splice( i, 1 );
-
-   	    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
-            fnFormatLendingOverrides(oTable_lending, nTr, anOpenLending);
-            anOpenLending.push( nTr );
-          } );
-          
-	} else {
-          // overrides is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_lending.fnClose( nTr );
-            anOpenLending.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
+	});  // end of .complete()
 });
 
 </script>
 
 
 <div id="center" role="main">
-
+<div>
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
 
     <div id="dialog-form" title="Change due date">
       <p class="validateTips">Enter the due date as YYYY-MM-DD</p>
+
 <!--  <form>  -->
 	<fieldset>
 	  <label for="duedate">New due date</label>
 	  <input type="text" name="duedate" id="duedate" class="text ui-widget-content ui-corner-all" />
 	</fieldset>
 <!--  </form>  -->
-    </div>
 
+    </div>
+</div>
+<br />
     <div id="tabs">
       <ul>
 	<li><a href="#tabs-1">Current borrowing</a></li>
@@ -371,51 +169,9 @@ $('document').ready(function(){
 	<li><a href="#tabs-3">We could not lend</a></li>
       </ul>
 
-      <div id="tabs-1">
-	<!--     <div id="mylistDiv">  -->
-	<h4>Current borrowing</h4>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_borrowing" class="display">
-	    <thead>
-	      <tr>
-		<th></th><th>gid</th><th>cid</th><th>title</th><th>author</th><th>patron_barcode</th><th>lender</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
-
-      <div id="tabs-2">
-	<h4>Current lending</h4>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_lending" class="display">
-	    <thead>
-	      <tr>
-		<th></th><th>cid</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th><th>overrides</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
-
-      <div id="tabs-3">
-	<h4>We could not lend</h4>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_notfilled" class="display">
-	    <thead>
-	      <tr>
-		<th></th><th>cid</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
+      <div id="tabs-1"></div>
+      <div id="tabs-2"></div>
+      <div id="tabs-3"></div>
 
     </div>
 

@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","enter-stats-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -34,7 +34,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "barcode"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "received"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "# circs"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "number of circs"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);

@@ -25,56 +25,56 @@ function update_menu_counters( lid ) {
             if (data.counts.unfilled > 0) {
 		var unfilled = $('#menu_borrow_unfilled a');
 		if (unfilled.length > 0) {
-                    unfilled[0].innerHTML = 'Unfilled: '+data.counts.unfilled;
+                    unfilled[0].innerHTML = 'Unfilled: <span class="circle">'+data.counts.unfilled+'</span>';
 		}
             };
             if (data.counts.holds > 0) {
 		var holds = $('#menu_borrow_holds a');
 		if (holds.length > 0) {
-                    holds[0].innerHTML = 'Holds placed: '+data.counts.holds;
+                    holds[0].innerHTML = 'Holds placed: <span class="circle">'+data.counts.holds+'</span>';
 		}
             };
             if (data.counts.overdue > 0) {
 		var overdue = $('#menu_borrow_overdue a');
 		if (overdue.length > 0) {
-                    overdue[0].innerHTML = 'Overdue: '+data.counts.overdue;
+                    overdue[0].innerHTML = 'Overdue: <span class="circle">'+data.counts.overdue+'</span>';
 		}
             };
             if (data.counts.renewalRequests > 0) {
 		var renewal = $('#menu_lend_renewal_requests a');
 		if (renewal.length > 0) {
-                    renewal[0].innerHTML = 'Renewal requests: '+data.counts.renewalRequests;
+                    renewal[0].innerHTML = 'Renewal requests: <span class="circle">'+data.counts.renewalRequests+'</span>';
 		}
             };
             if (data.counts.waiting > 0) {
 		var waiting = $('#menu_lend_respond a');
 		if (waiting.length > 0) {
-                    waiting[0].innerHTML = 'Respond: '+data.counts.waiting;
+                    waiting[0].innerHTML = 'Respond: <span class="circle">'+data.counts.waiting+'</span>';
 		}
             };
             if (data.counts.shipping > 0) {
 		var shipping = $('#menu_lend_shipping a');
 		if (shipping.length > 0) {
-                    shipping[0].innerHTML = 'Shipping: '+data.counts.shipping;
+                    shipping[0].innerHTML = 'Shipping: <span class="circle">'+data.counts.shipping+'</span>';
 		}
             };
             if ((data.counts.on_hold > 0) || (data.counts.on_hold_cancel > 0)) {
 		if (data.counts.on_hold_cancel > 0) {
 		    var on_hold = $('#menu_lend_holds a');
 		    if (on_hold.length > 0) {
-			on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold+'/<strong>'+data.counts.on_hold_cancel+'</strong>';
+			on_hold[0].innerHTML = 'On hold: <span class="circle">'+data.counts.on_hold+'/<strong>'+data.counts.on_hold_cancel+'</strong></span>';
 		    }
 		} else {
 		    var on_hold = $('#menu_lend_holds a');
 		    if (on_hold.length > 0) {
-			on_hold[0].innerHTML = 'On hold: '+data.counts.on_hold;
+			on_hold[0].innerHTML = 'On hold: <span class="circle">'+data.counts.on_hold+'</span>';
 		    }
 		}
             };
             if (data.counts.patron_requests > 0) {
 		var patron_requests = $('#menu_borrow_new_patron_requests a');
 		if (patron_requests.length > 0) {
-                    patron_requests[0].innerHTML = 'New patron requests: '+data.counts.patron_requests;
+                    patron_requests[0].innerHTML = 'New patron requests: <span class="circle">'+data.counts.patron_requests+'</span>';
 		}
             };
             //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\nholds: '+data.counts.holds+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);

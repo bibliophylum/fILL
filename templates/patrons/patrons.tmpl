@@ -14,49 +14,44 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    oTable = $('#datatable_patrons').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 10,
-        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            { "mDataProp": "pid", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "20%" },
-            { "mDataProp": "card", "sWidth": "10%" },
-            { "mDataProp": "username", "sWidth": "10%" },
-            { "mDataProp": "email_address", "sWidth": "20%" },
-            { "mDataProp": "is_enabled", "sWidth": "5%" },
-            { "mDataProp": "is_verified", "sWidth": "5%" },
-            { "mDataProp": "last_login", "sWidth": "5%" },
-            { "mDataProp": "ill_requests", "sWidth": "5%" },
-            { "mDataProp": "actions", "sWidth": "10%" }
-        ],
-        "bAutoWidth": false
-    });
-
     $.getJSON('/cgi-bin/get-patrons-list.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
+
+                oTable = $('#datatable_patrons').dataTable({
+                  "bJQueryUI": true,
+                  "sPaginationType": "full_numbers",
+                  "bInfo": true,
+      	          "bSort": true,
+	          "sDom": '<"H"Tfr>t<"F"ip>',
+                  "iDisplayLength": 10,
+                  "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	          "oTableTools": {
+                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	          },
+                 "columnDefs": [{
+                    "targets": 0,
+                    "visible": false
+                  }],
+                  "bAutoWidth": false,
+                  "fnInitComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_patrons").css("width","100%");
+                  }
+                });
            })
 	.success(function() {
 	    //alert('success');
+	})
+	.error(function() {
+	    //alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
 	    /* Apply the jEditable handlers to the table */
 
-	    $('td:eq(4),td:eq(5),td:eq(6),td:eq(9)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron.cgi', {
+	    $('td:eq(3),td:eq(4),td:eq(5),td:eq(8)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron.cgi', {
 	        "callback": function( sValue, y ) {
 	            //alert('2. sValue: '+sValue);
 	            var obj = jQuery.parseJSON( sValue );
@@ -74,25 +69,9 @@ $('document').ready(function(){
         	},
 	        "height": "14px",
 	        "select": true
-            } );
+            });
 
-	})
-	.error(function() {
-	    //alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
 	});
-
-
-    $('#datatable_patrons tbody tr').live('mouseover mouseout', function (event) {
-        if (event.type == 'mouseover') {
-            $(this).addClass("ui-state-hover");
-        } else {
-            $(this).removeClass("ui-state-hover");
-        }
-    });
-
 });
 
 </script>
@@ -107,27 +86,16 @@ $('document').ready(function(){
     <div id="myDiv">
       <h3>Patrons registered with fILL</h3>
       <div id="mylistDiv">
-	<div class="dataTable_wrapper">
-	  <table id="datatable_patrons" width="100%">
-	    <thead>
-	      <tr>
-		<th>pid</th><th>Name</th><th>Card</th><th>Username</th><th>Email address</th><th>Enabled?</th><th>Verified?</th><th>Last login</th><th># requests</th><th>Change password</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
       </div>
     </div>
 
   <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <br/>
-    <p>Update a user's <strong>email address</strong> by clicking on it and changing the text.</p><br/>
-    <p>Update a user's <strong>enabled</strong> status by clicking on it entering '0' or '1' ('0' means they are not enabled).  Hit <strong>[ENTER]</strong> to complete the change.</p><br/>
-    <p>Update a user's <strong>verified</strong> status by clicking on it entering '0' or '1' ('0' means they are not verified).  Hit <strong>[ENTER]</strong> to complete the change.</p><br/>
-    <p>You won't see a user's current <strong>password</strong>, but you can change it by clicking on "Click to change password" for that user.</p><br/>
+    
+    <p>Update a user's <strong>email address</strong> by clicking on it and changing the text.</p>
+    <p>Update a user's <strong>enabled</strong> status by clicking on it entering '0' or '1' ('0' means they are not enabled).  Hit <strong>[ENTER]</strong> to complete the change.</p>
+    <p>Update a user's <strong>verified</strong> status by clicking on it entering '0' or '1' ('0' means they are not verified).  Hit <strong>[ENTER]</strong> to complete the change.</p>
+    <p>You won't see a user's current <strong>password</strong>, but you can change it by clicking on "Click to change password" for that user.</p>
   </div>
 
 </div>

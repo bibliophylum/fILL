@@ -18,8 +18,7 @@ $('document').ready(function(){
                 //alert (data.returns[0].id+" "+data.returns[0].msg_from+" "+data.returns[0].call_number+" "+data.returns[0].author+" "+data.returns[0].title+" "+data.returns[0].ts); //further debug
                 build_table(data);
 
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#returns-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -27,7 +26,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -37,18 +36,15 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Return to" },
-                           { "mDataProp": "Return to (ID)" },
-                           { "mDataProp": "Return" }
-                      ]
-
+                       "columnDefs": [ {
+                           "targets": [0,1,2,7],
+                           "visible": false
+                       } ],
+                      "fnInitComplete": function() {
+                          // this handles a bug(?) in this version of datatables;
+                          // hidden columns caused the table width to be set to 100px, not 100%
+                          $("#returns-table").css("width","100%");
+                      }
                   });
            });
 

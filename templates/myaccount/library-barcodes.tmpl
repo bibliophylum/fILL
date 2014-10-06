@@ -6,53 +6,56 @@
 
 
 <script type="text/javascript">
-//set_secondary_tab("menu_borrow_receive");
+set_secondary_tab("menu_myaccount_library_barcodes");
 
 $.ajaxSetup ({  
   cache: false  
 });  
 
+var oTable;
+
 $('document').ready(function(){
 
     var anOpenBarcodes = [];
 
-    oTable = $('#datatable_barcodes').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 25,
-        "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            { "mDataProp": "lid", "sWidth": "5%" },
-            { "mDataProp": "borrower", "sWidth": "5%" },
-            { "mDataProp": "name", "sWidth": "15%" },
-            { "mDataProp": "library", "sWidth": "50%" },
-            { "mDataProp": "barcode", "sWidth": "15%" }
-        ],
-        "bAutoWidth": false
-    });
-
     $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
+
+                oTable = $('#datatable_barcodes').dataTable({
+                  "bJQueryUI": true,
+                  "sPaginationType": "full_numbers",
+                  "bInfo": true,
+ 	          "bSort": true,
+       	          "sDom": '<"H"Tfr>t<"F"ip>',
+                  "iDisplayLength": 25,
+                  "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                  "oTableTools": {
+                     "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                  },
+                  "columnDefs": [ {
+                    "targets": [0,1],
+                    "visible": false
+                  }],
+                  "bAutoWidth": false,
+                  "fnInitComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_barcodes").css("width","100%");
+                  }
+                });
            })
 	.success(function() {
 	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+
 	    /* Apply the jEditable handlers to the table */
-	    $('td:eq(4)', oTable.fnGetNodes()).editable( '/cgi-bin/update-library-barcode.cgi', {
+	    $('td:eq(2)', oTable.fnGetNodes()).editable( '/cgi-bin/update-library-barcode.cgi', {
 	        "callback": function( sValue, y ) {
 	            var obj = jQuery.parseJSON( sValue );
 	            //alert('data: '+obj.data);
@@ -69,25 +72,22 @@ $('document').ready(function(){
         	},
 	        "height": "14px",
 	        "select": true
-            } );
+            });
 
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
-	});
+       });
 
+<!--
+//    $('#datatable_barcodes tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_barcodes tbody tr", function() {  // suggested replacement
+    $("#datatable_barcodes tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
 
-    $('#datatable_barcodes tbody tr').live('mouseover mouseout', function (event) {
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
             $(this).removeClass("ui-state-hover");
         }
     });
-
+-->
 
 });
 
@@ -106,17 +106,6 @@ $('document').ready(function(){
     <div id="myDiv">
     <h3>Library barcodes from your ILS</h3>
         <div id="mylistDiv">
-    	  <div class="dataTable_wrapper">
-              <table id="datatable_barcodes" width="100%">
-        	  <thead>
-        	  <tr>
-        		<th>lid</th><th>borrower</th><th>name</th><th>library</th><th>barcode</th>
-        	  </tr>
-        	  </thead>
-        	  <tbody>
-        	  </tbody>
-        	  </table>
-    	  </div>
         </div>
     </div>
 </div>

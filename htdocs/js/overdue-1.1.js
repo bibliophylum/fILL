@@ -21,7 +21,7 @@
 function build_table( data ) {
     //alert( 'in build_table' );
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","overdue-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -36,7 +36,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Borrowed from"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Borrowed from (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     

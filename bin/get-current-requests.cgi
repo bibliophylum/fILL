@@ -27,6 +27,7 @@ my $SQL="select
   g.patron_barcode, 
   date_trunc('second',ra.ts) as ts, 
   (case when (ra.msg_to=?) then l1.name else l2.name end) as lender, 
+  (case when (ra.msg_to=?) then l1.library else l2.library end) as library_name,
   ra.status, 
   ra.message
 from requests_active ra
@@ -38,11 +39,11 @@ from requests_active ra
 where 
   r.requester=?
   and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id)
-group by gid, cid, g.title, g.author, g.patron_barcode, ts, lender, ra.status, ra.message
+group by gid, cid, g.title, g.author, g.patron_barcode, ts, lender, library_name, ra.status, ra.message
 order by ra.ts
 ";
 # There will be one row per request in the chain
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
 
 # sql to get this library's current lending
 $SQL = "select 
@@ -50,6 +51,7 @@ $SQL = "select
   g.title, 
   g.author, 
   l.name as requested_by, 
+  l.library,
   date_trunc('second',ra.ts) as ts, 
   ra.status, 
   ra.message 
@@ -72,6 +74,7 @@ $SQL = "select
   g.title, 
   g.author, 
   l.name as requested_by, 
+  l.library,
   date_trunc('second',ra.ts) as ts, 
   ra.status, 
   ra.message 

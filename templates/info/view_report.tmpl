@@ -19,21 +19,21 @@ $('document').ready(function(){
         "iDisplayLength": 10,
         "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
+          "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
 	},
         "aaSorting": [[0,"asc"],[1,"asc"]],
-        "bAutoWidth": false
+        "bAutoWidth": true,
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#datatable_report").css("width","100%");
+        }
     });
 
-    $('#datatable_report tbody tr').live('mouseover mouseout', function (event) {
+//    $('#datatable_report tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
+//    $(document).on("mouseover mouseout", "#datatable_report tbody tr", function() {  // suggested replacement
+    $("#datatable_report tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
+
         if (event.type == 'mouseover') {
             $(this).addClass("ui-state-hover");
         } else {
@@ -46,11 +46,10 @@ $('document').ready(function(){
 </script>
 
 
-<div role="main">
+<div id="center" role="main">
 
     <div id="myDiv">
       <h2>ILL Stats</h2>
-
 	<div class="dataTable_wrapper">
 	  <table id="datatable_report">
 	    <thead>
@@ -88,21 +87,21 @@ $('document').ready(function(){
     <h2>Instructions</h2>
 
     <h3>Borrowing</h3>
-    <table id="fill-table">
-      <tr><td style="border:1px solid black;">Books requested</td><td style="border:1px solid black;"># titles you've requested.</td></tr>
+    <table id="fill-table" class="table-width-lib">
+      <tr><td style="border:1px solid black;">Books requested</td><td style="border:1px solid black;">Number of titles you've requested.</td></tr>
       <tr><td style="border:1px solid black;">Actual requests</td><td style="border:1px solid black;">including retrying unfilleds, etc</td></tr>
-      <tr><td style="border:1px solid black;">Unfilled responses</td><td style="border:1px solid black;"># times libraries could not fill (actual) requests</td></tr>
+      <tr><td style="border:1px solid black;">Unfilled responses</td><td style="border:1px solid black;">Number of times libraries could not fill (actual) requests</td></tr>
       <tr><td style="border:1px solid black;">Lender shipped</td><td style="border:1px solid black;">books physically received from lenders.</td></tr>
       <tr><td style="border:1px solid black;">We cancelled</td><td style="border:1px solid black;">Requests you cancelled.</td></tr>
     </table>
 
     <h3>Lending</h3>
-    <table id="fill-table">
-      <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;"># requests other libraries have made to you</td></tr>
-      <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;"># times you responded 'unfilled'</td></tr>
+    <table id="fill-table" class="table-width-lib">
+      <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;">Number of requests other libraries have made to you</td></tr>
+      <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;">Number of times you responded 'unfilled'</td></tr>
       <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">books you sent out.</td></tr>
-      <tr><td style="border:1px solid black;">Forward to branch</td><td style="border:1px solid black;"># requests you've forwarded to one of your branches</td></tr>
-      <tr><td style="border:1px solid black;">Borrower cancelled</td><td style="border:1px solid black;"># requests that the borrower cancelled before you could respond.</td></tr>
+      <tr><td style="border:1px solid black;">Forward to branch</td><td style="border:1px solid black;">Number of requests you've forwarded to one of your branches</td></tr>
+      <tr><td style="border:1px solid black;">Borrower cancelled</td><td style="border:1px solid black;">Number of requests that the borrower cancelled before you could respond.</td></tr>
     </table>
   </div>
 

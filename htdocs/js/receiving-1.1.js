@@ -21,7 +21,7 @@
 function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","receiving-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -37,7 +37,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Timestamp"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Receive"; row.appendChild(cell);
     

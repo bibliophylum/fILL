@@ -21,8 +21,7 @@ $('document').ready(function(){
                 //alert (data.renewRequests[0].id+" "+data.renewRequests[0].msg_from+" "+data.renewRequests[0].call_number+" "+data.renewRequests[0].author+" "+data.renewRequests[0].title+" "+data.renewRequests[0].ts); //further debug
                 build_table(data);
 
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#renewal-answer-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -30,7 +29,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -40,20 +39,15 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)" },
-                           { "mDataProp": "Call #" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Due date" },
-                           { "mDataProp": "Response" }
-                      ]
-
+                       "columnDefs": [ {
+                           "targets": [0,1,2,4],
+                           "visible": false
+                       } ],
+                      "fnInitComplete": function() {
+                           // this handles a bug(?) in this version of datatables;
+                           // hidden columns caused the table width to be set to 100px, not 100%
+                           $("#renewal-answer-table").css("width","100%");
+                      }
                   });
            });
 
@@ -76,7 +70,7 @@ $('document').ready(function(){
       Loading... <img src="/wait.gif">
     </div>
 
-    <div id="myDiv">
+    <div id="myDiv"><br />
       <h3>1. Set a default due date</h3>
       <div id="defaultDueDate">
 	<form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change due date'; return false;">
@@ -87,12 +81,11 @@ $('document').ready(function(){
 -->
 	  <p>
 	    Date (yyyy-mm-dd): <input id="datepicker" type="text">
-	    <input type="submit" name="submit_default_due_date" value="Apply due date"/>
+	    <input type="submit" name="submit_default_due_date" value="Apply due date" class="library-style" />
 	  </p>
 	</form>
       </div>
 
-      <br/>
       <h3>2. Respond to renewal requests</h3>
       <div id="mylistDiv"></div>
     </div>

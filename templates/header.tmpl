@@ -6,26 +6,51 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
+
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1a.css">
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
   <link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
-  <link type="text/css" rel="stylesheet" href="/css/fILL-chill/jquery-ui-1.8.16.custom.css"/>
-  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_page.css">
-  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table.css">
-  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/media/css/demo_table_jui.css">
-  <link type="text/css" rel="stylesheet" href="/plugins/DataTables-1.8.2/extras/TableTools/media/css/TableTools_JUI.css">
 
-  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
+  <!-- jQuery-UI theme:
+       1. create a new theme using ThemeRoller, and save it to htdocs/themes/xxxx/
+       2. comment out the default jquery-ui.css ("/plugins/jquery-ui-1.11.1/jquery-ui.css")
+       3. add <link... to your new theme ("/themes/xxxx/jquery-ui.css")
+       4. comment out default jquery-ui.js ("/plugins/jquery-ui-1.11.1/jquery-ui.js")
+       5. add <script... to your new theme ("/themes/xxxx/jquery-ui.js")
+
+       The order of these links and scripts is important!
+  -->
+<!-- THEME: comment out default jquery css
+  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
+ -->
+<!-- THEME: add new theme: -->
+  <link rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css">
+
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+
+
+  <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
+
+<!-- THEME: comment out default jquery-ui.js:
+  <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
+-->
+<!-- THEME: add new theme's .js: -->
+  <script type="text/javascript" src="/themes/fILL-clean/jquery-ui.js"></script>
+
+
   <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
-  <script type="text/javascript" src="/plugins/DataTables-1.8.2/media/js/jquery.dataTables.js" charset="utf-8"></script>
-  <script type="text/javascript" src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/ZeroClipboard.js" charset="utf-8"></script>
-  <script type="text/javascript" src="/plugins/DataTables-1.8.2/extras/TableTools/media/js/TableTools.js" charset="utf-8"></script>
-  <script type="text/javascript" src="/plugins/dataTables.fnReloadAjax.js"></script>
+<!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
-
+  <!-- Testing DataTables jQuery-UI themeroller integration -->
+<!--
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/a5734b29083/integration/jqueryui/dataTables.jqueryui.css">
+  <script type="text/javascript" src="//cdn.datatables.net/plug-ins/a5734b29083/integration/jqueryui/dataTables.jqueryui.js"></script>
+-->
 <script type="text/javascript">
 
 $.ajaxSetup ({  
@@ -101,7 +126,7 @@ $('document').ready(function(){
 
   <!-- Not displayed on any page except lightning (at the moment), also used for chat -->
 <div id="header-right">
-      <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button">log out</a></div>
+    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="library-style">log out</a></div>
   <div id="patron-info">
       <div id="username"><TMPL_VAR NAME="username"></div>
       <p id="library_name"><TMPL_VAR NAME="library"></p>
@@ -112,73 +137,30 @@ $('document').ready(function(){
   </div><!--Div id header-->
 
 <!--***************ARIA MARKER 'SEARCH'***************-->
-<div id="search-container">
+<div id="search-container" style="display: none">
   <div id="search" role="search">
-    <div id="header_searchbar" style="display: none">
+    <div id="header_searchbar">
     <form id="searchForm" name="search">
       <input id="query" type="text" size="50"/>
-      <input id="button" type="submit" value="Search"/>
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;">
+      <input id="button" type="submit" value="Search" class="library-style" />
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style">
     </form>
     </div>
   </div>
 </div>
 
-<nav role="navigation" id="lib-nav">
-  <ul class="nav inline-items">
-    <li id="menu_borrow">
-      <a href="/cgi-bin/lightning.cgi?rm=lightning_search_form">
-      Borrowing
-      </a>
-    </li>
-
-    <li id="menu_lend">
-      <a href="/cgi-bin/lightning.cgi?rm=pull_list">
-      Lending
-      </a>
-    </li>
-
-    <li id="menu_borrow_current_requests">
-      <a href="/cgi-bin/lightning.cgi?rm=current">
-      Current
-      </a>
-    </li>
-
-    <li id="menu_borrow_history">
-      <a href="/cgi-bin/lightning.cgi?rm=history">
-      History
-      </a>
-    </li>
-
-    <li id="menu_myaccount">
-      <a href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">
-      Account
-      </a>
-    </li>
-
-    <li id="menu_patrons">
-      <a href="/cgi-bin/patrons.cgi?rm=patrons_form">
-      Patrons
-      </a>
-    </li>
-
-    <li id="menu_info">
-      <a href="/cgi-bin/info.cgi?rm=info_contacts_form">
-      Info
-      </a>
-    </li>
-
-    <li id="menu_rotations" style="display:none;">
-      <a href="/cgi-bin/rotations.cgi?rm=receive_form">
-      Rotation Manager
-      </a>
-    </li>
-
-    <li id="menu_rotations_admin" style="display:none;">
-      <a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">
-      Rotations Admin
-      </a>
-    </li>
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+<nav role="navigation" id="lib-nav-primary">
+  <ul class="inline-items">
+    <li><a id="menu_borrow" href="/cgi-bin/lightning.cgi?rm=lightning_search_form">Borrowing</a></li>
+    <li><a id="menu_lend" href="/cgi-bin/lightning.cgi?rm=pull_list">Lending</a></li>
+    <li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
+    <li><a id="menu_history" href="/cgi-bin/lightning.cgi?rm=history">History</a></li>
+    <li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
+    <li><a id="menu_patrons" href="/cgi-bin/patrons.cgi?rm=patrons_form">Patrons</a></li>
+    <li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Info</a></li>
+    <li id="menu_rotations" style="display:none;"><a href="/cgi-bin/rotations.cgi?rm=receive_form">Rotation Manager</a></li>
+    <li id="menu_rotations_admin" style="display:none;"><a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">Rotations Admin</a></li>
   </ul>
 </nav>
 

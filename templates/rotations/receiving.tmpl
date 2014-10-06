@@ -20,30 +20,15 @@ $('document').ready(function(){
     "sDom": '<"H"Tfr>t<"F"ip>',
     // TableTools requires Flash version 10...
     "oTableTools": {
-      "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-      "aButtons": [
-        "copy", "csv", "xls", "pdf", "print",
-        {
-        "sExtends":    "collection",
-        "sButtonText": "Save",
-        "aButtons":    [ "csv", "xls", "pdf" ]
-        }
-      ]
+      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
     },
-    "aoColumns": [
-      { "mDataProp": "id" },
-      { "mDataProp": "barcode" },
-      { "mDataProp": "callno" },
-      { "mDataProp": "title", "sWidth": "25%" },
-      { "mDataProp": "author" },
-      { "mDataProp": "current_library", "sWidth": "5%" },
-      { "mDataProp": "previous_library", "sWidth": "5%" },
-      { "mDataProp": "timestamp" }
-      ]
-      
-    });
+    "columnDefs": [{
+      "targets": 0,
+      "visible": false
+    }] 
+  });
 
-    oTable.fnSort( [ [7,'desc'] ] );
+  oTable.fnSort( [ [7,'desc'] ] );
 
 //    $("#barcode").on("input propertychange", function() {
     $("#barcode").on("change", function() {
@@ -99,9 +84,8 @@ function downloadMarc() {
     <div id="myDiv">
       <h3>Receive rotation titles</h3>
       <div id="scanner">
-	<table id="fill-table">
-	  <tr>
-	    <td width="80%">
+
+	<div class="tone-box">
 	      <form id="scan_form" onSubmit="return false;"> <!-- stop the form from submitting... submitting will reload, losing the data in the table -->
 <!--
 		<p>Scan a barcode: <input type="text" name="barcode" maxlength="14" onChange="barcode_scanned(this.value); this.value=''; this.focus(); return false;"></p>
@@ -112,11 +96,10 @@ function downloadMarc() {
 		</p>
 		<br/>
 	      </form>
-	    </td>
-	    <td>
+	
 	      <p>Get a file of MARC records with all rotation items you have received within the last month.</p>
-	      <input type="button" value="Download MARC records" onClick="downloadMarc(); return false;">
-	    </td>
+	      <input type="button" value="Download MARC records" onClick="downloadMarc(); return false;" class="library-style">
+      </div>
       </div>
     </div>
 
@@ -126,7 +109,7 @@ function downloadMarc() {
         <table id="datatable_scanned" class="display">
           <thead>
             <tr>
-              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current_library</th><th>previous_library</th><th>timestamp</th>
+              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current library</th><th>previous library</th><th>last update</th>
             </tr>
           </thead>
           <tbody>
@@ -134,13 +117,11 @@ function downloadMarc() {
         </table>
       </div>
 
-  <div id="instructions">
+  <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
     <ol>
       <li>Scan barcodes of received titles.</li>
-      <li> </li>
       <li>When you've finished receiving the items, click the "Download MARC records" button to get a file of all rotation items you have received within the last month, suitable for importing into your ILS.</li>
-      <li> </li>
       <li>Go to the <a href="/rotations-MARC/" style="text-decoration: underline" target="_blank">Download folder</a></li>
     </ol>
   </div>

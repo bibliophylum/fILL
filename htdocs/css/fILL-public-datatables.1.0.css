@@ -45,12 +45,6 @@ div#mylistDiv {
     background: url("/img/table-row-gradient-hover.png") repeat-x scroll 0 0 #D0DAFD;
     color: #333399;
 }
-#datatable_borrowing {
-    width: 100%;
-}
-#datatable_lending {
-    width: 100%;
-}
 div.innerDetails { display: none }
 #tabs { display: none }
 
@@ -338,6 +332,8 @@ table.display thead th div.DataTables_sort_wrapper span {
  */
 table.display {
 	margin: 0 auto;
+	margin-left: auto ;
+	margin-right: auto ;
 	width: 100%;
 	clear: both;
 	border-collapse: collapse;

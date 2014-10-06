@@ -12,63 +12,42 @@
   <form METHOD=POST ACTION="">
     <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
     <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
-    <table>
-      <tr>
-	<td>Email address:</td>
-	<td>
+ 
+      
+	<p>Email address:</p>
+	
 	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
-	</td>
-      </tr><tr>
-	<td>Library:</td>
-	<td>
+	
+     	<h3>Interlibrary Loan Mailing address</h3> 
+	<p>Library:</p>
+	
 	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
-	</td>
-      </tr><tr>
-	<td>Interlibrary Loan Mailing address</td>
-	<td>
-	  <table>
-	    <tr>
-	      <td>Street address or Box#:</td>
-	      <td>
+	
+	      <p>Street address or PO Box Number:</p>
+	      
 		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
-	      </td>
-	    </tr><tr>
-	      <td>Town/City:</td>
-	      <td>
+	      
+	    
+	      <p>Town/City:</p>
+	      
 		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>">
-	      </td>
-	    </tr><tr>
-	      <td>Province:</td>
-	      <td>
+	      
+	    
+	      <p>Province:</p>
+	      
 		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>">
-	      </td>
-	    </tr><tr>
-	      <td>Postal code:</td>
-	      <td>
+	      
+	    
+	      <p>Postal code:</p>
+	      
 		<input TYPE="text" NAME="post_code" SIZE="6" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
-	      </td>
-	    </tr>
-	  </table>
-	</td>
-      </tr>
-    </table>
+	      
+	    
+	
 
-    <br/>
-
-    <table id="fill-table">
-      <tr>
-	<td>
-	  <TMPL_IF NAME="editRequestEmailNotification">
-	    <input TYPE="radio" NAME="request_email_notification" VALUE='t' CHECKED>Yes<br/>
-	    <input TYPE="radio" NAME="request_email_notification" VALUE='f'>No<br/>
-	  <TMPL_ELSE>
-	    <input TYPE="radio" NAME="request_email_notification" VALUE='t'>Yes<br/>
-	    <input TYPE="radio" NAME="request_email_notification" VALUE='f' CHECKED>No<br/>
-	  </TMPL_IF>
-	</td>
-	<td>Do you want to receive email notifications for new requests? (CURRENTLY UNAVAILABLE)</td>
-      </tr><tr>
-	<td>
+    <table id="fill-table" class="">
+      
+	
 	  <TMPL_IF NAME="editSlipsWithBarcodes">
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes<br/>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No<br/>
@@ -76,10 +55,10 @@
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes<br/>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
-	</td>
-	<td>Do you want to print scannable patron barcodes on the date-due slips?</td>
-      </tr><tr>
-	<td>
+	
+	<h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
+      
+	
 	  <TMPL_IF NAME="editCentralizedILL">
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes<br/>
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No<br/>
@@ -87,14 +66,14 @@
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes<br/>
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
-	</td>
-	<td>Are you a headquarters library that centrally manages ILL for your branches?</td>
-      </tr>
+	
+	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>
+      
     </table>
 
     <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
     <br />
-    <input type="submit" name="submit" value="Update" />
+    <input type="submit" name="submit" value="Update" class="library-style" />
   </form>
 
 </div>

@@ -22,7 +22,7 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-            oTable = $('#gradient-style').dataTable({
+            oTable = $('#received-circ-counts-table').dataTable({
                 "bJQueryUI": true,
                 "sPaginationType": "full_numbers",
                 "bInfo": true,
@@ -32,21 +32,8 @@ $('document').ready(function(){
                 "bLengthChange": true,
                 // TableTools requires Flash version 10...
                 "oTableTools": {
-                    "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-                    "aButtons": [
-                      "copy", "csv", "xls", "pdf", "print",
-                      {
-                          "sExtends":    "collection",
-                          "sButtonText": "Save",
-                          "aButtons":    [ "csv", "xls", "pdf" ]
-                      }
-                   ]
-                },
-                "aoColumns": [
-                    { "mDataProp": "library" },
-                    { "mDataProp": "symbol" },
-                    { "mDataProp": "count" }
-                ]
+                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                }
           });
       });
 });
@@ -54,7 +41,7 @@ $('document').ready(function(){
 </script>
 
 
-<div role="main">
+<div id="center" role="main">
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif">

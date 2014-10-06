@@ -35,8 +35,8 @@
 
   
 <!--***************ARIA MARKER 'NAVIGATION'***************-->
-<nav role="navigation">
-  <ul class="nav inline-items">
+<nav role="navigation" id="pub-nav-primary">
+  <ul class="inline-items">
     <li><a id="menu_search" class="current_tab" href="">Welcome</a></li>
     <li><a id="menu_new" href="/new.html">New to fILL?</a></li>
   </ul>
@@ -52,15 +52,15 @@
 
     <p><strong>Library patrons:</strong></p>
     <p>fILL is getting a new look to improve user experience and accessibility.  The updated version of fILL is fully functional and you can use it to access your account and request your interlibrary loan items, just as you would using the old fILL site.</p>
-    <a href="/cgi-bin/public.cgi" id="butlink" >Use the NEW patron site!</a><br/>
+    <a href="/cgi-bin/public.cgi" id="butlink" class="public-style">Use the NEW patron site!</a><br/>
     <p>Help make the new fILL website better: if you have feedback about the new look please contact your local public library.</p>
 
 
   <div id="welcome-box" class="tone-box">
     <p>Welcome to the Manitoba public libraries' interlibrary loan system.</p>
     <p>There are separate login pages for:</p>
-    <a href="/cgi-bin/public-original.cgi" id="butlink">Library Patrons</a>
-    <a href="/cgi-bin/lightning.cgi" id="butlink">Library Staff</a>
+    <a href="/cgi-bin/public-original.cgi" id="butlink" class="public-style">Library Patrons</a>
+    <a href="/cgi-bin/lightning.cgi" id="butlink" class="library-style">Library Staff</a>
 <!--
     <a href="/cgi-bin/public-original.cgi">Library Patrons</a>
     <a href="/cgi-bin/lightning.cgi">Library Staff</a>
@@ -80,7 +80,11 @@
 <p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
 </div>
 </footer>
-<img class="bison" alt="Manitoba Bison Logo" title="Service provided by the Government of Manitoba" src="/img/manitoba.gif">
+
+<div id="bison-container">
+<img class="bison" alt="Manitoba Bison Logo" title="Coordinated by the Public Library Service Branch of the Government of Manitoba Tourism, Culture, Heritage and Consumer Protection" src="/img/manitoba.gif">
+</div>
+
 </body>
 </html>
 <!--<TMPL_INCLUDE NAME="footer.tmpl">-->

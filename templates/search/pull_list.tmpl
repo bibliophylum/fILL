@@ -35,7 +35,7 @@ $('document').ready(function() {
 
   set_secondary_tab("menu_lend_pull");
 
-  oTable = $('#gradient-style').dataTable({
+  oTable = $('#pull-list').dataTable({
          "bJQueryUI": true,
          "sPaginationType": "full_numbers",
          "bInfo": true,
@@ -43,7 +43,7 @@ $('document').ready(function() {
          "sDom": '<"H"Tfr>t<"F"ip>',
          // TableTools requires Flash version 10...
          "oTableTools": {
-             "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+             "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
            "aButtons": [
 	      "copy", "csv", "xls", "pdf", "print",
 	      {
@@ -53,15 +53,12 @@ $('document').ready(function() {
 	      }
            ]
          },
-         "aoColumns": [
-             { "mDataProp": "Call #" },
-             { "mDataProp": "Author" },
-             { "mDataProp": "Title" },
-             { "mDataProp": "Date/Time requested" },
-             { "mDataProp": "Requested by" },
-             { "mDataProp": "Requestor note" },
-             { "mDataProp": "Your barcode for the requesting library" }
-        ]
+        "fnInitComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100%
+            $("#pull-list").css("width","100%");
+        }
+
   });
 
   $(function() {
@@ -73,10 +70,10 @@ $('document').ready(function() {
 </script>
 
 <div id="center" role="main">
-
+<br />
 
     <h3>Pull list</h3>
-    <table id="gradient-style">
+    <table id="pull-list">
       <thead>
 	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requestor note</th><th>Your barcode for the requesting library</th></tr>
       </thead>

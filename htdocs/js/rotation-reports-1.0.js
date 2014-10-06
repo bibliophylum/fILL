@@ -20,7 +20,7 @@
 */
 function build_received_counts_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","received-circ-counts-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -56,7 +56,7 @@ function build_received_counts_table( data ) {
 
 function build_item_circ_counts_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","item-circ-counts-table");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

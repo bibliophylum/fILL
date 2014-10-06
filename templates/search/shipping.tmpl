@@ -17,8 +17,7 @@ $('document').ready(function(){
             function(data){
                 build_table(data);
 
-                //$('#gradient-style').dataTable();
-                oTable = $('#gradient-style').dataTable({
+                oTable = $('#shipping-table').dataTable({
                        "bJQueryUI": true,
                        "sPaginationType": "full_numbers",
                        "bInfo": true,
@@ -26,7 +25,7 @@ $('document').ready(function(){
                        "sDom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
 	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
 			      {
@@ -36,20 +35,15 @@ $('document').ready(function(){
 			      }
 		           ]
         	       },
-                       "aoColumns": [
-                           { "mDataProp": "gid" },
-                           { "mDataProp": "cid" },
-                           { "mDataProp": "ID" },
-                           { "mDataProp": "From" },
-                           { "mDataProp": "From (ID)" },
-                           { "mDataProp": "Author" },
-                           { "mDataProp": "Title" },
-                           { "mDataProp": "Mailing address" },
-                           { "mDataProp": "Timestamp" },
-                           { "mDataProp": "Due date" },
-                           { "mDataProp": "Response" }
-                      ]
-
+                       "columnDefs": [ {
+                           "targets": [0,1,2,4],
+                           "visible": false
+                       } ],
+                      "fnInitComplete": function() {
+                           // this handles a bug(?) in this version of datatables;
+                           // hidden columns caused the table width to be set to 100px, not 100%
+                           $("#shipping-table").css("width","100%");
+                      }
                   });
 
            });
@@ -73,14 +67,14 @@ $('document').ready(function(){
       Loading... <img src="/wait.gif">
     </div>
 
-    <div id="myDiv">
+    <div id="myDiv"><br />
       <div class="innerLeft">
 	<h3>1. Set the due date</h3>
 	<div id="defaultDueDate">
 	  <form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change due date'; return false;">
 	    <p>
 	      Date (yyyy-mm-dd): <input id="datepicker" type="text">
-	      <input type="submit" name="submit_default_due_date" value="Apply due date"/>
+	      <input type="submit" name="submit_default_due_date" value="Apply due date" class="library-style" />
 	    </p>
 	  </form>
 	</div>
@@ -104,10 +98,10 @@ $('document').ready(function(){
 
 <div id="instructions" class="tone-box">
     <h3>Instructions</h3>
-    <p>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</p><br/>
-    <p>For each of the requests that you are filling, click the "Sent" button.</p><br/>
-    <p>The "Oops!" button will return the request to the Respond list.</p><br/>
-    <p>Hover over a library's symbol to see the full name of the library.</p><br/>
+    <p>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</p>
+    <p>For each of the requests that you are filling, click the "Sent" button.</p>
+    <p>The "Oops!" button will return the request to the Respond list.</p>
+    <p>Hover over a library's symbol to see the full name of the library.</p>
 </div>
 
 </div>

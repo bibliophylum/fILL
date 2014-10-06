@@ -20,7 +20,7 @@
 */
 function build_table( data ) {
     var myTable = document.createElement("table");
-    myTable.setAttribute("id","gradient-style");
+    myTable.setAttribute("id","at-my-library");
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -50,7 +50,12 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.rotation[i].callno;
         cell = row.insertCell(-1); cell.innerHTML = data.rotation[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.rotation[i].author;
+
         cell = row.insertCell(-1); cell.innerHTML = data.rotation[i].barcode;
+	var img = document.createElement('img');
+	img.src = "data:image/png;base64,"+data.rotation[i].barcode_image
+	cell.appendChild(img);
+
         cell = row.insertCell(-1); cell.innerHTML = data.rotation[i].timestamp;
     }
     

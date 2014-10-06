@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/history-1.2.js"></script>
+<script type="text/javascript" src="/js/history-1.3.js"></script>
 
 <script type="text/javascript">
 
@@ -9,7 +9,14 @@ $.ajaxSetup ({
   cache: false  
 });  
 
+var anOpenBorrowing;
+var anOpenLending;
+
 $('document').ready(function(){
+    set_primary_tab("menu_history");
+
+    anOpenBorrowing = [];
+    anOpenLending = [];
 
     $(function() {
         var dateStart = moment();
@@ -26,93 +33,16 @@ $('document').ready(function(){
 
     });
 
+    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
+    $("#tabs").tabs( {
+        "activate": function(event, ui) {
+            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        }
+    } );
+  
 
-    $(function() {
-        $( "#tabs" ).tabs( {
-            "show": function(event, ui) {
-                var jqTable = $('table.display', ui.panel);
-                if ( jqTable.length > 0 ) {
-                    var oTableTools = TableTools.fnGetInstance( jqTable[0] );
-                    if ( oTableTools != null && oTableTools.fnResizeRequired() ) {
-                        jqTable.dataTable().fnAdjustColumnSizing();
-                        oTableTools.fnResizeButtons();
-                    }
-                }
-            }
-        });
-    });
-
-    var anOpenBorrowing = [];
-    var anOpenLending = [];
-    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
-
-    oTable_borrowing = $('#datatable_borrowing').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "gid" },
-            { "mDataProp": "cid" },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "patron_barcode" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "status" },
-            { "mDataProp": "message" }
-        ]
-
-    });
-
-    oTable_lending = $('#datatable_lending').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-	"oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.8.2/extras/TableTools/media/swf/copy_cvs_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	},
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "cid" },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "requested_by" },
-//            { "mDataProp": "requester" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "status" },
-            { "mDataProp": "message" }
-        ]
+    $("#dateButton").on("click", function() {
+        requery( $("#lid").text(), anOpenBorrowing, anOpenLending )
     });
 
     var d_s;
@@ -120,7 +50,6 @@ $('document').ready(function(){
     $(function() {
         d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
         d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
-//        alert( d_s );
 
         $.getJSON('/cgi-bin/get-history.cgi', { lid:   <TMPL_VAR name="lid">, 
                                                 start: d_s, 
@@ -128,6 +57,8 @@ $('document').ready(function(){
                                               },
                 function(data){
                     build_table(data);
+                    dt_init();  // set up the tables as DataTables
+
                })
         .success(function() {
 	    //alert('success');
@@ -137,45 +68,13 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-	});
-    });
 
-    $('#datatable_borrowing td.control').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_borrowing, nTr);
-        anOpenBorrowing.push( nTr );
-      }
-      else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_borrowing.fnClose( nTr );
-          anOpenBorrowing.splice( i, 1 );
-        } );
-      }
-    } );
+	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
 
-    $('#datatable_lending td.control').live( 'click', function () {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenLending );
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_lending, nTr);
-        anOpenLending.push( nTr );
-      }
-      else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          oTable_lending.fnClose( nTr );
-          anOpenLending.splice( i, 1 );
-        } );
-      }
-    } );
+	});  // end of .complete()
 
+    });  // end of function() wrapping .getJSON()
 });
 
 </script>
@@ -183,19 +82,15 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-    <div>
-      <h3>Specify a date range</h3>
+    <div><br />
+      <h3>View history</h3>
       <form>
-	<table cellspacing="20">
-	  <tr>
-	    <td>
-	      View history from (yyyy-mm-dd): <input id="startdate" type="text">
-	      <br>up to (but not including) (yyyy-mm-dd): <input id="enddate" type="text">
-	    </td><td>
-	      <input type="button" value="Fetch requests within this date range" onClick="requery(<TMPL_VAR name="lid">); return false;">
-	    </td>
-	  </tr>
-	</table>
+
+	      <p>From:</p> <input id="startdate" type="text">
+	      <p>To: (confusing fix xyz)</p> <input id="enddate" type="text">
+        <br />
+	      <input id="dateButton" type="button" value="Fetch requests within this date range" class="library-style">
+
       </form>
     </div>
 
@@ -209,45 +104,12 @@ $('document').ready(function(){
 	<li><a href="#tabs-2">Lending history</a></li>
       </ul>
 
-      <div id="tabs-1">
-	<!--     <div id="mylistDiv">  -->
-	<h4>Borrowing history</h4>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_borrowing" class="display">
-	    <thead>
-	      <tr>
-		<th></th><th>gid</th><th>cid</th><th>title</th><th>author</th><th>patron_barcode</th><th>ts</th><th>status</th><th>message</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
+      <div id="tabs-1"></div>
 
-      <div id="tabs-2">
-	<h4>Lending history</h4>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_lending" class="display">
-	    <thead>
-	      <tr>
-		<th></th><th>cid</th><th>title</th><th>author</th><th>requested_by</th><th>ts</th><th>status</th><th>message</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    </tbody>
-	  </table>
-	</div>
-      </div>
+      <div id="tabs-2"></div>
 
     </div>
 
-  <div id="instructions" class="tone-box">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Borrowing and lending history</li>
-    </ol>
-  </div>
 
 </div>
 

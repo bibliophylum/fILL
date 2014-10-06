@@ -70,7 +70,7 @@ function my_onshow(data) {
 	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-    	    html.push('<span><i>'+hit["md-title-responsibility"]+'</i></span>');
+    	    html.push('<span>'+hit["md-title-responsibility"]+'</span>');
       	}
 
         if (hit.recid == curDetRecId) {
@@ -98,10 +98,9 @@ function my_onstat(data) {
     var stat = document.getElementById('stat');
     if(stat != null){
 	if(data.activeclients != 0){
-	    stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
-	    stat.innerHTML += '<div id="progress_empty" style="position:relative;height:20px;width:150px;background-color:#cccccc;border:1px solid black;padding:0px;">';
-	    stat.innerHTML += '<div id="progress_filler" style="height:20px;width:'+(((data.clients - data.activeclients) / data.clients)*150)+'px;left:1px;background-color:#607D8B;padding-top:5px;padding:0px;position:relative;margin-right:200px;margin-top:-21px;"/>';
-	    stat.innerHTML += '</div></div><br />';
+        stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
+        stat.innerHTML += '<div id="progress_empty" style="">'; //Further styles for progress_empty in css
+        stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*130)+'px;"/>';//Further styles for progress filler in css	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
@@ -126,13 +125,13 @@ function my_onstat(data) {
 function my_onterm(data) {
     var termlists = [];
     termlists.push('<br><hr/><b>Refine your search by:</b>');
-    termlists.push('<hr/><div class="termtitle">.::Subjects</div>');
+    termlists.push('<hr/><div class="termtitle">Subjects</div>');
     for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
               + data.subject[i].freq + ')</span><br/>');
     }
      
-    termlists.push('<hr/><div class="termtitle">.::Authors</div>');
+    termlists.push('<hr/><div class="termtitle">Authors</div>');
     for (var i = 0; i < data.author.length && i < AuthorMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'au\', this.firstChild.nodeValue);return false;">' 
                             + data.author[i].name 
@@ -141,7 +140,7 @@ function my_onterm(data) {
                             + ')</span><br/>');
     }
 
-    termlists.push('<hr/><div class="termtitle">.::Sources</div>');
+    termlists.push('<hr/><div class="termtitle">Sources</div>');
     for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
         termlists.push('<a href="#" target_id='+data.xtargets[i].id
             + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
@@ -406,7 +405,7 @@ function renderDetails(data, marker)
 	    requestForm += '<input type="hidden" name="title" value="' + title + '">';
 	}
   	if (data["md-title-responsibility"] !== undefined) {
-	    details += ' <span><i>'+ data["md-title-responsibility"] +'</i></span>';
+	    details += ' <span>'+ data["md-title-responsibility"] +'</span>';
   	}
  	details += '</td></tr>';
     }
@@ -420,7 +419,7 @@ function renderDetails(data, marker)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
 
     var len=data["location"].length;
-    details += '<tr><td><b># locations</b></td><td><b>:</b> ' + len + '</td></tr>';
+    details += '<tr><td><b>locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
 
 	// temp fix for skipping Spruce locations
@@ -489,7 +488,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" value="Request _' + title +  '_">';
+	requestForm += '<input type="submit" value="Click To Request">';
     }
     requestForm += '</form>';
     details += '</table>';
