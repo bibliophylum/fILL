@@ -488,7 +488,7 @@ function renderDetails(data, marker)
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" value="Click To Request">';
+	requestForm += '<input type="submit" class="library-style" value="Click To Request">';
     }
     requestForm += '</form>';
     details += '</table>';

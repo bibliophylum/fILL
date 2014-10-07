@@ -79,9 +79,17 @@ $('document').ready(function(){
         });
 
     update_menu_counters( <TMPL_VAR name="lid"> );
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+
 });
 
-</script>
+</script> <!-- end of document.ready -->
 
 
 <script type="text/javascript">
@@ -93,6 +101,21 @@ $('document').ready(function(){
   function set_secondary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
   }
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) + 1
+        });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) - 1
+        });
+    });
+  } 
 
 </script>
 
@@ -128,9 +151,10 @@ $('document').ready(function(){
 <div id="header-right">
     <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="library-style">log out</a></div>
   <div id="patron-info">
-      <p><TMPL_VAR NAME="username"></p>
-      <p id="library_name"><TMPL_VAR NAME="library"></p>
-      <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <p><TMPL_VAR NAME="username"></p>
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <input id="incrFont" class="library-style" type="button" value="+A" /><input id="decrFont" class="library-style" type="button" value="-A" />
   </div>
 
   </div><!--Div header-right-->
