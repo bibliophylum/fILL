@@ -42,6 +42,7 @@ html, body {
     margin: 0;
     padding: 0;
     background: #f3f3f3;
+    font-size: 100%;  /* permits better scaling (all other font sizes in em) */
 }
 
 img 
