@@ -166,7 +166,7 @@
 
 #center {
   margin-top: 1em;
-  display: inline-block;
+  display: block;
   clear: left;
 }
 
