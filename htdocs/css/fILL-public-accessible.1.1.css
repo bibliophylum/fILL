@@ -189,7 +189,7 @@ nav li a
 /* #pub-nav-primaryigation link states */
 /* unvisted link */
 #pub-nav-primary li a:link {
- 	background: #183935;/*main dark green colour*/
+ 	background: #183935;/*Main dark green colour*/
  	text-decoration: none;
 	color: #fff;
 }
@@ -444,6 +444,29 @@ input[type=submit]:hover
     text-transform:capitalize;
 }
 
+input[type=button]
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=button]:hover
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+	background-color: #06a0ca;
+	color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
 input[type=submit]:focus
 {
     margin: .5em;
@@ -674,13 +697,18 @@ div.termtitle {
     color: #505050;
 }
 
-.clear {
+#clear {
+	display: block;
 	clear: both;
+	height: 1px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
 .fill-help {
 	width: 100%;
-	
 	margin: auto;
 }
 
