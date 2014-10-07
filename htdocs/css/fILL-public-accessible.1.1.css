@@ -674,9 +674,10 @@ div.termtitle {
     color: #505050;
 }
 
-.clear {
+#clear {
+	display: block;
 	clear: both;
-	height: .5px;
+	height: 1px;
 	width: 100%;
 	margin: 0;
 	padding: 0;
