@@ -676,11 +676,15 @@ div.termtitle {
 
 .clear {
 	clear: both;
+	height: .5px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
 .fill-help {
 	width: 100%;
-	
 	margin: auto;
 }
 
