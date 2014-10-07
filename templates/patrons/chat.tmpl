@@ -25,41 +25,56 @@ $('document').ready(function(){
 
     connections["syschan"] = new Channel("syschan");
 
-    $("#message-syschan").keypress(function (e) {
+    $("#input-syschan").keypress(function (e) {
         if (e.which == 13) {
-            $("#send-btn").click();
+            $("#send-btn-syschan").click();
             return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
         }
     });
 
     $("#start-chat").click( function(){
+        $("#start-chat-button-div").toggle();
         $("#syschan").toggle();
         connections["syschan"].sendJoiningMessage();
-        $("#message-syschan").val("");
-        $("#message-syschan").focus();
+        $("#input-syschan").val("");
+        $("#input-syschan").focus();
     });
 
-    $("#send-btn").click( function(){ connections["syschan"].chatSendMsg(); });
+    $("#send-btn-syschan").click( function(){ 
+        connections["syschan"].chatSendMsg(); 
+        $("#input-syschan").val("");
+        $("#input-syschan").focus();
+    });
    
 }); // end document ready
 
 </script>
 
 
-<div id="main">
+<!--<div id="main"> -->
 
-  <div id="chat-button-div">
-    <button id="start-chat">Start chat</button>
-  </div>
-
-  <div id="chatbox" class="chat_wrapper">
-    <div class="message_box" id="syschan" style="display:none; border:1px solid; float:left; width:250px">
-      <div class="panel">
-	<input type="text" name="message" id="message-syschan" placeholder="Message" maxlength="80"/>
-	<button id="send-btn">Send</button>
+  <div id="chat-div">
+    <div id="start-chat-button-div">
+      <button id="start-chat" class="library-style">Start chat</button>
     </div>
-</div>  </div> <!-- chat_wrapper -->
 
-</div>
+    <div id="channels" class="channels">
+
+<!--      <div id="syschan" class="single-channel" style="display:none; border:1px solid; float: left; width:300px; background-color:yellow;"> -->
+      <div id="syschan" class="single-channel" style="display:none">
+	<div class="channel-title"><h2>syschan</h2></div>
+	<div class="messages" id="messages-syschan"></div>
+	<div class="chat-entry" id="chat-entry-syschan">
+	  <input class="chat-input" id="input-syschan" type="text" name="message" placeholder="Message" maxlength="80"/>
+	  <button id="send-btn-syschan" class="library-style">Send</button>
+	</div>
+      </div>
+    </div> <!-- single-channel -->
+
+    <!-- library-patron channels will be added here dynamically -->
+
+  </div> <!-- channels -->
+
+<!-- </div> -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

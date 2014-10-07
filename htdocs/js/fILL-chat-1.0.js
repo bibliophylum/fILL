@@ -77,7 +77,7 @@ Channel.prototype.sendJoiningMessage = function() {
 };
 
 Channel.prototype.chatSendMsg = function(){         //user clicks message send button  
-    var mymessage = $('#message-'+this.name).val();
+    var mymessage = $('#input-'+this.name).val();
     var myname = $("#username").text();
     var mylid = $("#lid").text();
     var mycolor = this.color;
@@ -108,7 +108,7 @@ Channel.prototype.chatSendMsg = function(){         //user clicks message send b
 //    
 function wsOnOpen(ev, channel) {
     //notify user
-    $('#'+channel).append("<div class=\"system_msg\">"+connections[channel].name+" Connected!</div>");
+    $('#messages-'+channel).append("<div class=\"system_msg\">"+connections[channel].name+" Connected!</div>");
 }
 
 //#### Message received from server?
@@ -119,17 +119,19 @@ function wsOnMessage(ev, channel) {
     var uname = msg.name; //user name
     var ucolor = msg.color; //color
 
+    //-------------------------------------------------------------------
     if (type == 'usermsg') {
-        $("#"+channel).append(
+        $("#messages-"+channel).append(
 	    "<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>"
 	);
     }
 
+    //-------------------------------------------------------------------
     if (type == 'close') {
 	// note: if the same patron re-opens chat before the librarian
 	// has closed the window, bad things happen.  FIXME!
 
-	$("#panel-"+channel).toggle(); // hide the input controls
+	$("#chat-entry-"+channel).toggle(); // hide the input controls
 
 	$("<input/>", 
 	  {id:"close-btn-"+channel,
@@ -148,12 +150,14 @@ function wsOnMessage(ev, channel) {
 	});
     };
 
+    //-------------------------------------------------------------------
     if (type == 'color') {
 	// server sent a color assignment
 	connections[umsg].color = ucolor;
     };
 
-    if (type == 'system') {
+    //-------------------------------------------------------------------
+    if (type == 'open') {  // server asking us to open a new channel
 	var newChannel = umsg;  // chat server gives channel name in umsg
 
         // open new connection
@@ -162,42 +166,46 @@ function wsOnMessage(ev, channel) {
 	// create a new message box with the id of the channel
 	var $div = $("<div/>", 
 		     {id: newChannel, 
-		      class: "message_box", 
-		      style: "border:1px solid; float:left; width:250px;"
-		     }).appendTo("#chatbox");
-	var $panel = $("<div/>",
-		       {id: "panel-"+newChannel,
-			class: "panel"
-		       }).appendTo($div);
+		      class: "single-channel",
+//		      style: "border:1px solid; float: left; width:300px; background-color:yellow;"
+		     }).appendTo("#channels");
+	$("#"+newChannel).append(
+	    "<div class=\"channel-title\"><h2>"+newChannel+"</h2></div>"
+	);
+	$("#"+newChannel).append(
+	    "<div class=\"messages\" id=\"messages-"+newChannel+"\"></div>"
+	);
+	var $chatEntry = $("<div/>",
+			   {id: "chat-entry-"+newChannel,
+			    class: "chat-entry"
+			   }).appendTo($div);
 	$("<input/>",
 	  {type: "text",
 	   name: "message",
-	   id: "message-"+newChannel,
+	   id: "input-"+newChannel,
+	   class: "chat-input",
 	   maxlength: 80
-	  }).appendTo($panel);
+	  }).appendTo($chatEntry);
 
 	$("<input/>", 
 	  {id:"send-btn-"+newChannel,
 	   type: "button",
+	   class: "library-style",
 	   value: "Send"
-	  }).appendTo($panel);
+	  }).appendTo($chatEntry);
 
 	$("#send-btn-"+newChannel).on( "click", function() {
 	    connections[newChannel].chatSendMsg();
-	    $("#message-"+newChannel).val("");
-	    $("#message-"+newChannel).focus();
+	    $("#input-"+newChannel).val("");
+	    $("#input-"+newChannel).focus();
 	});
 	
-	$("#message-"+newChannel).keypress(function (e) {
+	$("#input-"+newChannel).keypress(function (e) {
             if (e.which == 13) {
 		$("#send-btn-"+newChannel).click();
 		return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
             }
 	});
-
-	$("#"+newChannel).append(
-	    "<div class=\"system_msg\">system: new channel "+newChannel+"</div>"
-	);
 
         // get the history for the new ws
         connections[newChannel].sendJoiningMessage();
@@ -208,11 +216,11 @@ function wsOnMessage(ev, channel) {
 };
    
 function wsOnError(ev, channel) { 
-    $('#'+channel).append("<div class=\"system_error\">Error Occurred - "+ev.data+"</div>");
+    $('#messages-'+channel).append("<div class=\"system_error\">Error Occurred - "+ev.data+"</div>");
 };
 
 function wsOnClose(ev, channel) {
-    $('#'+channel).append("<div class=\"system_msg\">Connection Closed</div>");
+    $('#messages-'+channel).append("<div class=\"system_msg\">Connection Closed</div>");
 };
 
 

@@ -247,7 +247,7 @@ Net::WebSocket::Server->new(
 				# (library will create new connection)
 				print LOG "asking $u to join $channel\n";
 				my %hash = ( 
-				    'type' => 'system',
+				    'type' => 'open',
 				    'message' => $channel,
 				    'name' => $user
 				    );
