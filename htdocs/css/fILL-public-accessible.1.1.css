@@ -740,6 +740,11 @@ div.termtitle {
   height: 3em;
 }
 
+.login-header-library {
+  background-color: #0f4072;
+  height: 3em;
+}
+
 .login-header-title {
   color: #fff;
   font-size: 2em;
