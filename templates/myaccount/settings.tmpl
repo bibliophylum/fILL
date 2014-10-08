@@ -46,17 +46,19 @@
 	
 
     <table id="fill-table" class="">
-      
-	
+      <tr><th><h3>Do you want to print scannable patron barcodes on the date-due slips?</h3></th></tr>
+	<tr><td>
 	  <TMPL_IF NAME="editSlipsWithBarcodes">
-	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes<br/>
-	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No<br/>
+	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes
+	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No</td>
 	  <TMPL_ELSE>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes<br/>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	
-	<h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
+
+      
+	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>
       
 	
 	  <TMPL_IF NAME="editCentralizedILL">
@@ -67,8 +69,6 @@
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	
-	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>
-      
     </table>
 
     <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
