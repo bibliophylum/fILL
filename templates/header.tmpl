@@ -7,8 +7,10 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
 
-  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
-  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1a.css">
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.no-colors.css">
+  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.0.css">
+  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/library-standard-colors.css">
+
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
   <link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
 
@@ -25,19 +27,22 @@
   <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
  -->
 <!-- THEME: add new theme: -->
-  <link rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css">
+  <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css">
 
   <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
   <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
 
 
+
   <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+
 
 <!-- THEME: comment out default jquery-ui.js:
   <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
 -->
 <!-- THEME: add new theme's .js: -->
-  <script type="text/javascript" src="/themes/fILL-clean/jquery-ui.js"></script>
+  <script id="themeroller-js" type="text/javascript" src="/themes/fILL-clean/jquery-ui.js"></script>
 
 
   <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
@@ -46,11 +51,6 @@
   <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
   <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
-  <!-- Testing DataTables jQuery-UI themeroller integration -->
-<!--
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/a5734b29083/integration/jqueryui/dataTables.jqueryui.css">
-  <script type="text/javascript" src="//cdn.datatables.net/plug-ins/a5734b29083/integration/jqueryui/dataTables.jqueryui.js"></script>
--->
 <script type="text/javascript">
 
 $.ajaxSetup ({  
@@ -80,12 +80,30 @@ $('document').ready(function(){
 
     update_menu_counters( <TMPL_VAR name="lid"> );
 
+    $('#theme1').click(function () {
+        $("#csstheme").attr("href", "/css/library-standard-colors.css");
+	$("#themeroller-css").attr("href","/themes/fILL-clean/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo.png");
+	$.cookie('fILL-theme','theme1', { expires: 7, path: '/' });
+    });
+    $('#theme2').click(function () {
+        $("#csstheme").attr("href", "/css/library-test-colors.css");
+	$("#themeroller-css").attr("href","/themes/Blitzer/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
+	$.cookie('fILL-theme','theme2', { expires: 7, path: '/' });
+    });
+
     $('#incrFont').click(function () {
         increaseFontSize();
     });
     $('#decrFont').click(function () {
         decreaseFontSize();
     });
+
+    var curTheme = $.cookie('fILL-theme');
+    if (curTheme) {
+        $('#'+curTheme).click();
+    }    
 
 });
 
@@ -143,7 +161,7 @@ $('document').ready(function(){
 <p>&nbsp;</p>
 <div id="header" class="header-library">
     <div id="header-left">
-      <div id="fill-logo"><a href="/cgi-bin/info.cgi?rm=welcome"><img src="/img/fill-lib-logo.png" alt="fill"></a></div>
+      <div id="fill-logo"><a href="/cgi-bin/info.cgi?rm=welcome"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"></a></div>
       <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
     </div>
 
@@ -154,6 +172,7 @@ $('document').ready(function(){
     <p><TMPL_VAR NAME="username"></p>
     <p id="library_name"><TMPL_VAR NAME="library"></p>
     <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <input id="theme1" class="library-style" type="button" value="Th1" />    <input id="theme2" class="library-style" type="button" value="Th2" />
     <input id="incrFont" class="library-style" type="button" value="+A" /><input id="decrFont" class="library-style" type="button" value="-A" />
   </div>
 

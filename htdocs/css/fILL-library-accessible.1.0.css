@@ -1,0 +1,172 @@
+/**This is to test changes to the library side, any new classes or IDs etc will be added in a special section below**/
+
+/***---Start of new library client side CSS---**/
+
+#header.header-library {
+}
+
+#main-left {
+	width: 30%;
+	padding: 1em;
+	float: left;
+	display: inline;
+	margin-bottom: 1em;
+}
+
+#main-right {
+	width: 65%;
+	padding: 1em;
+	float: right;
+	display: inline;
+	margin-bottom: 1em;
+}
+
+#lib-nav-primary
+{
+  background-color: ;
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0em;
+  font-size: 1.4em;
+}
+
+#lib-nav-primary ul
+{
+  margin-top: .5em;
+  padding: 0px;
+}
+
+/* #lib-navigation link states */
+#lib-nav-primary li a:link {
+  text-decoration: none;
+}
+
+#lib-nav-primary li a:visited {
+}
+#lib-nav-primary li a:hover { 
+}
+#lib-nav-primary li a:active {
+}
+#lib-nav-primary li a:focus { 
+}
+#lib-nav-primary li a.current_tab {
+}
+
+
+#csssubmenu 
+{
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0em;
+  font-size: 1em;
+}
+
+#csssubmenu ul
+{
+  margin-top: .5em;
+  padding: 0px;
+}
+
+#csssubmenu ul li
+{
+  list-style-type: none;
+  display: inline;
+}
+
+#csssubmenu li a
+{
+  margin: 0em .4em;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  display: block;
+  float: left;
+  padding: .2em .5em;
+  text-decoration: none;
+}
+
+/* #lib-Navigation link states */
+/* unvisted link */
+#csssubmenu li a:link {
+  text-decoration: none;
+}
+/* visited link */
+#csssubmenu li a:visited {
+}
+/* mouse over link */
+#csssubmenu li a:hover { 
+}
+/*selected link */
+#csssubmenu li a:active {
+}
+
+/* focus over link */
+#csssubmenu li a:focus { 
+}
+
+#csssubmenu li.current_tab a
+{
+}
+
+#instructions {
+    margin: 1em;
+    display: block;
+    padding: 1.25em; 
+}
+
+/* Circle has been created to highlight alerts */
+
+.circle {
+  font-size: .8em;
+  font-family: sans-serif;
+  padding: .2em;
+  margin: .2em;
+  -moz-border-radius: 0px;
+    -webkit-border-radius: .5em;
+  border-radius: .5em;
+  padding: 0px 4px;
+}
+
+#center {
+  margin-top: 1em;
+  display: block;
+  clear: left;
+}
+
+.table-width-lib {
+  width: 90%;
+}
+
+/*-- specific to make_request.tmp --*/
+#toptwo {
+    width: 100%;
+    float: left;
+}
+
+#midleft {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+}
+
+#midright {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+}
+
+#midfooter {
+    width: 100%;
+    padding: 1em;
+    clear: both;
+    margin-bottom: 1em;
+}
+
+
+/***---End of new library client side CSS--**/
+
+

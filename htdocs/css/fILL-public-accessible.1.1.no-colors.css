@@ -1,0 +1,912 @@
+
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 1em;
+}
+
+/* unvisted link */
+ a:link {
+ 	text-decoration: none;
+}
+
+/* visited link */
+ a:visited {
+}
+
+/* mouse over link */
+ a:hover {
+ 	text-decoration: none;
+}
+
+/*focus over link*/
+a:focus {
+	text-decoration: none;
+}
+
+/*selected link */
+ a:active {
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 100%;  /* permits better scaling (all other font sizes in em) */
+}
+
+img 
+{
+	height: auto;
+	max-width: 100%;
+	border: 0px;
+}
+
+h1 {
+	display: inline;
+	margin-bottom: .5em;
+	font-size: 1.4em;
+	text-transform: capitalize;
+}
+
+h2 {
+	display: inline;
+	margin-bottom-bottom: .5em;
+	font-size: 1.2em;
+	text-transform: capitalize;
+}
+
+h3 {
+	font-size: 1em;
+	font-style: bold;
+}
+
+#container
+{
+	margin: auto;
+	padding: ;
+	width: 90%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+}
+
+/**HEADER STYLES**/
+
+header {
+	margin-top: 1em;
+	padding-top: .5em;
+	height: ;
+}
+
+#header-left {
+	float: left;
+	width: 49%;
+	height: auto;
+	display: inline;
+}
+
+#header-right {
+ 	float: right;
+ 	width: 49%;
+ 	display: inline;
+}
+
+#fill-logo {
+	float: left;
+	clear: none;
+	display: inline;
+	width: 200px;
+	border: 0px;
+}
+
+#fill-tagline 
+{
+	float: left;
+	clear: left;
+	display: block;
+	height: 2em;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-transform: capitalize;
+	margin-bottom: .5em;
+}
+
+#logout-button {
+    float: right;
+	clear: none;
+    display: inline;
+    color: #fff;
+}
+
+#patron-info {
+    float: right;
+    clear: right;
+    display: inline;
+    text-align: right;
+    font-size: .8em;
+    margin: 1em;
+    padding: .3em;
+  
+}
+
+nav
+{
+	display: block;
+	float: left;
+	width: 100%;
+	margin: ;
+	font-size: 1.4em;
+}
+
+nav ul
+{
+	margin-top: .5em;
+	padding: 0px;
+}
+
+nav ul li
+{
+	list-style-type: none;
+	display: inline;
+}
+
+nav li a
+{
+	margin-right: .8em;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px 0px 0px;
+	display: block;
+	float: left;
+	padding: .2em .5em;
+	text-decoration: none;
+}
+
+#pub-nav-primary {
+	display: block;
+	float: left;
+	width: 100%;
+	margin: ;
+	font-size: 1.4em;
+}
+
+/* #pub-nav-primaryigation link states */
+/* unvisted link */
+#pub-nav-primary li a:link {
+ 	text-decoration: none;
+}
+/* visited link */
+#pub-nav-primary li a:visited {
+}
+/* mouse over link */
+#pub-nav-primary li a:hover { 
+}
+/*selected link */
+#pub-nav-primary li a:active {
+}
+
+/* focus over link */
+#pub-nav-primary li a:focus { 
+}
+
+#pub-nav-primary li a.current_tab {
+}
+#search-container {
+	width: 100%;
+	display: block;
+}
+
+#search
+{
+	float: left;
+	width: 100%;
+	height: ;
+	display: inline;
+  	
+  	margin-bottom: 1.2em;
+  	vertical-align: middle;
+  	text-align: center;
+	display: block;
+  	padding: 1.25em; 
+}
+
+#main
+{
+	float: right;
+	width: 80%; 
+	min-width: 400px;
+  	padding: 1.25em; 
+  	margin-bottom: 1em;
+}
+
+#aside
+{
+	float: left;
+	width: 18%;
+	min-width: 180px;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 1em; 
+}
+
+#aside img {
+	padding: 0em;
+}
+
+#progress_empty {
+	position:relative;
+	height:15px;
+	width:60%;
+	max-width: 160px;
+	padding:0px;
+	overflow: hidden;!important
+}
+#progress_filler {
+	height:15px;
+	width:;/*is styled in, 'fill-client-public.js'*/
+	left:1px;
+	padding-top:5px;
+	padding:0px;
+	position:relative;
+	margin-right:200px;
+	margin-top:-15px;
+}
+
+
+#main-info-left
+{
+	float: left;
+	width: 70%;
+	margin-bottom: 1em;
+	display: inline;
+  	padding: 1.25em; 
+  	
+}
+
+#main-info-right
+{
+	float: right;
+	width: 70%;
+	margin-bottom: 1em;
+	display: inline;
+  	padding: 1.25em; 
+  	
+}
+
+#aside-img-welcome {
+	float: left;
+	width: 40%;
+	height: auto;
+	min-height: 100% !important;
+	margin-bottom: 1.5em;
+	margin-top: 1em;
+	display: inline;
+  	padding-bottom: 1em; 
+}
+
+#main-info-welcome 
+{
+	float: left;
+	width: 50%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+}
+
+#welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+}
+
+#aside-img-right
+{
+	float: right;
+	width: 27%;
+	min-width: 200px;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 0px; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	float: left;
+	width: 27%;
+	min-width: 200px;
+	margin-bottom: 1.5em;
+	display: inline;
+  	padding: 0px;
+  	font-size: 1.2em; 
+}
+
+.tone-box 
+{
+}
+
+.lighter-box {
+}
+
+.covers {
+	height: 220px;
+	width: 150px;
+	margin-top: 2em;
+	margin: 3px;
+}
+.covers:hover {
+}
+
+.covers:focus {
+}
+
+footer
+{
+	clear: both;
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: .5em;
+	font-size: .8em;
+	margin-top: 1em;
+}
+/*--Button and input styles--*/
+
+input[type=text]
+{
+	margin: .5em 1em;
+	padding: .3em;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: auto;
+}
+
+input[type=password]
+{
+	margin: .5em 1em;
+	padding: .3em;
+    font-size: 1.4em;
+    padding-left:10px;
+    width: auto;
+}
+
+input[type=submit]
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=submit]:hover
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=button]
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=button]:hover
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+input[type=submit]:focus
+{
+    margin: .5em;
+	padding: .3em 1em;
+	border-radius: 5px;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+}
+
+
+input[type=text], input[type=password]
+{
+    border-radius:5px;
+    border: 2px solid inherit;
+}
+
+.public-style {
+	margin: .5em;
+	padding: .3em 1em;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
+}
+
+.library-style {
+	margin: .5em;
+	padding: .3em 1em;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
+}
+
+#fill-button {
+    margin: .5em;
+	padding: .3em 1em;
+    color: #fff;
+    font-size: 1.4em;
+    width: auto;
+    text-transform:capitalize;
+    border: 0;
+    border-radius:5px;
+}
+
+#fill-button:hover {
+}
+
+#fill-button:focus {
+}
+
+#butlink {
+	padding: .5em;
+	border: 1px solid inherit;
+	margin: 10px;
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+#butlink:link {
+}
+
+#butlink:visited {
+
+}
+
+#butlink:hover {
+}
+
+#butlink:focus {
+}
+
+#butlink:active {
+}
+
+button {
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
+	margin: 10px;
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.button-left:link {
+	float: left;
+	clear: right;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
+	margin: 10px;
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.button-left:hover {
+}
+
+.button-left:focus {
+}
+
+.button-right {
+	float: right;
+	clear: left;
+	font-size: 1.4em;
+	margin: .5em;
+	padding: .3em;
+	margin: 10px;
+	font-size: 1.4em;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+.tone-box.button-left {
+	float: left;
+	margin-right: 1em;
+}
+
+/*discontinued for text based fill logo
+.fill {
+	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+}*/
+
+.fill-info 
+{
+	display: inline;
+	float: right;
+	text-align: right;
+}
+
+/* Search page / search results */
+div.termtitle {
+    margin: 4px;
+    font-weight: bold;
+}
+
+
+
+/*** FILL #fill-table STYLES **/
+
+#fill-table {
+  	border-collapse: collapse;
+  	margin: 1em auto;
+	padding: .5em;
+}
+
+#fill-table td {
+	padding: 1em;
+}
+
+#fill-table th {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+#fill-table td, #fill-table th {
+}
+#fill-table tr:first-child th {
+  border-top: 0;
+}
+#fill-table tr:last-child td {
+  border-bottom: 0;
+}
+#fill-table tr td:first-child,
+#fill-table tr th:first-child {
+  border-left: 0;
+}
+#fill-table tr td:last-child,
+#fill-table tr th:last-child {
+  border-right: 0;
+}
+
+.table-width-pub {
+	width: 70%;
+}
+
+.bison 
+{
+	display: block;
+	margin: auto;
+	border: 0px;
+}
+
+#bison-container {
+}
+
+.note {
+	font-size: .5em;
+}
+
+.indent {
+    padding-left: .5cm;
+}
+
+#clear {
+	display: block;
+	clear: both;
+	height: 1px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.fill-help {
+	width: 100%;
+	margin: auto;
+}
+
+/*------------login styles---------------------------------*/
+
+.login {
+  display: block;
+  clear: all;
+  width: 50%;
+  margin: auto;
+}
+
+.login-content {
+  display: block;
+  clear: all;
+  font-size: 1em;
+  font-family: sans-serif;
+}
+
+.login p {
+  padding: .8em;
+}
+
+.login-header {
+  height: 3em;
+}
+
+.login-header-title {
+  font-size: 2em;
+  padding: .5em;
+}
+
+.login-footer {
+  display: block;
+  margin: auto;
+}
+
+fieldset input {
+	vertical-align: middle;
+}
+
+fieldset input span {
+	 vertical-align: middle;
+}
+
+div.login fieldset {
+  margin: 1em 0em 0em 0em;
+  padding: 5px;
+  border: none;
+  width: 100%;
+  
+}
+div.login label {
+  text-align: center;
+  padding: 0;
+  margin-left: 1em;
+  width: 8em;
+  font-size: 1em;
+}
+
+
+div.login input {
+  margin-left: 10px;
+}
+
+
+#divChangePass { 
+	display: none;
+	padding: .8em;
+  	width: 70%;
+  	margin: auto;
+	padding: .5em;
+}
+
+/*-------SEARCH RESULTS STYLES-----------------*/
+
+.record {
+        margin-bottom: 1em;
+}
+
+#reqeust_form_div {
+        float: left;
+	clear: left;
+}
+
+.primary_info {
+	width: 95%;
+	margin: .5em;
+	padding: .7em;
+	float: left;
+	clear: left;
+}
+
+.details {
+	padding: 1em; 
+	margin: 5px;
+}
+
+.secondary_info {
+	display: none; 
+	width: 100%; 
+	font-size: .8em; 
+}
+
+#pager {
+}
+
+/*------------------------------------------------------*/
+/* from Ohio Web Library */
+#progress_empty {
+    float: left !important;
+    overflow: hidden;
+}
+
+#progress_filler {
+    float: left !important;
+    overflow: hidden;
+}
+
+#stat {
+    width: 250px;
+}
+/*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+	width: device-width;
+}
+
+@media screen 
+and (max-width : 65em) 
+
+{
+
+#container
+{
+	margin: .5em;
+	padding: ;
+	width: 95%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+}
+
+button {
+	font-size: 1.2em;
+	margin: 1em;
+}	
+
+#header-left {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+#header-right {
+	float: left;
+ 	width: 100%;
+ 	margin-top: 1em;
+ 	display: block;
+}
+
+nav li a
+{
+	margin: .3em;
+	display: block;
+	font-size: 1.2em;
+	float: left;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+input[type=text]
+{
+	margin: .5em .5em;
+	padding: .3em;
+    font-size: 1.4em;
+    padding-left:.7em;
+    width: 90%;
+}
+
+#search-container {
+	width: 100%;
+	display: block;
+	margin: 1em;
+}
+
+.login {
+  display: block;
+  clear: all;
+  width: 100%;
+  margin: auto;
+}
+
+#main
+{
+	display: block;
+	width: 95%; 
+  	padding: 1em; 
+  	margin-bottom: 1em;
+}
+
+#aside
+{
+	width: 95%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 1em; 
+}
+
+#main-info-left
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em; 
+  	
+}
+
+#main-info-right
+{
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em;  	
+}
+
+#aside-img-welcome {
+
+	display: none;
+}
+
+#main-info-welcome 
+{
+	width: 100%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+}
+
+#welcome-box {
+	font-size: 1.2em;
+	border: 0px;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+}
+
+#aside-img-right
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px; 
+  	font-size: 1.2em;
+}
+
+#aside-img-left
+{
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0px;
+  	font-size: 1.2em; 
+}
+
+footer {
+	width: 100%;
+	display: block;
+}
+
+.record {
+        margin-bottom: 1em;
+        font-size: 1.2em;
+}
+.record 
+.primary_info {
+	text-align: left;
+}
+
+.secondary_info {
+	text-align: left;
+}
+
