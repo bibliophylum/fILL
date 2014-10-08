@@ -62,7 +62,7 @@ h1 {
 
 h2 {
 	display: inline;
-	margin-bottom-bottom: .5em;
+	margin-bottom: .5em;
 	color: #183935;
 	font-size: 1.2em;
 	text-transform: capitalize;
@@ -72,13 +72,12 @@ h3 {
 	
 	color: #183935;
 	font-size: 1em;
-	font-style: bold;
+	font-weight: bold;
 }
 
 #container
 {
 	margin: auto;
-	padding: ;
 	width: 90%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
@@ -89,7 +88,6 @@ h3 {
 header {
 	margin-top: 1em;
 	padding-top: .5em;
-	height: ;
 }
 
 #header-left {
@@ -150,7 +148,6 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: ;
 	font-size: 1.4em;
 }
 
@@ -182,7 +179,6 @@ nav li a
 	display: block;
 	float: left;
 	width: 100%;
-	margin: ;
 	font-size: 1.4em;
 	border-bottom: #06a0ca solid 5px;
 }
@@ -222,7 +218,6 @@ nav li a
 }
 #search-container {
 	width: 100%;
-	
 	display: block;
 }
 
@@ -230,7 +225,6 @@ nav li a
 {
 	float: left;
 	width: 100%;
-	height: ;
 	display: inline;
   	
   	margin-bottom: 1.2em;
@@ -272,11 +266,11 @@ nav li a
 	background-color:#f3f3f3;
 	border:1px solid #b3b3b3;
 	padding:0px;
-	overflow: hidden;!important
+	overflow: hidden !important;
 }
 #progress_filler {
 	height:15px;
-	width:;/*is styled in, 'fill-client-public.js'*/
+	/* width:xxxx;  /*is styled in 'fill-client-public.js'*/
 	left:1px;
 	background-color:#b3b3b3;
 	padding-top:5px;
@@ -484,7 +478,8 @@ input[type=submit]:focus
 input[type=text], input[type=password]
 {
     border-radius:5px;
-    border: 2px solid inherit;
+    border: 2px solid;
+    border-color: inherit;  /* see: https://stackoverflow.com/questions/5914239/why-doesnt-border-color-propagate-to-child-elements */
 }
 
 .public-style {
@@ -532,9 +527,10 @@ input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid inherit;
+	border: 1px solid;
+	border-color: inherit;
 	margin: 10px;
-	color: #fff;!important
+	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -567,7 +563,7 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff;!important
+	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -580,7 +576,7 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff;!important
+	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -602,7 +598,7 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff;!important
+	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -717,14 +713,14 @@ div.termtitle {
 
 .login {
   display: block;
-  clear: all;
+  clear: both;
   width: 50%;
   margin: auto;
 }
 
 .login-content {
   display: block;
-  clear: all;
+  clear: both;
   border-bottom: 5px solid #b3b3b3;
   background: #e3e3e3;
   font-size: 1em;
@@ -885,7 +881,6 @@ and (max-width : 65em)
 #container
 {
 	margin: .5em;
-	padding: ;
 	width: 95%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
@@ -939,7 +934,7 @@ input[type=text]
 
 .login {
   display: block;
-  clear: all;
+  clear: both;
   width: 100%;
   margin: auto;
 }

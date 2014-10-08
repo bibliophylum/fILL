@@ -55,20 +55,20 @@ h1 {
 
 h2 {
 	display: inline;
-	margin-bottom-bottom: .5em;
+	margin-bottom: .5em;
 	font-size: 1.2em;
 	text-transform: capitalize;
 }
 
 h3 {
 	font-size: 1em;
-	font-style: bold;
+	font-weight: bold;
 }
 
 #container
 {
 	margin: auto;
-	padding: ;
+
 	width: 90%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
@@ -79,7 +79,7 @@ h3 {
 header {
 	margin-top: 1em;
 	padding-top: .5em;
-	height: ;
+
 }
 
 #header-left {
@@ -138,7 +138,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: ;
+
 	font-size: 1.4em;
 }
 
@@ -170,7 +170,7 @@ nav li a
 	display: block;
 	float: left;
 	width: 100%;
-	margin: ;
+
 	font-size: 1.4em;
 }
 
@@ -204,7 +204,7 @@ nav li a
 {
 	float: left;
 	width: 100%;
-	height: ;
+
 	display: inline;
   	
   	margin-bottom: 1.2em;
@@ -243,11 +243,11 @@ nav li a
 	width:60%;
 	max-width: 160px;
 	padding:0px;
-	overflow: hidden;!important
+	overflow: hidden !important;
 }
 #progress_filler {
 	height:15px;
-	width:;/*is styled in, 'fill-client-public.js'*/
+/*	width:xxxx;  */ /*is styled in 'fill-client-public.js'*/
 	left:1px;
 	padding-top:5px;
 	padding:0px;
@@ -430,7 +430,8 @@ input[type=submit]:focus
 input[type=text], input[type=password]
 {
     border-radius:5px;
-    border: 2px solid inherit;
+    border: 2px solid;
+    border-color: inherit;
 }
 
 .public-style {
@@ -472,7 +473,8 @@ input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid inherit;
+	border: 1px solid;
+	border-color: inherit;
 	margin: 10px;
 	font-size: 1.4em;
 	text-transform: capitalize;
@@ -635,14 +637,14 @@ div.termtitle {
 
 .login {
   display: block;
-  clear: all;
+  clear: both;
   width: 50%;
   margin: auto;
 }
 
 .login-content {
   display: block;
-  clear: all;
+  clear: both;
   font-size: 1em;
   font-family: sans-serif;
 }
@@ -758,155 +760,156 @@ div.login input {
 
 @media screen 
 and (max-width : 65em) 
-
 {
 
-#container
-{
+    #container
+    {
 	margin: .5em;
-	padding: ;
+	
 	width: 95%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
-}
-
-button {
+    }
+    
+    button {
 	font-size: 1.2em;
 	margin: 1em;
-}	
+    }	
 
-#header-left {
+    #header-left {
 	width: 100%;
 	height: auto;
 	display: block;
-}
+    }
 
-#header-right {
+    #header-right {
 	float: left;
  	width: 100%;
  	margin-top: 1em;
  	display: block;
-}
-
-nav li a
-{
+    }
+    
+    nav li a
+    {
 	margin: .3em;
 	display: block;
 	font-size: 1.2em;
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
-}
-
-input[type=text]
-{
+    }
+    
+    input[type=text]
+    {
 	margin: .5em .5em;
 	padding: .3em;
-    font-size: 1.4em;
-    padding-left:.7em;
-    width: 90%;
-}
-
-#search-container {
+	font-size: 1.4em;
+	padding-left:.7em;
+	width: 90%;
+    }
+    
+    #search-container {
 	width: 100%;
 	display: block;
 	margin: 1em;
-}
-
-.login {
-  display: block;
-  clear: all;
-  width: 100%;
-  margin: auto;
-}
-
-#main
-{
+    }
+    
+    .login {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: auto;
+    }
+    
+    #main
+    {
 	display: block;
 	width: 95%; 
   	padding: 1em; 
   	margin-bottom: 1em;
-}
-
-#aside
-{
+    }
+    
+    #aside
+    {
 	width: 95%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 1em; 
-}
-
-#main-info-left
-{
+    }
+    
+    #main-info-left
+    {
 	width: 100%;
 	margin-bottom: 1em;
 	display: block;
   	padding: 1.25em; 
   	
-}
-
-#main-info-right
-{
+    }
+    
+    #main-info-right
+    {
 	width: 100%;
 	margin-bottom: 1em;
 	display: block;
   	padding: 1.25em;  	
-}
-
-#aside-img-welcome {
-
+    }
+    
+    #aside-img-welcome {
+	
 	display: none;
-}
-
-#main-info-welcome 
-{
+    }
+    
+    #main-info-welcome 
+    {
 	width: 100%;
 	height: auto;
 	margin: .9em;
   	padding: 1.25em;  
-}
-
-#welcome-box {
+    }
+    
+    #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
-}
-
-#aside-img-right
-{
+    }
+    
+    #aside-img-right
+    {
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 0px; 
   	font-size: 1.2em;
-}
-
-#aside-img-left
-{
+    }
+    
+    #aside-img-left
+    {
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 0px;
   	font-size: 1.2em; 
-}
-
-footer {
+    }
+    
+    footer {
 	width: 100%;
 	display: block;
-}
-
-.record {
+    }
+    
+    .record {
         margin-bottom: 1em;
         font-size: 1.2em;
-}
-.record 
-.primary_info {
+    }
+    .record 
+    .primary_info {
 	text-align: left;
-}
+    }
+    
+    .secondary_info {
+	text-align: left;
+    }
+} /* end of @media */
 
-.secondary_info {
-	text-align: left;
-}
 
