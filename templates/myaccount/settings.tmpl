@@ -8,68 +8,56 @@
 </script>
 
 <div id="center" role="main">
+<div id="instructions" class="tone-box">
   <h4><TMPL_VAR NAME="status"></h4>
   <form METHOD=POST ACTION="">
     <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
     <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
  
-      
-	<p>Email address:</p>
+		<label for="email_address">Email address:</label>
+	  	<input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
 	
-	  <input TYPE="text" NAME="email_address" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>">
+    <h3>Interlibrary Loan Mailing address</h3> 
+		<label for="library">Library:</label>
+	  	<input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
 	
-     	<h3>Interlibrary Loan Mailing address</h3> 
-	<p>Library:</p>
-	
-	  <input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
-	
-	      <p>Street address or PO Box Number:</p>
-	      
+	    <label for="mailing_address_line1">Street address or PO Box Number::</label>
 		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
-	      
 	    
-	      <p>Town/City:</p>
-	      
+	    <label for="city">Town/City:</label>
 		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>">
-	      
 	    
-	      <p>Province:</p>
-	      
+	    <label for="province">Province:</label>
 		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>">
 	      
-	    
-	      <p>Postal code:</p>
-	      
+	    <label for="post_code">Postal code:</label>
 		<input TYPE="text" NAME="post_code" SIZE="6" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
 	      
-	    
+</div><!--div id instrucitons 1-->	    
 	
+<div id="instructions" class="tone-box">
 
-    <table id="fill-table" class="">
-      <tr><th><h3>Do you want to print scannable patron barcodes on the date-due slips?</h3></th></tr>
-	<tr><td>
+      <h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
+	
 	  <TMPL_IF NAME="editSlipsWithBarcodes">
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes
-	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No</td>
+	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No<br />
 	  <TMPL_ELSE>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes<br/>
 	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
 	
-
-      
-	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>
-      
+	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
 	
 	  <TMPL_IF NAME="editCentralizedILL">
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes<br/>
-	    <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No<br/>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No<br />
 	  <TMPL_ELSE>
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes<br/>
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No<br/>
 	  </TMPL_IF>
-	
-    </table>
+
+</div><!--div id instrucitons 2-->
 
     <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
     <br />
