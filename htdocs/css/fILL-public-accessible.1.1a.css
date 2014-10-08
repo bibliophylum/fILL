@@ -143,7 +143,7 @@
 }
 
 #instructions {
-    margin: 1em;
+    margin: 1em 0em;
     display: block;
     padding: 1.25em; 
 }
@@ -178,7 +178,7 @@
 #toptwo {
     width: 100%;
     float: left;
-    background-color: #b8ffb8;  /* apply bg to containing div */
+    background-color: #e3e3e3;  /* apply bg to containing div */
 }
 
 #midleft {
@@ -190,10 +190,10 @@
 
 #midright {
     width: 50%;
+    margin: .5em;
     padding: 1em;
     float: left;
-    margin-bottom: 1em;
-    background-color: #ffcccc;
+    background-color: #d3d3d3;
 }
 
 #midfooter {
