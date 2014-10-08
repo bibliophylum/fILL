@@ -124,6 +124,7 @@ function wsOnMessage(ev, channel) {
         $("#messages-"+channel).append(
 	    "<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>"
 	);
+	$("#messages-"+channel).slimScroll({ scrollTo: '200px' });
     }
 
     //-------------------------------------------------------------------
@@ -131,16 +132,17 @@ function wsOnMessage(ev, channel) {
 	// note: if the same patron re-opens chat before the librarian
 	// has closed the window, bad things happen.  FIXME!
 
-	$("#chat-entry-"+channel).toggle(); // hide the input controls
+	$("#chat-entry-"+channel).hide(); // hide the input controls
 
 	$("<input/>", 
 	  {id:"close-btn-"+channel,
 	   type: "button",
 	   value: "Close"
-	  }).appendTo($("#"+channel));
+	  }).appendTo($("#ch"+channel));
 
 	$("#close-btn-"+channel).on( "click", function() {
-	    $("#"+channel).remove();
+	    $("#ch"+channel).hide();
+	    $("#ch"+channel).remove();
 	    // remove from connections:
 	    //var index = array.indexOf(channel); // not supported in IE8 or lower!
 	    var index = $.inArray(channel, connections); // yay for jQuery!
@@ -160,59 +162,72 @@ function wsOnMessage(ev, channel) {
     if (type == 'open') {  // server asking us to open a new channel
 	var newChannel = umsg;  // chat server gives channel name in umsg
 
-        // open new connection
-	connections[newChannel] = new Channel(newChannel); 
+	if ( $("#ch"+newChannel).length > 0 ) {	    // exists?
+	    $("#close-btn-"+newChannel).remove();
+	    $("#ch"+newChannel).show();
+	    $("#chat-entry-"+newChannel).show(); // show the input controls
 
-	// create a new message box with the id of the channel
-	var $div = $("<div/>", 
-		     {id: newChannel, 
-		      class: "single-channel",
-//		      style: "border:1px solid; float: left; width:300px; background-color:yellow;"
-		     }).appendTo("#channels");
-	$("#"+newChannel).append(
-	    "<div class=\"channel-title\"><h2>"+newChannel+"</h2></div>"
-	);
-	$("#"+newChannel).append(
-	    "<div class=\"messages\" id=\"messages-"+newChannel+"\"></div>"
-	);
-	var $chatEntry = $("<div/>",
-			   {id: "chat-entry-"+newChannel,
-			    class: "chat-entry"
-			   }).appendTo($div);
-	$("<input/>",
-	  {type: "text",
-	   name: "message",
-	   id: "input-"+newChannel,
-	   class: "chat-input",
-	   maxlength: 80
-	  }).appendTo($chatEntry);
+	} else {
+            // open new connection
+	    connections[newChannel] = new Channel(newChannel); 
 
-	$("<input/>", 
-	  {id:"send-btn-"+newChannel,
-	   type: "button",
-	   class: "library-style",
-	   value: "Send"
-	  }).appendTo($chatEntry);
+	    // create a new message box with the id of the channel
+	    var $div = $("<div/>", 
+			 {id: "ch"+newChannel, 
+			  class: "single-channel",
+			 }).appendTo("#channels");
+	    $("#ch"+newChannel).append(
+		"<div class=\"channel-title\"><h2>"+newChannel+"</h2></div>"
+	    );
+	    $("#ch"+newChannel).append(
+		"<div class=\"messages\" id=\"messages-"+newChannel+"\"></div>"
+	    );
 
-	$("#send-btn-"+newChannel).on( "click", function() {
-	    connections[newChannel].chatSendMsg();
-	    $("#input-"+newChannel).val("");
-	    $("#input-"+newChannel).focus();
-	});
+	    $("#messages-"+newChannel).slimScroll({
+		height: '200px'
+	    });
+
+
+	    var $chatEntry = $("<div/>",
+			       {id: "chat-entry-"+newChannel,
+				class: "chat-entry"
+			       }).appendTo($div);
+	    $("<input/>",
+	      {type: "text",
+	       name: "message",
+	       id: "input-"+newChannel,
+	       class: "chat-input",
+	       maxlength: 80
+	      }).appendTo($chatEntry);
+	    
+	    $("<input/>", 
+	      {id:"send-btn-"+newChannel,
+	       type: "button",
+	       class: "library-style",
+	       value: "Send"
+	      }).appendTo($chatEntry);
+	    
+	    $("#send-btn-"+newChannel).on( "click", function() {
+		connections[newChannel].chatSendMsg();
+		$("#input-"+newChannel).val("");
+		$("#input-"+newChannel).focus();
+	    });
+	    
+	    $("#input-"+newChannel).keypress(function (e) {
+		if (e.which == 13) {
+		    $("#send-btn-"+newChannel).click();
+		    return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
+		}
+	    });
+	    
+	    $("#ch"+newChannel).show(); // make it visible
+	}
 	
-	$("#input-"+newChannel).keypress(function (e) {
-            if (e.which == 13) {
-		$("#send-btn-"+newChannel).click();
-		return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
-            }
-	});
-
         // get the history for the new ws
         connections[newChannel].sendJoiningMessage();
-
+	    
+	$('#message').val(''); //reset text
     }
-       
-    $('#message').val(''); //reset text
 };
    
 function wsOnError(ev, channel) { 

@@ -1011,35 +1011,4 @@ footer {
 	text-align: left;
 }
 
-/*------------- specific to chat ---------------*/
-#chat-div {
-    border: 1px solid;
-}
-
-#start-chat-button-div {
-}
-
-.channels {
-    clear: both;
-    width: 100%;
-    background-color: red;
-}
-
-.single-channel {
-    border:1px solid; 
-    float:left; 
-    width:300px;
-    background-color: yellow;
-}
-
-.messages {
-}
-
-.chat-entry {
-    display: block;
-    background-color: blue;
-}
-.chat-input {
-    width: 100%;
-}
 

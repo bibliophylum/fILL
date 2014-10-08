@@ -157,20 +157,24 @@ Net::WebSocket::Server->new(
 		    if (($cu->[0] ne "syschan") && ($count < 2)) {
 			my @remaining_user = keys %{$channels{$cu->[0]}};
 			my $lib = $remaining_user[0];
-			# notify library that user has closed chat:
-			# send a system message to library on syschan
-			print LOG "informing $lib that " . $cu->[1] . " has left " . $cu->[0] . "\n";
-			my %hash = ( 
-			    'type' => 'close',
-			    'message' => $cu->[0],
-			    'name' => $cu->[1]
-			    );
-			$channels{$cu->[0]}{$lib}{"conn"}->send_utf8( encode_json \%hash );
+			if ($lib) {
+			    # notify library that user has closed chat:
+			    # send a system message to library on syschan
+			    print LOG "informing $lib that " . $cu->[1] . " has left " . $cu->[0] . "\n";
+			    my %hash = ( 
+				'type' => 'close',
+				'message' => $cu->[0],
+				'name' => $cu->[1]
+				);
+			    $channels{$cu->[0]}{$lib}{"conn"}->send_utf8( encode_json \%hash );
 
-			print LOG "deleting " . $lib . " from " . $cu->[0] . "\n";
-			delete $channels{$cu->[0]}{$lib};
-			delete $channels{$cu->[0]};
-			delete $history{$cu->[0]};
+			    print LOG "deleting " . $lib . " from " . $cu->[0] . "\n";
+			    delete $channels{$cu->[0]}{$lib};
+			    print LOG "deleting channel " . $cu->[0] . "...\n";
+			    delete $channels{$cu->[0]};
+			    print LOG "deleting channel history " . $cu->[0] . "...\n";
+			    delete $history{$cu->[0]};
+			}
 
 		    }
 		}
@@ -216,7 +220,7 @@ Net::WebSocket::Server->new(
 		    }
 		    print LOG "set $user color\n";
 		    my $href = { 'type' => 'color','name' => $user,'lid' => $lid,
-				 'message' => "set color", 
+				 'message' => $channel, 
 				 'color' => $channels{$channel}{$user}{'color'}
 		    };
 		    my $outgoing_msg = encode_json $href;
