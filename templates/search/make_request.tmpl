@@ -66,13 +66,15 @@ $('document').ready(function(){
 	    <br/>
 	    <h3>Additional notes</h3>
 	    <p>Enter any additional notes for the potential lenders: 
-	      <input type="text" name="request_note" size="60" maxlength="80">
+	      <!--<input type="text" name="request_note" size="60" maxlength="80">-->
+	      <TEXTAREA NAME="request_note" ROWS=3 COLS=30 >
+			</TEXTAREA>
 	    </p>
 
 	</div>
       </div>
       <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
-      <input type="hidden" name="rm" value="complete_the_request">
+      <input type="hidden" name="rm" value="complete_the_request" id="fill-button" class="library-style">
     </form>
 
     <!-- 
