@@ -19,16 +19,16 @@
 	
     <h3>Interlibrary Loan Mailing address</h3> 
 		<label for="library">Library:</label>
-	  	<input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>">
+	  	<input TYPE="text" NAME="library" SIZE="80" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>"><br />
 	
-	    <label for="mailing_address_line1">Street address or PO Box Number::</label>
-		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>">
+	    <label for="mailing_address_line1">Street address or PO Box Number:</label>
+		<input TYPE="text" NAME="mailing_address_line1" SIZE="60" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>"><br />
 	    
 	    <label for="city">Town/City:</label>
-		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>">
+		<input TYPE="text" NAME="city" SIZE="60" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editCity>"><br />
 	    
 	    <label for="province">Province:</label>
-		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>">
+		<input TYPE="text" NAME="province" SIZE="2" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>"><br />
 	      
 	    <label for="post_code">Postal code:</label>
 		<input TYPE="text" NAME="post_code" SIZE="6" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
@@ -50,7 +50,7 @@
 	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
 	
 	  <TMPL_IF NAME="editCentralizedILL">
-	    <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes<br/>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No<br />
 	  <TMPL_ELSE>
 	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes<br/>
