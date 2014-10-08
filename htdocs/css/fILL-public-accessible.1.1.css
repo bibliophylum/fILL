@@ -450,8 +450,9 @@ input[type=button]
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
+	background-color: #0f4072;
     color: #fff;
-    font-size: 1.4em;
+    font-size: 1em;
     width: auto;
     text-transform:capitalize;
 }
@@ -463,7 +464,7 @@ input[type=button]:hover
 	border-radius: 5px;
 	background-color: #06a0ca;
 	color: #fff;
-    font-size: 1.4em;
+    font-size: 1em;
     width: auto;
     text-transform:capitalize;
 }
