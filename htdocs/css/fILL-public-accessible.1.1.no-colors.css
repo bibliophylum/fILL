@@ -1,4 +1,5 @@
 
+
 *, *:before, *:after {
   -moz-box-sizing: border-box; 
   -webkit-box-sizing: border-box; 
@@ -10,29 +11,24 @@
 /* unvisted link */
  a:link {
  	text-decoration: none;
-	color: #183935;
 }
 
 /* visited link */
  a:visited {
-	color: #183935;
 }
 
 /* mouse over link */
  a:hover {
  	text-decoration: none;
-	color: #383;
 }
 
 /*focus over link*/
 a:focus {
 	text-decoration: none;
-	color: #383;
 }
 
 /*selected link */
  a:active {
-	color: #183935;
 }
 
 html, body {
@@ -40,7 +36,6 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #f3f3f3;
     font-size: 100%;  /* permits better scaling (all other font sizes in em) */
 }
 
@@ -54,7 +49,6 @@ img
 h1 {
 	display: inline;
 	margin-bottom: .5em;
-	color: #183935;
 	font-size: 1.4em;
 	text-transform: capitalize;
 }
@@ -62,14 +56,11 @@ h1 {
 h2 {
 	display: inline;
 	margin-bottom: .5em;
-	color: #183935;
 	font-size: 1.2em;
 	text-transform: capitalize;
 }
 
 h3 {
-	
-	color: #183935;
 	font-size: 1em;
 	font-weight: bold;
 }
@@ -77,6 +68,7 @@ h3 {
 #container
 {
 	margin: auto;
+
 	width: 90%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
@@ -85,9 +77,9 @@ h3 {
 /**HEADER STYLES**/
 
 header {
-	position: relative;
 	margin-top: 1em;
 	padding-top: .5em;
+
 }
 
 #header-left {
@@ -119,7 +111,6 @@ header {
 	height: 2em;
 	font-size: 1.1em;
 	font-weight: bold;
-	color: #505050;
 	text-transform: capitalize;
 	margin-bottom: .5em;
 }
@@ -135,7 +126,6 @@ header {
     float: right;
     clear: right;
     display: inline;
-    color: #505050;
     text-align: right;
     font-size: .8em;
     margin: 1em;
@@ -148,8 +138,7 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-	margin: .5em 0em;
-	
+
 	font-size: 1.4em;
 }
 
@@ -167,13 +156,13 @@ nav ul li
 
 nav li a
 {
-	margin-right: 10px;
+	margin-right: .8em;
 	-moz-border-radius: 0px;
 	-webkit-border-radius: 5px 5px 0px 0px;
 	border-radius: 5px 5px 0px 0px;
 	display: block;
 	float: left;
-	padding: 5px 10px;
+	padding: .2em .5em;
 	text-decoration: none;
 }
 
@@ -181,42 +170,30 @@ nav li a
 	display: block;
 	float: left;
 	width: 100%;
+
 	font-size: 1.4em;
-	border-bottom: #06a0ca solid 5px;
 }
 
 /* #pub-nav-primaryigation link states */
 /* unvisted link */
 #pub-nav-primary li a:link {
- 	background: #183935;/*Main dark green colour*/
  	text-decoration: none;
-	color: #fff;
 }
 /* visited link */
 #pub-nav-primary li a:visited {
-	background: #183935;
-	color: #fff;
 }
 /* mouse over link */
 #pub-nav-primary li a:hover { 
-	background: #06a0ca; 
-	color: #fff;
 }
 /*selected link */
 #pub-nav-primary li a:active {
-	background: #183935;
-	color: #fff;
 }
 
 /* focus over link */
 #pub-nav-primary li a:focus { 
-	background: #06a0ca; 
-	color: #fff;
 }
 
 #pub-nav-primary li a.current_tab {
-	background: #06a0ca; 
-	color: #fff;
 }
 #search-container {
 	width: 100%;
@@ -227,6 +204,7 @@ nav li a
 {
 	float: left;
 	width: 100%;
+
 	display: inline;
   	
   	margin-bottom: 1.2em;
@@ -234,7 +212,6 @@ nav li a
   	text-align: center;
 	display: block;
   	padding: 1.25em; 
-  	border-bottom: 5px solid #e3e3e3;
 }
 
 #main
@@ -265,16 +242,13 @@ nav li a
 	height:15px;
 	width:60%;
 	max-width: 160px;
-	background-color:#f3f3f3;
-	border:1px solid #b3b3b3;
 	padding:0px;
 	overflow: hidden !important;
 }
 #progress_filler {
 	height:15px;
-	/* width:xxxx;  /*is styled in 'fill-client-public.js'*/
+/*	width:xxxx;  */ /*is styled in 'fill-client-public.js'*/
 	left:1px;
-	background-color:#b3b3b3;
 	padding-top:5px;
 	padding:0px;
 	position:relative;
@@ -355,27 +329,21 @@ nav li a
 
 .tone-box 
 {
-	background: #e3e3e3;
-	border-bottom: 3px solid  #b3b3b3;
 }
 
 .lighter-box {
-	
 }
 
 .covers {
 	height: 220px;
 	width: 150px;
-	border: 3px solid #e3e3e3;
 	margin-top: 2em;
 	margin: 3px;
 }
 .covers:hover {
-	border: 3px dashed #c0c0c0; 
 }
 
 .covers:focus {
-	border: 3px dashed #c0c0c0; 
 }
 
 footer
@@ -383,8 +351,6 @@ footer
 	clear: both;
 	display: block;
 	width: 100%;
-	border-bottom: 3px solid #aabdba;
-	background: #d9efec;
 	text-align: center;
 	padding: .5em;
 	font-size: .8em;
@@ -396,35 +362,25 @@ input[type=text]
 {
 	margin: .5em 1em;
 	padding: .3em;
-    background-color: #fff;
-    border:solid 1px #505050;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    
-    border: 2px #c3c3c3 solid;
 }
 
 input[type=password]
 {
 	margin: .5em 1em;
 	padding: .3em;
-    background-color: #fff;
-    border:solid 1px #505050;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
-    
-    border: 2px #c3c3c3 solid;
 }
 
 input[type=submit]
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #183935 solid;
 	border-radius: 5px;
-    color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -434,10 +390,7 @@ input[type=submit]:hover
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #06a0ca solid;
 	border-radius: 5px;
-	background-color: #06a0ca;
-	color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -448,7 +401,6 @@ input[type=button]
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
-    color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -459,8 +411,6 @@ input[type=button]:hover
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
-	background-color: #06a0ca;
-	color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -470,10 +420,7 @@ input[type=submit]:focus
 {
     margin: .5em;
 	padding: .3em 1em;
-	border: 1px #06a0ca solid;
 	border-radius: 5px;
-	background-color: #06a0ca;
-	color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -482,17 +429,14 @@ input[type=submit]:focus
 
 input[type=text], input[type=password]
 {
-    border: 0;
     border-radius:5px;
     border: 2px solid;
-    border-color: inherit;  /* see: https://stackoverflow.com/questions/5914239/why-doesnt-border-color-propagate-to-child-elements */
+    border-color: inherit;
 }
 
 .public-style {
-	background-color: #183935;
 	margin: .5em;
 	padding: .3em 1em;
-    color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -501,10 +445,8 @@ input[type=text], input[type=password]
 }
 
 .library-style {
-	background-color: #0f4072;
 	margin: .5em;
 	padding: .3em 1em;
-    color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -524,11 +466,9 @@ input[type=text], input[type=password]
 }
 
 #fill-button:hover {
-	background: #06a0ca;
 }
 
 #fill-button:focus {
-	background: #06a0ca;
 }
 
 #butlink {
@@ -536,14 +476,12 @@ input[type=text], input[type=password]
 	border: 1px solid;
 	border-color: inherit;
 	margin: 10px;
-	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
 }
 
 #butlink:link {
-	color: #fff;
 }
 
 #butlink:visited {
@@ -551,17 +489,12 @@ input[type=text], input[type=password]
 }
 
 #butlink:hover {
-	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
 }
 
 #butlink:focus {
-	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
 }
 
 #butlink:active {
-	
 }
 
 button {
@@ -569,7 +502,6 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -582,19 +514,15 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
 }
 
 .button-left:hover {
-	background-color: #06a0ca;
-
 }
 
 .button-left:focus {
-	background-color: #06a0ca;
 }
 
 .button-right {
@@ -604,7 +532,6 @@ button {
 	margin: .5em;
 	padding: .3em;
 	margin: 10px;
-	color: #fff !important;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
@@ -617,7 +544,6 @@ button {
 
 /*discontinued for text based fill logo
 .fill {
-	color:#fff; 
 	font-family: "Book Antiqua", Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
 }*/
 
@@ -626,7 +552,6 @@ button {
 	display: inline;
 	float: right;
 	text-align: right;
-	background: red;/*dev test remove later*/
 }
 
 /* Search page / search results */
@@ -642,9 +567,6 @@ div.termtitle {
 #fill-table {
   	border-collapse: collapse;
   	margin: 1em auto;
-	background: #e3e3e3;
-	border: 2px solid #b3b3b3;
-	color: #505050;
 	padding: .5em;
 }
 
@@ -658,7 +580,6 @@ div.termtitle {
 }
 
 #fill-table td, #fill-table th {
-  border: 1px solid #fff;
 }
 #fill-table tr:first-child th {
   border-top: 0;
@@ -687,17 +608,14 @@ div.termtitle {
 }
 
 #bison-container {
-	background-color: #fff;
 }
 
 .note {
 	font-size: .5em;
-	color: #b3b3b3;
 }
 
 .indent {
     padding-left: .5cm;
-    color: #505050;
 }
 
 #clear {
@@ -727,8 +645,6 @@ div.termtitle {
 .login-content {
   display: block;
   clear: both;
-  border-bottom: 5px solid #b3b3b3;
-  background: #e3e3e3;
   font-size: 1em;
   font-family: sans-serif;
 }
@@ -738,12 +654,10 @@ div.termtitle {
 }
 
 .login-header {
-  background-color: #183935;
   height: 3em;
 }
 
 .login-header-title {
-  color: #fff;
   font-size: 2em;
   padding: .5em;
 }
@@ -781,39 +695,12 @@ div.login input {
   margin-left: 10px;
 }
 
-/*
-image courtesy of http://www.famfamfam.com/lab/icons/silk/ 
-#authen_loginfield {
-  background-color: #fff;
-  border-top: solid 1px #565656;
-  border-left: solid 1px #565656;
-  border-bottom: solid 1px #a2aac4;
-  border-right: solid 1px #a2aac4;
-  padding: 2px 0 2px 18px;
-  margin: 0.3em 1.5em;
-  width: 12em;
-}
-image courtesy of http://www.famfamfam.com/lab/icons/silk/  
-#authen_passwordfield {
-  background-color: #fff;
-  border-top: solid 1px #565656;
-  border-left: solid 1px #565656;
-  border-bottom: solid 1px #a2aac4;
-  border-right: solid 1px #a2aac4;
-  padding: 2px 0 2px 18px;
-  margin: 0.3em 1.5em;
-  width: 12em;
-}
-*//*dev test*/
 
 #divChangePass { 
 	display: none;
 	padding: .8em;
   	width: 70%;
   	margin: auto;
-	background: #f3f3f3;
-	border: 2px solid #505050;
-	color: #505050;
 	padding: .5em;
 }
 
@@ -831,31 +718,23 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 .primary_info {
 	width: 95%;
 	margin: .5em;
-	background-color: #e3e3e3;
 	padding: .7em;
-	border: 2px solid #b3b3b3;
 	float: left;
 	clear: left;
 }
 
 .details {
-	border-top: 1px solid #b3b3b3; 
-	border-bottom: 1px solid #ffffff;
 	padding: 1em; 
-	background-color: #f3f3f3; 
 	margin: 5px;
 }
 
 .secondary_info {
 	display: none; 
 	width: 100%; 
-	background-color: #f3f3f3; 
 	font-size: .8em; 
-	color: #505050;
 }
 
 #pager {
-	color: #383;
 }
 
 /*------------------------------------------------------*/
@@ -875,165 +754,162 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 }
 /*------------------------------------------------------*/
 /*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+	width: device-width;
+}
 
 @media screen 
-and (max-width : 50em) 
-
+and (max-width : 65em) 
 {
 
-#container
-{
-	margin: auto;
+    #container
+    {
+	margin: .5em;
+	
 	width: 95%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
-	text-align: center;
-}
-
-button {
+    }
+    
+    button {
 	font-size: 1.2em;
-	margin: auto;
-}	
+	margin: 1em;
+    }	
 
-#header-left {
+    #header-left {
 	width: 100%;
 	height: auto;
 	display: block;
-}
+    }
 
-#header-right {
+    #header-right {
 	float: left;
  	width: 100%;
  	margin-top: 1em;
  	display: block;
-}
-
-nav li a
-{
+    }
+    
+    nav li a
+    {
 	margin: .3em;
 	display: block;
 	font-size: 1.2em;
-	font-weight: bold;
 	float: left;
 	padding: 5px 10px;
 	text-decoration: none;
-}
-
-input[type=text]
-{
+    }
+    
+    input[type=text]
+    {
 	margin: .5em .5em;
 	padding: .3em;
-    background-color: #fff;
-    border:solid 1px #505050;
-    font-size: 1.4em;
-    padding-left:10px;
-    width: 90%;
-    border: 2px #c3c3c3 solid;
-}
-
-#search-container {
+	font-size: 1.4em;
+	padding-left:.7em;
+	width: 90%;
+    }
+    
+    #search-container {
 	width: 100%;
 	display: block;
+	margin: 1em;
+    }
+    
+    .login {
+	display: block;
+	clear: both;
+	width: 100%;
 	margin: auto;
-}
-
-.login {
-  display: block;
-  clear: both;
-  width: 100%;
-  margin: auto;
-}
-
-#main
-{
-	float: left;
+    }
+    
+    #main
+    {
 	display: block;
-	width: 100%; 
-  	padding: 1.25em; 
-  	margin: auto;
+	width: 95%; 
+  	padding: 1em; 
   	margin-bottom: 1em;
-}
-
-#aside
-{
-	width: 100%;
+    }
+    
+    #aside
+    {
+	width: 95%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 1em; 
-}
-
-#main-info-left
-{
+    }
+    
+    #main-info-left
+    {
 	width: 100%;
 	margin-bottom: 1em;
 	display: block;
   	padding: 1.25em; 
   	
-}
-
-#main-info-right
-{
+    }
+    
+    #main-info-right
+    {
 	width: 100%;
 	margin-bottom: 1em;
 	display: block;
   	padding: 1.25em;  	
-}
-
-#aside-img-welcome {
-
+    }
+    
+    #aside-img-welcome {
+	
 	display: none;
-}
-
-#main-info-welcome 
-{
+    }
+    
+    #main-info-welcome 
+    {
 	width: 100%;
 	height: auto;
 	margin: .9em;
   	padding: 1.25em;  
-}
-
-#welcome-box {
+    }
+    
+    #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
-}
-
-#aside-img-right
-{
+    }
+    
+    #aside-img-right
+    {
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 0px; 
   	font-size: 1.2em;
-}
-
-#aside-img-left
-{
+    }
+    
+    #aside-img-left
+    {
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
   	padding: 0px;
   	font-size: 1.2em; 
-}
-
-footer {
+    }
+    
+    footer {
 	width: 100%;
 	display: block;
-}
-
-.record {
+    }
+    
+    .record {
         margin-bottom: 1em;
         font-size: 1.2em;
-}
-.record 
-.primary_info {
+    }
+    .record 
+    .primary_info {
 	text-align: left;
-}
-
-.secondary_info {
+    }
+    
+    .secondary_info {
 	text-align: left;
-}
+    }
+} /* end of @media */
 
 

@@ -34,6 +34,18 @@
  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
  <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
+<script type="text/javascript">
+$('document').ready(function(){
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+
+});
+</script>
 
 <script type="text/javascript">
 
@@ -44,6 +56,21 @@
   function set_secondary_tab(tab_id) {
     document.getElementById(tab_id).className='current_tab';
   }
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) + 1
+        });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) - 1
+        });
+    });
+  } 
 
 </script>
 
@@ -88,6 +115,7 @@
         <div id="username"><TMPL_VAR name="username"></div>
         <p><TMPL_VAR name="library"></p>
         <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
+	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="decrFont" class="public-style" type="button" value="-A" />
     </div>
   </div>
 

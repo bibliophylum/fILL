@@ -557,7 +557,7 @@ function buildRequestForm(data) {
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
     } else {
-	requestForm += '<input type="submit" class="button-left" value="Click to request">';
+	requestForm += '<input type="submit" class="public-style" value="Click to request">';
     }
     requestForm += '</form></div>';
 

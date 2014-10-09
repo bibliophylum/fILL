@@ -1,0 +1,709 @@
+
+
+*, *:before, *:after {
+}
+
+/* unvisted link */
+ a:link {
+	color: #183935;
+}
+
+/* visited link */
+ a:visited {
+	color: #183935;
+}
+
+/* mouse over link */
+ a:hover {
+	color: #383;
+}
+
+/*focus over link*/
+a:focus {
+	color: #383;
+}
+
+/*selected link */
+ a:active {
+	color: #183935;
+}
+
+html, body {
+    background: #f3f3f3;
+}
+
+img 
+{
+}
+
+h1 {
+	color: #183935;
+}
+
+h2 {
+	color: #183935;
+}
+
+h3 {
+	color: #183935;
+}
+
+#container
+{
+}
+
+/**HEADER STYLES**/
+
+header {
+}
+
+#header-left {
+}
+
+#header-right {
+}
+
+#fill-logo {
+}
+
+#fill-tagline 
+{
+	color: #505050;
+}
+
+#logout-button {
+    color: #fff;
+}
+
+#patron-info {
+    color: #505050;
+}
+
+nav
+{
+}
+
+nav ul
+{
+}
+
+nav ul li
+{
+}
+
+nav li a
+{
+}
+
+#pub-nav-primary {
+	border-bottom: #06a0ca solid 5px;
+}
+
+/* #pub-nav-primaryigation link states */
+/* unvisted link */
+#pub-nav-primary li a:link {
+ 	background: #183935;/*Main dark green colour*/
+	color: #fff;
+}
+/* visited link */
+#pub-nav-primary li a:visited {
+	background: #183935;
+	color: #fff;
+}
+/* mouse over link */
+#pub-nav-primary li a:hover { 
+	background: #06a0ca; 
+	color: #fff;
+}
+/*selected link */
+#pub-nav-primary li a:active {
+	background: #183935;
+	color: #fff;
+}
+
+/* focus over link */
+#pub-nav-primary li a:focus { 
+	background: #06a0ca; 
+	color: #fff;
+}
+
+#pub-nav-primary li a.current_tab {
+	background: #06a0ca; 
+	color: #fff;
+}
+#search-container {
+}
+
+#search
+{
+  	border-bottom: 5px solid #e3e3e3;
+}
+
+#main
+{
+}
+
+#aside
+{
+}
+
+#aside img {
+}
+
+#progress_empty {
+	background-color:#f3f3f3;
+	border:1px solid #b3b3b3;
+}
+#progress_filler {
+	background-color:#b3b3b3;
+}
+
+
+#main-info-left
+{
+}
+
+#main-info-right
+{
+}
+
+#aside-img-welcome {
+}
+
+#main-info-welcome 
+{
+}
+
+#aside-img-right
+{
+}
+
+#aside-img-left
+{
+}
+
+.tone-box 
+{
+	background: #e3e3e3;
+	border-bottom: 3px solid  #b3b3b3;
+}
+
+.lighter-box {
+}
+
+.covers {
+	border: 3px solid #e3e3e3;
+}
+.covers:hover {
+	border: 3px dashed #c0c0c0; 
+}
+
+.covers:focus {
+	border: 3px dashed #c0c0c0; 
+}
+
+footer
+{
+	border-bottom: 3px solid #aabdba;
+	background: #d9efec;
+}
+/*--Button and input styles--*/
+
+input[type=text]
+{
+    background-color: #fff;
+    border: 2px #c3c3c3 solid;
+}
+
+input[type=password]
+{
+    background-color: #fff;
+    border: 2px #c3c3c3 solid;
+}
+
+input[type=submit]
+{
+    color: #fff;
+}
+
+input[type=submit]:hover
+{
+	background-color: #06a0ca;
+	color: #fff;
+}
+
+input[type=button]
+{
+    color: #fff;
+}
+
+input[type=button]:hover
+{
+	background-color: #06a0ca;
+	color: #fff;
+}
+
+input[type=submit]:focus
+{
+	background-color: #06a0ca;
+	color: #fff;
+}
+
+
+input[type=text], input[type=password]
+{
+}
+
+.public-style {
+    background-color: #183935;
+    color: #fff;
+}
+
+.library-style {
+    background-color: #0f4072;
+    color: #fff;
+}
+
+#fill-button {
+    color: #fff;
+}
+
+#fill-button:hover {
+    background: #06a0ca;
+}
+
+#fill-button:focus {
+    background: #06a0ca;
+}
+
+#butlink {
+	color: #fff !important;
+}
+
+#butlink:link {
+	color: #fff;
+}
+
+#butlink:visited {
+}
+
+#butlink:hover {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+#butlink:focus {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
+}
+
+#butlink:active {
+}
+
+button {
+	color: #fff !important;
+}
+
+.button-left:link {
+	color: #fff !important;
+}
+
+.button-left:hover {
+	background-color: #06a0ca;
+
+}
+
+.button-left:focus {
+	background-color: #06a0ca;
+}
+
+.button-right {
+	color: #fff !important;
+}
+
+.tone-box.button-left {
+}
+
+/*discontinued for text based fill logo
+.fill {
+	color:#fff; 
+}*/
+
+.fill-info 
+{
+	background: red;/*dev test remove later*/
+}
+
+/* Search page / search results */
+div.termtitle {
+}
+
+
+
+/*** FILL #fill-table STYLES **/
+
+#fill-table {
+	background: #e3e3e3;
+	border: 2px solid #b3b3b3;
+	color: #505050;
+}
+
+#fill-table td {
+}
+
+#fill-table th {
+}
+
+#fill-table td, #fill-table th {
+  border: 1px solid #fff;
+}
+#fill-table tr:first-child th {
+}
+#fill-table tr:last-child td {
+}
+#fill-table tr td:first-child,
+#fill-table tr th:first-child {
+}
+#fill-table tr td:last-child,
+#fill-table tr th:last-child {
+}
+
+.table-width-pub {
+}
+
+.bison 
+{
+}
+
+#bison-container {
+    background-color: #fff;
+}
+
+.note {
+    color: #b3b3b3;
+}
+
+.indent {
+    color: #505050;
+}
+
+#clear {
+}
+
+.fill-help {
+}
+
+/*------------login styles---------------------------------*/
+
+.login {
+}
+
+.login-content {
+  border-bottom: 5px solid #b3b3b3;
+  background: #e3e3e3;
+}
+
+.login p {
+}
+
+.login-header {
+  background-color: #183935;
+}
+
+.login-header-title {
+  color: #fff;
+}
+
+.login-footer {
+}
+
+fieldset input {
+}
+
+fieldset input span {
+}
+
+div.login fieldset {
+}
+
+div.login label {
+}
+
+div.login input {
+}
+
+#divChangePass { 
+    background: #f3f3f3;
+    border: 2px solid #505050;
+    color: #505050;
+}
+
+/*-------SEARCH RESULTS STYLES-----------------*/
+
+.record {
+    margin-bottom: 1em;
+}
+
+#reqeust_form_div {
+    float: left;
+    clear: left;
+}
+
+.primary_info {
+    background-color: #e3e3e3;
+    border: 2px solid #b3b3b3;
+}
+
+.details {
+    border-top: 1px solid #b3b3b3; 
+    border-bottom: 1px solid #ffffff;
+    background-color: #f3f3f3; 
+}
+
+.secondary_info {
+    background-color: #f3f3f3; 
+    color: #505050;
+}
+
+#pager {
+    color: #383;
+}
+
+/*------------------------------------------------------*/
+/* from Ohio Web Library */
+#progress_empty {
+}
+
+#progress_filler {
+}
+
+#stat {
+}
+/*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+    width: device-width;
+}
+
+@media screen 
+and (max-width : 65em) 
+{
+
+    #container
+    {
+    }
+
+    button {
+    }	
+
+    #header-left {
+    }
+
+    #header-right {
+    }
+
+    nav li a
+    {
+    }
+
+    input[type=text]
+    {
+	background-color: #fff;
+	border:solid 1px #505050;
+	border: 2px #c3c3c3 solid;
+    }
+    
+    #search-container {
+    }
+    
+    .login {
+    }
+    
+    #main
+    {
+    }
+    
+    #aside
+    {
+    }
+    
+    #main-info-left
+    {
+    }
+    
+    #main-info-right
+    {
+    }
+    
+    #aside-img-welcome {
+    }
+    
+    #main-info-welcome 
+    {
+    }
+    
+    #welcome-box {
+    }
+    
+    #aside-img-right
+    {
+    }
+    
+    #aside-img-left
+    {
+    }
+    
+    footer {
+    }
+    
+    .record {
+    }
+    .record 
+    .primary_info {
+    }
+    
+    .secondary_info {
+    }
+
+} /* end of @media */
+
+
+/*----------------------------------------------------------
+  From fILL-library-accessible.1.0.css
+----------------------------------------------------------*/
+#header.header-library {
+	background-color: #a2aac4;
+}
+
+#main-left {
+}
+
+#main-right {
+}
+
+#lib-nav-primary
+{
+/*  background-color: ; */ /* was not set in original... */
+  border-bottom: #6a99c9 solid 5px;
+}
+
+#lib-nav-primary ul
+{
+}
+
+/* #lib-navigation link states */
+/* unvisted link */
+#lib-nav-primary li a:link {
+  background: #0f4072;/*main dark blue colour*/
+  color: #fff;
+}
+/* visited link */
+#lib-nav-primary li a:visited {
+  background: #0f4072;
+  color: #fff;
+}
+/* mouse over link */
+#lib-nav-primary li a:hover { 
+  background: #6a99c9; 
+  color: #fff;
+}
+/*selected link */
+#lib-nav-primary li a:active {
+  background: #6a99c9;
+  color: #fff;
+}
+
+/* focus over link */
+#lib-nav-primary li a:focus { 
+  background: #6a99c9; 
+  color: #fff;
+}
+
+#lib-nav-primary li a.current_tab {
+  background: #6a99c9; 
+  color: #fff;
+}
+
+#csssubmenu 
+{
+  background-color: #6b99cc;
+}
+
+#csssubmenu ul
+{
+}
+
+#csssubmenu ul li
+{
+}
+
+#csssubmenu li a
+{
+}
+
+/* #lib-Navigation link states */
+/* unvisted link */
+#csssubmenu li a:link {
+  background: #0f4072;
+  color: #fff;
+}
+/* visited link */
+#csssubmenu li a:visited {
+  background: #0f4072;
+  color: #fff;
+}
+/* mouse over link */
+#csssubmenu li a:hover { 
+  background: #f3f3f3; 
+  color: #505050;
+}
+/*selected link */
+#csssubmenu li a:active {
+  background: #0f4072;
+  color: #fff;
+}
+
+/* focus over link */
+#csssubmenu li a:focus { 
+  background: #0f4072; 
+  color: #fff;
+}
+
+#csssubmenu li.current_tab a
+{
+    color: #000 ;
+    background-color: #f3f3f3 ;
+}
+
+#instructions {
+}
+
+/* Circle has been created to highlight alerts */
+
+.circle {
+  color: #fff;
+  background-color: #ff0000;
+  box-shadow: 2px 2px 2px #000;
+}
+
+#center {
+}
+
+.table-width-lib {
+}
+
+/*-- specific to make_request.tmp --*/
+#toptwo {
+    background-color: #b8ffb8;  /* apply bg to containing div */
+}
+
+#midleft {
+}
+
+#midright {
+    background-color: #ffcccc;
+}
+
+#midfooter {
+}
+/* end of "From fILL-library-accessible.1.0.css" */

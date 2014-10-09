@@ -3,7 +3,6 @@
 /***---Start of new library client side CSS---**/
 
 #header.header-library {
-	background-color: #a2aac4;
 }
 
 #main-left {
@@ -30,7 +29,6 @@
   width: 100%;
   margin: 0em;
   font-size: 1.4em;
-  border-bottom: #6a99c9 solid 5px;
 }
 
 #lib-nav-primary ul
@@ -40,42 +38,24 @@
 }
 
 /* #lib-navigation link states */
-/* unvisted link */
 #lib-nav-primary li a:link {
-  background: #0f4072;/*main dark blue colour*/
   text-decoration: none;
-  color: #fff;
 }
-/* visited link */
+
 #lib-nav-primary li a:visited {
-  background: #0f4072;
-  color: #fff;
 }
-/* mouse over link */
 #lib-nav-primary li a:hover { 
-  background: #6a99c9; 
-  color: #fff;
 }
-/*selected link */
 #lib-nav-primary li a:active {
-  background: #6a99c9;
-  color: #fff;
 }
-
-/* focus over link */
 #lib-nav-primary li a:focus { 
-  background: #6a99c9; 
-  color: #fff;
+}
+#lib-nav-primary li a.current_tab {
 }
 
-#lib-nav-primary li a.current_tab {
-  background: #6a99c9; 
-  color: #fff;
-}
 
 #csssubmenu 
 {
-  background-color: #6b99cc;
   display: block;
   float: left;
   width: 100%;
@@ -110,36 +90,24 @@
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #0f4072;
   text-decoration: none;
-  color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #0f4072;
-  color: #fff;
 }
 /* mouse over link */
 #csssubmenu li a:hover { 
-  background: #f3f3f3; 
-  color: #505050;
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #0f4072;
-  color: #fff;
 }
 
 /* focus over link */
 #csssubmenu li a:focus { 
-  background: #0f4072; 
-  color: #fff;
 }
 
 #csssubmenu li.current_tab a
 {
-    color: #000 ;
-    background-color: #f3f3f3 ;
 }
 
 #instructions {
@@ -159,9 +127,6 @@
     -webkit-border-radius: .5em;
   border-radius: .5em;
   padding: 0px 4px;
-  color: #fff;
-  background-color: #ff0000;
-  box-shadow: 2px 2px 2px #000;
 }
 
 #center {
@@ -178,7 +143,6 @@
 #toptwo {
     width: 100%;
     float: left;
-    background-color: #b8ffb8;  /* apply bg to containing div */
 }
 
 #midleft {
@@ -193,7 +157,6 @@
     padding: 1em;
     float: left;
     margin-bottom: 1em;
-    background-color: #ffcccc;
 }
 
 #midfooter {
@@ -202,8 +165,6 @@
     clear: both;
     margin-bottom: 1em;
 }
-
-
 
 
 /***---End of new library client side CSS--**/
