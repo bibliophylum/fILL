@@ -137,7 +137,8 @@ function wsOnMessage(ev, channel) {
 	$("<input/>", 
 	  {id:"close-btn-"+channel,
 	   type: "button",
-	   value: "Close"
+	   value: "Close",
+	   class: "library-style"
 	  }).appendTo($("#ch"+channel));
 
 	$("#close-btn-"+channel).on( "click", function() {
@@ -150,6 +151,12 @@ function wsOnMessage(ev, channel) {
 		connections.splice(index, 1);
 	    }
 	});
+
+        $("#messages-"+channel).append(
+	    "<div><span class=\"user_name\">system</span> : <span class=\"user_message\">patron has closed the chat.</span></div>"
+	);
+	$("#messages-"+channel).slimScroll({ scrollTo: '200px' });
+
     };
 
     //-------------------------------------------------------------------
