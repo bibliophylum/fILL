@@ -1,5 +1,6 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<script type="text/javascript" src="/js/jquery.slimscroll.min.js"></script>
 <link type="text/css" rel="stylesheet" href="/css/fILL-chat.1.0.css">
 
 <script type="text/javascript">
@@ -34,7 +35,9 @@ $(document).ready(function(){
             $('#mychannel').append("<div class=\"system_msg\">"+umsg+"</div>");
         }
        
-        $('#input-mychannel').val(''); //reset text
+        $("#input-mychannel").val(''); //reset text
+	$("#mychannel").slimScroll({ scrollTo: '200px' });
+
     };
    
     websocket.onerror   = function(ev){$('#mychannel').append("<div class=\"system_error\">Error Occurred - "+ev.data+"</div>");};
@@ -57,7 +60,6 @@ $(document).ready(function(){
           name: $("#username").text(),
           lid: $("#lid").text(),
           color: "7F6D6D",
-<!--      channel: "syschan" -->
           channel: $("#lid").text() + "-" + $("#username").text()
         };
         //convert and send data to server
@@ -92,6 +94,10 @@ $(document).ready(function(){
         websocket.send(JSON.stringify(msg));
     });
    
+    $("#mychannel").slimScroll({
+        height: '200px'
+    });
+
 }); // end document ready
 </script>
 

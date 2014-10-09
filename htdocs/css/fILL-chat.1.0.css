@@ -19,11 +19,24 @@
 }
 
 .messages {
+    text-align: left;
+    font-size: 1em;
 }
 
 .chat-entry {
     display: block;
 }
-.chat-input {
-    width: 100%;
+
+/* need "input" to make this more specific than
+   input[type="text"] in another css file... */
+input.chat-input { 
+    width: 85%;
+    margin: .5em 1em;
+    padding: .3em;
+    font-size: 1.2em;
+    padding-left:10px;
+    
+    background-color: #fff;
+    border:solid 1px #505050;
+    border: 2px #c3c3c3 solid;
 }

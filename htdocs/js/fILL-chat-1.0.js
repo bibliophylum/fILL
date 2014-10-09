@@ -219,6 +219,12 @@ function wsOnMessage(ev, channel) {
 		    return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
 		}
 	    });
+	    $("#input-"+newChannel).blur(function() {
+		$(this).css({'background-color' : '#FFF'});
+	    });
+	    $("#input-"+newChannel).focus(function() {
+		$(this).css({'background-color' : '#FFFF66'});
+	    });
 	    
 	    $("#ch"+newChannel).show(); // make it visible
 	}

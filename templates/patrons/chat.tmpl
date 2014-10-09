@@ -32,6 +32,12 @@ $('document').ready(function(){
             return false;  // have jQuery call e.preventDefault() and e.stopPropagation()
         }
     });
+    $("#input-syschan").blur(function() {
+        $(this).css({'background-color' : '#FFF'});
+    });
+    $("#input-syschan").focus(function() {
+        $(this).css({'background-color' : '#FFFF66'});
+    });
 
     $("#start-chat").click( function(){
         $("#start-chat-button-div").toggle();
