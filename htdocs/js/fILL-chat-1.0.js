@@ -71,7 +71,7 @@ Channel.prototype.sendJoiningMessage = function() {
       color: this.color,
       channel: this.name
     };
-
+//    alert(msg.message+'\n'+msg.name+'\n'+msg.lid+'\n'+msg.channel);
     //convert and send data to server
     this.send(JSON.stringify(msg));    // NOT this.ws.send(...)
 };

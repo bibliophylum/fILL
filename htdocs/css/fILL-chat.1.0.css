@@ -1,6 +1,7 @@
 /*------------- specific to chat ---------------*/
 #chat-div {
-    border: 1px solid;
+    /* border: 1px solid; */
+    clear: both;
 }
 
 #start-chat-button-div {
