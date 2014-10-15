@@ -99,6 +99,10 @@ $('document').ready(function(){
     $('#decrFont').click(function () {
         decreaseFontSize();
     });
+    $("#chatBtn").click(function () {
+        //window.open('/cgi-bin/patrons.cgi?rm=chat_form','fILL chat','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=yes'); 
+        window.open('/cgi-bin/patrons.cgi?rm=chat_form','_blank'); 
+    });
 
     var curTheme = $.cookie('fILL-theme');
     if (curTheme) {
@@ -174,6 +178,7 @@ $('document').ready(function(){
     <p id="lid"><TMPL_VAR NAME="lid"></p>
     <input id="theme1" class="library-style" type="button" value="Th1" />    <input id="theme2" class="library-style" type="button" value="Th2" />
     <input id="incrFont" class="library-style" type="button" value="+A" /><input id="decrFont" class="library-style" type="button" value="-A" />
+    <input id="chatBtn" class="library-style" type="button" value="Chat" />
   </div>
 
   </div><!--Div header-right-->

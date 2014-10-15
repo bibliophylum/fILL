@@ -215,7 +215,7 @@ Net::WebSocket::Server->new(
 			if ($count == 1) {
 			    $channels{$channel}{$user}{"color"} = "000000";
 			} else {
-			    $channels{$channel}{$user}{"color"} = "7FFF00";
+			    $channels{$channel}{$user}{"color"} = "22C704";
 			}
 		    }
 		    print LOG "set $user color\n";

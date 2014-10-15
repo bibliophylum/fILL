@@ -125,6 +125,7 @@ function wsOnMessage(ev, channel) {
 	    "<div><span class=\"user_name\" style=\"color:#"+ucolor+"\">"+uname+"</span> : <span class=\"user_message\">"+umsg+"</span></div>"
 	);
 	$("#messages-"+channel).slimScroll({ scrollTo: '200px' });
+	$("#messages-"+channel+" div:last-child").stop(true,true).effect("highlight", {}, 2000);
     }
 
     //-------------------------------------------------------------------

@@ -37,6 +37,7 @@ $(document).ready(function(){
        
         $("#input-mychannel").val(''); //reset text
 	$("#mychannel").slimScroll({ scrollTo: '200px' });
+	$("#mychannel div:last-child").stop(true,true).effect("highlight", {}, 2000);
 
     };
    
@@ -59,7 +60,7 @@ $(document).ready(function(){
           message: "joining",
           name: $("#username").text(),
           lid: $("#lid").text(),
-          color: "7F6D6D",
+          color: "22C704",
           channel: $("#lid").text() + "-" + $("#username").text()
         };
         //convert and send data to server
@@ -74,7 +75,7 @@ $(document).ready(function(){
         var mymessage = $('#input-mychannel').val();
         var myname = $("#username").text();
         var mylid = $("#lid").text();
-        var mycolor = "260CEB";
+        var mycolor = "22C704";
         var mychannel = $("#lid").text() + "-" + $("#username").text();
 
         if(mymessage == ""){ //emtpy message?
