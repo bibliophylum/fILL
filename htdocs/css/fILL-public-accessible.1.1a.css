@@ -189,7 +189,7 @@
 }
 
 #midright {
-    width: 50%;
+    width: 45%;
     margin: .5em;
     padding: 1em;
     float: left;
@@ -206,7 +206,7 @@
 #library-info {
   margin: 1em;
   background-color: #fff;
-  border: #f3f3f3 1px solid;
+  border: #e3e3e3 2px solid;
   font-style: bold;
   font-size: 1.2em;
 }
