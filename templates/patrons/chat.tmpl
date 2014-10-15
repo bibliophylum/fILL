@@ -24,6 +24,10 @@ $('document').ready(function(){
 
     set_secondary_tab("menu_patrons_chat");
 
+    $(".inline-items").hide();  // hide the nav menu
+    $("#csssubmenu").hide();    // and the submenu
+    $("#logout-button").hide();
+
     connections["syschan"] = new Channel("syschan");
 
     $("#input-syschan").keypress(function (e) {

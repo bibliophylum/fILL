@@ -90,7 +90,7 @@ my $DEBUG = 0;
 my %channels = ();
 my $maxHistory = 20;
 my %history = ();
-my @colors = ("7FFF00","0000FF","A52A2A","FFD700","F08080","556B2F","FF8C00","9932CC","9ACD32","EE82EE");
+my @colors = ("438303","0000FF","A52A2A","FFD700","F08080","556B2F","FF8C00","9932CC","9ACD32","EE82EE");
 
 Net::WebSocket::Server->new(
     listen => 8088,
