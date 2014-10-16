@@ -205,7 +205,7 @@ nav li a
 footer
 {
 	border-bottom: 3px solid #000;
-	background: #959595;
+	background: #fff;
 }
 /*--Button and input styles--*/
 
@@ -234,7 +234,7 @@ input[type=submit]:hover
 
 input[type=button]
 {
-    color: #fff;
+    color: #000;
 }
 
 input[type=button]:hover
@@ -574,7 +574,7 @@ and (max-width : 65em)
   From fILL-library-accessible.1.0.css
 ----------------------------------------------------------*/
 #header.header-library {
-	background-color: #c5a4a4;
+	background-color: #fff;
 }
 
 #main-left {
@@ -682,8 +682,8 @@ and (max-width : 65em)
 /* Circle has been created to highlight alerts */
 
 .circle {
-  color: #fff;
-  background-color: #959595;
+  color: #000;
+  background-color: #fff;
   box-shadow: 2px 2px 2px #000;
 }
 
