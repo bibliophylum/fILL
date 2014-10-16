@@ -262,11 +262,19 @@ input[type=text], input[type=password]
 .library-style {
     background-color: #000;
     color: #fff;
+    border: 0px;
 }
 
 .library-style2 {
   background-color: #000;
   color: #fff;
+  border: 0px;
+}
+
+.library-style3 {
+    background-color: #0f4072;
+    color: #fff;
+    border: 0px;
 }
 
 #fill-button {
