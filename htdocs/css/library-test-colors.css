@@ -5,12 +5,12 @@
 
 /* unvisted link */
  a:link {
-	color: #841313;
+	color: #000;
 }
 
 /* visited link */
  a:visited {
-	color: #841313;
+	color: #000;
 }
 
 /* mouse over link */
@@ -25,11 +25,11 @@ a:focus {
 
 /*selected link */
  a:active {
-	color: #841313;
+	color: #000;
 }
 
 html, body {
-    background: #f3f3f3;
+    background: #fff;
 }
 
 img 
@@ -37,15 +37,15 @@ img
 }
 
 h1 {
-	color: #841313;
+	color: #000;
 }
 
 h2 {
-	color: #841313;
+	color: #000;
 }
 
 h3 {
-	color: #841313;
+	color: #000;
 }
 
 #container
@@ -68,7 +68,7 @@ header {
 
 #fill-tagline 
 {
-	color: #505050;
+	color: #000;
 }
 
 #logout-button {
@@ -76,7 +76,7 @@ header {
 }
 
 #patron-info {
-    color: #505050;
+    color: #000;
 }
 
 nav
@@ -96,39 +96,39 @@ nav li a
 }
 
 #pub-nav-primary {
-	border-bottom: #ca0606 solid 5px;
+	border-bottom: #959595 solid 5px;
 }
 
 /* #pub-nav-primaryigation link states */
 /* unvisted link */
 #pub-nav-primary li a:link {
- 	background: #841313;
+ 	background: #000;
 	color: #fff;
 }
 /* visited link */
 #pub-nav-primary li a:visited {
-	background: #841313;
+	background: #000;
 	color: #fff;
 }
 /* mouse over link */
 #pub-nav-primary li a:hover { 
-	background: #ca0606; 
+	background: #959595; 
 	color: #fff;
 }
 /*selected link */
 #pub-nav-primary li a:active {
-	background: #841313;
+	background: #000;
 	color: #fff;
 }
 
 /* focus over link */
 #pub-nav-primary li a:focus { 
-	background: #ca0606; 
+	background: #959595; 
 	color: #fff;
 }
 
 #pub-nav-primary li a.current_tab {
-	background: #ca0606; 
+	background: #959595; 
 	color: #fff;
 }
 #search-container {
@@ -136,7 +136,7 @@ nav li a
 
 #search
 {
-  	border-bottom: 5px solid #e3e3e3;
+  	border-bottom: 5px solid #fff;
 }
 
 #main
@@ -151,11 +151,11 @@ nav li a
 }
 
 #progress_empty {
-	background-color:#f3f3f3;
-	border:1px solid #b3b3b3;
+	background-color:#fff;
+	border:1px solid #959595;
 }
 #progress_filler {
-	background-color:#b3b3b3;
+	background-color:#959595;
 }
 
 
@@ -184,22 +184,22 @@ nav li a
 
 .tone-box 
 {
-	background: #e3e3e3;
-	border-bottom: 3px solid  #b3b3b3;
+	background: #fff;
+	border-bottom: 3px solid  #959595;
 }
 
 .lighter-box {
 }
 
 .covers {
-	border: 3px solid #e3e3e3;
+	border: 3px solid #fff;
 }
 .covers:hover {
-	border: 3px dashed #c0c0c0; 
+	border: 3px dashed #959595; 
 }
 
 .covers:focus {
-	border: 3px dashed #c0c0c0; 
+	border: 3px dashed #959595; 
 }
 
 footer
@@ -212,13 +212,13 @@ footer
 input[type=text]
 {
     background-color: #fff;
-    border: 2px #c3c3c3 solid;
+    border: 2px #959595 solid;
 }
 
 input[type=password]
 {
     background-color: #fff;
-    border: 2px #c3c3c3 solid;
+    border: 2px #959595 solid;
 }
 
 input[type=submit]
@@ -228,7 +228,7 @@ input[type=submit]
 
 input[type=submit]:hover
 {
-	background-color: #ca0606;
+	background-color: #959595;
 	color: #fff;
 }
 
@@ -239,13 +239,13 @@ input[type=button]
 
 input[type=button]:hover
 {
-	background-color: #ca0606;
+	background-color: #959595;
 	color: #fff;
 }
 
 input[type=submit]:focus
 {
-	background-color: #ca0606;
+	background-color: #959595;
 	color: #fff;
 }
 
@@ -255,12 +255,12 @@ input[type=text], input[type=password]
 }
 
 .public-style {
-    background-color: #841313;
+    background-color: #000;
     color: #fff;
 }
 
 .library-style {
-    background-color: #BA1010;
+    background-color: #000;
     color: #fff;
 }
 
@@ -269,11 +269,11 @@ input[type=text], input[type=password]
 }
 
 #fill-button:hover {
-    background: #ca0606;
+    background: #959595;
 }
 
 #fill-button:focus {
-    background: #ca0606;
+    background: #959595;
 }
 
 #butlink {
@@ -288,13 +288,13 @@ input[type=text], input[type=password]
 }
 
 #butlink:hover {
-	background-color: #ca0606;
-	border: 1px solid #ca0606;
+	background-color: #959595;
+	border: 1px solid #959595;
 }
 
 #butlink:focus {
-	background-color: #ca0606;
-	border: 1px solid #ca0606;
+	background-color: #959595;
+	border: 1px solid #959595;
 }
 
 #butlink:active {
@@ -309,12 +309,12 @@ button {
 }
 
 .button-left:hover {
-	background-color: #ca0606;
+	background-color: #959595;
 
 }
 
 .button-left:focus {
-	background-color: #ca0606;
+	background-color: #959595;
 }
 
 .button-right {
@@ -343,9 +343,9 @@ div.termtitle {
 /*** FILL #fill-table STYLES **/
 
 #fill-table {
-	background: #e3e3e3;
-	border: 2px solid #b3b3b3;
-	color: #505050;
+	background: #fff;
+	border: 2px solid #959595;
+	color: #000;
 }
 
 #fill-table td {
@@ -380,11 +380,11 @@ div.termtitle {
 }
 
 .note {
-    color: #b3b3b3;
+    color: #959595;
 }
 
 .indent {
-    color: #505050;
+    color: #000;
 }
 
 #clear {
@@ -399,15 +399,15 @@ div.termtitle {
 }
 
 .login-content {
-  border-bottom: 5px solid #b3b3b3;
-  background: #e3e3e3;
+  border-bottom: 5px solid #959595;
+  background: #fff;
 }
 
 .login p {
 }
 
 .login-header {
-  background-color: #841313;
+  background-color: #000;
 }
 
 .login-header-title {
@@ -433,9 +433,9 @@ div.login input {
 }
 
 #divChangePass { 
-    background: #f3f3f3;
-    border: 2px solid #505050;
-    color: #505050;
+    background: #fff;
+    border: 2px solid #000;
+    color: #000;
 }
 
 /*-------SEARCH RESULTS STYLES-----------------*/
@@ -450,19 +450,19 @@ div.login input {
 }
 
 .primary_info {
-    background-color: #e3e3e3;
-    border: 2px solid #b3b3b3;
+    background-color: #fff;
+    border: 2px solid #959595;
 }
 
 .details {
-    border-top: 1px solid #b3b3b3; 
+    border-top: 1px solid #959595; 
     border-bottom: 1px solid #ffffff;
-    background-color: #f3f3f3; 
+    background-color: #fff; 
 }
 
 .secondary_info {
-    background-color: #f3f3f3; 
-    color: #505050;
+    background-color: #fff; 
+    color: #000;
 }
 
 #pager {
@@ -509,8 +509,8 @@ and (max-width : 65em)
     input[type=text]
     {
 	background-color: #fff;
-	border:solid 1px #505050;
-	border: 2px #c3c3c3 solid;
+	border:solid 1px #000;
+	border: 2px #959595 solid;
     }
 
 
@@ -585,7 +585,7 @@ and (max-width : 65em)
 
 #lib-nav-primary
 {
-  border-bottom: #ca0606 solid 5px;
+  border-bottom: #959595 solid 5px;
 }
 
 #lib-nav-primary ul
@@ -595,33 +595,33 @@ and (max-width : 65em)
 /* #lib-navigation link states */
 /* unvisted link */
 #lib-nav-primary li a:link {
-  background: #841313;
+  background: #000;
   color: #fff;
 }
 /* visited link */
 #lib-nav-primary li a:visited {
-  background: #841313;
+  background: #000;
   color: #fff;
 }
 /* mouse over link */
 #lib-nav-primary li a:hover { 
-  background: #ca0606; 
+  background: #959595; 
   color: #fff;
 }
 /*selected link */
 #lib-nav-primary li a:active {
-  background: #ca0606;
+  background: #959595;
   color: #fff;
 }
 
 /* focus over link */
 #lib-nav-primary li a:focus { 
-  background: #ca0606; 
+  background: #959595; 
   color: #fff;
 }
 
 #lib-nav-primary li a.current_tab {
-  background: #ca0606; 
+  background: #959595; 
   color: #fff;
 }
 
@@ -645,35 +645,35 @@ and (max-width : 65em)
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #841313;
+  background: #000;
   color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #841313;
+  background: #000;
   color: #fff;
 }
 /* mouse over link */
 #csssubmenu li a:hover { 
-  background: #f3f3f3; 
-  color: #505050;
+  background: #fff; 
+  color: #000;
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #841313;
+  background: #000;
   color: #fff;
 }
 
 /* focus over link */
 #csssubmenu li a:focus { 
-  background: #841313; 
+  background: #000; 
   color: #fff;
 }
 
 #csssubmenu li.current_tab a
 {
     color: #000 ;
-    background-color: #f3f3f3 ;
+    background-color: #fff ;
 }
 
 #instructions {
