@@ -303,7 +303,7 @@ nav li a
 
 #aside-img-welcome {
 	float: left;
-	width: 40%;
+	width: 30%;
 	height: auto;
 	min-height: 100% !important;
 	margin-bottom: 1.5em;
@@ -315,13 +315,14 @@ nav li a
 #main-info-welcome 
 {
 	float: left;
-	width: 50%;
+	width: 60%;
 	height: auto;
 	margin: .9em 0em;
   	padding: 1.25em;  
 }
 
 #welcome-box {
+	font-size: 1.2em;
 	border: 0px;
 	height: auto;
 	padding: 1em;
@@ -332,7 +333,6 @@ nav li a
 #welcome-text {
  	font-weight: bold;
  	font-size: 1.5em;
- 	color: red;
 }
 
 #aside-img-right
