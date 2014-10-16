@@ -66,13 +66,15 @@ $('document').ready(function(){
 	    <br/>
 	    <h3>Additional notes</h3>
 	    <p>Enter any additional notes for the potential lenders: 
-	      <input type="text" name="request_note" size="60" maxlength="80">
+	      <!--<input type="text" name="request_note" size="60" maxlength="80">-->
+	      <TEXTAREA NAME="request_note" ROWS=3 COLS=30 maxlength="80">
+			</TEXTAREA>
 	    </p>
 
 	</div>
       </div>
       <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
-      <input type="hidden" name="rm" value="complete_the_request">
+      <input type="hidden" name="rm" value="complete_the_request" id="fill-button" class="library-style">
     </form>
 
     <!-- 
@@ -90,7 +92,7 @@ $('document').ready(function(){
 <!--SECTION-->
 	<h2>Information</h2>
 	<h3>Interlibrary Loan request details</h3>
-	<table>
+	<table id="library-info">
 	  <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
 	  <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
 	  <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
@@ -99,7 +101,7 @@ $('document').ready(function(){
       
 	<h3>The title was found at these locations:</h3>
 	<p><em>fILL will automatically determine which lender to try first, to minimize lender workloads.</em></p>
-	<table>
+	<table id="library-info">
 	  <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td><td></td></tr>
 	  <TMPL_LOOP name="sources">
 	    <tr>
