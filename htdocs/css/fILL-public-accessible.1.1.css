@@ -330,6 +330,11 @@ nav li a
 	margin-top: 1em;
 }
 
+#welcome-text {
+ 	font-weight: bold;
+ 	font-size: 1.5em;
+}
+
 #aside-img-right
 {
 	float: right;
@@ -997,12 +1002,6 @@ input[type=text]
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
-}
-
-#welcome-text {
- 	font-weight: bold;
- 	font-size: 1.5em;
- 	color: red;
 }
 
 #aside-img-right
