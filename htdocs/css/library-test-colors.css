@@ -15,12 +15,12 @@
 
 /* mouse over link */
  a:hover {
-	color: #383;
+	color: #959595;
 }
 
 /*focus over link*/
 a:focus {
-	color: #383;
+	color: #959595;
 }
 
 /*selected link */
@@ -204,8 +204,8 @@ nav li a
 
 footer
 {
-	border-bottom: 3px solid #aabdba;
-	background: #d9efec;
+	border-bottom: 3px solid #000;
+	background: #959595;
 }
 /*--Button and input styles--*/
 
@@ -466,7 +466,7 @@ div.login input {
 }
 
 #pager {
-    color: #383;
+    color: #959595;
 }
 
 /*------------------------------------------------------*/
@@ -627,7 +627,7 @@ and (max-width : 65em)
 
 #csssubmenu 
 {
-  background-color: #cd6a6f;
+  background-color: #959595;
 }
 
 #csssubmenu ul
@@ -683,7 +683,7 @@ and (max-width : 65em)
 
 .circle {
   color: #fff;
-  background-color: #ff0000;
+  background-color: #959595;
   box-shadow: 2px 2px 2px #000;
 }
 
@@ -695,14 +695,14 @@ and (max-width : 65em)
 
 /*-- specific to make_request.tmp --*/
 #toptwo {
-    background-color: #b8ffb8;  /* apply bg to containing div */
+    background-color: #fff;  /* apply bg to containing div */
 }
 
 #midleft {
 }
 
 #midright {
-    background-color: #ffcccc;
+    background-color: #959595;
 }
 
 #midfooter {
