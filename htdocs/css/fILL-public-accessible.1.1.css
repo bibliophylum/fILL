@@ -855,7 +855,7 @@ image courtesy of http://www.famfamfam.com/lab/icons/silk/
 }
 
 #pager {
-	color: #383;
+	color: #183935;
 }
 
 /*------------------------------------------------------*/
@@ -997,6 +997,11 @@ input[type=text]
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
+}
+
+.welcome-text {
+ 	font-weight: bold;
+ 	font-size: 1.4;
 }
 
 #aside-img-right
