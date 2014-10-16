@@ -266,8 +266,8 @@ input[type=text], input[type=password]
 }
 
 .library-style2 {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   border: 0px;
 }
 
