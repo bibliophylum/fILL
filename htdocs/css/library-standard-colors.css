@@ -277,7 +277,7 @@ input[type=text], input[type=password]
 }
 
 #butlink {
-	color: #fff;!important
+	color: #fff !important;
 }
 
 #butlink:link {
@@ -301,11 +301,11 @@ input[type=text], input[type=password]
 }
 
 button {
-	color: #fff;!important
+	color: #fff !important;
 }
 
 .button-left:link {
-	color: #fff;!important
+	color: #fff !important;
 }
 
 .button-left:hover {
@@ -318,7 +318,7 @@ button {
 }
 
 .button-right {
-	color: #fff;!important
+	color: #fff !important;
 }
 
 .tone-box.button-left {
@@ -583,7 +583,7 @@ and (max-width : 65em)
 
 #lib-nav-primary
 {
-  background-color: ;
+/*  background-color: ; */ /* was not set in original... */
   border-bottom: #6a99c9 solid 5px;
 }
 
