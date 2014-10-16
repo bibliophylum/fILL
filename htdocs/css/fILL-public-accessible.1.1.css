@@ -999,7 +999,7 @@ input[type=text]
 	margin-top: 1em;
 }
 
-.welcome-text {
+#welcome-text {
  	font-weight: bold;
  	font-size: 1.4em;
 }
