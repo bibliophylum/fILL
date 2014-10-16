@@ -1002,7 +1002,7 @@ input[type=text]
 
 .welcome-text {
  	font-weight: bold;
- 	font-size: 1.4;
+ 	font-size: 1.4em;
 }
 
 #aside-img-right
