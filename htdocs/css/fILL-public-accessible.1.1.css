@@ -322,7 +322,6 @@ nav li a
 }
 
 #welcome-box {
-	font-size: 1.2em;
 	border: 0px;
 	height: auto;
 	padding: 1em;
@@ -333,6 +332,7 @@ nav li a
 #welcome-text {
  	font-weight: bold;
  	font-size: 1.5em;
+ 	color: red;
 }
 
 #aside-img-right
