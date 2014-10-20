@@ -721,3 +721,23 @@ and (max-width : 65em)
 #midfooter {
 }
 /* end of "From fILL-library-accessible.1.0.css" */
+
+
+/* action button styles for data table buttons */
+input[type="button"].action-button {
+    background-color: #084B8A;
+    color: #fff;
+}
+input[type="button"]:hover.action-button {
+    background-color: #6391bb;
+    color: #fff;
+}
+input[type="button"].action-button-highlighted {
+    background-color: #8f1212;
+    color: #fff;
+}
+input[type="button"]:hover.action-button-highlighted {
+    background-color: #b06262;
+    color: #fff;
+}
+

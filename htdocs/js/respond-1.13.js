@@ -85,6 +85,7 @@ function build_rows( tBody, data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Will-supply";
+	b1.className = "action-button";
 	var requestId = data.unhandledRequests[i].id;
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
@@ -93,6 +94,7 @@ function build_rows( tBody, data ) {
 	    var b2 = document.createElement("input");
 	    b2.type = "button";
 	    b2.value = "Forward to branch";
+	    b2.className = "action-button";
 	    b2.onclick = make_forward_handler( requestId, data.retargets );
 	    divResponses.appendChild(b2);
 	}
@@ -100,15 +102,17 @@ function build_rows( tBody, data ) {
 	var b3 = document.createElement("input");
 	b3.type = "button";
 	b3.value = "Unfilled";
+	b3.className = "action-button";
 	b3.onclick = make_unfilled_handler( requestId );
 	divResponses.appendChild(b3);
 	
 	if (data.unhandledRequests[i].place_on_hold != "no") {
-	    var b3 = document.createElement("input");
-	    b3.type = "button";
-	    b3.value = "Hold placed";
-	    b3.onclick = make_hold_placed_handler( requestId );
-	    divResponses.appendChild(b3);
+	    var b4 = document.createElement("input");
+	    b4.type = "button";
+	    b4.value = "Hold placed";
+	    b4.className = "action-button";
+	    b4.onclick = make_hold_placed_handler( requestId );
+	    divResponses.appendChild(b4);
 	}
 
 	cell.appendChild( divResponses );

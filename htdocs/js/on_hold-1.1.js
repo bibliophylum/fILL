@@ -71,10 +71,12 @@ function build_table( data ) {
 	b1.type = "button";
 	if (data.on_hold[i].cancel == 1) {
 	    b1.value = "Cancelled by borrower";
-	    b1.style.backgroundColor = '#F5BCA9';
+	    b1.className = "action-button-highlighted";
+/*	    b1.style.backgroundColor = '#F5BCA9'; */
 	    b1.onclick = make_cancelled_handler( requestId );
 	} else {
 	    b1.value = "Ready to ship";
+	    b1.className = "action-button";
 	    b1.onclick = make_shipper_handler( requestId );
 	}
 	divResponses.appendChild(b1);
