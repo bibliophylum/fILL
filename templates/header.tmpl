@@ -88,6 +88,12 @@ $('document').ready(function(){
     });
     $('#theme2').click(function () {
         $("#csstheme").attr("href", "/css/library-test-colors.css");
+	$("#themeroller-css").attr("href","/themes/fILL-contrast/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
+	$.cookie('fILL-theme','theme2', { expires: 7, path: '/' });
+    });
+    $('#theme3').click(function () {
+        $("#csstheme").attr("href", "/css/library-allison-colors.css");
 	$("#themeroller-css").attr("href","/themes/Blitzer/jquery-ui.css");
 	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
 	$.cookie('fILL-theme','theme2', { expires: 7, path: '/' });
@@ -174,6 +180,7 @@ $('document').ready(function(){
     <p id="lid"><TMPL_VAR NAME="lid"></p>
     <input id="theme1" class="library-style3" type="button" value="A" />
     <input id="theme2" class="library-style2" type="button" value="A" />
+    <input id="theme3" class="library-style" type="button" value="A" />
     <input id="incrFont" class="library-style" type="button" value="+" />
     <input id="decrFont" class="library-style" type="button" value="-" />
   </div>
