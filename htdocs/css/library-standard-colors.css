@@ -234,12 +234,15 @@ input[type=submit]:hover
 
 input[type=button]
 {
-   
+  background-color: #06a0ca;
+  color: #fff;
+  font-size: 1em;
 }
 
 input[type=button]:hover
 {
-
+  background-color: #06a0ca;
+  color: #fff;
 }
 
 input[type=submit]:focus

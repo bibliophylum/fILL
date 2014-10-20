@@ -315,7 +315,7 @@ nav li a
 #main-info-welcome 
 {
 	float: left;
-	width: 60%;
+	width: 50%;
 	height: auto;
 	margin: .9em 0em;
   	padding: 1.25em;  
@@ -374,6 +374,7 @@ nav li a
 	margin-top: 2em;
 	margin: 3px;
 }
+
 .covers:hover {
 	border: 3px dashed #c0c0c0; 
 }
@@ -450,8 +451,6 @@ input[type=button]
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
-	background-color: #0f4072;
-    color: #fff;
     font-size: 1em;
     width: auto;
     text-transform:capitalize;
@@ -462,8 +461,6 @@ input[type=button]:hover
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
-	background-color: #06a0ca;
-	color: #fff;
     font-size: 1em;
     width: auto;
     text-transform:capitalize;
@@ -474,8 +471,6 @@ input[type=submit]:focus
     margin: .5em;
 	padding: .3em 1em;
 	border-radius: 5px;
-	background-color: #06a0ca;
-	color: #fff;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -485,8 +480,7 @@ input[type=submit]:focus
 input[type=text], input[type=password]
 {
     border-radius:5px;
-    border: 2px solid;
-    border-color: inherit;  /* see: https://stackoverflow.com/questions/5914239/why-doesnt-border-color-propagate-to-child-elements */
+    border: 2px solid #b3b3b3;
 }
 
 .public-style {

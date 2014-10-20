@@ -78,7 +78,8 @@ $('document').ready(function(){
   <div id="toggle-unfilled-codes">
     <input type="button" id="bToggleUnfilledCodes" value="Show the Unfilled codes" class="library-style">
   </div>
-   <div id="unfilled-codes" style="display:none">
+  
+  <div id="unfilled-codes" style="display:none">
     <h3>Unfilled codes</h3>
     <table id="fill-table" class="table-width-lib">
       <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
@@ -97,22 +98,23 @@ $('document').ready(function(){
   </div>
 
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif">
+  </div>
 
-    <div id="myDiv">
-      <h3>Respond to requests</h3>
-      <div id="mylistDiv"></div>
-    </div>
+  <div id="myDiv">
+    <h3>Respond to requests</h3>
+    <div id="mylistDiv"></div>
+  </div>
 
-<div id="instructions" class="tone-box">
-    <h2>Instructions</h2>
-    <ol>
-      <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
-      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
-      <li>Hover over a library's symbol to see the full name of the library.</li>
-    </ol>
+  <div id="instructions" class="tone-box">
+      <h2>Instructions</h2>
+      <ol>
+        <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
+        <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
+        <li>Hover over a library's symbol to see the full name of the library.</li>
+      </ol>
+  </div>
+  
 </div>
-
 <TMPL_INCLUDE NAME="footer.tmpl">
