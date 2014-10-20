@@ -53,8 +53,11 @@ $('document').ready(function(){
 	<div class="dataTable_wrapper">
 	  <table id="datatable_report">
 	    <thead>
-	      <tr>
-		<th>Year</th><th>MonthNum</th><th>Month</th><th>Borrowing: books requested</th><th>Borrowing: actual requests made</th><th>Borrowing: unfilled responses</th><th>Borrowing: lender shipped</th><th>Borrowing: we cancelled</th><th>Lending: requests to lend</th><th>Lending: could not fill</th><th>Lending: shipped</th><th>Lending: forward to branch</th><th>Lending: borrower cancelled</th>
+      <tr>
+    <th colspan="3">Date</th><th colspan="5">Borrowing</th><th colspan="5">Lending</th>
+        </tr>
+	  <tr>
+		<th>Year</th><th>MonthNum</th><th>Month</th><th>Books requested</th><th>Actual requests</th><th>Unfilled responses</th><th>Lender shipped</th><th>We cancelled</th><th>Requests to lend</th><th>Could not fill</th><th>Shipped</th><th>Forward to branch</th><th>Borrower cancelled</th>
 	      </tr>
 	    </thead>
 	    <tbody>
