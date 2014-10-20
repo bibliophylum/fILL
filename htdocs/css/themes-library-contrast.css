@@ -265,18 +265,6 @@ input[type=text], input[type=password]
     border: 0px;
 }
 
-.library-style2 {
-  background-color: #fff;
-  color: #000;
-  border: 0px;
-}
-
-.library-style3 {
-    background-color: #0f4072;
-    color: #fff;
-    border: 0px;
-}
-
 #fill-button {
     color: #fff;
 }
@@ -723,4 +711,20 @@ and (max-width : 65em)
 /* end of "From fILL-library-accessible.1.0.css" */
 
 
-
+/* action button styles for data table buttons */
+input[type="button"].action-button {
+    background-color: #000;
+    color: #fff;
+}
+input[type="button"]:hover.action-button {
+    background-color: #959595;
+    color: #fff;
+}
+input[type="button"].action-button-highlighted {
+    background-color: #424242;
+    color: #fff;
+}
+input[type="button"]:hover.action-button-highlighted {
+    background-color: #959595;
+    color: #fff;
+}

@@ -199,6 +199,38 @@ input[type="button"]:hover.action-button-highlighted {
     border-radius:5px;
 }
 
+/* theme-chooser buttons */
+.theme-chooser1 {
+    background-color: #0f4072;
+    color: #fff;
+}
+.theme-chooser1:hover {
+    background-color: #678AAE;
+    color: #fff;
+}
+
+.theme-chooser2 {
+  background-color: #000;
+  color: #fff;
+  border: 0px;
+}
+.theme-chooser2:hover {
+  background-color: #424242;
+  color: #000;
+  border: 0px;
+}
+
+.theme-chooser3 {
+    background-color: #841313;
+    color: #fff;
+    border: 0px;
+}
+.theme-chooser3:hover {
+    background-color: #A85454;
+    color: #fff;
+    border: 0px;
+}
+
 
 /***---End of new library client side CSS--**/
 
