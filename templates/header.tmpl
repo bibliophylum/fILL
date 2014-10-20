@@ -81,13 +81,13 @@ $('document').ready(function(){
     update_menu_counters( <TMPL_VAR name="lid"> );
 
     $('#theme1').click(function () {
-        $("#csstheme").attr("href", "/css/library-standard-colors.css");
+        $("#csstheme").attr("href", "/css/themes-library-colors.css");
 	$("#themeroller-css").attr("href","/themes/fILL-clean/jquery-ui.css");
 	$("#theme-logo").attr("src","/img/fill-lib-logo.png");
 	$.cookie('fILL-theme','theme1', { expires: 7, path: '/' });
     });
     $('#theme2').click(function () {
-        $("#csstheme").attr("href", "/css/library-test-colors.css");
+        $("#csstheme").attr("href", "/css/themes-library-contrast.css");
 	$("#themeroller-css").attr("href","/themes/fILL-contrast/jquery-ui.css");
 	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
 	$.cookie('fILL-theme','theme2', { expires: 7, path: '/' });
