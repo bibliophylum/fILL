@@ -74,6 +74,7 @@ function build_table( data ) {
 	    var b3 = document.createElement("input");
 	    b3.type = "button";
 	    b3.value = "Verified";
+	    b3.className = "action-button-highlighted";
 	    b3.onclick = make_verify_handler( requestId );
 	    divVerify.appendChild(b3);
 	    divResponses.appendChild(divVerify);
@@ -81,6 +82,7 @@ function build_table( data ) {
 	    var b4 = document.createElement("input");
 	    b4.type = "button";
 	    b4.value = "Not a patron";
+	    b4.className = "action-button-highlighted";
 	    b4.onclick = make_deverify_handler( requestId );
 	    divVerify.appendChild(b4);
 
@@ -90,6 +92,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Create ILL";
+	b1.className = "action-button";
 	b1.onclick = make_ILL_handler( requestId );
 	if (!is_verified) {
 	    b1.disabled = "disabled";
@@ -99,6 +102,7 @@ function build_table( data ) {
 	var b2 = document.createElement("input");
 	b2.type = "button";
 	b2.value = "Do NOT create ILL";
+	b2.className = "action-button";
 	b2.onclick = make_noILL_handler( requestId );
 	if (!is_verified) {
 	    b2.disabled = "disabled";
@@ -116,8 +120,8 @@ function build_table( data ) {
     
     document.getElementById('mylistDiv').appendChild(myTable);
     
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
 }
 
 // Explanation of why we need a function to create the buttons' onclick handlers:
@@ -235,32 +239,3 @@ function deverify( requestId ) {
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
-
-
-function toggleLayer( whichLayer )
-{
-    var elem, vis;
-    if( document.getElementById ) // this is the way the standards work
-	elem = document.getElementById( whichLayer );
-    else if( document.all ) // this is the way old msie versions work
-	elem = document.all[whichLayer];
-    else if( document.layers ) // this is the way nn4 works
-	elem = document.layers[whichLayer];
-
-    vis = elem.style;
-    // if the style.display value is blank we try to figure it out here
-    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
-    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-    //    alert('toggled ' + whichLayer);
-}
-
-function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-

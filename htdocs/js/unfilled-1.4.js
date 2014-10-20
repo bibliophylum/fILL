@@ -71,6 +71,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Try next lender";
+	b1.className = "action-button";
 	if (+data.unfilled[i].tried >= +data.unfilled[i].sources) {
 	    b1.value = "No further sources";
 	    b1.disabled = "disabled";
@@ -82,6 +83,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Cancel request";
+	b1.className = "action-button";
 	var requestId = data.unfilled[i].id;
 	b1.onclick = make_cancel_handler( requestId );
 	divResponses.appendChild(b1);
@@ -91,8 +93,8 @@ function build_table( data ) {
     
     document.getElementById('mylistDiv').appendChild(myTable);
     
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
 }
 
 // Explanation of why we need a function to create the buttons' onclick handlers:
@@ -157,32 +159,3 @@ function cancel( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
-
-
-function toggleLayer( whichLayer )
-{
-    var elem, vis;
-    if( document.getElementById ) // this is the way the standards work
-	elem = document.getElementById( whichLayer );
-    else if( document.all ) // this is the way old msie versions work
-	elem = document.all[whichLayer];
-    else if( document.layers ) // this is the way nn4 works
-	elem = document.layers[whichLayer];
-
-    vis = elem.style;
-    // if the style.display value is blank we try to figure it out here
-    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
-    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-    //    alert('toggled ' + whichLayer);
-}
-
-function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-

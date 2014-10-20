@@ -85,6 +85,7 @@ function build_table( data ) {
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Sent - mark item as shipped.";
+	b1.className = "action-button";
 	b1.style.fontSize = "150%";
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
@@ -92,6 +93,7 @@ function build_table( data ) {
 	var b2 = document.createElement("input");
 	b2.type = "button";
 	b2.value = "Oops! Return this to the Respond list.";
+	b2.className = "action-button";
 	b2.onclick = make_unship_handler( requestId );
 	divResponses.appendChild(b2);
 	
@@ -100,8 +102,8 @@ function build_table( data ) {
     
     document.getElementById('mylistDiv').appendChild(myTable);
     
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
 }
 
 // Explanation of why we need a function to create the buttons' onclick handlers:
@@ -185,31 +187,3 @@ function set_default_due_date(oForm) {
     $("#gradient-style > tbody > tr > td:nth-child(10)").stop(true,true).effect("highlight", {}, 2000);
     return false;
 }
-
-function toggleLayer( whichLayer )
-{
-    var elem, vis;
-    if( document.getElementById ) // this is the way the standards work
-	elem = document.getElementById( whichLayer );
-    else if( document.all ) // this is the way old msie versions work
-	elem = document.all[whichLayer];
-    else if( document.layers ) // this is the way nn4 works
-	elem = document.layers[whichLayer];
-
-    vis = elem.style;
-    // if the style.display value is blank we try to figure it out here
-    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
-    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-    //    alert('toggled ' + whichLayer);
-}
-
-function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-
