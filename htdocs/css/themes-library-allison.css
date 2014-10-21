@@ -235,7 +235,8 @@ input[type=submit]:hover
 
 input[type=button]
 {
-    color: #fff;
+    background-color: #fff;
+    color: #000;
 }
 
 input[type=button]:hover
