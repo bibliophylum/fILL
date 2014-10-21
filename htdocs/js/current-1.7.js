@@ -35,7 +35,7 @@ function build_table_orig( data ) {
     oTable_notfilled.fnDraw();
 
     $("#waitDiv").hide();
-    $("#mylistDiv").show();
+    $("#tabs").show();
 }
 
 function build_table( data ) {
@@ -44,7 +44,7 @@ function build_table( data ) {
     build_table_notfilled( data );
     
     $("#waitDiv").hide();
-    $("#mylistDiv").show();
+    $("#tabs").show();
 }
 
 function build_table_borrowing( data ) {
