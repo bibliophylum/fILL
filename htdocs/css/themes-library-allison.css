@@ -38,15 +38,15 @@ img
 }
 
 h1 {
-	color: #e6e6e6;
+	color: #ccc;
 }
 
 h2 {
-	color: #e6e6e6;
+	color: #ccc;
 }
 
 h3 {
-	color: #e6e6e6;
+	color: #ccc;
 }
 
 #container
@@ -69,7 +69,7 @@ header {
 
 #fill-tagline 
 {
-	color: #e6e6e6;
+	color: #ccc;
 }
 
 #logout-button {
@@ -77,7 +77,7 @@ header {
 }
 
 #patron-info {
-    color: #e6e6e6;
+    color: #ccc;
 }
 
 nav
@@ -186,7 +186,7 @@ nav li a
 .tone-box 
 {
 	background: #2a2a2a;
-	border: 2px solid  #fff;
+	border: 2px solid  #ccc;
 }
 
 .lighter-box {
@@ -258,16 +258,16 @@ input[type=text], input[type=password]
 
 .public-style {
     background-color: #fff;
-    color: #fff;
+    color: #000;
 }
 
 .library-style {
     background-color: #fff;
-    color: #fff;
+    color: #000;
 }
 
 #fill-button {
-    color: #fff;
+    color: #000;
 }
 
 #fill-button:hover {
