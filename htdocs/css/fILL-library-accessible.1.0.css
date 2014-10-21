@@ -199,7 +199,9 @@ input[type="button"]:hover.action-button-highlighted {
     border-radius:5px;
 }
 
-/* theme-chooser buttons */
+/* theme-chooser buttons - colours are specified here because
+   they won't change regardless of current theme. Should be a
+   'preview' of what the chosen theme will be. */
 input[type="button"].theme-chooser1 {
     background-color: #0f4072;
     color: #fff;
@@ -234,6 +236,13 @@ input[type="button"]:hover.theme-chooser3 {
     font-size: 1em;
 }
 
+/* small buttons */
+input[type="button"].small-function-button {
+    font-size: 1em;
+}
+input[type="button"]:hover.small-function-button {
+    font-size: 1em;
+}
 
 /***---End of new library client side CSS--**/
 
