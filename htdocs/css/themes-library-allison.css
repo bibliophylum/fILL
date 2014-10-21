@@ -5,12 +5,12 @@
 
 /* unvisted link */
  a:link {
-	color: #841313;
+	color: #fff;
 }
 
 /* visited link */
  a:visited {
-	color: #841313;
+	color: #fff;
 }
 
 /* mouse over link */
@@ -25,11 +25,11 @@ a:focus {
 
 /*selected link */
  a:active {
-	color: #841313;
+	color: #fff;
 }
 
 html, body {
-    background: #f3f3f3;
+    background: #000;
 }
 
 img 
@@ -37,15 +37,15 @@ img
 }
 
 h1 {
-	color: #841313;
+	color: #fff;
 }
 
 h2 {
-	color: #841313;
+	color: #fff;
 }
 
 h3 {
-	color: #841313;
+	color: #fff;
 }
 
 #container
@@ -96,39 +96,39 @@ nav li a
 }
 
 #pub-nav-primary {
-	border-bottom: #ca0606 solid 5px;
+	border-bottom: #505050 solid 5px;
 }
 
 /* #pub-nav-primaryigation link states */
 /* unvisted link */
 #pub-nav-primary li a:link {
- 	background: #841313;
+ 	background: #fff;
 	color: #fff;
 }
 /* visited link */
 #pub-nav-primary li a:visited {
-	background: #841313;
+	background: #fff;
 	color: #fff;
 }
 /* mouse over link */
 #pub-nav-primary li a:hover { 
-	background: #ca0606; 
+	background: #505050; 
 	color: #fff;
 }
 /*selected link */
 #pub-nav-primary li a:active {
-	background: #841313;
+	background: #fff;
 	color: #fff;
 }
 
 /* focus over link */
 #pub-nav-primary li a:focus { 
-	background: #ca0606; 
+	background: #505050; 
 	color: #fff;
 }
 
 #pub-nav-primary li a.current_tab {
-	background: #ca0606; 
+	background: #505050; 
 	color: #fff;
 }
 #search-container {
@@ -151,11 +151,11 @@ nav li a
 }
 
 #progress_empty {
-	background-color:#f3f3f3;
-	border:1px solid #b3b3b3;
+	background-color:#505050;
+	border:1px solid #fff;
 }
 #progress_filler {
-	background-color:#b3b3b3;
+	background-color:#fff;
 }
 
 
@@ -185,21 +185,21 @@ nav li a
 .tone-box 
 {
 	background: #e3e3e3;
-	border-bottom: 3px solid  #b3b3b3;
+	border-bottom: 3px solid  #fff;
 }
 
 .lighter-box {
 }
 
 .covers {
-	border: 3px solid #e3e3e3;
+	border: 3px solid #505050;
 }
 .covers:hover {
-	border: 3px dashed #c0c0c0; 
+	border: 3px dashed #fff; 
 }
 
 .covers:focus {
-	border: 3px dashed #c0c0c0; 
+	border: 3px dashed #fff; 
 }
 
 footer
@@ -212,13 +212,13 @@ footer
 input[type=text]
 {
     background-color: #fff;
-    border: 2px #c3c3c3 solid;
+    border: 2px #fff solid;
 }
 
 input[type=password]
 {
     background-color: #fff;
-    border: 2px #c3c3c3 solid;
+    border: 2px #fff solid;
 }
 
 input[type=submit]
@@ -228,7 +228,7 @@ input[type=submit]
 
 input[type=submit]:hover
 {
-	background-color: #ca0606;
+	background-color: #505050;
 	color: #fff;
 }
 
@@ -239,13 +239,13 @@ input[type=button]
 
 input[type=button]:hover
 {
-	background-color: #ca0606;
+	background-color: #505050;
 	color: #fff;
 }
 
 input[type=submit]:focus
 {
-	background-color: #ca0606;
+	background-color: #505050;
 	color: #fff;
 }
 
@@ -255,12 +255,12 @@ input[type=text], input[type=password]
 }
 
 .public-style {
-    background-color: #841313;
+    background-color: #fff;
     color: #fff;
 }
 
 .library-style {
-    background-color: #841313;
+    background-color: #fff;
     color: #fff;
 }
 
@@ -269,11 +269,11 @@ input[type=text], input[type=password]
 }
 
 #fill-button:hover {
-    background: #ca0606;
+    background: #505050;
 }
 
 #fill-button:focus {
-    background: #ca0606;
+    background: #505050;
 }
 
 #butlink {
@@ -288,13 +288,13 @@ input[type=text], input[type=password]
 }
 
 #butlink:hover {
-	background-color: #ca0606;
-	border: 1px solid #ca0606;
+	background-color: #505050;
+	border: 1px solid #505050;
 }
 
 #butlink:focus {
-	background-color: #ca0606;
-	border: 1px solid #ca0606;
+	background-color: #505050;
+	border: 1px solid #505050;
 }
 
 #butlink:active {
@@ -309,12 +309,12 @@ button {
 }
 
 .button-left:hover {
-	background-color: #ca0606;
+	background-color: #505050;
 
 }
 
 .button-left:focus {
-	background-color: #ca0606;
+	background-color: #505050;
 }
 
 .button-right {
@@ -344,7 +344,7 @@ div.termtitle {
 
 #fill-table {
 	background: #e3e3e3;
-	border: 2px solid #b3b3b3;
+	border: 2px solid #fff;
 	color: #505050;
 }
 
@@ -380,7 +380,7 @@ div.termtitle {
 }
 
 .note {
-    color: #b3b3b3;
+    color: #fff;
 }
 
 .indent {
@@ -399,7 +399,7 @@ div.termtitle {
 }
 
 .login-content {
-  border-bottom: 5px solid #b3b3b3;
+  border-bottom: 5px solid #505050;
   background: #e3e3e3;
 }
 
@@ -407,7 +407,7 @@ div.termtitle {
 }
 
 .login-header {
-  background-color: #841313;
+  background-color: #fff;
 }
 
 .login-header-title {
@@ -433,7 +433,7 @@ div.login input {
 }
 
 #divChangePass { 
-    background: #f3f3f3;
+    background: #505050;
     border: 2px solid #505050;
     color: #505050;
 }
@@ -451,17 +451,17 @@ div.login input {
 
 .primary_info {
     background-color: #e3e3e3;
-    border: 2px solid #b3b3b3;
+    border: 2px solid #fff;
 }
 
 .details {
-    border-top: 1px solid #b3b3b3; 
+    border-top: 1px solid #fff; 
     border-bottom: 1px solid #ffffff;
-    background-color: #f3f3f3; 
+    background-color: #505050; 
 }
 
 .secondary_info {
-    background-color: #f3f3f3; 
+    background-color: #505050; 
     color: #505050;
 }
 
@@ -510,7 +510,7 @@ and (max-width : 65em)
     {
 	background-color: #fff;
 	border:solid 1px #505050;
-	border: 2px #c3c3c3 solid;
+	border: 2px #fff solid;
     }
 
 
@@ -585,7 +585,7 @@ and (max-width : 65em)
 
 #lib-nav-primary
 {
-  border-bottom: #ca0606 solid 5px;
+  border-bottom: #505050 solid 5px;
 }
 
 #lib-nav-primary ul
@@ -595,33 +595,33 @@ and (max-width : 65em)
 /* #lib-navigation link states */
 /* unvisted link */
 #lib-nav-primary li a:link {
-  background: #841313;
+  background: #fff;
   color: #fff;
 }
 /* visited link */
 #lib-nav-primary li a:visited {
-  background: #841313;
+  background: #fff;
   color: #fff;
 }
 /* mouse over link */
 #lib-nav-primary li a:hover { 
-  background: #ca0606; 
+  background: #505050; 
   color: #fff;
 }
 /*selected link */
 #lib-nav-primary li a:active {
-  background: #ca0606;
+  background: #505050;
   color: #fff;
 }
 
 /* focus over link */
 #lib-nav-primary li a:focus { 
-  background: #ca0606; 
+  background: #505050; 
   color: #fff;
 }
 
 #lib-nav-primary li a.current_tab {
-  background: #ca0606; 
+  background: #505050; 
   color: #fff;
 }
 
@@ -645,35 +645,35 @@ and (max-width : 65em)
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #841313;
+  background: #fff;
   color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #841313;
+  background: #fff;
   color: #fff;
 }
 /* mouse over link */
 #csssubmenu li a:hover { 
-  background: #f3f3f3; 
+  background: #505050; 
   color: #505050;
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #841313;
+  background: #fff;
   color: #fff;
 }
 
 /* focus over link */
 #csssubmenu li a:focus { 
-  background: #841313; 
+  background: #fff; 
   color: #fff;
 }
 
 #csssubmenu li.current_tab a
 {
     color: #000 ;
-    background-color: #f3f3f3 ;
+    background-color: #505050 ;
 }
 
 #instructions {
@@ -712,11 +712,11 @@ and (max-width : 65em)
 
 /* action button styles for data table buttons */
 input[type="button"].action-button {
-    background-color: #841313;
+    background-color: #fff;
     color: #fff;
 }
 input[type="button"]:hover.action-button {
-    background-color: #ca0606;
+    background-color: #505050;
     color: #fff;
 }
 input[type="button"].action-button-highlighted {
