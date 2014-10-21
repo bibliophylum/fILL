@@ -200,35 +200,37 @@ input[type="button"]:hover.action-button-highlighted {
 }
 
 /* theme-chooser buttons */
-.theme-chooser1 {
+input[type="button"].theme-chooser1 {
     background-color: #0f4072;
     color: #fff;
+    font-size: 1em;
 }
-.theme-chooser1:hover {
+input[type="button"]:hover.theme-chooser1 {
     background-color: #678AAE;
     color: #fff;
+    font-size: 1em;
 }
 
-.theme-chooser2 {
-  background-color: #000;
-  color: #fff;
-  border: 0px;
+input[type="button"].theme-chooser2 {
+    background-color: #000;
+    color: #fff;
+    font-size: 1em;
 }
-.theme-chooser2:hover {
-  background-color: #424242;
-  color: #000;
-  border: 0px;
+input[type="button"]:hover.theme-chooser2 {
+    background-color: #424242;
+    color: #000;
+    font-size: 1em;
 }
 
-.theme-chooser3 {
+input[type="button"].theme-chooser3 {
     background-color: #841313;
     color: #fff;
-    border: 0px;
+    font-size: 1em;
 }
-.theme-chooser3:hover {
+input[type="button"]:hover.theme-chooser3 {
     background-color: #A85454;
     color: #fff;
-    border: 0px;
+    font-size: 1em;
 }
 
 
