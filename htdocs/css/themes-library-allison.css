@@ -103,12 +103,12 @@ nav li a
 /* unvisted link */
 #pub-nav-primary li a:link {
  	background: #fff;
-	color: #fff;
+	color: #000;
 }
 /* visited link */
 #pub-nav-primary li a:visited {
 	background: #fff;
-	color: #fff;
+	color: #000;
 }
 /* mouse over link */
 #pub-nav-primary li a:hover { 
@@ -184,8 +184,8 @@ nav li a
 
 .tone-box 
 {
-	background: #e3e3e3;
-	border-bottom: 3px solid  #fff;
+	background: #3a3a3a;
+	border: 2px solid  #fff;
 }
 
 .lighter-box {
@@ -596,12 +596,12 @@ and (max-width : 65em)
 /* unvisted link */
 #lib-nav-primary li a:link {
   background: #fff;
-  color: #fff;
+  color: #000;
 }
 /* visited link */
 #lib-nav-primary li a:visited {
   background: #fff;
-  color: #fff;
+  color: #000;
 }
 /* mouse over link */
 #lib-nav-primary li a:hover { 
@@ -627,7 +627,7 @@ and (max-width : 65em)
 
 #csssubmenu 
 {
-  background-color: #cd6a6f;
+  background-color: #505050;
 }
 
 #csssubmenu ul
@@ -645,12 +645,12 @@ and (max-width : 65em)
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #fff;
+  background: #000;
   color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #fff;
+  background: #000;
   color: #fff;
 }
 /* mouse over link */
