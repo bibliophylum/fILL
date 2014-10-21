@@ -167,33 +167,33 @@
 
 /* action button styles for data table buttons */
 input[type="button"].action-button {
-    margin: .5em;
-    padding: .3em 1em;
-    font-size: 1em;
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
     width: auto;
     border: 0;
     border-radius:5px;
 }
 input[type="button"]:hover.action-button {
-    margin: .5em;
-    padding: .3em 1em;
-    font-size: 1em;
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
     width: auto;
     border: 0;
     border-radius:5px;
 }
 input[type="button"].action-button-highlighted {
-    margin: .5em;
-    padding: .3em 1em;
-    font-size: 1em;
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
     width: auto;
     border: 0;
     border-radius:5px;
 }
 input[type="button"]:hover.action-button-highlighted {
-    margin: .5em;
-    padding: .3em 1em;
-    font-size: 1em;
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
     width: auto;
     border: 0;
     border-radius:5px;
