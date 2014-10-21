@@ -15,12 +15,12 @@
 
 /* mouse over link */
  a:hover {
-	color: #383;
+	color: #505050;
 }
 
 /*focus over link*/
 a:focus {
-	color: #383;
+	color: #505050;
 }
 
 /*selected link */
@@ -30,6 +30,7 @@ a:focus {
 
 html, body {
     background: #000;
+    color: #fff;
 }
 
 img 
@@ -184,7 +185,7 @@ nav li a
 
 .tone-box 
 {
-	background: #3a3a3a;
+	background: #2a2a2a;
 	border: 2px solid  #fff;
 }
 
@@ -650,8 +651,8 @@ and (max-width : 65em)
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
 }
 /* mouse over link */
 #csssubmenu li a:hover { 
@@ -682,8 +683,8 @@ and (max-width : 65em)
 /* Circle has been created to highlight alerts */
 
 .circle {
-  color: #fff;
-  background-color: #ff0000;
+  color: #000;
+  background-color: #fff;
   box-shadow: 2px 2px 2px #000;
 }
 
