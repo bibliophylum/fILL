@@ -335,10 +335,10 @@ nav li a
 }
 
 .covers {
-	height: 220px;
-	width: 150px;
-	margin-top: 2em;
-	margin: 3px;
+    height: 220px;
+    width: 150px;
+    margin-top: 2em;
+    margin: 3px;
 }
 .covers:hover {
 }
@@ -348,20 +348,20 @@ nav li a
 
 footer
 {
-	clear: both;
-	display: block;
-	width: 100%;
-	text-align: center;
-	padding: .5em;
-	font-size: .8em;
-	margin-top: 1em;
+    clear: both;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: .5em;
+    font-size: .8em;
+    margin-top: 1em;
 }
 /*--Button and input styles--*/
 
 input[type=text]
 {
-	margin: .5em 1em;
-	padding: .3em;
+    margin: .5em 1em;
+    padding: .3em;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -369,8 +369,8 @@ input[type=text]
 
 input[type=password]
 {
-	margin: .5em 1em;
-	padding: .3em;
+    margin: .5em 1em;
+    padding: .3em;
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
@@ -379,8 +379,8 @@ input[type=password]
 input[type=submit]
 {
     margin: .5em;
-	padding: .3em 1em;
-	border-radius: 5px;
+    padding: .3em 1em;
+    border-radius: 5px;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -389,8 +389,8 @@ input[type=submit]
 input[type=submit]:hover
 {
     margin: .5em;
-	padding: .3em 1em;
-	border-radius: 5px;
+    padding: .3em 1em;
+    border-radius: 5px;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -399,8 +399,8 @@ input[type=submit]:hover
 input[type=button]
 {
     margin: .5em;
-	padding: .3em 1em;
-	border-radius: 5px;
+    padding: .3em 1em;
+    border-radius: 5px;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -409,8 +409,8 @@ input[type=button]
 input[type=button]:hover
 {
     margin: .5em;
-	padding: .3em 1em;
-	border-radius: 5px;
+    padding: .3em 1em;
+    border-radius: 5px;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -419,8 +419,8 @@ input[type=button]:hover
 input[type=submit]:focus
 {
     margin: .5em;
-	padding: .3em 1em;
-	border-radius: 5px;
+    padding: .3em 1em;
+    border-radius: 5px;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -435,8 +435,8 @@ input[type=text], input[type=password]
 }
 
 .public-style {
-	margin: .5em;
-	padding: .3em 1em;
+    margin: .5em;
+    padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
@@ -445,8 +445,8 @@ input[type=text], input[type=password]
 }
 
 .library-style {
-	margin: .5em;
-	padding: .3em 1em;
+    margin: .5em;
+    padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
