@@ -30,7 +30,7 @@ a:focus {
 
 html, body {
     background: #000;
-    color: #fff;
+/*    color: #fff; */
 }
 
 img 
@@ -714,18 +714,28 @@ and (max-width : 65em)
 
 /* action button styles for data table buttons */
 input[type="button"].action-button {
-    background-color: #fff;
+    background-color: #7a7669;
     color: #fff;
 }
 input[type="button"]:hover.action-button {
-    background-color: #505050;
+    background-color: #a9a28b;
     color: #fff;
 }
 input[type="button"].action-button-highlighted {
-    background-color: #CAA906;
+    background-color: #7a5f04;
     color: #fff;
 }
 input[type="button"]:hover.action-button-highlighted {
-    background-color: #E9D15E;
+    background-color: #BA9D3C;
+    color: #fff;
+}
+
+
+.dataTable th {
+    background-color: #505050;
+    color: #fff;
+}
+.dataTable td {
+    background-color: #424242;
     color: #fff;
 }
