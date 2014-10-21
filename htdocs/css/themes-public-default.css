@@ -1,0 +1,211 @@
+/* themes-public-default.css
+   
+   Public theme - colours only.  Structural css is in
+     fILL-public-accessible.1.x.css
+*/
+
+a:link {
+    color: #183935;
+}
+a:visited {
+    color: #183935;
+}
+a:hover {
+    color: #383;
+}
+a:active {
+    color: #183935;
+}
+
+html, body {
+    background: #f3f3f3;
+}
+
+h2 {
+    color: #383;
+}
+h3 {
+    color: #486660;
+}
+
+#fill-tagline {
+    color: #505050;
+}
+
+#patron-info {
+    color: #505050;
+}
+
+nav {
+    border-bottom: #06a0ca solid 5px;
+}
+
+/* Navigation link states */
+nav li a:link {
+    background: #183935;/*main dark green colour*/
+    color: #fff;
+}
+nav li a:visited {
+    background: #183935;
+    color: #fff;
+}
+nav li a:hover {
+    background: #06a0ca;
+    color: #fff;
+}
+nav li a:active {
+    background: #183935;
+    color: #fff;
+}
+nav li a.current_tab {
+    background: #06a0ca;
+    color: #fff;
+}
+
+#search {
+    border-bottom: 5px solid #e3e3e3;
+}
+
+#progress_empty {
+    background-color:#f3f3f3;
+    border:1px solid #b3b3b3;
+}
+#progress_filler {
+    background-color:#b3b3b3;
+}
+
+.tone-box {
+    background: #e3e3e3;
+    border-bottom: 3px solid #b3b3b3;
+}
+
+.covers {
+    border: 3px solid #e3e3e3;
+}
+.covers:hover {
+    border: 3px dashed #c0c0c0;
+}
+
+footer {
+    border-bottom: 3px solid #aabdba;
+    background: #d9efec;
+}
+
+/*--Button and input styles--*/
+input[type=text] {
+    background-color: #fff;
+    border:solid 1px #505050;
+    border: 2px #c3c3c3 solid;
+}
+input[type=password] {
+    background-color: #fff;
+    border:solid 1px #505050;
+    border: 2px #c3c3c3 solid;
+}
+input[type=submit] {
+    border: 1px #183935 solid;
+    background-color: #183935;
+    color: #fff;
+}
+input[type=submit]:hover {
+    border: 1px #06a0ca solid;
+    background-color: #06a0ca;
+    color: #fff;
+}
+
+#fill-button {
+    background-color: #183935;
+    color: #fff;
+}
+#fill-button:hover {
+    background: #06a0ca;
+}
+#butlink {
+    border: 1px solid #000;
+    background: #183935;
+    color: #fff;!important
+}
+#butlink:link {
+    color: #fff;
+}
+#butlink:visited {
+    background-color: #183935;
+}
+#butlink:hover {
+    background-color: #06a0ca;
+    border: 1px solid #06a0ca;
+}
+#butlink:active {
+    background-color: #183935;
+}
+button {
+    border: 1px solid #000;
+    background: #183935;
+    color: #fff;!important
+}
+.button-left:link {
+    border: 1px solid #000;
+    background: #183935;
+    color: #fff;!important
+}
+.button-left:hover {
+    background-color: #06a0ca;
+    border: 1px solid #06a0ca;
+}
+
+/*** FILL #fill-table STYLES **/
+#fill-table {
+    background: #e3e3e3;
+    border: 2px solid #b3b3b3;
+    color: #505050;
+}
+#fill-table td, #fill-table th {
+    border: 1px solid #fff;
+}
+
+#bison-container {
+    background-color: #fff;
+}
+
+.note {
+    color: #b3b3b3;
+}
+.indent {
+    color: #505050;
+}
+
+/*------------login styles---------------------------------*/
+.login-content {
+    border-bottom: 5px solid #b3b3b3;
+    background: #e3e3e3;
+}
+.login-header {
+    background-color: #183935;
+}
+.login-header-title {
+    color: #fff;
+}
+/*dev test*/
+#divChangePass {
+    background: #f3f3f3;
+    border: 2px solid #505050;
+    color: #505050;
+}
+
+/*-------SEARCH RESULTS STYLES-----------------*/
+.primary_info {
+    background-color: #e3e3e3;
+    border: 2px solid #b3b3b3;
+}
+.details {
+    border-top: 1px solid #b3b3b3;
+    border-bottom: 1px solid #ffffff;
+    background-color: #f3f3f3;
+}
+.secondary_info {
+    background-color: #f3f3f3;
+    color: #505050;
+}
+#pager {
+    color: #383;
+}
