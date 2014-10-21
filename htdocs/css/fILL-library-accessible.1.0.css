@@ -212,12 +212,12 @@ input[type="button"]:hover.theme-chooser1 {
 }
 
 input[type="button"].theme-chooser2 {
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
     font-size: 1em;
 }
 input[type="button"]:hover.theme-chooser2 {
-    background-color: #424242;
+    background-color: #505050;
     color: #000;
     font-size: 1em;
 }
