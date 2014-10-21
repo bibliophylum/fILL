@@ -16,28 +16,18 @@ $('document').ready(function(){
         "bInfo": true,
       	"bSort": true,
 	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 10,
-        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "iDisplayLength": 12,
+        "aLengthMenu": [[12, 24, 48, -1], [12, 24, 48, "All"]],
 	"oTableTools": {
           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
 	},
         "aaSorting": [[0,"asc"],[1,"asc"]],
         "bAutoWidth": true,
+        "scrollX": true, 
         "fnInitComplete": function() {
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
             $("#datatable_report").css("width","100%");
-        }
-    });
-
-//    $('#datatable_report tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
-//    $(document).on("mouseover mouseout", "#datatable_report tbody tr", function() {  // suggested replacement
-    $("#datatable_report tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
-
-        if (event.type == 'mouseover') {
-            $(this).addClass("ui-state-hover");
-        } else {
-            $(this).removeClass("ui-state-hover");
         }
     });
 
@@ -53,11 +43,11 @@ $('document').ready(function(){
 	<div class="dataTable_wrapper">
 	  <table id="datatable_report">
 	    <thead>
-      <tr>
-    <th colspan="3">Date</th><th colspan="5">Borrowing</th><th colspan="5">Lending</th>
-        </tr>
-	  <tr>
-		<th>Year</th><th>MonthNum</th><th>Month</th><th>Books requested</th><th>Actual requests</th><th>Unfilled responses</th><th>Lender shipped</th><th>We cancelled</th><th>Requests to lend</th><th>Could not fill</th><th>Shipped</th><th>Forward to branch</th><th>Borrower cancelled</th>
+	      <tr>
+		<th colspan="3">Date</th><th colspan="5">Borrowing</th><th colspan="5">Lending</th>
+              </tr>
+	      <tr>
+		<th>Year</th><th>Month Number</th><th>Month</th><th>Books requested</th><th>Actual requests</th><th>Unfilled responses</th><th>Lender shipped</th><th>We cancelled</th><th>Requests to lend</th><th>Could not fill</th><th>Shipped</th><th>Forward to branch</th><th>Borrower cancelled</th>
 	      </tr>
 	    </thead>
 	    <tbody>
