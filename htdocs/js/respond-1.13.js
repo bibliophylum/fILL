@@ -129,6 +129,11 @@ function make_hold_placed_handler( requestId ) {
 
 function holdplaced( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#respond-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var hpDiv = document.createElement("div");
     hpDiv.id = "expectedDate";
     var hpForm = document.createElement("form");
@@ -171,7 +176,8 @@ function holdplaced( requestId ) {
 	var myRow=$("#req"+requestId);
 	var parms = {
 	    "reqid": requestId,
-	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+//	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+	    "msg_to": msg_to,  // sending TO whoever original was FROM
 	    "lid": $("#lid").text(),
 	    "status": "ILL-Answer|Hold-Placed|estimated-date-available",
 	    "message": expected
@@ -194,9 +200,15 @@ function make_shipit_handler( requestId ) {
 
 function shipit( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#respond-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+//	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "ILL-Answer|Will-Supply|being-processed-for-supply",
 	"message": ""
@@ -223,6 +235,11 @@ function make_unfilled_handler( requestId ) {
 
 function unfilled( requestId ) {
     var row = $("#req"+requestId);
+    var nTr = row[0]; // convert jQuery object to DOM
+    var oTable = $('#respond-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var ruDiv = document.createElement("div");
     ruDiv.id = "reasonUnfilled";
     var ruForm = document.createElement("form");
@@ -258,7 +275,8 @@ function unfilled( requestId ) {
 	var myRow=$("#req"+requestId);
 	var parms = {
 	    "reqid": requestId,
-	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+//	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+	    "msg_to": msg_to,  // sending TO whoever original was FROM
 	    "lid": $("#lid").text(),
 	    "status": "ILL-Answer|Unfilled|"+reason,
 	    "message": optionalMessage
@@ -299,6 +317,11 @@ function make_forward_handler( requestId, retargets ) {
 
 function forward( requestId, retargets ) {
     var row = $("#req"+requestId);
+    var nTr = row[0]; // convert jQuery object to DOM
+    var oTable = $('#respond-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var ruDiv = document.createElement("div");
     ruDiv.id = "branchForward";
     var ruForm = document.createElement("form");
@@ -330,10 +353,15 @@ function forward( requestId, retargets ) {
 	$("#divResponses"+requestId).show(); 
 	
 	// Note that nth-child uses 1-based indexing, not 0-based
-	var parms = $('#gradient-style tbody tr').map(function() {
+	var parms = $('#respond-table tbody tr').map(function() {
 	    // $(this) is used more than once; cache it for performance.
 	    var $row = $(this);
-	    if ($row.find(':nth-child(3)').text() == requestId) {
+	    var nTr = row[0]; // convert jQuery object to DOM
+	    var oTable = $('#respond-table').dataTable();
+	    var aPos = oTable.fnGetPosition( nTr );
+	    var reqid = oTable.fnGetData( aPos )[2]; // 3rd column (0-based!), hidden or not
+//	    if ($row.find(':nth-child(3)').text() == requestId) {
+	    if (reqid == requestId) {
 		var targetIndex;
 		for (var i=0; i < retargets.length; i++) {
 		    if (retargets[i].lid == forwardTo)
@@ -341,7 +369,8 @@ function forward( requestId, retargets ) {
 		}
 		return {
 		    reqid: requestId,
-		    msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+//		    msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
+		    msg_to: msg_to,  // sending TO whoever original was FROM
 		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Locations-provided|responder-specific",
 		    message: "forwarded to our branch "+retargets[targetIndex].name
@@ -357,7 +386,7 @@ function forward( requestId, retargets ) {
 		      $.getJSON('/cgi-bin/change-request-status.cgi',
 				{ reqid: requestId,
 				  msg_to: forwardTo,
-				  lid: parms[0].msg_to,  // sending FROM whoever original was FROM (which is whoever we sent the response to
+				  lid: parms[0].msg_to,  // sending FROM whoever original was FROM (which is whoever we sent the response to)
 				  status: "ILL-Request",
 				  message: ""
 				},
