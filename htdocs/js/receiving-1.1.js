@@ -96,9 +96,14 @@ function make_receiving_handler( requestId ) {
 
 function receive( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#receiving-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[7]; // 8th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(8)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Received",
 	"message": ""
@@ -110,13 +115,17 @@ function receive( requestId ) {
 	.success(function() {
 	    // print slip (single) / add to slip page (multi) / do nothing (none)
 
-	    if ((!$('input[@name=slip]:checked').val()) || ($('input[@name=slip]:checked').val() == 'none')) {
+	    if ((!$('input[name=slip]:checked').val()) || ($('input[name=slip]:checked').val() == 'none')) {
 		// do not print slips
 	    } else {
-		if ($('input[@name=slip]:checked').val() == 'single') {
+		if ($('input[name=slip]:checked').val() == 'single') {
 		    $("#slip").remove();  // toast any existing slip div
-		    $('<div id="slip"></div>').appendTo("#leftcontent");
-		    $("#slip").css( "background-color", "white");
+		    $('<div id="slip"></div>').appendTo("#slipbox");
+		    $("#slip").css( {"background-color": "white",
+				     "border-color": "#C1E0FF", 
+				     "border-width":"1px", 
+				     "border-style":"solid",
+				    });
 		    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
 		    $("#slip").load( urlSlipWriter, function() {
 			$("#slip").printElement({ leaveOpen:true, printMode:'popup'});

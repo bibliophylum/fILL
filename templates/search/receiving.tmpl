@@ -1,7 +1,10 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/plugins/jquery.printElement.js"></script>
+// printElement uses jQuery .browser, which was removed in jQuery 1.9
+// jquery-migrate restores this functionality:
+<script type="text/javascript" src="/plugins/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/plugins/jquery.printElement.min.js"></script>
 <script type="text/javascript" src="/js/receiving-1.1.js"></script>
 
 
@@ -83,7 +86,6 @@ $('document').ready(function(){
       <p>Select your printing option:</p>
       <div id="slipPrinting"></div>
       <div id="multiCount"></div>
-
       <br/>
       <h3>Receiving</h3>
       <div id="mylistDiv"></div>
@@ -99,6 +101,12 @@ $('document').ready(function(){
       <li>You will have the option of printing a date-due slip.</li>
     </ol>
 </div>
+
+<!-- slipbox and multiPrint are used by receiving.js to enable slip printing
+     (using .printElement() plugin, which lets us print the contents of a
+     specific div -->
+<div id="slipbox"></div>
+<div id="multiPrint"></div>
 
 </div>
 

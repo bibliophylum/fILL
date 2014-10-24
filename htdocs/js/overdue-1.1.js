@@ -48,10 +48,8 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.overdue.length;i++) 
     {
-//	alert (data.overdue[i].id+" "+data.overdue[i].msg_from+" "+data.overdue[i].call_number+" "+data.overdue[i].author+" "+data.overdue[i].title+" "+data.overdue[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.overdue[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].cid;
@@ -94,9 +92,14 @@ function make_overdue_handler( requestId ) {
 
 function overdue( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#overdue-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[6]; // 7th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(7)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Renew",
 	"message": ""

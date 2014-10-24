@@ -95,9 +95,14 @@ function make_cancel_handler( requestId ) {
 
 function cancel_request( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#holds-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[7]; // 8th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(8)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Cancel",
 	"message": ""

@@ -47,10 +47,8 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.on_hold.length;i++) 
     {
-//	alert (data.on_hold[i].id+" "+data.on_hold[i].msg_from+" "+data.on_hold[i].call_number+" "+data.on_hold[i].author+" "+data.on_hold[i].title+" "+data.on_hold[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.on_hold[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.on_hold[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.on_hold[i].cid;
@@ -72,7 +70,6 @@ function build_table( data ) {
 	if (data.on_hold[i].cancel == 1) {
 	    b1.value = "Cancelled by borrower";
 	    b1.className = "action-button-highlighted";
-/*	    b1.style.backgroundColor = '#F5BCA9'; */
 	    b1.onclick = make_cancelled_handler( requestId );
 	} else {
 	    b1.value = "Ready to ship";
@@ -100,9 +97,14 @@ function make_shipper_handler( requestId ) {
 
 function shipper( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#on-hold-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "ILL-Answer|Will-Supply|being-processed-for-supply",
 	"message": ""
@@ -129,9 +131,14 @@ function make_cancelled_handler( requestId ) {
 
 function cancelled( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#on-hold-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Cancel-Reply",
 	"message": "Ok"

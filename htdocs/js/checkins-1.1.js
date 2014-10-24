@@ -89,9 +89,14 @@ function make_checkin_handler( requestId ) {
 
 function checkin( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#checkins-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[7]; // 8th column (0-based!), hidden or not
+
     var parms = {
 	reqid: requestId,
-	msg_to: myRow.find(':nth-child(8)').text(),  // sending TO whoever original was FROM
+	msg_to: msg_to,  // sending TO whoever original was FROM
 	lid: $("#lid").text(),
 	status: "Checked-in",
 	message: ""

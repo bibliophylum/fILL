@@ -168,7 +168,6 @@ function holdplaced( requestId ) {
     var sButton = $("<input type='submit' value='Submit'>").appendTo(hpForm);
     sButton.bind('click', function() {
         var expected = moment( $("#dateAvailable").datepicker("getDate") ).format("YYYY-MM-DD");
-//	alert(expected);
 	$("#expectedDate").remove(); 
 	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
@@ -176,7 +175,6 @@ function holdplaced( requestId ) {
 	var myRow=$("#req"+requestId);
 	var parms = {
 	    "reqid": requestId,
-//	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
 	    "msg_to": msg_to,  // sending TO whoever original was FROM
 	    "lid": $("#lid").text(),
 	    "status": "ILL-Answer|Hold-Placed|estimated-date-available",
@@ -207,7 +205,6 @@ function shipit( requestId ) {
 
     var parms = {
 	"reqid": requestId,
-//	"msg_to": myRow.find(':nth-child(5)').text(),
 	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "ILL-Answer|Will-Supply|being-processed-for-supply",
@@ -275,7 +272,6 @@ function unfilled( requestId ) {
 	var myRow=$("#req"+requestId);
 	var parms = {
 	    "reqid": requestId,
-//	    "msg_to": myRow.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
 	    "msg_to": msg_to,  // sending TO whoever original was FROM
 	    "lid": $("#lid").text(),
 	    "status": "ILL-Answer|Unfilled|"+reason,
@@ -352,7 +348,6 @@ function forward( requestId, retargets ) {
 	$("#tmprow").remove();
 	$("#divResponses"+requestId).show(); 
 	
-	// Note that nth-child uses 1-based indexing, not 0-based
 	var parms = $('#respond-table tbody tr').map(function() {
 	    // $(this) is used more than once; cache it for performance.
 	    var $row = $(this);
@@ -360,7 +355,6 @@ function forward( requestId, retargets ) {
 	    var oTable = $('#respond-table').dataTable();
 	    var aPos = oTable.fnGetPosition( nTr );
 	    var reqid = oTable.fnGetData( aPos )[2]; // 3rd column (0-based!), hidden or not
-//	    if ($row.find(':nth-child(3)').text() == requestId) {
 	    if (reqid == requestId) {
 		var targetIndex;
 		for (var i=0; i < retargets.length; i++) {
@@ -369,7 +363,6 @@ function forward( requestId, retargets ) {
 		}
 		return {
 		    reqid: requestId,
-//		    msg_to: $row.find(':nth-child(5)').text(),  // sending TO whoever original was FROM
 		    msg_to: msg_to,  // sending TO whoever original was FROM
 		    lid: $("#lid").text(),
 		    status: "ILL-Answer|Locations-provided|responder-specific",
@@ -414,10 +407,6 @@ function forward( requestId, retargets ) {
 
     // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
     $("#forwardradioset").buttonset();
-//    retargets.forEach(function(target){
-//	var s="<input type='radio' name='radioset' value='"+target.lid+"' id='"+target.name+"'/><label for='"+target.name+"'>"+target.city+"</label>";
-//	$("#forwardradioset").append(s);
-//    });
 
     for (var i = 0; i < retargets.length; i++) {
 	var s="<input type='radio' name='radioset' value='"+retargets[i].lid+"' id='"+retargets[i].name+"'/><label for='"+retargets[i].name+"'>"+retargets[i].city+"</label>";

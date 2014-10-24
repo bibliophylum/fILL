@@ -48,10 +48,8 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.shipping.length;i++) 
     {
-//	alert (data.shipping[i].id+" "+data.shipping[i].msg_from+" "+data.shipping[i].call_number+" "+data.shipping[i].author+" "+data.shipping[i].title+" "+data.shipping[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.shipping[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.shipping[i].cid;
@@ -74,8 +72,7 @@ function build_table( data ) {
 	    ((''+month).length<2 ? '0' : '') + month + '-' +
 	    ((''+day).length<2 ? '0' : '') + day;
 
-
-        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10);
+        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10); cell.setAttribute('class','due-date');
         cell = row.insertCell(-1); 
 
 	var requestId = data.shipping[i].id;
@@ -116,7 +113,13 @@ function make_shipit_handler( requestId ) {
 
 function shipit( requestId ) {
     var myRow=$("#req"+requestId);
-    if (myRow.find(':nth-child(10)').text().length == 0) {
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#shipping-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+    var due_date = oTable.fnGetData( aPos )[9];
+
+    if (due_date.length == 0) {
 	var retVal = confirm("You have not entered a due date.  Continue without due date?");
 	if (retVal == false) {
 	    // bail out to let the user enter a due date
@@ -126,10 +129,10 @@ function shipit( requestId ) {
 
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Shipped",
-	"message": "due "+myRow.find(':nth-child(10)').text()
+	"message": "due "+due_date
     };
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
@@ -153,9 +156,14 @@ function make_unship_handler( requestId ) {
 
 function unship( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#shipping-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Unship",
 	"message": ''
@@ -177,13 +185,10 @@ function unship( requestId ) {
 }
 
 function set_default_due_date(oForm) {
-//    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
     var defaultDueDate = oForm.elements["datepicker"].value;
-    var theTable = document.getElementById('gradient-style');
-
-    for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[9].innerHTML = defaultDueDate;
-    }
-    $("#gradient-style > tbody > tr > td:nth-child(10)").stop(true,true).effect("highlight", {}, 2000);
-    return false;
+    $(".due-date").each(function(){
+	$(this).text( defaultDueDate );
+    });
+    $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
+

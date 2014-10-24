@@ -72,7 +72,7 @@ function build_table( data ) {
 	var iso = d.getFullYear() + '-' +
 	    ((''+month).length<2 ? '0' : '') + month + '-' +
 	    ((''+day).length<2 ? '0' : '') + day;
-        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10);
+        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10); cell.setAttribute('class','due-date');
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
@@ -113,7 +113,14 @@ function make_renewalAnswer_handler( requestId ) {
 
 function renewalAnswer( requestId ) {
     var myRow=$("#req"+requestId);
-    if (myRow.find(':nth-child(10)').text().length == 0) {
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#renewal-answer-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+    var due_date = oTable.fnGetData( aPos )[9];
+
+//    if (myRow.find(':nth-child(10)').text().length == 0) {
+    if (due_date.length == 0) {
 	var retVal = confirm("You have not entered a due date.  Continue without due date?");
 	if (retVal == false) {
 	    // bail out to let the user enter a due date
@@ -123,10 +130,10 @@ function renewalAnswer( requestId ) {
 
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(5)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Renew-Answer|Ok",
-	"message": "due "+myRow.find(':nth-child(10)').text()
+	"message": "due "+due_date
     };
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
@@ -150,6 +157,10 @@ function make_cannotRenew_handler( requestId ) {
 
 function cannotRenew( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#renewal-answer-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
 
     var crDiv = document.createElement("div");
     crDiv.id = "cannotRenewMessage";
@@ -175,7 +186,7 @@ function cannotRenew( requestId ) {
 	$("#divResponses"+requestId).show(); 
 	var parms = {
 	    "reqid": requestId,
-	    "msg_to": myRow.find(':nth-child(5)').text(),
+	    "msg_to": msg_to,
 	    "lid": $("#lid").text(),
 	    "status": "Renew-Answer|No-renewal",
 	    "message": reason
@@ -199,12 +210,9 @@ function cannotRenew( requestId ) {
 }
 
 function set_default_due_date(oForm) {
-//    var defaultDueDate = oForm.elements["year"].value + '-' + oForm.elements["month"].value + '-' + oForm.elements["day"].value;
     var defaultDueDate = oForm.elements["datepicker"].value;
-    var theTable = document.getElementById('gradient-style');
-
-    for( var r = 0; r < theTable.tBodies[0].rows.length; r++ ) {
-	theTable.tBodies[0].rows[r].cells[9].innerHTML = defaultDueDate;
-    }
-    $("#gradient-style > tbody > tr > td:nth-child(10)").stop(true,true).effect("highlight", {}, 2000);
+    $(".due-date").each(function(){
+	$(this).text( defaultDueDate );
+    });
+    $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }

@@ -26,7 +26,6 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get the slip info
-#my $SQL = "select r.id, r.title, r.author, r.patron_barcode, l.library, ra.message from request r left join requests_active ra on r.id = ra.request_id left join libraries l on ra.msg_from = l.lid where r.id=? and ra.status='Shipped'";
 my $SQL = "select 
   r.id, 
   g.title, 

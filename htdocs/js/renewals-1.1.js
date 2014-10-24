@@ -50,10 +50,8 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.renewals.length;i++) 
     {
-//	alert (data.renewals[i].id+" "+data.renewals[i].msg_from+" "+data.renewals[i].call_number+" "+data.renewals[i].author+" "+data.renewals[i].title+" "+data.renewals[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.renewals[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.renewals[i].cid;
@@ -105,9 +103,14 @@ function make_renewals_handler( requestId ) {
 
 function request_renewal( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#renewals-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[8]; // 9th column (0-based!), hidden or not
+
     var parms = {
 	"reqid": requestId,
-	"msg_to": myRow.find(':nth-child(9)').text(),
+	"msg_to": msg_to,
 	"lid": $("#lid").text(),
 	"status": "Renew",
 	"message": ""
