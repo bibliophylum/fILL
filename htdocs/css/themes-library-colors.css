@@ -467,7 +467,7 @@ div.login input {
 }
 
 #pager {
-    color: #383;
+    color: #183935;
 }
 
 /*------------------------------------------------------*/
@@ -695,14 +695,15 @@ and (max-width : 65em)
 
 /*-- specific to make_request.tmp --*/
 #toptwo {
-    background-color: #b8ffb8;  /* apply bg to containing div */
+/*    background-color: #b8ffb8;  /* apply bg to containing div */
+    background-color: #b0b6ff;  /* apply bg to containing div */
 }
 
 #midleft {
 }
 
 #midright {
-    background-color: #ffcccc;
+    background-color: #c2c6ff;
 }
 
 #midfooter {

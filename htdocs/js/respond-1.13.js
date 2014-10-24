@@ -157,7 +157,7 @@ function holdplaced( requestId ) {
     $("#dateAvailable").datepicker('setDate', dateAvailable.native() );
     
 
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(hpForm);
+    var cButton = $("<input type='button' class='library-style' value='Cancel'>").appendTo(hpForm);
     cButton.bind('click', function() {
 	$("#expectedDate").remove(); 
 	$("#tmprow").remove();
@@ -165,7 +165,7 @@ function holdplaced( requestId ) {
 	//return false;
     });
 
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(hpForm);
+    var sButton = $("<input type='submit' class='library-style' value='Submit'>").appendTo(hpForm);
     sButton.bind('click', function() {
         var expected = moment( $("#dateAvailable").datepicker("getDate") ).format("YYYY-MM-DD");
 	$("#expectedDate").remove(); 
@@ -253,7 +253,7 @@ function unfilled( requestId ) {
 
     $("<p>Optional message to borrower: <input type='text' name='message' size='40' maxlength='100' /></p>").insertAfter("#unfilledradioset");
 
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
+    var cButton = $("<input type='button' class='library-style' value='Cancel'>").appendTo(ruForm);
     cButton.bind('click', function() {
 	$("#reasonUnfilled").remove(); 
 	$("#tmprow").remove();
@@ -261,7 +261,7 @@ function unfilled( requestId ) {
 	//return false;
     });
 
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
+    var sButton = $("<input type='submit' class='library-style' value='Submit'>").appendTo(ruForm);
     sButton.bind('click', function() {
 	var reason = $('input:radio[name=radioset]:checked').val();
 	var optionalMessage = $('input:text[name=message]').val();
@@ -333,7 +333,7 @@ function forward( requestId, retargets ) {
     $( "<p>Select the branch to foward this request to:</p>" ).insertBefore("#forwardradioset");
 
 
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(ruForm);
+    var cButton = $("<input type='button' class='library-style' value='Cancel'>").appendTo(ruForm);
     cButton.bind('click', function() {
 	$("#branchForward").remove(); 
 	$("#tmprow").remove();
@@ -341,7 +341,7 @@ function forward( requestId, retargets ) {
 	//return false;
     });
 
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(ruForm);
+    var sButton = $("<input type='submit' class='library-style' value='Submit'>").appendTo(ruForm);
     sButton.bind('click', function() {
 	var forwardTo = $('input:radio[name=radioset]:checked').val();
 	$("#branchForward").remove(); 

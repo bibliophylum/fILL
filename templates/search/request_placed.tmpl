@@ -20,7 +20,18 @@
   }
 </script>
 
+<script type="text/javascript">
+
+$('document').ready(function(){
+  // hide navigation
+  $("#lib-nav-primary").hide();
+  $("#csssubmenu").hide();
+  $("#logout-button").hide();
+});
+
+</script>
 <div id="center" id="main">
+    <p style="font-size: 1.4em"><strong>You can close this tab to return to your search.</strong></p>
 
     <TMPL_IF name="multiple_copies">
       <h2>Your requests have been placed</h2>
