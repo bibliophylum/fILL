@@ -247,9 +247,11 @@ function requery( lid, anOpenBorrowing, anOpenLending )
 {
     var d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
     var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
-//    alert( d_s+"\n"+d_e );
-    $("#waitDiv").hide();
-    $("#tabs").show();
+
+    $("#waitDiv").show();
+    $("#tabs").hide();
+    $("#dateButton").prop('disabled', true);
+
     $.getJSON('/cgi-bin/get-history.cgi', { "lid":   lid,
                                             "start": d_s, 
                                             "end":   d_e
@@ -264,6 +266,9 @@ function requery( lid, anOpenBorrowing, anOpenLending )
               })
     	.success(function() {
 	    // alert('success');
+	    $("#waitDiv").hide();
+	    $("#tabs").show();
+	    $("#dateButton").prop('disabled', false);
        	})
        	.error(function() {
             alert('error');

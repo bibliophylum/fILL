@@ -83,19 +83,25 @@ $('document').ready(function(){
 <div id="center" role="main">
 
     <div id="instructions" class="tone-box">
-      <h3>View history</h3>
+      <h3>View history - Fetch requests within this date range:</h3>
       <form>
-
-	      <p>From:</p> <input id="startdate" type="text">
-	      <p>To: (confusing fix xyz)</p> <input id="enddate" type="text">
-        <br />
-	      <input id="dateButton fill-button" type="button" value="Fetch requests within this date range" class="library-style">
-
+	<div style="float:left">
+	  <label for="startdate">Start date:</label>
+	  <input id="startdate" type="text">
+	</div>
+	<div style="float:left">
+	  <label for="enddate">End date:</label>
+	  <input id="enddate" type="text">
+	</div>
+	<div style="float:left">
+	  <input id="dateButton" type="button" class="library-style" value="Fetch requests...">
+	</div>
+	<div style="clear:both">
       </form>
     </div>
 
     <div id="waitDiv">
-      Loading... <img src="/wait.gif">
+      Getting requests from history... <img src="/wait.gif">
     </div>
 
     <div id="tabs">
