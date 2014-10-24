@@ -140,7 +140,7 @@ function receive( requestId ) {
 			
 			var para;
 			if ($("#multiPrint > div").length == 1) {
-			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
+			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" class="library-style" onclick="printMulti(); return false;" value="Print now"></p>';
 			} else {
 			    para='<p class="slipCount">There are '+$("#multiPrint > div").length+' slips to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
 			}
