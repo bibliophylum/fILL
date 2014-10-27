@@ -712,11 +712,11 @@ and (max-width : 65em)
 
 
 /* action button styles for data table buttons */
-input[type="button"].action-button {
+input[type="button"].action-button, button.action-button {
     background-color: #084B8A;
     color: #fff;
 }
-input[type="button"]:hover.action-button {
+input[type="button"]:hover.action-button, button:hover.action-button {
     background-color: #6391bb;
     color: #fff;
 }
@@ -729,3 +729,36 @@ input[type="button"]:hover.action-button-highlighted {
     color: #fff;
 }
 
+/* test */
+/* overrides button styles get overrun by jquery-ui styles... the background-image: none
+   is important.... */
+/*
+#overrides-list button:hover .override-button {
+    background-color: #6391bb;
+    color: #fff;
+}
+*/
+
+/* works... but ugly:
+html body.example_alt_pagination div#container div#center div#tabs.ui-tabs.ui-widget.ui-widget-content.ui-corner-all div#tabs-1.ui-tabs-panel.ui-widget-content.ui-corner-bottom div#datatable_borrowing_wrapper.dataTables_wrapper table#datatable_borrowing.dataTable tbody tr.details td.details div.innerDetails table#overrides-list tbody tr td button#bReceive.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #084B8A;
+    color: #fff;
+}
+*/
+
+/* better...
+#overrides-list tbody tr td button#bReceive.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #084B8A;
+    color: #fff;
+}
+*/
+#overrides-list tbody tr td button.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #0f4072;
+    color: #fff;
+    background-image: none;
+}
+#overrides-list tbody tr td button:hover.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #6391bb;
+    color: #fff;
+    background-image: none;
+}

@@ -269,18 +269,28 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
     var oTable = $tbl.dataTable();
     var aData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
-	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReceive" class="action-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bTryNextLender" class="action-button">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bNoFurtherSources" class="action-button">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bCancel" class="action-button">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bClose" class="action-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+//    sOut = sOut+'<tr><td><input type="button" id="bReceive" class="action-button" value="Receive" /></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bReceive" class="override-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bTryNextLender" class="override-button">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bNoFurtherSources" class="override-button">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bCancel" class="override-button">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bClose" class="override-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
     $(nDetailsRow).attr('detail','overrides');
+
+    // remove jquery-ui formatting of buttons
+    // DOESN'T WORK... button colours are wrong :-(
+//    $("#overrides-list :button").removeClass();
+//    $("#overrides-list :button").addClass("library-style override-button");
+    //$("#overrides-list :button").css('background', "transparent");
+//    $("#overrides-list :button").css('background-image', "none");
+
+
     $('#bReceive').button();
     $('#bReceive').click(function() { 
 	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Shipped'.");
@@ -322,11 +332,11 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
     var oTable = $tbl.dataTable();
     var aData = oTable.fnGetData( nTr );
     sOut = '<div class="innerDetails">'+
-	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReturned" class="action-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bDueDate" class="action-button">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
+    sOut = sOut+'<tr><td><button id="bReturned" class="override-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bDueDate" class="override-button">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
@@ -361,7 +371,8 @@ function activate_detail_control( $tbl, anOpen ) {
     $tbl.on("click", "td.control", function() {
       var nTr = this.parentNode;
       var i = $.inArray( nTr, anOpen );
-      var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+//      var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+	var sImageUrl = "/plugins/DataTables-1.10.2/examples/resources/";
 
       if (i === -1) {
         $('img', this).attr( 'src', sImageUrl+"details_close.png" );
@@ -399,50 +410,51 @@ function activate_detail_control( $tbl, anOpen ) {
 function activate_overrides_control( $tbl, anOpen ) {
 
     $tbl.on("click", "td.overrides", function() {           // reduce bubble-up
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpen );
-      var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+	var nTr = this.parentNode;
+	var i = $.inArray( nTr, anOpen );
+//	var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+	var sImageUrl = "/plugins/DataTables-1.10.2/examples/resources/";
 
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-        var id = $tbl.attr("id");
-        if (id == "datatable_borrowing") {
-          fnFormatBorrowingOverrides($tbl, nTr, anOpen);
-        } else if (id == "datatable_lending") {
-          fnFormatLendingOverrides($tbl, nTr, anOpen);
-        }
-        anOpen.push( nTr );
-      }
-      else {
-
-        // If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="overrides"]');
-        if (rOpen.length == 0) {
-          // must be conversation that is open.  close it and open the overrides
-          $(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            $tbl.fnClose( nTr );
-            anOpen.splice( i, 1 );
-
-            $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+	if ( i === -1 ) {
+            $('img', this).attr( 'src', sImageUrl+"details_close.png" );
             var id = $tbl.attr("id");
             if (id == "datatable_borrowing") {
-              fnFormatBorrowingOverrides($tbl, nTr, anOpen);
+		fnFormatBorrowingOverrides($tbl, nTr, anOpen);
             } else if (id == "datatable_lending") {
-              fnFormatLendingOverrides($tbl, nTr, anOpen);
+		fnFormatLendingOverrides($tbl, nTr, anOpen);
             }
             anOpen.push( nTr );
-          } );
-          
-        } else {
-          // overrides is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            $tbl.fnClose( nTr );
-            anOpen.splice( i, 1 );
-          } );
-        }
-      }
+	}
+	else {
+	    
+            // If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+            var rOpen = $(nTr).next('[detail*="overrides"]');
+            if (rOpen.length == 0) {
+		// must be conversation that is open.  close it and open the overrides
+		$(nTr).children('.control').children('img').attr( 'src', sImageUrl+"details_open.png" );
+		$('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+		    $tbl.fnClose( nTr );
+		    anOpen.splice( i, 1 );
+		    
+		    $(nTr).children('.overrides').children('img').attr( 'src', sImageUrl+"details_close.png" );
+		    var id = $tbl.attr("id");
+		    if (id == "datatable_borrowing") {
+			fnFormatBorrowingOverrides($tbl, nTr, anOpen);
+		    } else if (id == "datatable_lending") {
+			fnFormatLendingOverrides($tbl, nTr, anOpen);
+		    }
+		    anOpen.push( nTr );
+		} );
+		
+            } else {
+		// overrides is open, user is closing it.
+		$('img', this).attr( 'src', sImageUrl+"details_open.png" );
+		$('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+		    $tbl.fnClose( nTr );
+		    anOpen.splice( i, 1 );
+		} );
+            }
+	}
     });
 }
 

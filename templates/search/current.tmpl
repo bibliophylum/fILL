@@ -21,7 +21,8 @@ $('document').ready(function(){
     var anOpenBorrowing = [];
     var anOpenLending = [];
     var anOpenNotfilled = [];
-    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+    //var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+    var sImageUrl = "/plugins/DataTables-1.10.2/examples/resources/";
 
     $.getJSON('/cgi-bin/get-current-requests.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){

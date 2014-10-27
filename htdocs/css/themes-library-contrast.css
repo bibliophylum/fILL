@@ -728,3 +728,16 @@ input[type="button"]:hover.action-button-highlighted {
     background-color: #959595;
     color: #fff;
 }
+
+/* overrides button styles get overrun by jquery-ui styles... the background-image: none
+   is important.... */
+#overrides-list tbody tr td button.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #000;
+    color: #fff;
+    background-image: none;
+}
+#overrides-list tbody tr td button:hover.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #959595;
+    color: #fff;
+    background-image: none;
+}
