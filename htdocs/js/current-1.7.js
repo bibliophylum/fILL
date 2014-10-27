@@ -272,11 +272,11 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReceive">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bTryNextLender">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bNoFurtherSources">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bCancel">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bClose">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bReceive" class="action-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bTryNextLender" class="action-button">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bNoFurtherSources" class="action-button">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bCancel" class="action-button">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bClose" class="action-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
@@ -325,8 +325,8 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReturned">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bDueDate">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
+    sOut = sOut+'<tr><td><button id="bReturned" class="action-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bDueDate" class="action-button">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
     var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details overrideRow' );
@@ -444,7 +444,6 @@ function activate_overrides_control( $tbl, anOpen ) {
         }
       }
     });
-
 }
 
 $(function() {
