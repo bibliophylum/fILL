@@ -3,6 +3,10 @@
 *, *:before, *:after {
 }
 
+body {
+  color: #fff;
+}
+
 /* unvisted link */
  a:link {
 	color: #fff;
