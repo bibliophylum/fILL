@@ -5,27 +5,27 @@
 
 /* unvisted link */
  a:link {
-	color: #183935;
+	color: #000;
 }
 
 /* visited link */
  a:visited {
-	color: #183935;
+	color: #000;
 }
 
 /* mouse over link */
  a:hover {
-	color: #383;
+	color: #0f4072;
 }
 
 /*focus over link*/
 a:focus {
-	color: #383;
+	color: #0f4072;
 }
 
 /*selected link */
  a:active {
-	color: #183935;
+	color: #000;
 }
 
 html, body {
