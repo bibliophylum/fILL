@@ -592,6 +592,7 @@ and (max-width : 65em)
 #lib-nav-primary
 {
   border-bottom: #505050 solid 5px;
+  border-width: auto;
 }
 
 #lib-nav-primary ul
