@@ -622,9 +622,9 @@ div.termtitle {
 #clear {
 	display: block;
 	clear: both;
-	height: 1em;
+	height: .5em;
 	width: 100%;
-	margin: 0;
+	margin: .5em 0em;
 	padding: 0;
 	border: 0;
 }
