@@ -209,8 +209,8 @@ nav li a
 
 footer
 {
-	border-bottom: 3px solid #aabdba;
-	background: #d9efec;
+	border-bottom: 3px solid #505050;
+	background: #000;
 }
 /*--Button and input styles--*/
 
@@ -307,11 +307,11 @@ input[type=text], input[type=password]
 }
 
 button {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .button-left:link {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .button-left:hover {
@@ -324,7 +324,7 @@ button {
 }
 
 .button-right {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .tone-box.button-left {
