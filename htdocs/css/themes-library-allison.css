@@ -209,7 +209,7 @@ nav li a
 
 footer
 {
-	border-bottom: 3px solid #505050;
+	border-top: 3px solid #505050;
 	background: #000;
 }
 /*--Button and input styles--*/
@@ -634,6 +634,7 @@ and (max-width : 65em)
 #csssubmenu 
 {
   background-color: #505050;
+  width: auto;
 }
 
 #csssubmenu ul
