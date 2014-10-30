@@ -10,6 +10,12 @@ $('document').ready(function(){
     $(".inline-items").children(":contains('home')").show();
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
 
+    var homeLibraryName = $.cookie("fILL home library name");
+    if (homeLibraryName) {
+        $("#home-library-name").text( homeLibraryName );
+        $("#home-library").show();
+    }
+
 });
 
 </script>
@@ -20,6 +26,9 @@ $('document').ready(function(){
         <div class="login-header">
           <span class="login-header-title">Log in to fILL</span>
         </div>
+	<div id="home-library">
+	  <p id="home-library-name"></p>
+	</div>
         <fieldset name="login">
           <label for="authen_username">User Name</label>
           <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>

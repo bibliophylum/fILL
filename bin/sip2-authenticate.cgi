@@ -54,7 +54,7 @@ if ($href->{sip_server_login}) {
 }
 
 #$bsc->setPatron("20967000590071","3296");
-$bsc->setPatron($query->param('barcode'),$query->param('PIN'));
+$bsc->setPatron($query->param('barcode'),$query->param('pin'));
 
 my $msg = $bsc->msgPatronStatusRequest();
 my $response = $bsc->get_message( $msg );
@@ -70,10 +70,10 @@ my $parsed = $bsc->parsePatronStatusResponse( $response );
 
 # Note: don't return the patron name when invalid PIN
 my %authorized = (
-    "valid-barcode"  => $parsed->{'variable'}{'BL'},
-    "valid-pin"      => $parsed->{'variable'}{'CQ'},
-    "patron-name"    => $parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef,
-    "screen-message" => $parsed->{'variable'}{'AF'},
+    "validbarcode"  => $parsed->{'variable'}{'BL'},
+    "validpin"      => $parsed->{'variable'}{'CQ'},
+    "patronname"    => $parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef,
+    "screenmessage" => $parsed->{'variable'}{'AF'},
     );
 
 # just for testing:

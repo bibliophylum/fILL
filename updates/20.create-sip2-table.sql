@@ -9,3 +9,5 @@ create table library_sip2 (
        sip_server_login varchar(255) default null,
        sip_server_password varchar(255) default null
 );
+
+alter table patrons add is_sip2 boolean default false;
