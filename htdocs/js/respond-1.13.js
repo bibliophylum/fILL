@@ -35,7 +35,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Call Number"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
