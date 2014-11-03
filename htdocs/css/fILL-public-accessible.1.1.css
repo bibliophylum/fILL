@@ -742,6 +742,8 @@ div.login input {
 	width 45%;
 	float: left;
 	display: inline;
+	margin: .5em;
+	
 }
 
 /*------------------------------------------------------*/
