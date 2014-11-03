@@ -739,11 +739,10 @@ div.login input {
 }
 
 .innerLeft {
-	width 40%;
+	width: 40%;
 	float: left;
 	display: inline;
-	margin: .4em;
-
+	margin: .2em;
 }
 
 /*------------------------------------------------------*/
