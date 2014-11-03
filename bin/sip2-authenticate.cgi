@@ -70,10 +70,10 @@ my $parsed = $bsc->parsePatronStatusResponse( $response );
 
 # Note: don't return the patron name when invalid PIN
 my %authorized = (
-    "validbarcode"  => $parsed->{'variable'}{'BL'},
-    "validpin"      => $parsed->{'variable'}{'CQ'},
-    "patronname"    => $parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef,
-    "screenmessage" => $parsed->{'variable'}{'AF'},
+    "validbarcode"  => $parsed->{'variable'}{'BL'} || undef,
+    "validpin"      => $parsed->{'variable'}{'CQ'} || undef,
+    "patronname"    => $parsed->{'variable'}{'CQ'} ? ($parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef) : undef,
+    "screenmessage" => $parsed->{'variable'}{'AF'} || undef,
     );
 
 # just for testing:

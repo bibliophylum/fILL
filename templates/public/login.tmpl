@@ -10,10 +10,21 @@ $('document').ready(function(){
     $(".inline-items").children(":contains('home')").show();
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
 
-    var homeLibraryName = $.cookie("fILL home library name");
-    if (homeLibraryName) {
-        $("#home-library-name").text( homeLibraryName );
+    var homeLibraryLID = $.cookie("fILL-lid");
+    var homeLibraryLocation = $.cookie("fILL-location");
+    var patronBarcode = $.cookie("fILL-barcode");
+    if (homeLibraryLocation) {
+        $("#home-library-location").text( homeLibraryLocation );
         $("#home-library").show();
+    }
+    if ($.cookie("fILL-authentication")) {
+        if ($.cookie("fILL-authentication") === "sip2") {
+            $("#sip2").show();
+            $("#non-sip2").hide()
+            $("#authen_barcode").val( patronBarcode );
+            $("#authen_lid").val( homeLibraryLID );
+            $("#authen_pin").focus();
+        }
     }
 
 });
@@ -26,15 +37,30 @@ $('document').ready(function(){
         <div class="login-header">
           <span class="login-header-title">Log in to fILL</span>
         </div>
-	<div id="home-library">
-	  <p id="home-library-name"></p>
+	<div id="home-library" style="display:none">
+	  <p>Home library location:</p>
+	  <p id="home-library-location"></p>
 	</div>
-        <fieldset name="login">
-          <label for="authen_username">User Name</label>
-          <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
-          <label for="authen_password">Password </label>
-          <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
-        </fieldset>
+
+	<div id="sip2" style="display:none">
+	  <fieldset name="login">
+	    <label for="authen_barcode">Library card number</label>
+	    <input type="text" value="" size="15" name="authen_barcode" tabindex="1" id="authen_barcode"><br>
+            <label for="authen_pin">PIN number</label>
+            <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
+            <input type="hidden" size="4" name="authen_lid" id="authen_lid"><br>
+          </fieldset>
+	</div>
+
+	<div id="non-sip2">
+          <fieldset name="login">
+            <label for="authen_username">User Name</label>
+            <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
+            <label for="authen_password">Password </label>
+            <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
+          </fieldset>
+	</div>
+
         <fieldset>
           <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
           <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>

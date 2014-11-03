@@ -70,6 +70,9 @@ function prep_registration_form( but ) {
 		    $("#lid").val( data.sip2.lid );
 		    $("#sip2").show();
 		    $("#non-sip2").hide();
+		    $.cookie("fILL-lid", data.sip2.lid);
+		    $.cookie("fILL-location", but.innerHTML);
+		    $.cookie("fILL-authentication", "sip2");
 		} else {
 		    $("#sip2").hide();
 		    $("#non-sip2").show();
@@ -146,6 +149,7 @@ function register_sip2_patron() {
 		      $("input").prop('disabled', true);
 		      $("#submitSIP2Registration").hide();
 		      $("#complete").append('<a id="fill-button" role="button" type="button" href="/cgi-bin/public.cgi">Log in to fILL</a>');
+		      $.cookie("fILL-barcode", $("#barcode").val());
 		  }
 		  $("#complete").show();
               })

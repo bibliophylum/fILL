@@ -85,7 +85,7 @@ sub setup {
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
 	'help_form'                => 'help_process',	
-	'faq_form'				   => 'faq_process',
+	'faq_form'		   => 'faq_process',
 	'contact_form'             => 'contact_process',
 	);
 }

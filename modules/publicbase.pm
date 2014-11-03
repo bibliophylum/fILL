@@ -29,36 +29,25 @@ use CGI::Application::Plugin::Authorization;
 use CGI::Application::Plugin::LogDispatch;
 use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
+use Biblio::SIP2::Client;
 
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
 
-#my %config = (
-#    DRIVER         => [ 'DBI',
-#			TABLE => 'users',
-#			CONSTRAINTS => {
-#			    'users.username' => '__CREDENTIAL_1__',
-#			    'MD5:users.password' => '__CREDENTIAL_2__'
-#			},
-#
-#    ],
-#    STORE          => 'Session',
-#    POST_LOGIN_RUNMODE => 'welcome',
-#    LOGOUT_RUNMODE => 'logged_out',
-#    LOGIN_RUNMODE => 'login',
-#    );
-#
-#fILLbase->authen->config(%config);
-#fILLbase->authen->protected_runmodes(':all');
-
 my %config = (
-    DRIVER         => [ 'DBI',
-			TABLE => 'patrons',
-			CONSTRAINTS => {
-			    'patrons.username' => '__CREDENTIAL_1__',
-			    'MD5:patrons.password' => '__CREDENTIAL_2__',
-#			    'patrons.is_enabled' => 1
-			},
-
+    CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],  # DC - trying to figure out authen for sip2...
+    DRIVER => [ 
+	[ 'DBI',
+	  TABLE => 'patrons',
+	  CONSTRAINTS => {
+	      'patrons.username' => '__CREDENTIAL_1__',
+	      'MD5:patrons.password' => '__CREDENTIAL_2__',
+#	      'patrons.is_enabled' => 1
+	  },
+	],
+#	[ 'Authen::Simple::SIP2', ...  # would have to write Authen::Simple::SIP2 :-)
+#	],
+#	[ 'Generic', sub { return checkSip2( @_ ); } ],
+	[ 'Generic', \&checkSip2 ],
     ],
     STORE          => 'Session',
     LOGIN_RUNMODE  => 'loginFOO',
@@ -72,6 +61,17 @@ publicbase->authen->config(%config);
 # protect everything but the self-registration form:
 publicbase->authen->protected_runmodes(qr/^(?!registration_)/);
 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkSip2 {
+    my ($barcode, $pin, $lid) = @_;  # not sure how/what order these get passed...
+
+    # need to call sip2-authentication.cgi and parse the result....
+
+    return 0;
+}
 
 #--------------------------------------------------------------------------------
 #
@@ -289,7 +289,7 @@ sub environment_process {
 }
 
 
-#--------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
 sub get_patron_from_username {
     my $self = shift;
     my $username = shift;
