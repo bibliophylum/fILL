@@ -1,5 +1,16 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<script language="javascript">
+
+$('document').ready(function() {
+
+  // Most primary tabs are set as the current tab in the submenu_xxxxx.
+  // welcome menu doesn't have a submenu, so we set the current tab here.
+
+  set_primary_tab("menu_home");
+});
+</script>
+
 <div id="main-left" class="tone-box" role="main">
 	<h2>Quick Links</h2>
 	<!--
