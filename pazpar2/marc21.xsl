@@ -307,6 +307,12 @@
 	    <xsl:value-of select="marc:subfield[@code='c']"/>
 	  </pz:metadata>
 	</xsl:if>
+	<!-- Jolys holdings -->
+	<xsl:if test="marc:subfield[@code='b']">
+	  <pz:metadata type="holding-mstp-location">
+	    <xsl:value-of select="marc:subfield[@code='b']"/>
+	  </pz:metadata>
+	</xsl:if>
       </xsl:for-each>
 
       <pz:metadata type="medium">
