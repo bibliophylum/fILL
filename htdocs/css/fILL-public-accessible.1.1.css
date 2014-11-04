@@ -738,6 +738,14 @@ div.login input {
 #pager {
 }
 
+.innerLeft {
+	width: 45%;
+	float: left;
+	display: inline;
+	margin: .3em;
+	padding: 1em;
+}
+
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
 #progress_empty {
