@@ -39,7 +39,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "To"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Trying source"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);

@@ -31,10 +31,10 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "prid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Card"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Barcode"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Medium"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Format"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();

@@ -124,7 +124,7 @@ function my_onstat(data) {
 
 function my_onterm(data) {
     var termlists = [];
-    termlists.push('<br><hr/><b>Refine your search by:</b>');
+    termlists.push('<br><hr/><b>Refine search:</b>');
     termlists.push('<hr/><div class="termtitle">Subjects</div>');
     for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
@@ -437,7 +437,7 @@ function renderDetails(data, marker)
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
 	if (data["location"][i]["md-medium"] != undefined) {
-	    details += '<tr><td><b>Medium</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
+	    details += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	    if (data["location"][i]["md-medium"] == "electronicresource")
 		isElectronicResource = true;
 	}
