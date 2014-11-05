@@ -1,9 +1,9 @@
-// noresponse.js
+// pending.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    noresponse.js is a part of fILL.
+    pending.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
