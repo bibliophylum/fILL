@@ -720,11 +720,15 @@ input[type="button"]:hover.action-button, button:hover.action-button {
     background-color: #6391bb;
     color: #fff;
 }
-input[type="button"].action-button-highlighted {
+input[type="button"]:disabled.action-button, button:disabled.action-button {
+    background-color: #b0b8bf;
+    color: #000;
+}
+input[type="button"].action-button-highlighted, button.action-button-highlighted {
     background-color: #8f1212;
     color: #fff;
 }
-input[type="button"]:hover.action-button-highlighted {
+input[type="button"]:hover.action-button-highlighted, button:hover.action-button-highlighted {
     background-color: #b06262;
     color: #fff;
 }

@@ -712,19 +712,23 @@ and (max-width : 65em)
 
 
 /* action button styles for data table buttons */
-input[type="button"].action-button {
+input[type="button"].action-button, button.action-button {
     background-color: #000;
     color: #fff;
 }
-input[type="button"]:hover.action-button {
+input[type="button"]:hover.action-button, button:hover.action-button {
     background-color: #959595;
     color: #fff;
 }
-input[type="button"].action-button-highlighted {
+input[type="button"]:disabled.action-button, button:disabled.action-button {
+    background-color: #cccccc;
+    color: #000;
+}
+input[type="button"].action-button-highlighted, button.action-button-highlighted {
     background-color: #424242;
     color: #fff;
 }
-input[type="button"]:hover.action-button-highlighted {
+input[type="button"]:hover.action-button-highlighted, button:hover.action-button-highlighted {
     background-color: #959595;
     color: #fff;
 }
