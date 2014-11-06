@@ -335,10 +335,10 @@ nav li a
 }
 
 .covers {
-    height: 220px;
-    width: 150px;
+    height: 200px;
+    width: 140px;
     margin-top: 2em;
-    margin: 3px;
+    margin: .3em;
 }
 .covers:hover {
 }
