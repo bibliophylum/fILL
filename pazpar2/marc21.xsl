@@ -3,7 +3,10 @@
     version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:pz="http://www.indexdata.com/pazpar2/1.0"
-    xmlns:marc="http://www.loc.gov/MARC21/slim">
+    xmlns:marc="http://www.loc.gov/MARC21/slim"
+    xmlns:date="http://exslt.org/dates-and-times"
+    extension-element-prefixes="date">
+
   
   <xsl:output indent="yes" method="xml" version="1.0" encoding="UTF-8"/>
 
@@ -17,6 +20,32 @@
   </xsl:template>
 
   <xsl:template match="marc:record">
+    <xsl:variable name="date_entered_on_file" select="substring(marc:controlfield[@tag='008'],1,6)"/>
+    <xsl:variable name="deof">
+      <xsl:choose>
+	<!-- assume 2-digit year starting with [0-2] is 21st century... -->
+	<xsl:when test="number(substring(marc:controlfield[@tag='008'],1,1)) &lt; 3">
+	  <xsl:value-of select="date:date(concat(
+				'20',
+				substring($date_entered_on_file,1,2),'-',
+				substring($date_entered_on_file,3,2),'-',
+				substring($date_entered_on_file,5,2)))"/>
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:value-of select="date:date(concat(
+				'19',
+				substring($date_entered_on_file,1,2),'-',
+				substring($date_entered_on_file,3,2),'-',
+				substring($date_entered_on_file,5,2)))"/>
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+<!--    <xsl:variable name="age_of_rec" select="date:difference($deof, date:date())"/> -->
+    <xsl:variable name="age_of_rec" select="substring(
+					    date:difference($deof, date:date()),
+					    2,
+					    string-length(date:difference($deof, date:date()))-2)"/>
+
     <xsl:variable name="title_medium" select="marc:datafield[@tag='245']/marc:subfield[@code='h']"/>
     <xsl:variable name="journal_title" select="marc:datafield[@tag='773']/marc:subfield[@code='t']"/>
     <xsl:variable name="electronic_location_url" select="marc:datafield[@tag='856']/marc:subfield[@code='u']"/>
@@ -255,6 +284,99 @@
       <pz:metadata type="has-fulltext">
         <xsl:value-of select="$has_fulltext"/> 
       </pz:metadata>
+
+      <!-- DC -->
+      <pz:metadata type="current-date">
+	<xsl:value-of select="date:date()"/>
+      </pz:metadata>
+
+      <!-- DC: change this to convert to actual date -->
+      <pz:metadata type="date-entered-on-file">
+	<xsl:value-of select="$deof"/>
+      </pz:metadata>
+
+      <pz:metadata type="age-of-rec">
+         <xsl:value-of select="$age_of_rec"/>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-30-days">
+	<xsl:if test="number($age_of_rec) &gt; 30">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-60-days">
+	<xsl:if test="number($age_of_rec) &gt; 60">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-90-days">
+	<xsl:if test="number($age_of_rec) &gt; 90">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-120-days">
+	<xsl:if test="number($age_of_rec) &gt; 120">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-150-days">
+	<xsl:if test="number($age_of_rec) &gt; 150">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-180-days">
+	<xsl:if test="number($age_of_rec) &gt; 180">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-210-days">
+	<xsl:if test="number($age_of_rec) &gt; 210">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-240-days">
+	<xsl:if test="number($age_of_rec) &gt; 240">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-270-days">
+	<xsl:if test="number($age_of_rec) &gt; 270">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-300-days">
+	<xsl:if test="number($age_of_rec) &gt; 300">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-330-days">
+	<xsl:if test="number($age_of_rec) &gt; 330">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-365-days">
+	<xsl:if test="number($age_of_rec) &gt; 365">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
+      <pz:metadata type="older-than-3650-days">
+	<xsl:if test="number($age_of_rec) &gt; 3650">
+	  <xsl:value-of select="'Y'"/>
+	</xsl:if>
+      </pz:metadata>
+
 
       <xsl:for-each select="marc:datafield[@tag='773']">
     	<pz:metadata type="citation">

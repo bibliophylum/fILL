@@ -465,7 +465,30 @@ function renderDetails(data, marker)
 	} else {
 	    details += '<tr><td><b>Holding</b></td><td><b>:</b> No holdings information </td></tr>';
 	}
+	//-------------------------------------------------------------------------
+	// testing date-entered-on-file stuff...
+	if (data["location"][i]["md-date-entered-on-file"] != undefined) 
+            details += '<tr><td><b>Date entered on file</b></td><td><b>:</b> ' + data["location"][i]["md-date-entered-on-file"] + '</td></tr>';
+/*
+	if (data["location"][i]["md-current-date"] != undefined) 
+            details += '<tr><td><b>Today</b></td><td><b>:</b> ' + data["location"][i]["md-current-date"] + '</td></tr>';
+	if (data["location"][i]["md-age-of-rec"] != undefined) 
+            details += '<tr><td><b>Age of record</b></td><td><b>:</b> ' + data["location"][i]["md-age-of-rec"] + '</td></tr>';
+
+	if (data["location"][i]["md-older-than-30-days"] != undefined) 
+            details += '<tr><td><b>Older than 30?</b></td><td><b>:</b> ' + data["location"][i]["md-older-than-30-days"] + '</td></tr>';
+	if (data["location"][i]["md-older-than-60-days"] != undefined) 
+            details += '<tr><td><b>Older than 60?</b></td><td><b>:</b> ' + data["location"][i]["md-older-than-60-days"] + '</td></tr>';
+	if (data["location"][i]["md-older-than-90-days"] != undefined) 
+            details += '<tr><td><b>Older than 90?</b></td><td><b>:</b> ' + data["location"][i]["md-older-than-90-days"] + '</td></tr>';
+	if (data["location"][i]["md-older-than-120-days"] != undefined) 
+            details += '<tr><td><b>Older than 120?</b></td><td><b>:</b> ' + data["location"][i]["md-older-than-120-days"] + '</td></tr>';
+	if (data["location"][i]["md-older-than-3650-days"] != undefined) 
+            details += '<tr><td><b>Older than 3650?</b></td><td><b>:</b> ' + data["location"][i]["md-older-than-3650-days"] + '</td></tr>';
+*/
+	//-end testing date-entered-on-file stuff-----------------------------------------
 	
+
 //	if (data["location"][i]["md-symbol"] != undefined) {
 //	    details += '<tr><td><b>Library symbol</b></td><td><b>:</b> ' + data["location"][i]["md-symbol"]  + '</td></tr>';
 //	    if (data["location"][i]["md-symbol"] == 'SPRUCE') {

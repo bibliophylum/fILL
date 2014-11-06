@@ -8,6 +8,8 @@
   <set target="64.93.97.135:5666/LSPacZ" name="pz:cclmap:isbn" value="u=7 r=3"/>
   <set target="64.93.97.135:5666/LSPacZ" name="pz:cclmap:issn" value="u=8 r=3"/>
 
+  <!-- only include records that are more than 180 days old -->
+  <set target="64.93.97.135:5666/LSPacZ" name="pz:recordfilter" value="older-than-180-days=Y"/>
   <!-- mapping for unqualified search -->
   <set target="64.93.97.135:5666/LSPacZ" name="pz:cclmap:term" value="u=1016 t=l,r s=al r=3"/>
 
