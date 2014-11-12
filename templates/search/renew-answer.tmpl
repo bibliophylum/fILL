@@ -17,8 +17,7 @@ $('document').ready(function(){
             function(data){
                 //console.log(data.renewRequests[0].id);
                 //console.log(data.renewRequests[0].title);
-                //alert(data); //uncomment this for debug
-                //alert (data.renewRequests[0].id+" "+data.renewRequests[0].msg_from+" "+data.renewRequests[0].call_number+" "+data.renewRequests[0].author+" "+data.renewRequests[0].title+" "+data.renewRequests[0].ts); //further debug
+
                 build_table(data);
 
                 oTable = $('#renewal-answer-table').dataTable({
@@ -92,11 +91,11 @@ $('document').ready(function(){
 
   <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <ol>
-      <li>If your due date is the same for all (or most) requests you are renewing, enter that as the "default due date".</li>
+    <ul>
+      <li>If you want to change the due date of items, set the due date and click "Apply due date."  This will change the due dates for all the items in the table.</li>
       <li>For each of the requests that you are renewing, click the "Renew OK" button.</li>
       <li>For each remaining request - those that will be unfilled - click the "Can't renew".</li>
-    </ol>
+    </ul>
   </div>
 
 </div>

@@ -121,13 +121,20 @@ function request_renewal( requestId ) {
 	      })
 	.success(function() {
 	    // alert('success');
-	    // print slip (single) / add to slip page (multi) / do nothing (none)
+	    // change the text of the Status column, and highlight it.
+	    var tbl = $('#renewals-table').DataTable(); // note the capitalized "DataTable"
+	    var cell = tbl.cell( aPos, 9 );
+	    cell.data('Renew');
+	    var jQcell = cell.nodes();
+	    $(jQcell).stop(true,true).effect("highlight", {}, 2000);
+	    $("#divResponses"+requestId).empty();  // remove the button
 	})
 	.error(function() {
 	    alert('error');
 	})
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
-	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    // Hmm... don't actually want the row removed, just updated.
+	    //$("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }

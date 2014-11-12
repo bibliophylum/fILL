@@ -38,7 +38,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
@@ -166,22 +166,23 @@ function cannotRenew( requestId ) {
     crDiv.id = "cannotRenewMessage";
     var crForm = document.createElement("form");
     crDiv.appendChild(crForm);
-    myRow[0].cells[10].appendChild(crDiv);
+    $("#divResponses"+requestId).after( crDiv ); // crDiv is sibling of divResponses
 
     $("#divResponses"+requestId).hide();
 
     $("<p />").text("You can enter a message if you'd like:").appendTo(crForm);
     $("<input />").attr({'type':'text','id':'crmsg'}).appendTo(crForm);
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(crForm);
+    var cButton = $("<input type='button' class='action-button' value='Cancel'>").appendTo(crForm);
     cButton.bind('click', function() {
 	$("#cannotRenewMessage").remove(); 
 	$("#divResponses"+requestId).show(); 
 	//return false;
     });
 
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(crForm);
+    var sButton = $("<input type='button' class='action-button' value='Submit'>").appendTo(crForm);
     sButton.bind('click', function() {
-	var reason = $('input:[id=crmsg]').val();
+	var reason = $('#crmsg').val();
+	alert( reason );
 	$("#cannotRenewMessage").remove(); 
 	$("#divResponses"+requestId).show(); 
 	var parms = {

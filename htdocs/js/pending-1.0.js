@@ -34,11 +34,11 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron / Group"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Req Placed"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Request Placed"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Age (days)"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "To"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Trying source"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Trying lender"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
@@ -73,7 +73,7 @@ function build_table( data ) {
 	b1.value = "Try next lender";
 	b1.className = "action-button";
 	if (+data.noresponse[i].tried >= +data.noresponse[i].sources) {
-	    b1.value = "No further sources";
+	    b1.value = "No other lenders";
 	    b1.disabled = "disabled";
 	}
         if (+data.noresponse[i].age < 3) {
