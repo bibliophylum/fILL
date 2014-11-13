@@ -1,0 +1,11 @@
+Hmm.  This branch works on my laptop, but not on the staging server...
+
+It fills the pazpar2 log with:
+
+10:32:36-13/11 pazpar2 [warn] XML: xmlXPathCompOpEval: function date not found
+10:32:36-13/11 pazpar2 [warn] XML: Unregistered function
+10:32:36-13/11 pazpar2 [warn] XSLT: runtime error: file /etc/pazpar2/marc21.xsl line 32 element value-of
+10:32:36-13/11 pazpar2 [warn] XSLT: XPath evaluation returned no result.
+
+
+Clearly I'm missing something.  Back-burnered until after library-dev merge....
