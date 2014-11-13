@@ -5,9 +5,6 @@
   <set target="catalogue.bclibraries.ca:210/MWP" name="pz:name" value="Legislative Library"/>
   <set target="catalogue.bclibraries.ca:210/MWP" name="symbol" value="MWP"/>
 
-  <!-- only include records that are more than 180 days old -->
-  <set target="catalogue.bclibraries.ca:210/MWP" name="pz:recordfilter" value="older-than-180-days=Y"/>
-
 <!-- settings apply to all targets -->
 
   <!-- mapping for unqualified search -->

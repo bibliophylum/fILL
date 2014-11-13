@@ -6,9 +6,6 @@
   <set target="wmrl.ipac.sirsidynix.net:210/wmrl" name="pz:name" value="Western Manitoba Regional Library (Horizon)"/>
   <set target="wmrl.ipac.sirsidynix.net:210/wmrl" name="symbol" value="MBW"/>
 
-  <!-- only include records that are more than 180 days old -->
-  <set target="wmrl.ipac.sirsidynix.net:210/wmrl" name="pz:recordfilter" value="older-than-180-days=Y"/>
-
   <!-- mapping for unqualified search -->
   <!--set name="pz:cclmap:term" value="u=4 t=l,r s=al 2=102"/-->  <!-- WRML doesn't support 'Any' search? -->
   <set target="wmrl.ipac.sirsidynix.net:210/wmrl" name="pz:cclmap:term" value="u=1035 t=l,r s=al r=102"/>  <!-- WRML doesn't support 'Any' search? Uses 'Anywhere' instead. -->

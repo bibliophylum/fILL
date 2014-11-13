@@ -6,9 +6,6 @@
   <set target="198.163.53.31:210/horizon" name="pz:name" value="Winnipeg Public Library (Horizon)"/>
   <set target="198.163.53.31:210/horizon" name="symbol" value="MW"/>
 
-  <!-- only include records that are more than 180 days old -->
-  <set target="198.163.53.31:210/horizon" name="pz:recordfilter" value="older-than-180-days=Y"/>
-
   <!-- mapping for unqualified search -->
   <set target="198.163.53.31:210/horizon" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
 

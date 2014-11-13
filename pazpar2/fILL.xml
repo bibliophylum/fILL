@@ -105,27 +105,9 @@
 
   <!-- fILL -->
   <metadata name="symbol" setting="postproc" brief="yes" merge="no"/>
-  <metadata name="date-entered-on-file"/>
-  <metadata name="current-date"/>
-  <metadata name="age-of-rec"/>
-
-  <metadata name="older-than-30-days"/>
-  <metadata name="older-than-60-days"/>
-  <metadata name="older-than-90-days"/>
-  <metadata name="older-than-120-days"/>
-  <metadata name="older-than-150-days"/>
-  <metadata name="older-than-180-days"/>
-  <metadata name="older-than-210-days"/>
-  <metadata name="older-than-240-days"/>
-  <metadata name="older-than-270-days"/>
-  <metadata name="older-than-300-days"/>
-  <metadata name="older-than-330-days"/>
-  <metadata name="older-than-365-days"/>
-  <metadata name="older-than-3650-days"/>
-
   <!-- Jolys-specific holding info... they share database with school division,
   and we need to be able to filter out records from the schools -->
-  <metadata name="holding-mstp-location"/> 
+  <metadata name="holding-mstp"/> 
 
 </service>
 <!-- Keep this comment at the end of the file

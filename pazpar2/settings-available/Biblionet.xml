@@ -24,9 +24,6 @@
   <set target="199.204.69.199:210/steanne_ils" name="symbol" value="MSA"/>
 
 <!-- settings apply to all targets-->
-  <!-- only include records that are more than 180 days old -->
-  <set name="pz:recordfilter" value="older-than-180-days=Y"/>
-
   <!-- mapping for unqualified search -->
   <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/>
 

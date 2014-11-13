@@ -7,9 +7,6 @@
   <!-- don't include records that don't have 852$b="JRL" -->
   <set name="pz:recordfilter" value="holding-mstp-location=JRL"/>
 
-  <!-- only include records that are more than 180 days old -->
-  <set name="pz:recordfilter" value="older-than-180-days=Y"/>
-
   <!-- mapping for unqualified search -->
   <!--  <set name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=102"/> -->
   <!-- Destiny z39.50 server doesn't understand relation attrubute "relevance"; use "equal" instead. -->
