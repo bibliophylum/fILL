@@ -660,7 +660,9 @@ div.termtitle {
 
 .login-header-title {
   font-size: 2em;
-  padding: .5em;
+  padding: .5em .5em 0em .5em;
+  margin-top: 1em;
+  display: block;
 }
 
 .login-footer {
@@ -669,33 +671,47 @@ div.termtitle {
 }
 
 fieldset input {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 fieldset input span {
-	 vertical-align: middle;
+    vertical-align: middle;
 }
 
 div.login fieldset {
-  margin: 1em 0em 0em 0em;
+  margin: 0em 0em 0em 0em;
   padding: 5px;
   border: none;
   width: 100%;
   
 }
+/*
 div.login label {
   text-align: center;
   padding: 0;
   margin-left: 1em;
   width: 8em;
   font-size: 1em;
+  min-width: 140px;
 }
-
+*/
+div.login label {
+    float: left;
+    width: 20%;
+    text-align: right;
+    margin-right: 0.5em;
+    font-size: 1em;
+    padding-top: 1.6em;
+}
 
 div.login input {
   margin-left: 10px;
 }
 
+div.login label, div.login input {
+    display: inline-block;
+    vertical-align: baseline;
+}
 
 #divChangePass { 
 	display: none;
