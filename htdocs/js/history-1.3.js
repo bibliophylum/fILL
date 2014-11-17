@@ -57,16 +57,16 @@ function create_table_borrowing( data ) {
     cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "patron barcode"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Patron barcode"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "History of requests you've made to borrow items.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -104,16 +104,16 @@ function create_table_lending( data ) {
     
     cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "requested by"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Requested by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "History of requests other libraries have made for you to lend items.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
