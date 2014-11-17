@@ -80,7 +80,7 @@ $('document').ready(function(){
       </table>
     
  
-    <a id="showChangePassButton butlink" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button" type="button">Change password</a>
+    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button" type="button">Change password</a>
 
 
     <div id="divChangePass">
@@ -99,9 +99,9 @@ $('document').ready(function(){
   	  <td><input type="password" name="newpass2" id="newpass2"></td>
   	</tr>
         </table>
-        <input type="hidden" name="pid" value=<TMPL_VAR name="pid">
-        <input id="changePassword" type="submit" value="Change" class="fill-button">
-        <input id="cancel" type="button" value="Cancel" class="butlink">
+        <input type="hidden" name="pid" value=<TMPL_VAR name="pid">>
+        <input id="changePassword" type="submit" value="Change" class="public-style">
+        <input id="cancel" type="button" value="Cancel" class="public-style">
       </form>
     </div>
   </div>

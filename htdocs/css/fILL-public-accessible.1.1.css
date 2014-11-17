@@ -579,7 +579,7 @@ div.termtitle {
 	font-weight: bold;
 	font-size: 1.2em;
 }
-
+/*
 #fill-table td, #fill-table th {
 }
 #fill-table tr:first-child th {
@@ -596,7 +596,7 @@ div.termtitle {
 #fill-table tr th:last-child {
   border-right: 0;
 }
-
+*/
 .table-width-pub {
 	width: 70%;
 }
