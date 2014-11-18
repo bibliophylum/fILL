@@ -881,7 +881,7 @@ where r.id=?
 
     eval {
         open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
-        print SENDMAIL 'To: ' . $to_email;
+        print SENDMAIL 'To: ' . $to_email . "\n";
         print SENDMAIL $subject;
         print SENDMAIL "Content-type: text/plain\n\n";
         print SENDMAIL $content;
