@@ -142,6 +142,11 @@
   width: 90%;
 }
 
+#history {
+  display:inline; 
+  margin:1em;
+}
+
 /*-- specific to make_request.tmp --*/
 #toptwo {
     width: 100%;

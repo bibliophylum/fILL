@@ -82,22 +82,22 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-  <div id="instructions" class="tone-box">
-      <h3>View completed ILL requests within this date range:</h3>
-  
-  <form>
-	<div style="float:left">
-	  <label for="startdate">Start date:</label>
-	  <input id="startdate" type="text">
-	</div>
-	<div style="float:left">
-	  <label for="enddate">End date:</label>
-	  <input id="enddate" type="text">
-	</div>
-	<div style="float:left">
-	  <input id="dateButton" type="button" class="library-style" value="Fetch requests">
-	</div>
-      </form>
+<div id="instructions" class="tone-box">
+    <h3>View completed ILL requests within this date range:</h3>
+
+      <form>
+        <div id="history">
+
+          <label for="startdate">Start date:</label>
+          <input id="startdate" type="text">
+
+          <label for="enddate">End date:</label>
+          <input id="enddate" type="text">
+      
+          <input id="dateButton" type="button" class="library-style" value="Fetch requests">
+      </div>
+    </form>
+<br>
   </div><!--div id instructions-->
 
 	<div style="clear:both"></div>
