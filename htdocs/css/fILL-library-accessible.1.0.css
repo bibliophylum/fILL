@@ -133,13 +133,19 @@
 }
 
 #center {
+  width: 100%;
   margin-top: 1em;
-  display: block;
+  display: inline-block;
   clear: left;
 }
 
 .table-width-lib {
   width: 90%;
+}
+
+#history {
+  display:inline; 
+  margin:1em;
 }
 
 /*-- specific to make_request.tmp --*/
