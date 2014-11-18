@@ -178,9 +178,9 @@ $('document').ready(function(){
 
     <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <ul>
-      <li>If there is a problem with an item on this list, click the "Override" button (green plus sign in the right-most column) to view options.</li>
-    </ul>
+
+<h3>Borrowing Tab</h3>
+<p>If there is a problem with an item on this list, click the "Override" button (green plus sign in the right-most column) to view options.</p>
 
 <table>
 <th><td>Action</td><td>Do this...</td></th>
@@ -212,8 +212,29 @@ An override message will be added to the request, and it will be closed and move
         <td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as ‘Checked in to ILS’
 An override message will be added to the request, and it will be closed and moved to history.
 </td>
+</table>
+
+<h3>Lending Tab</h3>
+<p>If there is a problem with an item on this list, click the ‘Override’ button (green plus sign) to view options.</p>
+
+<table>
+   <th><td>Action</td><td>Do this...</td></th>
     </tr>
-</table>    
+        <tr>
+        <td>Returned</td>
+        <td>if you have received the book back from the borrower, but the borrower has not marked it as ‘Returned’
+An override message will be added to the request, and it will be marked as ‘Checked in to ILS’ and moved to history.
+</td>
+    </tr>
+        <tr>
+        <td>Change due date</td>
+        <td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as ‘Received’ yet)</td>
+    </tr>
+</table> 
+  
+<h3>We could not lend</h3>
+<p>See the status column for the reason a request was unfilled. </p>
+
 
     </div>
     
