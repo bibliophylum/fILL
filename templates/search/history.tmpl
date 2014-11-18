@@ -82,9 +82,10 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-    <div id="instructions" class="tone-box">
+  <div id="instructions" class="tone-box">
       <h3>View completed ILL requests within this date range:</h3>
-      <form>
+  
+  <form>
 	<div style="float:left">
 	  <label for="startdate">Start date:</label>
 	  <input id="startdate" type="text">
@@ -96,9 +97,10 @@ $('document').ready(function(){
 	<div style="float:left">
 	  <input id="dateButton" type="button" class="library-style" value="Fetch requests">
 	</div>
-	<div style="clear:both">
       </form>
-    </div>
+  </div><!--div id instructions-->
+
+	<div style="clear:both"></div>
 
     <div id="waitDiv">
       Getting requests from history... <img src="/wait.gif">
