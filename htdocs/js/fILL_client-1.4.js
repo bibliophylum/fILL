@@ -73,6 +73,10 @@ function my_onshow(data) {
     	    html.push('<span>'+hit["md-title-responsibility"]+'</span>');
       	}
 
+	if (hit["md-medium"] != undefined) {
+	    html.push(' <span><font style="background-color: white; font-weight: bold">' + hit["md-medium"] + '</font></span>');
+	}
+
         if (hit.recid == curDetRecId) {
             html.push(renderDetails(curDetRecData));
         }
