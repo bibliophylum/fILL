@@ -126,8 +126,10 @@
   border-bottom: 3px solid  #b3b3b3;
   text-align: center;
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.1em;
   padding: .5em;
+  margin-bottom: .5em;
+  color: #000;
 }
 
 .circle {
