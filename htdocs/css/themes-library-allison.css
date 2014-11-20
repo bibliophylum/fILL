@@ -193,6 +193,11 @@ nav li a
 	border: 2px solid  #ccc;
 }
 
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+}
+
 .lighter-box {
 }
 

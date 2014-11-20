@@ -188,6 +188,11 @@ nav li a
 	border-bottom: 3px solid  #959595;
 }
 
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+}
+
 .lighter-box {
 }
 

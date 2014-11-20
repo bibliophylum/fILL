@@ -121,6 +121,11 @@
 
 /* Circle has been created to highlight alerts */
 
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+}
+
 .circle {
   font-size: .8em;
   font-family: sans-serif;
