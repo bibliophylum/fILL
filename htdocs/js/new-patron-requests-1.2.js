@@ -35,11 +35,13 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Format"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "PubDate"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ISBN"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "These are new requests from your patrons.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "These are new requests from your patrons.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -55,6 +57,8 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].medium;
+        cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].pubdate;
+        cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].isbn;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");

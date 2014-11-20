@@ -413,11 +413,17 @@ function renderDetails(data, marker)
   	}
  	details += '</td></tr>';
     }
-    if (data["md-date"] != undefined)
-        details += '<tr><td><b>Date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
     if (data["md-author"] != undefined) {
         details += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
 	requestForm += '<input type="hidden" name="author" value="' + data["md-author"] + '">';
+    }
+    if (data["md-date"] != undefined) {
+        details += '<tr><td><b>Publication date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
+	requestForm += '<input type="hidden" name="pubdate" value="' + data["md-date"] + '">';
+    }
+    if (data["location"][0]["md-isbn"] != undefined) {
+        details += '<tr><td><b>ISBN</b></td><td><b>:</b> ' + data["location"][0]["md-isbn"] + '</td></tr>';
+	requestForm += '<input type="hidden" name="isbn" value="' + data["location"][0]["md-isbn"] + '">';
     }
     if (data["md-electronic-url"] != undefined)
         details += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';

@@ -104,6 +104,8 @@ my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
 if ($@) {
     $author = unidecode( $q->param('author') );
 }
+my $pubdate = $q->param('pubdate');
+my $isbn = $q->param('isbn');
 
 # check if this is a duplicate of an existing request (e.g. patron hit 'reload')
 my $matching = $dbh->selectall_arrayref(
@@ -198,13 +200,15 @@ $medium = sprintf("%.40s", $medium);
 
 # These should be atomic...
 # create the request_group
-$dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid) VALUES (?,?,?,?,?)",
+$dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid, pubdate, isbn) VALUES (?,?,?,?,?,?,?)",
 	 undef,
 	 $title,
 	 $author,
 	 $medium,
 	 $pid,     # requester
-	 $lid      # requester's home library
+	 $lid,     # requester's home library
+	 $pubdate,
+	 $isbn
     );
 my $pr_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'patron_request_seq'});
 

@@ -71,8 +71,12 @@ function my_onshow(data) {
 	    $recDiv.append( $('<span class="indent">' + hit["md-title-remainder"] + ' </span>') );
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-	    $recDiv.append( $('<span class="indent">'+hit["md-title-responsibility"]+'</span>') );
+	    $recDiv.append( $('<span class="indent">'+hit["md-title-responsibility"]+' </span>') );
       	}
+
+	if (hit["md-medium"] != undefined) {
+	    $recDiv.append( $('<span><font style="background-color: white; font-weight: bold">' + hit["md-medium"] + '</font></span>') );
+	}
 
         if (hit.recid == curDetRecId) {
 	    $recDiv.append( renderDetails(curDetRecData) );
@@ -446,7 +450,7 @@ function primaryDetails(data) {
  	primary += '</td></tr>';
     }
     if (data["md-date"] != undefined)
-        primary += '<tr><td><b>Date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
+        primary += '<tr><td><b>Publication date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
     if (data["md-author"] != undefined) {
         primary += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     }
@@ -536,6 +540,12 @@ function buildRequestForm(data) {
     }
     if (data["md-author"] != undefined) {
 	requestForm += '<input type="hidden" name="author" value="' + data["md-author"] + '">';
+    }
+    if (data["md-date"] != undefined) {
+	requestForm += '<input type="hidden" name="pubdate" value="' + data["md-date"] + '">';
+    }
+    if (data["location"][0]["md-isbn"] != undefined) {
+	requestForm += '<input type="hidden" name="isbn" value="' + data["location"][0]["md-isbn"] + '">';
     }
 
     var len=data["location"].length;
