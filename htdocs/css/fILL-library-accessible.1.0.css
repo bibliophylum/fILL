@@ -9,7 +9,7 @@
 	width: 30%;
 	padding: 1em;
 	float: left;
-	display: block;
+	display: inline;
 	margin-bottom: 1em;
 }
 
@@ -124,6 +124,10 @@
 .alert-box {
   background: #FFFF66;
   border-bottom: 3px solid  #b3b3b3;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: .5em;
 }
 
 .circle {
