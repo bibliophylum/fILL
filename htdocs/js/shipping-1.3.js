@@ -81,16 +81,20 @@ function build_table( data ) {
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
+	b1.id = "ship"+requestId;
 	b1.value = "Sent - mark item as shipped.";
-	b1.className = "action-button";
+	// class ship-it-button is used in function set_default_due_date()
+	b1.className = "action-button ship-it-button";
 	b1.style.fontSize = "150%";
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	var b2 = document.createElement("input");
 	b2.type = "button";
+	b2.id = "unship"+requestId;
 	b2.value = "Oops! Return this to the Respond list.";
-	b2.className = "action-button";
+	// class unship-button is used in function set_default_due_date()
+	b2.className = "action-button unship-button";
 	b2.onclick = make_unship_handler( requestId );
 	divResponses.appendChild(b2);
 	
@@ -186,9 +190,25 @@ function unship( requestId ) {
 
 function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["datepicker"].value;
+    var tbl = $("#shipping-table").DataTable(); // note the capitalized "DataTable"
+
     $(".due-date").each(function(){
-	$(this).text( defaultDueDate );
+	tbl.cell(this).data( defaultDueDate );
     });
+
+    // using cell.data() recreates the row, losing the dynamically created
+    // button handlers in the process.  We need to recreate them:
+
+    $(".ship-it-button").each(function(){
+	var requestId = this.id.slice(4); // button id starts with "ship"
+	this.onclick = make_shipit_handler( requestId );
+    });
+
+    $(".unship-button").each(function(){
+	var requestId = this.id.slice(6); // button id starts with "unship"
+	this.onclick = make_unship_handler( requestId );
+    });
+
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
 
