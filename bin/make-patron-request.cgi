@@ -85,7 +85,7 @@ my $hr_id = $dbh->selectrow_hashref(
     undef,
     $username
     );
-#print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id);
+print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id);
 my $pid = $hr_id->{pid};
 my $lid = $hr_id->{home_library_id};
 my $library = $hr_id->{library};
@@ -196,7 +196,13 @@ foreach my $num (sort keys %sources) {
 }
 #print STDERR "make-patron-request.cgi sources array:\n" . Dumper(@sources) ;
 
-$medium = sprintf("%.40s", $medium);
+$title   = sprintf("%.1024s", $medium);
+$author  = sprintf("%.256s", $medium);
+$medium  = sprintf("%.80s", $medium);
+$pubdate = sprintf("%.20s", $pubdate);
+$isbn    = sprintf("%.20s", $isbn);
+
+print STDERR "pid [$pid] lid [$lid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
 
 # These should be atomic...
 # create the request_group
