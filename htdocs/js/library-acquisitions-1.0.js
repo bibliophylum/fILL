@@ -39,7 +39,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "Random text.";
+    cell = row.insertCell(-1); cell.colSpan = "7"; cell.innerHTML = "You added these items from the New Patron Requests and Unfilled tables.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");

@@ -30,9 +30,10 @@ if ($patronRequest) {
 
         # These should be atomic...
         # create the request_group
-	$dbh->do("INSERT INTO acquisitions (lid, title, author, medium, isbn, pubdate, ts) VALUES (?,?,?,?,?,?,?)",
+	$dbh->do("INSERT INTO acquisitions (lid, pid, title, author, medium, isbn, pubdate, ts) VALUES (?,?,?,?,?,?,?,?)",
 		 undef,
 		 $lid,     # requester
+		 $patronRequest->{"pid"},
 		 $patronRequest->{"title"},
 		 $patronRequest->{"author"},
 		 $patronRequest->{"medium"},

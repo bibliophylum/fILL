@@ -23,21 +23,23 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get specific request
-my $SQL = "select g.title, g.author, g.medium, g.isbn, g.pubdate from request_group g left join request_chain c on c.group_id=g.group_id left join request r on r.chain_id=c.chain_id where r.id=?";
+#my $SQL = "select g.title, g.author, g.medium, g.isbn, g.pubdate, g.patron_barcode from request_group g left join request_chain c on c.group_id=g.group_id left join request r on r.chain_id=c.chain_id where r.id=?";
+my $SQL = "select g.requester, g.title, g.author, g.medium, g.isbn, g.pubdate, p.pid from request_group g left join request_chain c on c.group_id=g.group_id left join request r on r.chain_id=c.chain_id left join patrons p on (p.card = g.patron_barcode and p.home_library_id = g.requester) where r.id=?";
 my $req = $dbh->selectrow_hashref($SQL, undef, $rid );
 if ($req) {
 
     eval {
 
         # These should be atomic...
-	$dbh->do("INSERT INTO acquisitions (lid, title, author, medium, isbn, pubdate) VALUES (?,?,?,?,?,?)",
+	$dbh->do("INSERT INTO acquisitions (lid, title, author, medium, isbn, pubdate, pid) VALUES (?,?,?,?,?,?,?)",
 		 undef,
 		 $lid,     # requester
 		 $req->{"title"},
 		 $req->{"author"},
 		 $req->{"medium"},
 		 $req->{"isbn"},
-		 $req->{"pubdate"}
+		 $req->{"pubdate"},
+		 $req->{"pid"}
 	    );
 	
 #	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",

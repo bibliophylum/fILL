@@ -196,13 +196,13 @@ foreach my $num (sort keys %sources) {
 }
 #print STDERR "make-patron-request.cgi sources array:\n" . Dumper(@sources) ;
 
-$title   = sprintf("%.1024s", $medium);
-$author  = sprintf("%.256s", $medium);
+$title   = sprintf("%.1024s", $title);
+$author  = sprintf("%.256s", $author);
 $medium  = sprintf("%.80s", $medium);
 $pubdate = sprintf("%.20s", $pubdate);
 $isbn    = sprintf("%.20s", $isbn);
 
-print STDERR "pid [$pid] lid [$lid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
+#print STDERR "pid [$pid] lid [$lid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
 
 # These should be atomic...
 # create the request_group

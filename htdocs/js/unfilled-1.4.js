@@ -91,7 +91,7 @@ function build_table( data ) {
 	
 	var b1 = document.createElement("input");
 	b1.type = "button";
-	b1.value = "Add to acquisitions";
+	b1.value = "Add to wish list";
 	b1.className = "action-button";
 	var requestId = data.unfilled[i].id;
 	b1.onclick = make_acq_handler( requestId );
