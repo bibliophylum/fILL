@@ -415,18 +415,22 @@ sub request_process {
     if ($@) {
 	$author = unidecode( $q->param('author') );
     }
-    $medium = sprintf("%.40s", $medium);
+    $medium  = sprintf("%.40s", $medium);
+    my $isbn    = sprintf("%.40s", $q->param('isbn'));
+    my $pubdate = sprintf("%.40s", $q->param('pubdate'));
 #    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
 
     # These should be atomic...
     # create the request_group
-    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester) VALUES (?,?,?,?,?)",
+    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, isbn, pubdate) VALUES (?,?,?,?,?,?,?)",
 	undef,
 	1,        # default copies_requested
 	$title,
 	$author,
 	$medium,
 	$lid,     # requester
+	$isbn,
+	$pubdate,
 	);
     my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
 

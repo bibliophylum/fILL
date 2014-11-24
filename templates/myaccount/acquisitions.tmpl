@@ -1,12 +1,11 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<script type="text/javascript" src="/js/library-barcodes-1.0.js"></script>
+<script type="text/javascript" src="/js/library-acquisitions-1.0.js"></script>
 
 
 <script type="text/javascript">
-set_secondary_tab("menu_myaccount_library_barcodes");
+set_secondary_tab("menu_myaccount_acquisitions");
 
 $.ajaxSetup ({  
   cache: false  
@@ -16,13 +15,11 @@ var oTable;
 
 $('document').ready(function(){
 
-    var anOpenBarcodes = [];
-
-    $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: <TMPL_VAR name="lid">},
+    $.getJSON('/cgi-bin/get-library-acquisitions.cgi', {lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
 
-                oTable = $('#datatable_barcodes').dataTable({
+                oTable = $('#datatable_acquisitions').dataTable({
                   "bJQueryUI": true,
                   "sPaginationType": "full_numbers",
                   "bInfo": true,
@@ -34,14 +31,14 @@ $('document').ready(function(){
                      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
                   },
                   "columnDefs": [ {
-                    "targets": [0,1],
+                    "targets": 0,
                     "visible": false
                   }],
                   "bAutoWidth": false,
                   "fnInitComplete": function() {
                     // this handles a bug(?) in this version of datatables;
                     // hidden columns caused the table width to be set to 100px, not 100%
-                    $("#datatable_barcodes").css("width","100%");
+                    $("#datatable_acquisitions").css("width","100%");
                   }
                 });
            })
@@ -53,27 +50,6 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-
-	    /* Apply the jEditable handlers to the table */
-	    $('td:eq(2)', oTable.fnGetNodes()).editable( '/cgi-bin/update-library-barcode.cgi', {
-	        "callback": function( sValue, y ) {
-	            var obj = jQuery.parseJSON( sValue );
-	            //alert('data: '+obj.data);
-		    var aPos = oTable.fnGetPosition( this );
-		    //oTable.fnUpdate( sValue, aPos[0], aPos[1] );
-		    oTable.fnUpdate( obj.data, aPos[0], aPos[1] );
-	        },
-         	"submitdata": function ( value, settings ) {
-	            //alert('value: '+value+'\nsettings: '+settings);
-	            return {
-		        "row_id": this.parentNode.getAttribute('id'),
-			"column": oTable.fnGetPosition( this )[2]
-		    };
-        	},
-	        "height": "14px",
-	        "select": true
-            });
-
        });
 
 <!--
@@ -93,8 +69,6 @@ $('document').ready(function(){
 
 </script>
 
-
-<!--copied from barcodes tmpl, swap out above code as needed-->
 
 <div id="center" role="main">
     <div id="waitDiv">

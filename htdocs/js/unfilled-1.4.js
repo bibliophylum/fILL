@@ -186,13 +186,13 @@ function addToAcq( requestId ) {
 	      })
 	.success(function() {
 	    //alert('success');
+	    cancel( requestId );
 	})
 	.error(function() {
 	    alert('error');
 	})
 	.complete(function() {
-	    // slideUp doesn't work for <tr>
-	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    // row will get removed in cancel(), if add to acq is successful.
 	});
 }
 
