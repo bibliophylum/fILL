@@ -297,6 +297,10 @@ nav li a
   	padding: 1.25em;  
 }
 
+#welcome-text {
+    	font-size: 1.8em;    
+}
+
 #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
@@ -891,7 +895,8 @@ and (max-width : 65em)
 	margin: .9em;
   	padding: 1.25em;  
     }
-    
+   
+
     #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
