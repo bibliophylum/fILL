@@ -28,6 +28,11 @@ Add this to /opt/fILL/conf/fILL.conf (in virtualhost 443, right at the end):
 
 
 
+------------------
+You'll need to enable apache module proxy_wstunnel.
+
+
+
 Libraries automatically join channel 'syschan' when they log in.  This lets the chat server know that 
 they are on (so that when a patron of that library creates a chat, the chat server can look up the 
 proper connection for the library).
