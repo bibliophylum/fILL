@@ -22,6 +22,7 @@ function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");
     myTable.setAttribute("id","renewals-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

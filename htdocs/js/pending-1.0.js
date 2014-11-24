@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","pending-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

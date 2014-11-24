@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","unfilled-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -86,6 +87,14 @@ function build_table( data ) {
 	b1.className = "action-button";
 	var requestId = data.unfilled[i].id;
 	b1.onclick = make_cancel_handler( requestId );
+	divResponses.appendChild(b1);
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Add to acquisitions";
+	b1.className = "action-button";
+	var requestId = data.unfilled[i].id;
+	b1.onclick = make_acq_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
@@ -159,3 +168,32 @@ function cancel( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+
+function make_acq_handler( requestId ) {
+    return function() { addToAcq( requestId ) };
+}
+
+function addToAcq( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	rid: requestId,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/add-request-to-acquisitions.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+

@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","new-patron-requests-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -112,6 +113,16 @@ function build_table( data ) {
 	    b2.disabled = "disabled";
 	}
 	divResponses.appendChild(b2);
+
+	var b5 = document.createElement("input");
+	b5.type = "button";
+	b5.value = "Add to acquisitions";
+	b5.className = "action-button";
+	b5.onclick = make_acq_handler( requestId );
+	if (!is_verified) {
+	    b5.disabled = "disabled";
+	}
+	divResponses.appendChild(b5);
 
 	if (data.new_patron_requests[i].has_local_copy == 1) {
 	    var p = document.createElement("p");
@@ -243,3 +254,31 @@ function deverify( requestId ) {
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+function make_acq_handler( requestId ) {
+    return function() { addToAcq( requestId ) };
+}
+
+function addToAcq( requestId ) {
+    var myRow=$("#pr"+requestId);
+    var parms = {
+	prid: requestId,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/add-patron-request-to-acquisitions.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+

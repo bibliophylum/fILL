@@ -50,6 +50,7 @@ function build_table( data ) {
 function build_table_borrowing( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_borrowing");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -99,6 +100,7 @@ function build_table_borrowing( data ) {
 function build_table_lending( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_lending");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -144,6 +146,7 @@ function build_table_lending( data ) {
 function build_table_notfilled( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_notfilled");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;

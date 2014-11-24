@@ -23,6 +23,7 @@ function build_table( data ) {
 
     var myTable = document.createElement("table");
     myTable.setAttribute("id","average-times-table");
+    myTable.className = myTable.className + " cell-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
