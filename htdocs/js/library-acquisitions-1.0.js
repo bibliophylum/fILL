@@ -63,3 +63,15 @@ function build_table( data ) {
     $("#mylistDiv").show();
 }
 
+function clear_acquisitions() {
+    $.getJSON('/cgi-bin/clear-acquisitions.cgi', {lid: $("#lid").text()},
+	      function(data){
+	      })
+    .success(function() {
+	$('#datatable_acquisitions').DataTable().clear().draw();
+    })
+    .error(function() {
+    })
+    .complete(function() {
+    });
+}

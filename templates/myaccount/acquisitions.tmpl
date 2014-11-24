@@ -24,7 +24,7 @@ $('document').ready(function(){
                   "sPaginationType": "full_numbers",
                   "bInfo": true,
  	          "bSort": true,
-       	          "sDom": '<"H"Tfr>t<"F"ip>',
+       	          "sDom": '<"H"Tf<"clearbuttonarea">r>t<"F"ip>',
                   "iDisplayLength": 25,
                   "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
                   "oTableTools": {
@@ -41,6 +41,8 @@ $('document').ready(function(){
                     $("#datatable_acquisitions").css("width","100%");
                   }
                 });
+
+	        $("div.clearbuttonarea").html('<button id="clearbutton" class="action-button" type="button">Clear the wish list</button>');
            })
 	.success(function() {
 	    //alert('success');
@@ -50,7 +52,48 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-       });
+	    $("#clearbutton").on("click", function() {
+
+ 	      $('<div></div>').appendTo('body')
+	        .html('<div><h6>Are you sure?</h6><p>This will permanently remove these items from the wish list.</p></div>')
+	        .dialog({
+                    modal: true,
+                    title: 'Clear the wish list',
+                    zIndex: 10000,
+                    autoOpen: true,
+                    resizable: false,
+                    buttons: [
+	                {
+	                    text: "Yes",
+//                            "class": "library-style",
+	                    open: function() { 
+	                        $(this).addClass('library-style');
+	                        $(this).removeClass('ui-state-default');
+	                    },
+	                    click: function () {
+                              clear_acquisitions();
+                              $(this).dialog("close");
+                            }
+                        },
+                        {
+	                    text: "No",
+//	                    "class": "library-style",
+	                    open: function() { 
+	                        $(this).addClass('library-style');
+	                        $(this).removeClass('ui-state-default');
+	                    },
+	                    click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    ],
+                    close: function (event, ui) {
+                        $(this).remove();
+                    }
+              });
+	    });
+
+	});
 
 <!--
 //    $('#datatable_barcodes tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
