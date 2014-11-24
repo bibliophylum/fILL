@@ -894,6 +894,7 @@ and (max-width : 65em)
     
     #welcome-text {
     	font-size: 1.4em;
+    	color: red;
     }
 
     #welcome-box {
