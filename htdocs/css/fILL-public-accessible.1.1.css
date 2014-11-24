@@ -892,6 +892,10 @@ and (max-width : 65em)
   	padding: 1.25em;  
     }
     
+    #welcome-text {
+    	font-size: 1.4em;
+    }
+
     #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
