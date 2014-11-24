@@ -52,47 +52,7 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-	    $("#clearbutton").on("click", function() {
-
- 	      $('<div></div>').appendTo('body')
-	        .html('<div><h6>Are you sure?</h6><p>This will permanently remove these items from the wish list.</p></div>')
-	        .dialog({
-                    modal: true,
-                    title: 'Clear the wish list',
-                    zIndex: 10000,
-                    autoOpen: true,
-                    resizable: false,
-                    buttons: [
-	                {
-	                    text: "Yes",
-//                            "class": "library-style",
-	                    open: function() { 
-	                        $(this).addClass('library-style');
-	                        $(this).removeClass('ui-state-default');
-	                    },
-	                    click: function () {
-                              clear_acquisitions();
-                              $(this).dialog("close");
-                            }
-                        },
-                        {
-	                    text: "No",
-//	                    "class": "library-style",
-	                    open: function() { 
-	                        $(this).addClass('library-style');
-	                        $(this).removeClass('ui-state-default');
-	                    },
-	                    click: function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    ],
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-              });
-	    });
-
+	    $("#clearbutton").on("click", function(){ clear_acquisitions(); });
 	});
 
 <!--

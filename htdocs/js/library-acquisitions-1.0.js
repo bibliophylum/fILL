@@ -63,7 +63,7 @@ function build_table( data ) {
     $("#mylistDiv").show();
 }
 
-function clear_acquisitions() {
+function ajax_clear_acquisitions() {
     $.getJSON('/cgi-bin/clear-acquisitions.cgi', {lid: $("#lid").text()},
 	      function(data){
 	      })
@@ -74,4 +74,44 @@ function clear_acquisitions() {
     })
     .complete(function() {
     });
+}
+
+function clear_acquisitions() {
+    $('<div></div>').appendTo('body')
+	.html('<div><h6>Are you sure?</h6><p>This will permanently remove these items from the wish list.</p></div>')
+	.dialog({
+            modal: true,
+            title: 'Clear the wish list',
+            zIndex: 10000,
+            autoOpen: true,
+            resizable: false,
+            buttons: [
+	        {
+	            text: "Yes",
+		    //                            "class": "library-style",
+	            open: function() { 
+	                $(this).addClass('library-style');
+	                $(this).removeClass('ui-state-default');
+	            },
+	            click: function () {
+                        ajax_clear_acquisitions();
+                        $(this).dialog("close");
+                    }
+                },
+                {
+	            text: "No",
+		    //	                    "class": "library-style",
+	            open: function() { 
+	                $(this).addClass('library-style');
+	                $(this).removeClass('ui-state-default');
+	            },
+	            click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
 }
