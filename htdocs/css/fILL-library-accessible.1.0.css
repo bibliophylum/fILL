@@ -265,6 +265,15 @@ input[type="button"]:hover.small-function-button {
     font-size: 1em;
 }
 
+/* advanced search */
+#advanced_search table.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
 /***---End of new library client side CSS--**/
 
 

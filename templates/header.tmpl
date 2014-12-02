@@ -146,6 +146,21 @@ $('document').ready(function(){
     });
   } 
 
+  function toggleAdvanced() {
+      if ($('#advanced_search').is(':visible')) {
+          $('#advanced_search').hide();
+          $('#keyword_heading').hide();
+          $('#help').show();
+          $('#advanced-btn').attr('value','Advanced');
+      } else {
+          $('#advanced_search').show();
+          $('#keyword_heading').show();
+          $('#help').hide();
+          $('#query').val(""); // clear the general keyword (query) field
+          $('#advanced-btn').attr('value','Basic');
+      }
+  }
+
 </script>
 
 <!-- Google analytics -->
@@ -198,9 +213,19 @@ $('document').ready(function(){
   <div id="search" role="search">
     <div id="header_searchbar">
     <form id="searchForm" name="search">
+      <span id="keyword_heading" style="display: none">General keyword</span>
       <input id="query" type="text"/>
+      <div id="advanced_search" style="display: none">
+	<table class="center" >
+	  <tr><td>Title</td><td><input id="adv_title" type="text"/></td></tr>
+	  <tr><td>Author</td><td><input id="adv_author" type="text"/></td></tr>
+	  <tr><td>Subject</td><td><input id="adv_subject" type="text"/></td></tr>
+	  <tr><td>Series</td><td><input id="adv_series" type="text"/></td></tr>
+	</table>
+      </div>
       <input id="button" type="submit" value="Search" class="library-style" />
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style">
+      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style" />
+      <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
     </form>
     </div>
   </div>
