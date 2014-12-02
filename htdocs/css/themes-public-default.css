@@ -153,6 +153,10 @@ button {
     border: 1px solid #06a0ca;
 }
 
+.public-style {
+    color: #fff;
+}
+
 /*** FILL #fill-table STYLES **/
 #fill-table {
     background: #e3e3e3;

@@ -344,6 +344,14 @@ nav li a
     margin-top: 2em;
     margin: .3em;
 }
+
+.covers4 {
+	height: 260px;
+    width: 180px;
+    margin-top: 2em;
+    margin: .5em;
+}
+
 .covers:hover {
 }
 
