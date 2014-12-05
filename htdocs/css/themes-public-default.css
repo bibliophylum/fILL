@@ -68,7 +68,7 @@ nav li a.current_tab {
 }
 
 #search {
-    border-bottom: 5px solid #e3e3e3;
+    border-bottom: 5px solid #000;
 }
 
 #progress_empty {
