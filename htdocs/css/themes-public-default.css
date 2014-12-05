@@ -23,6 +23,7 @@ html, body {
 
 #container {
     background-color: #e3e3e3;
+    border: red dashed 1px;
 }
 
 h2 {
