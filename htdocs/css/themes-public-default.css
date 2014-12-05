@@ -18,10 +18,10 @@ a:active {
 }
 
 html, body {
-    background: #aaa;
+    background: #bbb;
 }
 
-#container {
+#content {
     background-color: #e3e3e3;
 }
 
