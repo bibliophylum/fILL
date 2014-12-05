@@ -68,8 +68,7 @@ h3 {
 #container
 {
 	margin: auto;
-
-	width: 90%;
+	width: 80%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
 }
