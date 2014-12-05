@@ -18,7 +18,11 @@ a:active {
 }
 
 html, body {
-    background: #f3f3f3;
+    background: #bbb;
+}
+
+#content {
+    background-color: #e3e3e3;
 }
 
 h2 {
