@@ -77,6 +77,17 @@ function build_table( data ) {
 	var requestId = data.receiving[i].id;
 	b1.onclick = make_receiving_handler( requestId );
 	divResponses.appendChild(b1);
+
+	if (data.receiving[i].tracking) {
+	    var $tracking = $('<input/>', 
+			      {
+				  'type':'button', 
+				  'value':'CP tracking', 
+				  'class':'action-button',
+				  'click': make_tracking_handler( data.receiving[i].tracking )
+			      });
+	    divResponses.appendChild( $tracking[0] );
+        }
 	
 	cell.appendChild( divResponses );
     }
@@ -166,4 +177,8 @@ function printMulti() {
     $("#multiPrint").printElement({ leaveOpen:true, printMode:'popup'});
     $("#multiPrint > div").remove();
     $('.slipCount').remove();
+}
+
+function make_tracking_handler( tracking ) {
+    return function() { window.open("http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber="+tracking, "_blank"); };
 }

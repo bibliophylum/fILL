@@ -216,8 +216,13 @@ function fnFormatDetails( $tbl, nTr )
 	    var data = $.parseJSON(jqXHRObject.responseText)
 	    var sOut;
 	    var numDetails = data.request_details.length; 
-	    sOut = '<div class="innerDetails">'+
-		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	    sOut = '<div class="innerDetails">';
+	    var hasTracking = data.tracking.length;
+	    if (hasTracking) {
+		sOut += '<div><p>Canada Post tracking number: '+data.tracking[0].tracking+' &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber='+data.tracking[0].tracking+'" target="_blank" style="text-decoration:underline;">Open CP tracking site...</a></p></div>';
+	    }
+
+	    sOut += '<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
 	    for (var i = 0; i < numDetails; i++) {
 		var detRow = '<tr>'+

@@ -80,6 +80,19 @@ function build_table( data ) {
 	var divResponses = document.createElement("div");
 	divResponses.id = 'divResponses'+requestId;
 
+	var $label = $("<label />").text('CP tracking:');
+	var $cp = $("<input />").attr({'type':'text',
+				       'size':16,
+				       'maxlength':16,
+				       'style':'font-size:90%',
+				       });
+	$cp.prop('id','cp'+data.shipping[i].id);
+	// make_trackingnumber_handler creates and returns the 
+	// function to be called on blur event...
+	$cp.blur( make_trackingnumber_handler( data.shipping[i].id ));
+	$cp.appendTo( $label );
+	divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
+
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.id = "ship"+requestId;
@@ -186,6 +199,32 @@ function unship( requestId ) {
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+function make_trackingnumber_handler( requestId ) {
+    return function() { trackit( requestId ) };
+}
+
+function trackit( requestId ) {
+    var parms = {
+	"rid": requestId,
+	"lid": $("#lid").text(),
+	"tracking": $("#cp"+requestId).val()
+    };
+    $.getJSON('/cgi-bin/set-shipping-tracking-number.cgi', parms,
+	      function(data){
+		  //alert("success: "+data.success);
+	      })
+	.success(function() {
+	    //alert("success!");
+	})
+	.error(function() {
+	    alert('Error adding shipping tracking number.');
+	    $("cp"+requestId).focus();
+	})
+	.complete(function() {
+	    //
 	});
 }
 

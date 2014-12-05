@@ -39,7 +39,9 @@ $('document').ready(function(){
                        "columnDefs": [ {
                            "targets": [0,1,2,7],
                            "visible": false
-                       } ],
+                       },
+                       { "targets": 8, "width": "30%" }
+	               ],
                       "fnInitComplete": function() {
                           // this handles a bug(?) in this version of datatables;
                           // hidden columns caused the table width to be set to 100px, not 100%
