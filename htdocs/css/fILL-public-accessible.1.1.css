@@ -68,10 +68,15 @@ h3 {
 #container
 {
 	margin: auto;
-
-	width: 90%;
+	background: #aaa;
+	width: 1000%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
+}
+
+#content {
+	width: 70%;
+	margin: auto;
 }
 
 /**HEADER STYLES**/
