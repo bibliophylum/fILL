@@ -18,12 +18,16 @@ a:active {
 }
 
 html, body {
-    background: #bbb;
+    background: #c3c3c3;
 }
 
 #container {
     background-color: #f3f3f3;
-    border: #b3b3b3 0px 2px 0px 2px;
+    border: #b3b3b3;
+    border-left: 2px;
+    border-right: 2px;
+    border-top: 0px;
+    border-bottom: 0px;
 }
 
 h2 {
