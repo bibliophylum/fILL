@@ -821,7 +821,6 @@ and (max-width : 65em)
 		border: 0px;
     	margin-left: auto;
     	margin-right: auto;
-    	display: block;
     }
 
     button {
