@@ -815,6 +815,10 @@ and (max-width : 65em)
     	margin: 0em;
     }
 
+    img {
+    	margin: auto;
+    }
+
     button {
 	font-size: 1.2em;
 	margin: 1em;
