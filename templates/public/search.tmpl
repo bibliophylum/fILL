@@ -112,9 +112,9 @@
 
 <!-- from header.tmpl -->
 
-<div id="container">
-<div id="content">
-  <!--***************ARIA MARKER 'BANNER'***************-->
+<div id="container"><!--closes in footer.tmp-->
+
+  <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
   <header role="banner">
 
     <div id="header-left">
@@ -197,6 +197,7 @@
         <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
 	     The keywords to search for are taken from the "title" attribute.
 	-->
+  <div id="covers">
         <a href="#" class="coverlink" title="Craig Davidson, Cataract City" >
     <img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-cataractcity.jpg">
   </a>
@@ -209,6 +210,7 @@
 <a href="#" class="coverlink" title="Dennis Bock, Going Home Again">
     <img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-homeagain.jpg">
   </a>
+  </div>
        <p><strong>Giller Prize 2013 shortlist</strong></p> 
       </div>
 
@@ -257,7 +259,7 @@
   <div id="termlist"></div>
 </div>
 
-</div> <!-- container -->
+
 <TMPL_INCLUDE NAME="footer.tmpl">
 
 </body>

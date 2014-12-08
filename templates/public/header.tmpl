@@ -93,10 +93,9 @@ $('document').ready(function(){
 <body class="example_alt_pagination">
 
 <div id="container">
-<div id="content">
 <!--header template from public folder-->
 
-<!--***************ARIA MARKER 'BANNER'***************-->
+<!--***************ARIA MARKER 'BANNER'-header.tmpl-***************-->
 <header role="banner">
 
   <div id="header-left">
@@ -141,12 +140,12 @@ $('document').ready(function(){
     <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
       <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
 	search_process to feed the *real* search page -->
-      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" name="query" placeholder="Search" value="<TMPL_VAR name='query'>">
       <input id="rm" type="hidden" name="rm" value="search_form">
       <input type="submit" value="Go" class="public-style">
     </form>
   </div>
 </div> <!-- search-container -->
 
-</div><!--container div-->
+
 <!-- Begin content -->
