@@ -23,6 +23,7 @@ html, body {
 
 #container {
     background-color: #f3f3f3;
+    border: #b3b3b3 0px 2px 0px 2px;
 }
 
 h2 {
