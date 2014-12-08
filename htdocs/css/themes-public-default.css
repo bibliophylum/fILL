@@ -18,13 +18,13 @@ a:active {
 }
 
 html, body {
-    background: #c3c3c3;
+    background: #e3e3e3;
 }
 
 #container {
     background-color: #f3f3f3;
-    border-left: 2px solid #b3b3b3;
-    border-right: 2px solid #b3b3b3;
+    border-left: 2px solid #a3a3a3;
+    border-right: 2px solid #a3a3a3;
 }
 
 h2 {
@@ -69,7 +69,7 @@ nav li a.current_tab {
 }
 
 #search {
-    border-bottom: 5px solid #c3c3c3;
+    border-bottom: 5px solid #e3e3e3;
 }
 
 #progress_empty {
