@@ -819,8 +819,8 @@ and (max-width : 65em)
     	height: auto;
 		max-width: 100%;
 		border: 0px;
-    	margin-left: auto;
-    	margin-right: auto;
+    	margin-left: 0 auto;
+    	margin-right: 0 auto;
     }
 
     button {
