@@ -76,6 +76,7 @@ h3 {
 
 #content {
 	margin: .5em;
+	display: block;
 }
 
 /**HEADER STYLES**/
@@ -887,15 +888,16 @@ and (max-width : 65em)
     #main
     {
 	display: block;
-	width: 95%; 
+	width: 100%; 
   	padding: 1em; 
   	margin-bottom: 1em;
+  	margin: 1em;
     }
     
     #aside
     {
-	width: 95%;
-	margin-bottom: 1.5em;
+	width: 80%;
+	margin: 1em;
 	display: block;
   	padding: 1em; 
     }
