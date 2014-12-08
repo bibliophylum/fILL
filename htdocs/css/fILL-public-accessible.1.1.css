@@ -828,7 +828,7 @@ and (max-width : 65em)
     	display: block;
     }
 
-    #covers {
+    #covers img {
     	height: auto;
 		max-width: 100%;
 		border: 0px;
