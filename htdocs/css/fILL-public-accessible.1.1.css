@@ -340,7 +340,11 @@ nav li a
 .lighter-box {
 }
 
-.covers {
+#covers {
+
+}/*more in mobile styles*/
+
+.covers6 {
     height: 180px;
     width: 120px;
     margin-top: 2em;
@@ -819,9 +823,14 @@ and (max-width : 65em)
     	height: auto;
 		max-width: 100%;
 		border: 0px;
-    	margin-left: 0 auto;
-    	margin-right: 0 auto;
+    	margin-left: auto;
+    	margin-right: auto;
+    	display: block;
     }
+    
+    #covers {
+    	display: inline;
+	}
 
     button {
 	font-size: 1.2em;
