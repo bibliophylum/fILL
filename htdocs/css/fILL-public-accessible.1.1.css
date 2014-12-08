@@ -74,6 +74,10 @@ h3 {
 	clear: both;  /* start fresh with floatiness within the container */
 }
 
+#content {
+	margin: .5em;
+}
+
 /**HEADER STYLES**/
 
 header {
