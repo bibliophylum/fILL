@@ -863,7 +863,6 @@ and (max-width : 65em)
     #search-container {
 	width: 100%;
 	display: block;
-	margin: 1em;
     }
     
     .login {
@@ -895,7 +894,6 @@ and (max-width : 65em)
 	margin-bottom: 1em;
 	display: block;
   	padding: 1.25em; 
-  	
     }
     
     #main-info-right
@@ -907,7 +905,6 @@ and (max-width : 65em)
     }
     
     #aside-img-welcome {
-	
 	display: none;
     }
     
@@ -919,7 +916,6 @@ and (max-width : 65em)
   	padding: 1.25em;  
     }
    
-
     #welcome-box {
 	font-size: 1.2em;
 	border: 0px;
