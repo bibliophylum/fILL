@@ -23,11 +23,8 @@ html, body {
 
 #container {
     background-color: #f3f3f3;
-    border: #b3b3b3;
-    border-left: 2px;
-    border-right: 2px;
-    border-top: 0px;
-    border-bottom: 0px;
+    border-left: 2px solid #b3b3b3;
+    border-right: 2px solid #b3b3b3;
 }
 
 h2 {
