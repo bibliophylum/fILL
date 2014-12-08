@@ -829,6 +829,10 @@ and (max-width : 65em)
     }
 
     #covers {
+    	height: auto;
+		max-width: 100%;
+		border: 0px;
+    	margin-right: .3em;
     	display: inline;
 	}
 
