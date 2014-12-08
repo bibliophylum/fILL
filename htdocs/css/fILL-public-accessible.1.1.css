@@ -208,9 +208,7 @@ nav li a
 {
 	float: left;
 	width: 100%;
-
 	display: inline;
-  	
   	margin-bottom: 1.2em;
   	vertical-align: middle;
   	text-align: center;
@@ -447,7 +445,7 @@ input[type=text], input[type=password]
 {
     border-radius:5px;
     border: 2px solid;
-    border-color: inherit;
+    border-color: #b3b3b3;
 }
 
 .public-style {
@@ -806,13 +804,17 @@ and (max-width : 65em)
 
     #container
     {
-	margin: .5em;
-	
-	width: 95%;
+	margin:;
+	padding: .5em;
+	width: 100%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
     }
-    
+
+    #content {
+    	margin: 0em;
+    }
+
     button {
 	font-size: 1.2em;
 	margin: 1em;
@@ -825,7 +827,6 @@ and (max-width : 65em)
     }
 
     #header-right {
-	float: left;
  	width: 100%;
  	margin-top: 1em;
  	display: block;
