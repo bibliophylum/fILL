@@ -21,61 +21,57 @@
 <body>
 
 <div id="container">
-<!--***************ARIA MARKER 'BANNER'***************-->
-  <header role="banner">
+  <!--***************ARIA MARKER 'BANNER'***************-->
+    <header role="banner">
 
-    <div id="header-left">
-      <div id="fill-logo"><img src="/img/fill-logo.png" alt="fill"></div>
-      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+      
+        <div id="fill-logo"><img src="/img/fill-logo.png" alt="fill"></div>
+        <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+     
+
+    </header>
+    
+  <!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation" id="pub-nav-primary">
+    <ul class="inline-items">
+      <li><a id="menu_search" class="current_tab" href="">Welcome</a></li>
+      <li><a id="menu_new" href="/new.html">New to fILL?</a></li>
+    </ul>
+  </nav>
+
+  <!-- Content -->
+
+  <div id="aside-img-welcome">
+    <img src='/img/card_catalogue.jpg'>
+    <p class="note">Image care of <a href="https://www.flickr.com/photos/misshaley/515045131/">Haley</a></p>
+  </div>
+
+  <div id="main-info-welcome">
+   <p id="welcome-text">Welcome to the Manitoba public libraries' interlibrary loan system.</p>
+   
+    <div id="welcome-box" class="tone-box">
+       <p>There are separate login pages for:</p><br>
+      <a href="/cgi-bin/public.cgi" id="butlink" class="public-style">Library Patrons</a>
+      <a href="/cgi-bin/lightning.cgi" id="butlink" class="library-style">Library Staff</a>
     </div>
 
-    <div id="header-right">
-    </div>
-  </header>
-  
-<!--***************ARIA MARKER 'NAVIGATION'***************-->
-<nav role="navigation" id="pub-nav-primary">
-  <ul class="inline-items">
-    <li><a id="menu_search" class="current_tab" href="">Welcome</a></li>
-    <li><a id="menu_new" href="/new.html">New to fILL?</a></li>
-  </ul>
-</nav>
+  </div>
 
-<!-- Content -->
+  <!-- End content -->
+  <footer role="contentinfo">
 
-<div id="aside-img-welcome">
-  <img src='/img/card_catalogue.jpg'>
-  <p class="note">Image care of <a href="https://www.flickr.com/photos/misshaley/515045131/">Haley</a></p>
-</div>
+  <div id="nav2">
+    <a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
+    <p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
+  </div>
 
-<div id="main-info-welcome">
- <p id="welcome-text">Welcome to the Manitoba public libraries' interlibrary loan system.</p>
- 
-  <div id="welcome-box" class="tone-box">
-     <p>There are separate login pages for:</p><br>
-    <a href="/cgi-bin/public.cgi" id="butlink" class="public-style">Library Patrons</a>
-    <a href="/cgi-bin/lightning.cgi" id="butlink" class="library-style">Library Staff</a>
-<!--
-    <a href="/cgi-bin/public-original.cgi">Library Patrons</a>
-    <a href="/cgi-bin/lightning.cgi">Library Staff</a>
--->
+  </footer>
+
+  <div id="bison-container">
+    <img class="bison" alt="Manitoba Bison Logo" title="Coordinated by the Public Library Service Branch of the Government of Manitoba Tourism, Culture, Heritage and Consumer Protection" src="/img/manitoba.gif">
   </div>
 
 </div>
-</div>
-
-<!-- End content -->
-<footer role="contentinfo">
-<div id="nav2">
-<a href=/cgi-bin/lightning.cgi?rm=environment_form>ENV display</a>|<a href="?authen_logout=1">Log out</a>
-<p><TMPL_VAR name="username"><TMPL_VAR name="lid"><TMPL_VAR name="library"></p>
-</div>
-</footer>
-
-<div id="bison-container">
-<img class="bison" alt="Manitoba Bison Logo" title="Coordinated by the Public Library Service Branch of the Government of Manitoba Tourism, Culture, Heritage and Consumer Protection" src="/img/manitoba.gif">
-</div>
-
 <!--<TMPL_INCLUDE NAME="footer.tmpl">-->
 </body>
 </html>
