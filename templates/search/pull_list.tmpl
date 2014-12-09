@@ -44,9 +44,9 @@ $('document').ready(function() {
 
 <div id="center" role="main">
 
-    <table id="pull-list">
+    <table id="pull-list" class="row-border">
       <thead>
-	<tr><th>Call Number</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requestor note</th><th>Your barcode for the requesting library</th></tr>
+	<tr><th>Call Number</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requestor note</th><th>Pub date</th><th>Your barcode for the requesting library</th></tr>
       </thead>
       <tfoot><tr><td colspan="8">You can print this list to use while in the stacks.</td></tr></tfoot>
       <tbody>
@@ -58,6 +58,7 @@ $('document').ready(function() {
 	  <td><TMPL_VAR NAME="ts"></td>
 	  <td title="<TMPL_VAR NAME="library">"><TMPL_VAR NAME="from"></td>
 	  <td><TMPL_VAR NAME="note"></td>
+	  <td><TMPL_VAR NAME="pubdate"></td>
 	  <td>
 	    <TMPL_VAR NAME="barcode"><br/>
 	    <img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>

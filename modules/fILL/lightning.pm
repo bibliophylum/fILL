@@ -248,7 +248,6 @@ sub pull_list_process {
     my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    #my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
     my $SQL="select 
   b.barcode, 
   g.title, 
@@ -257,7 +256,8 @@ sub pull_list_process {
   date_trunc('second',ra.ts) as ts, 
   l.name as from, 
   l.library, 
-  s.call_number 
+  s.call_number,
+  g.pubdate  
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
