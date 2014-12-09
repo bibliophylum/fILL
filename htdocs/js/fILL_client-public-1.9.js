@@ -472,7 +472,7 @@ function primaryDetails(data) {
 	// (using the same URL), so it makes sense to show the first one here.
 	// Patrons will be asked to log in to Overdrive when they attempt to borrow.
 	if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
-            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Borrow this title from eLM...' + '</a>' + '</td></tr>';
+            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</td></tr>';
 	    useELMcover = 1;
 	}
     }
@@ -585,7 +585,21 @@ function buildRequestForm(data) {
     }
 
     if (isElectronicResource) {
-	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
+	if (data["location"][0]["md-electronic-url"] != undefined) {
+	    var url = String(data["location"][0]["md-electronic-url"]);
+	    // for us, all libraries have access to the same pool of Overdrive titles
+	    // (using the same URL), so it makes sense to show the first one here.
+	    // Patrons will be asked to log in to Overdrive when they attempt to borrow.
+	    if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
+		requestForm += '<p><strong>Your library may provide access to this electronic resource through eLibraries Manitoba.</strong></p>';
+		requestForm += '<p><a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</p>';
+
+	    } else {
+		requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+	    }
+	} else {
+	    requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+	}
     } else {
 	requestForm += '<input type="submit" class="public-style" value="Click to request">';
     }
