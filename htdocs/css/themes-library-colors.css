@@ -29,7 +29,14 @@ a:focus {
 }
 
 html, body {
-    background: #f3f3f3;
+    background: #e3e3e3;
+}
+
+#container {
+  background: #f3f3f3;
+  -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
 img 
