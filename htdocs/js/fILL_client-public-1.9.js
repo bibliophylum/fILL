@@ -38,6 +38,7 @@ var submitted = false;
 var SourceMax = 16;
 var SubjectMax = 10;
 var AuthorMax = 10;
+var useELMcover = 0;  // Manitoba-specific
 
 //
 // pz2.js event handlers:
@@ -86,6 +87,10 @@ function my_onshow(data) {
 		request();
 		event.preventDefault();
 	    });
+	    // can't be done in coverImage - have to wait until container appended to div
+	    if (useELMcover) {
+		$("#cover").attr("src","/img/fill-cover-elm.png");
+	    }
 	}
 	$newResults.append( $recDiv );
     }
@@ -183,6 +188,10 @@ function my_onrecord(data) {
 	event.preventDefault();
     });
 
+    // can't be done in coverImage - have to wait until container appended to div
+    if (useELMcover) {
+	$("#cover").attr("src","/img/fill-cover-elm.png");
+    }
 }
 
 function my_onbytarget(data) {
@@ -424,10 +433,12 @@ function coverImage(lccn,isbn) {
     var cover = '<td>';
     if ((isbn != undefined) || (lccn != undefined)) {
 	if (lccn != undefined) {
-	    cover += '<img src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg">';
 	} else if (isbn != undefined) {
-	    cover += '<img src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg">';
 	}
+    } else {
+	cover += '<img id="cover" src="/img/fill-cover.png">';
     }
     cover += '</td>';
     return cover;
@@ -454,6 +465,7 @@ function primaryDetails(data) {
     if (data["md-author"] != undefined) {
         primary += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     }
+    useELMcover = 0;  // reset
     if (data["location"][0]["md-electronic-url"] != undefined) {
 	var url = String(data["location"][0]["md-electronic-url"]);
 	// for us, all libraries have access to the same pool of Overdrive titles
@@ -461,6 +473,7 @@ function primaryDetails(data) {
 	// Patrons will be asked to log in to Overdrive when they attempt to borrow.
 	if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
             primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Borrow this title from eLM...' + '</a>' + '</td></tr>';
+	    useELMcover = 1;
 	}
     }
 
@@ -593,7 +606,6 @@ function renderDetails(data, marker)
 
     var $td = $('<td></td>').appendTo( $tr );
     var $primary = $('<div>', { "id": "primary" } ).appendTo( $td );  // return correct div to 'primary' var
-//    $td.append( $('<div>', { "id": "confirm", "style": "display:none" }));
     $td.append( $('<div>', { "id": "confirmed", "style": "display:none" }));
     $td.append( $('<div>', { "id": "couldNotCancel", "style": "display:none" }));
 
