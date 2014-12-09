@@ -29,7 +29,11 @@ a:focus {
 }
 
 html, body {
-    background: #f3f3f3;
+    background: #e3e3e3;
+}
+
+#container {
+  background: #f3f3f3;
 }
 
 img 
