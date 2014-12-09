@@ -23,8 +23,9 @@ html, body {
 
 #container {
     background-color: #f3f3f3;
-    border-left: 2px solid #b3b3b3;
-    border-right: 2px solid #b3b3b3;
+    -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
 h2 {
