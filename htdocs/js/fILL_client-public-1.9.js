@@ -454,8 +454,15 @@ function primaryDetails(data) {
     if (data["md-author"] != undefined) {
         primary += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     }
-    if (data["md-electronic-url"] != undefined)
-        primary += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
+    if (data["location"][0]["md-electronic-url"] != undefined) {
+	var url = String(data["location"][0]["md-electronic-url"]);
+	// for us, all libraries have access to the same pool of Overdrive titles
+	// (using the same URL), so it makes sense to show the first one here.
+	// Patrons will be asked to log in to Overdrive when they attempt to borrow.
+	if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
+            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Borrow this title from eLM...' + '</a>' + '</td></tr>';
+	}
+    }
 
     var len=data["location"].length;
     if (len > 0) {
