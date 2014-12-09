@@ -3,8 +3,13 @@
 *, *:before, *:after {
 }
 
-body {
-  color: #fff;
+html, body {
+    background: #505050;
+    color: #fff;
+}
+
+#container {
+  background: #000;
 }
 
 /* unvisted link */
@@ -32,10 +37,7 @@ a:focus {
 	color: #fff;
 }
 
-html, body {
-    background: #000;
-/*    color: #fff; */
-}
+
 
 img 
 {
