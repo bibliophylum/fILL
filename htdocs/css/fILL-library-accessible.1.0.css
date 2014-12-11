@@ -12,7 +12,7 @@ html, body {
 
 #container
 {
-  margin: auto;
+  margin: 0 auto;
   padding: 0em .5em;
   width: 85%;
   height: auto;
