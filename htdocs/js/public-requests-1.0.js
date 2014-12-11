@@ -20,7 +20,30 @@
 */
 function build_table_orig( data ) {
     for (var i=0;i<data.active.length;i++) {
+	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
+	delete data.active[i].declined_id;
+	data.active[i].action="";
 	var ai = oTable_borrowing.fnAddData( data.active[i], false );
+
+	if (data.active[i].status == 'Declined') {
+	    var n = oTable_borrowing.fnSettings().aoData[ ai[0] ].nTr;
+	    /* n is now the TR that you added - so it can be modified */
+	    var oData = oTable_borrowing.fnGetData( n );
+	    n.setAttribute('id', 'declined'+declinedID);
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+declinedID;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Delete";
+	    b1.onclick = make_seenit_handler( declinedID );
+	    divActions.appendChild(b1);
+
+	    $(n).find('td:last').append( divActions );
+
+	} else {
+	}
     }
     oTable_borrowing.fnDraw();
 
@@ -111,3 +134,33 @@ function fnFormatDetails( oTable, nTr )
 
 	});
 }
+
+function make_seenit_handler( declinedID ) {
+    return function() { seenit( declinedID ) };
+}
+
+function seenit( declinedID ) {
+//    $("#declined"+declinedID).fadeOut(400, function() { $(this).remove(); }); // toast the row
+//    alert("Seen it! "+declinedID);
+    var parms = {
+	"prid": declinedID,
+	"lid": $("#lid").text()
+    };
+    $.getJSON('/cgi-bin/delete-declined-patron-request.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#declined"+declinedID).fadeOut(400, function() {
+		oTable_borrowing.fnDeleteRow( $("#declined"+declinedID)[ 0 ] );
+	    }); // toast the row
+	});
+
+}
+

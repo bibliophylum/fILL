@@ -42,8 +42,9 @@ my $SQL="select
         when ra.status='Renew-Answer|Ok' then 'The lender has given you a renewal on the loan.  The item is now '||ra.message
         else ra.status
   end) as status,
-  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as libraries_tried,
-  date_trunc('second',ra.ts) as ts 
+  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details,
+  date_trunc('second',ra.ts) as ts,
+  -1 as declined_id 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
@@ -71,8 +72,9 @@ $SQL = "select
   author,
   '-1' as lender,
   'New request' as status,
-  'Your librarian has not yet seen this request.' as libraries_tried,
-  date_trunc('second',ts) as ts
+  'Your librarian has not yet seen this request.' as details,
+  date_trunc('second',ts) as ts,
+  -1 as declined_id
 from
   patron_request
 where 
@@ -86,6 +88,7 @@ my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
 foreach my $href (@$aref) {
     push @$aref_borr, $href;
 }
+
 
 
 
@@ -106,7 +109,36 @@ where
 order by ts desc";
 
 $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+# add to aref_borr:
+foreach my $href (@$aref) {
+    push @$aref_borr, $href;
+}
 
+
+
+# Get patron requests that the library has declined to create:
+$SQL = "select 
+  '-1' as cid,
+  title,
+  author,
+  '-1' as lender,
+  'Declined' as status,
+  (case when reason='held-locally' then 'Your library has this locally. '||message
+        when reason='blocked' then 'There is a problem with your library account. '||message
+        when reason='on-order' then 'Your library is purchasing this title. '||message 
+        when reason='other' then 'Reason given: '||message
+        else reason||'. '||message
+  end) as details,
+  date_trunc('second',ts) as ts,
+  prid as declined_id
+from
+  patron_requests_declined
+where 
+  lid=?
+  and pid=?
+order by ts desc";
+
+$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
 # add to aref_borr:
 foreach my $href (@$aref) {
     push @$aref_borr, $href;

@@ -22,6 +22,31 @@ $('document').ready(function(){
     var anOpenBorrowing = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "cid", "bVisible": false },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "status" },
+            { "mDataProp": "details" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "action" }
+        ]
+
+    });
+
+
     $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
@@ -93,8 +118,20 @@ $('document').ready(function(){
 	<div id="myDiv">
           <h2>Current borrowing</h2>
           <br />
-        <div id="mylistDiv"></div>
-  </div>
+        <div class="dataTable_wrapper">
+
+        	<table id="datatable_borrowing" class="display">
+        	  <thead>
+        	    <tr>
+        	      <th></th><th>cid</th><th>Title</th><th>Author</th><th>Status</th><th>Details</th><th>Status Updated</th><th>Action</th>
+        	    </tr>
+        	  </thead>
+        	  <tbody>
+        	  </tbody>
+        	</table>
+      </div>
+</div>
+</div>
 
 </div><!--div id content-->
 
