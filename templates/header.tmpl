@@ -216,12 +216,21 @@ $('document').ready(function(){
       <span id="keyword_heading" style="display: none">General keyword</span>
       <input id="query" type="text"/>
       <div id="advanced_search" style="display: none">
-	<table class="center" >
-	  <tr><td>Title</td><td><input id="adv_title" type="text"/></td></tr>
-	  <tr><td>Author</td><td><input id="adv_author" type="text"/></td></tr>
-	  <tr><td>Subject</td><td><input id="adv_subject" type="text"/></td></tr>
-	  <tr><td>Series</td><td><input id="adv_series" type="text"/></td></tr>
-	</table>
+	<div class="tone-box">
+
+	  <label for="adv_title">Title</label>
+    <input id="adv_title" type="text"/>
+	  
+    <label for="adv_author">Author</label>
+    <input id="adv_author" type="text"/>
+	  
+    <label for="adv_subject">Subject</label>
+    <input id="adv_subject" type="text"/>
+	  
+    <label for="adv_series">Series</label>
+    <input id="adv_series" type="text"/>
+
+	</div>
       </div>
       <input id="button" type="submit" value="Search" class="library-style" />
       <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style" />
