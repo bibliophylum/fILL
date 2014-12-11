@@ -91,28 +91,31 @@ foreach my $href (@$aref) {
 
 
 
-
+#
+# "Wish list" items are now considered 'declined':
+#
 # Get patron requests that the library has moved to acquisitions:
-$SQL = "select 
-  '-1' as cid,
-  title,
-  author,
-  '-1' as lender,
-  'Wish list' as status,
-  'Your librarian is considering this for purchase.' as libraries_tried,
-  date_trunc('second',ts) as ts
-from
-  acquisitions
-where 
-  lid=?
-  and pid=?
-order by ts desc";
-
-$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
-# add to aref_borr:
-foreach my $href (@$aref) {
-    push @$aref_borr, $href;
-}
+#$SQL = "select 
+#  '-1' as cid,
+#  title,
+#  author,
+#  '-1' as lender,
+#  'Wish list' as status,
+#  'Your librarian is considering this for purchase.' as details,
+#  date_trunc('second',ts) as ts,
+#  -1 as declined_id 
+#from
+#  acquisitions
+#where 
+#  lid=?
+#  and pid=?
+#order by ts desc";
+#
+#$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+## add to aref_borr:
+#foreach my $href (@$aref) {
+#    push @$aref_borr, $href;
+#}
 
 
 
@@ -122,7 +125,9 @@ $SQL = "select
   title,
   author,
   '-1' as lender,
-  'Declined' as status,
+  (case when reason='Your librarian is considering this for purchase.' then 'Wish list'
+        else 'Declined'
+   end) as status,
   (case when reason='held-locally' then 'Your library has this locally. '||message
         when reason='blocked' then 'There is a problem with your library account. '||message
         when reason='on-order' then 'Your library is purchasing this title. '||message 

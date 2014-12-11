@@ -147,7 +147,7 @@ function make_noILL_handler( requestId ) {
     return function() { noILL( requestId ) };
 }
 
-function noILL( requestId ) {
+function noILL_orig( requestId ) {
     var myRow=$("#pr"+requestId);
     var parms = {
 	prid: requestId,
@@ -167,6 +167,67 @@ function noILL( requestId ) {
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
+}
+
+function noILL( requestId ) {
+    var row = $("#pr"+requestId);
+    var rnDiv = document.createElement("div");
+    rnDiv.id = "reasonNoILL";
+    var rnForm = document.createElement("form");
+
+    var rn = document.createElement("div");
+    rn.setAttribute('id','noillradioset');
+    rnForm.appendChild(rn);
+    rnDiv.appendChild(rnForm);
+    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#pr"+requestId));
+    $("#tmpcol").append(rnDiv);
+
+    $("#divResponses"+requestId).hide();
+    $( "<p>Select a reason for declining to place the ILL (your patron will be able to see this):</p>" ).insertBefore("#noillradioset");
+
+    $("<p>Optional message to patron: <input type='text' name='message' size='40' maxlength='100' /></p>").insertAfter("#noillradioset");
+
+    var cButton = $("<input type='button' value='Cancel' class='library-style'>").appendTo(rnForm);
+    cButton.bind('click', function() {
+	$("#reasonNoILL").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	//return false;
+    });
+
+    var sButton = $("<input type='submit' value='Submit' class='library-style'>").appendTo(rnForm);
+    sButton.bind('click', function() {
+	var reason = $('input:radio[name=radioset]:checked').val();
+	var optionalMessage = $('input:text[name=message]').val();
+	$("#reasonNoILL").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	
+	var myRow=$("#pr"+requestId);
+	var parms = {
+	    "prid": requestId,
+	    "lid": $("#lid").text(),
+	    "reason": reason,
+	    "message": optionalMessage
+	}
+	$.getJSON('/cgi-bin/decline-patron-request.cgi', parms,
+		  function(data){
+		      // slideUp doesn't work for <tr>
+		      $("#pr"+requestId).fadeOut(400, function() { $("#pr"+requestId).remove(); }); // toast the row
+		  })
+	    .success(function() {
+		update_menu_counters( $("#lid").text() );
+	    });
+	
+    });
+
+    // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
+    $("#noillradioset").buttonset();
+    $("#noillradioset").append("<input type='radio' name='radioset' value='held-locally' id='held-locally' checked='checked'/><label for='held-locally'>Title held locally / local hold placed</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='blocked' id='blocked'/><label for='blocked'>Patron account blocked</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='on-order' id='on-order'/><label for='on-order'>Title on order</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
+    $("#noillradioset").buttonset('refresh');
 }
 
 
@@ -271,6 +332,18 @@ function addToAcq( requestId ) {
 	      })
 	.success(function() {
 	    //alert('success');
+	    var parms = {
+		"prid": requestId,
+		"lid": $("#lid").text(),
+		"reason": 'Your librarian is considering this for purchase.',
+		"message": ''
+	    }
+	    $.getJSON('/cgi-bin/decline-patron-request.cgi', parms,
+		      function(data){
+			  //
+		      })
+		.success(function() {
+		});
 	})
 	.error(function() {
 	    alert('error');
@@ -278,6 +351,7 @@ function addToAcq( requestId ) {
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    update_menu_counters( $("#lid").text() );
 	});
 }
 

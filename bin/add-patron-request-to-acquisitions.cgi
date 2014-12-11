@@ -41,16 +41,19 @@ if ($patronRequest) {
 		 $patronRequest->{"pubdate"},
 		 $patronRequest->{"ts"}
 	    );
-	
-	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
-		 undef,
-		 $prid,
-		 $lid
-	    );
-	$dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
-		 undef,
-		 $prid
-	    );
+
+# NOTE: adding a patron request to the "wish list" now triggers a 
+# "decline-patron-request.cgi", which does the following:
+#
+#	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
+#		 undef,
+#		 $prid,
+#		 $lid
+#	    );
+#	$dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
+#		 undef,
+#		 $prid
+#	    );
 
 	$dbh->commit;
     };  # end of eval

@@ -69,27 +69,53 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Details"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status Updated"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = " ";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = " ";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
-    
+
     for (var i=0;i<data.active.length;i++) 
     {
+	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
+	delete data.active[i].declined_id;
+	data.active[i].action="";
+
         row = tBody.insertRow(-1); row.id = 'cid'+data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].lender;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.active[i].libraries_tried;
+        cell = row.insertCell(-1); cell.innerHTML = data.active[i].details;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].ts;
+	cell = row.insertCell(-1); // actions
+
+	if ((data.active[i].status == 'Declined') || (data.active[i].status == 'Wish list')) {
+	    cell.id='declined'+declinedID;
+	    row.id = 'row'+declinedID;
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+declinedID;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.className = "action-button";
+	    b1.value = "Delete";
+	    b1.onclick = make_seenit_handler( declinedID );
+	    divActions.appendChild(b1);
+
+	    $(cell).append( divActions );
+
+	} else {
+	    // no actions
+	}
     }
-    
+
     document.getElementById('mylistDiv').appendChild(myTable);
     
     $("#waitDiv").hide();
@@ -157,8 +183,8 @@ function seenit( declinedID ) {
 	})
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
-	    $("#declined"+declinedID).fadeOut(400, function() {
-		oTable_borrowing.fnDeleteRow( $("#declined"+declinedID)[ 0 ] );
+	    $("#row"+declinedID).fadeOut(400, function() {
+		oTable_borrowing.fnDeleteRow( $("#row"+declinedID)[ 0 ] );
 	    }); // toast the row
 	});
 
