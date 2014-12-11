@@ -691,11 +691,19 @@ div.termtitle {
   height: 3em;
 }
 
-.login-header-title {
+/*.login-header-title {
   font-size: 2em;
   padding: .5em .5em 0em .5em;
   margin-top: 1em;
   display: block;
+}*/
+
+legend {
+	font-size: 2em;
+  padding: .5em;
+  margin-top: 1em;
+  display: block;
+  color: #fff;
 }
 
 .login-footer {
