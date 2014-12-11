@@ -799,7 +799,7 @@ div.login label, div.login input {
 }
 
 @media screen 
-and (max-width : 65em) 
+and (max-width : 75em) 
 {
 
     #container
