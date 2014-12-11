@@ -32,7 +32,6 @@ and (max-width : 65em)
 
     #covers img {
     	height: auto;
-		max-width: 100%;
 		border: 0px;
     	margin-right: .3em;
     	display: inline;
@@ -96,7 +95,7 @@ and (max-width : 65em)
     
     #aside
     {
-	width: 80%;
+	width: 100%;
 	margin: auto;
 	display: block;
   	padding: 1em; 
