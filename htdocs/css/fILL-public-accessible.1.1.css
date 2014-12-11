@@ -885,14 +885,13 @@ and (max-width : 65em)
 	display: block;
 	width: 100%; 
   	padding: 1em; 
-  	margin-bottom: 1em;
-  	margin: 1em;
+  	margin-bottom: .5em;
     }
     
     #aside
     {
 	width: 80%;
-	margin: 1em;
+	margin: auto;
 	display: block;
   	padding: 1em; 
     }
