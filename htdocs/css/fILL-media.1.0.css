@@ -71,7 +71,7 @@ and (max-width : 65em)
 	padding: .3em;
 	font-size: 1.4em;
 	padding-left:.7em;
-	width: 90%;
+	width: auto;
     }
     
     #search-container {
