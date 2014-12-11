@@ -45,6 +45,20 @@ html, body {
     font-size: 100%;  /* permits better scaling (all other font sizes in em) */
 }
 
+#container
+{
+	margin: auto;
+	padding: 0em .5em;
+	width: 85%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+}
+
+#content {
+	margin: .5em;
+	display: block;
+}
+
 img 
 {
 	height: auto;
@@ -71,19 +85,6 @@ h3 {
 	font-weight: bold;
 }
 
-#container
-{
-	margin: auto;
-	padding: 0em .5em;
-	width: 85%;
-	height: auto;
-	clear: both;  /* start fresh with floatiness within the container */
-}
-
-#content {
-	margin: .5em;
-	display: block;
-}
 
 /**HEADER STYLES**/
 
@@ -224,7 +225,6 @@ nav li a
 {
 	float: right;
 	width: 80%; 
-	min-width: 400px;
   	padding: 1.25em; 
   	margin-bottom: 1em;
 }
@@ -233,7 +233,6 @@ nav li a
 {
 	float: left;
 	width: 18%;
-	min-width: 180px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 1em; 
@@ -319,7 +318,6 @@ nav li a
 {
 	float: right;
 	width: 27%;
-	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 0px; 
@@ -330,7 +328,6 @@ nav li a
 {
 	float: left;
 	width: 27%;
-	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 0px;
@@ -941,14 +938,13 @@ and (max-width : 65em)
 	display: block;
 	width: 100%; 
   	padding: 1em; 
-  	margin-bottom: 1em;
-  	margin: 1em;
+  	margin-bottom: .5em;
     }
     
     #aside
     {
 	width: 80%;
-	margin: 1em;
+	margin: auto;
 	display: block;
   	padding: 1em; 
     }
