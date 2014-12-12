@@ -187,9 +187,9 @@ button {
 
 /*------------login styles---------------------------------*/
 
-.login-header legend {
+.login-header {
     background-color: #183935;
-    color: #fff;
+    
 }
 
 /*dev test*/
@@ -197,6 +197,10 @@ button {
     background: #f3f3f3;
     border: 2px solid #505050;
     color: #505050;
+}
+
+.login-header legend {
+    color: #fff;
 }
 
 /*-------SEARCH RESULTS STYLES-----------------*/
