@@ -93,7 +93,7 @@ and (max-width : 65em)
   	padding: 1em; 
   	margin-bottom: .5em;
     font-size: 2em;
-    max-width: 55em;
+    max-width: inherit;
     }
     
     #aside
