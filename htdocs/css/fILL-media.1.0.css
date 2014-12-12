@@ -24,7 +24,7 @@ and (max-width : 65em)
     img {
     	height: auto;
 		max-width: 100%;
-		border: 0px;
+		border: none;
     	margin-left: auto;
     	margin-right: auto;
     	display: block;
@@ -32,7 +32,7 @@ and (max-width : 65em)
 
     #covers img {
     	height: auto;
-		border: 0px;
+		border: none;
     	margin-right: .3em;
     	display: inline;
 	}
@@ -60,7 +60,7 @@ and (max-width : 65em)
 	display: block;
 	font-size: 1.2em;
 	float: left;
-	padding: 5px 10px;
+	padding: .3em 1 none;
 	text-decoration: none;
     }
     
@@ -81,7 +81,7 @@ and (max-width : 65em)
     .login {
 	display: block;
 	clear: both;
-	width: 100%;
+	width: 80%;
 	margin: auto;
     }
     
@@ -131,7 +131,6 @@ and (max-width : 65em)
    
     #welcome-box {
 	font-size: 1.2em;
-	border: 0px;
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
@@ -142,7 +141,7 @@ and (max-width : 65em)
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
-  	padding: 0px; 
+  	padding: 0em; 
   	font-size: 1.2em;
     }
     
@@ -151,7 +150,7 @@ and (max-width : 65em)
 	width: 100%;
 	margin-bottom: 1.5em;
 	display: block;
-  	padding: 0px;
+  	padding: none;
   	font-size: 1.2em; 
     }
     
