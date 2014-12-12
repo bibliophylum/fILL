@@ -44,9 +44,9 @@
   <set target="206.45.94.71:210/ILS" name="symbol" value="MMNN"/>
 
 <!-- Pauline Johnson Library -->
-  <set target="www.insigniasoftware.com:210/PJPL_ILS" name="pz:name" value="Pauline Johnson Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/PJPL_ILS" name="symbol" value="MLPJ"/>
-  <set target="www.insigniasoftware.com:210/PJPL_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
+  <set target="pjpl.insigniails.com:210/PJPL_ILS" name="pz:name" value="Pauline Johnson Library (Insignia)"/>
+  <set target="pjpl.insigniails.com:210/PJPL_ILS" name="symbol" value="MLPJ"/>
+  <set target="pjpl.insigniails.com:210/PJPL_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Pinawa Public Library -->
   <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
