@@ -102,6 +102,7 @@ and (max-width : 65em)
 	margin: auto;
 	display: block;
   	padding: 1em; 
+    max-width: inherit;
     }
     
     #main-info-left
