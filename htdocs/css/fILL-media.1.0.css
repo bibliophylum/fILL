@@ -13,7 +13,7 @@ and (max-width : 65em)
 	margin: none;
 	padding: .5em;
 	width: 100%;
-    max-width: 65em;
+    max-width: 55em;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
     }
