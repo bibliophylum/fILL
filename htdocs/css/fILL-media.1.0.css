@@ -91,6 +91,7 @@ and (max-width : 65em)
 	width: 100%; 
   	padding: 1em; 
   	margin-bottom: .5em;
+    font-size: 2em;
     }
     
     #aside
