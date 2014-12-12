@@ -186,16 +186,12 @@ button {
 }
 
 /*------------login styles---------------------------------*/
-.login-content {
-    border-bottom: 5px solid #b3b3b3;
-    background: #e3e3e3;
-}
-.login-header {
+
+.login-header legend {
     background-color: #183935;
-}
-.login-header-title {
     color: #fff;
 }
+
 /*dev test*/
 #divChangePass {
     background: #f3f3f3;

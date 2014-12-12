@@ -687,7 +687,7 @@ div.termtitle {
   padding: .8em;
 }
 
-.login-header {
+.login-header legend {
   height: 3em;
   padding: .5em;
   font-size: 2em;
