@@ -459,7 +459,6 @@ input[type=text], input[type=password]
     width: auto;
     text-transform:capitalize;
     border: 0;
-    border-radius:5px;
     background-color: #183935;
 }
 
@@ -470,7 +469,6 @@ input[type=text], input[type=password]
     width: auto;
     text-transform:capitalize;
     border: 0;
-    border-radius:5px;
 }
 
 
@@ -555,8 +553,7 @@ button {
 }
 
 .button-left:focus {
-	background-color: #06a0ca;
-	border: 1px solid #06a0ca;
+
 }
 
 .button-right {
