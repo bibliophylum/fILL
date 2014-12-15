@@ -429,13 +429,19 @@ function replaceHtml(el, html) {
   return newEl;
 };
 
+function ImgError(source){
+	source.src = "/img/fill-cover.png";
+	source.onerror = "";
+	return true;
+}
+
 function coverImage(lccn,isbn) {
     var cover = '<td>';
     if ((isbn != undefined) || (lccn != undefined)) {
 	if (lccn != undefined) {
-	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg?default=false" onerror="ImgError(this)">';
 	} else if (isbn != undefined) {
-	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg?default=false" onerror="ImgError(this)">';
 	}
     } else {
 	cover += '<img id="cover" src="/img/fill-cover.png">';
