@@ -291,9 +291,13 @@ input[type="button"]:hover.small-function-button {
     margin-left: auto;
     margin-right: auto;
     border-collapse: collapse;
-    border: 1px solid black;
+    border: 1px solid #b3b3b3;
 }
 
+#instructions input[type="text"]
+{
+  width: 50%;
+}
 /***---End of new library client side CSS--**/
 
 

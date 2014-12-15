@@ -74,6 +74,11 @@ and (max-width : 65em)
 	width: auto;
     }
     
+    #instructions input[type="text"]
+    {
+    width: 90%;
+    }
+
     #search-container {
 	width: 100%;
 	display: block;
