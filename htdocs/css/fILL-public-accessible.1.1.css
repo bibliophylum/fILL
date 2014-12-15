@@ -680,6 +680,16 @@ div.termtitle {
   margin-top: 1em;
 }
 
+.login-header-pub legend {
+	background-color: #183935;
+	color:#fff;
+}
+
+.login-header-lib legend {
+	background-color: #0f4072;
+	color:#fff;
+}
+
 .login-footer {
   display: block;
   margin: auto;
