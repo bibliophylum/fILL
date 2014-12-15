@@ -151,7 +151,7 @@ button {
     color: #fff;!important
 }
 .button-left:link {
-    border: 1px solid #000;
+    border: 1px solid inherit;
     background: #183935;
     color: #fff;!important
 }
