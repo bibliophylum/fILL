@@ -96,7 +96,7 @@ $('document').ready(function(){
 
 </script>
 
-<div id="container">
+<div id="content">
   <div id="aside-img-left">
     <img src="/img/regional_map.gif" alt="map of Manitoba with all the regions listed">
   </div>
@@ -131,7 +131,8 @@ $('document').ready(function(){
         <table id="fill-table">
           <tr>
         	  <th>Home library</th>
-        	  <td><p id="home_library"></p></td>
+        	  <td><p id="home_library"></p>
+            <p><TMPL_VAR name="library"></p></td>TMPL_VAR name="library"
         	</tr>
           <tr>
         	  <th>Your name</th>
@@ -176,5 +177,5 @@ $('document').ready(function(){
     <p> </p>
 
   </div><!-- div id main-info-right -->
-</div><!-- div id container -->
+</div><!-- div id content -->
 <TMPL_INCLUDE NAME="footer.tmpl">
