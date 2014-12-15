@@ -26,7 +26,7 @@ html, body {
 }
 
 #main-left {
-	width: 30%;
+	width: 28%;
 	padding: 1em;
 	float: left;
 	display: inline;
@@ -34,7 +34,7 @@ html, body {
 }
 
 #main-right {
-	width: 65%;
+	width: 70%;
 	padding: 1em;
 	float: right;
 	display: inline;
@@ -291,9 +291,13 @@ input[type="button"]:hover.small-function-button {
     margin-left: auto;
     margin-right: auto;
     border-collapse: collapse;
-    border: 1px solid black;
+    border: 1px solid #b3b3b3;
 }
 
+#instructions input[type="text"]
+{
+  width: 50%;
+}
 /***---End of new library client side CSS--**/
 
 

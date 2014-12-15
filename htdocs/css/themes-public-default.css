@@ -23,9 +23,6 @@ html, body {
 
 #container {
     background-color: #f3f3f3;
-    -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
-    -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
-    box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
 h2 {
@@ -196,7 +193,6 @@ button {
 
 .login-header {
     background-color: #183935;
-    
 }
 
 /*dev test*/
