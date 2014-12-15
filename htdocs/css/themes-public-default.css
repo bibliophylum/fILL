@@ -151,7 +151,7 @@ button {
     color: #fff;!important
 }
 .button-left:link {
-    border: 1px solid inherit;
+    border: 1px solid ;
     background: #183935;
     color: #fff;!important
 }
@@ -162,6 +162,7 @@ button {
 
 .public-style {
     color: #fff;
+    border: 1px solid #183935;
 }
 
 /*** FILL #fill-table STYLES **/
