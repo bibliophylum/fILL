@@ -146,16 +146,22 @@ input[type=submit]:hover {
     background-color: #183935;
 }
 button {
-    border: 1px solid #000;
+    border: 1px solid inherit;
     background: #183935;
     color: #fff;!important
 }
 .button-left:link {
-    border: 1px solid ;
+    border: 1px solid inherit;
     background: #183935;
     color: #fff;!important
 }
-.button-left:hover {
+
+.button-left:focus {
+    background-color: #06a0ca;
+    border: 1px solid #06a0ca;
+}
+
+.public-style:hover {
     background-color: #06a0ca;
     border: 1px solid #06a0ca;
 }
