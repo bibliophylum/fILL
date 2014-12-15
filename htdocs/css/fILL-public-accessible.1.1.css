@@ -455,6 +455,13 @@ input[type=text], input[type=password]
     border-color: #b3b3b3;
 }
 
+input[type=text]:focus, input[type=password]:focus
+{
+    border-radius:5px;
+    border: 2px solid;
+    border-color: #b3b3b3;
+}
+
 .public-style {
     
     padding: .3em 1em;
@@ -498,12 +505,13 @@ input[type=text], input[type=password]
 
 #butlink {
 	padding: .5em;
-	border: 1px solid;
+	border: 1px solid inherit;
 	border-color: inherit;
-	margin: 10px;
+	margin: .5em;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
+    border-radius:5px;
 }
 
 #butlink:link {
