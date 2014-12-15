@@ -463,7 +463,6 @@ input[type=text]:focus, input[type=password]:focus
 }
 
 .public-style {
-    
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
@@ -473,7 +472,6 @@ input[type=text]:focus, input[type=password]:focus
 }
 
 .library-style {
-    
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
