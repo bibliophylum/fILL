@@ -734,7 +734,7 @@ div.login label {
 }
 
 div.login input {
-  margin-left: 10px;
+  margin-left: ;
 }
 
 div.login label, div.login input {
@@ -771,7 +771,7 @@ div.login label, div.login input {
 
 .details {
 	padding: 1em; 
-	margin: 5px;
+	margin: .3em;
 }
 
 .secondary_info {
