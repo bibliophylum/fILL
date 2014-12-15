@@ -673,19 +673,19 @@ div.termtitle {
   padding: .8em;
 }
 
-.login-header {
+#login-header {
   height: ;
   padding: .5em 1em;
   font-size: 2em;
   margin-top: 1em;
 }
 
-.login-header-pub legend {
+.login-header-pub {
 	background-color: #183935;
 	color:#fff;
 }
 
-.login-header-lib legend {
+.login-header-lib {
 	background-color: #0f4072;
 	color:#fff;
 }
