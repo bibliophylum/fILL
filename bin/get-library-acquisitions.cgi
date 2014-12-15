@@ -8,18 +8,19 @@ my $query = new CGI;
 my $lid = $query->param('lid');
 
 my $SQL = "select 
-  title,
-  author,
-  isbn,
-  pubdate,
-  medium,
-  ts::date
+  a.title,
+  a.author,
+  a.isbn,
+  a.pubdate,
+  a.medium,
+  p.card as patron,
+  a.ts::date
 from 
-  acquisitions 
+  acquisitions a
+  left join patrons p on p.pid=a.pid 
 where lid=? 
 order by ts
 ";
-
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
 		       "maplin3db",
