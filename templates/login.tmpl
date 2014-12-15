@@ -15,14 +15,17 @@ $('document').ready(function(){
 });
 </script>
 
-<div class="clear">
+<div class="clear"></div>
  <form action="/cgi-bin/lightning.cgi" method="post" name="loginform">
-  <div class="login">
-  <div class="login-content">
-  	<div class="login-header-library">
-  	  <span class="login-header-title">Sign in to fILL</span>
-  	</div>
-	  <fieldset>
+  
+<div class="login">
+      <div class="login-content tone-box">
+
+          <div class="login-header">
+              <legend>Login</legend>
+          </div>
+
+	  <fieldset class="login">
             <label for="authen_username">User Name</label>
             <input type="text" value="" autocaptalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br>
 
