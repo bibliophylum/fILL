@@ -13,37 +13,40 @@ $('document').ready(function(){
 });
 
 </script>
-<div class="clear">
+<div class="clear"></div>
 
   <form action="/cgi-bin/public.cgi" method="post" name="loginform">
     <div class="login">
-      <div class="login-content">
-        <div class="login-header">
-          <span class="login-header-title">Log in to fILL</span>
-        </div>
+      <div class="login-content tone-box">
+
+          <div class="login-header">
+              <legend>Login</legend>
+            <!--<span class="login-header-title">Log in to fILL</span>-->
+          </div>
+
         <fieldset name="login">
-        <legend>Login</legend>
           <label for="authen_username">User Name</label>
-          <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
+          <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
           <label for="authen_password">Password </label>
-          <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+          <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
         </fieldset>
         <fieldset>
           <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
           <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
         </fieldset>
       </div>
+
       <div class="login-footer">
         <p>Don&rsquo;t have an account?</p>
           <a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign Up!</a>
-
-        <p>If you cannot remember your user name or password, please contact your local public library.</p>
+          <p>If you cannot remember your user name or password, please contact your local public library.</p>
       </div>
+
     </div><!--div class login-->
     <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
     <input type="hidden" value="authen_login" name="rm">
   </form>
-</div>
+
 
 <script language="JavaScript" type="text/javascript">
   $('#csstabs').hide();

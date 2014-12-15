@@ -146,22 +146,29 @@ input[type=submit]:hover {
     background-color: #183935;
 }
 button {
-    border: 1px solid #000;
+    border: 1px solid inherit;
     background: #183935;
     color: #fff;!important
 }
 .button-left:link {
-    border: 1px solid #000;
+    border: 1px solid inherit;
     background: #183935;
     color: #fff;!important
 }
-.button-left:hover {
+
+.button-left:focus {
+    background-color: #06a0ca;
+    border: 1px solid #06a0ca;
+}
+
+.public-style:hover {
     background-color: #06a0ca;
     border: 1px solid #06a0ca;
 }
 
 .public-style {
     color: #fff;
+    border: 1px solid #183935;
 }
 
 /*** FILL #fill-table STYLES **/
@@ -186,21 +193,21 @@ button {
 }
 
 /*------------login styles---------------------------------*/
-.login-content {
-    border-bottom: 5px solid #b3b3b3;
-    background: #e3e3e3;
-}
+
 .login-header {
     background-color: #183935;
+    
 }
-.login-header-title {
-    color: #fff;
-}
+
 /*dev test*/
 #divChangePass {
     background: #f3f3f3;
     border: 2px solid #505050;
     color: #505050;
+}
+
+.login-header legend {
+    color: #fff;
 }
 
 /*-------SEARCH RESULTS STYLES-----------------*/
