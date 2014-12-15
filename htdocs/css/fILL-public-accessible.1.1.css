@@ -52,6 +52,9 @@ html, body {
 	width: 85%;
 	height: auto;
 	clear: both;  /* start fresh with floatiness within the container */
+	-webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
 #content {
