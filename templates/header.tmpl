@@ -14,7 +14,7 @@
 
   <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-library-colors.css"/>
 
-  <link type="text/css" rel="stylesheet" href=" "></link>
+  <link type="text/css" rel="stylesheet" href=" "/>
   <link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css"/>
 
   <!-- jQuery-UI theme:
@@ -50,9 +50,9 @@
 
   <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 
-<!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
-  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
 <script type="text/javascript">
 
@@ -221,34 +221,34 @@ $('document').ready(function(){
 	<div class="tone-box">
 
 	  <label for="adv_title">Title: </label>
-    <input id="adv_title" type="text"/><br>
+	  <input id="adv_title" type="text"/><br/>
 	  
-    <label for="adv_author">Author: </label>
-    <input id="adv_author" type="text"/><br>
+	  <label for="adv_author">Author: </label>
+	  <input id="adv_author" type="text"/><br/>
 	  
-    <label for="adv_subject">Subject: </label>
-    <input id="adv_subject" type="text"/><br>
+	  <label for="adv_subject">Subject: </label>
+	  <input id="adv_subject" type="text"/><br/>
 	  
-    <label for="adv_series">Series: </label>
-    <input id="adv_series" type="text"/>
+	  <label for="adv_series">Series: </label>
+	  <input id="adv_series" type="text"/>
 
-  <h3>Search help</h3>
-   <p>fILL does a general keyword search by default.</p>
+	  <h3>Search help</h3>
+	  <p>fILL does a general keyword search by default.</p>
   
-   <p><strong>Specific title:</strong> tti="The case for mars"</p>
-   <p><strong>Specific author:</strong> tau="Zubrin, Robert"</p>
-   <p><strong>Specific subject:</strong> tsu="mars planet"</p>
-   <p><strong>Series:</strong> tseries="fear street"</p>
+	  <p><strong>Specific title:</strong> ti="The case for mars"</p>
+	  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
+	  <p><strong>Specific subject:</strong> su="mars planet"</p>
+	  <p><strong>Series:</strong> series="fear street"</p>
 
-   <p>You can combine these using the connectors AND, OR, NOT:</p>
-   <p>tau="david drake" and au="eric flint"</p>
-   <p>tti="cooking" and su="solar"</p>
-   <p>tti="cooking" not su="microwave"");</p>
+	  <p>You can combine these using the connectors AND, OR, NOT:</p>
+	  <p>au="david drake" and au="eric flint"</p>
+	  <p>ti="cooking" and su="solar"</p>
+	  <p>ti="cooking" not su="microwave"</p>
   
 	</div>
       </div>
       <input id="button" type="submit" value="Search" class="library-style" />
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style" />
+      <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
       <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
     </form>
     </div>

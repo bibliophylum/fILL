@@ -16,40 +16,38 @@ $('document').ready(function(){
 </script>
 
 <div id="clear"></div>
- <form action="/cgi-bin/lightning.cgi" method="post" name="loginform" id="loginform">
-  
-<div class="login">
 
-	  <fieldset name="login">
+<form action="/cgi-bin/lightning.cgi" method="post" name="loginform" id="loginform">
+   <div class="login">
+     
+     <fieldset name="login">
+       
+       <legend>Staff Login</legend>
+       <label for="authen_username">User Name</label>
+       <input type="text" value="" autocaptalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br/>
+       
+       <label for="authen_password">Password</label>
+       <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield"><br/>
+       
+       <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br/>
+     </fieldset>
+     
+     <div class="login-footer">
+       <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+     </div>
+     
+   </div>
+   <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
+   <input type="hidden" value="authen_login" name="rm">
+</form>
 
-    <legend>Staff Login</legend>
-            <label for="authen_username">User Name</label>
-            <input type="text" value="" autocaptalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br>
+<!-- </div> where did this come from? -->
 
-            <label for="authen_password">Password</label>
-            <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
-
-            <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
-	  </fieldset>
-
-	<div class="login-footer">
-
-      <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton fill-button">
-	 
-	</div>
-
-  </div>
-      <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
-      <input type="hidden" value="authen_login" name="rm">
-  </form>
-
-</div>
-
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   $('#csstabs').hide();
 </script>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   document.loginform.authen_username.focus();
 </script>
 
