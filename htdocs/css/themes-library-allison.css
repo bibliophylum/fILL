@@ -216,6 +216,10 @@ footer
 }
 /*--Button and input styles--*/
 
+label {
+  color: #fff;
+}
+
 input[type=text]
 {
     background-color: #fff;
