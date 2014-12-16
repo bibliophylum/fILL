@@ -105,6 +105,7 @@ header {
 }
 
 #header-right {
+	font-size: 1.2em;
  	float: right;
  	width: 49%;
  	display: inline;
