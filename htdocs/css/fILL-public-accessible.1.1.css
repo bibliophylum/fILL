@@ -235,9 +235,9 @@ nav li a
 }
 
 #display {
-	width: 100%;
+	width: auto;
 	display: block;
-	margin: 1em 0em;
+	margin: 1em auto;
 	padding: 1em;
 	clear: both;
 }
