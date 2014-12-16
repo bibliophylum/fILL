@@ -673,22 +673,24 @@ div.termtitle {
   padding: .8em;
 }
 
-#login-header {
+.login-header-pub {
   height: ;
   padding: .5em 1em;
   font-size: 1.5em;
   margin-top: 1em;
   color: #fff;
+  background-color: #183935;/*Dark Green*/
+  color:#fff;
 }
 
-.login-header-pub h2 {
-	background-color: #183935;
-	color:#fff;
-}
-
-.login-header-lib h2 {
-	background-color: #0f4072;
-	color:#fff;
+.login-header-lib {
+  height: ;
+  padding: .5em 1em;
+  font-size: 1.5em;
+  margin-top: 1em;
+  color: #fff;
+  background-color: #0f4072;/*Dark Blue*/
+  color:#fff;
 }
 
 .login-footer {
