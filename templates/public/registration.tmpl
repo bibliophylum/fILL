@@ -130,39 +130,43 @@ $('document').ready(function(){
 	  -->
 
         <table id="fill-table">
+	  <tr>
+	    <th>Home library</th>
+	    <td><p id="home_library_name"></p></td>
+	  </tr>
           <tr>
-        	  <th>Home library</th>
-        	  <td><p id="home_library"></p></td>
-        	</tr>
+            <th>Home library location</th>
+            <td><p id="home_library"></p></td>
+          </tr>
           <tr>
-        	  <th>Your name</th>
-        	  <td><input type="text" id="patron_name"></td>
-        	</tr>
+            <th>Your name</th>
+            <td><input type="text" id="patron_name"></td>
+          </tr>
           <tr>
-        	  <th>Library card number</th>
-        	  <td><input type="text" id="barcode"></td>
-        	</tr>
+            <th>Library card number</th>
+            <td><input type="text" id="barcode"></td>
+          </tr>
           <tr>
-        	  <th>Email address</th>
-        	  <td><input type="text" id="email_address"></td>
-        	</tr>
+            <th>Email address</th>
+            <td><input type="text" id="email_address"></td>
+          </tr>
           <tr>
-        	  <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
-        	</tr>
+            <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
+          </tr>
           <tr>
-        	  <th>Username</th>
-		  <!-- this id="username" was conflicting with the username in the header,
-		    so I've renamed this one to "reg_username". -->
-        	  <td><input type="text" id="reg_username" size=30 maxlength=50><br><p id="username_message"></p></td>
-        	</tr>
+            <th>Username</th>
+	    <!-- this id="username" was conflicting with the username in the header,
+		 so I've renamed this one to "reg_username". -->
+            <td><input type="text" id="reg_username" size=30 maxlength=50><br><p id="username_message"></p></td>
+          </tr>
           <tr>
-        	  <th>Password</th>
-        	  <td><input type="password" id="password" size=30 maxlength=50></td>
-        	</tr>
+            <th>Password</th>
+            <td><input type="password" id="password" size=30 maxlength=50></td>
+          </tr>
           <tr>
-        	  <th>Re-type Password</th>
-        	  <td><input type="password" id="password2" size=30 maxlength=50><br><p id="password_message"></p></td>
-        	</tr>
+            <th>Re-type Password</th>
+            <td><input type="password" id="password2" size=30 maxlength=50><br><p id="password_message"></p></td>
+          </tr>
         </table>
 
         <input id="home_library_town" type="hidden">
