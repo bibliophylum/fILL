@@ -105,10 +105,17 @@ header {
 }
 
 #header-right {
-	font-size: 1.2em;
  	float: right;
  	width: 49%;
  	display: inline;
+}
+
+#header-right p {
+	font-size: 1.2em;
+}
+
+#username {
+	font-size: 1.2em;
 }
 
 #fill-logo {
