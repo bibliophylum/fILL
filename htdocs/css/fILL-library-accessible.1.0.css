@@ -152,6 +152,7 @@ html, body {
   color: #000;
 }
 
+.alert-box a:link { color: #000; }
 .alert-box a:visited { color: #000; }
 .alert-box a:hover { color: red; }
 .alert-box a:active { color: #000; }
