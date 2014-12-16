@@ -662,35 +662,8 @@ div.termtitle {
   margin: auto;
 }
 
-.login-content {
-  display: block;
-  clear: both;
-  font-size: 1em;
-  font-family: sans-serif;
-}
-
 .login p {
   padding: .8em;
-}
-
-.login-header-pub {
-  height: ;
-  padding: .5em 1em;
-  font-size: 1.5em;
-  margin-top: 1em;
-  color: #fff;
-  background-color: #183935;/*Dark Green*/
-  color:#fff;
-}
-
-.login-header-lib {
-  height: ;
-  padding: .5em 1em;
-  font-size: 1.5em;
-  margin-top: 1em;
-  color: #fff;
-  background-color: #0f4072;/*Dark Blue*/
-  color:#fff;
 }
 
 .login-footer {
@@ -710,7 +683,6 @@ form#loginform label {
     display: inline-block;
     vertical-align: baseline;
     text-align: right;
-    border: 1px solid red;
     width: 15%;
     font-weight: bold;
     margin-right: ;
@@ -736,8 +708,8 @@ legend {
   color: #111;
   font-size:1.5em;
   background-color: #d3d3d3;
+  margin-top: 1em;
   }
-
 
 #divChangePass { 
 	display: none;

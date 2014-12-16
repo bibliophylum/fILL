@@ -16,16 +16,13 @@ $('document').ready(function(){
 </script>
 
 <div class="clear"></div>
- <form action="/cgi-bin/lightning.cgi" method="post" name="loginform">
+ <form action="/cgi-bin/lightning.cgi" method="post" name="loginform" id="loginform">
   
 <div class="login">
-      <div class="login-content tone-box">
 
-          <div id="login-header">
-              <h2>Login</h2>
-          </div>
+	  <fieldset name="login">
 
-	  <fieldset class="login">
+    <legend>Staff Login</legend>
             <label for="authen_username">User Name</label>
             <input type="text" value="" autocaptalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br>
 
@@ -34,7 +31,6 @@ $('document').ready(function(){
 
             <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
 	  </fieldset>
-	</div>
 
 	<div class="login-footer">
 
@@ -46,6 +42,7 @@ $('document').ready(function(){
       <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
       <input type="hidden" value="authen_login" name="rm">
   </form>
+
 </div>
 
 <script language="JavaScript" type="text/javascript">
