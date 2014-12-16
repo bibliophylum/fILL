@@ -232,6 +232,10 @@ nav li a
   	margin-bottom: 1em;
 }
 
+#display {
+	width: 100%
+}
+
 #aside
 {
 	float: left;
