@@ -60,6 +60,7 @@ html, body {
 #content {
 	margin: .5em;
 	display: block;
+	overflow: auto;
 }
 
 img 
@@ -233,7 +234,9 @@ nav li a
 }
 
 #display {
-	width: 100%
+	width: 100%;
+	display: block;
+	margin: 1em 0em;
 }
 
 #aside
