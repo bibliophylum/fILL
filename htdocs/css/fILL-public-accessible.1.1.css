@@ -676,17 +676,17 @@ div.termtitle {
 #login-header {
   height: ;
   padding: .5em 1em;
-  font-size: 2em;
+  font-size: 1.5em;
   margin-top: 1em;
   color: #fff;
 }
 
-.login-header-pub {
+.login-header-pub h2 {
 	background-color: #183935;
 	color:#fff;
 }
 
-.login-header-lib {
+.login-header-lib h2 {
 	background-color: #0f4072;
 	color:#fff;
 }
