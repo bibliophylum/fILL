@@ -15,26 +15,26 @@ $('document').ready(function(){
 </script>
 <div class="clear"></div>
 
-  <form action="/cgi-bin/public.cgi" method="post" name="loginform">
+  <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
     <div class="login">
-      <div class="login-content tone-box">
-
-          <div id="login-header-pub">
-              <h2>Login</h2>
-            <!--<span class="login-header-title">Log in to fILL</span>-->
-          </div>
 
         <fieldset name="login">
+
+        <legend>Patron Login</legend>
+        
           <label for="authen_username">User Name</label>
           <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
-          <label for="authen_password">Password </label>
+
+          <label for="authen_password">Password</label>
           <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+
         </fieldset>
+
         <fieldset>
           <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
           <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
         </fieldset>
-      </div>
+      
 
       <div class="login-footer">
         <p>Don&rsquo;t have an account?</p>

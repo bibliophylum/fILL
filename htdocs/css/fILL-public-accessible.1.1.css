@@ -706,40 +706,38 @@ fieldset input span {
     vertical-align: middle;
 }
 
-div.login fieldset {
-  margin: 0em 0em 0em 0em;
-  padding: 5px;
-  border: none;
-  width: 100%;
-  
-}
-/*
-div.login label {
-  text-align: center;
-  padding: 0;
-  margin-left: 1em;
-  width: 8em;
-  font-size: 1em;
-  min-width: 140px;
-}
-*/
-div.login label {
-    float: left;
-    width: 20%;
-    text-align: right;
-    margin-right: 0.5em;
-    font-size: 1em;
-    padding-top: 1.6em;
-}
-
-div.login input {
-  margin-left: ;
-}
-
-div.login label, div.login input {
+form#loginform label {
     display: inline-block;
     vertical-align: baseline;
+    text-align: right;
+    border: 1px solid red;
+    width: 15%;
+    font-weight: bold;
+    margin-right: ;
 }
+
+#loginform fieldset {
+	background-color: #e3e3e3;
+	border: none;
+	padding-top: 1em;
+}
+
+form#loginform input[type=password], form#loginform input[type=text] {
+	margin: .5em;
+    display: inline-block;
+    vertical-align: baseline;
+    width: 50%;
+}
+
+legend {
+  width: 95%;
+  padding: 0.5em;
+  border-bottom: 3px solid #b3b3b3;
+  color: #111;
+  font-size:1.5em;
+  background-color: #d3d3d3;
+  }
+
 
 #divChangePass { 
 	display: none;
