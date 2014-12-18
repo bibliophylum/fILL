@@ -152,6 +152,12 @@ html, body {
   color: #000;
 }
 
+.alert-box a:link { color: #000; }
+.alert-box a:visited { color: #000; }
+.alert-box a:hover { color: #505050; }
+.alert-box a:active { color: #000; }
+.alert-box a:focus { color: #000; }
+
 .circle {
   font-size: .8em;
   font-family: sans-serif;
