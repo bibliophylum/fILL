@@ -185,6 +185,11 @@ html, body {
   margin:1em;
 }
 
+.community {
+  color: #183935;
+  background-color: #f3f3f3;
+}
+
 /*-- specific to make_request.tmp --*/
 #toptwo {
     width: 100%;
