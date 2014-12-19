@@ -60,19 +60,6 @@ $('document').ready(function(){
 	    $("#clearbutton").on("click", function(){ clear_acquisitions(); });
 	});
 
-<!--
-//    $('#datatable_barcodes tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
-//    $(document).on("mouseover mouseout", "#datatable_barcodes tbody tr", function() {  // suggested replacement
-    $("#datatable_barcodes tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
-
-        if (event.type == 'mouseover') {
-            $(this).addClass("ui-state-hover");
-        } else {
-            $(this).removeClass("ui-state-hover");
-        }
-    });
--->
-
 });
 
 </script>
