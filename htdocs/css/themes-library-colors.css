@@ -683,6 +683,10 @@ and (max-width : 65em)
 #instructions {
 }
 
+#community {
+  color: #183935;
+}
+
 /* Circle has been created to highlight alerts */
 
 .circle {
