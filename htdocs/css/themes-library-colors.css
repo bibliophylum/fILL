@@ -683,7 +683,7 @@ and (max-width : 65em)
 #instructions {
 }
 
-#community {
+.community {
   color: #183935;
 }
 
