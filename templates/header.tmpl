@@ -176,10 +176,17 @@ $('document').ready(function(){
 
 </script>
 
+<script type="text/javascript">
+  function callDomReadyIfAvailable() {
+    // domReady() is defined (and only used) in search.  If it's defined, call it.
+    if (typeof domReady == 'function') { domReady(); }
+  }
+</script>
+
 </head>
 <!--Library Client side fILL-->
 
-<body class="example_alt_pagination" onload="domReady();">
+<body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
 
 <div id="container">
 <p>&nbsp;</p>
