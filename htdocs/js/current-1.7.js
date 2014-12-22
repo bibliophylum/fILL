@@ -245,7 +245,7 @@ function fnFormatDetails( $tbl, nTr )
 
 function override( e, cid, localData, oTable, nTr )
 {
-//    alert("cid: "+oData.cid+"\noverride: "+e.id+"\ndata: "+localData);
+//    alert("cid: "+cid+"\noverride: "+e.id+"\ndata: "+localData);
     $.getJSON('/cgi-bin/override.cgi', {"cid": cid, "override": e.id, "data":localData},
 	      function(data){
 		  $(nTr).children('.overrides').click();
@@ -498,8 +498,8 @@ $(function() {
 
     $( "#dialog-form" ).dialog({
 	autoOpen: false,
-	height: 300,
-	width: 350,
+	height: 400,
+	width: 400,
 	modal: true,
 	buttons: {
 	    "Update due date": function() {
@@ -508,10 +508,11 @@ $(function() {
 		bValid = bValid && checkRegexp( duedate, /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/, "Due date must be in YYYY-MM-DD format." );
 		if ( bValid ) {
 		    var fromButton = $(this).data('fromButton');
-		    var oData = $(this).data('oData');
+		    var aData = $(this).data('aData');
 		    var oTable = $(this).data('oTable');
 		    var nTr = $(this).data('nTr');
-		    override( fromButton, oData, duedate.val(), oTable, nTr );
+		    //alert('fromButton:'+fromButton+'\naData[1]:'+aData[1]+'\nduedate.val():'+duedate.val()+'\noTable:'+oTable+'\nnTr:'+nTr);
+		    override( fromButton, aData[1], duedate.val(), oTable, nTr );
 		    $( this ).dialog( "close" );
 		}
 	    },
