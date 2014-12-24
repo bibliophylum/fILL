@@ -1,0 +1,181 @@
+/*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+	width: device-width;
+}
+
+@media screen 
+and (max-width : 65em) 
+{
+
+    #container
+    {
+	margin: none;
+	padding: .5em;
+	width: 100%;
+    
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+    }
+
+    #content {
+    	margin: 0em;
+    }
+
+    img {
+    	height: auto;
+		max-width: 100%;
+		border: none;
+    	margin-left: auto;
+    	margin-right: auto;
+    	display: block;
+    }
+
+    #covers img {
+    	height: auto;
+		border: none;
+    	margin-right: .3em;
+    	display: inline;
+	}
+
+    button {
+	font-size: 1.2em;
+	margin: 1em;
+    }	
+
+    #header-left {
+	width: 100%;
+	height: auto;
+	display: block;
+    }
+
+    #header-right {
+ 	width: 100%;
+ 	margin-top: 1em;
+ 	display: block;
+    }
+    
+    nav li a
+    {
+	margin: .3em;
+	display: block;
+	font-size: 1.2em;
+	float: left;
+	padding: .3em 1 none;
+	text-decoration: none;
+    }
+    
+    input[type=text]
+    {
+	margin: .5em .5em;
+	padding: .3em;
+	font-size: 1.4em;
+	padding-left:.7em;
+	width: auto;
+    }
+    
+    #instructions input[type="text"]
+    {
+    width: 90%;
+    }
+
+    #search-container {
+	width: 100%;
+	display: block;
+    }
+    
+    .login {
+	display: block;
+	clear: both;
+	width: 80%;
+	margin: auto;
+    }
+    
+    #main
+    {
+	display: block;
+	width: 100%; 
+  	padding: 1em; 
+  	margin-bottom: .5em;
+    font-size: 2em;
+    }
+    
+    #aside
+    {
+	width: 100%;
+	margin: auto;
+	display: block;
+  	padding: 1em; 
+    }
+    
+    #main-info-left
+    {
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em; 
+    }
+    
+    #main-info-right
+    {
+	width: 100%;
+	margin-bottom: 1em;
+	display: block;
+  	padding: 1.25em;  	
+    }
+    
+    #aside-img-welcome {
+	display: none;
+    }
+    
+    #main-info-welcome 
+    {
+	width: 100%;
+	height: auto;
+	margin: .9em;
+  	padding: 1.25em;  
+    }
+   
+    #welcome-box {
+	font-size: 1.2em;
+	height: auto;
+	padding: 1em;
+	margin-top: 1em;
+    }
+    
+    #aside-img-right
+    {
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: 0em; 
+  	font-size: 1.2em;
+    }
+    
+    #aside-img-left
+    {
+	width: 100%;
+	margin-bottom: 1.5em;
+	display: block;
+  	padding: none;
+  	font-size: 1.2em; 
+    }
+    
+    footer {
+	width: 100%;
+	display: block;
+    }
+    
+    .record {
+        margin-bottom: 1em;
+        font-size: 1.2em;
+    }
+    .record 
+    .primary_info {
+	text-align: left;
+    }
+    
+    .secondary_info {
+	text-align: left;
+    }
+} /* end of @media */

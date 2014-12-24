@@ -22,6 +22,7 @@ function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");
     myTable.setAttribute("id","returns-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -37,7 +38,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return to"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Return to (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Return"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
@@ -65,12 +66,24 @@ function build_table( data ) {
 	var divResponses = document.createElement("div");
 	divResponses.id = 'divResponses'+data.returns[i].id;
 
+	var $label = $("<label />").text('CP tracking:');
+	var $cp = $("<input />").attr({'type':'text',
+				       'size':16,
+				       'maxlength':16,
+				       'style':'font-size:90%',
+				       });
+	$cp.prop('id','cp'+data.returns[i].id);
+	// make_trackingnumber_handler creates and returns the 
+	// function to be called on blur event...
+	$cp.blur( make_trackingnumber_handler( data.returns[i].id ));
+	$cp.appendTo( $label );
+	divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
+
 	var b1 = document.createElement("input");
 	b1.type = "button";
 	b1.value = "Return";
 	b1.className = "action-button";
-	var requestId = data.returns[i].id;
-	b1.onclick = make_returns_handler( requestId );
+	b1.onclick = make_returns_handler( data.returns[i].id );
 	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
@@ -120,3 +133,30 @@ function return_item( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+function make_trackingnumber_handler( requestId ) {
+    return function() { trackit( requestId ) };
+}
+
+function trackit( requestId ) {
+    var parms = {
+	"rid": requestId,
+	"lid": $("#lid").text(),
+	"tracking": $("#cp"+requestId).val()
+    };
+    $.getJSON('/cgi-bin/set-shipping-tracking-number.cgi', parms,
+	      function(data){
+		  //alert("success: "+data.success);
+	      })
+	.success(function() {
+	    //alert("success!");
+	})
+	.error(function() {
+	    alert('Error adding shipping tracking number.');
+	    $("cp"+requestId).focus();
+	})
+	.complete(function() {
+	    //
+	});
+}
+

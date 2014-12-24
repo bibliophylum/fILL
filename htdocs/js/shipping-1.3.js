@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","shipping-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -79,18 +80,35 @@ function build_table( data ) {
 	var divResponses = document.createElement("div");
 	divResponses.id = 'divResponses'+requestId;
 
+	var $label = $("<label />").text('CP tracking:');
+	var $cp = $("<input />").attr({'type':'text',
+				       'size':16,
+				       'maxlength':16,
+				       'style':'font-size:90%',
+				       });
+	$cp.prop('id','cp'+data.shipping[i].id);
+	// make_trackingnumber_handler creates and returns the 
+	// function to be called on blur event...
+	$cp.blur( make_trackingnumber_handler( data.shipping[i].id ));
+	$cp.appendTo( $label );
+	divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
+
 	var b1 = document.createElement("input");
 	b1.type = "button";
+	b1.id = "ship"+requestId;
 	b1.value = "Sent - mark item as shipped.";
-	b1.className = "action-button";
+	// class ship-it-button is used in function set_default_due_date()
+	b1.className = "action-button ship-it-button";
 	b1.style.fontSize = "150%";
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	var b2 = document.createElement("input");
 	b2.type = "button";
+	b2.id = "unship"+requestId;
 	b2.value = "Oops! Return this to the Respond list.";
-	b2.className = "action-button";
+	// class unship-button is used in function set_default_due_date()
+	b2.className = "action-button unship-button";
 	b2.onclick = make_unship_handler( requestId );
 	divResponses.appendChild(b2);
 	
@@ -184,11 +202,53 @@ function unship( requestId ) {
 	});
 }
 
+function make_trackingnumber_handler( requestId ) {
+    return function() { trackit( requestId ) };
+}
+
+function trackit( requestId ) {
+    var parms = {
+	"rid": requestId,
+	"lid": $("#lid").text(),
+	"tracking": $("#cp"+requestId).val()
+    };
+    $.getJSON('/cgi-bin/set-shipping-tracking-number.cgi', parms,
+	      function(data){
+		  //alert("success: "+data.success);
+	      })
+	.success(function() {
+	    //alert("success!");
+	})
+	.error(function() {
+	    alert('Error adding shipping tracking number.');
+	    $("cp"+requestId).focus();
+	})
+	.complete(function() {
+	    //
+	});
+}
+
 function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["datepicker"].value;
+    var tbl = $("#shipping-table").DataTable(); // note the capitalized "DataTable"
+
     $(".due-date").each(function(){
-	$(this).text( defaultDueDate );
+	tbl.cell(this).data( defaultDueDate );
     });
+
+    // using cell.data() recreates the row, losing the dynamically created
+    // button handlers in the process.  We need to recreate them:
+
+    $(".ship-it-button").each(function(){
+	var requestId = this.id.slice(4); // button id starts with "ship"
+	this.onclick = make_shipit_handler( requestId );
+    });
+
+    $(".unship-button").each(function(){
+	var requestId = this.id.slice(6); // button id starts with "unship"
+	this.onclick = make_unship_handler( requestId );
+    });
+
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
 

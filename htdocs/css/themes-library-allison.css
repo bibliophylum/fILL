@@ -3,8 +3,13 @@
 *, *:before, *:after {
 }
 
-body {
-  color: #fff;
+html, body {
+    background: #505050;
+    color: #fff;
+}
+
+#container {
+  background: #000;
 }
 
 /* unvisted link */
@@ -32,10 +37,7 @@ a:focus {
 	color: #fff;
 }
 
-html, body {
-    background: #000;
-/*    color: #fff; */
-}
+
 
 img 
 {
@@ -209,10 +211,14 @@ nav li a
 
 footer
 {
-	border-bottom: 3px solid #aabdba;
-	background: #d9efec;
+	border-top: 3px solid #505050;
+	background: #000;
 }
 /*--Button and input styles--*/
+
+label {
+  color: #fff;
+}
 
 input[type=text]
 {
@@ -307,11 +313,11 @@ input[type=text], input[type=password]
 }
 
 button {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .button-left:link {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .button-left:hover {
@@ -324,7 +330,7 @@ button {
 }
 
 .button-right {
-	color: #fff !important;
+	color: #000 !important;
 }
 
 .tone-box.button-left {
@@ -592,6 +598,7 @@ and (max-width : 65em)
 #lib-nav-primary
 {
   border-bottom: #505050 solid 5px;
+  border-width: auto;
 }
 
 #lib-nav-primary ul
@@ -634,6 +641,7 @@ and (max-width : 65em)
 #csssubmenu 
 {
   background-color: #505050;
+  width: auto;
 }
 
 #csssubmenu ul
@@ -717,19 +725,23 @@ and (max-width : 65em)
 
 
 /* action button styles for data table buttons */
-input[type="button"].action-button {
+input[type="button"].action-button, button.action-button {
     background-color: #7a7669;
     color: #fff;
 }
-input[type="button"]:hover.action-button {
+input[type="button"]:hover.action-button, button:hover.action-button {
     background-color: #a9a28b;
     color: #fff;
 }
-input[type="button"].action-button-highlighted {
+input[type="button"]:disabled.action-button, button:disabled.action-button {
+    background-color: #69614a;
+    color: #fff;
+}
+input[type="button"].action-button-highlighted, button.action-button-highlighted {
     background-color: #7a5f04;
     color: #fff;
 }
-input[type="button"]:hover.action-button-highlighted {
+input[type="button"]:hover.action-button-highlighted, button:hover.action-button-highlighted {
     background-color: #BA9D3C;
     color: #fff;
 }

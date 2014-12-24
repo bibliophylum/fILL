@@ -98,7 +98,7 @@ sub setup {
 	'history'                  => 'history_process',
 	'current'                  => 'current_process',
 	'new_patron_requests'      => 'new_patron_requests_process',
-	'no_response'              => 'no_response_process',
+	'pending'                  => 'pending_process',
 	);
 }
 
@@ -248,7 +248,6 @@ sub pull_list_process {
     my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
-    #my $SQL = "select b.barcode, r.title, r.author, r.note, date_trunc('second',ra.ts) as ts, l.name as from, l.library, s.call_number from request r left join requests_active ra on (r.id = ra.request_id) left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) left join sources s on (s.request_id = ra.request_id and s.lid = ra.msg_to) left join libraries l on ra.msg_from = l.lid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) order by s.call_number";
     my $SQL="select 
   b.barcode, 
   g.title, 
@@ -257,7 +256,8 @@ sub pull_list_process {
   date_trunc('second',ra.ts) as ts, 
   l.name as from, 
   l.library, 
-  s.call_number 
+  s.call_number,
+  g.pubdate  
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
@@ -415,18 +415,22 @@ sub request_process {
     if ($@) {
 	$author = unidecode( $q->param('author') );
     }
-    $medium = sprintf("%.40s", $medium);
+    $medium  = sprintf("%.40s", $medium);
+    my $isbn    = sprintf("%.40s", $q->param('isbn'));
+    my $pubdate = sprintf("%.40s", $q->param('pubdate'));
 #    $self->log->debug( "Medium for " . $title . ": " . $medium . "\n" );
 
     # These should be atomic...
     # create the request_group
-    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester) VALUES (?,?,?,?,?)",
+    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, isbn, pubdate) VALUES (?,?,?,?,?,?,?)",
 	undef,
 	1,        # default copies_requested
 	$title,
 	$author,
 	$medium,
 	$lid,     # requester
+	$isbn,
+	$pubdate,
 	);
     my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
 
@@ -826,13 +830,13 @@ sub new_patron_requests_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub no_response_process {
+sub pending_process {
     my $self = shift;
     my $q = $self->query;
 
     my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $template = $self->load_tmpl('search/no_response.tmpl');	
+    my $template = $self->load_tmpl('search/pending.tmpl');	
     $template->param( pagetitle => "ILL requests with no response yet",
 		      username => $self->authen->username,
 		      lid => $lid,
@@ -881,7 +885,7 @@ where r.id=?
 
     eval {
         open(SENDMAIL, "|$sendmail") or die "Cannot open $sendmail: $!";
-        print SENDMAIL 'To: ' . $to_email;
+        print SENDMAIL 'To: ' . $to_email . "\n";
         print SENDMAIL $subject;
         print SENDMAIL "Content-type: text/plain\n\n";
         print SENDMAIL $content;

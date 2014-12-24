@@ -16,6 +16,8 @@ my $SQL = "select
   pr.title, 
   pr.author,
   pr.medium,
+  pr.pubdate,
+  pr.isbn,
   p.is_verified
 from 
   patron_request pr 

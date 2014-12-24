@@ -1,17 +1,11 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
 <script type="text/javascript">
     set_primary_tab("menu_about");
 </script>
-<div id="container">
 
-  <div id="aside-img-left">
-        <img src='/img/fill-about.jpg' alt="Brown haired girl with a pony tail, reading a book in the park"/>
-            <p class="note">Image care of <a href="https://www.flickr.com/photos/swanksalot/2715407049/">Seth Anderson</a></p>
+<div id="content">
 
-  </div>
-
-  <div id="main-info-right" class="tone-box">
+  <div id="main-info-right" class="tone-box" role="main">
         <h2>About</h2>
         <p>fILL is the interlibrary loan management system for all Manitoba public libraries. It connects your local library to the millions of items available in Manitoba&rsquo;s libraries.</p>
         <p>If you are unable to find an item after searching your library&rsquo;s catalogue you can use fILL to find it online and have it delivered to your local public library.
@@ -24,15 +18,15 @@
         fILL does not keep a record of your search history nor  does it keep a record of request transactions after borrowed items are returned. Logging into your account is necessary in order for your library to validate the request; some non-identifying data may be retained for statistical purposes.
         </p>
 
-
-
-
-
-
-
-
   </div><!--main-info-right-->
-</div><!--container div-->
+
+<div id="aside-img-left" role="complimentary">
+        <img src='/img/fill-about.jpg' alt="Brown haired girl with a pony tail, reading a book in the park"/>
+            <p class="note">Image care of <a href="https://www.flickr.com/photos/swanksalot/2715407049/">Seth Anderson</a></p>
+
+  </div>
+
+</div><!--div id content-->
 
 <!--
       <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>

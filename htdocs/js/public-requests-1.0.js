@@ -20,7 +20,30 @@
 */
 function build_table_orig( data ) {
     for (var i=0;i<data.active.length;i++) {
+	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
+	delete data.active[i].declined_id;
+	data.active[i].action="";
 	var ai = oTable_borrowing.fnAddData( data.active[i], false );
+
+	if (data.active[i].status == 'Declined') {
+	    var n = oTable_borrowing.fnSettings().aoData[ ai[0] ].nTr;
+	    /* n is now the TR that you added - so it can be modified */
+	    var oData = oTable_borrowing.fnGetData( n );
+	    n.setAttribute('id', 'declined'+declinedID);
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+declinedID;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Delete";
+	    b1.onclick = make_seenit_handler( declinedID );
+	    divActions.appendChild(b1);
+
+	    $(n).find('td:last').append( divActions );
+
+	} else {
+	}
     }
     oTable_borrowing.fnDraw();
 
@@ -31,6 +54,7 @@ function build_table_orig( data ) {
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_borrowing");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -45,27 +69,53 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Details"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status Updated"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = " ";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = " ";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
-    
+
     for (var i=0;i<data.active.length;i++) 
     {
+	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
+	delete data.active[i].declined_id;
+	data.active[i].action="";
+
         row = tBody.insertRow(-1); row.id = 'cid'+data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].lender;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.active[i].libraries_tried;
+        cell = row.insertCell(-1); cell.innerHTML = data.active[i].details;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].ts;
+	cell = row.insertCell(-1); // actions
+
+	if ((data.active[i].status == 'Declined') || (data.active[i].status == 'Wish list')) {
+	    cell.id='declined'+declinedID;
+	    row.id = 'row'+declinedID;
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+declinedID;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.className = "action-button";
+	    b1.value = "Delete";
+	    b1.onclick = make_seenit_handler( declinedID );
+	    divActions.appendChild(b1);
+
+	    $(cell).append( divActions );
+
+	} else {
+	    // no actions
+	}
     }
-    
+
     document.getElementById('mylistDiv').appendChild(myTable);
     
     $("#waitDiv").hide();
@@ -110,3 +160,33 @@ function fnFormatDetails( oTable, nTr )
 
 	});
 }
+
+function make_seenit_handler( declinedID ) {
+    return function() { seenit( declinedID ) };
+}
+
+function seenit( declinedID ) {
+//    $("#declined"+declinedID).fadeOut(400, function() { $(this).remove(); }); // toast the row
+//    alert("Seen it! "+declinedID);
+    var parms = {
+	"prid": declinedID,
+	"lid": $("#lid").text()
+    };
+    $.getJSON('/cgi-bin/delete-declined-patron-request.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#row"+declinedID).fadeOut(400, function() {
+		oTable_borrowing.fnDeleteRow( $("#row"+declinedID)[ 0 ] );
+	    }); // toast the row
+	});
+
+}
+

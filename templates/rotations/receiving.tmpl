@@ -30,28 +30,25 @@ $('document').ready(function(){
 
   oTable.fnSort( [ [7,'desc'] ] );
 
-//    $("#barcode").on("input propertychange", function() {
-    $("#barcode").on("change", function() {
-      barcode_scanned(this.value); 
-      this.value=''; 
-      this.focus(); 
-    });
+  $("#barcode").on("change", function() {
+    barcode_scanned(this.value); 
+    this.value=''; 
+    this.focus(); 
+  });
 
-    // some users are reporting that the scanned barcode doesn't
-    // automatically appear in the data table (i.e. that the onChange
-    // wasn't firing.  So let's add a manual option:
-    $("#scanOk").on("click", function() {
-        // button does nothing except change focus from text input,
-        // which triggers onChange.
-//      var bc = $("#barcode").val();
-//      barcode_scanned( bc );
-      $("#barcode").focus();
-      return false;
-    });
-
-
-    // start with focus on barcode field
+  // some users are reporting that the scanned barcode doesn't
+  // automatically appear in the data table (i.e. that the onChange
+  // wasn't firing.  So let's add a manual option:
+  $("#scanOk").on("click", function() {
+    // button does nothing except change focus from text input,
+    // which triggers onChange.
     $("#barcode").focus();
+    return false;
+  });
+
+
+  // start with focus on barcode field
+  $("#barcode").focus();
 
 });
 
@@ -64,15 +61,12 @@ function barcode_scanned( bc ) {
 };
 
 function downloadMarc() {
-//  alert('download MARC\n');
-//    var jqxhr = $.get('/cgi-bin/rotations-MARC-file.cgi', {lid: <TMPL_VAR name="lid"> },
   $.getJSON('/cgi-bin/rotations-MARC-file.cgi', {lid: <TMPL_VAR name="lid"> },
     function(data){
 	// alert(data.filename);
 	window.open( '/rotations-MARC/' );
         }
   );
-//  alert('done.');    
 }
 
 
@@ -109,7 +103,7 @@ function downloadMarc() {
         <table id="datatable_scanned" class="display">
           <thead>
             <tr>
-              <th>id</th><th>barcode</th><th>callno</th><th>title</th><th>author</th><th>current library</th><th>previous library</th><th>last update</th>
+              <th>id</th><th>Barcode</th><th>Callno</th><th>Title</th><th>Author</th><th>Current library</th><th>Previous library</th><th>Last update</th>
             </tr>
           </thead>
           <tbody>

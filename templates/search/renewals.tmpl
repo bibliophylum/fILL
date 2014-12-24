@@ -67,17 +67,18 @@ $('document').ready(function(){
     </div>
 
     <div id="myDiv">
-      <br/>
-      <h3>Request renewals (for ILL items currently out to your patrons)</h3>
-      <div id="mylistDiv"></div>
+    
+          <div id="mylistDiv"></div>
     </div>
 
-    <div class="tone-box">
+    <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <ol>
-      <li>These are items that your patrons currently have out.</li>
-      <li>You can request a renewal.</li>
-    </ol>
+
+      <p>These are items that your patrons currently have out.</p>
+      <p>A status of 'Renew' means that you have asked the lender for a renewal.</p>
+      <p>'Renew-Answer | Ok' means that the lender has allowed the renewal.</p>
+      <p>If the renewal was not accepted, the status will be 'Renew-Answer | No-renewal'</p>
+
     </div>
 
 </div>

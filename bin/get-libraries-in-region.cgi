@@ -7,7 +7,7 @@ use JSON;
 my $query = new CGI;
 my $region = $query->param('region');
 
-my $SQL = "select city from libraries where region=? order by city";
+my $SQL = "select lid,city,library from libraries where region=? order by city";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -23,4 +23,4 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 my $aref = $dbh->selectall_arrayref($SQL, undef, $region);
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { city => $aref } );
+print "Content-Type:application/json\n\n" . to_json( { inregion => $aref } );

@@ -50,6 +50,7 @@ function build_table( data ) {
 function build_table_borrowing( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_borrowing");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -60,18 +61,18 @@ function build_table_borrowing( data ) {
     cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "gid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "patron barcode"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "lender"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Patron barcode"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Lender"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Overrides"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "Items you are currently borrowing from other libraries.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -99,6 +100,7 @@ function build_table_borrowing( data ) {
 function build_table_lending( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_lending");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -108,17 +110,17 @@ function build_table_lending( data ) {
     
     cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "requested by"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "overrides"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Requested by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Overrides"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "Items you are currently lending to other libraries.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -144,6 +146,7 @@ function build_table_lending( data ) {
 function build_table_notfilled( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_notfilled");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -153,16 +156,16 @@ function build_table_notfilled( data ) {
     
     cell = document.createElement("TH"); cell.innerHTML = " "; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "requested by"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "last update"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "status"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Requested by"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "Requested items that you could not lend.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -213,8 +216,13 @@ function fnFormatDetails( $tbl, nTr )
 	    var data = $.parseJSON(jqXHRObject.responseText)
 	    var sOut;
 	    var numDetails = data.request_details.length; 
-	    sOut = '<div class="innerDetails">'+
-		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	    sOut = '<div class="innerDetails">';
+	    var hasTracking = data.tracking.length;
+	    if (hasTracking) {
+		sOut += '<div><p>Canada Post tracking number: '+data.tracking[0].tracking+' &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber='+data.tracking[0].tracking+'" target="_blank" style="text-decoration:underline;">Open CP tracking site...</a></p></div>';
+	    }
+
+	    sOut += '<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
 	    for (var i = 0; i < numDetails; i++) {
 		var detRow = '<tr>'+
@@ -237,7 +245,7 @@ function fnFormatDetails( $tbl, nTr )
 
 function override( e, cid, localData, oTable, nTr )
 {
-//    alert("cid: "+oData.cid+"\noverride: "+e.id+"\ndata: "+localData);
+//    alert("cid: "+cid+"\noverride: "+e.id+"\ndata: "+localData);
     $.getJSON('/cgi-bin/override.cgi', {"cid": cid, "override": e.id, "data":localData},
 	      function(data){
 		  $(nTr).children('.overrides').click();
@@ -272,11 +280,10 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-//    sOut = sOut+'<tr><td><input type="button" id="bReceive" class="action-button" value="Receive" /></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
     sOut = sOut+'<tr><td><button id="bReceive" class="override-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
     sOut = sOut+'<tr><td><button id="bTryNextLender" class="override-button">Try next lender</button></td><td>if you have requested a book, but have not received a response from the (potential)<br/>lender in a timely fashion.  This request will be cancelled, and the next lender will be tried.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bNoFurtherSources" class="override-button">No further sources</button></td><td>if there are no furher sources for you to try.<br/>This request will be closed and moved to history.</td></tr>';
-    sOut = sOut+'<tr><td><button id="bCancel" class="override-button">Cancel</button></td><td>if the lender has not yet responded to your request, you can cancel the request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bNoFurtherSources" class="override-button">No further sources</button></td><td>if there are no further sources for you to try.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bCancel" class="override-button">Cancel</button></td><td>if the lender has not yet responded to your request.<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bClose" class="override-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
@@ -335,7 +342,7 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
-    sOut = sOut+'<tr><td><button id="bReturned" class="override-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked-in" and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bReturned" class="override-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked in to ILS" and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bDueDate" class="override-button">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
@@ -491,8 +498,8 @@ $(function() {
 
     $( "#dialog-form" ).dialog({
 	autoOpen: false,
-	height: 300,
-	width: 350,
+	height: 400,
+	width: 400,
 	modal: true,
 	buttons: {
 	    "Update due date": function() {
@@ -501,10 +508,11 @@ $(function() {
 		bValid = bValid && checkRegexp( duedate, /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/, "Due date must be in YYYY-MM-DD format." );
 		if ( bValid ) {
 		    var fromButton = $(this).data('fromButton');
-		    var oData = $(this).data('oData');
+		    var aData = $(this).data('aData');
 		    var oTable = $(this).data('oTable');
 		    var nTr = $(this).data('nTr');
-		    override( fromButton, oData, duedate.val(), oTable, nTr );
+		    //alert('fromButton:'+fromButton+'\naData[1]:'+aData[1]+'\nduedate.val():'+duedate.val()+'\noTable:'+oTable+'\nnTr:'+nTr);
+		    override( fromButton, aData[1], duedate.val(), oTable, nTr );
 		    $( this ).dialog( "close" );
 		}
 	    },

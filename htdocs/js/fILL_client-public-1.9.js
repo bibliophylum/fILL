@@ -38,6 +38,7 @@ var submitted = false;
 var SourceMax = 16;
 var SubjectMax = 10;
 var AuthorMax = 10;
+var useELMcover = 0;  // Manitoba-specific
 
 //
 // pz2.js event handlers:
@@ -71,8 +72,12 @@ function my_onshow(data) {
 	    $recDiv.append( $('<span class="indent">' + hit["md-title-remainder"] + ' </span>') );
 	}
 	if (hit["md-title-responsibility"] !== undefined) {
-	    $recDiv.append( $('<span class="indent">'+hit["md-title-responsibility"]+'</span>') );
+	    $recDiv.append( $('<span class="indent">'+hit["md-title-responsibility"]+' </span>') );
       	}
+
+	if (hit["md-medium"] != undefined) {
+	    $recDiv.append( $('<span><font style="background-color: white; font-weight: bold">' + hit["md-medium"] + '</font></span>') );
+	}
 
         if (hit.recid == curDetRecId) {
 	    $recDiv.append( renderDetails(curDetRecData) );
@@ -82,6 +87,10 @@ function my_onshow(data) {
 		request();
 		event.preventDefault();
 	    });
+	    // can't be done in coverImage - have to wait until container appended to div
+	    if (useELMcover) {
+		$("#cover").attr("src","/img/fill-cover-elm.png");
+	    }
 	}
 	$newResults.append( $recDiv );
     }
@@ -179,6 +188,10 @@ function my_onrecord(data) {
 	event.preventDefault();
     });
 
+    // can't be done in coverImage - have to wait until container appended to div
+    if (useELMcover) {
+	$("#cover").attr("src","/img/fill-cover-elm.png");
+    }
 }
 
 function my_onbytarget(data) {
@@ -416,14 +429,22 @@ function replaceHtml(el, html) {
   return newEl;
 };
 
+function ImgError(source){
+	source.src = "/img/fill-cover.png";
+	source.onerror = "";
+	return true;
+}
+
 function coverImage(lccn,isbn) {
     var cover = '<td>';
     if ((isbn != undefined) || (lccn != undefined)) {
 	if (lccn != undefined) {
-	    cover += '<img src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/LCCN/' + lccn[0] + '-M.jpg?default=false" onerror="ImgError(this)">';
 	} else if (isbn != undefined) {
-	    cover += '<img src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg">';
+	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg?default=false" onerror="ImgError(this)">';
 	}
+    } else {
+	cover += '<img id="cover" src="/img/fill-cover.png">';
     }
     cover += '</td>';
     return cover;
@@ -446,12 +467,21 @@ function primaryDetails(data) {
  	primary += '</td></tr>';
     }
     if (data["md-date"] != undefined)
-        primary += '<tr><td><b>Date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
+        primary += '<tr><td><b>Publication date</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
     if (data["md-author"] != undefined) {
         primary += '<tr><td><b>Author</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     }
-    if (data["md-electronic-url"] != undefined)
-        primary += '<tr><td><b>URL</b></td><td><b>:</b> <a href="' + data["md-electronic-url"] + '" target="_blank">' + data["md-electronic-url"] + '</a>' + '</td></tr>';
+    useELMcover = 0;  // reset
+    if (data["location"][0]["md-electronic-url"] != undefined) {
+	var url = String(data["location"][0]["md-electronic-url"]);
+	// for us, all libraries have access to the same pool of Overdrive titles
+	// (using the same URL), so it makes sense to show the first one here.
+	// Patrons will be asked to log in to Overdrive when they attempt to borrow.
+	if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
+            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</td></tr>';
+	    useELMcover = 1;
+	}
+    }
 
     var len=data["location"].length;
     if (len > 0) {
@@ -537,6 +567,12 @@ function buildRequestForm(data) {
     if (data["md-author"] != undefined) {
 	requestForm += '<input type="hidden" name="author" value="' + data["md-author"] + '">';
     }
+    if (data["md-date"] != undefined) {
+	requestForm += '<input type="hidden" name="pubdate" value="' + data["md-date"] + '">';
+    }
+    if (data["location"][0]["md-isbn"] != undefined) {
+	requestForm += '<input type="hidden" name="isbn" value="' + data["location"][0]["md-isbn"] + '">';
+    }
 
     var len=data["location"].length;
     for (var i=0; i<len; i++) {
@@ -555,7 +591,21 @@ function buildRequestForm(data) {
     }
 
     if (isElectronicResource) {
-	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
+	if (data["location"][0]["md-electronic-url"] != undefined) {
+	    var url = String(data["location"][0]["md-electronic-url"]);
+	    // for us, all libraries have access to the same pool of Overdrive titles
+	    // (using the same URL), so it makes sense to show the first one here.
+	    // Patrons will be asked to log in to Overdrive when they attempt to borrow.
+	    if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
+		requestForm += '<p><strong>Your library may provide access to this electronic resource through eLibraries Manitoba.</strong></p>';
+		requestForm += '<p><a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</p>';
+
+	    } else {
+		requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+	    }
+	} else {
+	    requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+	}
     } else {
 	requestForm += '<input type="submit" class="public-style" value="Click to request">';
     }
@@ -576,7 +626,6 @@ function renderDetails(data, marker)
 
     var $td = $('<td></td>').appendTo( $tr );
     var $primary = $('<div>', { "id": "primary" } ).appendTo( $td );  // return correct div to 'primary' var
-//    $td.append( $('<div>', { "id": "confirm", "style": "display:none" }));
     $td.append( $('<div>', { "id": "confirmed", "style": "display:none" }));
     $td.append( $('<div>', { "id": "couldNotCancel", "style": "display:none" }));
 

@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
@@ -7,13 +6,12 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><TMPL_VAR name="pagetitle"></title>
 
-  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
-  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.0.css">
-  <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
-  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-library-colors.css">
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.0.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-  <link type="text/css" rel="stylesheet" href=" "></link>
-  <link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
+  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-library-colors.css"/>
 
   <!-- jQuery-UI theme:
        1. create a new theme using ThemeRoller, and save it to htdocs/themes/xxxx/
@@ -28,10 +26,10 @@
   <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
  -->
 <!-- THEME: add new theme: -->
-  <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css">
+  <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css"/>
 
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
 
 
 
@@ -48,9 +46,9 @@
 
   <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 
-<!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
-  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
 <script type="text/javascript">
 
@@ -146,6 +144,21 @@ $('document').ready(function(){
     });
   } 
 
+  function toggleAdvanced() {
+      if ($('#advanced_search').is(':visible')) {
+          $('#advanced_search').hide();
+          $('#keyword_heading').hide();
+          $('#help').show();
+          $('#advanced-btn').attr('value','Advanced');
+      } else {
+          $('#advanced_search').show();
+          $('#keyword_heading').show();
+          $('#help').hide();
+          $('#query').val(""); // clear the general keyword (query) field
+          $('#advanced-btn').attr('value','Basic');
+      }
+  }
+
 </script>
 
 <!-- Google analytics -->
@@ -163,16 +176,23 @@ $('document').ready(function(){
 
 </script>
 
+<script type="text/javascript">
+  function callDomReadyIfAvailable() {
+    // domReady() is defined (and only used) in search.  If it's defined, call it.
+    if (typeof domReady == 'function') { domReady(); }
+  }
+</script>
+
 </head>
 <!--Library Client side fILL-->
 
-<div id="container">
+<body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
 
-<body class="example_alt_pagination" onload="domReady();">
+<div id="container">
 <p>&nbsp;</p>
 <div id="header" class="header-library">
     <div id="header-left">
-      <div id="fill-logo"><a href="/cgi-bin/info.cgi?rm=welcome"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"></a></div>
+      <div id="fill-logo"><a href="/"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
       <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
     </div>
 
@@ -180,9 +200,9 @@ $('document').ready(function(){
 <div id="header-right">
     <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="library-style">log out</a></div>
   <div id="patron-info">
-    <p><TMPL_VAR NAME="username"></p>
+    <p style="display:none"><TMPL_VAR NAME="username"></p>
     <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid"><TMPL_VAR NAME="lid"></p>
+    <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>
     <input id="theme1" class="theme-chooser1" type="button" value="A" />
     <input id="theme2" class="theme-chooser2" type="button" value="A" />
     <input id="theme3" class="theme-chooser3" type="button" value="A" />
@@ -198,9 +218,41 @@ $('document').ready(function(){
   <div id="search" role="search">
     <div id="header_searchbar">
     <form id="searchForm" name="search">
-      <input id="query" type="text" size="50"/>
+      <span id="keyword_heading" style="display: none">General keyword</span>
+      <input id="query" type="text"/>
+      <div id="advanced_search" style="display: none">
+	<div class="tone-box">
+
+	  <label for="adv_title">Title: </label>
+	  <input id="adv_title" type="text"/><br/>
+	  
+	  <label for="adv_author">Author: </label>
+	  <input id="adv_author" type="text"/><br/>
+	  
+	  <label for="adv_subject">Subject: </label>
+	  <input id="adv_subject" type="text"/><br/>
+	  
+	  <label for="adv_series">Series: </label>
+	  <input id="adv_series" type="text"/>
+
+	  <h3>Search help</h3>
+	  <p>fILL does a general keyword search by default.</p>
+  
+	  <p><strong>Specific title:</strong> ti="The case for mars"</p>
+	  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
+	  <p><strong>Specific subject:</strong> su="mars planet"</p>
+	  <p><strong>Series:</strong> series="fear street"</p>
+
+	  <p>You can combine these using the connectors AND, OR, NOT:</p>
+	  <p>au="david drake" and au="eric flint"</p>
+	  <p>ti="cooking" and su="solar"</p>
+	  <p>ti="cooking" not su="microwave"</p>
+  
+	</div>
+      </div>
       <input id="button" type="submit" value="Search" class="library-style" />
-      <input id="help" type="submit" value="?" onClick="javascript:searchHelp(this); return false;" class="library-style">
+      <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
+      <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
     </form>
     </div>
   </div>
@@ -209,6 +261,7 @@ $('document').ready(function(){
 <!--***************ARIA MARKER 'NAVIGATION'***************-->
 <nav role="navigation" id="lib-nav-primary">
   <ul class="inline-items">
+    <li><a id="menu_home" href="/cgi-bin/info.cgi?rm=welcome">Home</a></li>
     <li><a id="menu_borrow" href="/cgi-bin/lightning.cgi?rm=lightning_search_form">Borrowing</a></li>
     <li><a id="menu_lend" href="/cgi-bin/lightning.cgi?rm=pull_list">Lending</a></li>
     <li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
@@ -216,8 +269,8 @@ $('document').ready(function(){
     <li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
     <li><a id="menu_patrons" href="/cgi-bin/patrons.cgi?rm=patrons_form">Patrons</a></li>
     <li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Info</a></li>
-    <li id="menu_rotations" style="display:none;"><a href="/cgi-bin/rotations.cgi?rm=receive_form">Rotation Manager</a></li>
-    <li id="menu_rotations_admin" style="display:none;"><a href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">Rotations Admin</a></li>
+    <li><a id="menu_rotations" style="display:none;" href="/cgi-bin/rotations.cgi?rm=receive_form">*Rotations</a></li>
+    <li><a id="menu_rotations_admin" style="display:none;" href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">*Admin</a></li>
   </ul>
 </nav>
 

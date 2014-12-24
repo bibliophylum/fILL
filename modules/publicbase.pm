@@ -161,6 +161,8 @@ sub cgiapp_prerun {
 	-expires       => 'Sat, 26 Jul 1997 05:00:00 GMT',
 	# always modified
 	-Last_Modified => strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime),
+	# postgres is in UTF-8
+	-charset => 'UTF-8',
 	# HTTP/1.0
 	-Pragma        => 'no-cache',
 	# HTTP/1.1

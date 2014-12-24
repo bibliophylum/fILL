@@ -2,11 +2,31 @@
 
 /***---Start of new library client side CSS---**/
 
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 100%;  /* permits better scaling (all other font sizes in em) */
+}
+
+#container
+{
+  margin: 0 auto;
+  padding: 0em .5em;
+  width: 85%;
+  height: auto;
+  clear: both;  /* start fresh with floatiness within the container */
+  -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+}
+
 #header.header-library {
 }
 
 #main-left {
-	width: 30%;
+	width: 28%;
 	padding: 1em;
 	float: left;
 	display: inline;
@@ -14,7 +34,7 @@
 }
 
 #main-right {
-	width: 65%;
+	width: 70%;
 	padding: 1em;
 	float: right;
 	display: inline;
@@ -28,6 +48,10 @@
   width: 100%;
   margin: 0em;
   font-size: 1.4em;
+}
+
+#lib-nav-primary #menu_borrow, #lib-nav-primary #menu_lend {
+  font-weight: bold;
 }
 
 #lib-nav-primary ul
@@ -117,6 +141,23 @@
 
 /* Circle has been created to highlight alerts */
 
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: .5em;
+  margin-bottom: .5em;
+  color: #000;
+}
+
+.alert-box a:link { color: #000; }
+.alert-box a:visited { color: #000; }
+.alert-box a:hover { color: #505050; }
+.alert-box a:active { color: #000; }
+.alert-box a:focus { color: #000; }
+
 .circle {
   font-size: .8em;
   font-family: sans-serif;
@@ -129,13 +170,24 @@
 }
 
 #center {
-  margin-top: 1em;
-  display: block;
+  width: 100%;
+  margin: 1em auto;
+  display: inline-block;
   clear: left;
 }
 
 .table-width-lib {
   width: 90%;
+}
+
+#history {
+  display:inline; 
+  margin:1em;
+}
+
+.community {
+  color: #183935;
+  background-color: #f3f3f3;
 }
 
 /*-- specific to make_request.tmp --*/
@@ -244,6 +296,19 @@ input[type="button"]:hover.small-function-button {
     font-size: 1em;
 }
 
+/* advanced search */
+#advanced_search table.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border: 1px solid #b3b3b3;
+}
+
+#instructions input[type="text"]
+{
+  width: 50%;
+}
 /***---End of new library client side CSS--**/
 
 

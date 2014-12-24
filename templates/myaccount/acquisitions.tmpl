@@ -1,0 +1,91 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript" src="/js/library-acquisitions-1.0.js"></script>
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_acquisitions");
+  //-->
+</script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_myaccount_acquisitions");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+var oTable;
+
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-library-acquisitions.cgi', {lid: <TMPL_VAR name="lid">},
+            function(data){
+                build_table(data);
+
+                oTable = $('#datatable_acquisitions').dataTable({
+                  "bJQueryUI": true,
+                  "sPaginationType": "full_numbers",
+                  "bInfo": true,
+ 	          "bSort": true,
+       	          "sDom": '<"H"Tf<"clearbuttonarea">r>t<"F"ip>',
+                  "iDisplayLength": 25,
+                  "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                  "oTableTools": {
+                     "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                  },
+                  "columnDefs": [ {
+                    "targets": 0,
+                    "visible": false
+                  }],
+                  "bAutoWidth": false,
+                  "fnInitComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_acquisitions").css("width","100%");
+                  }
+                });
+
+	        $("div.clearbuttonarea").html('<button id="clearbutton" class="action-button" type="button">Clear the wish list</button>');
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	    $("#clearbutton").on("click", function(){ clear_acquisitions(); });
+	});
+
+});
+
+</script>
+
+
+<div id="center" role="main">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif">
+    </div>
+
+    <div id="myDiv">
+      <div id="mylistDiv">
+      </div>
+    </div>
+
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+
+      <p>Items that you mark as 'Add to Aquisitions' in the <strong>'New patrons requests'</strong> and <strong>'Unfilled'</strong> tabs will be placed here</p>
+      <p>Make use of the list to assist in your library's collection development</p>
+      <p>Export as a CSV or print out the list and share with collections staff</p>
+      <p>Place a hold on the requested item with the associated member barcode</p> 
+
+</div>
+
+</div>
+
+
+<TMPL_INCLUDE NAME="footer.tmpl">

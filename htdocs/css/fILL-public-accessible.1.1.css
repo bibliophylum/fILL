@@ -27,6 +27,12 @@ a:focus {
 	text-decoration: none;
 }
 
+/*focus over link*/
+a:focus {
+	text-decoration: none;
+	color: #383;
+}
+
 /*selected link */
  a:active {
 }
@@ -37,6 +43,25 @@ html, body {
     margin: 0;
     padding: 0;
     font-size: 100%;  /* permits better scaling (all other font sizes in em) */
+}
+
+#container
+{
+	margin: auto;
+	padding: 0em .5em;
+	width: 85%;
+	height: auto;
+	clear: both;  /* start fresh with floatiness within the container */
+	-webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+    box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+}
+
+#content {
+	margin: .5em;
+	display: block;
+	overflow: ;
+	padding-top: 1px;
 }
 
 img 
@@ -65,21 +90,11 @@ h3 {
 	font-weight: bold;
 }
 
-#container
-{
-	margin: auto;
-
-	width: 90%;
-	height: auto;
-	clear: both;  /* start fresh with floatiness within the container */
-}
 
 /**HEADER STYLES**/
 
 header {
-	margin-top: 1em;
-	padding-top: .5em;
-
+	padding-top: 1em;
 }
 
 #header-left {
@@ -93,6 +108,14 @@ header {
  	float: right;
  	width: 49%;
  	display: inline;
+}
+
+#header-right p {
+	font-size: 1.2em;
+}
+
+#username {
+	font-size: 1.2em;
 }
 
 #fill-logo {
@@ -138,7 +161,6 @@ nav
 	display: block;
 	float: left;
 	width: 100%;
-
 	font-size: 1.4em;
 }
 
@@ -204,9 +226,7 @@ nav li a
 {
 	float: left;
 	width: 100%;
-
 	display: inline;
-  	
   	margin-bottom: 1.2em;
   	vertical-align: middle;
   	text-align: center;
@@ -218,16 +238,22 @@ nav li a
 {
 	float: right;
 	width: 80%; 
-	min-width: 400px;
   	padding: 1.25em; 
   	margin-bottom: 1em;
+}
+
+#AVnotice {
+	width: auto;
+	display: block;
+	margin: 1em auto;
+	padding: 1em;
+	clear: both;
 }
 
 #aside
 {
 	float: left;
 	width: 18%;
-	min-width: 180px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 1em; 
@@ -297,9 +323,12 @@ nav li a
   	padding: 1.25em;  
 }
 
+#welcome-text {
+    	font-size: 2em;    
+}
+
 #welcome-box {
 	font-size: 1.2em;
-	border: 0px;
 	height: auto;
 	padding: 1em;
 	margin-top: 1em;
@@ -308,8 +337,7 @@ nav li a
 #aside-img-right
 {
 	float: right;
-	width: 27%;
-	min-width: 200px;
+	width: 28%;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 0px; 
@@ -320,7 +348,6 @@ nav li a
 {
 	float: left;
 	width: 27%;
-	min-width: 200px;
 	margin-bottom: 1.5em;
 	display: inline;
   	padding: 0px;
@@ -334,12 +361,24 @@ nav li a
 .lighter-box {
 }
 
-.covers {
-    height: 220px;
-    width: 150px;
+#covers {
+
+}/*more in mobile styles*/
+
+.covers6 {
+    height: 180px;
+    width: 120px;
     margin-top: 2em;
-    margin: 3px;
+    margin: .3em;
 }
+
+.covers4 {
+	height: 260px;
+    width: 180px;
+    margin-top: 2em;
+    margin: .5em;
+}
+
 .covers:hover {
 }
 
@@ -431,27 +470,31 @@ input[type=text], input[type=password]
 {
     border-radius:5px;
     border: 2px solid;
-    border-color: inherit;
+    border-color: #b3b3b3;
+}
+
+input[type=text]:focus, input[type=password]:focus
+{
+    border-radius:5px;
+    border: 2px solid;
+    border-color: #b3b3b3;
 }
 
 .public-style {
-    margin: .5em;
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
     border: 0;
-    border-radius:5px;
+    background-color: #183935;
 }
 
 .library-style {
-    margin: .5em;
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
     text-transform:capitalize;
     border: 0;
-    border-radius:5px;
 }
 
 
@@ -472,14 +515,18 @@ input[type=text], input[type=password]
 #fill-button:focus {
 }
 
+#fill-button:focus {
+	background: #06a0ca;
+}
+
 #butlink {
 	padding: .5em;
-	border: 1px solid;
-	border-color: inherit;
-	margin: 10px;
+	border: 1px solid inherit;
+	margin: .5em;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
+    border-radius:5px;
 }
 
 #butlink:link {
@@ -493,6 +540,11 @@ input[type=text], input[type=password]
 }
 
 #butlink:focus {
+}
+
+#butlink:focus {
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
 }
 
 #butlink:active {
@@ -514,16 +566,20 @@ button {
 	font-size: 1.4em;
 	margin: .5em;
 	padding: .3em;
-	margin: 10px;
 	font-size: 1.4em;
 	text-transform: capitalize;
 	cursor: pointer;
+	border-radius:5px;
 }
 
 .button-left:hover {
 }
 
 .button-left:focus {
+}
+
+.button-left:focus {
+
 }
 
 .button-right {
@@ -561,8 +617,6 @@ div.termtitle {
     font-weight: bold;
 }
 
-
-
 /*** FILL #fill-table STYLES **/
 
 #fill-table {
@@ -580,24 +634,7 @@ div.termtitle {
 	font-size: 1.2em;
 }
 
-#fill-table td, #fill-table th {
-}
-#fill-table tr:first-child th {
-  border-top: 0;
-}
-#fill-table tr:last-child td {
-  border-bottom: 0;
-}
-#fill-table tr td:first-child,
-#fill-table tr th:first-child {
-  border-left: 0;
-}
-#fill-table tr td:last-child,
-#fill-table tr th:last-child {
-  border-right: 0;
-}
-
-.table-width-pub {
+.fill-table-pub {
 	width: 70%;
 }
 
@@ -622,9 +659,9 @@ div.termtitle {
 #clear {
 	display: block;
 	clear: both;
-	height: 1px;
+	height: .5em;
 	width: 100%;
-	margin: 0;
+	margin-top: .5em;
 	padding: 0;
 	border: 0;
 }
@@ -643,24 +680,8 @@ div.termtitle {
   margin: auto;
 }
 
-.login-content {
-  display: block;
-  clear: both;
-  font-size: 1em;
-  font-family: sans-serif;
-}
-
 .login p {
   padding: .8em;
-}
-
-.login-header {
-  height: 3em;
-}
-
-.login-header-title {
-  font-size: 2em;
-  padding: .5em;
 }
 
 .login-footer {
@@ -669,33 +690,44 @@ div.termtitle {
 }
 
 fieldset input {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 fieldset input span {
-	 vertical-align: middle;
+    vertical-align: middle;
 }
 
-div.login fieldset {
-  margin: 1em 0em 0em 0em;
-  padding: 5px;
-  border: none;
-  width: 100%;
-  
-}
-div.login label {
-  text-align: center;
-  padding: 0;
-  margin-left: 1em;
-  width: 8em;
-  font-size: 1em;
+form#loginform label {
+    display: inline-block;
+    vertical-align: baseline;
+    text-align: right;
+    width: 15%;
+    font-weight: bold;
+    margin-right: ;
 }
 
-
-div.login input {
-  margin-left: 10px;
+#loginform fieldset {
+	background-color: #e3e3e3;
+	border: none;
+	padding-top: 1em;
 }
 
+form#loginform input[type=password], form#loginform input[type=text] {
+	margin: .5em;
+    display: inline-block;
+    vertical-align: baseline;
+    width: 50%;
+}
+
+legend {
+  width: 95%;
+  padding: 0.5em;
+  border-bottom: 3px solid #b3b3b3;
+  color: #111;
+  font-size:1.5em;
+  background-color: #d3d3d3;
+  margin-top: 1em;
+  }
 
 #divChangePass { 
 	display: none;
@@ -726,7 +758,7 @@ div.login input {
 
 .details {
 	padding: 1em; 
-	margin: 5px;
+	margin: .3em;
 }
 
 .secondary_info {
@@ -736,6 +768,48 @@ div.login input {
 }
 
 #pager {
+}
+
+.innerLeft {
+	width: 45%;
+	float: left;
+	display: inline;
+	margin: 1em .5em;
+	padding: 1em;
+}
+
+/* action button styles for data table buttons */
+input[type="button"].action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"].action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
 }
 
 /*------------------------------------------------------*/
@@ -753,164 +827,3 @@ div.login input {
 #stat {
     width: 250px;
 }
-/*------------------------------------------------------*/
-/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
-@-ms-viewport {
-	width: device-width;
-}
-
-@media screen 
-and (max-width : 65em) 
-{
-
-    #container
-    {
-	margin: .5em;
-	
-	width: 95%;
-	height: auto;
-	clear: both;  /* start fresh with floatiness within the container */
-    }
-    
-    button {
-	font-size: 1.2em;
-	margin: 1em;
-    }	
-
-    #header-left {
-	width: 100%;
-	height: auto;
-	display: block;
-    }
-
-    #header-right {
-	float: left;
- 	width: 100%;
- 	margin-top: 1em;
- 	display: block;
-    }
-    
-    nav li a
-    {
-	margin: .3em;
-	display: block;
-	font-size: 1.2em;
-	float: left;
-	padding: 5px 10px;
-	text-decoration: none;
-    }
-    
-    input[type=text]
-    {
-	margin: .5em .5em;
-	padding: .3em;
-	font-size: 1.4em;
-	padding-left:.7em;
-	width: 90%;
-    }
-    
-    #search-container {
-	width: 100%;
-	display: block;
-	margin: 1em;
-    }
-    
-    .login {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: auto;
-    }
-    
-    #main
-    {
-	display: block;
-	width: 95%; 
-  	padding: 1em; 
-  	margin-bottom: 1em;
-    }
-    
-    #aside
-    {
-	width: 95%;
-	margin-bottom: 1.5em;
-	display: block;
-  	padding: 1em; 
-    }
-    
-    #main-info-left
-    {
-	width: 100%;
-	margin-bottom: 1em;
-	display: block;
-  	padding: 1.25em; 
-  	
-    }
-    
-    #main-info-right
-    {
-	width: 100%;
-	margin-bottom: 1em;
-	display: block;
-  	padding: 1.25em;  	
-    }
-    
-    #aside-img-welcome {
-	
-	display: none;
-    }
-    
-    #main-info-welcome 
-    {
-	width: 100%;
-	height: auto;
-	margin: .9em;
-  	padding: 1.25em;  
-    }
-    
-    #welcome-box {
-	font-size: 1.2em;
-	border: 0px;
-	height: auto;
-	padding: 1em;
-	margin-top: 1em;
-    }
-    
-    #aside-img-right
-    {
-	width: 100%;
-	margin-bottom: 1.5em;
-	display: block;
-  	padding: 0px; 
-  	font-size: 1.2em;
-    }
-    
-    #aside-img-left
-    {
-	width: 100%;
-	margin-bottom: 1.5em;
-	display: block;
-  	padding: 0px;
-  	font-size: 1.2em; 
-    }
-    
-    footer {
-	width: 100%;
-	display: block;
-    }
-    
-    .record {
-        margin-bottom: 1em;
-        font-size: 1.2em;
-    }
-    .record 
-    .primary_info {
-	text-align: left;
-    }
-    
-    .secondary_info {
-	text-align: left;
-    }
-} /* end of @media */
-
-

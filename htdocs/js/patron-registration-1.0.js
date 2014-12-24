@@ -51,13 +51,14 @@ function get_libraries( but ) {
 function build_libraries_div( data ) {
     $("#libraries").empty();
     $("#libraries").append("<p>Where is your home library?</p><br/>");
-    for (var i=0;i<data.city.length;i++) {
-	$('<button/>', { "id": "city_"+data.city[i][0],
+    for (var i=0;i<data.inregion.length;i++) {
+	$('<button/>', { "id": "lid_"+data.inregion[i][0],
 			 "type": "button",
 			 "class": "button-left",
-			 "text": data.city[i][0],
+			 "text": data.inregion[i][1],
 			 click: function() { prep_registration_form( this ); }
 		       }).appendTo($("#libraries"));
+	$("#lid_"+data.inregion[i][0]).data("library",data.inregion[i][2]); // library name
     }
     $("#libraries").show();
     $("#registration").hide();
@@ -66,11 +67,13 @@ function build_libraries_div( data ) {
 function prep_registration_form( but ) {
     $("#home_library").text( but.innerHTML );
     $("#home_library_town").val( but.innerHTML );
+    $("#home_library_name").text( $(but).data("library") );
     $("#registration").show();
     $("#patron_name").focus();
 }
 
 function register_patron() {
+    // this should use lid instead of the city name stored in home_library...
     var parms = { 
 	"home_library":  $("#home_library").text(),
 	"patron_name":   $("#patron_name").val(),

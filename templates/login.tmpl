@@ -7,43 +7,48 @@ $('document').ready(function(){
     $(".inline-items").children().hide();
 //    $(".inline-items").children(":contains('home')").show();
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
-
+    $("#theme1").hide();
+    $("#theme2").hide();
+    $("#theme3").hide();
+    $("#incrFont").hide();
+    $("#decrFont").hide();
 });
 </script>
 
-<div class="clear">
- <form action="/cgi-bin/lightning.cgi" method="post" name="loginform">
-  <div class="login">
-  <div class="login-content">
-  	<div class="login-header-library">
-  	  <span class="login-header-title">Sign in to fILL</span>
-  	</div>
-	  <fieldset>
-            <label for="authen_username">User Name</label>
-            <input type="text" value="" size="20" name="authen_username" tabindex="1" id="authen_loginfield"><br>
-            <label for="authen_password">Password</label>
-            <input type="password" size="20" name="authen_password" tabindex="2" id="authen_passwordfield"><br>
-            <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br>
-	  </fieldset>
-	</div>
+<div id="clear"></div>
 
-	<div class="login-footer">
+   <div class="login">
 
-      <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton fill-button">
-	 
-	</div>
+     <form action="/cgi-bin/lightning.cgi" method="post" name="loginform" id="loginform">
+     
+     <fieldset name="login">
+       
+       <legend>Staff Login</legend>
+       <label for="authen_loginfield">User Name</label>
+       <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br/>
+       
+       <label for="authen_passwordfield">Password</label>
+       <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield"><br/>
+       
+       <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br/>
+     </fieldset>
+     
+     <div class="login-footer">
+       <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+     </div>
+     
+   </div>
+   <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
+   <input type="hidden" value="authen_login" name="rm">
+</form>
 
-  </div>
-      <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
-      <input type="hidden" value="authen_login" name="rm">
-  </form>
-</div>
+<!-- </div> where did this come from? -->
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   $('#csstabs').hide();
 </script>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   document.loginform.authen_username.focus();
 </script>
 

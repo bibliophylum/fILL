@@ -1,3 +1,4 @@
+// renewal-answer.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
@@ -18,9 +19,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 function build_table( data ) {
-//    alert( 'in build_table' );
     var myTable = document.createElement("table");
     myTable.setAttribute("id","renewal-answer-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -38,7 +39,7 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
@@ -48,10 +49,8 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
-//    alert('building rows');
     for (var i=0;i<data.renewRequests.length;i++) 
     {
-//	alert (data.renewRequests[i].id+" "+data.renewRequests[i].msg_from+" "+data.renewRequests[i].call_number+" "+data.renewRequests[i].author+" "+data.renewRequests[i].title+" "+data.renewRequests[i].ts); //further debug
         row = tBody.insertRow(-1); row.id = 'req'+data.renewRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].cid;
@@ -75,22 +74,25 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10); cell.setAttribute('class','due-date');
         cell = row.insertCell(-1); 
 
-	var divResponses = document.createElement("div");
-	divResponses.id = 'divResponses'+data.renewRequests[i].id;
-
 	var requestId = data.renewRequests[i].id;
+	var divResponses = document.createElement("div");
+	divResponses.id = 'divResponses'+requestId;
 
 	var b1 = document.createElement("input");
 	b1.type = "button";
+	b1.id = "renew"+requestId;
 	b1.value = "Renew OK";
-	b1.className = "action-button";
+	// class renew-it-button is used in function set_default_due_date()
+	b1.className = "action-button renew-it-button";
 	b1.onclick = make_renewalAnswer_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	var b2 = document.createElement("input");
 	b2.type = "button";
+	b2.id = "norenew"+requestId;
 	b2.value = "Can\'t renew";
-	b2.className = "action-button";
+	// class no-renew-button is used in function set_default_due_date()
+	b2.className = "action-button no-renew-button";
 	b2.onclick = make_cannotRenew_handler( requestId );
 	divResponses.appendChild(b2);
 
@@ -119,7 +121,6 @@ function renewalAnswer( requestId ) {
     var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
     var due_date = oTable.fnGetData( aPos )[9];
 
-//    if (myRow.find(':nth-child(10)').text().length == 0) {
     if (due_date.length == 0) {
 	var retVal = confirm("You have not entered a due date.  Continue without due date?");
 	if (retVal == false) {
@@ -140,7 +141,7 @@ function renewalAnswer( requestId ) {
 		  //alert('change request status: '+data+'\n'+parms.status);
 	      })
         .success(function() {
-	    //alert('success');
+	    update_menu_counters( $("#lid").text() );
 	})
 	.error(function() {
 	    alert('error');
@@ -166,22 +167,23 @@ function cannotRenew( requestId ) {
     crDiv.id = "cannotRenewMessage";
     var crForm = document.createElement("form");
     crDiv.appendChild(crForm);
-    myRow[0].cells[10].appendChild(crDiv);
+    $("#divResponses"+requestId).after( crDiv ); // crDiv is sibling of divResponses
 
     $("#divResponses"+requestId).hide();
 
     $("<p />").text("You can enter a message if you'd like:").appendTo(crForm);
     $("<input />").attr({'type':'text','id':'crmsg'}).appendTo(crForm);
-    var cButton = $("<input type='button' value='Cancel'>").appendTo(crForm);
+    var cButton = $("<input type='button' class='action-button' value='Cancel'>").appendTo(crForm);
     cButton.bind('click', function() {
 	$("#cannotRenewMessage").remove(); 
 	$("#divResponses"+requestId).show(); 
 	//return false;
     });
 
-    var sButton = $("<input type='submit' value='Submit'>").appendTo(crForm);
+    var sButton = $("<input type='button' class='action-button' value='Submit'>").appendTo(crForm);
     sButton.bind('click', function() {
-	var reason = $('input:[id=crmsg]').val();
+	var reason = $('#crmsg').val();
+	alert( reason );
 	$("#cannotRenewMessage").remove(); 
 	$("#divResponses"+requestId).show(); 
 	var parms = {
@@ -211,8 +213,24 @@ function cannotRenew( requestId ) {
 
 function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["datepicker"].value;
+    var tbl = $("#renewal-answer-table").DataTable(); // note the capitalized "DataTable"
+
     $(".due-date").each(function(){
-	$(this).text( defaultDueDate );
+	tbl.cell(this).data( defaultDueDate );
     });
+
+    // using cell.data() recreates the row, losing the dynamically created
+    // button handlers in the process.  We need to recreate them:
+
+    $(".renew-it-button").each(function(){
+	var requestId = this.id.slice(5); // button id starts with "renew"
+	this.onclick = make_renewalAnswer_handler( requestId );
+    });
+
+    $(".no-renew-button").each(function(){
+	var requestId = this.id.slice(7); // button id starts with "norenew"
+	this.onclick = make_cannotRenew_handler( requestId );
+    });
+
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }

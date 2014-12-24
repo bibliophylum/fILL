@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","new-patron-requests-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -31,15 +32,17 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "prid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Patron"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Card"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Barcode"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Medium"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Format"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "PubDate"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "ISBN"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Actions"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = "These are new requests from your patrons.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "These are new requests from your patrons.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -55,6 +58,8 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].medium;
+        cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].pubdate;
+        cell = row.insertCell(-1); cell.innerHTML = data.new_patron_requests[i].isbn;
         cell = row.insertCell(-1); 
 
 	var divResponses = document.createElement("div");
@@ -109,6 +114,16 @@ function build_table( data ) {
 	}
 	divResponses.appendChild(b2);
 
+	var b5 = document.createElement("input");
+	b5.type = "button";
+	b5.value = "Add to wish list";
+	b5.className = "action-button";
+	b5.onclick = make_acq_handler( requestId );
+	if (!is_verified) {
+	    b5.disabled = "disabled";
+	}
+	divResponses.appendChild(b5);
+
 	if (data.new_patron_requests[i].has_local_copy == 1) {
 	    var p = document.createElement("p");
 	    p.innerHTML = "Title held locally";
@@ -132,7 +147,7 @@ function make_noILL_handler( requestId ) {
     return function() { noILL( requestId ) };
 }
 
-function noILL( requestId ) {
+function noILL_orig( requestId ) {
     var myRow=$("#pr"+requestId);
     var parms = {
 	prid: requestId,
@@ -152,6 +167,67 @@ function noILL( requestId ) {
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
+}
+
+function noILL( requestId ) {
+    var row = $("#pr"+requestId);
+    var rnDiv = document.createElement("div");
+    rnDiv.id = "reasonNoILL";
+    var rnForm = document.createElement("form");
+
+    var rn = document.createElement("div");
+    rn.setAttribute('id','noillradioset');
+    rnForm.appendChild(rn);
+    rnDiv.appendChild(rnForm);
+    $("<tr id='tmprow'><td></td><td id='tmpcol' colspan='9'></td></tr>").insertAfter($("#pr"+requestId));
+    $("#tmpcol").append(rnDiv);
+
+    $("#divResponses"+requestId).hide();
+    $( "<p>Select a reason for declining to place the ILL (your patron will be able to see this):</p>" ).insertBefore("#noillradioset");
+
+    $("<p>Optional message to patron: <input type='text' name='message' size='40' maxlength='100' /></p>").insertAfter("#noillradioset");
+
+    var cButton = $("<input type='button' value='Cancel' class='library-style'>").appendTo(rnForm);
+    cButton.bind('click', function() {
+	$("#reasonNoILL").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	//return false;
+    });
+
+    var sButton = $("<input type='submit' value='Submit' class='library-style'>").appendTo(rnForm);
+    sButton.bind('click', function() {
+	var reason = $('input:radio[name=radioset]:checked').val();
+	var optionalMessage = $('input:text[name=message]').val();
+	$("#reasonNoILL").remove(); 
+	$("#tmprow").remove();
+	$("#divResponses"+requestId).show(); 
+	
+	var myRow=$("#pr"+requestId);
+	var parms = {
+	    "prid": requestId,
+	    "lid": $("#lid").text(),
+	    "reason": reason,
+	    "message": optionalMessage
+	}
+	$.getJSON('/cgi-bin/decline-patron-request.cgi', parms,
+		  function(data){
+		      // slideUp doesn't work for <tr>
+		      $("#pr"+requestId).fadeOut(400, function() { $("#pr"+requestId).remove(); }); // toast the row
+		  })
+	    .success(function() {
+		update_menu_counters( $("#lid").text() );
+	    });
+	
+    });
+
+    // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
+    $("#noillradioset").buttonset();
+    $("#noillradioset").append("<input type='radio' name='radioset' value='held-locally' id='held-locally' checked='checked'/><label for='held-locally'>Title held locally / local hold placed</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='blocked' id='blocked'/><label for='blocked'>Patron account blocked</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='on-order' id='on-order'/><label for='on-order'>Title on order</label>");
+    $("#noillradioset").append("<input type='radio' name='radioset' value='other' id='other'/><label for='other'>other</label>");
+    $("#noillradioset").buttonset('refresh');
 }
 
 
@@ -239,3 +315,44 @@ function deverify( requestId ) {
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+function make_acq_handler( requestId ) {
+    return function() { addToAcq( requestId ) };
+}
+
+function addToAcq( requestId ) {
+    var myRow=$("#pr"+requestId);
+    var parms = {
+	prid: requestId,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/add-patron-request-to-acquisitions.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	    var parms = {
+		"prid": requestId,
+		"lid": $("#lid").text(),
+		"reason": 'Your librarian is considering this for purchase.',
+		"message": ''
+	    }
+	    $.getJSON('/cgi-bin/decline-patron-request.cgi', parms,
+		      function(data){
+			  //
+		      })
+		.success(function() {
+		});
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	    update_menu_counters( $("#lid").text() );
+	});
+}
+
+

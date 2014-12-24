@@ -4,9 +4,13 @@
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript" src="/js/library-barcodes-1.0.js"></script>
 
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_library_barcodes");
+  //-->
+</script>
 
 <script type="text/javascript">
-set_secondary_tab("menu_myaccount_library_barcodes");
 
 $.ajaxSetup ({  
   cache: false  
@@ -75,39 +79,30 @@ $('document').ready(function(){
             });
 
        });
-
-<!--
-//    $('#datatable_barcodes tbody tr').live('mouseover mouseout', function (event) {    // deprecated in jquery 1.7
-//    $(document).on("mouseover mouseout", "#datatable_barcodes tbody tr", function() {  // suggested replacement
-    $("#datatable_barcodes tbody").on("mouseover mouseout", "tr", function() {           // reduce bubble-up
-
-        if (event.type == 'mouseover') {
-            $(this).addClass("ui-state-hover");
-        } else {
-            $(this).removeClass("ui-state-hover");
-        }
-    });
--->
-
 });
+
 
 </script>
 
 <div id="center" role="main">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Click on the barcode column to enter the barcode from your ILS.</li>
-    </ol>
-
     <div id="waitDiv">
       Loading... <img src="/wait.gif">
     </div>
 
     <div id="myDiv">
-    <h3>Library barcodes from your ILS</h3>
-        <div id="mylistDiv">
-        </div>
+      <div id="mylistDiv">
+      </div>
     </div>
+
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+
+      <p>In your ILS, you should have other libraries (borrowers) set up as patrons.</p>
+      <p>You can enter the barcodes for those patron records here, by clicking on the "barcode" cell for that library.</p>
+      <p>These are the patron barcodes that will appear on your fILL pull list.</p>
+
+</div>
+
 </div>
 
 

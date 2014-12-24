@@ -34,6 +34,7 @@ function build_table_orig( data ) {
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_patrons");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -46,8 +47,8 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Card"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Username"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Email address"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Enabled?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Verified?"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Enabled?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last login"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Number of requests"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Change password"; row.appendChild(cell);
@@ -68,8 +69,8 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].card;
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].username;
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].email_address;
-        cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].is_enabled;
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].is_verified;
+        cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].is_enabled;
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].last_login;
         cell = row.insertCell(-1); cell.innerHTML = data.patrons[i].ill_requests;
         cell = row.insertCell(-1); cell.innerHTML = "Click to change password";

@@ -31,26 +31,28 @@ $('document').ready(function(){
 
 </script>
 <div id="center" id="main">
-    <p style="font-size: 1.4em"><strong>You can close this tab to return to your search.</strong></p>
-
     <TMPL_IF name="multiple_copies">
-      <h2>Your requests have been placed</h2>
-      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copies.</p>
-      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
-      <p><TMPL_VAR NAME="requests_made"> requests were made.</p>
+      <h2>Your requests have been placed. You can close this tab to return to your search.</h2>
+      <p>
+	You've asked for <strong><TMPL_VAR NAME="copies_requested"></strong> copies.
+	There are <strong><TMPL_VAR NAME="number_of_sources"></strong> sources.
+	<strong><TMPL_VAR NAME="requests_made"></strong> requests were made.
+      </p>
     <TMPL_ELSE>
-      <h2>Your request has been placed</h2>
-      <p>You've asked for <TMPL_VAR NAME="copies_requested"> copy.</p>
-      <p>There are <TMPL_VAR NAME="number_of_sources"> sources.</p>
-      <p><TMPL_VAR NAME="requests_made"> request was made.</p>
+      <h2>Your request has been placed. You can close this tab to return to your search.</h2>
+      <p>
+	You've asked for <strong><TMPL_VAR NAME="copies_requested"></strong> copy.
+	There are <strong><TMPL_VAR NAME="number_of_sources"></strong> sources.
+	<strong><TMPL_VAR NAME="requests_made"></strong> request was made.
+      </p>
     </TMPL_IF>
 
     <br/>
     <table id="fill-table" class="table-width-lib">
-      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
-      <tr><td>Title</td><td>: <TMPL_VAR NAME="title"></td></tr>
-      <tr><td>Author</td><td>: <TMPL_VAR NAME="author"></td></tr>
-      <tr><td>Medium</td><td>: <font style="background-color: yellow;"><TMPL_VAR name="medium"></font></td></tr>
+      <tr><td>Requesting user</td><td><TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Title</td><td><TMPL_VAR NAME="title"></td></tr>
+      <tr><td>Author</td><td><TMPL_VAR NAME="author"></td></tr>
+      <tr><td>Format</td><td><font style="background-color: yellow;"><TMPL_VAR name="medium"></font></td></tr>
     </table>
     <p>The following requests have been added to these lender's pending lists:</p>
     <table>

@@ -23,6 +23,7 @@ function build_table( data ) {
 
     var myTable = document.createElement("table");
     myTable.setAttribute("id","respond-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -35,18 +36,19 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "ID"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "From (ID)"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Call #"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Call Number"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Note"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Format"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Pub date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Hold requested?"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Response"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "13"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "14"; cell.innerHTML = "As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -76,6 +78,7 @@ function build_rows( tBody, data ) {
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].note;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].ts;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].medium;
+	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].pubdate;
 	cell = row.insertCell(-1); cell.innerHTML = data.unhandledRequests[i].place_on_hold;
 	cell = row.insertCell(-1); 
 	

@@ -43,7 +43,7 @@ my $SQL = "select
  r.barcode,
  l1.name as current_library,
  l2.name as previous_library,
- r. ts as timestamp
+ r.ts as timestamp
 from 
  rotations r
  left join libraries l1 on l1.lid=r.current_library

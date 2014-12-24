@@ -34,6 +34,7 @@ function build_table_orig( data ) {
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_barcodes");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -49,7 +50,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "5"; cell.innerHTML = "table footer text";
+    cell = row.insertCell(-1); cell.colSpan = "5"; cell.innerHTML = "Click on the barcode column to enter the barcode from your ILS.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");

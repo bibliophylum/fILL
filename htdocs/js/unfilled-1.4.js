@@ -21,6 +21,7 @@
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","unfilled-table");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -38,12 +39,13 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Pub date"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Trying source"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Next lender?"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "12"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
+    cell = row.insertCell(-1); cell.colSpan = "13"; cell.innerHTML = "If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the \"Current ILLs\" screen.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -62,6 +64,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].message;
+        cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].pubdate;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].tried+' of '+data.unfilled[i].sources;
         cell = row.insertCell(-1); 
 
@@ -86,6 +89,14 @@ function build_table( data ) {
 	b1.className = "action-button";
 	var requestId = data.unfilled[i].id;
 	b1.onclick = make_cancel_handler( requestId );
+	divResponses.appendChild(b1);
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Add to wish list";
+	b1.className = "action-button";
+	var requestId = data.unfilled[i].id;
+	b1.onclick = make_acq_handler( requestId );
 	divResponses.appendChild(b1);
 	
 	cell.appendChild( divResponses );
@@ -159,3 +170,32 @@ function cancel( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+
+function make_acq_handler( requestId ) {
+    return function() { addToAcq( requestId ) };
+}
+
+function addToAcq( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	rid: requestId,
+	lid: $("#lid").text(),
+    }
+    $.getJSON('/cgi-bin/add-request-to-acquisitions.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	    cancel( requestId );
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // row will get removed in cancel(), if add to acq is successful.
+	});
+}
+
+

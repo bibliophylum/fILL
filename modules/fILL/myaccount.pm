@@ -35,6 +35,7 @@ sub setup {
 	'myaccount_settings_form'         => 'myaccount_settings_process',
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	'myaccount_test_zserver_form'     => 'myaccount_test_zserver_process',
+	'myaccount_acquisitions_form'     => 'myaccount_acquisitions_process',
 	);
 }
 
@@ -136,6 +137,24 @@ sub myaccount_test_zserver_process {
 		     username     => $self->authen->username,
 		     lid          => $lid,
 		     libsym       => $symbol,
+		     library      => $library,
+	);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_acquisitions_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my $template = $self->load_tmpl('myaccount/acquisitions.tmpl');
+    $template->param(pagetitle => "fILL acquisitions list",
+		     username     => $self->authen->username,
+		     lid          => $lid,
 		     library      => $library,
 	);
     return $template->output;

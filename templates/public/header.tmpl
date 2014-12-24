@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><title><TMPL_VAR name="pagetitle"></title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--[if lt IE 9]>
@@ -14,21 +15,21 @@
   </script>
 <![endif]-->
 
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
-<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css">
-
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
-
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+<link type"text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
 
-<script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
+<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+
+
+<script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquery-1.11.1.min.js before going to production -->
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
 
 <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
-
 <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 
 <!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
@@ -97,7 +98,7 @@ $('document').ready(function(){
 <div id="container">
 <!--header template from public folder-->
 
-<!--***************ARIA MARKER 'BANNER'***************-->
+<!--***************ARIA MARKER 'BANNER'-header.tmpl-***************-->
 <header role="banner">
 
   <div id="header-left">
@@ -114,9 +115,8 @@ $('document').ready(function(){
        It doesn't have to be *here*, but it has to be somewhere....
     -->
         <div id="username"><TMPL_VAR name="username"></div>
-        <p><TMPL_VAR name="library"></p>
-        <p style="display:none"><TMPL_VAR name="lid"></p>
-
+        <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
+        <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
 	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="decrFont" class="public-style" type="button" value="-A" />
     </div>
   </div>
@@ -142,12 +142,12 @@ $('document').ready(function(){
     <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
       <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
 	search_process to feed the *real* search page -->
-      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" name="query" placeholder="Search" value="<TMPL_VAR name='query'>">
       <input id="rm" type="hidden" name="rm" value="search_form">
       <input type="submit" value="Go" class="public-style">
     </form>
   </div>
 </div> <!-- search-container -->
 
-</div><!--container div-->
+
 <!-- Begin content -->

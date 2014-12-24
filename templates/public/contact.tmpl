@@ -3,9 +3,9 @@
 <script type="text/javascript">
     set_primary_tab("menu_contact");
 </script>
-<div id="container">
 
-	<div id="main-info-left" class="tone-box">
+<div id="content">
+	<div id="main-info-left" class="tone-box" role="main">
 	    <p>If you require additional help requesting an item through fILL please visit or contact your local public library.</p>
 			<h3><TMPL_VAR name="library"></h3>
 			<p>Phone: <TMPL_VAR name="phone"></p>
@@ -18,11 +18,12 @@
 		</p>
 	</div>
 
-	<div id="aside-img-right">
+	<div id="aside-img-right" role="complimentary">
 		<img src="/img/fill-contact.jpg" alt="Child sitting on a the floor of a book store, engrossed in reading">
 		      <p class="note">Image care of <a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a></p>
 
 	</div>
 
-</div>
+</div><!--div id content-->
+
 <TMPL_INCLUDE NAME="footer.tmpl">

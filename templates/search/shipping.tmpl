@@ -38,7 +38,11 @@ $('document').ready(function(){
                        "columnDefs": [ {
                            "targets": [0,1,2,4],
                            "visible": false
-                       } ],
+                       },
+	               {
+	                   "targets": 10,
+                           "width": "15%"
+                       }],
                       "fnInitComplete": function() {
                            // this handles a bug(?) in this version of datatables;
                            // hidden columns caused the table width to be set to 100px, not 100%
@@ -67,9 +71,9 @@ $('document').ready(function(){
       Loading... <img src="/wait.gif">
     </div>
 
-    <div id="myDiv"><br />
+    <div id="myDiv">
     <div class="innerLeft tone-box">
-	   <h3>1. Set the due date</h3>
+	   <h3>Set the due date</h3>
 	<div id="defaultDueDate">
 	  <form id="set_default_due_date" onsubmit="set_default_due_date(this); this.submit_default_due_date.value='Change due date'; return false;">
 	    <p>
@@ -81,23 +85,24 @@ $('document').ready(function(){
   </div>
   </div>
 
-  <div class="innerLeft">
-	<h3>(3. Canada Post Shipping Tool)</h3>
+  <div class="innerLeft tone-box">
+	<h3>Canada Post Shipping Tool</h3>
 	<div id="shippingtool">
 	  <p>Clicking on this link will open the <a href="http://www.clatoolbox.ca/EOE_SCE_Prod/forms/" target="_blank" style="text-decoration : underline;">Canada Post Shipping Tool</a> in a new tab or window.</p>
 	</div>
   </div>
 
-      <br/>
-      <h3>2. Items to ship</h3>
     <div id="mylistDiv"></div>
 
 <div id="instructions" class="tone-box">
     <h3>Instructions</h3>
-    <p>If your due date is the same for all (or most) requests you are filling, enter that as the "default due date".</p>
-    <p>For each of the requests that you are filling, click the "Sent" button.</p>
-    <p>The "Oops!" button will return the request to the Respond list.</p>
-    <p>Hover over a library's symbol to see the full name of the library.</p>
+
+      <p>If you want to change the due date of items, set the due date and click 'Apply due date.'  This will change the due dates for all items in the table.</p>
+      <p>For each of the requests that you are filling, click the "Sent" button.</p>
+      <p>The "Oops!" button will return the request to the Respond list.</p>
+      <p>Hover over a library's symbol to see the full name of the library.</p>
+      <p>As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the 'Current' tab.</p>
+
 </div>
 
 </div>

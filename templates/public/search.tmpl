@@ -18,9 +18,15 @@
   </script>
 <![endif]-->
 
-  <link rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"></link>
-  <link rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
-  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css">
+<link type"text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"> 
+
+<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+
   <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
   <script type="text/javascript" src="/js/pz2.js"></script>
   <script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
@@ -76,7 +82,7 @@
 <script type="text/javascript">
   $('document').ready(function(){
 
-    $("#image").append("<img src=/img/fill-search.jpg>");
+    $("#image").append("");
 
     $("#query").focus();
 
@@ -112,9 +118,9 @@
 
 <!-- from header.tmpl -->
 
-<div id="container">
+<div id="container"><!--closes in footer.tmp-->
 
-  <!--***************ARIA MARKER 'BANNER'***************-->
+  <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
   <header role="banner">
 
     <div id="header-left">
@@ -131,10 +137,10 @@
          It doesn't have to be *here*, but it has to be somewhere....
       -->
           <div id="username"><TMPL_VAR name="username"></div>
-          <p><TMPL_VAR name="library"></p>
-          <p style="display:none"><TMPL_VAR name="lid"></p>
+          <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
 
 	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="decrFont" class="public-style" type="button" value="-A" />
+          <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
       </div>
     </div>
 
@@ -158,7 +164,7 @@
 <div id="search-container">
   <div id="search" role="search">
     <form id="searchForm" name="search">
-      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" placeholder="Search" value="<TMPL_VAR name='query'>">
       <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
 	   domReady() function to automatically do the search, if the user had 
 	   filled in the search box from a different page.
@@ -172,6 +178,29 @@
 </div> <!-- search-container -->
 
 <!--***************ARIA MARKER 'MAIN'***************-->
+<div id="content">
+
+<div id="AVnotice" class="tone-box">
+
+  <h2>Featured</h2><br>
+
+        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
+       The keywords to search for are taken from the "title" attribute.
+  -->
+
+  <div id="covers">
+    
+    <a href="#" class="coverlink" title="Craig Davidson, Cataract City"><img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-cataractcity.jpg"></a>
+    <a href="#" class="coverlink" title="Lisa Moore, Caught"><img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-caught.jpeg"></a>
+    <a href="#" class="coverlink" title="Dan Vyleta, The Crooked Maid"><img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-crookedmaid.jpg"></a>
+    <a href="#" class="coverlink" title="Dennis Bock, Going Home Again"><img class="covers4" alt="Giller Prize shortlist 2013" src="/img/covers/gp13-homeagain.jpg"></a>
+
+  </div>
+
+  <p><strong>Giller Prize 2013 shortlist</strong></p> 
+       
+</div><!--div id AV display-->
+
 <main id="main" class="tone-box" role="main">
 
 <!-- Begin content -->
@@ -191,32 +220,7 @@
   </div>
  
   <div id="recordview">
-    <div id="AVnotice">
-     <h2>Featured</h2><br>
-
-        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
-	     The keywords to search for are taken from the "title" attribute.
-	-->
-        <a href="#" class="coverlink" title="Jim Crace Harvest" >
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/1.png">
-	</a>
-        <a href="#" class="coverlink" title="Colm Toibin The Testamant of Mary">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/7.png">
-	</a>
-        <a href="#" class="coverlink" title="Ruth Ozeki A Tale for the Time Being">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/27.png">
-	</a>
-        <a href="#" class="coverlink" title="NoViolet Bulawayo We Need New Names">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/68.png">
-	</a>
-        <a href="#" class="coverlink" title="Eleanor Catton The Luminaries">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/73.png">
-	</a>
-        <a href="#" class="coverlink" title="Jhumpa Lahiri The Lowland">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/90.png">
-	</a>
-       <p><strong>Man Booker 2013 shortlist</strong></p> 
-      </div>
+ 
 
       <div id="ranking" style="clear:left; display:none">
        <form name="select">
@@ -256,6 +260,7 @@
 </main>
 
 <!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
+
 <div id="aside" class="tone-box" role="complimentary">
   <div id="image"></div>
   <div id="stat"></div>
@@ -263,7 +268,8 @@
   <div id="termlist"></div>
 </div>
 
-</div> <!-- container -->
+</div><!--div id content-->
+
 <TMPL_INCLUDE NAME="footer.tmpl">
 
 </body>

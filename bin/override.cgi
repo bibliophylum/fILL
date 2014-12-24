@@ -265,6 +265,7 @@ switch( $override ) {
 		$return_data_href->{ status } = "Shipped";
 		$return_data_href->{ message } = $message;
 	    } else {
+		print STDERR "NOT ok to update, message [$message], reqid [$reqid], lender_id [$lender_id], borrower_id [$borrower_id]\n";
 		$return_data_href->{ success } = 0;
 		$return_data_href->{ status } = "Shipped";
 		$return_data_href->{ message } = "Cannot override - borrower has received";
