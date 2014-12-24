@@ -47,6 +47,8 @@ my %config = (
 #	[ 'Authen::Simple::SIP2', ...  # would have to write Authen::Simple::SIP2 :-)
 #	],
 #	[ 'Generic', sub { return checkSip2( @_ ); } ],
+#	[ 'Generic', sub { checkSip2( @_ ); } ],
+	[ 'Generic', sub { print STDERR "Hmm." . Dumper( @_ ); return 0 } ],  # what's getting passed?  This should print to the file specified in fILL.conf's ScriptLog
 	[ 'Generic', \&checkSip2 ],
     ],
     STORE          => 'Session',
@@ -66,9 +68,15 @@ publicbase->authen->protected_runmodes(qr/^(?!registration_)/);
 #
 #
 sub checkSip2 {
-    my ($barcode, $pin, $lid) = @_;  # not sure how/what order these get passed...
+#    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
 
     # need to call sip2-authentication.cgi and parse the result....
+
+#    $self->log->debug( "checkSip2: barcode [$barcode], pin [$pin], lid [$lid]\n" );
+    print STDERR "checkSip2: barcode [$barcode], pin [$pin], lid [$lid]\n";
+
+    return 1 if (($barcode eq '20967000590071') && ($pin eq '3296'));
 
     return 0;
 }

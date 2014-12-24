@@ -51,11 +51,11 @@ function get_libraries( but ) {
 function build_libraries_div( data ) {
     $("#libraries").empty();
     $("#libraries").append("<p>Where is your home library?</p><br/>");
-    for (var i=0;i<data.city.length;i++) {
-	$('<button/>', { "id": "city_"+data.city[i][0],
+    for (var i=0;i<data.inregion.length;i++) {
+	$('<button/>', { "id": "lid_"+data.inregion[i][0],
 			 "type": "button",
 			 "class": "button-left",
-			 "text": data.city[i][0],
+			 "text": data.inregion[i][1],
 			 click: function() { prep_registration_form( this ); }
 		       }).appendTo($("#libraries"));
     }
