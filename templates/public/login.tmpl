@@ -1,5 +1,15 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<!--
+    $.cookie("fILL-lid","94");
+    $.cookie("fILL-location","Brandon");
+    $.cookie("fILL-barcode","20967000590071");
+    $.cookie("fILL-authentication","sip2");
 
+    $.removeCookie("fILL-lid", { path: '/cgi-bin/' });
+    $.removeCookie("fILL-location", { path: '/cgi-bin/' });
+    $.removeCookie("fILL-barcode", { path: '/cgi-bin/' });
+    $.removeCookie("fILL-authentication", { path: '/cgi-bin/' });
+-->
 
 <script type="text/javascript">
   
@@ -23,9 +33,28 @@ $('document').ready(function(){
             $("#non-sip2").hide()
             $("#authen_barcode").val( patronBarcode );
             $("#authen_lid").val( homeLibraryLID );
+            $("#authen_loginfield").val( "using-sip2" );
+            $("#authen_passwordfield").val( "using-sip2" );
             $("#authen_pin").focus();
         }
+    } else {
+      $("#authen_barcode").val( "not-using-sip2" );
+      $("#authen_pin").val( "not-using-sip2" );
+      $("#authen_lid").val( homeLibraryLID ); // undef?
+      $("#authen_loginfield").focus();
     }
+
+    // this is just so I can use the debugger to see what's being submitted...
+    $('#loginform').on('submit', function(e){
+        e.preventDefault();
+        //alert('form submit!');
+        var myAlert = "";
+        $("#loginform :input").each(function(i){
+          var $input = $(this);
+          myAlert += $input.attr('name')+':'+$input.val()+'\n';
+        });
+        this.submit();
+    });
 
 });
 
@@ -40,8 +69,12 @@ $('document').ready(function(){
       <legend>Patron Login</legend>
 
       <div id="home-library" style="display:none">
-	<p>Home library location:</p>
-	<p id="home-library-location"></p>
+	<table>
+	  <tr>
+	    <td>Home library location:</td>
+	    <td><p id="home-library-location"></p></td>
+	</tr>
+	</table>
       </div>
 
       <div id="sip2" style="display:none">
@@ -50,18 +83,16 @@ $('document').ready(function(){
 	  <input type="text" value="" size="15" name="authen_barcode" tabindex="1" id="authen_barcode"><br>
           <label for="authen_pin">PIN number</label>
           <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
-          <input type="hidden" size="4" name="authen_lid" id="authen_lid"><br>
         </fieldset>
-      </div><!-- div id sip2 -->
+      </div> <!-- div id sip2 -->
 
       <div id="non-sip2">
         <label for="authen_username">User Name</label>
         <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
-	
         <label for="authen_password">Password</label>
         <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
-	
-      </div<!-- div id non-sip2 -->
+      </div> <!-- div id non-sip2 -->
+
     </fieldset>
 
     <fieldset>
@@ -74,13 +105,14 @@ $('document').ready(function(){
       <p>Don&rsquo;t have an account?</p>
       <a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign Up!</a>
       <p>If you cannot remember your user name or password, please contact your local public library.</p>
-    </div><!--div class login-footer -->
+    </div> <!--div class login-footer -->
 
     <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
+    <input type="hidden" name="authen_lid" id="authen_lid" value="">
     <input type="hidden" value="authen_login" name="rm">
   </form>
 
-</div><!-- div class login -->
+</div> <!-- div class login -->
 
 <script language="JavaScript" type="text/javascript">
   $('#csstabs').hide();
