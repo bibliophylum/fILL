@@ -70,9 +70,9 @@ function prep_registration_form( but ) {
 		    $("#lid").val( data.sip2.lid );
 		    $("#sip2").show();
 		    $("#non-sip2").hide();
-		    $.cookie("fILL-lid", data.sip2.lid, { expires: 356, path: '/' });
-		    $.cookie("fILL-location", but.innerHTML, { expires: 356, path: '/' });
-		    $.cookie("fILL-authentication", "sip2", { expires: 356, path: '/' });
+		    $.cookie("fILL-lid", data.sip2.lid, { expires: 365, path: '/' });
+		    $.cookie("fILL-location", but.innerHTML, { expires: 365, path: '/' });
+		    $.cookie("fILL-authentication", "sip2", { expires: 365, path: '/' });
 		} else {
 		    $("#sip2").hide();
 		    $("#non-sip2").show();

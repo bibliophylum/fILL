@@ -46,6 +46,14 @@ $('document').ready(function(){
         decreaseFontSize();
     });
 
+    $("#clearCookies").on("click",function(e){
+        e.preventDefault();
+        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-location", { path: '/' });
+        $.removeCookie("fILL-barcode", { path: '/' });
+        $.removeCookie("fILL-authentication", { path: '/' });
+        window.location.href="?authen_logout=1";
+    });
 });
 </script>
 

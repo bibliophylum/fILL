@@ -66,7 +66,7 @@ sub cgiapp_init {
 
     # configure authentication
     $self->authen->config(
-	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],  # DC - trying to figure out authen for sip2...
+	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],
 	DRIVER => [ 
 	    [ 'Generic', sub { return $self->checkSip2( @_ ); } ],
 	    [ 'DBI',
