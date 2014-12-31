@@ -20,6 +20,10 @@ and (max-width : 65em)
 
     #content {
     	margin: 0em;
+        width: 100%;
+        display: block;
+        overflow: ;
+        padding-top: 1px; 
     }
 
     img {

@@ -18,6 +18,14 @@ $('document').ready(function() {
 <p>You can now add patron requests to your <a href="/cgi-bin/myaccount.cgi?rm=myaccount_acquisitions_form">'wish list'</a></p>
 </div>
 
+<div id="zserver">
+<h3>Z Server Status Report</h3>
+  <div id="zstatus">Z Server Present... <div id="zresult"><span class="zyes">Yes &#9775;</span></div></div>
+  <div id="zstatus">Able to Connect... <div id="zresult"><span class="zyes">Yes &#9775;</span></div></div>
+  <div id="zstatus">Able to Search... <div id="zresult"><span class="zyes">Yes &#9775;</span></div></div>
+  <div id="zstatus">Able to Retrieve Record... <div id="zresult"><span class="zno">No&nbsp;&nbsp;&nbsp;&#9760;</span></div></div>
+</div>
+
 	<h2>Quick Links</h2>
 	<!--
 	<p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
@@ -62,7 +70,7 @@ $('document').ready(function() {
   <li>Added pub date information to both the ‘Respond’ and ‘Unfilled’ tables</li>
   <li>Canada post tracking number option added to Shipping-returning table; includes link to CP package tracking site <span class="community">(Community Suggestion - Vickie Short, Lac du Bonnet Regional Library)</span></li>
   <li>Added ability to easily perform advanced searches based on limiters; title, author, subject and series</li>
-  <li>Added ability to display the reason a patron request was declined by home library system</li>  
+  <li>Added ability to display the reason a patron request was declined by home library system</li>
   <li>New alert message "You can now add patron requests to your 'wish list'"</li>
   <li>Ability to clear items from the wish list</li>
   <li>Wish list now includes the patron barcode of title requests originating from your library service area.<span class="community">(Community Suggestion - Mary Toma, South Central Regional Library)</span></li>
@@ -72,7 +80,7 @@ $('document').ready(function() {
   <li>eLM resources in results now link directly to eLM record</li>
   <li>Placeholder cover images show in search results wherever title images are not available at source</li>
   <li>Enhanced mobile optimisation; improved viewing on mobile and smaller screens. As an ongoing work in progress, please advise if you are viewing on a particular device with a small screen that requires some adjusting</li>
-  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li> 
+  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li>
   <li>New featured titles from 2013 Scotia Bank prize shortlist</li>
   <li>Other minor code tweaks and bug fixes</li>
 </ul>

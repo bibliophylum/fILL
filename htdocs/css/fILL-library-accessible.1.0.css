@@ -309,6 +309,45 @@ input[type="button"]:hover.small-function-button {
 {
   width: 50%;
 }
+
+
+#zserver {
+  background-color: #e3e3e3;
+  margin: 1em;
+  padding: .5em;
+  float: left;
+  width: 28%;
+}
+
+#zstatus {
+  border: 1px solid #b3b3b3;
+  background: #d3d3d3;
+  padding: .7em 1em;
+  font-size: 1.2em;
+  font-style: bold;
+  margin: .5em 0em;
+}
+
+#zresult {
+  width: auto;
+  float: right;
+}
+
+.zyes {
+  width: 30%;
+  color: green;
+  background-color: #adff2f;
+  border: 1px solid green;
+  padding: .3em;
+}
+
+.zno {
+  width: 30%;
+  color: #660000;
+  background-color: #ff6262;
+  border: 1px solid #660000;
+  padding: .3em;
+}
 /***---End of new library client side CSS--**/
 
 
