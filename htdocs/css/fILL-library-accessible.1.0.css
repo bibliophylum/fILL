@@ -321,7 +321,7 @@ input[type="button"]:hover.small-function-button {
 #zstatus {
   border: 1px solid #b3b3b3;
   background: #d3d3d3;
-  padding: .7em 1em;
+  padding: .7em .5em;
   font-size: 1.2em;
   font-style: bold;
   margin: .5em 0em;
