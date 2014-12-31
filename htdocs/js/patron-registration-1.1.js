@@ -149,7 +149,7 @@ function register_sip2_patron() {
 		      $("input").prop('disabled', true);
 		      $("#submitSIP2Registration").hide();
 		      $("#complete").append('<a id="fill-button" role="button" type="button" href="/cgi-bin/public.cgi">Log in to fILL</a>');
-		      $.cookie("fILL-barcode", $("#barcode").val(), { expires: 356, path: '/' });
+		      $.cookie("fILL-barcode", $("#barcode").val(), { expires: 365, path: '/' });
 		  }
 		  $("#complete").show();
               })

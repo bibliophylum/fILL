@@ -9,6 +9,8 @@ use Data::Dumper;
 
 my $query = new CGI;
 
+#print STDERR $query->Dump;
+
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
                        "maplin3db",

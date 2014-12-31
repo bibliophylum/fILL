@@ -29,7 +29,10 @@ use CGI::Application::Plugin::Authorization;
 use CGI::Application::Plugin::LogDispatch;
 use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
-use Biblio::SIP2::Client;
+use JSON;
+#use Biblio::SIP2::Client;
+#use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+use Capture::Tiny ':all';
 
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
 
@@ -126,23 +129,107 @@ sub cgiapp_init {
 #--------------------------------------------------------------------------------
 #
 #
-sub checkSip2 {
+sub checkSip2_external {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
 
-    $self->log->debug( "checkSip2, credentials::\n" . Dumper( $self->authen->credentials()) . "\n" );
+#    $self->log->debug( "checkSip2, credentials::\n" . Dumper( $self->authen->credentials()) . "\n" );
     $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
     return 0 unless ($barcode);
 
-    # need to call sip2-authentication.cgi and parse the result....
+    # need to call sip2-authenticate.cgi and parse the result....
+    my @args = ("lid=$lid", "barcode=$barcode", "pin=$pin");
+    $self->log->debug("args:\n" . Dumper(@args) . "\n");
 
-    $self->log->debug( "checkSip2: barcode [$barcode], pin [$pin], lid [$lid]\n" );
-
-    return "Christensen, David A." if (($barcode eq '20967000590071') && ($pin eq '3296'));
+    my $stdout; my $stderr; my $exit_code;
+    ($stdout, $stderr, $exit_code) = capture {
+	system("perl", "/opt/fILL/bin/sip2-authenticate.cgi", @args);
+    };
+    $self->log->debug( "stdout: $stdout\nstderr: $stderr\nexit_code: $exit_code\n");
+    
+    chomp $stdout;
+    $stdout =~ s|^Content-Type:application/json\n\n(.*)|$1|;
+    my $json = from_json($stdout);
+    if (($json->{"authorized"}{"validbarcode"} eq 'Y')
+	&& ($json->{"authorized"}{"validpin"} eq 'Y')) {
+	return $json->{"authorized"}{"patronname"};
+    }
+    
+#    return "Christensen, David A." if (($barcode eq '20967000590071') && ($pin eq '3296'));
 
     return 0;
 }
 
+#--------------------------------------------------------------------------------
+#
+#
+sub checkSip2 {
+    # from sip2-authenticate.cgi
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password from library_sip2 where lid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+
+    $self->log->debug( Dumper(%$href) );
+
+    if ($href) {
+	# need to translate from postgresql field name to SIP2 field name
+	if ($href->{terminator}) {
+	    $href->{msgTerminator} = $href->{terminator};
+	}
+    } else {
+	# no SIP2 server, so bail
+	return 0;
+    }
+
+    my $bsc = Biblio::SIP2::Client->new( %$href );
+    $bsc->connect();
+
+    # if SIP2 server requires login (untested):
+    if ($href->{sip_server_login}) {
+	my $msg = $bsc->msgLogin($href->{sip_server_login},$href->{sip_server_password});
+	my $response = $bsc->get_message( $msg );
+	my $parsed = $bsc->parseLoginResponse( $response );
+	
+	if ($parsed->{'fixed'}{'Ok'} == 1) {
+	    # good to go
+	} else {
+	    # invalid SIP2 server credentials, so bail
+	    return 0;
+	}
+    }
+
+    #$bsc->setPatron("20967000590071","3296");
+    $bsc->setPatron($barcode,$pin);
+
+    my $msg = $bsc->msgPatronStatusRequest();
+    my $response = $bsc->get_message( $msg );
+    my $parsed = $bsc->parsePatronStatusResponse( $response );
+    $self->log->debug( $self->print_parsed_response($parsed) );
+
+    # BL - valid patron, Y or N
+    # CQ - valid password, Y or N
+    # AO - institution id eg: "mbw"
+    # AA - patron barcode
+    # AE - patron name eg:"Christensen, David A."
+    # AF - screen message eg: "#Incorrect password."
+
+    my $accountName;
+    if (($parsed->{'variable'}{'BL'} eq 'Y')
+	&& ($parsed->{'variable'}{'CQ'} eq 'Y')) {
+	$accountName = $parsed->{'variable'}{'AE'};
+    }
+    $msg = $bsc->msgEndPatronSession();
+    $response = $bsc->get_message( $msg );
+    $parsed = $bsc->parseEndSessionResponse( $response );
+
+    $bsc->disconnect();
+    
+    return $accountName;
+}
 
 #--------------------------------------------------------------------------------
 # Execute the following before we execute the requested run mode
@@ -329,6 +416,45 @@ sub login_foo {
 #    return $html_output;
 #}
 
+#---------------------------------------------------------------
+# for debugging...
+#---------------------------------------------------------------
+sub print_parsed_response {
+    my $self = shift;
+    my $parsed = shift;
+
+    $self->log->debug( "Fixed:\n");
+    my $href = $parsed->{'fixed'};
+    foreach my $key (keys %$href) { 
+	$self->log->debug( "$key\t"); 
+	if (ref( $href->{$key} ) eq "ARRAY") {
+	    $self->log->debug( "\n");
+	    foreach my $elem (@{$href->{$key}}) {
+		$elem =~ s/\r//;
+		$self->log->debug( "\t$elem\n");
+	    }
+	} else {
+	    $href->{$key} =~ s/\r//;
+	    $self->log->debug( "[" . $href->{$key} . "]\n"); 
+	}
+    }
+
+    $self->log->debug( "Variable:\n");
+    $href = $parsed->{'variable'};
+    foreach my $key (keys %$href) { 
+	$self->log->debug( "$key\t"); 
+	if (ref( $href->{$key} ) eq "ARRAY") {
+	    $self->log->debug( "\n");
+	    foreach my $elem (@{$href->{$key}}) {
+		$elem =~ s/\r//;
+		$self->log->debug( "\t$elem\n");
+	    }
+	} else {
+	    $href->{$key} =~ s/\r//;
+	    $self->log->debug( "[" . $href->{$key} . "]\n" ); 
+	}
+    }
+}
 
 
 1; # so the 'require' or 'use' succeeds
