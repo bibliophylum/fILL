@@ -313,9 +313,8 @@ input[type="button"]:hover.small-function-button {
 
 #zserver {
   background-color: #e3e3e3;
-  margin: 1em;
-  padding: .5em;
-  float: left;
+  margin: ;
+  padding: ;
   width: 28%;
 }
 
@@ -348,6 +347,7 @@ input[type="button"]:hover.small-function-button {
   border: 1px solid #660000;
   padding: .3em;
 }
+
 /***---End of new library client side CSS--**/
 
 
