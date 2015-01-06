@@ -1,0 +1,990 @@
+package Biblio::SIP2::Client;
+
+# Perl implementation of John Wohlers' sip2.class.php
+# from http://php-sip2.googlecode.com/
+
+use warnings;
+use strict;
+use IO::Socket::INET;
+use Scalar::Util qw(looks_like_number);
+use Carp;
+
+our $VERSION = '0.01';
+
+sub new {
+    my $proto = shift;
+    my $class = ref($proto) || $proto;
+
+    my %parms = @_;
+
+    my $self  = {};
+
+    # Public variables for configuration
+#    $self->{hostname};
+    $self->{host}         = $parms{'host'};
+    $self->{port}         = $parms{'port'};
+    $self->{library}      = $parms{'library'} || '';
+    $self->{language}     = $parms{'language'} || '001'; # 001= english
+
+    # Patron ID
+    $self->{patron}       = $parms{'patron'} || ''; # AA
+    $self->{patronpwd}    = $parms{'patronpwd'} || ''; # AD
+   
+    #terminal password
+    $self->{AC}           = $parms{'termpwd'} || ''; # AC
+   
+    # Maximum number of resends allowed before get_message gives up
+#    $self->{maxretry}     = 3;
+    $self->{maxretry}     = 0;  # debugging
+   
+    # Terminator s
+    $self->{fldTerminator} = '|';
+    $self->{msgTerminator} = $parms{"msgTerminator"} || "\r\n";
+   
+    # Login Variables
+    $self->{UIDalgorithm} = 0;   # 0    = unencrypted, default
+    $self->{PWDalgorithm} = 0;   # undefined in documentation
+    $self->{scLocation}   = '';  # Location Code
+
+    # Debug
+    $self->{debug}        = $parms{'debug'} || 0;
+   
+    # Private variables for building messages
+    $self->{AO} = 'BibliophylumSIP';
+    $self->{AN} = 'SIPCHK';
+   
+    # Private variable to hold socket connection
+    $self->{socket} = undef;
+   
+    # Sequence number counter
+    $self->{seq}   = -1;
+
+    # resend counter
+    $self->{retry} = 0;
+   
+    # Workarea for building a message
+    $self->{msgBuild} = '';
+    $self->{noFixed} = 0;
+
+
+    bless ($self, $class);
+    return $self;
+}
+
+sub setPatron {
+    my $self = shift;
+    my ($barcode,$pwd) = @_;
+
+    if (($barcode) && ($pwd)) {
+	if ($self->{patron}) {
+	    # end previous patron session, if any
+	    $self->msgEndPatronSession();
+	}
+	$self->{patron} = $barcode;
+	$self->{patronpwd} = $pwd;
+    } else {
+	$self->_debugmsg("SIP2: setPatron missing parameter(s)");
+	return undef;
+    }
+    return $self->{patron};
+}
+
+sub msgPatronStatusRequest {
+    my $self = shift;
+    # Server Response: Patron Status Response message.
+    $self->_newMessage('23');
+    $self->_addFixedOption($self->{language}, 3);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AC',$self->{AC});
+    $self->_addVarOption('AD',$self->{patronpwd});
+    return $self->_returnMessage();    
+}
+   
+sub msgCheckout {
+    my $self = shift;
+    my ($item, $nbDateDue, $scRenewal, $itmProp, $fee, $noBlock, $cancel) = @_;
+    $scRenewal = "N" unless $scRenewal;
+    $fee = "N" unless $fee;
+    $noBlock = "N" unless $noBlock;
+    $cancel = "N" unless $cancel;
+
+
+    # Checkout an item  (11) - untested
+    $self->_newMessage('11');
+    $self->_addFixedOption($scRenewal, 1);
+    $self->_addFixedOption($noBlock, 1);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    if ($nbDateDue) {
+	# override defualt date due
+	$self->_addFixedOption($self->_datestamp($nbDateDue), 18);
+    } else {
+	# send a blank date due to allow ACS to use default date due computed for item
+	$self->_addFixedOption('', 18);
+    }
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AB',$item);
+    $self->_addVarOption('AC',$self->{AC});
+    $self->_addVarOption('CH',$itmProp, 1);
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('BO',$fee, 1); # Y or N
+    $self->_addVarOption('BI',$cancel, 1); # Y or N
+    
+    return $self->_returnMessage();
+}
+   
+sub msgCheckin {
+    my $self = shift;
+    my ($item, $itmReturnDate, $itmLocation, $itmProp, $noBlock, $cancel) = @_;
+    $noBlock = "N" unless $noBlock;
+
+    # Checkin an item (09) - untested
+    unless ($itmLocation) {
+	# If no location is specified, assume the defualt location of the SC, behavior suggested by spec
+	$itmLocation = $self->{scLocation};
+    }
+    
+    $self->_newMessage('09');
+    $self->_addFixedOption($noBlock, 1);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addFixedOption($self->_datestamp($itmReturnDate), 18);
+    $self->_addVarOption('AP',$itmLocation);
+    $self->_addVarOption('AO',$self->AO);
+    $self->_addVarOption('AB',$item);
+    $self->_addVarOption('AC',$self->AC);
+    $self->_addVarOption('CH',$itmProp, 1);
+    $self->_addVarOption('BI',$cancel, 1); # Y or N
+    
+    return $self->_returnMessage();
+}
+
+sub msgBlockPatron {
+    my $self = shift;
+    my ($message, $retained) = @_;
+    $retained = "N" unless $retained;
+
+    # Blocks a patron, and responds with a patron status response  (01) - untested
+    $self->_newMessage('01');
+    $self->_addFixedOption($retained, 1); # Y if card has been retained
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->AO);
+    $self->_addVarOption('AL',$message);
+    $self->_addVarOption('AA',$self->AA);
+    $self->_addVarOption('AC',$self->AC);
+    
+    return $self->_returnMessage();
+}
+
+sub msgSCStatus {
+    my $self = shift;
+    my ($status, $width, $version) = @_;
+    $width = 80 unless $width;
+    $version = 2 unless $version;
+
+    # selfcheck status message, this should be sent immediatly after login  - untested
+    # status codes, from the spec:
+    # 0 SC unit is OK
+    # 1 SC printer is out of paper
+    # 2 SC is about to shut down
+    
+    
+    if ($version > 3) {
+	$version = 2;
+    }
+    if ($status < 0 || $status > 2) {
+	$self->_debugmsg( "SIP2: Invalid status passed to msgSCStatus" );
+	return 0;
+    }    
+    $self->_newMessage('99');
+    $self->_addFixedOption($status, 1);
+    $self->_addFixedOption($width, 3);
+    $self->_addFixedOption(sprintf("%03.2f",$version), 4);
+    return $self->_returnMessage();
+}
+
+sub msgRequestACSResend {
+    my $self = shift;
+    # Used to request a resend due to CRC mismatch - No sequence number is used
+    $self->_newMessage('97');
+    return $self->_returnMessage(0);
+}
+
+sub msgLogin {
+    my $self = shift;
+    my ($sipLogin, $sipPassword) = @_;
+
+    # Login (93) - untested
+    $self->_newMessage('93');
+    $self->_addFixedOption($self->{UIDalgorithm}, 1);
+    $self->_addFixedOption($self->{PWDalgorithm}, 1);
+    $self->_addVarOption('CN',$sipLogin);
+    $self->_addVarOption('CO',$sipPassword);
+    $self->_addVarOption('CP',$self->{scLocation}, 1);
+    return $self->_returnMessage();
+    
+}
+
+sub msgPatronInformation {
+    my $self = shift;
+    my ($type, $start, $end) = @_;
+    $start = 1 unless $start;
+    $end = 5 unless $end;
+    
+    #
+    # According to the specification:
+    # Only one category of items should be  requested at a time, i.e. it would take 6 of these messages,
+    # each with a different position set to Y, to get all the detailed information about a patron's items.
+
+    my %summary;
+    $summary{'none'}     = '      ';
+    $summary{'hold'}     = 'Y     ';
+    $summary{'overdue'}  = ' Y    ';
+    $summary{'charged'}  = '  Y   ';
+    $summary{'fine'}     = '   Y  ';
+    $summary{'recall'}   = '    Y ';
+    $summary{'unavail'}  = '     Y';
+    
+    # Request patron information
+    $self->_newMessage('63');
+    $self->_addFixedOption($self->{language}, 3);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addFixedOption(sprintf("%-10s",$summary{$type}), 10);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('BP',$start, 1); # old sub version used padded 5 digits, not sure why
+    $self->_addVarOption('BQ',$end, 1); # old sub version used padded 5 digits, not sure why
+    return $self->_returnMessage();
+}
+
+sub msgEndPatronSession {
+    my $self = shift;
+    #  End Patron Session, should be sent before switching to a new patron. (35) - untested
+    
+    $self->_newMessage('35');
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    return $self->_returnMessage();
+}
+
+# Fee paid sub should go here
+sub msgFeePaid {
+    my $self = shift;
+    my ($feeType, $pmtType, $pmtAmount, $curType, $feeId, $transId) = @_;
+    $curType = 'USD' unless $curType;
+
+    # Fee payment sub (37) - untested
+    # Fee Types:
+    # 01 other/unknown
+    # 02 administrative
+    # 03 damage
+    # 04 overdue
+    # 05 processing
+    # 06 rental*/
+    # 07 replacement
+    # 08 computer access charge
+    # 09 hold fee
+    
+    # Value Payment Type
+    # 00   cash
+    # 01   VISA
+    # 02   credit card
+    
+#    if (!is_numeric($feeType) || $feeType > 99 || $feeType < 1) {
+    if (!looks_like_a_number($feeType) || $feeType > 99 || $feeType < 1) {
+	# not a valid fee type - exit
+	$self->_debugmsg( "SIP2: (msgFeePaid) Invalid fee type: {$feeType}");
+	return 0;
+    }
+    
+#    if (!is_numeric($pmtType) || $pmtType > 99 || $pmtType < 0) {
+    if (!looks_like_a_number($pmtType) || $pmtType > 99 || $pmtType < 0) {
+	# not a valid payment type - exit
+	$self->_debugmsg( "SIP2: (msgFeePaid) Invalid payment type: {$pmtType}");
+	return 0;
+    }
+    
+    $self->_newMessage('37');
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addFixedOption(sprintf('%02d', $feeType), 2);
+    $self->_addFixedOption(sprintf('%02d', $pmtType), 2);
+    $self->_addFixedOption($curType, 3);
+    $self->_addVarOption('BV',$pmtAmount); # due to currancy format localization, it is up to the programmer to properly format their payment amount
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('CG',$feeId, 1);
+    $self->_addVarOption('BK',$transId, 1);
+    
+    return $self->_returnMessage();
+}
+   
+sub msgItemInformation {
+    my $self = shift;
+    my $item = shift;
+
+    $self->_newMessage('17');
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AB',$item);
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    return $self->_returnMessage();
+    
+}
+
+sub msgItemStatus {
+    my $self = shift;
+    my ($item, $itmProp) = @_;
+
+    # Item status update sub (19) - untested 
+    
+    $self->_newMessage('19');
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AB',$item);
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('CH',$itmProp);
+    return $self->_returnMessage();
+}
+
+sub msgPatronEnable {
+    my $self = shift;
+    # Patron Enable sub (25) - untested
+    #  This message can be used by the SC to re-enable canceled patrons. It should only be used for system testing and validation.
+    $self->_newMessage('25');
+    $self->_addFixedOption($self->_datestamp(), 18);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    return $self->_returnMessage();
+    
+}
+
+sub msgHold {
+    my $self = shift;
+    my ($mode, $expDate, $holdtype, $item, $title, $fee, $pkupLocation) = @_;
+    $fee = "N" unless $fee;
+
+    # mode validity check
+    #
+    # - remove hold
+    # + place hold
+    # * modify hold
+    
+    if (strpos('-+*',$mode) == 0) {
+	# not a valid mode - exit
+	$self->_debugmsg( "SIP2: Invalid hold mode: {$mode}");
+	return 0;
+    }
+    
+    if (defined($holdtype) && ($holdtype < 1 || $holdtype > 9)) {
+	#
+        # Valid hold types range from 1 - 9
+	# 1   other
+	# 2   any copy of title
+	# 3   specific copy
+        # 4   any copy at a single branch or location
+	
+	$self->_debugmsg( "SIP2: Invalid hold type code: {$holdtype}");
+	return 0;
+    }
+    
+    $self->_newMessage('15');
+    $self->_addFixedOption($mode, 1);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    if ($expDate) {
+	# hold expiration date,  due to the use of the datestamp function, we have to check here for empty value. when datestamp is passed an empty value it will generate a current datestamp
+	$self->_addVarOption('BW', $self->_datestamp($expDate), 1); #spec says this is fixed field, but it behaves like a var field and is optional...
+    }
+    $self->_addVarOption('BS',$pkupLocation, 1);
+    $self->_addVarOption('BY',$holdtype, 1);
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('AB',$item, 1);
+    $self->_addVarOption('AJ',$title, 1);
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('BO',$fee, 1); # Y when user has agreed to a fee notice
+    
+    return $self->_returnMessage();
+    
+}
+
+sub msgRenew {
+    my $self = shift;
+    my ($item, $title, $nbDateDue, $itmProp, $fee, $noBlock, $thirdParty) = @_;
+    $fee = "N" unless $fee;
+    $noBlock = "N" unless $fee;
+    $thirdParty = "N" unless $thirdParty;
+
+    # renew a single item (29) - untested
+    $self->_newMessage('29');
+    $self->_addFixedOption($thirdParty, 1);
+    $self->_addFixedOption($noBlock, 1);
+    $self->_addFixedOption($self->_datestamp(), 18);
+    if ($nbDateDue) {
+	# override default date due
+	$self->_addFixedOption($self->_datestamp($nbDateDue), 18);
+    } else {
+	# send a blank date due to allow ACS to use default date due computed for item
+	$self->_addFixedOption('', 18);
+    }
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('AB',$item, 1);
+    $self->_addVarOption('AJ',$title, 1);
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('CH',$itmProp, 1);
+    $self->_addVarOption('BO',$fee, 1); # Y or N
+    
+    return $self->_returnMessage();
+}
+
+sub msgRenewAll {
+    my $self = shift;
+    my $fee = shift || "N";
+
+    # renew all items for a patron (65) - untested
+    $self->_newMessage('65');
+    $self->_addVarOption('AO',$self->{AO});
+    $self->_addVarOption('AA',$self->{patron});
+    $self->_addVarOption('AD',$self->{patronpwd}, 1);
+    $self->_addVarOption('AC',$self->{AC}, 1);
+    $self->_addVarOption('BO',$fee, 1); # Y or N
+    
+    return $self->_returnMessage();
+}
+   
+sub parsePatronStatusResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'PatronStatus'      => substr($response, 2, 14),
+	'Language'          => substr($response, 16, 3),
+	'TransactionDate'   => substr($response, 19, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 37);
+    return \%result;
+}
+
+sub parseCheckoutResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response,2,1),
+	'RenewalOk'         => substr($response,3,1),
+	'Magnetic'          => substr($response,4,1),
+	'Desensitize'       => substr($response,5,1),
+	'TransactionDate'   => substr($response,6,18),
+    };
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 24);
+    return \%result;
+    
+}
+
+sub parseCheckinResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response,2,1),
+	'Resensitize'       => substr($response,3,1),
+	'Magnetic'          => substr($response,4,1),
+	'Alert'             => substr($response,5,1),
+	'TransactionDate'   => substr($response,6,18),
+    };
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 24);
+    return \%result;
+    
+}
+
+sub parseACSStatusResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Online'            => substr($response, 2, 1),
+	'Checkin'           => substr($response, 3, 1),  # is Checkin by the SC allowed ?*/
+	'Checkout'          => substr($response, 4, 1),  # is Checkout by the SC allowed ?*/
+	'Renewal'           => substr($response, 5, 1),  # renewal allowed?
+	'PatronUpdate'      => substr($response, 6, 1),  # is patron status updating by the SC allowed ? (status update ok)*/
+	'Offline'           => substr($response, 7, 1),
+	'Timeout'           => substr($response, 8, 3),
+	'Retries'           => substr($response, 11, 3),
+	'TransactionDate'   => substr($response, 14, 18),
+	'Protocol'          => substr($response, 32, 4),
+        };
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 36);
+    return \%result;
+}
+
+sub parseLoginResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response, 2, 1),
+    };
+#    $result{'variable'} = array();
+    $result{'variable'} = ();
+    return \%result;
+}
+
+sub parsePatronInfoResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'PatronStatus'      => substr($response, 2, 14),
+	'Language'          => substr($response, 16, 3),
+	'TransactionDate'   => substr($response, 19, 18),
+	'HoldCount'         => substr($response, 37, 4),
+	'OverdueCount'      => substr($response, 41, 4),
+	'ChargedCount'      => substr($response, 45, 4),
+	'FineCount'         => substr($response, 49, 4),
+	'RecallCount'       => substr($response, 53, 4),
+	'UnavailableCount'  => substr($response, 57, 4)
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 61);
+    return \%result;
+}
+
+sub parseEndSessionResponse {
+    my $self = shift;
+    my $response = shift;
+    #   Response example:  36Y20080228 145537AOWOHLERS|AAX00000000|AY9AZF474  
+       
+    my %result;
+    $result{'fixed'} = {
+	'EndSession'        => substr($response, 2, 1),
+	'TransactionDate'   => substr($response, 3, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 21);
+    
+    return \%result;
+}
+
+sub parseFeePaidResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'PaymentAccepted'   => substr($response, 2, 1),
+	'TransactionDate'   => substr($response, 3, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 21);
+    return \%result;
+    
+}
+
+sub parseItemInfoResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'CirculationStatus' => intval (substr($response, 2, 2)),
+	'SecurityMarker'    => intval (substr($response, 4, 2)),
+	'FeeType'           => intval (substr($response, 6, 2)),
+	'TransactionDate'   => substr($response, 8, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 26);
+    
+    return \%result;
+}
+
+sub parseItemStatusResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'PropertiesOk'      => substr($response, 2, 1),
+	'TransactionDate'   => substr($response, 3, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 21);
+    return \%result;
+    
+}
+
+sub parsePatronEnableResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'PatronStatus'      => substr($response, 2, 14),
+	'Language'          => substr($response, 16, 3),
+	'TransactionDate'   => substr($response, 19, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 37);
+    return \%result;
+    
+}
+
+sub parseHoldResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response, 2, 1),
+	'available'         => substr($response, 3, 1),
+	'TransactionDate'   => substr($response, 4, 18),
+	'ExpirationDate'    => substr($response, 22, 18)                        
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 40);
+    
+    return \%result;
+}  
+
+   
+sub parseRenewResponse {
+    my $self = shift;
+    my $response = shift;
+
+    # Response Example:  300NUU20080228    222232AOWOHLERS|AAX00000241|ABM02400028262|AJFolksongs of Britain and Ireland|AH5/23/2008,23:59|CH|AFOverride required to exceed renewal limit.|AY1AZCDA5
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response, 2, 1),
+	'RenewalOk'         => substr($response, 3, 1),
+	'Magnetic'          => substr($response, 4, 1),
+	'Desensitize'       => substr($response, 5, 1),
+	'TransactionDate'   => substr($response, 6, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 24);
+    
+    return \%result;
+}
+   
+sub parseRenewAllResponse {
+    my $self = shift;
+    my $response = shift;
+
+    my %result;
+    $result{'fixed'} = {
+	'Ok'                => substr($response, 2, 1),
+	'Renewed'           => substr($response, 3, 4),
+	'Unrenewed'         => substr($response, 7, 4),
+	'TransactionDate'   => substr($response, 11, 18),
+    };    
+    
+    $result{'variable'} = $self->_parsevariabledata($response, 29);
+    
+    return \%result;
+}
+
+
+
+sub get_message {
+    my $self = shift;
+    my $message = shift;
+
+    # sends the current message, and gets the response
+    my $result     = '';
+    my $terminator = '';
+    my $nr         = '';
+
+    my $sock = $self->{socket};
+    
+    $self->_debugmsg('SIP2: Sending SIP2 request...');
+    my $sentSize = $sock->send($message);
+    $sock->flush;
+
+    $self->_debugmsg("SIP2: msg sent, size $sentSize");
+    
+    $self->_debugmsg('SIP2: Request Sent, Reading response');
+    
+#    while ($terminator ne "\x0D" && $nr ne 0) {
+#	$nr = $sock->recv($terminator,1);
+#	$result = $result . $terminator;
+#    }
+
+#    $result = <$sock>;
+    $sock->recv($result,1024);
+    
+    $self->_debugmsg("SIP2: get_message result: [$result]");
+    
+    # test message for CRC validity
+    if ($self->_check_crc($result)) {
+	# reset the retry counter on successful send
+	$self->{retry}=0;
+	$self->_debugmsg("SIP2: Message from ACS passed CRC check");
+    } else {
+	# CRC check failed, request a resend
+	$self->{retry}++;
+	if ($self->{retry} < $self->{maxretry}) {
+	    # try again
+	    $self->_debugmsg("SIP2: Message failed CRC check, retrying ($self->{retry})");
+	    
+	    $self->get_message($message);
+	} else {
+	    # give up
+	    $self->_debugmsg("SIP2: Failed to get valid CRC after $self->{maxretry} retries.");
+	    return 0;
+	}
+    }
+    return $result;
+}  
+
+
+sub connect {
+    my $self = shift;
+
+    $self->{socket} = IO::Socket::INET->new( PeerAddr => $self->{host},
+					     PeerPort => $self->{port},
+					     Proto => 'tcp',
+	) || croak "cannot connect to SIP2 on " . $self->{host};
+    $self->{socket}->autoflush(1);
+    $self->_debugmsg("SIP2: connected to " . $self->{socket}->peerhost() . " on port " . $self->{socket}->peerport());
+}  
+
+sub disconnect {
+    my $self = shift;
+#    shutdown($self->{'socket'},1);
+    close $self->{socket};
+}
+
+# Core local utility functions  
+sub _datestamp {
+    my $self = shift;
+    my $timestamp = shift;
+
+    # generate a SIP2 compatable datestamp
+    # From the spec:
+    # YYYYMMDDZZZZHHMMSS.
+    # All dates and times are expressed according to the ANSI standard X3.30 for
+    # date and X3.43 for time. The ZZZZ field should contain blanks (code $20) to
+    # represent local time. To represent universal time, a Z character(code $5A) 
+    # should be put in the last (right hand) position of the ZZZZ field.
+    # To represent other time zones the appropriate character should be used; a 
+    # Q character (code $51) should be put in the last (right hand) position of 
+    # the ZZZZ field to represent Atlantic Standard Time.
+    # When possible local time is the preferred format.
+    my $sip_ts;
+    
+    if ($timestamp) {
+	# Generate a proper date time from the date provided
+#	return date('Ymd    His', $timestamp);
+	print STDERR "Timestamp: [$timestamp]\n";
+	$sip_ts = $timestamp; # THIS WILL NEED FORMATTING!
+    } else {
+	# Current Date/Time
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	$sip_ts = sprintf("%4d%02d%02d    %02d%02d%02d",
+			  $year+1900, $mon+1, $mday,
+			  $hour, $min, $sec
+	    );
+    }
+    return $sip_ts;
+}
+
+sub _parsevariabledata {
+    my $self = shift;
+    my ($response, $start) = @_;
+
+    my %result;
+    my @raw = split /\|/, substr($response,$start,-7);
+    $result{'Raw'} = [ @raw ];
+    foreach my $item (@raw) {
+	my $field = substr($item,0,2);
+	my $value = substr($item,2);
+	# SD returns some odd values on ocassion, Unable to locate the purpose in spec, so I strip from
+	# the parsed array. Orig values will remain in ['raw'] element
+	
+	$value =~ s/[\x00-\x1F]//g;
+	$value =~ s/^\s+|\s+$//g;
+	if (length $value > 0) {
+	    $result{$field} = $value;
+	}
+    }              
+    $result{'AZ'} = substr($response,-5);
+    
+    return \%result;
+}
+
+sub _crc {
+    my $self = shift;
+    my $buf = shift;
+
+    # Calculate CRC 
+    my $sum = 0;
+    
+    my $len = length($buf);
+    for (my $n = 0; $n < $len; $n++) {
+	$sum = $sum + ord(substr($buf, $n, 1));
+    }
+    
+    my $crc = ($sum & 0xFFFF) * -1;
+    
+    $self->_debugmsg("SIP2: _crc [" . substr(sprintf ("%4X", $crc), -4, 4) . "]");
+
+    # 2008.03.15 - Fixed a bug that allowed the checksum to be larger then 4 digits
+    return substr(sprintf ("%4X", $crc), -4, 4);
+} # end crc    
+
+sub _getseqnum {
+    my $self = shift;
+    # Get a sequence number for the AY field
+    # valid numbers range 0-9
+    $self->{seq}++;
+    if ($self->{seq} > 9 ) {
+	$self->{seq} = 0;
+    }
+    return ($self->{seq});
+}
+
+sub _debugmsg {
+    my $self = shift;
+    my $message = shift;
+
+    # custom debug function,  why repeat the check for the debug flag in code...
+    if ($self->{debug}) {
+	# trigger_error( $message, E_USER_NOTICE);  <-- DC: without E_USER_NOTICE, this would be: warn $message;
+	#croak $message;
+	carp $message;
+    }      
+}
+
+sub _check_crc {
+    my $self = shift;
+    my $message = shift;
+
+    $self->_debugmsg("SIP2: _check_crc [$message]\n");
+
+    # test the recieved message's CRC by generating our own CRC from the message
+    #$test = preg_split('/(.{4})$/',trim($message),2,PREG_SPLIT_DELIM_CAPTURE);
+
+    my $s = $message;
+    $s =~ s/^\s+|\s+$//g;  # trim
+    my ($test0, $test1) = $s =~ /^(.*)(.{4})$/s;  # last 4 chars are CRC
+    # Same as saying:
+    #    my $test0 = substr($s,-4);
+    #    my $test1 = substr($s,0,-4);
+
+    $self->_debugmsg("SIP2: _check_crc [$test0] [$test1]");
+
+    $self->_debugmsg("SIP2: src crc [$test1], gen crc [" . $self->_crc($test0) . "]\n");
+    $self->_debugmsg( $self->hdump( $test0 ) );
+    
+    if ($self->_crc($test0) eq $test1) {
+	return 1;
+    } else {
+	return 0;
+    }
+}
+   
+sub _newMessage {
+    my $self = shift;
+    my $code = shift;
+
+    # resets the msgBuild variable to the value of $code, and clears the flag for fixed messages
+    $self->{noFixed}  = 0;
+    $self->{msgBuild} = $code;
+}
+
+sub _addFixedOption {
+    my $self = shift;
+    my ($value, $len) = @_;
+
+    # adds afixed length option to the msgBuild IF no variable options have been added.
+    if ( $self->{noFixed} ) {
+	return 0;
+    } else {
+	$self->{msgBuild} .= sprintf("%${len}s", substr($value,0,$len));
+	return 1;
+    }
+}
+   
+sub _addVarOption {
+    my $self = shift;
+    my ($field, $value, $optional) = @_;
+    $optional = 0 unless $optional;
+
+    # adds a varaiable length option to the message, and also prevents adding addtional fixed fields
+    if ($optional && (not defined $value)) {
+	# skipped
+	$self->_debugmsg( "SIP2: Skipping optional field {$field}");
+    } else {
+	$self->{noFixed}  = 1; # no more fixed for this message
+	$self->{msgBuild} .= $field . substr($value, 0, 255) . $self->{fldTerminator};
+    }
+    return 1;
+}
+
+sub _returnMessage {
+    my $self = shift;
+    my ($withSeq, $withCrc) = @_;
+    $withSeq = 1 unless $withSeq;
+    $withCrc = 1 unless $withCrc;
+
+    # Finalizes the message and returns it.  Message will remain in msgBuild until newMessage is called
+    if ($withSeq) {
+	$self->{msgBuild} .= 'AY' . $self->_getseqnum();
+    }
+    if ($withCrc) {
+	$self->{msgBuild} .= 'AZ';
+	$self->{msgBuild} .= $self->_crc($self->{msgBuild});
+    }
+    $self->{msgBuild} .= $self->{msgTerminator};
+    
+    return $self->{msgBuild};
+}
+
+# debugging aid, from
+# http://www.perlmonks.org/index.pl?node_id=111481
+sub hdump {
+    my $self = shift;
+    my $offset = 0;
+    my(@array,$format);
+    my $s;
+    foreach my $data (unpack("a16"x(length($_[0])/16)."a*",$_[0])) {
+        my($len)=length($data);
+        if ($len == 16) {
+            @array = unpack('N4', $data);
+            $format="0x%08x (%05d)   %08x %08x %08x %08x   %s\n";
+        } else {
+            @array = unpack('C*', $data);
+            $_ = sprintf "%2.2x", $_ for @array;
+            push(@array, '  ') while $len++ < 16;
+            $format="0x%08x (%05d)" .
+               "   %s%s%s%s %s%s%s%s %s%s%s%s %s%s%s%s   %s\n";
+        } 
+        $data =~ tr/\0-\37\177-\377/./;
+        $s .= sprintf($format,$offset,$offset,@array,$data);
+        $offset += 16;
+    }
+    $self->_debugmsg($s);
+}
+
+1;
