@@ -60,14 +60,15 @@ function create_table_borrowing( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "cid"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Title"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Author"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Patron barcode"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "From"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "To"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Message"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "9"; cell.innerHTML = "History of requests you've made to borrow items.";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "History of requests you've made to borrow items.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -86,8 +87,9 @@ function build_table_borrowing( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].author;
-        cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].ts;
+        cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].from; cell.setAttribute('title', data.history.borrowing[i].from_library);
+        cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].to; cell.setAttribute('title', data.history.borrowing[i].to_library);
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.history.borrowing[i].message;
     }
