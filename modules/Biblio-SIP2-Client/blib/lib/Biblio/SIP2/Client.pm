@@ -987,4 +987,63 @@ sub hdump {
     $self->_debugmsg($s);
 }
 
+#----------------------------------------------------------------------------------
+
+# bundle everything needed to verify a patron's credentials in one handy sub
+sub verifyPatron {
+    my $self = shift;
+    my ($barcode, $pin, $sip_server_login, $sip_server_password) = @_;
+
+    # if SIP2 server requires login (untested):
+    if (defined $sip_server_login) {
+	my $msg = $self->msgLogin($sip_server_login,$sip_server_password);
+	my $response = $self->get_message( $msg );
+	my $parsed = $self->parseLoginResponse( $response );
+	
+	if ($parsed->{'fixed'}{'Ok'} == 1) {
+	    # good to go
+	} else {
+	    # invalid SIP2 server credentials, so bail
+	    #bail("Library SIP2 server login failed");
+	    return undef;
+	}
+    }
+    
+    #$self->setPatron("20967000590071","3296");
+    $self->setPatron($barcode,$pin);
+
+    my $msg = $self->msgPatronStatusRequest();
+    my $response = $self->get_message( $msg );
+    my $parsed = $self->parsePatronStatusResponse( $response );
+    #print_parsed_response($parsed);
+
+    # BL - valid patron, Y or N
+    # CQ - valid password, Y or N
+    # AO - institution id eg: "mbw"
+    # AA - patron barcode
+    # AE - patron name eg:"Christensen, David A."
+    # AF - screen message eg: "#Incorrect password."
+
+    # Note: don't return the patron name when invalid PIN
+    my %authorized = (
+	"validbarcode"  => $parsed->{'variable'}{'BL'} || undef,
+	"validpin"      => $parsed->{'variable'}{'CQ'} || undef,
+	"patronname"    => $parsed->{'variable'}{'CQ'} ? ($parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef) : undef,
+	"screenmessage" => $parsed->{'variable'}{'AF'} || undef,
+	);
+
+    # just for testing:
+    #$msg = $self->msgPatronInformation( 'none' );
+    #$response = $self->get_message( $msg );
+    #$parsed = $self->parsePatronInfoResponse( $response );
+    #print_parsed_response($parsed);
+
+    $msg = $self->msgEndPatronSession();
+    $response = $self->get_message( $msg );
+    $parsed = $self->parseEndSessionResponse( $response );
+
+    return \%authorized;
+}
+
+
 1;

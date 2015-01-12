@@ -79,6 +79,7 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
+	'test_form' => 'test_process',
 	'search_form'              => 'search_process',
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
@@ -88,6 +89,22 @@ sub setup {
 	'faq_form'		   => 'faq_process',
 	'contact_form'             => 'contact_process',
 	);
+}
+
+sub test_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template;
+    $template = $self->load_tmpl('public/test.tmpl');
+    $template->param( pagetitle => "fILL test",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
 }
 
 #--------------------------------------------------------------------------------

@@ -14,7 +14,7 @@
 #     BUILD_REQUIRES => { Test::More=>q[0.47] }
 #     CONFIGURE_REQUIRES => {  }
 #     NAME => q[Biblio-SIP2-Client]
-#     PREREQ_PM => { Scalar::Util=>q[0], Test::More=>q[0.47], IO::Socket=>q[0], Carp=>q[0] }
+#     PREREQ_PM => { Carp=>q[0], Test::More=>q[0.47], Scalar::Util=>q[0], IO::Socket=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Biblio/SIP2/Client.pm]
 
@@ -40,7 +40,7 @@ LIBC =
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 3.2.0-58-generic
+OSVERS = 3.2.0-37-generic
 RANLIB = :
 SITELIBEXP = /usr/local/share/perl/5.18.2
 SITEARCHEXP = /usr/local/lib/perl/5.18.2
@@ -184,10 +184,10 @@ PERL_ARCHIVE_AFTER =
 TO_INST_PM = lib/Biblio/SIP2/Client.pm \
 	lib/Biblio/sip2.class.php
 
-PM_TO_BLIB = lib/Biblio/SIP2/Client.pm \
-	blib/lib/Biblio/SIP2/Client.pm \
-	lib/Biblio/sip2.class.php \
-	blib/lib/Biblio/sip2.class.php
+PM_TO_BLIB = lib/Biblio/sip2.class.php \
+	blib/lib/Biblio/sip2.class.php \
+	lib/Biblio/SIP2/Client.pm \
+	blib/lib/Biblio/SIP2/Client.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -437,22 +437,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  core.*perl.*.? perlmain.c \
-	  $(BASEEXT).exp tmon.out \
-	  *$(LIB_EXT) core.[0-9][0-9][0-9][0-9] \
-	  perl.exe core.[0-9][0-9][0-9] \
-	  *perl.core pm_to_blib.ts \
-	  core $(BASEEXT).def \
-	  core.[0-9] MYMETA.json \
-	  *$(OBJ_EXT) $(BASEEXT).bso \
-	  $(INST_ARCHAUTODIR)/extralibs.ld so_locations \
-	  MYMETA.yml perl$(EXE_EXT) \
-	  lib$(BASEEXT).def $(BASEEXT).x \
-	  pm_to_blib core.[0-9][0-9] \
-	  $(BOOTSTRAP) perl \
-	  blibdirs.ts mon.out \
-	  core.[0-9][0-9][0-9][0-9][0-9] $(MAKE_APERL_FILE) \
-	  $(INST_ARCHAUTODIR)/extralibs.all 
+	  core.[0-9][0-9][0-9][0-9][0-9] core.[0-9][0-9][0-9] \
+	  perl $(BASEEXT).x \
+	  *$(OBJ_EXT) core.[0-9][0-9][0-9][0-9] \
+	  core.*perl.*.? $(INST_ARCHAUTODIR)/extralibs.all \
+	  $(INST_ARCHAUTODIR)/extralibs.ld blibdirs.ts \
+	  core.[0-9][0-9] $(BOOTSTRAP) \
+	  *perl.core $(BASEEXT).exp \
+	  perl$(EXE_EXT) perl.exe \
+	  $(BASEEXT).bso core.[0-9] \
+	  perlmain.c lib$(BASEEXT).def \
+	  mon.out $(BASEEXT).def \
+	  tmon.out MYMETA.json \
+	  $(MAKE_APERL_FILE) so_locations \
+	  pm_to_blib pm_to_blib.ts \
+	  core MYMETA.yml \
+	  *$(LIB_EXT) 
 	- $(RM_RF) \
 	  blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
@@ -484,7 +484,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) 'configure_requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  ExtUtils::MakeMaker: 0' >> META_new.yml
 	$(NOECHO) $(ECHO) 'dynamic_config: 1' >> META_new.yml
-	$(NOECHO) $(ECHO) 'generated_by: '\''ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'generated_by: '\''ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'license: unknown' >> META_new.yml
 	$(NOECHO) $(ECHO) 'meta-spec:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  url: http://module-build.sourceforge.net/META-spec-v1.4.html' >> META_new.yml
@@ -507,7 +507,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      "unknown"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
 	$(NOECHO) $(ECHO) '   "dynamic_config" : 1,' >> META_new.json
-	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "license" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '      "unknown"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
@@ -822,7 +822,7 @@ ppd :
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Carp::" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="IO::Socket" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Scalar::Util" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.18" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i686-linux-gnu-thread-multi-64int-5.18" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '</SOFTPKG>' >> $(DISTNAME).ppd
@@ -832,8 +832,8 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Biblio/SIP2/Client.pm blib/lib/Biblio/SIP2/Client.pm \
-	  lib/Biblio/sip2.class.php blib/lib/Biblio/sip2.class.php 
+	  lib/Biblio/sip2.class.php blib/lib/Biblio/sip2.class.php \
+	  lib/Biblio/SIP2/Client.pm blib/lib/Biblio/SIP2/Client.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

@@ -38,59 +38,13 @@ if ($href) {
     bail("Library does not support SIP2 authentication");
 }
 
+my $authorized_href;
 my $bsc = Biblio::SIP2::Client->new( %$href );
 $bsc->connect();
-
-# if SIP2 server requires login (untested):
-if ($href->{sip_server_login}) {
-    my $msg = $bsc->msgLogin($href->{sip_server_login},$href->{sip_server_password});
-    my $response = $bsc->get_message( $msg );
-    my $parsed = $bsc->parseLoginResponse( $response );
-
-    if ($parsed->{'fixed'}{'Ok'} == 1) {
-	# good to go
-    } else {
-	# invalid SIP2 server credentials, so bail
-	bail("Library SIP2 server login failed");
-    }
-}
-
-#$bsc->setPatron("20967000590071","3296");
-$bsc->setPatron($query->param('barcode'),$query->param('pin'));
-
-my $msg = $bsc->msgPatronStatusRequest();
-my $response = $bsc->get_message( $msg );
-my $parsed = $bsc->parsePatronStatusResponse( $response );
-#print_parsed_response($parsed);
-
-# BL - valid patron, Y or N
-# CQ - valid password, Y or N
-# AO - institution id eg: "mbw"
-# AA - patron barcode
-# AE - patron name eg:"Christensen, David A."
-# AF - screen message eg: "#Incorrect password."
-
-# Note: don't return the patron name when invalid PIN
-my %authorized = (
-    "validbarcode"  => $parsed->{'variable'}{'BL'} || undef,
-    "validpin"      => $parsed->{'variable'}{'CQ'} || undef,
-    "patronname"    => $parsed->{'variable'}{'CQ'} ? ($parsed->{'variable'}{'CQ'} eq 'Y' ? $parsed->{'variable'}{'AE'} : undef) : undef,
-    "screenmessage" => $parsed->{'variable'}{'AF'} || undef,
-    );
-
-# just for testing:
-#$msg = $bsc->msgPatronInformation( 'none' );
-#$response = $bsc->get_message( $msg );
-#$parsed = $bsc->parsePatronInfoResponse( $response );
-#print_parsed_response($parsed);
-
-$msg = $bsc->msgEndPatronSession();
-$response = $bsc->get_message( $msg );
-$parsed = $bsc->parseEndSessionResponse( $response );
-
+$authorized_href = $bsc->verifyPatron($query->param('barcode'),$query->param('pin'));
 $bsc->disconnect();
 
-print "Content-Type:application/json\n\n" . to_json( { authorized => { %authorized } } );
+print "Content-Type:application/json\n\n" . to_json( { authorized => { %$authorized_href } } );
 
 
 #---------------------------------------------------------------

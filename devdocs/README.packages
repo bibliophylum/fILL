@@ -26,6 +26,7 @@ libdigest-sha-perl
 libjs-jquery
 libjs-jquery-ui
 libtext-unidecode-perl
+libstring-random-perl
 
 See also README.pazpar2 for information on installing IndexData's pazpar2 packages.
 
