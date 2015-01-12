@@ -84,8 +84,8 @@ sub cgiapp_init {
 	STORE          => 'Session',
 	LOGIN_RUNMODE  => 'loginFOO',
 	POST_LOGIN_CALLBACK => \&update_login_date,
-#	POST_LOGIN_RUNMODE => 'search_form',
-	POST_LOGIN_RUNMODE => 'test_form',
+	POST_LOGIN_RUNMODE => 'search_form',
+#	POST_LOGIN_RUNMODE => 'test_form',
 	LOGOUT_RUNMODE => 'logged_out',
 	);
     #publicbase->authen->protected_runmodes(':all');
