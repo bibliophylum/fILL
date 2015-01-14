@@ -16,9 +16,29 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
+	'upload' => 'upload_process',
 	'report_received_cnt' => 'report_received_cnt_process',
 	'report_item_circs'   => 'report_item_circs_process',
 	);
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub upload_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('rotations/admin/upload.tmpl');	
+    $template->param( pagetitle => "Rotations - Upload records",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
 }
 
 #--------------------------------------------------------------------------------
