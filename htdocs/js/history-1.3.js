@@ -192,7 +192,7 @@ function fnFormatDetails( $tbl, nTr )
 }
 
 function dt_init() {
-    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+    var sImageUrl = "/plugins/DataTables-1.10.2/examples/resources/";
 
     oTable_borrowing = $('#datatable_borrowing').dataTable({
         "bJQueryUI": true,
