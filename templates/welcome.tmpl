@@ -8,52 +8,108 @@ $('document').ready(function() {
   // welcome menu doesn't have a submenu, so we set the current tab here.
 
   set_primary_tab("menu_home");
+
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name='libsym'>"},
+            function(data){
+               $("#zPresent").attr("class","zno");
+               $("#zPresent").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               if (data.success == 1) {
+                 $("#zPresent").attr("class","zyes");
+                 $("#zPresent").text("Yes "+String.fromCharCode(10004));
+               }
+
+               $("#zConnect").attr("class","zno");
+               $("#zConnect").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               if (data.zServer_status.connection != null) {
+                 if (data.zServer_status.connection.success != null) {
+                   if (data.zServer_status.connection.success == 1) {
+                     $("#zConnect").attr("class","zyes");
+                     $("#zConnect").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zSearch").attr("class","zno");
+               $("#zSearch").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               if (data.zServer_status.search != null) {
+                 if (data.zServer_status.search.success != null) {
+                   if (data.zServer_status.search.success == 1) {
+                     $("#zSearch").attr("class","zyes");
+                     $("#zSearch").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zRecord").attr("class","zno");
+               $("#zRecord").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               if (data.zServer_status.record != null) {
+                 if (data.zServer_status.record.success != null) {
+                   if (data.zServer_status.record.success == 1) {
+                     $("#zRecord").attr("class","zyes");
+                     $("#zRecord").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+           })
+	.done(function() {
+	    //alert('success!\n'+data);
+	})
+	.fail(function() {
+	    alert('error testing zServer!');
+	})
+	.always(function() {
+            //alert('ajax complete');
+            $("#waitDiv").hide();
+	});
+
 });
 </script>
 <div id="center" role="main">
 
 <div id="main-left" class="tone-box" >
 
-<div class="alert-box" >
-<p>You can now add patron requests to your <a href="/cgi-bin/myaccount.cgi?rm=myaccount_acquisitions_form">'wish list'</a></p>
-</div>
-<hr>
-<div id="zserver">
-<h3>Z Server Status Report</h3>
-  <div id="zstatus">Z Server Present<div id="zresult"><span class="zyes">Yes &#10004;</span></div></div>
-  <div id="zstatus">Able to Connect<div id="zresult"><span class="zyes">Yes &#10004;</span></div></div>
-  <div id="zstatus">Able to Search<div id="zresult"><span class="zyes">Yes &#10004;</span></div></div>
-  <div id="zstatus">Able to Retrieve Record<div id="zresult"><span class="zno">No&nbsp;&nbsp;&nbsp;&#x2717;</span></div></div>
-</div>
-<hr>
-	<h2>Quick Links</h2>
-	<!--
-	<p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
-	<p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
-	-->
+  <div class="alert-box" >
+    <p>You can now add patron requests to your <a href="/cgi-bin/myaccount.cgi?rm=myaccount_acquisitions_form">'wish list'</a></p>
+  </div>
+  <hr>
+  <div id="zserver">
+    <h3>Z Server Status Report</h3>
+    <div id="waitDiv">Checking...<img src="/wait.gif"></div>
+    <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
+    <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
+    <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
+    <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+  </div>
+  <hr>
 
-	<p><strong>Public fILL</strong></p>
-	<ul>
-	<li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
-	<li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
-	<li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
-	</ul>
+  <h2>Quick Links</h2>
+  <!--
+      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+  <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+  -->
 
-	<p><strong>Library fILL</strong></p>
-	<ul>
-	<li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
-	</ul>
-
-	<p><strong>Counting Opinions</strong></p> 	
-	<ul> 	
-	  <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
-	</ul>
+  <p><strong>Public fILL</strong></p>
+  <ul>
+    <li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
+    <li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
+    <li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
+  </ul>
+  
+  <p><strong>Library fILL</strong></p>
+  <ul>
+    <li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
+  </ul>
+  
+  <p><strong>Counting Opinions</strong></p> 	
+  <ul> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
+    <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
+    <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
+  </ul>
 </div>
 
 <div id="main-right" class="tone-box" role="complimentary">

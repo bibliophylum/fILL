@@ -286,7 +286,7 @@ sub admin_test_zserver_process {
     }
 
     my $template = $self->load_tmpl('admin/test_zserver.tmpl');
-    $template->param(pagetitle => 'Maplin-3 Admin Test zServer',
+    $template->param(pagetitle => 'fILL Admin Test zServer',
 		     username => $self->authen->username,
 		     zservers => $ar_conn,
 		     conn => $conn,

@@ -318,7 +318,7 @@ input[type="button"]:hover.small-function-button {
   width: ;
 }
 
-#zstatus {
+.zstatus {
   border: 1px solid #b3b3b3;
   background: #d3d3d3;
   padding: .7em .5em;
@@ -338,6 +338,7 @@ input[type="button"]:hover.small-function-button {
   background-color: #adff2f;
   border: 1px solid green;
   padding: .3em;
+  float: right;
 }
 
 .zno {
@@ -346,6 +347,7 @@ input[type="button"]:hover.small-function-button {
   background-color: #ff6262;
   border: 1px solid #660000;
   padding: .3em;
+  float: right;
 }
 
 /***---End of new library client side CSS--**/
