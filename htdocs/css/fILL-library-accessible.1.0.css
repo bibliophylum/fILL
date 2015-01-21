@@ -310,7 +310,6 @@ input[type="button"]:hover.small-function-button {
   width: 50%;
 }
 
-
 #zserver {
   background-color: #e3e3e3;
   margin: ;
@@ -331,7 +330,7 @@ input[type="button"]:hover.small-function-button {
 #zresult {
   width: auto;
   float: right;
-  padding: .5em;
+  padding: ;
 }
 
 .zyes {
