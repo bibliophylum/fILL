@@ -12,14 +12,14 @@ $('document').ready(function() {
     $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name='libsym'>"},
             function(data){
                $("#zPresent").attr("class","zno");
-               $("#zPresent").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               $("#zPresent").text("No "+String.fromCharCode(10007));
                if (data.success == 1) {
                  $("#zPresent").attr("class","zyes");
                  $("#zPresent").text("Yes "+String.fromCharCode(10004));
                }
 
                $("#zConnect").attr("class","zno");
-               $("#zConnect").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               $("#zConnect").text("No "+String.fromCharCode(10007));
                if (data.zServer_status.connection != null) {
                  if (data.zServer_status.connection.success != null) {
                    if (data.zServer_status.connection.success == 1) {
@@ -30,7 +30,7 @@ $('document').ready(function() {
                }
 
                $("#zSearch").attr("class","zno");
-               $("#zSearch").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               $("#zSearch").text("No "+String.fromCharCode(10007));
                if (data.zServer_status.search != null) {
                  if (data.zServer_status.search.success != null) {
                    if (data.zServer_status.search.success == 1) {
@@ -41,7 +41,7 @@ $('document').ready(function() {
                }
 
                $("#zRecord").attr("class","zno");
-               $("#zRecord").text("No&nbsp;&nbsp;&nbsp;"+String.fromCharCode(2717));
+               $("#zRecord").text("No "+String.fromCharCode(10007));
                if (data.zServer_status.record != null) {
                  if (data.zServer_status.record.success != null) {
                    if (data.zServer_status.record.success == 1) {
@@ -55,7 +55,7 @@ $('document').ready(function() {
 	    //alert('success!\n'+data);
 	})
 	.fail(function() {
-	    alert('error testing zServer!');
+	    //alert('error testing zServer!');
 	})
 	.always(function() {
             //alert('ajax complete');
