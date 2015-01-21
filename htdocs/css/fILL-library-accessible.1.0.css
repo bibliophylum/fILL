@@ -327,10 +327,10 @@ input[type="button"]:hover.small-function-button {
   height: 1.5em;
 }
 
-#zresult {
+zyes, zno {
   width: auto;
   float: right;
-  padding: ;
+  padding: .5em;
 }
 
 .zyes {
