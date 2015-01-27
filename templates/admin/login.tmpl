@@ -1,0 +1,56 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<script type="text/javascript">
+$('document').ready(function(){
+
+    $("#search").hide();
+    $(".inline-items").children().hide();
+//    $(".inline-items").children(":contains('home')").show();
+    $("#fill-button").hide();  // hide the logout button, as it makes no sense here
+    $("#theme1").hide();
+    $("#theme2").hide();
+    $("#theme3").hide();
+    $("#incrFont").hide();
+    $("#decrFont").hide();
+
+});
+</script>
+
+<div id="clear"></div>
+
+   <div class="login">
+
+     <form action="/cgi-bin/admin.cgi" method="post" name="loginform" id="loginform">
+     
+     <fieldset name="login">
+       
+       <legend>Admin Login</legend>
+       <label for="authen_loginfield">User Name</label>
+       <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield"><br/>
+       
+       <label for="authen_passwordfield">Password</label>
+       <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield"><br/>
+       
+       <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield">Remember User Name<br/>
+     </fieldset>
+     
+     <div class="login-footer">
+       <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+     </div>
+     
+   </div>
+   <input type="hidden" value="https://localhost/cgi-bin/admin.cgi?rm=welcome;submit=Log%20in" name="destination">
+   <input type="hidden" value="authen_login" name="rm">
+</form>
+
+<!-- </div> where did this come from? -->
+
+<script type="text/javascript">
+  $('#csstabs').hide();
+</script>
+
+<script type="text/javascript">
+  document.loginform.authen_username.focus();
+</script>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

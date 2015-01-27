@@ -1,0 +1,770 @@
+
+
+*, *:before, *:after {
+}
+
+html, body {
+    background: #FFBF00;
+    color: #fff;
+}
+
+#container {
+  background: #000;
+}
+
+/* unvisted link */
+ a:link {
+	color: #fff;
+}
+
+/* visited link */
+ a:visited {
+	color: #fff;
+}
+
+/* mouse over link */
+ a:hover {
+	color: #FFBF00;
+}
+
+/*focus over link*/
+a:focus {
+	color: #FFBF00;
+}
+
+/*selected link */
+ a:active {
+	color: #fff;
+}
+
+
+
+img 
+{
+}
+
+h1 {
+	color: #ccc;
+}
+
+h2 {
+	color: #ccc;
+}
+
+h3 {
+	color: #ccc;
+}
+
+#container
+{
+}
+
+/**HEADER STYLES**/
+
+header {
+}
+
+#header-left {
+}
+
+#header-right {
+}
+
+#fill-logo {
+}
+
+#fill-tagline 
+{
+	color: #ccc;
+}
+
+#logout-button {
+    color: #000;
+}
+
+#patron-info {
+    color: #ccc;
+}
+
+nav
+{
+}
+
+nav ul
+{
+}
+
+nav ul li
+{
+}
+
+nav li a
+{
+}
+
+#pub-nav-primary {
+	border-bottom: #FFBF00 solid 5px;
+}
+
+/* #pub-nav-primaryigation link states */
+/* unvisted link */
+#pub-nav-primary li a:link {
+ 	background: #fff;
+	color: #000;
+}
+/* visited link */
+#pub-nav-primary li a:visited {
+	background: #fff;
+	color: #000;
+}
+/* mouse over link */
+#pub-nav-primary li a:hover { 
+	background: #FFBF00; 
+	color: #fff;
+}
+/*selected link */
+#pub-nav-primary li a:active {
+	background: #fff;
+	color: #fff;
+}
+
+/* focus over link */
+#pub-nav-primary li a:focus { 
+	background: #FFBF00; 
+	color: #fff;
+}
+
+#pub-nav-primary li a.current_tab {
+	background: #FFBF00; 
+	color: #fff;
+}
+#search-container {
+}
+
+#search
+{
+  	border-bottom: 5px solid #e3e3e3;
+}
+
+#main
+{
+}
+
+#aside
+{
+}
+
+#aside img {
+}
+
+#progress_empty {
+	background-color:#FFBF00;
+	border:1px solid #fff;
+}
+#progress_filler {
+	background-color:#fff;
+}
+
+
+#main-info-left
+{
+}
+
+#main-info-right
+{
+}
+
+#aside-img-welcome {
+}
+
+#main-info-welcome 
+{
+}
+
+#aside-img-right
+{
+}
+
+#aside-img-left
+{
+}
+
+.tone-box 
+{
+	background: #2a2a2a;
+	border: 2px solid  #ccc;
+}
+
+.lighter-box {
+}
+
+.covers {
+	border: 3px solid #FFBF00;
+}
+.covers:hover {
+	border: 3px dashed #fff; 
+}
+
+.covers:focus {
+	border: 3px dashed #fff; 
+}
+
+footer
+{
+	border-top: 3px solid #FFBF00;
+	background: #000;
+}
+/*--Button and input styles--*/
+
+label {
+  color: #fff;
+}
+
+input[type=text]
+{
+    background-color: #fff;
+    border: 2px #fff solid;
+}
+
+input[type=password]
+{
+    background-color: #fff;
+    border: 2px #fff solid;
+}
+
+input[type=submit]
+{
+    color: #fff;
+}
+
+input[type=submit]:hover
+{
+	background-color: #FFBF00;
+	color: #fff;
+}
+
+input[type=button]
+{
+    background-color: #fff;
+    color: #000;
+}
+
+input[type=button]:hover
+{
+	background-color: #FFBF00;
+	color: #fff;
+}
+
+input[type=submit]:focus
+{
+	background-color: #FFBF00;
+	color: #fff;
+}
+
+
+input[type=text], input[type=password]
+{
+}
+
+.public-style {
+    background-color: #fff;
+    color: #000;
+}
+
+.library-style {
+    background-color: #fff;
+    color: #000;
+}
+
+#fill-button {
+    color: #000;
+}
+
+#fill-button:hover {
+    background: #FFBF00;
+}
+
+#fill-button:focus {
+    background: #FFBF00;
+}
+
+#butlink {
+	color: #fff !important;
+}
+
+#butlink:link {
+	color: #fff;
+}
+
+#butlink:visited {
+}
+
+#butlink:hover {
+	background-color: #FFBF00;
+	border: 1px solid #FFBF00;
+}
+
+#butlink:focus {
+	background-color: #FFBF00;
+	border: 1px solid #FFBF00;
+}
+
+#butlink:active {
+}
+
+button {
+	color: #000 !important;
+}
+
+.button-left:link {
+	color: #000 !important;
+}
+
+.button-left:hover {
+	background-color: #FFBF00;
+
+}
+
+.button-left:focus {
+	background-color: #FFBF00;
+}
+
+.button-right {
+	color: #000 !important;
+}
+
+.tone-box.button-left {
+}
+
+/*discontinued for text based fill logo
+.fill {
+	color:#fff; 
+}*/
+
+.fill-info 
+{
+	background: red;/*dev test remove later*/
+}
+
+/* Search page / search results */
+div.termtitle {
+}
+
+
+
+/*** FILL #fill-table STYLES **/
+
+#fill-table {
+	background: #e3e3e3;
+	border: 2px solid #fff;
+	color: #FFBF00;
+}
+
+#fill-table td {
+}
+
+#fill-table th {
+}
+
+#fill-table td, #fill-table th {
+  border: 1px solid #fff;
+}
+#fill-table tr:first-child th {
+}
+#fill-table tr:last-child td {
+}
+#fill-table tr td:first-child,
+#fill-table tr th:first-child {
+}
+#fill-table tr td:last-child,
+#fill-table tr th:last-child {
+}
+
+.table-width-pub {
+}
+
+.bison 
+{
+}
+
+#bison-container {
+    background-color: #fff;
+}
+
+.note {
+    color: #fff;
+}
+
+.indent {
+    color: #FFBF00;
+}
+
+#clear {
+}
+
+.fill-help {
+}
+
+/*------------login styles---------------------------------*/
+
+.login {
+}
+
+.login-content {
+  border-bottom: 5px solid #FFBF00;
+  background: #e3e3e3;
+}
+
+.login p {
+}
+
+.login-header {
+  background-color: #fff;
+}
+
+.login-header-title {
+  color: #fff;
+}
+
+.login-footer {
+}
+
+fieldset input {
+}
+
+fieldset input span {
+}
+
+div.login fieldset {
+}
+
+div.login label {
+}
+
+div.login input {
+}
+
+#divChangePass { 
+    background: #FFBF00;
+    border: 2px solid #FFBF00;
+    color: #FFBF00;
+}
+
+/*-------SEARCH RESULTS STYLES-----------------*/
+
+.record {
+    margin-bottom: 1em;
+}
+
+#reqeust_form_div {
+    float: left;
+    clear: left;
+}
+
+.primary_info {
+    background-color: #e3e3e3;
+    border: 2px solid #fff;
+}
+
+.details {
+    border-top: 1px solid #fff; 
+    border-bottom: 1px solid #ffffff;
+    background-color: #FFBF00; 
+}
+
+.secondary_info {
+    background-color: #FFBF00; 
+    color: #FFBF00;
+}
+
+#pager {
+    color: #FFBF00;
+}
+
+/*------------------------------------------------------*/
+/* from Ohio Web Library */
+#progress_empty {
+}
+
+#progress_filler {
+}
+
+#stat {
+}
+/*------------------------------------------------------*/
+/*Mobile styles. The site is generally responsive, however not great on smaller phone screen. These styles will address this*/
+@-ms-viewport {
+    width: device-width;
+}
+
+@media screen 
+and (max-width : 65em) 
+{
+
+    #container
+    {
+    }
+
+    button {
+    }	
+
+    #header-left {
+    }
+
+    #header-right {
+    }
+
+    nav li a
+    {
+    }
+
+    input[type=text]
+    {
+	background-color: #fff;
+	border:solid 1px #FFBF00;
+	border: 2px #fff solid;
+    }
+
+
+
+    #search-container {
+    }
+
+    .login {
+    }
+
+    #main
+    {
+    }
+
+    #aside
+    {
+    }
+
+    #main-info-left
+    {
+    }
+
+    #main-info-right
+    {
+    }
+
+    #aside-img-welcome {
+    }
+    
+    #main-info-welcome 
+    {
+    }
+
+    #welcome-box {
+    }
+
+    #aside-img-right
+    {
+    }
+
+    #aside-img-left
+    {
+    }
+
+    footer {
+    }
+
+    .record {
+    }
+    .record
+    .primary_info {
+    }
+
+    .secondary_info {
+    }
+
+} /* end of @media */
+
+
+/*----------------------------------------------------------
+  From fILL-library-accessible.1.0.css
+----------------------------------------------------------*/
+#header.header-library {
+	background-color: #c5a4a4;
+}
+
+#main-left {
+}
+
+#main-right {
+}
+
+#lib-nav-primary
+{
+  border-bottom: #FFBF00 solid 5px;
+  border-width: auto;
+}
+
+#lib-nav-primary ul
+{
+}
+
+/* #lib-navigation link states */
+/* unvisted link */
+#lib-nav-primary li a:link {
+  background: #fff;
+  color: #000;
+}
+/* visited link */
+#lib-nav-primary li a:visited {
+  background: #fff;
+  color: #000;
+}
+/* mouse over link */
+#lib-nav-primary li a:hover { 
+  background: #FFBF00; 
+  color: #fff;
+}
+/*selected link */
+#lib-nav-primary li a:active {
+  background: #FFBF00;
+  color: #fff;
+}
+
+/* focus over link */
+#lib-nav-primary li a:focus { 
+  background: #FFBF00; 
+  color: #fff;
+}
+
+#lib-nav-primary li a.current_tab {
+  background: #FFBF00; 
+  color: #fff;
+}
+
+#csssubmenu 
+{
+  background-color: #FFBF00;
+  width: auto;
+}
+
+#csssubmenu ul
+{
+}
+
+#csssubmenu ul li
+{
+}
+
+#csssubmenu li a
+{
+}
+
+/* #lib-Navigation link states */
+/* unvisted link */
+#csssubmenu li a:link {
+  background: #fff;
+  color: #000;
+}
+/* visited link */
+#csssubmenu li a:visited {
+  background: #fff;
+  color: #000;
+}
+/* mouse over link */
+#csssubmenu li a:hover { 
+  background: #000; 
+  color: #fff;
+}
+/*selected link */
+#csssubmenu li a:active {
+  background: #fff;
+  color: #fff;
+}
+
+/* focus over link */
+#csssubmenu li a:focus { 
+  background: #000; 
+  color: #fff;
+}
+
+#csssubmenu li.current_tab a
+{
+    color: #fff ;
+    background-color: #000 ;
+}
+
+#instructions {
+}
+
+/* Circle has been created to highlight alerts */
+
+.circle {
+  color: #000;
+  background-color: #fff;
+  box-shadow: 2px 2px 2px #000;
+}
+
+#center {
+}
+
+.table-width-lib {
+}
+
+/*-- specific to make_request.tmp --*/
+#toptwo {
+    background-color: #b8ffb8;  /* apply bg to containing div */
+}
+
+#midleft {
+}
+
+#midright {
+    background-color: #ffcccc;
+}
+
+#midfooter {
+}
+/* end of "From fILL-library-accessible.1.0.css" */
+
+
+/* action button styles for data table buttons */
+input[type="button"].action-button, button.action-button {
+    background-color: #7a7669;
+    color: #fff;
+}
+input[type="button"]:hover.action-button, button:hover.action-button {
+    background-color: #a9a28b;
+    color: #fff;
+}
+input[type="button"]:disabled.action-button, button:disabled.action-button {
+    background-color: #69614a;
+    color: #fff;
+}
+input[type="button"].action-button-highlighted, button.action-button-highlighted {
+    background-color: #7a5f04;
+    color: #fff;
+}
+input[type="button"]:hover.action-button-highlighted, button:hover.action-button-highlighted {
+    background-color: #BA9D3C;
+    color: #fff;
+}
+
+/* overrides button styles get overrun by jquery-ui styles... the background-image: none
+   is important.... */
+#overrides-list tbody tr td button.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #7a7669;
+    color: #fff;
+    background-image: none;
+}
+#overrides-list tbody tr td button:hover.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #a9a28b;
+    color: #fff;
+    background-image: none;
+}
+
+
+.dataTable th {
+    background-color: #FFBF00;
+    color: #fff;
+}
+.dataTable td {
+    background-color: #424242;
+    color: #fff;
+}
