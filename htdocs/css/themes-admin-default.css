@@ -3,56 +3,53 @@
 *, *:before, *:after {
 }
 
-html, body {
-    background: #FFBF00;
-    color: #fff;
-}
-
-#container {
-  background: #000;
-}
-
 /* unvisted link */
  a:link {
-	color: #fff;
+	color: #000;
 }
 
 /* visited link */
  a:visited {
-	color: #fff;
+	color: #000;
 }
 
 /* mouse over link */
  a:hover {
-	color: #FFBF00;
+	color: #0f4072;
 }
 
 /*focus over link*/
 a:focus {
-	color: #FFBF00;
+	color: #0f4072;
 }
 
 /*selected link */
  a:active {
-	color: #fff;
+	color: #000;
 }
 
+html, body {
+    background: #fcf283;
+}
 
+#container {
+  background: #f3f3f3;
+}
 
 img 
 {
 }
 
 h1 {
-	color: #ccc;
+	color: #183935;
 }
 
 h2 {
-	color: #ccc;
+	color: #183935;
 }
 
 h3 {
-	color: #ccc;
+	color: #183935;
 }
 
 #container
@@ -75,15 +72,15 @@ header {
 
 #fill-tagline 
 {
-	color: #ccc;
+	color: #505050;
 }
 
 #logout-button {
-    color: #000;
+    color: #fff;
 }
 
 #patron-info {
-    color: #ccc;
+    color: #505050;
 }
 
 nav
@@ -103,39 +100,39 @@ nav li a
 }
 
 #pub-nav-primary {
-	border-bottom: #FFBF00 solid 5px;
+	border-bottom: #06a0ca solid 5px;
 }
 
 /* #pub-nav-primaryigation link states */
 /* unvisted link */
 #pub-nav-primary li a:link {
- 	background: #fff;
-	color: #000;
+ 	background: #183935;/*Main dark green colour*/
+	color: #fff;
 }
 /* visited link */
 #pub-nav-primary li a:visited {
-	background: #fff;
-	color: #000;
+	background: #183935;
+	color: #fff;
 }
 /* mouse over link */
 #pub-nav-primary li a:hover { 
-	background: #FFBF00; 
+	background: #06a0ca; 
 	color: #fff;
 }
 /*selected link */
 #pub-nav-primary li a:active {
-	background: #fff;
+	background: #183935;
 	color: #fff;
 }
 
 /* focus over link */
 #pub-nav-primary li a:focus { 
-	background: #FFBF00; 
+	background: #06a0ca; 
 	color: #fff;
 }
 
 #pub-nav-primary li a.current_tab {
-	background: #FFBF00; 
+	background: #06a0ca; 
 	color: #fff;
 }
 #search-container {
@@ -158,11 +155,11 @@ nav li a
 }
 
 #progress_empty {
-	background-color:#FFBF00;
-	border:1px solid #fff;
+	background-color:#f3f3f3;
+	border:1px solid #b3b3b3;
 }
 #progress_filler {
-	background-color:#fff;
+	background-color:#b3b3b3;
 }
 
 
@@ -191,45 +188,41 @@ nav li a
 
 .tone-box 
 {
-	background: #2a2a2a;
-	border: 2px solid  #ccc;
+	background: #e3e3e3;
+	border-bottom: 3px solid  #b3b3b3;
 }
 
 .lighter-box {
 }
 
 .covers {
-	border: 3px solid #FFBF00;
+	border: 3px solid #e3e3e3;
 }
 .covers:hover {
-	border: 3px dashed #fff; 
+	border: 3px dashed #c0c0c0; 
 }
 
 .covers:focus {
-	border: 3px dashed #fff; 
+	border: 3px dashed #c0c0c0; 
 }
 
 footer
 {
-	border-top: 3px solid #FFBF00;
-	background: #000;
+	border-bottom: 3px solid #aabdba;
+	background: #d9efec;
 }
 /*--Button and input styles--*/
-
-label {
-  color: #fff;
-}
 
 input[type=text]
 {
     background-color: #fff;
-    border: 2px #fff solid;
+    border: 2px #c3c3c3 solid;
 }
 
 input[type=password]
 {
     background-color: #fff;
-    border: 2px #fff solid;
+    border: 2px #c3c3c3 solid;
 }
 
 input[type=submit]
@@ -239,25 +232,25 @@ input[type=submit]
 
 input[type=submit]:hover
 {
-	background-color: #FFBF00;
+	background-color: #06a0ca;
 	color: #fff;
 }
 
 input[type=button]
 {
-    background-color: #fff;
-    color: #000;
+  background-color: #0f4072;
+  color: #fff;
 }
 
 input[type=button]:hover
 {
-	background-color: #FFBF00;
-	color: #fff;
+  background-color: #06a0ca;
+  color: #fff;
 }
 
 input[type=submit]:focus
 {
-	background-color: #FFBF00;
+	background-color: #06a0ca;
 	color: #fff;
 }
 
@@ -267,25 +260,25 @@ input[type=text], input[type=password]
 }
 
 .public-style {
-    background-color: #fff;
-    color: #000;
+    background-color: #183935;
+    color: #fff;
 }
 
 .library-style {
-    background-color: #fff;
-    color: #000;
+    background-color: #0f4072;
+    color: #fff;
 }
 
 #fill-button {
-    color: #000;
+    color: #fff;
 }
 
 #fill-button:hover {
-    background: #FFBF00;
+    background: #06a0ca;
 }
 
 #fill-button:focus {
-    background: #FFBF00;
+    background: #06a0ca;
 }
 
 #butlink {
@@ -300,37 +293,37 @@ input[type=text], input[type=password]
 }
 
 #butlink:hover {
-	background-color: #FFBF00;
-	border: 1px solid #FFBF00;
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
 }
 
 #butlink:focus {
-	background-color: #FFBF00;
-	border: 1px solid #FFBF00;
+	background-color: #06a0ca;
+	border: 1px solid #06a0ca;
 }
 
 #butlink:active {
 }
 
 button {
-	color: #000 !important;
+	color: #fff !important;
 }
 
 .button-left:link {
-	color: #000 !important;
+	color: #fff !important;
 }
 
 .button-left:hover {
-	background-color: #FFBF00;
+	background-color: #06a0ca;
 
 }
 
 .button-left:focus {
-	background-color: #FFBF00;
+	background-color: #06a0ca;
 }
 
 .button-right {
-	color: #000 !important;
+	color: #fff !important;
 }
 
 .tone-box.button-left {
@@ -356,8 +349,8 @@ div.termtitle {
 
 #fill-table {
 	background: #e3e3e3;
-	border: 2px solid #fff;
-	color: #FFBF00;
+	border: 2px solid #b3b3b3;
+	color: #505050;
 }
 
 #fill-table td {
@@ -392,11 +385,11 @@ div.termtitle {
 }
 
 .note {
-    color: #fff;
+    color: #b3b3b3;
 }
 
 .indent {
-    color: #FFBF00;
+    color: #505050;
 }
 
 #clear {
@@ -411,7 +404,7 @@ div.termtitle {
 }
 
 .login-content {
-  border-bottom: 5px solid #FFBF00;
+  border-bottom: 5px solid #b3b3b3;
   background: #e3e3e3;
 }
 
@@ -419,11 +412,11 @@ div.termtitle {
 }
 
 .login-header {
-  background-color: #fff;
+  background-color: #183935;
 }
 
 .login-header-title {
-  color: #fff;
+  color: #000;
 }
 
 .login-footer {
@@ -445,9 +438,9 @@ div.login input {
 }
 
 #divChangePass { 
-    background: #FFBF00;
-    border: 2px solid #FFBF00;
-    color: #FFBF00;
+    background: #f3f3f3;
+    border: 2px solid #505050;
+    color: #505050;
 }
 
 /*-------SEARCH RESULTS STYLES-----------------*/
@@ -463,22 +456,22 @@ div.login input {
 
 .primary_info {
     background-color: #e3e3e3;
-    border: 2px solid #fff;
+    border: 2px solid #b3b3b3;
 }
 
 .details {
-    border-top: 1px solid #fff; 
+    border-top: 1px solid #b3b3b3; 
     border-bottom: 1px solid #ffffff;
-    background-color: #FFBF00; 
+    background-color: #f3f3f3; 
 }
 
 .secondary_info {
-    background-color: #FFBF00; 
-    color: #FFBF00;
+    background-color: #f3f3f3; 
+    color: #505050;
 }
 
 #pager {
-    color: #FFBF00;
+    color: #183935;
 }
 
 /*------------------------------------------------------*/
@@ -521,61 +514,59 @@ and (max-width : 65em)
     input[type=text]
     {
 	background-color: #fff;
-	border:solid 1px #FFBF00;
-	border: 2px #fff solid;
+	border:solid 1px #505050;
+	border: 2px #c3c3c3 solid;
     }
-
-
-
+    
     #search-container {
     }
-
+    
     .login {
     }
-
+    
     #main
     {
     }
-
+    
     #aside
     {
     }
-
+    
     #main-info-left
     {
     }
-
+    
     #main-info-right
     {
     }
-
+    
     #aside-img-welcome {
     }
     
     #main-info-welcome 
     {
     }
-
+    
     #welcome-box {
     }
-
+    
     #aside-img-right
     {
     }
-
+    
     #aside-img-left
     {
     }
-
+    
     footer {
     }
-
+    
     .record {
     }
-    .record
+    .record 
     .primary_info {
     }
-
+    
     .secondary_info {
     }
 
@@ -586,7 +577,7 @@ and (max-width : 65em)
   From fILL-library-accessible.1.0.css
 ----------------------------------------------------------*/
 #header.header-library {
-	background-color: #c5a4a4;
+	background-color: #a2aac4;
 }
 
 #main-left {
@@ -597,8 +588,8 @@ and (max-width : 65em)
 
 #lib-nav-primary
 {
-  border-bottom: #FFBF00 solid 5px;
-  border-width: auto;
+/*  background-color: ; */ /* was not set in original... */
+  border-bottom: #6a99c9 solid 5px;
 }
 
 #lib-nav-primary ul
@@ -608,40 +599,39 @@ and (max-width : 65em)
 /* #lib-navigation link states */
 /* unvisted link */
 #lib-nav-primary li a:link {
-  background: #fff;
-  color: #000;
+  background: #0f4072;/*main dark blue colour*/
+  color: #fff;
 }
 /* visited link */
 #lib-nav-primary li a:visited {
-  background: #fff;
-  color: #000;
+  background: #0f4072;
+  color: #fff;
 }
 /* mouse over link */
 #lib-nav-primary li a:hover { 
-  background: #FFBF00; 
+  background: #6a99c9; 
   color: #fff;
 }
 /*selected link */
 #lib-nav-primary li a:active {
-  background: #FFBF00;
+  background: #6a99c9;
   color: #fff;
 }
 
 /* focus over link */
 #lib-nav-primary li a:focus { 
-  background: #FFBF00; 
+  background: #6a99c9; 
   color: #fff;
 }
 
 #lib-nav-primary li a.current_tab {
-  background: #FFBF00; 
+  background: #6a99c9; 
   color: #fff;
 }
 
 #csssubmenu 
 {
-  background-color: #FFBF00;
-  width: auto;
+  background-color: #6b99cc;
 }
 
 #csssubmenu ul
@@ -659,35 +649,35 @@ and (max-width : 65em)
 /* #lib-Navigation link states */
 /* unvisted link */
 #csssubmenu li a:link {
-  background: #fff;
-  color: #000;
+  background: #0f4072;
+  color: #fff;
 }
 /* visited link */
 #csssubmenu li a:visited {
-  background: #fff;
-  color: #000;
+  background: #0f4072;
+  color: #fff;
 }
 /* mouse over link */
 #csssubmenu li a:hover { 
-  background: #000; 
-  color: #fff;
+  background: #f3f3f3; 
+  color: #505050;
 }
 /*selected link */
 #csssubmenu li a:active {
-  background: #fff;
+  background: #0f4072;
   color: #fff;
 }
 
 /* focus over link */
 #csssubmenu li a:focus { 
-  background: #000; 
+  background: #0f4072; 
   color: #fff;
 }
 
 #csssubmenu li.current_tab a
 {
-    color: #fff ;
-    background-color: #000 ;
+    color: #000 ;
+    background-color: #f3f3f3 ;
 }
 
 #instructions {
@@ -696,8 +686,8 @@ and (max-width : 65em)
 /* Circle has been created to highlight alerts */
 
 .circle {
-  color: #000;
-  background-color: #fff;
+  color: #fff;
+  background-color: #ff0000;
   box-shadow: 2px 2px 2px #000;
 }
 
@@ -709,14 +699,15 @@ and (max-width : 65em)
 
 /*-- specific to make_request.tmp --*/
 #toptwo {
-    background-color: #b8ffb8;  /* apply bg to containing div */
+/*    background-color: #b8ffb8;  /* apply bg to containing div */
+    background-color: #b0b6ff;  /* apply bg to containing div */
 }
 
 #midleft {
 }
 
 #midright {
-    background-color: #ffcccc;
+    background-color: #c2c6ff;
 }
 
 #midfooter {
@@ -726,45 +717,56 @@ and (max-width : 65em)
 
 /* action button styles for data table buttons */
 input[type="button"].action-button, button.action-button {
-    background-color: #7a7669;
+    background-color: #084B8A;
     color: #fff;
 }
 input[type="button"]:hover.action-button, button:hover.action-button {
-    background-color: #a9a28b;
+    background-color: #6391bb;
     color: #fff;
 }
 input[type="button"]:disabled.action-button, button:disabled.action-button {
-    background-color: #69614a;
-    color: #fff;
+    background-color: #b0b8bf;
+    color: #000;
 }
 input[type="button"].action-button-highlighted, button.action-button-highlighted {
-    background-color: #7a5f04;
+    background-color: #8f1212;
     color: #fff;
 }
 input[type="button"]:hover.action-button-highlighted, button:hover.action-button-highlighted {
-    background-color: #BA9D3C;
+    background-color: #b06262;
     color: #fff;
 }
 
+/* test */
 /* overrides button styles get overrun by jquery-ui styles... the background-image: none
    is important.... */
+/*
+#overrides-list button:hover .override-button {
+    background-color: #6391bb;
+    color: #fff;
+}
+*/
+
+/* works... but ugly:
+html body.example_alt_pagination div#container div#center div#tabs.ui-tabs.ui-widget.ui-widget-content.ui-corner-all div#tabs-1.ui-tabs-panel.ui-widget-content.ui-corner-bottom div#datatable_borrowing_wrapper.dataTables_wrapper table#datatable_borrowing.dataTable tbody tr.details td.details div.innerDetails table#overrides-list tbody tr td button#bReceive.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #084B8A;
+    color: #fff;
+}
+*/
+
+/* better...
+#overrides-list tbody tr td button#bReceive.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
+    background-color: #084B8A;
+    color: #fff;
+}
+*/
 #overrides-list tbody tr td button.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
-    background-color: #7a7669;
+    background-color: #0f4072;
     color: #fff;
     background-image: none;
 }
 #overrides-list tbody tr td button:hover.override-button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only {
-    background-color: #a9a28b;
+    background-color: #6391bb;
     color: #fff;
     background-image: none;
-}
-
-
-.dataTable th {
-    background-color: #FFBF00;
-    color: #fff;
-}
-.dataTable td {
-    background-color: #424242;
-    color: #fff;
 }
