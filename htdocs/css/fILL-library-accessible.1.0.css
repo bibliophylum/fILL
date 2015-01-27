@@ -310,7 +310,6 @@ input[type="button"]:hover.small-function-button {
   width: 50%;
 }
 
-
 #zserver {
   background-color: #e3e3e3;
   margin: ;
@@ -325,16 +324,18 @@ input[type="button"]:hover.small-function-button {
   font-size: 1em;
   font-style: bold;
   margin: .5em 0em;
+  height: 3em;
 }
 
-#zresult {
+zyes, zno {
   width: auto;
   float: right;
+  padding: .5em;
 }
 
 .zyes {
   width: 30%;
-  color: green;
+  color: #000;
   background-color: #adff2f;
   border: 1px solid green;
   padding: .3em;
@@ -343,7 +344,7 @@ input[type="button"]:hover.small-function-button {
 
 .zno {
   width: 30%;
-  color: #660000;
+  color: #000;
   background-color: #ff6262;
   border: 1px solid #660000;
   padding: .3em;
