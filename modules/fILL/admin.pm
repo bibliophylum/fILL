@@ -32,20 +32,22 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'some_admin_form'         => 'some_admin_process',
+	'test_zserver'         => 'test_zserver_process',
 	);
 }
 
 #--------------------------------------------------------------------------------
 #
 #
-sub some_admin_process {
+sub test_zserver_process {
     my $self = shift;
     my $q = $self->query;
 
-    my $template = $self->load_tmpl('admin/admin.tmpl');	
-    $template->param( pagetitle => "Some admin page",
-		      username => $self->authen->username,
+    my $libraries_aref = $self->dbh->selectall_arrayref("select name,library from libraries order by library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/test-zserver.tmpl');	
+    $template->param( pagetitle => "Test zServer",
+		      library_list => $libraries_aref
 	);
     return $template->output;
     
