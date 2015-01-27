@@ -36,7 +36,8 @@ my $result_href = { "success" => 0,
 		    "log" => "",
 };
 
-my @SpruceLibraries = qw(MS MBOM MVE ME MMCA MDB MSOG MMA MPLP MWOW MMOW MAOW MMIOW MSTR MSTOS MTSIR MWPL);
+#my @SpruceLibraries = qw(MS MBOM MVE ME MMCA MDB MSOG MMA MPLP MWOW MMOW MAOW MMIOW MSTR MSTOS MTSIR MWPL);
+my @SpruceLibraries = qw(MWPL MAOW MMIOW MMOW MWOW MBOM MMA MSTR AB MWP MSTOS MTSIR MMCA MVE ME MS MSOG MDB MPLP MSSC MEC MNH MSRH MTK MTPK MWMW MRD MBI MSCL);
 
 if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # pre-Perl 5.10, you'd have to use something like (untested):
