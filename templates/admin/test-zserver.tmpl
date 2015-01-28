@@ -18,7 +18,7 @@ $('document').ready(function() {
     $("#libtotest").text( $(this).val() );
     $("#waitDiv").show();
     $(".zstatus").hide();
-    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', { libsym: $(this).val() },
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', { libsym: $(this).val(), log: 1 },
             function(data){
                $(".zstatus").show();
                $("#zPresent").attr("class","zno");
@@ -60,6 +60,9 @@ $('document').ready(function() {
                    }
                  }
                }
+
+               //data.log = data.log.replace(/\n/g,"<br />");
+               $("#log").text( data.log );
            })
 	.done(function() {
 	    //alert('success!\n'+data);
@@ -118,6 +121,11 @@ $('document').ready(function() {
     <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
     <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
     <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+  </div>
+
+  <div>
+    <p>Log:</p>
+    <pre id="log"></pre>
   </div>
 </div>
 

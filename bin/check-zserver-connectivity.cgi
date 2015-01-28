@@ -57,6 +57,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     }
     $result_href->{libsym} = $libsym;
 
+    # see if that symbol shows up in any of the pazpar2/settings/ files:
     my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
     my @f = `$cmd`;
 
