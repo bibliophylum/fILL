@@ -1,0 +1,108 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<script language="javascript">
+
+$('document').ready(function() {
+
+  // Most primary tabs are set as the current tab in the submenu_xxxxx.
+  // welcome menu doesn't have a submenu, so we set the current tab here.
+
+  set_primary_tab("menu_test_zserver");
+
+  $(".zstatus").hide();
+
+  $(".action-button").on("click",function(){
+    $("#libtotest").text( $(this).val() );
+    $("#waitDiv").show();
+    $(".zstatus").hide();
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', { libsym: $(this).val() },
+            function(data){
+               $(".zstatus").show();
+               $("#zPresent").attr("class","zno");
+               $("#zPresent").text("No "+String.fromCharCode(10007));
+               if (data.success == 1) {
+                 $("#zPresent").attr("class","zyes");
+                 $("#zPresent").text("Yes "+String.fromCharCode(10004));
+               }
+
+               $("#zConnect").attr("class","zno");
+               $("#zConnect").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.connection != null) {
+                 if (data.zServer_status.connection.success != null) {
+                   if (data.zServer_status.connection.success == 1) {
+                     $("#zConnect").attr("class","zyes");
+                     $("#zConnect").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zSearch").attr("class","zno");
+               $("#zSearch").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.search != null) {
+                 if (data.zServer_status.search.success != null) {
+                   if (data.zServer_status.search.success == 1) {
+                     $("#zSearch").attr("class","zyes");
+                     $("#zSearch").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zRecord").attr("class","zno");
+               $("#zRecord").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.record != null) {
+                 if (data.zServer_status.record.success != null) {
+                   if (data.zServer_status.record.success == 1) {
+                     $("#zRecord").attr("class","zyes");
+                     $("#zRecord").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+           })
+	.done(function() {
+	    //alert('success!\n'+data);
+	})
+	.fail(function() {
+	    //alert('error testing zServer!');
+	})
+	.always(function() {
+            //alert('ajax complete');
+            $("#waitDiv").hide();
+	});
+  });
+});
+</script>
+
+<div id="center" role="main">
+
+<div id="main-left">
+  <table id="libraries" class="row-border">
+    <thead>
+      <tr><th>Symbol</th><th>Library</th>
+    </thead>
+    <tbody>
+      <TMPL_LOOP name="library_list">
+	<tr>
+	  <td>
+	    <input type="button" class="action-button" value=<TMPL_VAR NAME="name" />
+	  </td>
+	  <td><TMPL_VAR NAME="library"></td>
+	</tr>
+      </TMPL_LOOP>
+    </tbody>
+  </table>
+</div>
+
+<div id="main-right">
+  <p id="libtotest">Choose a library...</p>
+  <div id="zserver">
+    <a href="https://mintaka.gotdns.org/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form"><h3>Z Server Status Check</h3></a>
+    <div id="waitDiv">Checking...<img src="/wait.gif"></div>
+    <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
+    <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
+    <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
+    <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+  </div>
+</div>
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">
