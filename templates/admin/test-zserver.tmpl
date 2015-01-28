@@ -1,5 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
+<script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+
 <script language="javascript">
 
 $('document').ready(function() {
@@ -10,6 +12,7 @@ $('document').ready(function() {
   set_primary_tab("menu_test_zserver");
 
   $(".zstatus").hide();
+  $("#waitDiv").hide();
 
   $(".action-button").on("click",function(){
     $("#libtotest").text( $(this).val() );
@@ -69,27 +72,41 @@ $('document').ready(function() {
             $("#waitDiv").hide();
 	});
   });
+
+
+  $("#scrolling-table").slimScroll({
+    height: '350px',
+    alwaysVisible: true,
+    railVisible: true,
+    wheelStep: 1,
+    allowPageScroll: false,
+    disableFadeOut: false,
+    scrollBy: '10px'
+  });
+
 });
 </script>
 
 <div id="center" role="main">
 
 <div id="main-left">
-  <table id="libraries" class="row-border">
-    <thead>
-      <tr><th>Symbol</th><th>Library</th>
-    </thead>
-    <tbody>
-      <TMPL_LOOP name="library_list">
-	<tr>
-	  <td>
-	    <input type="button" class="action-button" value=<TMPL_VAR NAME="name" />
-	  </td>
-	  <td><TMPL_VAR NAME="library"></td>
-	</tr>
-      </TMPL_LOOP>
-    </tbody>
-  </table>
+  <div id="scrolling-table">
+    <table id="libraries" class="row-border">
+      <thead>
+	<tr><th>Symbol</th><th>Library</th>
+      </thead>
+      <tbody>
+	<TMPL_LOOP name="library_list">
+	  <tr>
+	    <td>
+	      <input type="button" class="action-button" value=<TMPL_VAR NAME="name" />
+		     </td>
+	    <td><TMPL_VAR NAME="library"></td>
+	  </tr>
+	</TMPL_LOOP>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div id="main-right">

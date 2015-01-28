@@ -37,6 +37,8 @@ my $result_href = { "success" => 0,
 };
 
 my @SpruceLibraries = qw(MWPL MAOW MMIOW MMOW MWOW MBOM MMA MSTR AB MWP MSTOS MTSIR MMCA MVE ME MS MSOG MDB MPLP MSSC MEC MNH MSRH MTK MTPK MWMW MRD MBI MSCL);
+my @ParklandLibraries = qw(MDPGL MDPGP MDPMC MDPHA MDA MDPSL MDPFO MDPBO MDPGV MDPBR MDPLA MDPBI MDPSI MDPST MDPMI MDPRO MDPOR MDPWP MDPER MDPSLA MDP MRO);
+my @WesternLibraries = qw(MCNC MHW MGW MNW MBW);
 
 if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # pre-Perl 5.10, you'd have to use something like (untested):
@@ -46,6 +48,12 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # smartmatch has been made 'experimental'....
     if ($libsym ~~ @SpruceLibraries) {
 	$libsym = "SPRUCE";
+    }
+    if ($libsym ~~ @ParklandLibraries) {
+	$libsym = "MDA";
+    }
+    if ($libsym ~~ @WesternLibraries) {
+	$libsym = "MBW";
     }
     $result_href->{libsym} = $libsym;
 
