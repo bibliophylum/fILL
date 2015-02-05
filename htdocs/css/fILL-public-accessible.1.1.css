@@ -352,6 +352,11 @@ nav li a
   	font-size: 1.2em; 
 }
 
+#help-img {
+	width: 80%;
+	border: 1em solid #fff;
+}
+
 .tone-box 
 {
 }
