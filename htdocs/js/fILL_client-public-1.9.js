@@ -430,7 +430,7 @@ function replaceHtml(el, html) {
 };
 
 function ImgError(source){
-	source.src = "/img/fill-cover.png";
+	source.src = "/img/fill-cover.png" .alt = "fill cover";
 	source.onerror = "";
 	return true;
 }
