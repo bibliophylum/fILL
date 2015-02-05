@@ -72,14 +72,12 @@ img
 }
 
 h1 {
-	display: inline;
 	margin-bottom: .5em;
 	font-size: 1.4em;
 	text-transform: capitalize;
 }
 
 h2 {
-	display: inline;
 	margin-bottom: .5em;
 	font-size: 1.2em;
 	text-transform: capitalize;
