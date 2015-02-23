@@ -1,0 +1,86 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
+
+<script type="text/javascript" src="/js/rotation-reports-1.0.js"></script>
+
+<script type="text/javascript">
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+  $("#waitDiv").hide();
+  set_secondary_tab("menu_rotations_report_item_highcirc");
+
+  $('#myForm').on('submit', function(e){
+      e.preventDefault();
+
+      $.getJSON('/cgi-bin/get-rotations-items-highcirc.cgi', 
+        {
+          lid: <TMPL_VAR name="lid">, 
+          sdate: $("#sdate").val(), 
+          edate: $("#edate").val(), 
+          limit: $("#limit").val()
+        },
+        function(data){
+            build_item_highcirc_table(data);
+        })
+	.success(function() {
+        })
+	.error(function() {
+        })
+	.complete(function() { 
+            oTable = $('#item-highcirc-table').dataTable({
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bInfo": true,
+                "bSort": true,
+                "sDom": '<"H"Tfr>t<"F"ip>',
+                "iDisplayLength": 50,
+                "bLengthChange": true,
+                // TableTools requires Flash version 10...
+                "oTableTools": {
+                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                }
+          });
+      });
+  });
+
+});
+
+</script>
+
+
+
+<div id="center" role="main">
+
+  <div id="formDiv">
+    <form id="myForm">
+      Start date ('YYYY-MM-DD'): <input type="text" id="sdate" />
+      Up to (but not including): <input type="text" id="edate" />
+      Circ counts at or above: <input type="text" id="limit" value="3" />
+      <input type="submit">
+    </form>
+  </div>
+
+  <div id="waitDiv">
+    Calculating... <img src="/wait.gif">
+  </div>
+
+  <div id="myDiv">
+    <h3>High Circ Items.</h3>
+    <div id="mylistDiv"></div>
+  </div>
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <ol>
+      <li>Circs by item and library.</li>
+    </ol>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

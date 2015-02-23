@@ -18,6 +18,7 @@ sub setup {
     $self->run_modes(
 	'report_received_cnt' => 'report_received_cnt_process',
 	'report_item_circs'   => 'report_item_circs_process',
+	'report_item_highcirc' => 'report_item_highcirc_process',
 	);
 }
 
@@ -51,6 +52,25 @@ sub report_item_circs_process {
 
     my $template = $self->load_tmpl('rotations/admin/reports/item_circ_counts.tmpl');	
     $template->param( pagetitle => "Rotations - report on item circ counts",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub report_item_highcirc_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('rotations/admin/reports/item_highcirc.tmpl');	
+    $template->param( pagetitle => "Rotations - report on items with high circ counts",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,
