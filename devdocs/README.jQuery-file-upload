@@ -1,0 +1,3 @@
+Need to install package libnet-ssh2-perl using package manager.
+Need to install jQuery::File::Upload from CPAN (no kubuntu package available) (for server-side upload handler)
+
