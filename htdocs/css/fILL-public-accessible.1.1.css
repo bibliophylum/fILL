@@ -352,10 +352,14 @@ nav li a
   	font-size: 1.2em; 
 }
 
-#help-img {
-	width: 80%;
+.help-img {
+	width: auto;
 	height: auto;
 	border: 1em solid #fff;
+}
+
+.help-img-float {
+	display: inline;
 }
 
 .tone-box 
