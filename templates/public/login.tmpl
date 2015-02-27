@@ -17,47 +17,49 @@ $('document').ready(function(){
 
 <div id="content">
 
-<div id="aside-img-welcome">
+<div id="aside-img-welcome" class="tone-box">
     <img src='/img/card_catalogue.jpg' alt="card catalogue cabinet"/><br />
     <p class="note">Image care of <a href="https://www.flickr.com/photos/misshaley/515045131/">Haley</a></p>
     <p id="welcome-text">Welcome to the Manitoba public libraries' interlibrary loan system.</p>
-  </div>
+</div>
 
 <div id="main-info-welcome">
 
-<div class="login">
+  <div class="login">
 
-  <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
-        <fieldset name="login">
+    <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
+          <fieldset name="login">
 
-        <legend>Patron Login</legend>
+          <legend>Patron Login</legend>
 
-          <label for="authen_username">User Name</label>
-          <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
+            <label for="authen_username">User Name</label>
+            <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
 
-          <label for="authen_password">Password</label>
-          <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+            <label for="authen_password">Password</label>
+            <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
 
-        </fieldset>
+          </fieldset>
 
-        <fieldset>
-          <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-          <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
-        </fieldset>
-      
+          <fieldset>
+            <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+            <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
+          </fieldset>
+        
 
-      <div class="login-footer">
-        <p>Don&rsquo;t have an account?</p>
-          <a href="?rm=registration_form" >Sign up now</a>
-          <p>If you cannot remember your user name or password, please contact your local public library.</p>
+        <div class="login-footer">
+          <p>Don&rsquo;t have an account? <a href="?rm=registration_form" >Sign up now</a></p>
+            <p>If you cannot remember your user name or password, please contact your local public library.</p>
+        </div>
 
-    </div><!--div class login-->
+
 
     <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
     <input type="hidden" value="authen_login" name="rm">
   </form>
-</div>
-</div>
+  </div><!--div class login-->
+
+</div><!--div id main info welcome-->
+
 </div><!--div id content-->
 
 <script language="JavaScript" type="text/javascript">
