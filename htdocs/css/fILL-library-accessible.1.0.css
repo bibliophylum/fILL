@@ -22,6 +22,11 @@ html, body {
   box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
+#login-container {
+  width: 60%;
+  margin: auto;
+}
+
 #header.header-library {
 }
 
