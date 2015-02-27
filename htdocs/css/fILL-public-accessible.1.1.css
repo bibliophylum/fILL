@@ -69,6 +69,7 @@ img
 	height: auto;
 	max-width: 100%;
 	border: 0px;
+	margin: auto;
 }
 
 h1 {
@@ -310,10 +311,6 @@ nav li a
 	margin-top: 1em;
 	display: inline;
   	padding: 1em; 
-}
-
-#aside-img-welcome img {
-	margin: auto;
 }
 
 #main-info-welcome 
@@ -729,7 +726,7 @@ form#loginform input[type=password], form#loginform input[type=text] {
 	margin: .5em;
     display: inline-block;
     vertical-align: baseline;
-    width: 80%;
+    width: 60%;
 }
 
 legend {
