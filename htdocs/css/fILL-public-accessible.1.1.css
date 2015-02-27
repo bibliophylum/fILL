@@ -309,7 +309,11 @@ nav li a
 	margin-bottom: 1.5em;
 	margin-top: 1em;
 	display: inline;
-  	padding-bottom: 1em; 
+  	padding: 1em; 
+}
+
+#aside-img-welcome img {
+	margin: 0em auto .5em auto;
 }
 
 #main-info-welcome 
