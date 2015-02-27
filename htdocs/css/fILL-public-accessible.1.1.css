@@ -314,7 +314,7 @@ nav li a
 
 #main-info-welcome 
 {
-	float: left;
+	float: right;
 	width: 50%;
 	height: auto;
 	margin: .9em;
@@ -353,7 +353,7 @@ nav li a
 }
 
 .help-img {
-	width: auto;
+	width: ;
 	height: auto;
 	border: 1em solid #fff;
 }
