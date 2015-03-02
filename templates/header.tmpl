@@ -57,6 +57,9 @@ $.ajaxSetup ({
 });  
 
 $('document').ready(function(){
+
+    setFontSizeFromCookies();
+
     $.getJSON('/cgi-bin/rotations-allowed.cgi', 
         {lid: <TMPL_VAR name="lid"> },
         function(data){
@@ -130,17 +133,32 @@ $('document').ready(function(){
   }
 
  function increaseFontSize() {
+    var newsize;
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) + 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
     });
  }
  function decreaseFontSize() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) - 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
     });
   } 
 
