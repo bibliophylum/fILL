@@ -310,7 +310,7 @@ nav li a
 	margin-bottom: 1.5em;
 	margin-top: 1em;
 	display: inline;
-  	padding: 1em; 
+  	padding: 0; 
 }
 
 #main-info-welcome 
@@ -323,7 +323,8 @@ nav li a
 }
 
 #welcome-text {
-    	font-size: 2em;    
+    	font-size: 2em; 
+    	margin: 1em;   
 }
 
 #welcome-box {
