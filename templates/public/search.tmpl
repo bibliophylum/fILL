@@ -27,9 +27,11 @@
 <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
 
-  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-  <script type="text/javascript" src="/js/pz2.js"></script>
-  <script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
+<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+
+<script type="text/javascript" src="/js/pz2.js"></script>
+<script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
 
 <script type="text/javascript">
 
@@ -53,6 +55,24 @@
         $(this).css({
             'font-size': parseFloat($(this).css('font-size')) - 1
         });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
     });
   } 
 
@@ -82,6 +102,8 @@
 <script type="text/javascript">
   $('document').ready(function(){
 
+    setFontSizeFromCookies();
+
     $("#image").append("");
 
     $("#query").focus();
@@ -98,6 +120,9 @@
     });
     $('#decrFont').click(function () {
         decreaseFontSize();
+    });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
     });
 
   });
@@ -139,7 +164,7 @@
           <div id="username"><TMPL_VAR name="username"></div>
           <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
 
-	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="decrFont" class="public-style" type="button" value="-A" />
+	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
           <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
       </div>
     </div>

@@ -111,6 +111,9 @@ $('document').ready(function(){
     $('#decrFont').click(function () {
         decreaseFontSize();
     });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
+    });
 
     var curTheme = $.cookie('fILL-theme');
     if (curTheme) {
@@ -133,7 +136,6 @@ $('document').ready(function(){
   }
 
  function increaseFontSize() {
-    var newsize;
     $('body').find('div, h1, h2, h3, p, td').each(function () {
         var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
         $(this).css({
@@ -150,6 +152,14 @@ $('document').ready(function(){
         });
         $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
     });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
   } 
  function setFontSizeFromCookies() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
@@ -225,6 +235,7 @@ $('document').ready(function(){
     <input id="theme2" class="theme-chooser2" type="button" value="A" />
     <input id="theme3" class="theme-chooser3" type="button" value="A" />
     <input id="incrFont" class="theme-chooser1 small-function-button" type="button" value="+" />
+    <input id="resetFont" class="theme-chooser1 small-function-button" type="button" value="Default" />
     <input id="decrFont" class="theme-chooser1 small-function-button" type="button" value="-" />
   </div>
 
