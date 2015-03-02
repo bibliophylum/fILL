@@ -1,0 +1,81 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
+
+<!-- Bootstrap styles -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- Generic page styles -->
+<link rel="stylesheet" href="/plugins/jQuery-File-Upload-9.9.2/css/style.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="/plugins/jQuery-File-Upload-9.9.2/css/jquery.fileupload.css">
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/plugins/jQuery-File-Upload-9.9.2/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script type="text/javascript" src="/plugins/jQuery-File-Upload-9.9.2/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="/plugins/jQuery-File-Upload-9.9.2/js/jquery.fileupload.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="/js/rotations-admin-1.0.js"></script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_rotations_admin_upload");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+
+</script>
+
+
+<div id="center" role="main">
+  <h3>Upload MARC and items files</h3>
+  <!-- The fileinput-button span is used to style the file input field as button -->
+  <span class="btn btn-success fileinput-button">
+    <i class="glyphicon glyphicon-plus"></i>
+    <span>Select files...</span>
+    <!-- The file input field used as target for the file upload widget -->
+    <input id="fileupload" type="file" name="files[]" multiple>
+  </span>
+  <br>
+  <br>
+  <!-- The global progress bar -->
+  <div id="progress" class="progress">
+    <div class="progress-bar progress-bar-success"></div>
+  </div>
+  <!-- The container for the uploaded files -->
+  <h3>Uploaded files:</h3>
+  <div id="files" class="files"></div>
+  <br>
+  
+  <div>
+    <p>After you have uploaded the MARC and .items files, click the "process" button to load the records into the rotation manager.</p>
+    <p>Once the processing is done, the files will be removed from the server.</p>
+    <input id="processButton" class="library-style" type="button" value="Process">
+
+    <h3>Processing stats</h3>
+    <div id="processStats"></div>
+    <hr>
+    <h3>Processing report</h3>
+    <div id="processReport"></div>
+    <hr>
+    <h3>Load report</h3>
+    <div id="loadReport"></div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Notes</h3>
+    </div>
+    <div class="panel-body">
+      <ul>
+        <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage (see <a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Browser-support">Browser support</a>).</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
