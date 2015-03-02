@@ -319,7 +319,7 @@ nav li a
 	width: 50%;
 	height: auto;
 	margin: .9em;
-  	padding: 1.25em;  
+  	padding: 0;  
 }
 
 #welcome-text {
