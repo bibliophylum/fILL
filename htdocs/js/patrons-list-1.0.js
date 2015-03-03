@@ -55,7 +55,7 @@ function build_table( data ) {
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "5"; cell.innerHTML = " ";
+    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = " ";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");

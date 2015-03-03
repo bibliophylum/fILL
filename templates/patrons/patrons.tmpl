@@ -50,8 +50,29 @@ $('document').ready(function(){
 	.complete(function() {
             //alert('ajax complete');
 	    /* Apply the jEditable handlers to the table */
+	    // Note - 0th column is hidden, so all of these td numbers are shifted by 1
+	    $('td:eq(1),td:eq(3),td:eq(8)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron.cgi', {
+	        "callback": function( sValue, y ) {
+	            var obj = jQuery.parseJSON( sValue );
+		    var aPos = oTable.fnGetPosition( this );
+		    oTable.fnUpdate( obj.data, aPos[0], aPos[2] );
+	        },
+         	"submitdata": function ( value, settings ) {
+	            return {
+		        "pid": this.parentNode.getAttribute('id'),
+		        "lid": <TMPL_VAR name="lid">,
+			"column": oTable.fnGetPosition( this )[2]
+		    };
+        	},
+	        "height": 24,
+	        "select": true
+            });
 
-	    $('td:eq(3),td:eq(4),td:eq(5),td:eq(8)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron.cgi', {
+	    // Note - 0th column is hidden, so all of these td numbers are shifted by 1
+	    $('td:eq(4),td:eq(5)', oTable.fnGetNodes()).editable( '/cgi-bin/update-patron.cgi', {
+	        data: " {'yes':'yes','no':'no','selected':'yes'}",
+	        type: "select",
+	        onblur: "submit",
 	        "callback": function( sValue, y ) {
 	            var obj = jQuery.parseJSON( sValue );
 		    var aPos = oTable.fnGetPosition( this );
@@ -90,8 +111,8 @@ $('document').ready(function(){
     
     <ul>
       <li>Update a user's <strong>email address</strong> by clicking on it and changing the text.</li>
-      <li>Update a user's <strong>verified</strong> status by clicking on it entering '0' or '1' ('0' means they are not verified).  Hit <strong>[ENTER]</strong> to complete the change.</li>
-      <li>Update a user's <strong>enabled</strong> status by clicking on it entering '0' or '1' ('0' means they are not enabled).  Hit <strong>[ENTER]</strong> to complete the change.</li>
+      <li>Update a user's <strong>verified</strong> status by clicking on it and selecting 'yes' or 'no'.  Click anywhere off the 'yes/no' box to complete the change.</li>
+      <li>Update a user's <strong>enabled</strong> status by clicking on it and selecting 'yes' or 'no'.  Click anywhere off the 'yes/no' box to complete the change.</li>
       <li>You won't see a user's current <strong>password</strong>, but you can change it by clicking on "Click to change password" for that user.</li>
     </ul>
   </div>
