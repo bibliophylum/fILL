@@ -466,8 +466,12 @@ function renderDetails(data, marker)
 		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
 			bail=1;
 		    }
+		    // Boissevain temporarily closed
+		    if ("MBOM" === data["location"][i]["md-locallocation"][lloc]) {
+			bail=1;
+		    }
 		}
-		if (bail) continue;
+		if (bail) continue; // skip the details section below, just go on to the next pass through the loop
 	    }
 	}
 
