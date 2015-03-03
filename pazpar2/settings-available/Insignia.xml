@@ -30,9 +30,9 @@
   <set target="216.55.201.10:210/ils" name="symbol" value="mste"/>
 
 <!-- Lakeland Regional Library -->
-  <set target="www.insigniasoftware.com:210/Lakeland" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/Lakeland" name="symbol" value="MKL"/>
-  <set target="www.insigniasoftware.com:210/Lakeland" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
+  <set target="lakelandpl.insigniails.com:210/lakeland_ils" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
+  <set target="lakelandpl.insigniails.com:210/lakeland_ils" name="symbol" value="MKL"/>
+  <set target="lakelandpl.insigniails.com:210/lakeland_ils" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Minnedosa Regional Library -->
   <set target="www.insigniasoftware.com:210/minnedosa" name="pz:name" value="Minnedosa Regional Library (Insignia)"/>
@@ -49,8 +49,8 @@
   <set target="pjpl.insigniails.com:210/PJPL_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Pinawa Public Library -->
-  <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/Pinawa_ILS" name="symbol" value="MP"/>
+  <set target="207.34.61.23:210/Pinawa_ILS" name="pz:name" value="Pinawa Public Library (Insignia)"/>
+  <set target="207.34.61.23:210/Pinawa_ILS" name="symbol" value="MP"/>
 
 <!-- Southwestern Manitoba Regional Library -->
   <set target="www.insigniasoftware.com:210/Melita_ILS" name="pz:name" value="Southwestern Manitoba Regional Library (Insignia)"/>
