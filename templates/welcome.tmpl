@@ -9,6 +9,11 @@ $('document').ready(function() {
 
   set_primary_tab("menu_home");
 
+  $("#zserver").on("click", function(e){
+    e.preventDefault();
+    window.location = "/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form";
+  });
+
     $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name='libsym'>"},
             function(data){
                $("#zPresent").attr("class","zno");
