@@ -277,7 +277,7 @@ sub forbidden_process {
 sub environment_process {
     my $self = shift;
 
-    my $template = $self->load_tmpl('environment/display.tmpl');
+    my $template = $self->load_tmpl('public/environment.tmpl');
     my @loop;
     foreach my $key (keys %ENV) {
 	my %row = ( name => $key,
