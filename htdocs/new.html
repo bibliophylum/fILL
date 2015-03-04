@@ -24,6 +24,65 @@
 
 <body>
 
+<script type="text/javascript">
+$('document').ready(function(){
+
+    setFontSizeFromCookies();
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
+    });
+
+});
+</script>
+
+<script type="text/javascript">
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
+    });
+  } 
+
+</script>
+
 <div id="container">
 <!--***************ARIA MARKER 'BANNER'***************-->
   <header role="banner">
@@ -34,13 +93,16 @@
     </div>
 
     <div id="header-right">
+      <div id="patron-info">
+	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
+      </div>
     </div>
 
   
 <!--***************ARIA MARKER 'NAVIGATION'***************-->
 <nav role="navigation" id="pub-nav-primary">
   <ul class="inline-items">
-    <li><a id="menu_search" href="/">Welcome</a></li>
+    <li><a id="menu_login" href="/cgi-bin/public.cgi">Welcome</a></li>
     <li><a id="menu_new" class="current_tab" href="/new.html">New to fILL?</a></li>
   </ul>
 </nav>

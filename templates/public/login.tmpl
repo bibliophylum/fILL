@@ -7,7 +7,11 @@ $('document').ready(function(){
 
     $("#search").hide();
     $(".inline-items").children().hide();
-    $(".inline-items").children(":contains('home')").show();
+    $(".inline-items").append('<li><a id="menu_login" class="current_tab" href="/cgi-bin/public.cgi">Welcome</a></li>');
+    $(".inline-items").append('<li><a id="menu_new" href="/new.html">New to fILL?</a></li>');
+    $("#menu_login").show();
+    $("#menu_new").show();
+
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
 
     $("#nav2").append(' | </span><a href="/cgi-bin/lightning.cgi">Library Staff</a>');
