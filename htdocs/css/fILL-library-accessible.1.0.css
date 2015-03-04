@@ -222,6 +222,20 @@ html, body {
     margin-bottom: 1em;
 }
 
+/* advanced search */
+.two-column {
+    float: left;
+    width: 50%;
+}
+#advanced_search label {
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+}
+#advanced_search input {
+  display: inline-block;
+}
+
 /* action button styles for data table buttons */
 input[type="button"].action-button {
     margin: .3em;

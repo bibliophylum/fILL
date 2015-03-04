@@ -249,39 +249,45 @@ $('document').ready(function(){
     <form id="searchForm" name="search">
       <span id="keyword_heading" style="display: none">General keyword</span>
       <input id="query" type="text"/>
-      <div id="advanced_search" style="display: none">
-	<div class="tone-box">
-
-	  <label for="adv_title">Title: </label>
-	  <input id="adv_title" type="text"/><br/>
-	  
-	  <label for="adv_author">Author: </label>
-	  <input id="adv_author" type="text"/><br/>
-	  
-	  <label for="adv_subject">Subject: </label>
-	  <input id="adv_subject" type="text"/><br/>
-	  
-	  <label for="adv_series">Series: </label>
-	  <input id="adv_series" type="text"/>
-
-	  <h3>Search help</h3>
-	  <p>fILL does a general keyword search by default.</p>
-  
-	  <p><strong>Specific title:</strong> ti="The case for mars"</p>
-	  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
-	  <p><strong>Specific subject:</strong> su="mars planet"</p>
-	  <p><strong>Series:</strong> series="fear street"</p>
-
-	  <p>You can combine these using the connectors AND, OR, NOT:</p>
-	  <p>au="david drake" and au="eric flint"</p>
-	  <p>ti="cooking" and su="solar"</p>
-	  <p>ti="cooking" not su="microwave"</p>
-  
-	</div>
-      </div>
       <input id="button" type="submit" value="Search" class="library-style" />
       <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
       <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
+
+      <div id="advanced_search" style="display: none">
+	<div class="tone-box">
+
+	  <div class="two-column">
+	    <label for="adv_title">Title: </label>
+	    <input id="adv_title" type="text"/><br/>
+	  
+	    <label for="adv_author">Author: </label>
+	    <input id="adv_author" type="text"/><br/>
+	  
+	    <label for="adv_subject">Subject: </label>
+	    <input id="adv_subject" type="text"/><br/>
+	  
+	    <label for="adv_series">Series: </label>
+	    <input id="adv_series" type="text"/>
+	  </div>
+
+	  <div class="two-column">
+	    <h3>Search help</h3>
+	    <p>fILL does a general keyword search by default.</p>
+	    
+	    <p><strong>Specific title:</strong> ti="The case for mars"</p>
+	    <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
+	    <p><strong>Specific subject:</strong> su="mars planet"</p>
+	    <p><strong>Series:</strong> series="fear street"</p>
+	    
+	    <p>You can combine these using the connectors AND, OR, NOT:</p>
+	    <p>au="david drake" and au="eric flint"</p>
+	    <p>ti="cooking" and su="solar"</p>
+	    <p>ti="cooking" not su="microwave"</p>
+	  </div>
+
+	</div>
+      </div>
+
     </form>
     </div>
   </div>
