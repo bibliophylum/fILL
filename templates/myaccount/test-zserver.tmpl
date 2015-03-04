@@ -10,7 +10,7 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name="libsym">"},
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name="libsym">", log:1},
             function(data){
                //alert (data.holds[0].id+" "+data.holds[0].title+" "+data.holds[0].author+" "+data.holds[0].patron_barcode+" "+data.holds[0].ts); //further debug
                //alert('pqf:'+data.zServer_status.pqf+', #found:'+ data.zServer_status.found);
