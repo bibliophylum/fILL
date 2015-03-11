@@ -34,7 +34,7 @@ my $SQL="select
   l1.library as from_library,
   l2.name as to,
   l2.library as to_library,
-  rh.status, 
+  replace(rh.status,'|',' ') as status, 
   rh.message 
 from requests_history rh
   left join request_closed rc on rc.id=rh.request_id
@@ -47,7 +47,7 @@ where
   and rh.ts=(select max(ts) from requests_history rh2 left join request_closed r2 on r2.id=rh2.request_id left join history_chain hc2 on hc2.chain_id=r2.chain_id where r2.chain_id=hc.chain_id)
   and rh.ts >= ?
   and rh.ts < ?
-group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, rh.status, rh.message, l1.name, l1.library, l2.name, l2.library   
+group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, status, rh.message, l1.name, l1.library, l2.name, l2.library   
 order by ts
 ";
 my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $start, $end );
@@ -60,7 +60,7 @@ $SQL="select
   l.name as requested_by, 
   l.library,
   date_trunc('second',rh.ts) as ts, 
-  rh.status, 
+  replace(rh.status,'|',' ') as status, 
   rh.message 
 from requests_history rh
   left join request_closed rc on rc.id=rh.request_id

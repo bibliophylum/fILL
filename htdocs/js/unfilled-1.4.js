@@ -62,6 +62,9 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].patron_barcode;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].from; cell.setAttribute('title', data.unfilled[i].library);
+//	var statusWithWhitespace = data.unfilled[i].status;
+//	statusWithWhitespace = statusWithWhitespace.replace(/\|/g,' ');
+//        cell = row.insertCell(-1); cell.innerHTML = statusWithWhitespace;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].message;
         cell = row.insertCell(-1); cell.innerHTML = data.unfilled[i].pubdate;
