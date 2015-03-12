@@ -18,6 +18,86 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    $("#search").hide();
+    $(".inline-items").children().hide();
+    $(".inline-items").children(":contains('home')").show();
+
+    $.getJSON('/cgi-bin/get-map-regions.cgi', 
+            function(data){
+                build_region_div(data);
+           })
+        .success(function() {
+            //alert('success');
+        })
+        .error(function(data) {
+            alert('error');
+        })
+        .complete(function() {
+            //alert('ajax complete');
+        });
+
+    $("#registration_form").submit(function( event ) {
+        if (ValidateForm()) {
+            register_patron();
+        }
+        event.preventDefault();
+    });
+
+    $( "#reg_username" ).blur(function() {
+
+        if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
+            // nothing to check yet
+        } else {
+            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
+                function(data){
+                    if (data.exists == 1) {
+                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
+                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
+                        $("#reg_username").focus();
+                    } else {
+                        $("#username_message").text("Username is unique, good!");
+                    }
+                })
+            .success(function() {
+                //alert('success');
+            })
+            .error(function(data) {
+                alert('error');
+            })
+            .complete(function() {
+                //alert('ajax complete');
+            });
+        }
+    });
+
+
+    $( "#password2" ).blur(function() {
+
+        if ($("#password").val() === undefined 
+           || $("#password").val().length == 0 
+           || $("#password2").val() === undefined 
+           || $("#password2").val().length == 0) {
+
+            alert("Please enter a password, and then re-type the password.");
+            $("#password").focus();
+
+        } else {
+            if ($("#password").val() === $("#password2").val()) {
+                $("#password_message").text("Passwords match, good!");
+            } else {
+
+                $("#password_message").text("Your re-typed password did not match your origial password.  Please enter (and then re-type) a new password.");
+                $("#password_message").stop(true,true).effect("highlight", {}, 2000);
+                $("#password").focus();
+
+            }
+        }
+    });
+
+});
+
 function build_region_div( data ) {
     $("#region").empty();
     $("#region").append("<p>Which region of Manitoba do you live in?</p><br/>");

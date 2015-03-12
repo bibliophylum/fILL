@@ -18,6 +18,50 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-library-acquisitions.cgi', {lid: $("#lid").text()},
+            function(data){
+                build_table(data);
+
+                $('#datatable_acquisitions').DataTable({
+                  "jQueryUI": true,
+                  "pagingType": "full_numbers",
+                  "info": true,
+ 	          "ordering": true,
+       	          "dom": '<"H"Tf<"clearbuttonarea">r>t<"F"ip>',
+                  "pageLength": 25,
+                  "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                  "tableTools": {
+                     "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                  },
+                  "columnDefs": [ {
+                    "targets": 0,
+                    "visible": false
+                  }],
+                  "autoWidth": false,
+                  "initComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_acquisitions").css("width","100%");
+                  }
+                });
+
+	        $("div.clearbuttonarea").html('<button id="clearbutton" class="action-button" type="button">Clear the wish list</button>');
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	    $("#clearbutton").on("click", function(){ clear_acquisitions(); });
+	});
+
+});
+
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_acquisitions");

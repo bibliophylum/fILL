@@ -18,6 +18,64 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    $.getJSON('/cgi-bin/get-respond-list.cgi', {lid: $("#lid").text()},
+        function(data){
+            build_table(data);
+        })
+	.success(function() {
+        })
+	.error(function() {
+        })
+	.complete(function() { 
+            $('#respond-table').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+                "ordering": true,
+                "dom": '<"H"Tfr>t<"F"ip>',
+                // TableTools requires Flash version 10...
+	        "tableTools": {
+                   "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+		   "aButtons": [
+		      "copy", "csv", "xls", "pdf", "print",
+		      {
+			"sExtends":    "collection",
+			"sButtonText": "Save",
+			"aButtons":    [ "csv", "xls", "pdf" ]
+		      }
+		   ]
+                 },
+                 "columnDefs": [ {
+                     "targets": [0,1,2,4],
+                     "visible": false
+                 } ],
+                 "initComplete": function() {
+                     // this handles a bug(?) in this version of datatables;
+                     // hidden columns caused the table width to be set to 100px, not 100%
+                     $("#respond-table").css("width","100%");
+                 }
+            });
+
+	});
+
+
+    $(function() {
+           update_menu_counters( $("#lid").text() );
+    });
+
+    $("#bToggleUnfilledCodes").on("click", function() {
+	  $("#unfilled-codes").toggle();
+	  if ( $("#unfilled-codes").is(":visible") ) {
+	      $("#bToggleUnfilledCodes").prop('value',"Hide the Unfilled codes");
+          } else {
+	      $("#bToggleUnfilledCodes").prop('value',"Show the Unfilled codes");
+          }
+    });
+
+});
+
 function build_table( data ) {
 //    alert( 'in build_table' );
 

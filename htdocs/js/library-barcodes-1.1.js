@@ -18,6 +18,72 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+$('document').ready(function(){
+
+    var anOpenBarcodes = [];
+    var dTable;
+    $.getJSON('/cgi-bin/get-library-barcodes.cgi', {lid: $("#lid").text()},
+            function(data){
+                build_table(data);
+
+                dTable = $('#datatable_barcodes').DataTable({
+                  "jQueryUI": true,
+                  "pagingType": "full_numbers",
+                  "info": true,
+ 	          "ordering": true,
+       	          "dom": '<"H"Tfr>t<"F"ip>',
+                  "pageLength": 25,
+                  "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                  "tableTools": {
+                     "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+                  },
+                  "columnDefs": [ {
+                    "targets": [0,1],
+                    "visible": false
+                  }],
+                  "autoWidth": false,
+                  "initComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_barcodes").css("width","100%");
+                  }
+                });
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+
+	    /* Apply the jEditable handlers to the table */
+            $("tr").find("td:eq(2)").addClass("edit");
+	    $(".edit").editable( '/cgi-bin/update-library-barcode.cgi', {
+	        "callback": function( sValue, y ) {
+	            var obj = jQuery.parseJSON( sValue );
+//		    oTable.fnUpdate( obj.data, aPos[0], aPos[1] );
+                    dTable.cell( this ).data( obj.data ).draw();
+	        },
+         	"submitdata": function ( value, settings ) {
+                    var col = dTable.cell( this ).index().column;
+	            // row_id holds lid and borrower lid separated by underscore: XX_YY
+	            return {
+		        "row_id": this.parentNode.getAttribute('id'),
+			"column": dTable.cell( this ).index().column
+		    };
+        	},
+	        "height": "14px",
+	        "select": true
+            });
+
+       });
+});
+
+
+
 function build_table_orig( data ) {
     for (var i=0;i<data.barcodes.length;i++) {
 //	alert( data.barcodes[i].library );

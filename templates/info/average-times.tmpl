@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_info.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/average-times-1.0.js"></script>
+<script type="text/javascript" src="/js/average-times-1.1.js"></script>
 
 <script type="text/javascript">
 set_secondary_tab("menu_info_average_times");
@@ -10,48 +10,6 @@ set_secondary_tab("menu_info_average_times");
 $.ajaxSetup ({  
   cache: false  
 });  
-
-$('document').ready(function(){
-
-    $(function() {
-        $.getJSON('/cgi-bin/get-average-times.cgi', {},
-                function(data){
-                    build_table(data);
-               })
-        .success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-            oTable = $('#average-times-table').dataTable({
-            "bJQueryUI": true,
-            "sPaginationType": "full_numbers",
-            "bInfo": true,
-            "bSort": true,
-	    "sDom": '<"H"Tfr>t<"F"ili>',
-            "iDisplayLength": -1,
-            "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-	    "oTableTools": {
-                "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		"aButtons": [
-			"copy", "csv", "xls", "pdf", "print",
-			{
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			}
-		]
-	    },
-            "bAutoWidth": false
-        });
-
-      });
-
-      });
-
-});
 
 </script>
 

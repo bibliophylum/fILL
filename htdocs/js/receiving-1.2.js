@@ -18,6 +18,62 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+//    $(".btnPrint").printPage();
+
+    $.getJSON('/cgi-bin/get-receiving-list.cgi', {lid: $("#lid").text()},
+            function(data){
+                //alert (data.receiving[0].id+" "+data.receiving[0].msg_from+" "+data.receiving[0].call_number+" "+data.receiving[0].author+" "+data.receiving[0].title+" "+data.receiving[0].ts); //further debug
+                build_table(data);
+
+                $('#receiving-table').DataTable({
+                       "jQueryUI": true,
+                       "pagingType": "full_numbers",
+                       "info": true,
+                       "ordering": true,
+                       "dom": '<"H"Tfr>t<"F"ip>',
+                       // TableTools requires Flash version 10...
+	               "tableTools": {
+                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+		           "aButtons": [
+			      "copy", "csv", "xls", "pdf", "print",
+			      {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			      }
+		           ]
+        	       },
+                       "columnDefs": [ {
+                           "targets": [0,1,2,7],
+                           "visible": false
+                       } ],
+                      "initComplete": function() {
+                         // this handles a bug(?) in this version of datatables;
+                         // hidden columns caused the table width to be set to 100px, not 100% 
+                         $("#receiving-table").css("width","100%");
+                      }
+
+
+                  });
+           });
+
+    $(function() {
+           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+
+    $("#slipPrinting").buttonset();
+    $("#slipPrinting").append("<input type='radio' name='slip' value='single' id='single' checked='checked'/><label for='single'>Individual slips</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='multi' id='multi'/><label for='multi'>Multiple slips on a page</label>");
+    $("#slipPrinting").append("<input type='radio' name='slip' value='none' id='none'/><label for='none'>Do not print slips</label>");
+    $("#slipPrinting").buttonset('refresh');
+
+    $(function() {
+           update_menu_counters( $("#lid").text() );
+    });
+
+});
+
 function build_table( data ) {
 //    alert( 'in build_table' );
     var myTable = document.createElement("table");

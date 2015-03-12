@@ -1,81 +1,13 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/history-1.3.js"></script>
+<script type="text/javascript" src="/js/history-1.4.js"></script>
 
 <script type="text/javascript">
 
 $.ajaxSetup ({  
   cache: false  
 });  
-
-var anOpenBorrowing;
-var anOpenLending;
-
-$('document').ready(function(){
-    set_primary_tab("menu_history");
-
-    anOpenBorrowing = [];
-    anOpenLending = [];
-
-    $(function() {
-        var dateStart = moment();
-        dateStart = dateStart.subtract('months',1);
-	var dateEnd = moment();
-	dateEnd = dateEnd.add('days',1);
-
-        $("#startdate").datepicker({ dateFormat: 'yy-mm-dd', defaultDate: '-1m' });
-        $("#startdate").datepicker('setDate', dateStart.native() );
-
-        $( "#enddate" ).datepicker({ dateFormat: 'yy-mm-dd', defaultDate: null });
-//        $(" #enddate" ).datepicker('setDate', new Date());
-        $(" #enddate" ).datepicker('setDate', dateEnd.native());  // include today in the history :-)
-
-    });
-
-    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
-    $("#tabs").tabs( {
-        "activate": function(event, ui) {
-            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
-        }
-    } );
-  
-
-    $("#dateButton").on("click", function() {
-        requery( $("#lid").text(), anOpenBorrowing, anOpenLending )
-    });
-
-    var d_s;
-    var d_e;
-    $(function() {
-        d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
-        d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
-
-        $.getJSON('/cgi-bin/get-history.cgi', { lid:   <TMPL_VAR name="lid">, 
-                                                start: d_s, 
-                                                end:   d_e
-                                              },
-                function(data){
-                    build_table(data);
-                    dt_init();  // set up the tables as DataTables
-
-               })
-        .success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
-
-	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
-	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
-
-	});  // end of .complete()
-
-    });  // end of function() wrapping .getJSON()
-});
 
 </script>
 

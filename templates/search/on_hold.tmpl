@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/on_hold-1.1.js"></script>
+<script type="text/javascript" src="/js/on_hold-1.2.js"></script>
 
 
 <script type="text/javascript">
@@ -10,49 +10,6 @@ set_secondary_tab("menu_lend_holds");
 $.ajaxSetup ({  
   cache: false  
 });  
-
-$('document').ready(function(){
-
-    $.getJSON('/cgi-bin/get-on-hold.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                build_table(data);
-
-                $('#on-hold-table').DataTable({
-                       "jQueryUI": true,
-                       "pagingType": "full_numbers",
-                       "info": true,
-                       "ordering": true,
-                       "dom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "tableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2,4],
-                           "visible": false
-                       } ],
-                      "initComplete": function() {
-                           // this handles a bug(?) in this version of datatables;
-                           // hidden columns caused the table width to be set to 100px, not 100%
-                           $("#on-hold-table").css("width","100%");
-                      }
-                  });
-
-           });
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-});
 
 </script>
 

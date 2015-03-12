@@ -18,6 +18,86 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    var dTable;
+    $.getJSON('/cgi-bin/get-patrons-list.cgi', {lid: $("#lid").text()},
+            function(data){
+                build_table(data);
+
+                dTable = $("#datatable_patrons").DataTable({
+                  "jQueryUI": true,
+                  "pagingType": "full_numbers",
+                  "info": true,
+      	          "ordering": true,
+	          "dom": '<"H"Tfr>t<"F"ip>',
+                  "pageLength": 10,
+                  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	          "tableTools": {
+                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	          },
+                 "columnDefs": [{
+                    "targets": 0,
+                    "visible": false
+                  }],
+                  "autoWidth": false,
+                  "initComplete": function() {
+                    // this handles a bug(?) in this version of datatables;
+                    // hidden columns caused the table width to be set to 100px, not 100%
+                    $("#datatable_patrons").css("width","100%");
+                  }
+                });
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    //alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+	    /* Apply the jEditable handlers to the table */
+	    $("tr").find("td:eq(1),td:eq(3),td:eq(8)").addClass("edit");
+	    $(".edit").editable( '/cgi-bin/update-patron.cgi', {
+	        "callback": function( sValue, y ) {
+	            var obj = jQuery.parseJSON( sValue );
+	            dTable.cell( this ).data( obj.data ).draw();
+	        },
+         	"submitdata": function ( value, settings ) {
+	            return {
+		        "pid": this.parentNode.getAttribute('id'),
+		        "lid": $("#lid").text(),
+	                "column": dTable.cell( this ).index().column
+		    };
+        	},
+	        "height": 24,
+	        "select": true
+            });
+
+	    // Note - 0th column is hidden, so all of these td numbers are shifted by 1
+            $("tr").find("td:eq(4),td:eq(5)").addClass("editYN");
+            $(".editYN").editable( '/cgi-bin/update-patron.cgi', {
+	        data: " {'yes':'yes','no':'no','selected':'yes'}",
+	        type: "select",
+	        onblur: "submit",
+	        "callback": function( sValue, y ) {
+	            var obj = jQuery.parseJSON( sValue );
+	            dTable.cell( this ).data( obj.data );
+	        },
+         	"submitdata": function ( value, settings ) {
+	            return {
+		        "pid": this.parentNode.getAttribute('id'),
+		        "lid": $("#lid").text(),
+	                "column": dTable.cell( this ).index().column
+		    };
+        	},
+	        "height": 24,
+	        "select": true
+            });
+
+	});
+});
+
 function build_table_orig( data ) {
     for (var i=0;i<data.patrons.length;i++) {
 	data.patrons[i].actions = "Click to change password"; // add the 'actions' column

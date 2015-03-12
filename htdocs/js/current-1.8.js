@@ -18,6 +18,140 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+    set_primary_tab("menu_current");
+
+    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
+    $("#tabs").tabs( {
+        "activate": function(event, ui) {
+            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        }
+    } );
+  
+
+    var anOpenBorrowing = [];
+    var anOpenLending = [];
+    var anOpenNotfilled = [];
+    //var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
+    var sImageUrl = "/plugins/DataTables-1.10.2/examples/resources/";
+
+    $.getJSON('/cgi-bin/get-current-requests.cgi', {lid: $("#lid").text()},
+            function(data){
+                build_table(data);
+
+                $('#datatable_borrowing').DataTable({
+                 "jQueryUI": true,
+                 "pagingType": "full_numbers",
+                 "info": true,
+      	         "ordering": true,
+	         "dom": '<"H"Tfr>t<"F"ip>',
+                 // TableTools requires Flash version 10...
+	         "tableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	         },
+                 "columnDefs": [{
+                     "targets": 0,
+                     "data": null,
+                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                     "className": "control center"
+                   },
+                   {
+                     "targets": [1,2],
+                     "visible": false
+                   },
+                   {
+                     "targets": -1,
+                     "data": null,
+                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                     "className": "overrides center"
+                }],
+                "initComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_borrowing").css("width","100%");
+                }
+              });
+
+              $('#datatable_lending').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+                "ordering": true,
+ 	        "dom": '<"H"Tfr>t<"F"ip>',
+	        "tableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	        },
+                "columnDefs": [{
+                    "targets": 0,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "control center"
+                  },
+                  {
+                    "targets": 1,
+                    "visible": false
+                  },
+                  {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "overrides center"
+                }],
+                "initComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_lending").css("width","100%");
+                }
+              });
+
+              $('#datatable_notfilled').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+      	        "ordering": true,
+	        "dom": '<"H"Tfr>t<"F"ip>',
+                // TableTools requires Flash version 10...
+	        "tableTools": {
+                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	        },
+                "columnDefs": [{
+                    "targets": 0,
+                    "data": null,
+                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
+                    "className": "control center"
+                  },
+                  {
+                    "targets": 1,
+                    "visible": false
+                }],
+                "initComplete": function() {
+                  // this handles a bug(?) in this version of datatables;
+                  // hidden columns caused the table width to be set to 100px, not 100%
+                  $("#datatable_notfilled").css("width","100%");
+                }
+              });
+
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+
+	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
+	    activate_detail_control( $("#datatable_notfilled"), anOpenNotfilled );
+
+	    activate_overrides_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_overrides_control( $("#datatable_lending"),   anOpenLending   );
+	    activate_overrides_control( $("#datatable_notfilled"), anOpenNotfilled );
+
+	});  // end of .complete()
+});
+
 function build_table_orig( data ) {
     for (var i=0;i<data.active.borrowing.length;i++) {
 	var ai = oTable_borrowing.fnAddData( data.active.borrowing[i], false );

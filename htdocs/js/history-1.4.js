@@ -18,6 +18,74 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+var anOpenBorrowing;
+var anOpenLending;
+
+$('document').ready(function(){
+    set_primary_tab("menu_history");
+
+    anOpenBorrowing = [];
+    anOpenLending = [];
+
+    $(function() {
+        var dateStart = moment();
+        dateStart = dateStart.subtract('months',1);
+	var dateEnd = moment();
+	dateEnd = dateEnd.add('days',1);
+
+        $("#startdate").datepicker({ dateFormat: 'yy-mm-dd', defaultDate: '-1m' });
+        $("#startdate").datepicker('setDate', dateStart.native() );
+
+        $( "#enddate" ).datepicker({ dateFormat: 'yy-mm-dd', defaultDate: null });
+//        $(" #enddate" ).datepicker('setDate', new Date());
+        $(" #enddate" ).datepicker('setDate', dateEnd.native());  // include today in the history :-)
+
+    });
+
+    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
+    $("#tabs").tabs( {
+        "activate": function(event, ui) {
+            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        }
+    } );
+  
+
+    $("#dateButton").on("click", function() {
+        requery( $("#lid").text(), anOpenBorrowing, anOpenLending )
+    });
+
+    var d_s;
+    var d_e;
+    $(function() {
+        d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
+        d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
+
+        $.getJSON('/cgi-bin/get-history.cgi', { lid:   $("#lid").text(), 
+                                                start: d_s, 
+                                                end:   d_e
+                                              },
+                function(data){
+                    build_table(data);
+                    dt_init();  // set up the tables as DataTables
+
+               })
+        .success(function() {
+	    //alert('success');
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+
+	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
+	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
+
+	});  // end of .complete()
+
+    });  // end of function() wrapping .getJSON()
+});
+
 function build_table_orig( data ) {
     for (var i=0;i<data.history.borrowing.length;i++) {
 	var ai = oTable_borrowing.fnAddData( data.history.borrowing[i], false );

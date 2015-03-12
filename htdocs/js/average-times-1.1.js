@@ -18,6 +18,48 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    $(function() {
+        $.getJSON('/cgi-bin/get-average-times.cgi', {},
+                  function(data){
+                      build_table(data);
+		  })
+            .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+		$('#average-times-table').DataTable({
+		    "jQueryUI": true,
+		    "pagingType": "full_numbers",
+		    "info": true,
+		    "oerdering": true,
+		    "dom": '<"H"Tfr>t<"F"ili>',
+		    "pageLength": -1,
+		    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+		    "tableTools": {
+			"sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+			"aButtons": [
+			    "copy", "csv", "xls", "pdf", "print",
+			    {
+				"sExtends":    "collection",
+				"sButtonText": "Save",
+				"aButtons":    [ "csv", "xls", "pdf" ]
+			    }
+			]
+		    },
+		    "autoWidth": false
+		});
+		
+	    });
+	
+    });
+    
+});
+
 function build_table( data ) {
 //    alert( 'in build_table' );
 

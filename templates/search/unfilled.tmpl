@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/unfilled-1.4.js"></script>
+<script type="text/javascript" src="/js/unfilled-1.5.js"></script>
 
 
 <script type="text/javascript">
@@ -10,59 +10,6 @@ set_secondary_tab("menu_borrow_unfilled");
 $.ajaxSetup ({  
   cache: false  
 });  
-
-$('document').ready(function(){
-
-    $.getJSON('/cgi-bin/get-unfilled-list.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                //alert (data.unfilled[0].id+" "+data.unfilled[0].title+" "+data.unfilled[0].author+" "+data.unfilled[0].patron_barcode+" "+data.unfilled[0].ts); //further debug
-                build_table(data); 
-
-                $('#unfilled-table').DataTable({
-                       "jQueryUI": true,
-                       "pagingType": "full_numbers",
-                       "info": true,
-                       "ordering": true,
-                       "dom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "tableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2],
-                           "visible": false
-                       },
-                       ],
-                      "initComplete": function(settings, json) {
-                         // this handles a bug(?) in this version of datatables;
-                         // hidden columns caused the table width to be set to 100px, not 100% 
-                         $("#unfilled-table").css("width","100%");
-
-	                 while( checkOverflow( $("#myListDiv")[0] ) ) {
-                           decreaseTableFontSize();
-                         }
-                      }
-
-                  });
-            });
-
-    $(function() {
-           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    });
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-});
 
 </script>
 
