@@ -28,12 +28,12 @@ $('document').ready(function(){
             function(data){
                 build_table(data);
 
-                oTable_borrowing = $('#datatable_borrowing').dataTable({
-                 "bJQueryUI": true,
-                 "sPaginationType": "full_numbers",
-                 "bInfo": true,
-      	         "bSort": true,
-	         "sDom": '<"H"Tfr>t<"F"ip>',
+                $('#datatable_borrowing').DataTable({
+                 "jQueryUI": true,
+                 "pagingType": "full_numbers",
+                 "info": true,
+      	         "ordering": true,
+	         "dom": '<"H"Tfr>t<"F"ip>',
                  // TableTools requires Flash version 10...
 	         "tableTools": {
                   "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
@@ -54,20 +54,20 @@ $('document').ready(function(){
                      "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
                      "className": "overrides center"
                 }],
-                "fnInitComplete": function() {
+                "initComplete": function() {
                   // this handles a bug(?) in this version of datatables;
                   // hidden columns caused the table width to be set to 100px, not 100%
                   $("#datatable_borrowing").css("width","100%");
                 }
               });
 
-              oTable_lending = $('#datatable_lending').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-                "bSort": true,
- 	        "sDom": '<"H"Tfr>t<"F"ip>',
-	        "oTableTools": {
+              $('#datatable_lending').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+                "ordering": true,
+ 	        "dom": '<"H"Tfr>t<"F"ip>',
+	        "tableTools": {
                   "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
 	        },
                 "columnDefs": [{
@@ -86,21 +86,21 @@ $('document').ready(function(){
                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
                     "className": "overrides center"
                 }],
-                "fnInitComplete": function() {
+                "initComplete": function() {
                   // this handles a bug(?) in this version of datatables;
                   // hidden columns caused the table width to be set to 100px, not 100%
                   $("#datatable_lending").css("width","100%");
                 }
               });
 
-              oTable_notfilled = $('#datatable_notfilled').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-      	        "bSort": true,
-	        "sDom": '<"H"Tfr>t<"F"ip>',
+              $('#datatable_notfilled').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+      	        "ordering": true,
+	        "dom": '<"H"Tfr>t<"F"ip>',
                 // TableTools requires Flash version 10...
-	        "oTableTools": {
+	        "tableTools": {
                   "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
 	        },
                 "columnDefs": [{
@@ -113,7 +113,7 @@ $('document').ready(function(){
                     "targets": 1,
                     "visible": false
                 }],
-                "fnInitComplete": function() {
+                "initComplete": function() {
                   // this handles a bug(?) in this version of datatables;
                   // hidden columns caused the table width to be set to 100px, not 100%
                   $("#datatable_notfilled").css("width","100%");

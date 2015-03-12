@@ -18,14 +18,14 @@ $('document').ready(function(){
                 //alert (data.returns[0].id+" "+data.returns[0].msg_from+" "+data.returns[0].call_number+" "+data.returns[0].author+" "+data.returns[0].title+" "+data.returns[0].ts); //further debug
                 build_table(data);
 
-                oTable = $('#returns-table').dataTable({
-                       "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
+                $('#returns-table').DataTable({
+                       "jQueryUI": true,
+                       "pagingType": "full_numbers",
+                       "info": true,
+                       "ordering": true,
+                       "dom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
-	               "oTableTools": {
+	               "tableTools": {
                            "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
@@ -42,7 +42,7 @@ $('document').ready(function(){
                        },
                        { "targets": 8, "width": "30%" }
 	               ],
-                      "fnInitComplete": function() {
+                      "initComplete": function() {
                           // this handles a bug(?) in this version of datatables;
                           // hidden columns caused the table width to be set to 100px, not 100%
                           $("#returns-table").css("width","100%");

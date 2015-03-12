@@ -58,7 +58,7 @@ function build_table( data ) {
     
     for (var i=0;i<data.barcodes.length;i++) 
     {
-        row = tBody.insertRow(-1); row.id = 'bc'+data.barcodes[i].lid;
+        row = tBody.insertRow(-1); row.id = data.barcodes[i].lid+'_'+data.barcodes[i].borrower;
         cell = row.insertCell(-1); cell.innerHTML = data.barcodes[i].lid;
         cell = row.insertCell(-1); cell.innerHTML = data.barcodes[i].borrower;
         cell = row.insertCell(-1); cell.innerHTML = data.barcodes[i].name;

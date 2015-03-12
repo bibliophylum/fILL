@@ -18,14 +18,14 @@ $('document').ready(function(){
                 //alert (data.overdue[0].id+" "+data.overdue[0].title+" "+data.overdue[0].author+" "+data.overdue[0].ts+" "+data.overdue[0].due_date+" "+data.overdue[0].patron_barcode); //further debug
                 build_table(data);
 
-                oTable = $('#overdue-table').dataTable({
-                       "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
+                $('#overdue-table').DataTable({
+                       "jQueryUI": true,
+                       "pagingType": "full_numbers",
+                       "info": true,
+                       "ordering": true,
+                       "dom": '<"H"Tfr>t<"F"ip>',
                        // TableTools requires Flash version 10...
-	               "oTableTools": {
+	               "tableTools": {
                            "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
 		           "aButtons": [
 			      "copy", "csv", "xls", "pdf", "print",
@@ -40,7 +40,7 @@ $('document').ready(function(){
                            "targets": [0,1,2,6],
                            "visible": false
                        } ],
-                      "fnInitComplete": function() {
+                      "initComplete": function() {
                           // this handles a bug(?) in this version of datatables;
                           // hidden columns caused the table width to be set to 100px, not 100%
                           $("#overdue-table").css("width","100%");

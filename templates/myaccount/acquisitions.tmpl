@@ -24,23 +24,23 @@ $('document').ready(function(){
             function(data){
                 build_table(data);
 
-                oTable = $('#datatable_acquisitions').dataTable({
-                  "bJQueryUI": true,
-                  "sPaginationType": "full_numbers",
-                  "bInfo": true,
- 	          "bSort": true,
-       	          "sDom": '<"H"Tf<"clearbuttonarea">r>t<"F"ip>',
-                  "iDisplayLength": 25,
-                  "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-                  "oTableTools": {
+                $('#datatable_acquisitions').DataTable({
+                  "jQueryUI": true,
+                  "pagingType": "full_numbers",
+                  "info": true,
+ 	          "ordering": true,
+       	          "dom": '<"H"Tf<"clearbuttonarea">r>t<"F"ip>',
+                  "pageLength": 25,
+                  "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+                  "tableTools": {
                      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
                   },
                   "columnDefs": [ {
                     "targets": 0,
                     "visible": false
                   }],
-                  "bAutoWidth": false,
-                  "fnInitComplete": function() {
+                  "autoWidth": false,
+                  "initComplete": function() {
                     // this handles a bug(?) in this version of datatables;
                     // hidden columns caused the table width to be set to 100px, not 100%
                     $("#datatable_acquisitions").css("width","100%");

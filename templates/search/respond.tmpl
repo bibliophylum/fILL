@@ -23,34 +23,34 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-            oTable = $('#respond-table').dataTable({
-            "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2,4],
-                           "visible": false
-                       } ],
-                      "fnInitComplete": function() {
-                           // this handles a bug(?) in this version of datatables;
-                           // hidden columns caused the table width to be set to 100px, not 100%
-                           $("#respond-table").css("width","100%");
-                      }
-                  });
+            $('#respond-table').DataTable({
+                "jQueryUI": true,
+                "pagingType": "full_numbers",
+                "info": true,
+                "ordering": true,
+                "dom": '<"H"Tfr>t<"F"ip>',
+                // TableTools requires Flash version 10...
+	        "tableTools": {
+                   "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+		   "aButtons": [
+		      "copy", "csv", "xls", "pdf", "print",
+		      {
+			"sExtends":    "collection",
+			"sButtonText": "Save",
+			"aButtons":    [ "csv", "xls", "pdf" ]
+		      }
+		   ]
+                 },
+                 "columnDefs": [ {
+                     "targets": [0,1,2,4],
+                     "visible": false
+                 } ],
+                 "initComplete": function() {
+                     // this handles a bug(?) in this version of datatables;
+                     // hidden columns caused the table width to be set to 100px, not 100%
+                     $("#respond-table").css("width","100%");
+                 }
+            });
 
 	});
 

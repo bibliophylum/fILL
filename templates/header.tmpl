@@ -171,6 +171,16 @@ $('document').ready(function(){
         }
     });
   } 
+ // if we find that the table is overflowing...
+ function decreaseTableFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
 
   function toggleAdvanced() {
       if ($('#advanced_search').is(':visible')) {
@@ -185,6 +195,23 @@ $('document').ready(function(){
           $('#query').val(""); // clear the general keyword (query) field
           $('#advanced-btn').attr('value','Basic');
       }
+  }
+
+  // Determines if the passed element is overflowing its bounds,
+  // either vertically or horizontally.
+  // Will temporarily modify the "overflow" style to detect this
+  // if necessary.
+  function checkOverflow(el) {
+    var curOverflow = el.style.overflow;
+    if ( !curOverflow || curOverflow === "visible" )
+       el.style.overflow = "hidden";
+
+    var isOverflowing = el.clientWidth < el.scrollWidth 
+       || el.clientHeight < el.scrollHeight;
+
+    el.style.overflow = curOverflow;
+
+    return isOverflowing;
   }
 
 </script>
