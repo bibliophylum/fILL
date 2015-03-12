@@ -22,32 +22,77 @@ $('document').ready(function(){
 
     var dTable;
     $.getJSON('/cgi-bin/get-patrons-list.cgi', {lid: $("#lid").text()},
-            function(data){
-                build_table(data);
+              function(data){
+                  build_table(data);
+		  
+                  dTable = $("#datatable_patrons").DataTable({
+                      "jQueryUI": true,
+                      "pagingType": "full_numbers",
+                      "info": true,
+      	              "ordering": true,
+	              "dom": '<"H"Tfr>t<"F"ip>',
+                      "pageLength": 10,
+                      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	              "tableTools": {
+			  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	              },
+                      "columnDefs": [{
+			  "targets": 0,
+			  "visible": false
+                      }],
+                      "autoWidth": false,
+                      "initComplete": function() {
+			  // this handles a bug(?) in this version of datatables;
+			  // hidden columns caused the table width to be set to 100px, not 100%
+			  $("#datatable_patrons").css("width","100%");
+                      },
+		      "drawCallback": function( settings ) {
+			  // rows not on the current page are not in the DOM, and won't have
+			  // the .edit class applied from the .complete callback.
+			  // On a table redraw (eg: go to next page), those rows may get added, so we need to apply
+			  // the class and make them editable.
+			  $("tr").find("td:eq(1),td:eq(3),td:eq(8)").filter(":not([class*='edit'])").addClass("edit");
+			  $(".edit").editable( '/cgi-bin/update-patron.cgi', {
+			      "callback": function( sValue, y ) {
+				  var obj = jQuery.parseJSON( sValue );
+				  //dTable.cell( this ).data( obj.data ).draw();  // .draw() does a full re-sort/re-filter; not needed.
+				  dTable.cell( this ).data( obj.data );
+			      },
+         		      "submitdata": function ( value, settings ) {
+				  var col = dTable.cell( this ).index().column;
+				  // row_id holds lid and borrower lid separated by underscore: XX_YY
+				  return {
+				      "pid": this.parentNode.getAttribute('id'),
+				      "lid": $("#lid").text(),
+				      "column": dTable.cell( this ).index().column
+				  };
+        		      },
+			      "height": "14px",
+			      "select": true
+			  });
 
-                dTable = $("#datatable_patrons").DataTable({
-                  "jQueryUI": true,
-                  "pagingType": "full_numbers",
-                  "info": true,
-      	          "ordering": true,
-	          "dom": '<"H"Tfr>t<"F"ip>',
-                  "pageLength": 10,
-                  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-	          "tableTools": {
-                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	          },
-                 "columnDefs": [{
-                    "targets": 0,
-                    "visible": false
-                  }],
-                  "autoWidth": false,
-                  "initComplete": function() {
-                    // this handles a bug(?) in this version of datatables;
-                    // hidden columns caused the table width to be set to 100px, not 100%
-                    $("#datatable_patrons").css("width","100%");
-                  }
-                });
-           })
+			  $("tr").find("td:eq(4),td:eq(5)").filter(":not([class*='editYN'])").addClass("editYN");
+			  $(".editYN").editable( '/cgi-bin/update-patron.cgi', {
+			      data: " {'yes':'yes','no':'no','selected':'yes'}",
+			      type: "select",
+			      onblur: "submit",
+			      "callback": function( sValue, y ) {
+				  var obj = jQuery.parseJSON( sValue );
+				  dTable.cell( this ).data( obj.data );
+			      },
+         		      "submitdata": function ( value, settings ) {
+				  return {
+				      "pid": this.parentNode.getAttribute('id'),
+				      "lid": $("#lid").text(),
+				      "column": dTable.cell( this ).index().column
+				  };
+        		      },
+			      "height": 24,
+			      "select": true
+			  });
+                      }
+                  });
+              })
 	.success(function() {
 	    //alert('success');
 	})
@@ -61,7 +106,8 @@ $('document').ready(function(){
 	    $(".edit").editable( '/cgi-bin/update-patron.cgi', {
 	        "callback": function( sValue, y ) {
 	            var obj = jQuery.parseJSON( sValue );
-	            dTable.cell( this ).data( obj.data ).draw();
+	            //dTable.cell( this ).data( obj.data ).draw();
+	            dTable.cell( this ).data( obj.data );
 	        },
          	"submitdata": function ( value, settings ) {
 	            return {
