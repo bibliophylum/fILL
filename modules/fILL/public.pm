@@ -234,10 +234,20 @@ sub contact_process {
     my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
     my $hr_lib = $self->dbh->selectrow_hashref(
-	"select library, email_address, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone from libraries where lid=?",
+	"select library, email_address, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, name from libraries where lid=?",
 	undef,
 	$lid
 	);
+
+    my $logoPath = "/img/fill-contact.jpg";
+    my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
+    my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
+    if (-f "/opt/fILL/htdocs/img/logos/" . $hr_lib->{name} . ".png") {
+	$logoPath = "/img/logos/" . $hr_lib->{name} . ".png";
+	$logoAltText = $hr_lib->{"library"} . " logo";
+	$logoCredit = $hr_lib->{"library"} . ". Used with permission.";
+    }
+    $self->log->debug( "contact logo:\n" . Dumper($hr_lib) . "\npath: $logoPath\nalt: $logoAltText\ncredit: $logoCredit\n" );
     
     my $template = $self->load_tmpl('public/contact.tmpl');	
     $template->param( pagetitle => "Contact",
@@ -251,7 +261,10 @@ sub contact_process {
 		      city => $hr_lib->{city},
 		      province => $hr_lib->{province},
 		      post_code => $hr_lib->{post_code},
-		      phone => $hr_lib->{phone}
+		      phone => $hr_lib->{phone},
+		      logo_path => $logoPath,
+		      logo_alt_text => $logoAltText,
+		      logo_credit => $logoCredit
 #		      pid => $pid
 	);
     return $template->output;
