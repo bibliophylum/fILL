@@ -477,12 +477,22 @@ sub request_process {
 #    $self->log->debug("same regional system:\n" . Dumper(%sameReg));
 
     # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
+    # NBLC - keyword just to make finding this in source easier
     $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
+
+    my $untracked_href = $self->dbh->selectall_hashref("select lid, borrowed, loaned from libraries_untracked_ill",'lid');
+
     foreach my $src (@unique_sources) {
 	if (exists $nblc_href->{ $src->{symbol} }) {
 	    $src->{net} = $nblc_href->{ $src->{symbol} }{net};
 	    $src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+	    $self->log->debug( "NBLC for " . $src->{symbol} . ": " . $src->{net} );
+	    if (exists $untracked_href->{ $src->{lid} } ) {
+		# does this library have any untracked-by-fILL ILL counts imported into the system?
+		$src->{net} = $src->{net} + $untracked_href->{ $src->{lid} }{loaned} - $untracked_href->{ $src->{lid} }{borrowed};
+		$self->log->debug( "...untracked ILL counts being included, new net is " . $src->{net} );
+	    }
 	} else {
 	    $src->{net} = 0;
 	    $src->{lid} = undef;

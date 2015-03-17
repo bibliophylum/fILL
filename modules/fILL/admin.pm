@@ -33,6 +33,7 @@ sub setup {
     $self->mode_param('rm');
     $self->run_modes(
 	'test_zserver'         => 'test_zserver_process',
+	'spruce_ill'           => 'load_spruce_ill_numbers_process',
 	);
 }
 
@@ -49,6 +50,21 @@ sub test_zserver_process {
     $template->param( pagetitle => "Test zServer",
 		      library_list => $libraries_aref
 	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub load_spruce_ill_numbers_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select name,library from libraries order by library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/load-untracked-ill.tmpl');	
+    $template->param( pagetitle => "Admin - load untracked ILL numbers" );
     return $template->output;
     
 }
