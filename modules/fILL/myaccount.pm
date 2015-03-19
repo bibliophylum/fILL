@@ -36,6 +36,7 @@ sub setup {
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	'myaccount_test_zserver_form'     => 'myaccount_test_zserver_process',
 	'myaccount_acquisitions_form'     => 'myaccount_acquisitions_process',
+	'myaccount_patrons_form'          => 'myaccount_patrons_process',	
 	);
 }
 
@@ -161,7 +162,26 @@ sub myaccount_acquisitions_process {
 }
 
 
-#--------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_patrons_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('myaccount/patrons.tmpl');	
+    $template->param( pagetitle => "Patrons using public fILL",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#------------------------------------------------------------------------------------
 sub get_library_from_username {
     my $self = shift;
     my $username = shift;
