@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
  
@@ -18,14 +17,14 @@
   </script>
 <![endif]-->
 
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
-<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css">
-<link type"text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"> 
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
 
 <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
@@ -149,12 +148,12 @@
   <header role="banner">
 
     <div id="header-left">
-      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"/></a></div>
+      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
     </div>
 
     <div id="header-right">
-      <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="public-style">log out</a></div>
+      <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
       <div id="patron-info">
     <!-- The id="username" div is necessary: the username gets extracted (in 
          fILL_client-public-x.y.js), and passed to the code that allows the patron 
@@ -189,7 +188,7 @@
 <div id="search-container">
   <div id="search" role="search">
     <form id="searchForm" name="search">
-      <input id="query" type="text" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" placeholder="Search" value="<TMPL_VAR name='query'>"/>
       <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
 	   domReady() function to automatically do the search, if the user had 
 	   filled in the search box from a different page.
@@ -197,7 +196,7 @@
 	   If you change the id here, change it in fILL_client-public too,
 	   or the automatic search won't fire.
 	-->
-      <input id="search-submit-button" type="submit" value="Go" class="public-style">
+      <input id="search-submit-button" type="submit" value="Go" class="public-style"/>
     </form>
   </div>
 </div> <!-- search-container -->
@@ -297,5 +296,3 @@
 
 <TMPL_INCLUDE NAME="footer.tmpl">
 
-</body>
-</html>

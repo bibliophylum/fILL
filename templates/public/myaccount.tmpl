@@ -61,13 +61,6 @@ $('document').ready(function(){
 });
 
 </script>
-<style type="text/css">
-
-/*#aside, #stat, #leftcontent, #termlist, .aside {
-    display: none;!important
-}*/
-
-</style>
 
 <div id="clear"></div>
 <div id="content">
@@ -80,10 +73,10 @@ $('document').ready(function(){
         <tr><th scope="row">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
       </table>
  
-    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button" type="button">Change password</a>
+    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button">Change password</a>
 
     <div id="divChangePass">
-      <form id="changePassword_form" name="changePassword" action="" method="post">
+      <form id="changePassword_form" name="changePassword" action="#" method="post">
         <table>
   	<tr>
   	  <td>Current password:</td>

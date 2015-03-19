@@ -18,7 +18,7 @@
 <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
 <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
 <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
-<link type"text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
+<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
 
 <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
@@ -32,9 +32,9 @@
 <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 
-<!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
- <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
- <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+ <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+ <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
 <script type="text/javascript">
 $('document').ready(function(){
@@ -130,11 +130,11 @@ $('document').ready(function(){
 
   <div id="header-left">
     <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-    <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+    <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
   </div>
 
   <div id="header-right">
-    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="public-style">log out</a></div>
+    <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
     <div id="patron-info">
   <!-- The id="username" div is necessary: the username gets extracted (in 
        fILL_client-public-x.y.js), and passed to the code that allows the patron 
