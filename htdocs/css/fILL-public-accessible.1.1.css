@@ -630,17 +630,17 @@ div.termtitle {
 
 /*** FILL #fill-table STYLES **/
 
-#fill-table {
+.fill-table {
   	border-collapse: collapse;
   	margin: 1em auto;
 	padding: .5em;
 }
 
-#fill-table td {
+.fill-table td {
 	padding: 1em;
 }
 
-#fill-table th {
+.fill-table th {
 	font-weight: bold;
 	font-size: 1.2em;
 }
