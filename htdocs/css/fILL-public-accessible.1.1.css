@@ -374,11 +374,8 @@ nav li a
 #covers {
 	margin:auto;
 	display: block;
+	width: 100%;
 }/*more in mobile styles*/
-
-#covers-container {
-	margin: auto;
-}
 
 .covers6 {
     height: 180px;
