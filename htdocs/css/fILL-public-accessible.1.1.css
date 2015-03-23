@@ -375,7 +375,12 @@ nav li a
 	margin:auto;
 	display: block;
 	width: 100%;
+	text-align:center;
 }/*more in mobile styles*/
+
+#covers img {
+	display: inline-block;
+}
 
 .covers6 {
     height: 180px;
