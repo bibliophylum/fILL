@@ -372,11 +372,18 @@ nav li a
 }
 
 #covers {
-
+	margin:auto;
 }/*more in mobile styles*/
 
 .covers6 {
     height: 180px;
+    width: 120px;
+    margin-top: 2em;
+    margin: .3em;
+}
+
+.covers5 {
+	height: 220px;
     width: 120px;
     margin-top: 2em;
     margin: .3em;
