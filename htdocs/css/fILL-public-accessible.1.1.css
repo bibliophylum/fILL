@@ -369,7 +369,7 @@ nav li a
 .help-img-float {
 	display: inline;
 	float: left;
-	margin: 1em;
+	margin: 0em 1em;
 }
 
 .tone-box {
@@ -397,8 +397,8 @@ nav li a
 }
 
 .covers5 {
-	width: 200px;
-	height: 300px;
+	width: 195px;
+	height: 295px;
     margin-top: 2em;
     margin: .3em;
 }
