@@ -57,9 +57,10 @@ sub myaccount_settings_process {
 
 	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
 
-	$self->dbh->do("UPDATE libraries SET email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
+	$self->dbh->do("UPDATE libraries SET email_address=?, website=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
 		       undef,
 		       $q->param("email_address"),
+		       $q->param("website"),
 		       $q->param("library"),
 		       $q->param("mailing_address_line1"),
 		       $q->param("city"),
@@ -76,7 +77,7 @@ sub myaccount_settings_process {
     }
 
     # Get the form data
-    my $SQL_getLibrary = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
+    my $SQL_getLibrary = "SELECT lid, name, password, email_address, website, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
     my $href = $self->dbh->selectrow_hashref(
 	$SQL_getLibrary,
 	{},
@@ -94,6 +95,7 @@ sub myaccount_settings_process {
 	             status       => $status,
 		     editLID      => $href->{lid},
 		     editEmail    => $href->{email_address},
+		     editWebsite  => $href->{website},
 		     editLibrary  => $href->{library},
 		     editMailingAddressLine1 => $href->{mailing_address_line1},
 		     editCity     => $href->{city},

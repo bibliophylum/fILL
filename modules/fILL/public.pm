@@ -85,7 +85,7 @@ sub setup {
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
 	'help_form'                => 'help_process',	
-	'faq_form'				   => 'faq_process',
+	'faq_form'		   => 'faq_process',
 	'contact_form'             => 'contact_process',
 	);
 }
@@ -234,7 +234,7 @@ sub contact_process {
     my ($pid,$lid,$library,$is_enabled) = get_patron_from_username($self, $self->authen->username);  # do error checking!
 
     my $hr_lib = $self->dbh->selectrow_hashref(
-	"select library, email_address, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, name from libraries where lid=?",
+	"select library, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, name from libraries where lid=?",
 	undef,
 	$lid
 	);
@@ -255,6 +255,7 @@ sub contact_process {
 		      lid => $lid,
 		      library => $library,
 		      email_address => $hr_lib->{email_address},
+		      website => $hr_lib->{website},
 		      mailing_address_line1 => $hr_lib->{mailing_address_line1},
 		      mailing_address_line2 => $hr_lib->{mailing_address_line2},
 #		      mailing_address_line3 => $hr_lib->{mailing_address_line3},   # redundant; info is in city/province/post_code.  Removed from template.

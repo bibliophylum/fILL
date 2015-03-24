@@ -11,6 +11,9 @@
 			<h2><TMPL_VAR name="library"></h2>
 			<p>Phone: <TMPL_VAR name="phone"></p>
 			<p>Email: <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
+			<TMPL_IF name="website">
+			  <p>Open <span style="text-decoration: underline;"><a href='<TMPL_VAR name="website">' target="_blank"><TMPL_VAR name="library"> web site</a></span> in a new page.</p>
+			</TMPL_IF>
 			<p>Address:<br/>
 			<TMPL_VAR name="mailing_address_line1"><br/>
 			<TMPL_VAR name="mailing_address_line2"><br/>
