@@ -305,7 +305,7 @@ button {
 	color: #fff !important;
 }
 
-.button-left:link {
+.button-left:link, .button-left:visited {
 	color: #fff !important;
 }
 

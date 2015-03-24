@@ -52,6 +52,10 @@ $('document').ready(function(){
       event.preventDefault();
     });
 
+    $("#showChangePassButton").click(function( event ) {
+      toggleChangePassDiv();
+    });
+
     $("#cancel").click(function( event ) {
       $("#divChangePass").toggle();
       $("#showChangePassButton").toggle();
@@ -73,7 +77,7 @@ $('document').ready(function(){
         <tr><th scope="row">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
       </table>
  
-    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button">Change password</a>
+    <a id="showChangePassButton" href="#" class="button-left public-style" role="button">Change password</a>
 
     <div id="divChangePass">
       <form id="changePassword_form" name="changePassword" action="#" method="post">
@@ -95,8 +99,7 @@ $('document').ready(function(){
         <input id="changePassword" type="submit" value="Change" class="public-style">
         <input id="cancel" type="button" value="Cancel" class="public-style">
       </form>
-    </div>
-
-</div>
+    </div><!-- divChangePass -->
+</div><!-- content -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">
