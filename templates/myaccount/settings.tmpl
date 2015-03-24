@@ -11,62 +11,72 @@
 
   <h4><TMPL_VAR NAME="status"></h4>
   
-  <form method="post" action="#">
-    
-    <div id="instructions" class="tone-box">
-      <input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
-      <input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
-      
-      <label for="email_address">Email address:</label><br>
-      <input id="email_address" TYPE="text" NAME="email_address" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>"><br />
-      
-      <label for="website">Web site:</label><br>
-      <input id="website" TYPE="text" NAME="website" VALUE="<TMPL_VAR NAME=editWebsite>">
-      
-      <h3>Interlibrary Loan Mailing address</h3> 
-      <label for="library">Library:</label><br>
-      <input id="library" TYPE="text" NAME="library" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>"><br />
-      
-      <label for="mailing_address_line1">Street address or PO Box Number:</label><br>
-      <input id="mailing_address_line1" TYPE="text" NAME="mailing_address_line1" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>"><br />
-      
-      <label for="city">Town/City:</label><br>
-      <input id="city" TYPE="text" NAME="city" VALUE="<TMPL_VAR NAME=editCity>"><br />
-      
-      <label for="province">Province:</label><br>
-      <input id="province" TYPE="text" NAME="province" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>"><br />
-      
-      <label for="post_code">Postal code:</label><br>
-      <input id="post_code" TYPE="text" NAME="post_code" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
-      
-      <h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
-      
-      <TMPL_IF NAME="editSlipsWithBarcodes">
-	<input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes
-	<input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No
-	<TMPL_ELSE>
-	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes
-	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No
-      </TMPL_IF>
-      
-      <h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
-      
-      <TMPL_IF NAME="editCentralizedILL">
-	<input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes
-	<input TYPE="radio" NAME="centralized_ill" VALUE='f'>No
-	<TMPL_ELSE>
-	  <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes
-	  <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No
-      </TMPL_IF>
-      
-    </div><!--div id instrucitons -->
-    
-    <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
-    <br />
-    <input type="submit" name="submit" value="Update" class="library-style" />
+  <div id="main-info-left" class="tone-box" role="main">
 
-  </form>
-  
+    <form method="post" action="#">
+      
+      <div id="instructions" class="tone-box">
+	<input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
+	<input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
+	
+	<label for="email_address">Email address:</label><br>
+	<input id="email_address" TYPE="text" NAME="email_address" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>"><br />
+	
+	<label for="website">Web site:</label><br>
+	<input id="website" TYPE="text" NAME="website" VALUE="<TMPL_VAR NAME=editWebsite>">
+	
+	<h3>Interlibrary Loan Mailing address</h3> 
+	<label for="library">Library:</label><br>
+	<input id="library" TYPE="text" NAME="library" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>"><br />
+	
+	<label for="mailing_address_line1">Street address or PO Box Number:</label><br>
+	<input id="mailing_address_line1" TYPE="text" NAME="mailing_address_line1" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>"><br />
+	
+	<label for="city">Town/City:</label><br>
+	<input id="city" TYPE="text" NAME="city" VALUE="<TMPL_VAR NAME=editCity>"><br />
+	
+	<label for="province">Province:</label><br>
+	<input id="province" TYPE="text" NAME="province" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>"><br />
+	
+	<label for="post_code">Postal code:</label><br>
+	<input id="post_code" TYPE="text" NAME="post_code" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
+	
+	<h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
+	
+	<TMPL_IF NAME="editSlipsWithBarcodes">
+	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes
+	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No
+	  <TMPL_ELSE>
+	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes
+	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No
+	</TMPL_IF>
+	
+	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
+	
+	<TMPL_IF NAME="editCentralizedILL">
+	  <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes
+	  <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No
+	  <TMPL_ELSE>
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes
+	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No
+	</TMPL_IF>
+      
+      </div><!--div id instrucitons -->
+    
+      <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
+      <br />
+      <input type="submit" name="submit" value="Update" class="library-style" />
+
+    </form>
+  </div><!-- main-info-left -->
+
+  <div id="aside-img-right" role="complementary">
+    <p>The library logo that your patrons see:</p>
+    <img src="<TMPL_VAR name='logo_path'>" alt="<TMPL_VAR name='logo_alt_text'>" />
+    <p class="note">Image care of <TMPL_VAR name="logo_credit"></p>
+    <p>To update your logo, contact Public Library Services at pls@gov.mb.ca</p>
+  </div>
+
 </div><!-- center -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

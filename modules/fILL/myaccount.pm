@@ -87,6 +87,15 @@ sub myaccount_settings_process {
 
     $status = "Editing in process." unless $status;
 
+    my $logoPath = "/img/fill-contact.jpg";
+    my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
+    my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
+    if (-f "/opt/fILL/htdocs/img/logos/" . $href->{name} . ".png") {
+	$logoPath = "/img/logos/" . $href->{name} . ".png";
+	$logoAltText = $href->{"library"} . " logo";
+	$logoCredit = $href->{"library"} . ". Used with permission.";
+    }
+
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
     $template->param(pagetitle => "fILL MyAccount Settings",
 		     username     => $self->authen->username,
@@ -103,6 +112,9 @@ sub myaccount_settings_process {
 		     editPostalCode => $href->{post_code},
 		     editSlipsWithBarcodes => $href->{slips_with_barcodes},
 		     editCentralizedILL => $href->{centralized_ill},
+		     logo_path => $logoPath,
+		     logo_alt_text => $logoAltText,
+		     logo_credit => $logoCredit
 	);
     return $template->output;
 }
