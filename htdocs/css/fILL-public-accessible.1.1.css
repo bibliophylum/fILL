@@ -74,18 +74,18 @@ img
 
 h1 {
 	margin-bottom: .5em;
-	font-size: 1.4em;
+	font-size: 1.5em;
 	text-transform: capitalize;
 }
 
 h2 {
 	margin-bottom: .5em;
-	font-size: 1.2em;
+	font-size: 1.3em;
 	text-transform: capitalize;
 }
 
 h3 {
-	font-size: 1em;
+	font-size: 1.1em;
 	font-weight: bold;
 }
 
@@ -354,18 +354,25 @@ nav li a
   	font-size: 1.2em; 
 }
 
+#help p {
+	display: inline;
+}
+
 .help-img {
+	display: block;
 	width: ;
 	height: auto;
 	border: 1em solid #fff;
+	margin: 1em;
 }
 
 .help-img-float {
 	display: inline;
+	float: left;
+	margin: 1em;
 }
 
-.tone-box 
-{
+.tone-box {
 }
 
 .lighter-box {
@@ -386,12 +393,12 @@ nav li a
     height: 180px;
     width: 120px;
     margin-top: 2em;
-    margin: .3em;
+    margin: .2em;
 }
 
 .covers5 {
 	width: 200px;
-	height: 325px;
+	height: 300px;
     margin-top: 2em;
     margin: .3em;
 }
@@ -644,17 +651,17 @@ div.termtitle {
 
 /*** FILL #fill-table STYLES **/
 
-.fill-table {
+#fill-table {
   	border-collapse: collapse;
   	margin: 1em auto;
 	padding: .5em;
 }
 
-.fill-table td {
+#fill-table td {
 	padding: 1em;
 }
 
-.fill-table th {
+#fill-table th {
 	font-weight: bold;
 	font-size: 1.2em;
 }

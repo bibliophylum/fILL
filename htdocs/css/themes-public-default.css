@@ -145,12 +145,12 @@ input[type=submit]:hover {
 button {
     border: 1px solid inherit;
     background: #183935;
-    color: #fff;!important
+    color: #fff !important;
 }
 .button-left:link, .button-left:visited {
     border: 1px solid inherit;
     background: #183935;
-    color: #fff;!important
+    color: #fff !important;
 }
 
 .button-left:focus {
@@ -169,12 +169,12 @@ button {
 }
 
 /*** FILL #fill-table STYLES **/
-.fill-table {
+#fill-table {
     background: #e3e3e3;
     border: 2px solid #b3b3b3;
     color: #505050;
 }
-.fill-table td, .fill-table th {
+#fill-table td, #fill-table th {
     border: 1px solid #fff;
 }
 
