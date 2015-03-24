@@ -354,7 +354,12 @@ nav li a
   	font-size: 1.2em; 
 }
 
+#help p {
+	display: inline;
+}
+
 .help-img {
+	display: block;
 	width: ;
 	height: auto;
 	border: 1em solid #fff;
@@ -362,6 +367,7 @@ nav li a
 
 .help-img-float {
 	display: inline;
+	float: left;
 }
 
 .tone-box {
