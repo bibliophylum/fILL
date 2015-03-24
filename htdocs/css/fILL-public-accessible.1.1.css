@@ -363,13 +363,13 @@ nav li a
 	width: ;
 	height: auto;
 	border: 1em solid #fff;
-	float: left; 
+	margin: 1em;
 }
 
 .help-img-float {
 	display: inline;
 	float: left;
-	margin-right: 1em;
+	margin: 1em;
 }
 
 .tone-box {
