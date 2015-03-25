@@ -27,7 +27,7 @@
 
 <!-- Jake Epp Library -->
   <set target="216.55.201.10:210/ils" name="pz:name" value="Jake Epp Library (Insignia)"/>
-  <set target="216.55.201.10:210/ils" name="symbol" value="mste"/>
+  <set target="216.55.201.10:210/ils" name="symbol" value="MSTE"/>
 
 <!-- Lakeland Regional Library -->
   <set target="lakelandpl.insigniails.com:210/lakeland_ils" name="pz:name" value="Lakeland Regional Library (Insignia)"/>
