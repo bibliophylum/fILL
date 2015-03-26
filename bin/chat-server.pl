@@ -86,7 +86,7 @@ if ($logging) {
 #}
  
 #--- the actual server code -------------------------------------------------
-my $DEBUG = 0;
+my $DEBUG = 1;
 my %channels = ();
 my $maxHistory = 20;
 my %history = ();
