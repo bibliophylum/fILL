@@ -1,5 +1,10 @@
 <settings target="*">
 
+<!-- Bibliotheque Ste. Anne -->
+  <set target="stannepl.insigniails.com:210/stanne_ils" name="pz:name" value="Bibliotheque Ste. Anne"/>
+  <set target="stannepl.insigniails.com:210/stanne_ils" name="symbol" value="MSA"/>
+  <set target="stannepl.insigniails.com:210/stanne_ils" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
+
 <!-- R.M. of Argyle Public Library -->
   <set target="www.insigniasoftware.com:210/RMArgyle" name="pz:name" value="R.M. of Argyle Public Library"/>
   <set target="www.insigniasoftware.com:210/RMArgyle" name="symbol" value="MBA"/>
