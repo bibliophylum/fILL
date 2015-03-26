@@ -23,7 +23,12 @@
 <script type="text/javascript">
 
 $('document').ready(function(){
-  update_menu_counters( <TMPL_VAR name="lid"> );
+  // hide navigation
+  $("#lib-nav-primary").hide();
+  $("#csssubmenu").hide();
+  $("#logout-button").hide();
+
+//  update_menu_counters( <TMPL_VAR name="lid"> );
   $("#pbarcode").focus();
 });
 
@@ -32,102 +37,108 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-    <form action="/cgi-bin/lightning.cgi" method="post">
+  <p>Title: <TMPL_VAR name="title"></p>
 
-<div id="toptwo">
-<!--SECTION-->
-<div id="midleft">
-	    <h2>Required</h2>
-	    <br/>
-	    <h3>Patron barcode</h3>
-	    <p>Enter the barcode number of your patron (or a group identifier if you are requesting multiple copies): 
-	      <input id="pbarcode" type="text" name="pbarcode" size="14" maxlength="14">
-	    </p>
-	    <input type="submit" style="height:50px; min-width:150px; top:75%; display:block; margin:0 auto;" value="Complete the request">
-	</div>
+  <form action="/cgi-bin/lightning.cgi" method="post">
 
-<!--SECTION-->
-<div id="midright">
-	    <h2>Optional</h2>
-	    <br/>
-	    <h3>Number of copies</h3>
-	    <p>There are <TMPL_VAR name="num_sources"> potential sources.</p>
-	    <p>How many copies are you looking for?
-	      <input type="text" name="copies_requested" size="4" maxlength="4" value=<TMPL_VAR name="copies_requested">>
-	    </p>
-	    <br />
-	    <h3>Ask for holds?</h3>
-	    <p>Would you like to ask the potential lender(s) to place a hold if the title is currently out?</p>
-	    <p>
-	      <input type="radio" name="placeOnHold" value="yes"/> Yes,
-	      <input type="radio" name="placeOnHold" value="no"/> No,
-	      <input type="radio" name="placeOnHold" value="lenderPolicy" checked="yes"/> At lender's discretion
-	    </p>
-	    <br/>
-	    <h3>Additional notes</h3>
-	    <p>Enter any additional notes for the potential lenders: 
-	      <input type="text" name="request_note" size="60" maxlength="80">
-	    </p>
-
-	</div>
+    <div id="toptwo">
+      <!--SECTION-->
+      <div id="midleft">
+	<h2>Required</h2>
+	<br/>
+	<h3>Patron barcode</h3>
+	<p>Enter the barcode number of your patron (or a group identifier if you are requesting multiple copies): 
+	  <input id="pbarcode" type="text" name="pbarcode" size="14" maxlength="14">
+	</p>
+<!--	<input type="submit" style="height:50px; min-width:150px; top:75%; display:block; margin:0 auto;" value="Complete the request"> -->
+	<input type="submit" class="library-style" value="Complete the request">
       </div>
-      <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
-      <input type="hidden" name="rm" value="complete_the_request">
-    </form>
-
-    <!-- 
-    <h2>parms</h2>
-    <TMPL_LOOP name="parms">
-      <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
-    </TMPL_LOOP>
-    -->
-    
-    <br/>
-</div> <!-- id="toptwo" -->
-    <div id="midfooter">
-      <div id="midinner">
-
-<!--SECTION-->
-	<h2>Information</h2>
-	<h3>Interlibrary Loan request details</h3>
-	<table>
-	  <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
-	  <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
-	  <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
-	  <tr><td>Medium</td><td>: <font style="background-color: yellow;"><TMPL_VAR name="medium"></font></td></tr>
-	</table>
       
-	<h3>The title was found at these locations:</h3>
-	<p><em>fILL will automatically determine which lender to try first, to minimize lender workloads.</em></p>
-	<table>
-	  <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td><td></td></tr>
-	  <TMPL_LOOP name="sources">
-	    <tr>
-	      <!-- <TMPL_VAR name="lid"> -->
-	      <td><TMPL_VAR name="symbol"></td>
-	      <td><TMPL_VAR name="location"></td>
-	      <td><TMPL_VAR name="holding"></td>
-	      <td><TMPL_VAR name="callnumber"></td>
-	      <td><TMPL_VAR name="net"></td>
-	      <td><TMPL_VAR name="msg"></td>
-	    </tr>
-	  </TMPL_LOOP>
-	</table>
+      <!--SECTION-->
+      <div id="midright">
+	<h2>Optional</h2>
+	<br/>
+	<h3>Number of copies</h3>
+	<p>There are <TMPL_VAR name="num_sources"> potential sources.</p>
+	<p>How many copies are you looking for?
+	  <input type="text" name="copies_requested" size="4" maxlength="4" value=<TMPL_VAR name="copies_requested">>
+	</p>
+	<br />
+	<h3>Ask for holds?</h3>
+	<p>Would you like to ask the potential lender(s) to place a hold if the title is currently out?</p>
+	<p>
+	  <input type="radio" name="placeOnHold" value="yes"/> Yes,
+	  <input type="radio" name="placeOnHold" value="no"/> No,
+	  <input type="radio" name="placeOnHold" value="lenderPolicy" checked="yes"/> At lender's discretion
+	</p>
+	<br/>
+	<h3>Additional notes</h3>
+	<p>Enter any additional notes for the potential lenders: 
+	  <!--<input type="text" name="request_note" size="60" maxlength="80">-->
+	  <TEXTAREA NAME="request_note" ROWS=3 COLS=30 maxlength="80">
+	  </TEXTAREA>
+	</p>
+	
       </div>
     </div>
+    <input type="hidden" name="group_id" value=<TMPL_VAR name="group_id">>
+    <input type="hidden" name="rm" value="complete_the_request" id="fill-button" class="library-style">
+  </form>
 
-  <div id="instructions" class="tone-box">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Enter your patron's barcode or a group identifier.</li>
-      <li>Fill in the number of copies you'd like.</li>
-      <li>Select whether you are asking for a hold to be placed.</li>
-      <li>Enter any additiona notes that may help the lender.</li>
-      <li>Click the "Complete the request" button</li>
-    </ol>
+  <!-- 
+       <h2>parms</h2>
+       <TMPL_LOOP name="parms">
+	 <br/><TMPL_VAR name="parm_name">: <TMPL_VAR name="parm_value">
+       </TMPL_LOOP>
+       -->
+    
+  <br/>
+</div> <!-- id="toptwo" -->
+
+<div id="midfooter">
+  <div id="midinner">
+    
+    <!--SECTION-->
     <h2>Information</h2>
-    <p>fILL asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
+    <h3>Interlibrary Loan request details</h3>
+    <table id="library-info">
+      <tr><td>Requesting user</td><td>: <TMPL_VAR NAME="username"></td></tr>
+      <tr><td>Title</td><td>: <TMPL_VAR name="title"></td></tr>
+      <tr><td>Author</td><td>: <TMPL_VAR name="author"></td></tr>
+      <tr><td>Medium</td><td>: <font style="background-color: yellow;"><TMPL_VAR name="medium"></font></td></tr>
+    </table>
+      
+    <h3>The title was found at these locations:</h3>
+    <p><em>fILL will automatically determine which lender to try first, to minimize lender workloads.</em></p>
+    <table id="library-info">
+      <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td><td></td></tr>
+      <TMPL_LOOP name="sources">
+	<tr>
+	  <!-- <TMPL_VAR name="lid"> -->
+	  <td><TMPL_VAR name="symbol"></td>
+	  <td><TMPL_VAR name="location"></td>
+	  <td><TMPL_VAR name="holding"></td>
+	  <td><TMPL_VAR name="callnumber"></td>
+	  <td><TMPL_VAR name="net"></td>
+	  <td><TMPL_VAR name="msg"></td>
+	</tr>
+      </TMPL_LOOP>
+    </table>
   </div>
+</div>
+
+<div id="instructions" class="tone-box">
+  <h2>Instructions</h2>
+  <ol>
+    <li>Enter your patron's barcode or a group identifier.</li>
+    <li>Fill in the number of copies you'd like.</li>
+    <li>Select whether you are asking for a hold to be placed.</li>
+    <li>Enter any additiona notes that may help the lender.</li>
+    <li>Click the "Complete the request" button</li>
+  </ol>
+  <h2>Information</h2>
+  <p>fILL asks for your patron's barcode number so you'll be able to look up your patron when the item arrives.</p>
+</div>
 
 </div>
 

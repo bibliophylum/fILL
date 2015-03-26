@@ -13,8 +13,8 @@ my $SQL = "select
   card,
   username,
   email_address,
-  is_enabled,
-  is_verified,
+  CASE WHEN is_enabled=1 THEN 'yes' ELSE 'no' END as is_enabled,
+  CASE WHEN is_verified=1 THEN 'yes' ELSE 'no' END as is_verified,
   to_char(last_login,'YYYY-MM-DD') as last_login,
   ill_requests
 from patrons

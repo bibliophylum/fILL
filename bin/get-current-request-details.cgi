@@ -3,6 +3,7 @@
 use CGI;
 use DBI;
 use JSON;
+use Data::Dumper;
 
 my $query = new CGI;
 #my $reqid = $query->param('reqid');
@@ -38,8 +39,12 @@ order by ts
 ";
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $chain_id );
 
-$dbh->do("SET TIMEZONE='America/Winnipeg'");
+my $rid = $aref->[ $#aref ]{"request_id"};
+$SQL = "select lid, rid, tracking from shipping_tracking_number where rid=?";
+# get the request_id of the last element of the array:
+my $tracking = $dbh->selectall_arrayref($SQL, { Slice => {} }, $rid);
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { request_details => $aref });
+print "Content-Type:application/json\n\n" . to_json( { request_details => $aref,
+						       tracking => $tracking });

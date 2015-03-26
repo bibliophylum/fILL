@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.7.js"></script>
+<script type="text/javascript" src="/js/current-1.8.js"></script>
 
 <script type="text/javascript">
 
@@ -7,181 +7,109 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-    set_primary_tab("menu_current");
-
-    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
-    $("#tabs").tabs( {
-        "activate": function(event, ui) {
-            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
-        }
-    } );
-  
-
-    var anOpenBorrowing = [];
-    var anOpenLending = [];
-    var anOpenNotfilled = [];
-    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
-
-    $.getJSON('/cgi-bin/get-current-requests.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                build_table(data);
-
-                oTable_borrowing = $('#datatable_borrowing').dataTable({
-                 "bJQueryUI": true,
-                 "sPaginationType": "full_numbers",
-                 "bInfo": true,
-      	         "bSort": true,
-	         "sDom": '<"H"Tfr>t<"F"ip>',
-                 // TableTools requires Flash version 10...
-	         "tableTools": {
-                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	         },
-                 "columnDefs": [{
-                     "targets": 0,
-                     "data": null,
-                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
-                     "className": "control center"
-                   },
-                   {
-                     "targets": [1,2],
-                     "visible": false
-                   },
-                   {
-                     "targets": -1,
-                     "data": null,
-                     "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
-                     "className": "overrides center"
-                }],
-                "fnInitComplete": function() {
-                  // this handles a bug(?) in this version of datatables;
-                  // hidden columns caused the table width to be set to 100px, not 100%
-                  $("#datatable_borrowing").css("width","100%");
-                }
-              });
-
-              oTable_lending = $('#datatable_lending').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-                "bSort": true,
- 	        "sDom": '<"H"Tfr>t<"F"ip>',
-	        "oTableTools": {
-                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	        },
-                "columnDefs": [{
-                    "targets": 0,
-                    "data": null,
-                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
-                    "className": "control center"
-                  },
-                  {
-                    "targets": 1,
-                    "visible": false
-                  },
-                  {
-                    "targets": -1,
-                    "data": null,
-                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
-                    "className": "overrides center"
-                }],
-                "fnInitComplete": function() {
-                  // this handles a bug(?) in this version of datatables;
-                  // hidden columns caused the table width to be set to 100px, not 100%
-                  $("#datatable_lending").css("width","100%");
-                }
-              });
-
-              oTable_notfilled = $('#datatable_notfilled').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-      	        "bSort": true,
-	        "sDom": '<"H"Tfr>t<"F"ip>',
-                // TableTools requires Flash version 10...
-	        "oTableTools": {
-                  "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	        },
-                "columnDefs": [{
-                    "targets": 0,
-                    "data": null,
-                    "defaultContent": '<img src="'+sImageUrl+'details_open.png'+'">',
-                    "className": "control center"
-                  },
-                  {
-                    "targets": 1,
-                    "visible": false
-                }],
-                "fnInitComplete": function() {
-                  // this handles a bug(?) in this version of datatables;
-                  // hidden columns caused the table width to be set to 100px, not 100%
-                  $("#datatable_notfilled").css("width","100%");
-                }
-              });
-
-           })
-	.success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
-
-	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
-	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
-	    activate_detail_control( $("#datatable_notfilled"), anOpenNotfilled );
-
-	    activate_overrides_control( $("#datatable_borrowing"), anOpenBorrowing );
-	    activate_overrides_control( $("#datatable_lending"),   anOpenLending   );
-	    activate_overrides_control( $("#datatable_notfilled"), anOpenNotfilled );
-
-	});  // end of .complete()
-});
-
 </script>
 
 
 <div id="center" role="main">
-<div>
+  <div>
     <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
-
-    <div id="dialog-form" title="Change due date">
-      <p class="validateTips">Enter the due date as YYYY-MM-DD</p>
-
-<!--  <form>  -->
-	<fieldset>
-	  <label for="duedate">New due date</label>
-	  <input type="text" name="duedate" id="duedate" class="text ui-widget-content ui-corner-all" />
-	</fieldset>
-<!--  </form>  -->
-
-    </div>
-</div>
-<br />
-    <div id="tabs">
-      <ul>
-	<li><a href="#tabs-1">Current borrowing</a></li>
-	<li><a href="#tabs-2">Current lending</a></li>
-	<li><a href="#tabs-3">We could not lend</a></li>
-      </ul>
-
-      <div id="tabs-1"></div>
-      <div id="tabs-2"></div>
-      <div id="tabs-3"></div>
-
-    </div>
-
-    <div id="instructions" class="tone-box">
-    <h2>Instructions</h2>
-    <ol>
-      <li>Current interlibrary loans: borrowing and lending</li>
-    </ol>
+      Loading... <img src="/wait.gif" alt="loading indicator">
     </div>
     
-</div>
+    <div id="dialog-form" title="Change due date">
+      <p class="validateTips">Enter the due date as YYYY-MM-DD</p>
+      
+      <!--  <form>  -->
+      <fieldset>
+	<label for="duedate">New due date</label>
+	<input type="text" name="duedate" id="duedate" class="text ui-widget-content ui-corner-all" />
+      </fieldset>
+      <!--  </form>  -->
+    </div>
+  </div>
 
+  <br />
+
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Borrowing</a></li>
+      <li><a href="#tabs-2">Lending</a></li>
+      <li><a href="#tabs-3">We could not lend</a></li>
+    </ul>
+
+    <div id="tabs-1"></div>
+    <div id="tabs-2"></div>
+    <div id="tabs-3"></div>
+    
+  </div><!-- tabs -->
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    
+    <h3>'Borrowing' Tab</h3>
+    <p>If there is a problem with an item on this list, click the "Override" button (green plus sign in the right-most column) to view options.</p>
+    
+    <table class="fill-table table-width-lib">
+      <tr><th>Action</th><th>Do this...</th></tr>
+      
+      <tr>
+	<td>Receive</td>
+	<td>if you have received the book from the lender, but the lender has not marked it as ‘Shipped’.<br>
+	  An override message will be added to the request, and it will be forced to ‘Shipped’.<br>
+	  The request will be added to your ‘Receiving’ list so that you can control slip printing.
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Try next lender</td>
+	<td>if you have requested a book, but have not received a response from the (potential) lender in a timely fashion. This request will be cancelled, and the next lender will be tried.</td>
+      </tr>
+      
+      <tr>
+	<td>No further sources</td>
+	<td>if there are no further sources for you to try.
+	  This request will be closed and moved to history.
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Cancel</td>
+	<td>if the lender has not yet responded to your request. <br>
+	  An override message will be added to the request, and it will be closed and moved to history.
+	</td>
+      </tr>
+      
+      <tr>
+	<td>Close</td>
+	<td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as ‘Checked in to ILS’
+	  An override message will be added to the request, and it will be closed and moved to history.
+	</td>
+      </tr>
+    </table>
+    
+    <h3>'Lending' Tab</h3>
+    <p>If there is a problem with an item on this list, click the ‘Override’ button (green plus sign) to view options.</p>
+    
+    <table class="fill-table table-width-lib">
+      <tr><th>Action</th><th>Do this...</th></tr>
+
+      <tr>
+	<td>Returned</td>
+	<td>if you have received the book back from the borrower, but the borrower has not marked it as ‘Returned’
+	  An override message will be added to the request, and it will be marked as ‘Checked in to ILS’ and moved to history.
+	</td>
+      </tr>
+
+      <tr>
+	<td>Change due date</td>
+	<td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as ‘Received’ yet)</td>
+      </tr>
+    </table> 
+    
+    <h3>'We could not lend' Tab</h3>
+    <p>See the status column for the reason a request was unfilled. </p>
+    
+  </div><!-- instructions -->
+</div><!-- center -->
+  
 <TMPL_INCLUDE NAME="footer.tmpl">

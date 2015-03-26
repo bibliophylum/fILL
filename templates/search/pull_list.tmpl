@@ -2,63 +2,35 @@
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
 
-<script type="text/javascript">
-  function toggleLayer( whichLayer )
-  {
-    var elem, vis;
-    if( document.getElementById ) // this is the way the standards work
-      elem = document.getElementById( whichLayer );
-    else if( document.all ) // this is the way old msie versions work
-      elem = document.all[whichLayer];
-    else if( document.layers ) // this is the way nn4 works
-      elem = document.layers[whichLayer];
-
-    vis = elem.style;
-    // if the style.display value is blank we try to figure it out here
-    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-      vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
-    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-  }
-</script>
-
-<script language="JavaScript">
+<script>
 
 $('document').ready(function() {
 
-  function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
   set_secondary_tab("menu_lend_pull");
 
-  oTable = $('#pull-list').dataTable({
-         "bJQueryUI": true,
-         "sPaginationType": "full_numbers",
-         "bInfo": true,
-         "bSort": true,
-         "sDom": '<"H"Tfr>t<"F"ip>',
-         // TableTools requires Flash version 10...
-         "oTableTools": {
-             "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-           "aButtons": [
-	      "copy", "csv", "xls", "pdf", "print",
+  $('#pull-list').DataTable({
+     "jQueryUI": true,
+     "pagingType": "full_numbers",
+     "info": true,
+     "ordering": true,
+     "dom": '<"H"Tfr>t<"F"ip>',
+     // TableTools requires Flash version 10...
+     "tableTools": {
+         "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+         "aButtons": [
+             "copy", "csv", "xls", "pdf", "print",
 	      {
 		"sExtends":    "collection",
 		"sButtonText": "Save",
 		"aButtons":    [ "csv", "xls", "pdf" ]
 	      }
            ]
-         },
-        "fnInitComplete": function() {
-            // this handles a bug(?) in this version of datatables;
-            // hidden columns caused the table width to be set to 100px, not 100%
-            $("#pull-list").css("width","100%");
-        }
-
+     },
+     "initComplete": function() {
+         // this handles a bug(?) in this version of datatables;
+         // hidden columns caused the table width to be set to 100px, not 100%
+         $("#pull-list").css("width","100%");
+     }
   });
 
   $(function() {
@@ -70,15 +42,13 @@ $('document').ready(function() {
 </script>
 
 <div id="center" role="main">
-<br />
 
-    <h3>Pull list</h3>
-    <table id="pull-list">
-      <thead>
-	<tr><th>Call #</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requestor note</th><th>Your barcode for the requesting library</th></tr>
-      </thead>
-      <tfoot><tr><td colspan="8">You can print this and take it to the stacks.</td></tr></tfoot>
-      <tbody>
+  <table id="pull-list" class="row-border">
+    <thead>
+      <tr><th>Call Number</th><th>Author</th><th>Title</th><th>Date/Time requested</th><th>Requested by</th><th>Requestor note</th><th>Pub date</th><th>Your barcode for the requesting library</th></tr>
+    </thead>
+    <tfoot><tr><td colspan="8">You can print this list to use while in the stacks.</td></tr></tfoot>
+    <tbody>
       <TMPL_LOOP name="pulls">
 	<tr>
 	  <td><TMPL_VAR NAME="call_number"></td>
@@ -87,16 +57,22 @@ $('document').ready(function() {
 	  <td><TMPL_VAR NAME="ts"></td>
 	  <td title="<TMPL_VAR NAME="library">"><TMPL_VAR NAME="from"></td>
 	  <td><TMPL_VAR NAME="note"></td>
+	  <td><TMPL_VAR NAME="pubdate"></td>
 	  <td>
 	    <TMPL_VAR NAME="barcode"><br/>
-	    <img src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>
+	    <img alt="barcode image" src="data:image/png;base64,<TMPL_VAR NAME="barcode_image">"/>
 	  </td>
 	</tr>
       </TMPL_LOOP>
-      </tbody>
-    </table>
+    </tbody>
+  </table>
     
 
-</div>
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <p>You can print this list to use while in the stacks.</p>
+  </div>
+
+</div><!-- center -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

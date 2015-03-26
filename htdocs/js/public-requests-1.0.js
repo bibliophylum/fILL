@@ -47,13 +47,14 @@ function build_table_orig( data ) {
     }
     oTable_borrowing.fnDraw();
 
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
 }
 
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","datatable_borrowing");
+    myTable.className = myTable.className + " row-border";
     var tHead = myTable.createTHead();
     var row = tHead.insertRow(-1);
     var cell;
@@ -68,31 +69,57 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Details"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status Updated"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Action"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "6"; cell.innerHTML = " ";
+    cell = row.insertCell(-1); cell.colSpan = "8"; cell.innerHTML = " ";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
-    
+
     for (var i=0;i<data.active.length;i++) 
     {
+	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
+	delete data.active[i].declined_id;
+	data.active[i].action="";
+
         row = tBody.insertRow(-1); row.id = 'cid'+data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].cid;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].author;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].lender;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].status;
-        cell = row.insertCell(-1); cell.innerHTML = data.active[i].libraries_tried;
+        cell = row.insertCell(-1); cell.innerHTML = data.active[i].details;
         cell = row.insertCell(-1); cell.innerHTML = data.active[i].ts;
+	cell = row.insertCell(-1); // actions
+
+	if ((data.active[i].status == 'Declined') || (data.active[i].status == 'Wish list')) {
+	    cell.id='declined'+declinedID;
+	    row.id = 'row'+declinedID;
+	    
+	    var divActions = document.createElement("div");
+	    divActions.id = 'divActions'+declinedID;
+	    
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.className = "action-button";
+	    b1.value = "Delete";
+	    b1.onclick = make_seenit_handler( declinedID );
+	    divActions.appendChild(b1);
+
+	    $(cell).append( divActions );
+
+	} else {
+	    // no actions
+	}
     }
-    
+
     document.getElementById('mylistDiv').appendChild(myTable);
     
-    toggleLayer("waitDiv");
-    toggleLayer("mylistDiv");
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
 }
 
 function fnFormatDetails( oTable, nTr )
@@ -156,35 +183,10 @@ function seenit( declinedID ) {
 	})
 	.complete(function() {
 	    // slideUp doesn't work for <tr>
-//	    $("#declined"+declinedID).fadeOut(400, function() { $(this).remove(); }); // toast the row
-	    $("#declined"+declinedID).fadeOut(400, function() {
-		oTable_borrowing.fnDeleteRow( $("#declined"+declinedID)[ 0 ] );
+	    $("#row"+declinedID).fadeOut(400, function() {
+		oTable_borrowing.fnDeleteRow( $("#row"+declinedID)[ 0 ] );
 	    }); // toast the row
 	});
 
 }
 
-function toggleLayer( whichLayer )
-{
-    var elem, vis;
-    if( document.getElementById ) // this is the way the standards work
-	elem = document.getElementById( whichLayer );
-    else if( document.all ) // this is the way old msie versions work
-	elem = document.all[whichLayer];
-    else if( document.layers ) // this is the way nn4 works
-	elem = document.layers[whichLayer];
-
-    vis = elem.style;
-    // if the style.display value is blank we try to figure it out here
-    if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
-	vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
-    vis.display = (vis.display==''||vis.display=='block')?'none':'block';
-}
-
-function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}
-
-function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-}

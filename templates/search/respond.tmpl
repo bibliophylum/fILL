@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/respond-1.13.js"></script>
+<script type="text/javascript" src="/js/respond-1.14.js"></script>
 
 
 <script type="text/javascript">
@@ -12,107 +12,51 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-    $.getJSON('/cgi-bin/get-respond-list.cgi', {lid: <TMPL_VAR name="lid">},
-        function(data){
-            build_table(data);
-        })
-	.success(function() {
-        })
-	.error(function() {
-        })
-	.complete(function() { 
-            oTable = $('#respond-table').dataTable({
-            "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2,4],
-                           "visible": false
-                       } ],
-                      "fnInitComplete": function() {
-                           // this handles a bug(?) in this version of datatables;
-                           // hidden columns caused the table width to be set to 100px, not 100%
-                           $("#respond-table").css("width","100%");
-                      }
-                  });
-
-	});
-
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-    $("#bToggleUnfilledCodes").on("click", function() {
-	  $("#unfilled-codes").toggle();
-	  if ( $("#unfilled-codes").is(":visible") ) {
-	      $("#bToggleUnfilledCodes").prop('value',"Hide the Unfilled codes");
-          } else {
-	      $("#bToggleUnfilledCodes").prop('value',"Show the Unfilled codes");
-          }
-    });
-
-});
-
 </script>
 
 
 <div id="center" role="main">
-<br />
+
   <div id="toggle-unfilled-codes">
     <input type="button" id="bToggleUnfilledCodes" value="Show the Unfilled codes" class="library-style">
   </div>
-   <div id="unfilled-codes" style="display:none">
+  
+  <div id="unfilled-codes" style="display:none">
     <h3>Unfilled codes</h3>
-    <table id="fill-table" class="table-width-lib">
-      <tr><td style="border:1px solid black;">in-use /on-loan</td><td style="border:1px solid black;">Currently checked out to a patron.</td></tr>
-      <tr><td style="border:1px solid black;">in-process</td><td style="border:1px solid black;">Not ready for loan.</td></tr>
-      <tr><td style="border:1px solid black;">lost</td><td style="border:1px solid black;">Item has been declared missing.</td></tr>
-      <tr><td style="border:1px solid black;">not-owned</td><td style="border:1px solid black;">Our catalogue lies.  We should fix that.</td></tr>
-      <tr><td style="border:1px solid black;">on-order</td><td style="border:1px solid black;">We're going to buy it.</td></tr>
-      <tr><td style="border:1px solid black;">not-on-shelf</td><td style="border:1px solid black;">We've... misplaced it.</td></tr>
-      <tr><td style="border:1px solid black;">on-reserve</td><td style="border:1px solid black;">Too new, or circ limited to specific group.</td></tr>
-      <tr><td style="border:1px solid black;">poor- condition</td><td style="border:1px solid black;">How did that get back on the shelf?</td></tr>
-      <tr><td style="border:1px solid black;">charges</td><td style="border:1px solid black;">There would be a fee - email us to ask.</td></tr>
-      <tr><td style="border:1px solid black;">on-hold</td><td style="border:1px solid black;">There are local holds on this.</td></tr>
-      <tr><td style="border:1px solid black;">policy-problem</td><td style="border:1px solid black;">It is against our policies to loan this.</td></tr>
-      <tr><td style="border:1px solid black;">other</td><td style="border:1px solid black;">Any other reason.</td></tr>
+    <table class="fill-table table-width-lib">
+      <tr><td>in-use /on-loan</td><td>Currently checked out to a patron.</td></tr>
+      <tr><td>in-process</td><td>Not ready for loan.</td></tr>
+      <tr><td>lost</td><td>Item has been declared missing.</td></tr>
+      <tr><td>not-owned</td><td>Our catalogue lies.  We should fix that.</td></tr>
+      <tr><td>on-order</td><td>We're going to buy it.</td></tr>
+      <tr><td>not-on-shelf</td><td>We've... misplaced it.</td></tr>
+      <tr><td>on-reserve</td><td>Too new, or circ limited to specific group.</td></tr>
+      <tr><td>poor- condition</td><td>How did that get back on the shelf?</td></tr>
+      <tr><td>charges</td><td>There would be a fee - email us to ask.</td></tr>
+      <tr><td>on-hold</td><td>There are local holds on this.</td></tr>
+      <tr><td>policy-problem</td><td>It is against our policies to loan this.</td></tr>
+      <tr><td>other</td><td>Any other reason.</td></tr>
     </table>
   </div>
 
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif">
-    </div>
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif" alt="loading indicator">
+  </div>
 
-    <div id="myDiv">
-      <h3>Respond to requests</h3>
-      <div id="mylistDiv"></div>
-    </div>
+  <div id="myDiv">
+    <div id="mylistDiv"></div>
+  </div>
 
-<div id="instructions" class="tone-box">
-    <h2>Instructions</h2>
-    <ol>
-      <li>For each of the requests that you are filling, click the "Will-supply" button.</li>
-      <li>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</li>
-      <li>Hover over a library's symbol to see the full name of the library.</li>
-    </ol>
+  <div id="instructions" class="tone-box">
+      <h2>Instructions</h2>
+
+        <p>For each of the requests that you are filling, click the "Will-supply" button.</p>
+        <p>For each remaining request - those that will be unfilled - click the "Unfilled" button and select a reason.</p>
+        <p>Hover over a library's symbol to see the full name of the library.</p>
+	     <p>As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the 'Current' tab.</p>
+
+  </div>
+
 </div>
-
 <TMPL_INCLUDE NAME="footer.tmpl">

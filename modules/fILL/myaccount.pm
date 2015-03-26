@@ -35,7 +35,29 @@ sub setup {
 	'myaccount_settings_form'         => 'myaccount_settings_process',
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	'myaccount_test_zserver_form'     => 'myaccount_test_zserver_process',
+	'myaccount_acquisitions_form'     => 'myaccount_acquisitions_process',
+	'myaccount_patrons_form'          => 'myaccount_patrons_process',	
+	'chat_form'                       => 'chat_process',
 	);
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub chat_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('myaccount/chat.tmpl');	
+    $template->param( pagetitle => "Chat manager",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
 }
 
 #--------------------------------------------------------------------------------
@@ -55,9 +77,10 @@ sub myaccount_settings_process {
 
 	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
 
-	$self->dbh->do("UPDATE libraries SET email_address=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
+	$self->dbh->do("UPDATE libraries SET email_address=?, website=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
 		       undef,
 		       $q->param("email_address"),
+		       $q->param("website"),
 		       $q->param("library"),
 		       $q->param("mailing_address_line1"),
 		       $q->param("city"),
@@ -74,7 +97,7 @@ sub myaccount_settings_process {
     }
 
     # Get the form data
-    my $SQL_getLibrary = "SELECT lid, name, password, email_address, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
+    my $SQL_getLibrary = "SELECT lid, name, password, email_address, website, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
     my $href = $self->dbh->selectrow_hashref(
 	$SQL_getLibrary,
 	{},
@@ -84,6 +107,15 @@ sub myaccount_settings_process {
 
     $status = "Editing in process." unless $status;
 
+    my $logoPath = "/img/fill-contact.jpg";
+    my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
+    my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
+    if (-f "/opt/fILL/htdocs/img/logos/" . $href->{name} . ".png") {
+	$logoPath = "/img/logos/" . $href->{name} . ".png";
+	$logoAltText = $href->{"library"} . " logo";
+	$logoCredit = $href->{"library"} . ". Used with permission.";
+    }
+
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
     $template->param(pagetitle => "fILL MyAccount Settings",
 		     username     => $self->authen->username,
@@ -92,6 +124,7 @@ sub myaccount_settings_process {
 	             status       => $status,
 		     editLID      => $href->{lid},
 		     editEmail    => $href->{email_address},
+		     editWebsite  => $href->{website},
 		     editLibrary  => $href->{library},
 		     editMailingAddressLine1 => $href->{mailing_address_line1},
 		     editCity     => $href->{city},
@@ -99,6 +132,9 @@ sub myaccount_settings_process {
 		     editPostalCode => $href->{post_code},
 		     editSlipsWithBarcodes => $href->{slips_with_barcodes},
 		     editCentralizedILL => $href->{centralized_ill},
+		     logo_path => $logoPath,
+		     logo_alt_text => $logoAltText,
+		     logo_credit => $logoCredit
 	);
     return $template->output;
 }
@@ -142,7 +178,44 @@ sub myaccount_test_zserver_process {
 }
 
 
-#--------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_acquisitions_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my $template = $self->load_tmpl('myaccount/acquisitions.tmpl');
+    $template->param(pagetitle => "fILL acquisitions list",
+		     username     => $self->authen->username,
+		     lid          => $lid,
+		     library      => $library,
+	);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_patrons_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('myaccount/patrons.tmpl');	
+    $template->param( pagetitle => "Patrons using public fILL",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#------------------------------------------------------------------------------------
 sub get_library_from_username {
     my $self = shift;
     my $username = shift;

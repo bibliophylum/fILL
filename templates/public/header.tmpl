@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><title><TMPL_VAR name="pagetitle"></title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--[if lt IE 9]>
@@ -14,34 +15,39 @@
   </script>
 <![endif]-->
 
-<meta name=viewport content="width=device-width, initial-scale=1">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css">
-<link type="text/css" rel="stylesheet" href="/css/feedstyles.1.1.css">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
-
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css">
+<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
 
 
 <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
- <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
 
+<script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
 
-<!--  <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
- <script type="text/javascript" charset="utf8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
- <script type="text/javascript" language="javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+ <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+ <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
 <script type="text/javascript">
 $('document').ready(function(){
+
+    setFontSizeFromCookies();
 
     $('#incrFont').click(function () {
         increaseFontSize();
     });
     $('#decrFont').click(function () {
         decreaseFontSize();
+    });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
     });
 
 });
@@ -59,16 +65,38 @@ $('document').ready(function(){
 
  function increaseFontSize() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) + 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
     });
  }
  function decreaseFontSize() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) - 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
     });
   } 
 
@@ -96,16 +124,16 @@ $('document').ready(function(){
 <div id="container">
 <!--header template from public folder-->
 
-<!--***************ARIA MARKER 'BANNER'***************-->
+<!--***************ARIA MARKER 'BANNER'-header.tmpl-***************-->
 <header role="banner">
 
   <div id="header-left">
     <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-    <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+    <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
   </div>
 
   <div id="header-right">
-    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="public-style">log out</a></div>
+    <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
     <div id="patron-info">
   <!-- The id="username" div is necessary: the username gets extracted (in 
        fILL_client-public-x.y.js), and passed to the code that allows the patron 
@@ -113,9 +141,9 @@ $('document').ready(function(){
        It doesn't have to be *here*, but it has to be somewhere....
     -->
         <div id="username"><TMPL_VAR name="username"></div>
-        <p><TMPL_VAR name="library"></p>
+        <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
         <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
-	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="decrFont" class="public-style" type="button" value="-A" />
+	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
     </div>
   </div>
 
@@ -140,12 +168,12 @@ $('document').ready(function(){
     <form id="searchForm" action="/cgi-bin/public.cgi" method="post" name="search">
       <!-- The <input id="query"...> also needs name="query"; it is used by public.pm's 
 	search_process to feed the *real* search page -->
-      <input id="query" type="text" name="query" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" name="query" placeholder="Search" value="<TMPL_VAR name='query'>">
       <input id="rm" type="hidden" name="rm" value="search_form">
       <input type="submit" value="Go" class="public-style">
     </form>
   </div>
 </div> <!-- search-container -->
 
-</div><!--container div-->
+
 <!-- Begin content -->

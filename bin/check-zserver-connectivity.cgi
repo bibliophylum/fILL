@@ -36,7 +36,9 @@ my $result_href = { "success" => 0,
 		    "log" => "",
 };
 
-my @SpruceLibraries = qw(MS MBOM MVE ME MMCA MDB MSOG MMA MPLP MWOW MMOW MAOW MMIOW MSTR MSTOS MTSIR MWPL);
+my @SpruceLibraries = qw(MWPL MAOW MMIOW MMOW MWOW MBOM MMA MSTR AB MWP MSTOS MTSIR MMCA MVE ME MS MSOG MDB MPLP MSSC MEC MNH MSRH MTK MTPK MWMW MRD MBI MSCL);
+my @ParklandLibraries = qw(MDPGL MDPGP MDPMC MDPHA MDA MDPSL MDPFO MDPBO MDPGV MDPBR MDPLA MDPBI MDPSI MDPST MDPMI MDPRO MDPOR MDPWP MDPER MDPSLA MDP MRO);
+my @WesternLibraries = qw(MCNC MHW MGW MNW MBW);
 
 if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # pre-Perl 5.10, you'd have to use something like (untested):
@@ -47,8 +49,15 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     if ($libsym ~~ @SpruceLibraries) {
 	$libsym = "SPRUCE";
     }
+    if ($libsym ~~ @ParklandLibraries) {
+	$libsym = "MDA";
+    }
+    if ($libsym ~~ @WesternLibraries) {
+	$libsym = "MBW";
+    }
     $result_href->{libsym} = $libsym;
 
+    # see if that symbol shows up in any of the pazpar2/settings/ files:
     my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
     my @f = `$cmd`;
 
@@ -286,7 +295,7 @@ sub admin_test_zserver_process {
     }
 
     my $template = $self->load_tmpl('admin/test_zserver.tmpl');
-    $template->param(pagetitle => 'Maplin-3 Admin Test zServer',
+    $template->param(pagetitle => 'fILL Admin Test zServer',
 		     username => $self->authen->username,
 		     zservers => $ar_conn,
 		     conn => $conn,

@@ -1,31 +1,65 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">
+<!--<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css">-->
 <script type="text/javascript">
     set_primary_tab("menu_help");
 </script>
-<div id="container">
-<!--
-  <div id="aside-img-left">
-      <img src='/img/fill-help.jpg' alt="Three children sitting on a couch in the library reading books"/>
-      <p class="note">Image care of <a href="https://www.flickr.com/photos/sanjoselibrary/2839834669/">the San Jose Library</a></p>
-  </div>
--->
-<div role="main">
-<h2>Help</h2>
 
-	<p>Here is a tutorial on using fILL to find and request titles from any Manitoba public library:</p>
+<div id="clear"></div>
 
-	<object class="fill-help" data="/patrons-searching-tutorial.pdf" type="application/pdf" height="900">
-	  alt : <a href="/patrons-searching-tutorial.pdf">Patrons - Searching tutorial.pdf</a>
-	</object>
-  <p>Or click here to <a href="/patrons-searching-tutorial.pdf">download PDF</a>[285 KB]</p>
-</div>
-</div><!--container div-->
-
-<!--
-      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
-      <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
--->
-
-
+<div id="content">
+  <!--
+      <div id="aside-img-left">
+	<img src='/img/fill-help.jpg' alt="Three children sitting on a couch in the library reading books"/>
+	<p class="note">Image care of <a href="https://www.flickr.com/photos/sanjoselibrary/2839834669/">the San Jose Library</a></p>
+      </div>
+      -->
+  <div role="main">
+    <h1>Search Tutorial</h1>
+    
+    <h2>How to search for and request interlibrary loan items</h2>
+    
+    <h3>Step 1 – Where to complete a search</h3>
+    <p>Complete a search from any one of the tabs in the fILL website.</p>
+    <img class="help-img" alt="screenshot of search area" src="/img/help01.png"/>
+    
+    <h3>Step 2 – How to complete a search</h3>
+    <p>Enter your search terms in to the search bar at the top of the screen, and click “Go”.</p>
+    <img class="help-img" alt="Screenshot typing into search area" src="/img/help02.png"/>
+    
+    <h3>Step 3 – When is my search complete</h3>
+    <img class="help-img-float" alt="Screenshot of progress bar" src="/img/help03.png" />
+    <p>The search will begin, and your page will start updating. Wait for the “Searching...” progress bar in the upper left to finish loading (it's very fast!).</p>
+    <p>Your search results will look like this:</p>
+    <img class="help-img" alt="Screenshot  of a list of 8 search results" src="/img/help04.png" />
+    
+    <h3>Step 4 – Click on the title you are interested in.</h3>
+    <img class="help-img" alt="Screenshot of a search result expanded" src="/img/help05.png" />
+    <p>If this is the book you'd like to request, click on the “Request” button.</p>
+    <img class="help-img" alt="Screenshot of the request button being clicked" src="/img/help06.png" />
+    <p>If this isn't the right book, click on the title again to hide the details, and try another title.</p>
+    <p>You're done!</p>
+    <p>If you decide you don’t want this item after all, you can cancel your request right away.</p>
+    <img class="help-img" alt="Screenshot of the cancel request button is now shown" src="/img/help07.png"/>
+    
+    
+    <h2>Becoming a Power-user!</h2>
+    
+    <h3>Refining your search</h3>
+    <img class="help-img" alt="Screenshot of search refinement options that appear in the aside section after a search" src="/img/help08.png" />
+    <p>In your search results page, along the left-hand side, there is a list of all of the subjects and authors that were found in all of the records your search returned.</p>
+    <p>The number in parenthesis counts how many of your results have that particular subject or author.</p>
+    <p>Clicking on a subject or author will refine your search terms by adding that specific information. The system will re-do the search with your new terms.</p>
+    <p>You can continue to refine your results as often as you need.</p>
+    <p>Or you can enter a completely new search into the search bar at the top of the screen.</p>
+    
+    <h3>Sorting the results, and moving from page to page</h3>
+    <img class="help-img-float" alt="Screenshot of dropdown list, choose from 4 options, relevance, title, newest, oldest" src="/img/help09.png"/>
+    <p>Search results are sorted by <strong>relevance</strong> by default. This will place the books that most closely match your search terms at the top of the list.</p>
+    <p>You can choose to sort by title or by publication date, by clicking the “Sort by” button at the top of the results list.</p>
+    <p>You can page through your results by clicking on the “<strong>&lt;&lt; Prev</strong>” and “<strong>Next &gt;&gt;</strong>” links, or by choosing a page number to jump to.</p>
+    <p>Or click here to <a href="/patrons-searching-tutorial.pdf">download PDF</a>[285 KB]</p>
+    
+  </div><!-- role=main -->
+</div><!--content div-->
+  
 <TMPL_INCLUDE NAME="footer.tmpl">

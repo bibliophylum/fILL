@@ -13,7 +13,7 @@ my %SPRUCE_TO_MAPLIN = (
     'MMIOW' => 'MMIOW',      # Miami
     'MMOW' => 'MMOW',        # Morden
     'MWOW' => 'MWOW',        # Winkler
-    'BOISSEVAIN' => 'MBOM',
+    'MBOM' => 'MBOM',        # Boissevain
     'MANITOU' => 'MMA',
     'STEROSE' => 'MSTR',
     'AB' => 'MWP',
@@ -85,7 +85,7 @@ my $hr_id = $dbh->selectrow_hashref(
     undef,
     $username
     );
-#print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id);
+print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id);
 my $pid = $hr_id->{pid};
 my $lid = $hr_id->{home_library_id};
 my $library = $hr_id->{library};
@@ -104,6 +104,8 @@ my $author = eval { decode( 'UTF-8', $q->param('author'), Encode::FB_CROAK ) };
 if ($@) {
     $author = unidecode( $q->param('author') );
 }
+my $pubdate = $q->param('pubdate');
+my $isbn = $q->param('isbn');
 
 # check if this is a duplicate of an existing request (e.g. patron hit 'reload')
 my $matching = $dbh->selectall_arrayref(
@@ -194,17 +196,25 @@ foreach my $num (sort keys %sources) {
 }
 #print STDERR "make-patron-request.cgi sources array:\n" . Dumper(@sources) ;
 
-$medium = sprintf("%.40s", $medium);
+$title   = sprintf("%.1024s", $title);
+$author  = sprintf("%.256s", $author);
+$medium  = sprintf("%.80s", $medium);
+$pubdate = sprintf("%.20s", $pubdate);
+$isbn    = sprintf("%.20s", $isbn);
+
+#print STDERR "pid [$pid] lid [$lid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
 
 # These should be atomic...
 # create the request_group
-$dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid) VALUES (?,?,?,?,?)",
+$dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid, pubdate, isbn) VALUES (?,?,?,?,?,?,?)",
 	 undef,
 	 $title,
 	 $author,
 	 $medium,
 	 $pid,     # requester
-	 $lid      # requester's home library
+	 $lid,     # requester's home library
+	 $pubdate,
+	 $isbn
     );
 my $pr_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'patron_request_seq'});
 

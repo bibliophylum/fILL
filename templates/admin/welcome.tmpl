@@ -1,0 +1,63 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<script language="javascript">
+
+$('document').ready(function() {
+
+  // Most primary tabs are set as the current tab in the submenu_xxxxx.
+  // welcome menu doesn't have a submenu, so we set the current tab here.
+
+  set_primary_tab("menu_home");
+
+});
+</script>
+
+<div id="center" role="main">
+
+<div id="main-left" class="tone-box" >
+
+  <div class="alert-box" >
+    <p>Some random admin reminder.</a></p>
+  </div>
+  <hr>
+
+  <h2>Quick Links</h2>
+  <!--
+      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+  <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+  -->
+
+  <p><strong>Public fILL</strong></p>
+  <ul>
+    <li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
+    <li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
+    <li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
+  </ul>
+  
+  <p><strong>Library fILL</strong></p>
+  <ul>
+    <li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
+  </ul>
+  
+  <p><strong>Counting Opinions</strong></p> 	
+  <ul> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
+    <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
+    <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
+  </ul>
+
+</div>
+
+<div id="main-right" class="tone-box" role="complementary">
+  <h2>Updates</h2>
+  <hr>
+
+  <strong>Tuesday 27th January 2015 Release notes</strong> <span style="color:red;"> (new!)</span>
+  <p>Hey, here's how to do something....</p>
+</div>	
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

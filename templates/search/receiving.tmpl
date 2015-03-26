@@ -1,8 +1,11 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/plugins/jquery.printElement.js"></script>
-<script type="text/javascript" src="/js/receiving-1.1.js"></script>
+<!-- printElement uses jQuery .browser, which was removed in jQuery 1.9
+     jquery-migrate restores this functionality: -->
+<script type="text/javascript" src="/plugins/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/plugins/jquery.printElement.min.js"></script>
+<script type="text/javascript" src="/js/receiving-1.2.js"></script>
 
 
 <script type="text/javascript">
@@ -12,93 +15,36 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-//    $(".btnPrint").printPage();
-
-    $.getJSON('/cgi-bin/get-receiving-list.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                //alert (data.receiving[0].id+" "+data.receiving[0].msg_from+" "+data.receiving[0].call_number+" "+data.receiving[0].author+" "+data.receiving[0].title+" "+data.receiving[0].ts); //further debug
-                build_table(data);
-
-                //$('#gradient-style').dataTable();
-                oTable = $('#receiving-table').dataTable({
-                       "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2,7],
-                           "visible": false
-                       } ],
-                      "fnInitComplete": function() {
-                         // this handles a bug(?) in this version of datatables;
-                         // hidden columns caused the table width to be set to 100px, not 100% 
-                         $("#receiving-table").css("width","100%");
-                      }
-
-
-                  });
-           });
-
-    $(function() {
-           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    });
-
-    $("#slipPrinting").buttonset();
-    $("#slipPrinting").append("<input type='radio' name='slip' value='single' id='single' checked='checked'/><label for='single'>Individual slips</label>");
-    $("#slipPrinting").append("<input type='radio' name='slip' value='multi' id='multi'/><label for='multi'>Multiple slips on a page</label>");
-    $("#slipPrinting").append("<input type='radio' name='slip' value='none' id='none'/><label for='none'>Do not print slips</label>");
-    $("#slipPrinting").buttonset('refresh');
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-});
-
 </script>
 
 
 <div id="center" role="main">
 
     <div id="waitDiv">
-      Loading... <img src="/wait.gif">
+      Loading... <img src="/wait.gif" alt="loading indicator">
     </div>
 
-    <div id="myDiv"><br />
-      <h3>Printing of Date-Due slips</h3>
-      <p>Select your printing option:</p>
+    <div id="myDiv">
+      <p>Select your due-date slip printing option:</p>
       <div id="slipPrinting"></div>
       <div id="multiCount"></div>
-
       <br/>
-      <h3>Receiving</h3>
       <div id="mylistDiv"></div>
-    </div>
-
-    <div id="multiPrint">
     </div>
 
 <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <ol>
-      <li>As books arrive from lending libraries to fill your ILL requests, click the 'Received' button for that book.</li>
-      <li>You will have the option of printing a date-due slip.</li>
-    </ol>
+
+      <p>As items arrive, receive them by clicking the 'Received' button. Once items are received, they will be removed from this list and you will have the option of printing a due date slip.</p>
+      <p>You can see the status of all of your active ILLs in the 'Current' tab.</p>
+
 </div>
+
+<!-- slipbox and multiPrint are used by receiving.js to enable slip printing
+     (using .printElement() plugin, which lets us print the contents of a
+     specific div -->
+<div id="slipbox"></div>
+<div id="multiPrint"></div>
 
 </div>
 

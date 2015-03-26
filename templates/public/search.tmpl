@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
  
@@ -18,13 +17,20 @@
   </script>
 <![endif]-->
 
-<meta name=viewport content="width=device-width, initial-scale=1">
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-  <link rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"></link>
-  <link rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"></link>
-  <script type="text/javascript" src="/js/jquery-1.7.min.js"></script>
-  <script type="text/javascript" src="/js/pz2.js"></script>
-  <script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
+<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+
+<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+
+<script type="text/javascript" src="/js/pz2.js"></script>
+<script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
 
 <script type="text/javascript">
 
@@ -32,11 +38,48 @@
     document.getElementById(tab_id).className='current_tab';
   }
 
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) + 1
+        });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) - 1
+        });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
+    });
+  } 
+
 </script>
 
 <!-- Google analytics -->
 <script type="text/javascript">
-
+<!--
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-21021258-1']);
   _gaq.push(['_trackPageview']);
@@ -46,7 +89,7 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
+-->
 </script>
 
 <script type="text/javascript">
@@ -58,7 +101,9 @@
 <script type="text/javascript">
   $('document').ready(function(){
 
-    $("#image").append("<img src=/img/fill-search.jpg>");
+    setFontSizeFromCookies();
+
+    $("#image").append("");
 
     $("#query").focus();
 
@@ -67,6 +112,16 @@
         var $title = $(this).attr("title");
         $("#query").val( $title );
         $("#search-submit-button").click();
+    });
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
     });
 
   });
@@ -87,18 +142,18 @@
 
 <!-- from header.tmpl -->
 
-<div id="container">
+<div id="container"><!--closes in footer.tmp-->
 
-  <!--***************ARIA MARKER 'BANNER'***************-->
+  <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
   <header role="banner">
 
     <div id="header-left">
-      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+      <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"/></a></div>
+      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
     </div>
 
     <div id="header-right">
-      <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="public-style">log out</a></div>
+      <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
       <div id="patron-info">
     <!-- The id="username" div is necessary: the username gets extracted (in 
          fILL_client-public-x.y.js), and passed to the code that allows the patron 
@@ -106,7 +161,9 @@
          It doesn't have to be *here*, but it has to be somewhere....
       -->
           <div id="username"><TMPL_VAR name="username"></div>
-          <p><TMPL_VAR name="library"></p>
+          <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
+
+	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
           <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
       </div>
     </div>
@@ -131,7 +188,7 @@
 <div id="search-container">
   <div id="search" role="search">
     <form id="searchForm" name="search">
-      <input id="query" type="text" size="50px" placeholder="Search" value="<TMPL_VAR name='query'>">
+      <input id="query" type="text" placeholder="Search" value="<TMPL_VAR name='query'>"/>
       <!-- The id of the submit button is used in fILL_client-public-x.y.js in the
 	   domReady() function to automatically do the search, if the user had 
 	   filled in the search box from a different page.
@@ -139,12 +196,36 @@
 	   If you change the id here, change it in fILL_client-public too,
 	   or the automatic search won't fire.
 	-->
-      <input id="search-submit-button" type="submit" value="Go" class="public-style">
+      <input id="search-submit-button" type="submit" value="Go" class="public-style"/>
     </form>
   </div>
 </div> <!-- search-container -->
 
 <!--***************ARIA MARKER 'MAIN'***************-->
+<div id="content">
+
+<div id="AVnotice" class="tone-box">
+
+  <h2>Featured</h2><br>
+
+        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
+       The keywords to search for are taken from the "title" attribute.
+  -->
+
+  <div id="covers">
+
+    <a href="#" class="coverlink" title="And The Birds Rained Down Jocelyne Saucier"><img class="covers5" src="/img/covers/cr14-andthebirdsraineddown-220.jpg" alt="And The Birds Rained Down Jocelyne Saucier"></a>
+    <a href="#" class="coverlink" title="Intolerable: A Memoir of Extremes Kamal Al Solaylee"><img class="covers5" src="/img/covers/cr14-intolerable-220.jpg" alt="Intolerable: A Memoir of Extremes Kamal Al Solaylee"></a>
+    <a href="#" class="coverlink" title="Ru kim thuy"><img class="covers5" src="/img/covers/cr14-ru-kim-thuy-books100.jpg" alt="Ru kim thuy"></a>
+    <a href="#" class="coverlink" title="The Inconvenient Indian Thomas King"><img class="covers5" src="/img/covers/cr14-theinconvenientindian-220.jpg" alt="The Inconvenient Indian Thomas King"></a>
+    <a href="#" class="coverlink" title="When everything feels like the movies Raziel Reid"><img class="covers5" src="/img/covers/cr14-wheneverythingfeelslikethemovies-220.jpg" alt="When everything feels like the movies Raziel Reid"></a>
+
+  </div>
+
+  <p><strong>Canada Reads 2015 Finalists</strong></p> 
+       
+</div><!--div id AV display-->
+
 <main id="main" class="tone-box" role="main">
 
 <!-- Begin content -->
@@ -164,32 +245,7 @@
   </div>
  
   <div id="recordview">
-    <div id="AVnotice">
-     <h2>Featured</h2><br>
-
-        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
-	     The keywords to search for are taken from the "title" attribute.
-	-->
-        <a href="#" class="coverlink" title="Jim Crace Harvest" >
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/1.png">
-	</a>
-        <a href="#" class="coverlink" title="Colm Toibin The Testamant of Mary">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/7.png">
-	</a>
-        <a href="#" class="coverlink" title="Ruth Ozeki A Tale for the Time Being">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/27.png">
-	</a>
-        <a href="#" class="coverlink" title="NoViolet Bulawayo We Need New Names">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/68.png">
-	</a>
-        <a href="#" class="coverlink" title="Eleanor Catton The Luminaries">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/73.png">
-	</a>
-        <a href="#" class="coverlink" title="Jhumpa Lahiri The Lowland">
-	  <img class="covers" alt="Man Booker shortlist 2013 book cover" src="/img/covers/90.png">
-	</a>
-       <p><strong>Man Booker 2013 shortlist</strong></p> 
-      </div>
+ 
 
       <div id="ranking" style="clear:left; display:none">
        <form name="select">
@@ -228,16 +284,16 @@
 <!-- End content -->
 </main>
 
-<!--***************ARIA MARKER 'COMPLIMENTARY'***************-->
-<div id="aside" class="tone-box" role="complimentary">
+<!--***************ARIA MARKER 'COMPLEMENTARY'***************-->
+
+<div id="aside" class="tone-box" role="complementary">
   <div id="image"></div>
   <div id="stat"></div>
   <div id="leftcontent"></div>
   <div id="termlist"></div>
 </div>
 
-</div> <!-- container -->
+</div><!--div id content-->
+
 <TMPL_INCLUDE NAME="footer.tmpl">
 
-</body>
-</html>

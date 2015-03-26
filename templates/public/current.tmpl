@@ -22,6 +22,30 @@ $('document').ready(function(){
     var anOpenBorrowing = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "cid", "bVisible": false },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "status" },
+            { "mDataProp": "details" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "action" }
+        ]
+
+    });
+
     $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, lid: <TMPL_VAR name="lid">},
             function(data){
                 build_table(data);
@@ -52,6 +76,7 @@ $('document').ready(function(){
             // hidden 'cid' column (which is necessary for the detail drill-down):
             $('#datatable_borrowing').width("100%");
 	});
+
 
 
 //    $('#datatable_borrowing td.control').live( 'click', function () {        // deprecated in jquery 1.7
@@ -85,18 +110,15 @@ $('document').ready(function(){
 
 </script>
 
-<div id="container">
-
-<div role="main">
-      <div id="middlecontent">
-        <div id="waitDiv">
-          Loading... <img src="/wait.gif">
-        </div>
-
-	<div id="myDiv">
-          <h2>Current borrowing</h2>
-          <br />
-        <div id="mylistDiv"></div>
+<div id="content">  
+  <h1>Current Borrowing</h1>
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif" alt="loading indicator">
   </div>
+  
+  <div id="myDiv">
+    <div id="mylistDiv"></div>
+  </div>
+</div><!--div id content-->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

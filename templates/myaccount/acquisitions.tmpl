@@ -1,0 +1,45 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript" src="/js/library-acquisitions-1.1.js"></script>
+
+<script type="text/javascript">
+  <!--
+  set_secondary_tab("menu_myaccount_acquisitions");
+  //-->
+</script>
+
+<script type="text/javascript">
+set_secondary_tab("menu_myaccount_acquisitions");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+</script>
+
+
+<div id="center" role="main">
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <div id="myDiv">
+      <div id="mylistDiv">
+      </div>
+    </div>
+
+<div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+
+      <p>Items that you mark as 'Add to Aquisitions' in the <strong>'New patrons requests'</strong> and <strong>'Unfilled'</strong> tabs will be placed here</p>
+      <p>Make use of the list to assist in your library's collection development</p>
+      <p>Export as a CSV or print out the list and share with collections staff</p>
+      <p>Place a hold on the requested item with the associated member barcode</p> 
+
+</div>
+
+</div>
+
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/patron-registration-1.0.js"></script>
+<script type="text/javascript" src="/js/patron-registration-1.1.js"></script>
 
 <!-- A bit of custom css for this page only -->
 <style type="text/css">
@@ -14,98 +14,18 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-    $("#search").hide();
-    $(".inline-items").children().hide();
-    $(".inline-items").children(":contains('home')").show();
-
-    $.getJSON('/cgi-bin/get-map-regions.cgi', 
-            function(data){
-                build_region_div(data);
-           })
-        .success(function() {
-            //alert('success');
-        })
-        .error(function(data) {
-            alert('error');
-        })
-        .complete(function() {
-            //alert('ajax complete');
-        });
-
-    $("#registration_form").submit(function( event ) {
-        if (ValidateForm()) {
-            register_patron();
-        }
-        event.preventDefault();
-    });
-
-    $( "#reg_username" ).blur(function() {
-
-        if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
-            // nothing to check yet
-        } else {
-            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
-                function(data){
-                    if (data.exists == 1) {
-                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
-                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
-                        $("#reg_username").focus();
-                    } else {
-                        $("#username_message").text("Username is unique, good!");
-                    }
-                })
-            .success(function() {
-                //alert('success');
-            })
-            .error(function(data) {
-                alert('error');
-            })
-            .complete(function() {
-                //alert('ajax complete');
-            });
-        }
-    });
-
-
-    $( "#password2" ).blur(function() {
-
-        if ($("#password").val() === undefined 
-           || $("#password").val().length == 0 
-           || $("#password2").val() === undefined 
-           || $("#password2").val().length == 0) {
-
-            alert("Please enter a password, and then re-type the password.");
-            $("#password").focus();
-
-        } else {
-            if ($("#password").val() === $("#password2").val()) {
-                $("#password_message").text("Passwords match, good!");
-            } else {
-
-                $("#password_message").text("Your re-typed password did not match your origial password.  Please enter (and then re-type) a new password.");
-                $("#password_message").stop(true,true).effect("highlight", {}, 2000);
-                $("#password").focus();
-
-            }
-        }
-    });
-
-});
-
 </script>
 
-<div id="container">
+<div id="clear"></div>
+<div id="content">
   <div id="aside-img-left">
-    <img src="/img/fill-registration.jpg" alt="man sitting in a chair relaxing and reading a book">
-    <p class="note">Image care of <a href="https://www.flickr.com/photos/alancleaver/4297809244/">Alan Cleaver</a></p>
+    <img src="/img/regional_map.png" alt="map of Manitoba with all the regions listed">
   </div>
 
   <div id="main-info-right" class="tone-box">
 
       <div id="waitDiv">
-        Loading... <img src="/wait.gif">
+        Loading... <img src="/wait.gif" alt="loading indicator">
       </div>
 
       <div id="region">
@@ -115,7 +35,8 @@ $('document').ready(function(){
       <div id="libraries" style="display:none; clear:both;">
       </div>
     <p> </p>
-
+</div>
+ <div id="main-info-right">
     <div id="registration" style="display:none; clear:both;">
       <br/>
       <h2>Registration form</h2>
@@ -130,39 +51,43 @@ $('document').ready(function(){
 	  -->
 
         <table id="fill-table">
+	  <tr>
+	    <th>Home library</th>
+	    <td><p id="home_library_name"></p></td>
+	  </tr>
           <tr>
-        	  <th>Home library</th>
-        	  <td><p id="home_library"></p></td>
-        	</tr>
+            <th>Home library location</th>
+            <td><p id="home_library"></p></td>
+          </tr>
           <tr>
-        	  <th>Your name</th>
-        	  <td><input type="text" id="patron_name"></td>
-        	</tr>
+            <th>Your name</th>
+            <td><input type="text" id="patron_name"></td>
+          </tr>
           <tr>
-        	  <th>Library card number</th>
-        	  <td><input type="text" id="barcode"></td>
-        	</tr>
+            <th>Library card number</th>
+            <td><input type="text" size="13" maxlength="13" id="barcode"></td>
+          </tr>
           <tr>
-        	  <th>Email address</th>
-        	  <td><input type="text" id="email_address"></td>
-        	</tr>
+            <th>Email address</th>
+            <td><input type="text" id="email_address"></td>
+          </tr>
           <tr>
-        	  <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
-        	</tr>
+            <td colspan="2"><strong>You also need to choose a username and password for this system:</strong></td>
+          </tr>
           <tr>
-        	  <th>Username</th>
-		  <!-- this id="username" was conflicting with the username in the header,
-		    so I've renamed this one to "reg_username". -->
-        	  <td><input type="text" id="reg_username" size=30 maxlength=50><br><p id="username_message"></p></td>
-        	</tr>
+            <th>Username</th>
+	    <!-- this id="username" was conflicting with the username in the header,
+		 so I've renamed this one to "reg_username". -->
+            <td><input type="text" id="reg_username" size=30 maxlength=50><br><p id="username_message"></p></td>
+          </tr>
           <tr>
-        	  <th>Password</th>
-        	  <td><input type="password" id="password" size=30 maxlength=50></td>
-        	</tr>
+            <th>Password</th>
+            <td><input type="password" id="password" size=30 maxlength=50></td>
+          </tr>
           <tr>
-        	  <th>Re-type Password</th>
-        	  <td><input type="password" id="password2" size=30 maxlength=50><br><p id="password_message"></p></td>
-        	</tr>
+            <th>Re-type Password</th>
+            <td><input type="password" id="password2" size=30 maxlength=50><br><p id="password_message"></p></td>
+          </tr>
         </table>
 
         <input id="home_library_town" type="hidden">
@@ -177,5 +102,5 @@ $('document').ready(function(){
     <p> </p>
 
   </div><!-- div id main-info-right -->
-</div><!-- div id container -->
+</div><!-- div id content -->
 <TMPL_INCLUDE NAME="footer.tmpl">

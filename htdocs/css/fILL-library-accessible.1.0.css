@@ -2,11 +2,36 @@
 
 /***---Start of new library client side CSS---**/
 
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 100%;  /* permits better scaling (all other font sizes in em) */
+}
+
+#container
+{
+  margin: 0 auto;
+  padding: 0em .5em;
+  width: 85%;
+  height: auto;
+  clear: both;  /* start fresh with floatiness within the container */
+  -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+}
+
+#login-container {
+  width: 60%;
+  margin: auto;
+}
+
 #header.header-library {
 }
 
 #main-left {
-	width: 30%;
+	width: 28%;
 	padding: 1em;
 	float: left;
 	display: inline;
@@ -14,7 +39,7 @@
 }
 
 #main-right {
-	width: 65%;
+	width: 70%;
 	padding: 1em;
 	float: right;
 	display: inline;
@@ -23,12 +48,15 @@
 
 #lib-nav-primary
 {
-
   display: block;
   float: left;
   width: 100%;
   margin: 0em;
   font-size: 1.4em;
+}
+
+#lib-nav-primary #menu_borrow, #lib-nav-primary #menu_lend {
+  font-weight: bold;
 }
 
 #lib-nav-primary ul
@@ -118,6 +146,23 @@
 
 /* Circle has been created to highlight alerts */
 
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: .5em;
+  margin-bottom: .5em;
+  color: #000;
+}
+
+.alert-box a:link { color: #000; }
+.alert-box a:visited { color: #000; }
+.alert-box a:hover { color: #505050; }
+.alert-box a:active { color: #000; }
+.alert-box a:focus { color: #000; }
+
 .circle {
   font-size: .8em;
   font-family: sans-serif;
@@ -130,13 +175,24 @@
 }
 
 #center {
-  margin-top: 1em;
-  display: block;
+  width: 100%;
+  margin: 1em auto;
+  display: inline-block;
   clear: left;
 }
 
 .table-width-lib {
   width: 90%;
+}
+
+#history {
+  display:inline; 
+  margin:1em;
+}
+
+.community {
+  color: #183935;
+  background-color: #f3f3f3;
 }
 
 /*-- specific to make_request.tmp --*/
@@ -166,6 +222,153 @@
     margin-bottom: 1em;
 }
 
+/* advanced search */
+.two-column {
+    float: left;
+    width: 50%;
+}
+#advanced_search label {
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+}
+#advanced_search input {
+  display: inline-block;
+}
+
+/* action button styles for data table buttons */
+input[type="button"].action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"].action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+
+/* theme-chooser buttons - colours are specified here because
+   they won't change regardless of current theme. Should be a
+   'preview' of what the chosen theme will be. */
+input[type="button"].theme-chooser1 {
+    background-color: #0f4072;
+    color: #fff;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser1 {
+    background-color: #678AAE;
+    color: #fff;
+    font-size: 1em;
+}
+
+input[type="button"].theme-chooser2 {
+    background-color: #fff;
+    color: #000;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser2 {
+
+    background-color: #505050;
+    color: #000;
+    font-size: 1em;
+}
+
+input[type="button"].theme-chooser3 {
+    background-color: #000;
+    color: #fff;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser3 {
+    background-color: #505050;
+    color: #fff;
+    font-size: 1em;
+}
+
+/* small buttons */
+input[type="button"].small-function-button {
+    font-size: 1em;
+}
+input[type="button"]:hover.small-function-button {
+    font-size: 1em;
+}
+
+/* advanced search */
+#advanced_search table.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border: 1px solid #b3b3b3;
+}
+
+#instructions input[type="text"]
+{
+  width: 50%;
+}
+
+#zserver {
+  background-color: #e3e3e3;
+  margin: ;
+  padding: ;
+  width: ;
+}
+
+.zstatus {
+  border: 1px solid #b3b3b3;
+  background: #d3d3d3;
+  padding: .7em .5em;
+  font-size: 1em;
+  font-style: bold;
+  margin: .5em 0em;
+  height: 3em;
+}
+
+zyes, zno {
+  width: auto;
+  float: right;
+  padding: .5em;
+}
+
+.zyes {
+  width: 30%;
+  color: #000;
+  background-color: #adff2f;
+  border: 1px solid green;
+  padding: .3em;
+  float: right;
+}
+
+.zno {
+  width: 30%;
+  color: #000;
+  background-color: #ff6262;
+  border: 1px solid #660000;
+  padding: .3em;
+  float: right;
+}
 
 /***---End of new library client side CSS--**/
 

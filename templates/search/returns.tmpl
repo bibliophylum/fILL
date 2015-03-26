@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/returns-1.1.js"></script>
+<script type="text/javascript" src="/js/returns-1.2.js"></script>
 
 
 <script type="text/javascript">
@@ -11,70 +11,27 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-    $.getJSON('/cgi-bin/get-returns-list.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                //alert (data.returns[0].id+" "+data.returns[0].msg_from+" "+data.returns[0].call_number+" "+data.returns[0].author+" "+data.returns[0].title+" "+data.returns[0].ts); //further debug
-                build_table(data);
-
-                oTable = $('#returns-table').dataTable({
-                       "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2,7],
-                           "visible": false
-                       } ],
-                      "fnInitComplete": function() {
-                          // this handles a bug(?) in this version of datatables;
-                          // hidden columns caused the table width to be set to 100px, not 100%
-                          $("#returns-table").css("width","100%");
-                      }
-                  });
-           });
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-});
-
 </script>
 
 
 <div id="center" role="main">
 
     <div id="waitDiv">
-      Loading... <img src="/wait.gif">
+      Loading... <img src="/wait.gif" alt="loading indicator">
     </div>
 
     <div id="myDiv">
-      <br/>
-      <h3>Returns (ILL items currently out to your patrons)</h3>
+
       <div id="mylistDiv"></div>
     </div>
 
 <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-    <ol>
-      <li>If you try to check a book into your ILS, and your ILS doesn't have a record of that book, it's likely an ILL.</li>
-      <li>Find the book on this screen, click 'Return', and send it back to the lending library using the return slip that came with it.</li>
-    </ol>
+
+      <p>If you try to check a book into your ILS, and your ILS doesn't have a record of that book, it's likely an ILL.</p>
+      <p>Find the item on this screen, click 'Return', and send it back to the lending library using the return slip that came with it.</p>
+      <p>As you mark items 'returned', they are removed from this list.  You can see the status of all of your active ILLs in the 'Current' tab.</p>
+
   </div>
   
 </div>
