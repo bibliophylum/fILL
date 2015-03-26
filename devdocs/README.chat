@@ -32,8 +32,17 @@ Add this to /opt/fILL/conf/fILL.conf (in virtualhost 443, right at the end):
 You'll need to enable apache module proxy_wstunnel.
 
 ------------------
-wsUri needs to be updated in fILL-chat-1.0.js (and htdocs/chat-test.html)
+wsUri needs to be updated in fILL-chat-1.0.js, templates/public/contact.tmpl, and htdocs/chat-test.html
+
 $DEBUG is currently turned on in bin/chat-server.pl
+
+------------------
+Current versions of Firefox disable insecure websockets by default (i.e. without actual security cert).
+This makes it difficult to develop...
+Going to firefox's about:config and toggling network.websocket.allowInsecureFromHTTPS will get rid of the SecurityError.
+
+------------------
+Shutting down the chat server doesn't seem to work cleanly... may need to manually kill the process.  Need to figure this out....
 
 ------------------
 Libraries automatically join channel 'syschan' when they log in.  This lets the chat server know that 

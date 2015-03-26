@@ -75,7 +75,7 @@ if ($logging) {
 	select((select(LOG), $|=1)[0]); # make the log file "hot" - turn off buffering
 }
  
-print LOG "chat server up and running\n";
+print LOG "chat server up and running\n" if ($logging);
 
 # "infinite" loop where some useful process happens
 #until ($dieNow) {
@@ -88,7 +88,7 @@ print LOG "chat server up and running\n";
 #}
  
 #--- the actual server code -------------------------------------------------
-my $DEBUG = 1;
+my $DEBUG = 0;  # 1 for debugging. 2 for more verbose.  But you probably don't want that.
 my %channels = ();
 my $maxHistory = 20;
 my %history = ();
@@ -98,18 +98,20 @@ Net::WebSocket::Server->new(
     listen => 8088,
     on_connect => sub {
         my ($serv, $conn) = @_;
-	print LOG "on_connect\n";
+	logEntry("on_connect\n");
         $conn->on(
 	    handshake => sub {
 		my ($handshake) = @_;
-		print LOG "handshake\n" . Dumper($handshake) . "\n-----------\n" if ($DEBUG);
+		logEntry("handshake\n-----------") if ($DEBUG==1);
+		logEntry("handshake\n" . Dumper($handshake) . "\n-----------") if ($DEBUG==2);
 	    },
 	    ready => sub {
-		print LOG "ready\n-----------\n";
+		logEntry("ready\n-----------");
 	    },
 	    disconnect => sub {
 		my ($code, $reason) = @_;
-		print LOG "disconnect code\n" . Dumper($code) . "\nreason [$reason]\n-----------\n" if ($DEBUG);
+		logEntry("disconnect code\nreason [$reason]\n-----------") if ($DEBUG==1);
+		logEntry("disconnect code\n" . Dumper($code) . "\nreason [$reason]\n-----------") if ($DEBUG==2);
 
 		# remove connection from all channels
 		my @del = ();
@@ -122,7 +124,7 @@ Net::WebSocket::Server->new(
 		}
 
 		foreach my $cu (@del) {
-		    print LOG "deleting " . $cu->[1] . " from " . $cu->[0] . "\n";
+		    logEntry("deleting " . $cu->[1] . " from " . $cu->[0]);
 		    my $lid = $channels{$cu->[0]}{$cu->[1]}{"lid"};
 
 		    if ($cu->[0] eq "syschan") {
@@ -140,12 +142,12 @@ Net::WebSocket::Server->new(
 			my $outgoing_msg = encode_json $href;
 			
 			# add to history
-			print LOG "add " . $cu->[1] . " leaving message to history\n";
+			logEntry("add " . $cu->[1] . " leaving message to history");
 			push @{ $history{"syschan"} }, $outgoing_msg;
 			shift @{ $history{"syschan"} } if (scalar(@{ $history{"syschan"} }) > $maxHistory);
 			
 			# send the message to everyone (else) in the channel
-			print LOG "tell syschan that " . $cu->[1] . " has left\n";
+			logEntry("tell syschan that " . $cu->[1] . " has left");
 			foreach my $uid (keys %{$channels{"syschan"}} ) {
 			    if ($uid ne $cu->[1]) {  # not safe to send to disconnected user
 				$channels{"syschan"}{$uid}{"conn"}->send_utf8( $outgoing_msg );
@@ -162,7 +164,7 @@ Net::WebSocket::Server->new(
 			if ($lib) {
 			    # notify library that user has closed chat:
 			    # send a system message to library on syschan
-			    print LOG "informing $lib that " . $cu->[1] . " has left " . $cu->[0] . "\n";
+			    logEntry("informing $lib that " . $cu->[1] . " has left " . $cu->[0]);
 			    my %hash = ( 
 				'type' => 'close',
 				'message' => $cu->[0],
@@ -170,11 +172,11 @@ Net::WebSocket::Server->new(
 				);
 			    $channels{$cu->[0]}{$lib}{"conn"}->send_utf8( encode_json \%hash );
 
-			    print LOG "deleting " . $lib . " from " . $cu->[0] . "\n";
+			    logEntry("deleting " . $lib . " from " . $cu->[0]);
 			    delete $channels{$cu->[0]}{$lib};
-			    print LOG "deleting channel " . $cu->[0] . "...\n";
+			    logEntry("deleting channel " . $cu->[0] . "...");
 			    delete $channels{$cu->[0]};
-			    print LOG "deleting channel history " . $cu->[0] . "...\n";
+			    logEntry("deleting channel history " . $cu->[0] . "...");
 			    delete $history{$cu->[0]};
 			}
 
@@ -182,23 +184,25 @@ Net::WebSocket::Server->new(
 		}
 
 	    },
-	    pong => sub {
-		my ($message) = @_;
-		print LOG "pong message\n" . Dumper($message) . "\n-----------\n" if ($DEBUG);
-	    },
+#	    pong => sub {
+#		my ($message) = @_;
+#		#logEntry("pong message\n-----------") if ($DEBUG==1);
+#		#logEntry("pong message\n" . Dumper($message) . "\n-----------") if ($DEBUG==2);
+#	    },
 
             utf8 => sub {
                 my ($conn, $msg) = @_;
-		print LOG "utf8\n";
+		logEntry("utf8");
 
-		print LOG "$msg\n";
+		logEntry("$msg");
 		my $hrefFromClient = decode_json $msg;
 
 		my $channel = $hrefFromClient->{'channel'};
+		$channel =~ s/\s/-/g;
 		my $user = $hrefFromClient->{'name'};
 		my $lid  = $hrefFromClient->{'lid'};
 
-		print LOG "add $user to $channel\n";
+		logEntry("add $user to $channel");
 
 		# Add to known connections for this channel,
 		# if it's not already there.
@@ -220,7 +224,7 @@ Net::WebSocket::Server->new(
 			    $channels{$channel}{$user}{"color"} = "22C704";
 			}
 		    }
-		    print LOG "set $user color\n";
+		    logEntry("set $user color");
 		    my $href = { 'type' => 'color','name' => $user,'lid' => $lid,
 				 'message' => $channel, 
 				 'color' => $channels{$channel}{$user}{'color'}
@@ -237,8 +241,8 @@ Net::WebSocket::Server->new(
 
 		    my $count = keys %{$channels{$channel}}; # keys evaluated in scalar context == count of keys
 		    if (($channel ne "syschan") && ($count < 2)) {
-			# we need to figure out who the user's library is, and tell that library to
-			# connect to this new channel, too.
+			# we need to figure out who the user's library is, and tell that 
+			# library to connect to this new channel, too.
 
 			# find the connection for that library id
 			my $libconn;
@@ -251,7 +255,7 @@ Net::WebSocket::Server->new(
 				# notify library that user is opening a chat:
 				# send a system message to library on syschan,
 				# (library will create new connection)
-				print LOG "asking $u to join $channel\n";
+				logEntry("asking $u to join $channel");
 				my %hash = ( 
 				    'type' => 'open',
 				    'message' => $channel,
@@ -293,12 +297,12 @@ Net::WebSocket::Server->new(
 #		# just back to the originator.
 #               $channels{$channel}{$user}{"conn"}->send_utf8( encode_json \%hash );
 
-		print LOG "\n-----------\n" if ($DEBUG);
+		logEntry("\n-----------") if ($DEBUG);
             },
         );
     },
     on_shutdown => sub {
-	print LOG "shutting down\n";
+	logEntry("shutting down\n");
     },
 )->start;
 
@@ -310,7 +314,7 @@ sub logEntry {
 	my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
 	my $dateTime = sprintf "%4d-%02d-%02d %02d:%02d:%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec;
 	if ($logging) {
-		print LOG "$dateTime $logText\n";
+	    print LOG "$dateTime $logText\n";
 	}
 }
  

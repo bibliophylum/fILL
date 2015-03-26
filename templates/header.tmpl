@@ -261,7 +261,7 @@ $('document').ready(function(){
       <div id="header-right">
 	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="library-style">log out</a></div>
 	<div id="patron-info">
-	  <p style="display:none"><TMPL_VAR NAME="username"></p>
+	  <p id="username" style="display:none"><TMPL_VAR NAME="username"></p>
 	  <p id="library_name"><TMPL_VAR NAME="library"></p>
 	  <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>  <!-- used in a LOT of js files -->
 	  <input id="theme1" class="theme-chooser1" type="button" value="A" />
@@ -270,7 +270,7 @@ $('document').ready(function(){
 	  <input id="incrFont" class="theme-chooser1 small-function-button" type="button" value="+" />
 	  <input id="resetFont" class="theme-chooser1 small-function-button" type="button" value="Default" />
 	  <input id="decrFont" class="theme-chooser1 small-function-button" type="button" value="-" />
-	  <input id="chatBtn" class="library-style" type="button" value="Chat" />
+	  <input id="chatBtn" class="theme-chooser1 small-function-button" type="button" value="Chat" />
 	</div><!-- patron-info -->
 
       </div><!--Div header-right-->
@@ -336,7 +336,7 @@ $('document').ready(function(){
 	<li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
 	<li><a id="menu_history" href="/cgi-bin/lightning.cgi?rm=history">History</a></li>
 	<li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
-s	<li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Reports</a></li>
+	<li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Reports</a></li>
 	<li><a id="menu_rotations" style="display:none;" href="/cgi-bin/rotations.cgi?rm=receive_form">*Rotations</a></li>
 	<li><a id="menu_rotations_admin" style="display:none;" href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">*Admin</a></li>
       </ul>
