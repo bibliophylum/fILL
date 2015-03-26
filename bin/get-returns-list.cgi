@@ -27,7 +27,7 @@ where
   ra.msg_from=? 
   and ra.status='Received' 
   and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned') 
-  and ra.request_id not in (select request_id from requests_active where msg_from=24 and status='Renew') 
+  and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Renew' and request_id not in (select request_id from requests_active where msg_to=? and status like 'Renew-Answer%')) 
 order by g.author, g.title
 ";
 
@@ -42,7 +42,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid, $lid );
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { returns => $aref } );
