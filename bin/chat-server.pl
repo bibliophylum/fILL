@@ -75,6 +75,8 @@ if ($logging) {
 	select((select(LOG), $|=1)[0]); # make the log file "hot" - turn off buffering
 }
  
+print LOG "chat server up and running\n";
+
 # "infinite" loop where some useful process happens
 #until ($dieNow) {
 #	sleep($sleepMainLoop);

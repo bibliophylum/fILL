@@ -23,7 +23,7 @@ var connections;
 
 function Channel( channel ) {
     //create a new WebSocket object.
-    var wsUri = "wss://localhost/app/ws/";  
+    var wsUri = "wss://rigel.gotdns.org/app/ws/";  
     var websocket = new WebSocket(wsUri);
     websocket.onmessage = function(ev){ wsOnMessage(ev, channel) };
     websocket.onopen    = function(ev){ wsOnOpen(ev, channel) };
