@@ -64,7 +64,20 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     if (scalar @f == 1) {
 	my $t = $f[0];
 	chomp $t;
-	$t =~ s/^.*(target=.*) name=.*/$1/;
+	if ($t =~ /target=/) {
+	    $t =~ s/^.*(target=.*) name=.*/$1/;
+	} else {
+	    # Individual library profile... doesn't have connection info in the <set ...>,
+	    # instead, it shows up once in the first line (<settings target=...>)
+	    # (This will eventually become the default!)
+	    my $fn = $t;
+	    $fn =~ s/^(.*\.xml):.*/$1/;
+	    open(my $file, '<', $fn) or die "Can't open $fn for read: $!";
+	    my $firstline = <$file>;
+	    close $file;
+	    $firstline =~ s/^<settings (target=.*)>$/$1/;
+	    $t = $firstline;
+	}
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);
 
