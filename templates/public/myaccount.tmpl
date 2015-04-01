@@ -52,6 +52,10 @@ $('document').ready(function(){
       event.preventDefault();
     });
 
+    $("#showChangePassButton").click(function( event ) {
+      toggleChangePassDiv();
+    });
+
     $("#cancel").click(function( event ) {
       $("#divChangePass").toggle();
       $("#showChangePassButton").toggle();
@@ -61,17 +65,10 @@ $('document').ready(function(){
 });
 
 </script>
-<style type="text/css">
-
-/*#aside, #stat, #leftcontent, #termlist, .aside {
-    display: none;!important
-}*/
-
-</style>
 
 <div id="clear"></div>
 <div id="content">
-      <h2>My Account</h2>
+      <h1>My Account</h1>
       <table id="fill-table" class="fill-table-pub">
         <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
         <tr><th scope="row">Username</th><td><TMPL_VAR name="username"></td></tr>
@@ -80,10 +77,10 @@ $('document').ready(function(){
         <tr><th scope="row">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
       </table>
  
-    <a id="showChangePassButton" href="javascript:void(0)" onclick="toggleChangePassDiv()" class="button-left public-style" role="button" type="button">Change password</a>
+    <a id="showChangePassButton" href="#" class="button-left public-style" role="button">Change password</a>
 
     <div id="divChangePass">
-      <form id="changePassword_form" name="changePassword" action="" method="post">
+      <form id="changePassword_form" name="changePassword" action="#" method="post">
         <table>
   	<tr>
   	  <td>Current password:</td>
@@ -102,8 +99,7 @@ $('document').ready(function(){
         <input id="changePassword" type="submit" value="Change" class="public-style">
         <input id="cancel" type="button" value="Cancel" class="public-style">
       </form>
-    </div>
-
-</div>
+    </div><!-- divChangePass -->
+</div><!-- content -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

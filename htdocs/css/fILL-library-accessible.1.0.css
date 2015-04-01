@@ -22,6 +22,11 @@ html, body {
   box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
 }
 
+#login-container {
+  width: 60%;
+  margin: auto;
+}
+
 #header.header-library {
 }
 
@@ -217,6 +222,20 @@ html, body {
     margin-bottom: 1em;
 }
 
+/* advanced search */
+.two-column {
+    float: left;
+    width: 50%;
+}
+#advanced_search label {
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+}
+#advanced_search input {
+  display: inline-block;
+}
+
 /* action button styles for data table buttons */
 input[type="button"].action-button {
     margin: .3em;
@@ -309,6 +328,48 @@ input[type="button"]:hover.small-function-button {
 {
   width: 50%;
 }
+
+#zserver {
+  background-color: #e3e3e3;
+  margin: ;
+  padding: ;
+  width: ;
+}
+
+.zstatus {
+  border: 1px solid #b3b3b3;
+  background: #d3d3d3;
+  padding: .7em .5em;
+  font-size: 1em;
+  font-style: bold;
+  margin: .5em 0em;
+  height: 3em;
+}
+
+zyes, zno {
+  width: auto;
+  float: right;
+  padding: .5em;
+}
+
+.zyes {
+  width: 30%;
+  color: #000;
+  background-color: #adff2f;
+  border: 1px solid green;
+  padding: .3em;
+  float: right;
+}
+
+.zno {
+  width: 30%;
+  color: #000;
+  background-color: #ff6262;
+  border: 1px solid #660000;
+  padding: .3em;
+  float: right;
+}
+
 /***---End of new library client side CSS--**/
 
 

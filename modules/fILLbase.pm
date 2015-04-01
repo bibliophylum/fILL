@@ -185,6 +185,7 @@ sub welcome_process {
 		      sessionid => $self->session->id(),
 		      lid => $lid,
 		      library => $library,
+		      libsym => $symbol,   # needed for z39.50 connectivity check
 	);
 
     # Parse the template

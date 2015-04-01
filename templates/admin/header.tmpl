@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title><TMPL_VAR name="pagetitle"></title>
+
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.0.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
+
+  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-admin-default.css"/>
+
+  <!-- jQuery-UI theme:
+       1. create a new theme using ThemeRoller, and save it to htdocs/themes/xxxx/
+       2. comment out the default jquery-ui.css ("/plugins/jquery-ui-1.11.1/jquery-ui.css")
+       3. add <link... to your new theme ("/themes/xxxx/jquery-ui.css")
+       4. comment out default jquery-ui.js ("/plugins/jquery-ui-1.11.1/jquery-ui.js")
+       5. add <script... to your new theme ("/themes/xxxx/jquery-ui.js")
+
+       The order of these links and scripts is important!
+  -->
+<!-- THEME: comment out default jquery css
+  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
+ -->
+<!-- THEME: add new theme: -->
+  <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-admin/jquery-ui.css"/>
+
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+
+
+
+  <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+
+
+<!-- THEME: comment out default jquery-ui.js:
+  <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
+-->
+<!-- THEME: add new theme's .js: -->
+  <script id="themeroller-js" type="text/javascript" src="/themes/fILL-admin/jquery-ui.js"></script>
+
+
+  <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
+
+<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
+  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+
+<script type="text/javascript">
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$('document').ready(function(){
+
+    $('#theme1').click(function () {
+        $("#csstheme").attr("href", "/css/themes-admin-default.css");
+	$("#themeroller-css").attr("href","/themes/fILL-admin/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
+	$(".small-function-button").switchClass("theme-chooser1 theme-chooser2","theme-chooser3",0);
+	$.cookie('fILL-theme','theme1', { expires: 7, path: '/' });
+    });
+    $('#theme2').click(function () {
+        $("#csstheme").attr("href", "/css/themes-library-colors.css");
+	$("#themeroller-css").attr("href","/themes/fILL-clean/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo.png");
+	$(".small-function-button").switchClass("theme-chooser2 theme-chooser3","theme-chooser1",0);
+	$.cookie('fILL-theme','theme2', { expires: 7, path: '/' });
+    });
+    $('#theme3').click(function () {
+        $("#csstheme").attr("href", "/css/themes-library-contrast.css");
+	$("#themeroller-css").attr("href","/themes/fILL-contrast/jquery-ui.css");
+	$("#theme-logo").attr("src","/img/fill-lib-logo-theme2.png");
+	$(".small-function-button").switchClass("theme-chooser1 theme-chooser3","theme-chooser2",0);
+	$.cookie('fILL-theme','theme3', { expires: 7, path: '/' });
+    });
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+
+    var curTheme = $.cookie('fILL-theme');
+    if (curTheme) {
+        $('#'+curTheme).click();
+    }    
+
+});
+
+</script> <!-- end of document.ready -->
+
+
+<script type="text/javascript">
+
+  function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+  function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+  }
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) + 1
+        });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        $(this).css({
+            'font-size': parseFloat($(this).css('font-size')) - 1
+        });
+    });
+  } 
+
+  function toggleAdvanced() {
+      if ($('#advanced_search').is(':visible')) {
+          $('#advanced_search').hide();
+          $('#keyword_heading').hide();
+          $('#help').show();
+          $('#advanced-btn').attr('value','Advanced');
+      } else {
+          $('#advanced_search').show();
+          $('#keyword_heading').show();
+          $('#help').hide();
+          $('#query').val(""); // clear the general keyword (query) field
+          $('#advanced-btn').attr('value','Basic');
+      }
+  }
+
+</script>
+
+<script type="text/javascript">
+  function callDomReadyIfAvailable() {
+    // domReady() is defined (and only used) in search.  If it's defined, call it.
+    if (typeof domReady == 'function') { domReady(); }
+  }
+</script>
+
+</head>
+<!--Library Client side fILL-->
+
+<body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
+
+<div id="container">
+<p>&nbsp;</p>
+<div id="header" class="header-library">
+    <div id="header-left">
+      <div id="fill-logo"><a href="/"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
+      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
+    </div>
+
+  <!-- Not displayed on any page except lightning (at the moment) -->
+<div id="header-right">
+    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="library-style">log out</a></div>
+  <div id="patron-info">
+    <p style="display:none"><TMPL_VAR NAME="username"></p>
+    <p id="library_name"><TMPL_VAR NAME="library"></p>
+    <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>
+    <input id="theme1" class="theme-chooser1" type="button" value="A" />
+    <input id="theme2" class="theme-chooser2" type="button" value="A" />
+    <input id="theme3" class="theme-chooser3" type="button" value="A" />
+    <input id="incrFont" class="theme-chooser1 small-function-button" type="button" value="+" />
+    <input id="decrFont" class="theme-chooser1 small-function-button" type="button" value="-" />
+  </div>
+
+  </div><!--Div header-right-->
+  </div><!--Div id header-->
+
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container" style="display: none">
+  <div id="search" role="search">
+    <div id="header_searchbar">
+    <form id="searchForm" name="search">
+      <span id="keyword_heading" style="display: none">General keyword</span>
+      <input id="query" type="text"/>
+      <div id="advanced_search" style="display: none">
+	<div class="tone-box">
+
+	  <label for="adv_title">Title: </label>
+	  <input id="adv_title" type="text"/><br/>
+	  
+	  <label for="adv_author">Author: </label>
+	  <input id="adv_author" type="text"/><br/>
+	  
+	  <label for="adv_subject">Subject: </label>
+	  <input id="adv_subject" type="text"/><br/>
+	  
+	  <label for="adv_series">Series: </label>
+	  <input id="adv_series" type="text"/>
+
+	  <h3>Search help</h3>
+	  <p>fILL does a general keyword search by default.</p>
+  
+	  <p><strong>Specific title:</strong> ti="The case for mars"</p>
+	  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
+	  <p><strong>Specific subject:</strong> su="mars planet"</p>
+	  <p><strong>Series:</strong> series="fear street"</p>
+
+	  <p>You can combine these using the connectors AND, OR, NOT:</p>
+	  <p>au="david drake" and au="eric flint"</p>
+	  <p>ti="cooking" and su="solar"</p>
+	  <p>ti="cooking" not su="microwave"</p>
+  
+	</div>
+      </div>
+      <input id="button" type="submit" value="Search" class="library-style" />
+      <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
+      <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
+    </form>
+    </div>
+  </div>
+</div>
+
+<!--***************ARIA MARKER 'NAVIGATION'***************-->
+<nav role="navigation" id="lib-nav-primary">
+  <ul class="inline-items">
+    <li><a id="menu_home" href="/cgi-bin/admin.cgi?rm=welcome">Home</a></li>
+    <li><a id="menu_test_zserver" href="/cgi-bin/admin.cgi?rm=test_zserver">Test a zServer</a></li>
+    <li><a id="menu_load_spruce_ill_numbers" href="/cgi-bin/admin.cgi?rm=spruce_ill">Load Spruce ILL numbers</a></li>
+  </ul>
+</nav>
+
+<!-- Begin content -->
+

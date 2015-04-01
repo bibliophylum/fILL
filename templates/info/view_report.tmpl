@@ -10,21 +10,21 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    oTable = $('#datatable_report').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 12,
-        "aLengthMenu": [[12, 24, 48, -1], [12, 24, 48, "All"]],
-	"oTableTools": {
+    $('#datatable_report').DataTable({
+        "jQueryUI": true,
+        "pagingType": "full_numbers",
+        "info": true,
+      	"ordering": true,
+	"dom": '<"H"Tfr>t<"F"ip>',
+        "pageLength": 12,
+        "lengthMenu": [[12, 24, 48, -1], [12, 24, 48, "All"]],
+	"tableTools": {
           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
 	},
-        "aaSorting": [[0,"asc"],[1,"asc"]],
-        "bAutoWidth": true,
+        "order": [[0,"asc"],[1,"asc"]],
+        "autoWidth": true,
         "scrollX": true, 
-        "fnInitComplete": function() {
+        "initComplete": function() {
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
             $("#datatable_report").css("width","100%");
@@ -80,7 +80,7 @@ $('document').ready(function(){
     <h2>Instructions</h2>
 
     <h3>Borrowing</h3>
-    <table id="fill-table" class="table-width-lib">
+    <table class="fill-table table-width-lib">
       <tr><td style="border:1px solid black;">Items requested</td><td style="border:1px solid black;">Number of items you've requested.</td></tr>
       <tr><td style="border:1px solid black;">Actual requests</td><td style="border:1px solid black;">Number of requests made to lenders, including unfilled requests</td></tr>
       <tr><td style="border:1px solid black;">Unfilled requests</td><td style="border:1px solid black;">Number of unfilled requests</td></tr>
@@ -89,7 +89,7 @@ $('document').ready(function(){
     </table>
 
     <h3>Lending</h3>
-    <table id="fill-table" class="table-width-lib">
+    <table class="fill-table table-width-lib">
       <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;">Number of requests you received from other libraries</td></tr>
       <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;">Number of requests to which you responded 'unfilled'</td></tr>
       <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">Number of items you sent out.</td></tr>

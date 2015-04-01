@@ -57,6 +57,9 @@ $.ajaxSetup ({
 });  
 
 $('document').ready(function(){
+
+    setFontSizeFromCookies();
+
     $.getJSON('/cgi-bin/rotations-allowed.cgi', 
         {lid: <TMPL_VAR name="lid"> },
         function(data){
@@ -108,6 +111,9 @@ $('document').ready(function(){
     $('#decrFont').click(function () {
         decreaseFontSize();
     });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
+    });
 
     var curTheme = $.cookie('fILL-theme');
     if (curTheme) {
@@ -131,16 +137,48 @@ $('document').ready(function(){
 
  function increaseFontSize() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) + 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
     });
  }
  function decreaseFontSize() {
     $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
         $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) - 1
+            'font-size': fs + "px"
         });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
+    });
+  } 
+ // if we find that the table is overflowing...
+ function decreaseTableFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
     });
   } 
 
@@ -157,6 +195,23 @@ $('document').ready(function(){
           $('#query').val(""); // clear the general keyword (query) field
           $('#advanced-btn').attr('value','Basic');
       }
+  }
+
+  // Determines if the passed element is overflowing its bounds,
+  // either vertically or horizontally.
+  // Will temporarily modify the "overflow" style to detect this
+  // if necessary.
+  function checkOverflow(el) {
+    var curOverflow = el.style.overflow;
+    if ( !curOverflow || curOverflow === "visible" )
+       el.style.overflow = "hidden";
+
+    var isOverflowing = el.clientWidth < el.scrollWidth 
+       || el.clientHeight < el.scrollHeight;
+
+    el.style.overflow = curOverflow;
+
+    return isOverflowing;
   }
 
 </script>
@@ -188,91 +243,98 @@ $('document').ready(function(){
 
 <body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
 
-<div id="container">
-<p>&nbsp;</p>
-<div id="header" class="header-library">
-    <div id="header-left">
-      <div id="fill-logo"><a href="/"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
-      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
-    </div>
-
-  <!-- Not displayed on any page except lightning (at the moment) -->
-<div id="header-right">
-    <div id="logout-button"><a href="?authen_logout=1" type="button" role="button" id="fill-button" class="library-style">log out</a></div>
-  <div id="patron-info">
-    <p style="display:none"><TMPL_VAR NAME="username"></p>
-    <p id="library_name"><TMPL_VAR NAME="library"></p>
-    <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>
-    <input id="theme1" class="theme-chooser1" type="button" value="A" />
-    <input id="theme2" class="theme-chooser2" type="button" value="A" />
-    <input id="theme3" class="theme-chooser3" type="button" value="A" />
-    <input id="incrFont" class="theme-chooser1 small-function-button" type="button" value="+" />
-    <input id="decrFont" class="theme-chooser1 small-function-button" type="button" value="-" />
-  </div>
-
-  </div><!--Div header-right-->
-  </div><!--Div id header-->
-
-<!--***************ARIA MARKER 'SEARCH'***************-->
-<div id="search-container" style="display: none">
-  <div id="search" role="search">
-    <div id="header_searchbar">
-    <form id="searchForm" name="search">
-      <span id="keyword_heading" style="display: none">General keyword</span>
-      <input id="query" type="text"/>
-      <div id="advanced_search" style="display: none">
-	<div class="tone-box">
-
-	  <label for="adv_title">Title: </label>
-	  <input id="adv_title" type="text"/><br/>
-	  
-	  <label for="adv_author">Author: </label>
-	  <input id="adv_author" type="text"/><br/>
-	  
-	  <label for="adv_subject">Subject: </label>
-	  <input id="adv_subject" type="text"/><br/>
-	  
-	  <label for="adv_series">Series: </label>
-	  <input id="adv_series" type="text"/>
-
-	  <h3>Search help</h3>
-	  <p>fILL does a general keyword search by default.</p>
-  
-	  <p><strong>Specific title:</strong> ti="The case for mars"</p>
-	  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
-	  <p><strong>Specific subject:</strong> su="mars planet"</p>
-	  <p><strong>Series:</strong> series="fear street"</p>
-
-	  <p>You can combine these using the connectors AND, OR, NOT:</p>
-	  <p>au="david drake" and au="eric flint"</p>
-	  <p>ti="cooking" and su="solar"</p>
-	  <p>ti="cooking" not su="microwave"</p>
-  
-	</div>
+  <div id="container"><!-- closed in footer.tmpl -->
+    <p>&nbsp;</p>
+    <div id="header" class="header-library">
+      <div id="header-left">
+	<div id="fill-logo"><a href="/"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
+	<div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
       </div>
-      <input id="button" type="submit" value="Search" class="library-style" />
-      <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
-      <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
-    </form>
-    </div>
-  </div>
-</div>
 
-<!--***************ARIA MARKER 'NAVIGATION'***************-->
-<nav role="navigation" id="lib-nav-primary">
-  <ul class="inline-items">
-    <li><a id="menu_home" href="/cgi-bin/info.cgi?rm=welcome">Home</a></li>
-    <li><a id="menu_borrow" href="/cgi-bin/lightning.cgi?rm=lightning_search_form">Borrowing</a></li>
-    <li><a id="menu_lend" href="/cgi-bin/lightning.cgi?rm=pull_list">Lending</a></li>
-    <li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
-    <li><a id="menu_history" href="/cgi-bin/lightning.cgi?rm=history">History</a></li>
-    <li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
-    <li><a id="menu_patrons" href="/cgi-bin/patrons.cgi?rm=patrons_form">Patrons</a></li>
-    <li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Info</a></li>
-    <li><a id="menu_rotations" style="display:none;" href="/cgi-bin/rotations.cgi?rm=receive_form">*Rotations</a></li>
-    <li><a id="menu_rotations_admin" style="display:none;" href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">*Admin</a></li>
-  </ul>
-</nav>
+      <!-- Not displayed on any page except lightning (at the moment) -->
+      <div id="header-right">
+	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="library-style">log out</a></div>
+	<div id="patron-info">
+	  <p style="display:none"><TMPL_VAR NAME="username"></p>
+	  <p id="library_name"><TMPL_VAR NAME="library"></p>
+	  <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>  <!-- used in a LOT of js files -->
+	  <input id="theme1" class="theme-chooser1" type="button" value="A" />
+	  <input id="theme2" class="theme-chooser2" type="button" value="A" />
+	  <input id="theme3" class="theme-chooser3" type="button" value="A" />
+	  <input id="incrFont" class="theme-chooser1 small-function-button" type="button" value="+" />
+	  <input id="resetFont" class="theme-chooser1 small-function-button" type="button" value="Default" />
+	  <input id="decrFont" class="theme-chooser1 small-function-button" type="button" value="-" />
+	</div><!-- patron-info -->
 
-<!-- Begin content -->
+      </div><!--Div header-right-->
+    </div><!--Div id header-->
+
+    <!--***************ARIA MARKER 'SEARCH'***************-->
+    <div id="search-container" style="display: none">
+      <div id="search" role="search">
+	<div id="header_searchbar">
+	  <form id="searchForm" name="search">
+	    <span id="keyword_heading" style="display: none">General keyword</span>
+	    <input id="query" type="text"/>
+	    <input id="button" type="submit" value="Search" class="library-style" />
+	    <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
+	    <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
+	    
+	    <div id="advanced_search" style="display: none">
+	      <div class="tone-box">
+		
+		<div class="two-column">
+		  <label for="adv_title">Title: </label>
+		  <input id="adv_title" type="text"/><br/>
+		  
+		  <label for="adv_author">Author: </label>
+		  <input id="adv_author" type="text"/><br/>
+		  
+		  <label for="adv_subject">Subject: </label>
+		  <input id="adv_subject" type="text"/><br/>
+		  
+		  <label for="adv_series">Series: </label>
+		  <input id="adv_series" type="text"/>
+		</div><!-- two-column -->
+
+		<div class="two-column">
+		  <h3>Search help</h3>
+		  <p>fILL does a general keyword search by default.</p>
+		  
+		  <p><strong>Specific title:</strong> ti="The case for mars"</p>
+		  <p><strong>Specific author:</strong> au="Zubrin, Robert"</p>
+		  <p><strong>Specific subject:</strong> su="mars planet"</p>
+		  <p><strong>Series:</strong> series="fear street"</p>
+		  
+		  <p>You can combine these using the connectors AND, OR, NOT:</p>
+		  <p>au="david drake" and au="eric flint"</p>
+		  <p>ti="cooking" and su="solar"</p>
+		  <p>ti="cooking" not su="microwave"</p>
+		</div><!-- two-column -->
+
+	      </div><!-- tone-box -->
+	    </div><!-- advanced_search -->
+	    
+	  </form>
+	</div><!-- header -->
+      </div><!-- search bar -->
+    </div><!-- search container -->
+
+    <!--***************ARIA MARKER 'NAVIGATION'***************-->
+    <nav role="navigation" id="lib-nav-primary">
+      <ul class="inline-items">
+	<li><a id="menu_home" href="/cgi-bin/info.cgi?rm=welcome">Home</a></li>
+	<li><a id="menu_borrow" href="/cgi-bin/lightning.cgi?rm=lightning_search_form">Borrowing</a></li>
+	<li><a id="menu_lend" href="/cgi-bin/lightning.cgi?rm=pull_list">Lending</a></li>
+	<li><a id="menu_current" href="/cgi-bin/lightning.cgi?rm=current">Current</a></li>
+	<li><a id="menu_history" href="/cgi-bin/lightning.cgi?rm=history">History</a></li>
+	<li><a id="menu_myaccount" href="/cgi-bin/myaccount.cgi?rm=myaccount_settings_form">Account</a></li>
+	<!--    <li><a id="menu_patrons" href="/cgi-bin/patrons.cgi?rm=patrons_form">Patrons</a></li> -->
+	<li><a id="menu_info" href="/cgi-bin/info.cgi?rm=info_contacts_form">Reports</a></li>
+	<li><a id="menu_rotations" style="display:none;" href="/cgi-bin/rotations.cgi?rm=receive_form">*Rotations</a></li>
+	<li><a id="menu_rotations_admin" style="display:none;" href="/cgi-bin/rotations_admin.cgi?rm=report_received_cnt">*Admin</a></li>
+      </ul>
+    </nav>
+
+    <!-- Begin content -->
 

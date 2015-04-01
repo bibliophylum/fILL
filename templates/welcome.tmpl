@@ -1,6 +1,6 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
-<script language="javascript">
+<script>
 
 $('document').ready(function() {
 
@@ -8,53 +8,144 @@ $('document').ready(function() {
   // welcome menu doesn't have a submenu, so we set the current tab here.
 
   set_primary_tab("menu_home");
+
+  $("#zserver").on("click", function(e){
+    e.preventDefault();
+    window.location = "/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form";
+  });
+
+    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', {libsym: "<TMPL_VAR name='libsym'>"},
+            function(data){
+               $("#zPresent").attr("class","zno");
+               $("#zPresent").text("No "+String.fromCharCode(10007));
+               if (data.success == 1) {
+                 $("#zPresent").attr("class","zyes");
+                 $("#zPresent").text("Yes "+String.fromCharCode(10004));
+               }
+
+               $("#zConnect").attr("class","zno");
+               $("#zConnect").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.connection != null) {
+                 if (data.zServer_status.connection.success != null) {
+                   if (data.zServer_status.connection.success == 1) {
+                     $("#zConnect").attr("class","zyes");
+                     $("#zConnect").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zSearch").attr("class","zno");
+               $("#zSearch").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.search != null) {
+                 if (data.zServer_status.search.success != null) {
+                   if (data.zServer_status.search.success == 1) {
+                     $("#zSearch").attr("class","zyes");
+                     $("#zSearch").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+
+               $("#zRecord").attr("class","zno");
+               $("#zRecord").text("No "+String.fromCharCode(10007));
+               if (data.zServer_status.record != null) {
+                 if (data.zServer_status.record.success != null) {
+                   if (data.zServer_status.record.success == 1) {
+                     $("#zRecord").attr("class","zyes");
+                     $("#zRecord").text("Yes "+String.fromCharCode(10004));
+                   }
+                 }
+               }
+           })
+	.done(function() {
+	    //alert('success!\n'+data);
+	})
+	.fail(function() {
+	    //alert('error testing zServer!');
+	})
+	.always(function() {
+            //alert('ajax complete');
+            $("#waitDiv").hide();
+	});
+
 });
 </script>
 <div id="center" role="main">
 
 <div id="main-left" class="tone-box" >
 
-<div class="alert-box" >
-<p>You can now add patron requests to your <a href="/cgi-bin/myaccount.cgi?rm=myaccount_acquisitions_form">'wish list'</a></p>
-</div>
-
-	<h2>Quick Links</h2>
-	<!--
-	<p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
-	<p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
-	-->
-
-	<p><strong>Public fILL</strong></p>
-	<ul>
-	<li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
-	<li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
-	<li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
-	</ul>
-
-	<p><strong>Library fILL</strong></p>
-	<ul>
-	<li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
-	<li><a href="/cgi-bin/info.cgi?rm=send_pdf&doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
-	</ul>
-
-	<p><strong>Counting Opinions</strong></p> 	
-	<ul> 	
-	  <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
-	  <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
-	</ul>
-</div>
-
-<div id="main-right" class="tone-box" role="complimentary">
-  <h2>Updates</h2>
+  <div class="alert-box" >
+    <p>Canada Post's Library Shipping Tool is currently unable to print return labels. They are aware of the issue and working to resolve it.</p>
+  </div>
+  <hr>
+  <div id="zserver">
+    <a href="https://mintaka.gotdns.org/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form"><h3>Z Server Status Check</h3></a>
+    <div id="waitDiv">Checking...<img src="/wait.gif" alt="loading indicator"></div>
+    <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
+    <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
+    <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
+    <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+  </div>
+  <p>If any Z Server check indicates 'No &#x2717;' please notify your ILS admistrator and email <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>
   <hr>
 
-  <strong>Monday 19th December 2014 Release notes</strong> <span style="color:red;"> (new!)</span>
- 
-<p>The improvements represented below have been inspired through the collective input received from the library community and some have been integrated from direct feedback. We will continue to refine areas of the site wherever necessary and your ongoing support and advice is very much appreciated. If your library has ideas on how we can improve fILL together, please send your thoughts to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a></p>
+  <h2>Quick Links</h2>
+  <!--
+      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+  <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+  -->
+
+  <p><strong>Public fILL</strong></p>
+  <ul>
+    <li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
+    <li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
+    <li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
+  </ul>
+  
+  <p><strong>Library fILL</strong></p>
+  <ul>
+    <li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
+    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
+  </ul>
+  
+  <p><strong>Counting Opinions</strong></p> 	
+  <ul> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
+    <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
+    <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
+    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
+  </ul>
+
+</div>
+
+<div id="main-right" class="tone-box" role="complementary">
+  <h2>Updates</h2>
+  <hr>
+  <strong>Wednesday 25th March 2015 Release notes</strong> <span style="color:red;"> (new!)</span>
+  <h2>Landing Page</h2>
+  <p>The landing page for both libraries and users has been updated to improve the patron experience.</p>
+  <ul>
+    <li>Patrons are now able to log in to the system from the landing page.</li>
+    <li>Librarians are able to access their login page from a link in the footer.</li>
+  </ul>
+  <h2>Library side</h2>
+  <p>The home page now features a zServer status check on the left-hand side.  Clicking on the results of the check will take you to the full zServer test.</p>
+  <p>The patron list has been moved under Account.  Within the patron list, you can now use <strong>Yes</strong> and <strong>No</strong> instead of 1 and 0 to indicate verified and enabled.  You are also able to edit a patron's card number.</p>
+  <p>Info has received a name change to Reports.</p>
+  <p>Font-size changes are now "sticky" across all fILL pages.</p>
+  <p>Added message From and To fields in History, and removed patron barcode (ILL history records no longer contain any patron-identifying information).</p>
+  <p>Items waiting for a renewal answer no longer show on the Returns list.</p>
+  <p>Bug fix to the lender override due date.</p>
+  <h2>Patron side</h2>
+  <p>Libraries that were able to send us a copy of their logo or their local authorities logo have had these added to the system.  Now when patrons view the Contact page, the library's logo will appear.</p>
+  <p>The Help page has been updated to improve accessibility.</p>
+  <p>Many fixes to Internet Explorer problems.</p>
+
+
+  <hr>
+  <strong>Monday 19th December 2014 Release notes</strong>
+  <p>The improvements represented below have been inspired through the collective input received from the library community and some have been integrated from direct feedback. We will continue to refine areas of the site wherever necessary and your ongoing support and advice is very much appreciated. If your library has ideas on how we can improve fILL together, please send your thoughts to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a></p>
 <h3>Updates and bug fixes</h3>
 <p>The update release notes have been divided into two sections to best articulate the updates and fixes.</p>
 <h3>Library Side</h3>
@@ -62,7 +153,7 @@ $('document').ready(function() {
   <li>Added pub date information to both the ‘Respond’ and ‘Unfilled’ tables</li>
   <li>Canada post tracking number option added to Shipping-returning table; includes link to CP package tracking site <span class="community">(Community Suggestion - Vickie Short, Lac du Bonnet Regional Library)</span></li>
   <li>Added ability to easily perform advanced searches based on limiters; title, author, subject and series</li>
-  <li>Added ability to display the reason a patron request was declined by home library system</li>  
+  <li>Added ability to display the reason a patron request was declined by home library system</li>
   <li>New alert message "You can now add patron requests to your 'wish list'"</li>
   <li>Ability to clear items from the wish list</li>
   <li>Wish list now includes the patron barcode of title requests originating from your library service area.<span class="community">(Community Suggestion - Mary Toma, South Central Regional Library)</span></li>
@@ -72,7 +163,7 @@ $('document').ready(function() {
   <li>eLM resources in results now link directly to eLM record</li>
   <li>Placeholder cover images show in search results wherever title images are not available at source</li>
   <li>Enhanced mobile optimisation; improved viewing on mobile and smaller screens. As an ongoing work in progress, please advise if you are viewing on a particular device with a small screen that requires some adjusting</li>
-  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li> 
+  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li>
   <li>New featured titles from 2013 Scotia Bank prize shortlist</li>
   <li>Other minor code tweaks and bug fixes</li>
 </ul>
@@ -110,13 +201,12 @@ $('document').ready(function() {
   <p>Your ongoing feedback is key to ensure our development resources are focused on the elements and features that are important across the library
     community.  Once you've had a chance to review the changes, we'd really appreciate if you would let us know what you think and share your first
     impressions with us be sending your feedback to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>.</p>
-  <p>Among the many user interface updates you'll see:
-    <ul>
-      <li>Larger text</li>
-      <li>Enhanced menu notifications</li>
-      <li>Accessibility features</li>
-    </ul>
-  </p>
+  <p>Among the many user interface updates you'll see:</p>
+  <ul>
+    <li>Larger text</li>
+    <li>Enhanced menu notifications</li>
+    <li>Accessibility features</li>
+  </ul>
   <p>- the fILL development team</p>
 </div>	
 </div><!--div id center-->

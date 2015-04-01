@@ -31,44 +31,43 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-    <div id="myDiv">
-      <div>
-	<div class="dataTable_wrapper">
-	  <table id="datatable_contacts" class="row-border" width="100%">
-	    <thead>
+  <div id="myDiv">
+    <div>
+      <div class="dataTable_wrapper">
+	<table id="datatable_contacts" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>library</th><th>Symbol</th><th>Phone</th><th>Email address</th><th>Mailing address</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    
+	    <TMPL_LOOP NAME="libraries">
 	      <tr>
-		<th>library</th><th>Symbol</th><th>Phone</th><th>Email address</th><th>Mailing address</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-
-	      <TMPL_LOOP NAME="libraries">
-		<tr>
-		  <td><TMPL_VAR NAME="library"></td>
-		  <td><TMPL_VAR NAME="name"></td>
-		  <td><TMPL_VAR NAME="phone"></td>
-		  <td><a href='mailto:<TMPL_VAR NAME="email_address">'><TMPL_VAR NAME="email_address"></td>
-		  <td>
-		    <TMPL_VAR NAME="mailing_address_line1"><br>
+		<td><TMPL_VAR NAME="library"></td>
+		<td><TMPL_VAR NAME="name"></td>
+		<td><TMPL_VAR NAME="phone"></td>
+		<td><a href='mailto:<TMPL_VAR NAME="email_address">'><TMPL_VAR NAME="email_address"></a></td>
+		<td>
+		  <TMPL_VAR NAME="mailing_address_line1"><br>
 		    <TMPL_VAR NAME="mailing_address_line2"><br>
-		    <TMPL_VAR NAME="mailing_address_line3">
-		  </td>
-		</tr>
-	      </TMPL_LOOP>
-
-	    </tbody>
-	  </table>
-	</div>
-      </div>
+		      <TMPL_VAR NAME="mailing_address_line3">
+		</td>
+	      </tr>
+	    </TMPL_LOOP>
+	    
+	  </tbody>
+	</table>
+      </div><!-- dataTable_wrapper -->
     </div>
-
+  </div><!-- myDiv -->
+  
   <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
+    <p>Click on the email address to send a new email to the library.</p>
+    <p>Right-click on the email address to copy it.</p>
+  </div><!-- instructions -->
 
-      <p>Click on the email address to send a new email to the library.</p>
-      <p>Right-click on the email address to copy it.</p>
-
-  </div>
-</div>
+</div><!-- center -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

@@ -36,7 +36,9 @@ my $result_href = { "success" => 0,
 		    "log" => "",
 };
 
-my @SpruceLibraries = qw(MS MBOM MVE ME MMCA MDB MSOG MMA MPLP MWOW MMOW MAOW MMIOW MSTR MSTOS MTSIR MWPL);
+my @SpruceLibraries = qw(MWPL MAOW MMIOW MMOW MWOW MBOM MMA MSTR AB MWP MSTOS MTSIR MMCA MVE ME MS MSOG MDB MPLP MSSC MEC MNH MSRH MTK MTPK MWMW MRD MBI MSCL);
+my @ParklandLibraries = qw(MDPGL MDPGP MDPMC MDPHA MDA MDPSL MDPFO MDPBO MDPGV MDPBR MDPLA MDPBI MDPSI MDPST MDPMI MDPRO MDPOR MDPWP MDPER MDPSLA MDP MRO);
+my @WesternLibraries = qw(MCNC MHW MGW MNW MBW);
 
 if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     # pre-Perl 5.10, you'd have to use something like (untested):
@@ -47,15 +49,35 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     if ($libsym ~~ @SpruceLibraries) {
 	$libsym = "SPRUCE";
     }
+    if ($libsym ~~ @ParklandLibraries) {
+	$libsym = "MDA";
+    }
+    if ($libsym ~~ @WesternLibraries) {
+	$libsym = "MBW";
+    }
     $result_href->{libsym} = $libsym;
 
+    # see if that symbol shows up in any of the pazpar2/settings/ files:
     my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
     my @f = `$cmd`;
 
     if (scalar @f == 1) {
 	my $t = $f[0];
 	chomp $t;
-	$t =~ s/^.*(target=.*) name=.*/$1/;
+	if ($t =~ /target=/) {
+	    $t =~ s/^.*(target=.*) name=.*/$1/;
+	} else {
+	    # Individual library profile... doesn't have connection info in the <set ...>,
+	    # instead, it shows up once in the first line (<settings target=...>)
+	    # (This will eventually become the default!)
+	    my $fn = $t;
+	    $fn =~ s/^(.*\.xml):.*/$1/;
+	    open(my $file, '<', $fn) or die "Can't open $fn for read: $!";
+	    my $firstline = <$file>;
+	    close $file;
+	    $firstline =~ s/^<settings (target=.*)>$/$1/;
+	    $t = $firstline;
+	}
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);
 
@@ -286,7 +308,7 @@ sub admin_test_zserver_process {
     }
 
     my $template = $self->load_tmpl('admin/test_zserver.tmpl');
-    $template->param(pagetitle => 'Maplin-3 Admin Test zServer',
+    $template->param(pagetitle => 'fILL Admin Test zServer',
 		     username => $self->authen->username,
 		     zservers => $ar_conn,
 		     conn => $conn,

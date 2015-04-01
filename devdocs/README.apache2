@@ -1,0 +1,7 @@
+We want to redirect https://localhost/ to a specific cgi script (public.cgi).
+Add this to the /opt/conf/fILL.conf <VirtualHost *:442> section:
+
+	# /index.html is no longer the default landing page...
+	RewriteEngine On
+	RewriteRule ^/?$ /cgi-bin/public.cgi [R=302,L]
+

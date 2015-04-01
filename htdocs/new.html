@@ -24,23 +24,85 @@
 
 <body>
 
+<script type="text/javascript">
+$('document').ready(function(){
+
+    setFontSizeFromCookies();
+
+    $('#incrFont').click(function () {
+        increaseFontSize();
+    });
+    $('#decrFont').click(function () {
+        decreaseFontSize();
+    });
+    $('#resetFont').click(function () {
+        resetFontSizeToDefault();
+    });
+
+});
+</script>
+
+<script type="text/javascript">
+
+ function increaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+ }
+ function decreaseFontSize() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        var fs = parseFloat($(this).css('font-size')) - 1;
+        $(this).css({
+            'font-size': fs + "px"
+        });
+        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
+    });
+  } 
+ function resetFontSizeToDefault() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
+        }
+    });
+    location.reload();
+  } 
+ function setFontSizeFromCookies() {
+    $('body').find('div, h1, h2, h3, p, td').each(function () {
+        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
+            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
+            $(this).css({
+                'font-size': fs + "px"
+            });
+        }
+    });
+  } 
+
+</script>
+
 <div id="container">
 <!--***************ARIA MARKER 'BANNER'***************-->
   <header role="banner">
 
     <div id="header-left">
       <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-      <div id="fill-tagline"><p id="fill-tagline">connecting libraries, serving patrons.</p></div>
+      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
     </div>
 
     <div id="header-right">
+      <div id="patron-info">
+	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
+      </div>
     </div>
 
   
 <!--***************ARIA MARKER 'NAVIGATION'***************-->
 <nav role="navigation" id="pub-nav-primary">
   <ul class="inline-items">
-    <li><a id="menu_search" href="/">Welcome</a></li>
+    <li><a id="menu_login" href="/cgi-bin/public.cgi">Welcome</a></li>
     <li><a id="menu_new" class="current_tab" href="/new.html">New to fILL?</a></li>
   </ul>
 </nav>
@@ -48,10 +110,7 @@
 <!-- Content -->
 <div id="clear"></div>
 
-  <div id="aside-img-left">
-      <img src='/img/fill-help.jpg' alt="Three children sitting on a couch in the library reading books"/>
-      <p class="note">Image care of <a href="https://www.flickr.com/photos/sanjoselibrary/2839834669/">the San Jose Library</a></p>
-  </div>
+
 
   <div id="main-info-right" class="tone-box">
   <h2>About fILL</h2>
@@ -63,8 +122,7 @@
   <p>To use fILL you will need to create an account.  All you need is a valid Manitoba public library card.</p>
   <p>Creating an account is easy... 
     <ol>
-      <li>From the Welcome page, click the "Library Patrons" button</li>
-      <li>On the login page, click the "Sign up!" button</li>
+      <li>On the login page, click the "Sign up now" link</li>
       <li>Follow the instructions to select your home library</li>
       <li>Enter your name and library card number, and choose a username and password</li>
     </ol>
@@ -77,6 +135,11 @@
   </p>
 </div><!--div id main info right-->
 
+  <div id="aside-img-left">
+      <img src='/img/fill-help.jpg' alt="Three children sitting on a couch in the library reading books"/>
+      <p class="note">Image care of <a href="https://www.flickr.com/photos/sanjoselibrary/2839834669/">the San Jose Library</a></p>
+  </div>
+  
 <!-- End content -->
 
 <footer role="contentinfo">

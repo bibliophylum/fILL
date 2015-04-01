@@ -100,3 +100,45 @@ function build_item_circ_counts_table( data ) {
     $("#waitDiv").hide();
     $("#mylistDiv").show();
 }
+
+
+function build_item_highcirc_table( data ) {
+    $("#waitDiv").show();
+    $("#formDiv").hide();
+
+    var myTable = document.createElement("table");
+    myTable.setAttribute("id","item-highcirc-table");
+    var tHead = myTable.createTHead();
+    var row = tHead.insertRow(-1);
+    var cell;
+    // Can't just use:
+    // cell = row.insertCell(-1); cell.innerHTML = "ID";
+    // ...because insertCell inserts TD elements, and our CSS uses TH for header cells.
+    
+    cell = document.createElement("TH"); cell.innerHTML = "title"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "callno"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "barcode"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "circs"; row.appendChild(cell);
+    
+    var tFoot = myTable.createTFoot();
+    row = tFoot.insertRow(-1);
+    cell = row.insertCell(-1); cell.colSpan = "4"; cell.innerHTML = "";
+    
+    // explicit creation of TBODY element to make IE happy
+    var tBody = document.createElement("TBODY");
+    myTable.appendChild(tBody);
+    
+    for (var i=0;i<data.rotations_item_highcirc.length;i++) 
+    {
+        row = tBody.insertRow(-1); row.id = 'hc'+data.rotations_item_highcirc[i].barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_highcirc[i].title;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_highcirc[i].callno;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_highcirc[i].barcode;
+        cell = row.insertCell(-1); cell.innerHTML = data.rotations_item_highcirc[i].total_circ;
+    }
+    
+    document.getElementById('mylistDiv').appendChild(myTable);
+    
+    $("#waitDiv").hide();
+    $("#mylistDiv").show();
+}

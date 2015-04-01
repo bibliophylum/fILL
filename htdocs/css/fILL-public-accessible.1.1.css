@@ -69,24 +69,23 @@ img
 	height: auto;
 	max-width: 100%;
 	border: 0px;
+	margin: auto;
 }
 
 h1 {
-	display: inline;
 	margin-bottom: .5em;
-	font-size: 1.4em;
+	font-size: 1.5em;
 	text-transform: capitalize;
 }
 
 h2 {
-	display: inline;
 	margin-bottom: .5em;
-	font-size: 1.2em;
+	font-size: 1.3em;
 	text-transform: capitalize;
 }
 
 h3 {
-	font-size: 1em;
+	font-size: 1.1em;
 	font-weight: bold;
 }
 
@@ -305,26 +304,27 @@ nav li a
 
 #aside-img-welcome {
 	float: left;
-	width: 40%;
+	width: 45%;
 	height: auto;
 	min-height: 100% !important;
 	margin-bottom: 1.5em;
 	margin-top: 1em;
 	display: inline;
-  	padding-bottom: 1em; 
+  	padding: 0; 
 }
 
 #main-info-welcome 
 {
-	float: left;
+	float: right;
 	width: 50%;
 	height: auto;
 	margin: .9em;
-  	padding: 1.25em;  
+  	padding: 0;  
 }
 
 #welcome-text {
-    	font-size: 2em;    
+    	font-size: 2em; 
+    	margin: 1em;   
 }
 
 #welcome-box {
@@ -354,20 +354,51 @@ nav li a
   	font-size: 1.2em; 
 }
 
-.tone-box 
-{
+#help p {
+	display: inline;
+}
+
+.help-img {
+	display: block;
+	width: ;
+	height: auto;
+	border: 1em solid #fff;
+	margin: 1em;
+}
+
+.help-img-float {
+	display: inline;
+	float: left;
+	margin: 0em 1em;
+}
+
+.tone-box {
 }
 
 .lighter-box {
 }
 
 #covers {
-
+	margin:auto;
+	display: block;
+	width: 100%;
+	text-align:center;
 }/*more in mobile styles*/
+
+#covers img {
+	display: inline-block;
+}
 
 .covers6 {
     height: 180px;
     width: 120px;
+    margin-top: 2em;
+    margin: .2em;
+}
+
+.covers5 {
+	width: 195px;
+	height: 295px;
     margin-top: 2em;
     margin: .3em;
 }
@@ -404,6 +435,7 @@ input[type=text]
     font-size: 1.4em;
     padding-left:10px;
     width: auto;
+    display: inline-block;
 }
 
 input[type=password]
@@ -676,7 +708,7 @@ div.termtitle {
 .login {
   display: block;
   clear: both;
-  width: 50%;
+  width: 100%;
   margin: auto;
 }
 
@@ -701,7 +733,7 @@ form#loginform label {
     display: inline-block;
     vertical-align: baseline;
     text-align: right;
-    width: 15%;
+    width: 25%;
     font-weight: bold;
     margin-right: ;
 }
@@ -716,7 +748,7 @@ form#loginform input[type=password], form#loginform input[type=text] {
 	margin: .5em;
     display: inline-block;
     vertical-align: baseline;
-    width: 50%;
+    width: 60%;
 }
 
 legend {

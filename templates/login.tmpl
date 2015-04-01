@@ -12,10 +12,12 @@ $('document').ready(function(){
     $("#theme3").hide();
     $("#incrFont").hide();
     $("#decrFont").hide();
+    $("#resetFont").hide();
 });
 </script>
 
 <div id="clear"></div>
+<div id="login-container">
 
    <div class="login">
 
@@ -36,11 +38,13 @@ $('document').ready(function(){
      <div class="login-footer">
        <input type="submit" class="button-left library-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
      </div>
-     
-   </div>
+
    <input type="hidden" value="https://localhost/cgi-bin/lightning.cgi?rm=search_simple_ajax_form;submit=Log%20in" name="destination">
    <input type="hidden" value="authen_login" name="rm">
-</form>
+    </form>
+
+  </div>
+</div>
 
 <!-- </div> where did this come from? -->
 

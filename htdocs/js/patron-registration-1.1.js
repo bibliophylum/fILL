@@ -18,6 +18,93 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    $("#search").hide();
+    $(".inline-items").children().hide();
+    $(".inline-items").children(":contains('home')").show();
+
+    $.getJSON('/cgi-bin/get-map-regions.cgi', 
+            function(data){
+                build_region_div(data);
+           })
+        .success(function() {
+            //alert('success');
+        })
+        .error(function(data) {
+            alert('error');
+        })
+        .complete(function() {
+            //alert('ajax complete');
+        });
+
+    $("#registration_form").submit(function( event ) {
+        if (ValidateForm()) {
+            register_patron();
+        }
+        event.preventDefault();
+    });
+
+    $("#sip2_registration_form").submit(function( event ) {
+        if (ValidateSIP2Form()) {
+          sip2_authenticate_and_register();
+        }
+        event.preventDefault();
+    });
+
+    $( "#reg_username" ).blur(function() {
+
+        if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {
+            // nothing to check yet
+        } else {
+            $.getJSON('/cgi-bin/check-username.cgi', { username: $("#reg_username").val() },
+                function(data){
+                    if (data.exists == 1) {
+                        $("#username_message").text("Sorry, that username is taken.  Please try a different username.");
+                        $("#username_message").stop(true,true).effect("highlight", {}, 2000);
+                        $("#reg_username").focus();
+                    } else {
+                        $("#username_message").text("Username is unique, good!");
+                    }
+                })
+            .success(function() {
+                //alert('success');
+            })
+            .error(function(data) {
+                alert('error');
+            })
+            .complete(function() {
+                //alert('ajax complete');
+            });
+        }
+    });
+
+
+    $( "#password2" ).blur(function() {
+
+        if ($("#password").val() === undefined 
+           || $("#password").val().length == 0 
+           || $("#password2").val() === undefined 
+           || $("#password2").val().length == 0) {
+
+            alert("Please enter a password, and then re-type the password.");
+            $("#password").focus();
+
+        } else {
+            if ($("#password").val() === $("#password2").val()) {
+                $("#password_message").text("Passwords match, good!");
+            } else {
+
+                $("#password_message").text("Your re-typed password did not match your origial password.  Please enter (and then re-type) a new password.");
+                $("#password_message").stop(true,true).effect("highlight", {}, 2000);
+                $("#password").focus();
+
+            }
+        }
+    });
+
+});
+
 function build_region_div( data ) {
     $("#region").empty();
     $("#region").append("<p>Which region of Manitoba do you live in?</p><br/>");
@@ -58,54 +145,29 @@ function build_libraries_div( data ) {
 			 "text": data.inregion[i][1],
 			 click: function() { prep_registration_form( this ); }
 		       }).appendTo($("#libraries"));
+	$("#lid_"+data.inregion[i][0]).data("library",data.inregion[i][2]); // library name
     }
     $("#libraries").show();
     $("#registration").hide();
 }
 
 function prep_registration_form( but ) {
-    $.getJSON('/cgi-bin/check-library-sip2-support.cgi', { city: but.innerHTML }, 
-            function(data){
-                if (data.sip2.enabled === 1) {
-		    $("#lid").val( data.sip2.lid );
-		    $("#sip2").show();
-		    $("#non-sip2").hide();
-		    $.cookie("fILL-lid", data.sip2.lid, { expires: 365, path: '/' });
-		    $.cookie("fILL-location", but.innerHTML, { expires: 365, path: '/' });
-		    $.cookie("fILL-authentication", "sip2", { expires: 365, path: '/' });
-		} else {
-		    $("#sip2").hide();
-		    $("#non-sip2").show();
-		}
-           })
-        .success(function() {
-            //alert('success');
-        })
-        .error(function(data) {
-            alert('error');
-        })
-        .complete(function() {
-            //alert('ajax complete');
-        });
     $("#home_library").text( but.innerHTML );
     $("#home_library_town").val( but.innerHTML );
+    $("#home_library_name").text( $(but).data("library") );
     $("#registration").show();
-    if ( $("#patron_name").is(":visible") ) {
-	$("#patron_name").focus();
-    } else {
-	$("#barcode").focus();
-    }
+    $("#patron_name").focus();
 }
 
 function register_patron() {
+    // this should use lid instead of the city name stored in home_library...
     var parms = { 
 	"home_library":  $("#home_library").text(),
 	"patron_name":   $("#patron_name").val(),
 	"patron_card":   $("#barcode").val(),
 	"email_address": $("#email_address").val(),
 	"username":      $("#reg_username").val(),
-	"password":      $("#password").val(),
-	"sip2_enabled":  $("#sip2-enabled").val()
+	"password":      $("#password").val()
     };
     $.getJSON('/cgi-bin/register-patron.cgi', parms,
               function(data){
@@ -118,38 +180,6 @@ function register_patron() {
 		      $("#submitRegistration").hide();
 //		      $("#complete").append('<button><a href="/cgi-bin/public.cgi">Log in to fILL</a></button>');
 		      $("#complete").append('<a id="fill-button" role="button" type="button" href="/cgi-bin/public.cgi">Log in to fILL</a>');
-		  }
-		  $("#complete").show();
-              })
-        .success(function() {
-            //alert('success');
-        })
-        .error(function(data) {
-            alert('error');
-        })
-        .complete(function() {
-            //alert('ajax complete');
-        });
-}
-
-function register_sip2_patron() {
-    var parms = { 
-	"lid":           $("#lid").val(),
-	"patron_card":   $("#barcode").val(),
-//	"patron_pin":    $("#pin").val(),
-	"patron_name":   $("#sip2_patron_name").text()
-    };
-    $.getJSON('/cgi-bin/register-sip2-patron.cgi', parms,
-              function(data){
-		  $("#complete").empty();
-		  if (data.success === 0) {
-		      $("#complete").append("<h3>There was a problem creating your account.</h3><p>Please contact your local library.</p>");
-		  } else {
-		      $("#complete").append("<h3>Your account has been created.</h3>");
-		      $("input").prop('disabled', true);
-		      $("#submitSIP2Registration").hide();
-		      $("#complete").append('<a id="fill-button" role="button" type="button" href="/cgi-bin/public.cgi">Log in to fILL</a>');
-		      $.cookie("fILL-barcode", $("#barcode").val(), { expires: 365, path: '/' });
 		  }
 		  $("#complete").show();
               })
@@ -210,11 +240,12 @@ function echeck(str) {
         return false
     }
 
-    return true;					
+    return true					
 }
 
 
 function ValidateForm(){
+    //var emailID=document.registration_form.patron_email
     var emailID=$("#email_address");
 
     if ((emailID.val()==null)||(emailID.val()=="")){
@@ -232,58 +263,7 @@ function ValidateForm(){
 	$("#reg_username").focus();
 	return false;
     }
-    return true;
+    return true
 }
 
 
-function ValidateSIP2Form(){
-    if (( $("#barcode").val()==null)||( $("#barcode").val()=="")){
-        alert("Please enter your library card number");
-        $("#barcode").focus();
-        return false;
-    }
-    if (( $("#pin").val()==null)||( $("#pin").val()=="")){
-        alert("Please enter your library PIN number");
-        $("#pin").focus();
-        return false;
-    }
-
-    return true;
-}
-
-function sip2_authenticate_and_register() {
-    var parms = { 
-	"lid":     $("#lid").val(),
-	"barcode": $("#barcode").val(),
-	"pin":     $("#pin").val(),
-    };
-    
-    $.getJSON('/cgi-bin/sip2-authenticate.cgi', parms,
-              function(data){
-              })
-        .success(function(data) {
-            //alert('success');
-      	    if (( data.authorized.screenmessage ) && ( data.authorized.screenmessage != 'null' )){
-      		$("#msgFromLibrarySystem").text( data.authorized.screenmessage );
-	    }
-	    if ( data.authorized.validbarcode === 'Y' ) {
-		if ( data.authorized.validpin === 'Y' ) {
-		    $("#sip2_patron_name").text( data.authorized.patronname );
-                    register_sip2_patron();
-		} else {
-		    alert("The PIN number you entered does not match your library's record.");
-		    $("#pin").focus();
-		}
-	    } else {
-		alert("The barcode you entered does not exist at your library.");
-		$("#barcode").focus();
-	    }
-        })
-        .error(function(data) {
-            alert('error');
-        })
-        .complete(function() {
-            //alert('ajax complete');
-        });
-
-}

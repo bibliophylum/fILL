@@ -1,0 +1,42 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
+
+<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
+<script type="text/javascript" src="/js/patrons-list-1.1.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_myaccount_patrons");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+</script>
+
+
+<div id="center" role="main">
+
+    <div id="waitDiv">
+      Loading... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <div id="myDiv">
+      <div id="mylistDiv">
+      </div>
+    </div>
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    
+    <ul>
+      <li>Update a user's <strong>email address</strong> by clicking on it and changing the text.</li>
+      <li>Update a user's <strong>verified</strong> status by clicking on it and selecting 'yes' or 'no'.  Click anywhere off the 'yes/no' box to complete the change.</li>
+      <li>Update a user's <strong>enabled</strong> status by clicking on it and selecting 'yes' or 'no'.  Click anywhere off the 'yes/no' box to complete the change.</li>
+      <li>You won't see a user's current <strong>password</strong>, but you can change it by clicking on "Click to change password" for that user.</li>
+    </ul>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

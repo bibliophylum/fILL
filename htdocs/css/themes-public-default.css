@@ -145,12 +145,12 @@ input[type=submit]:hover {
 button {
     border: 1px solid inherit;
     background: #183935;
-    color: #fff;!important
+    color: #fff !important;
 }
-.button-left:link {
+.button-left:link, .button-left:visited {
     border: 1px solid inherit;
     background: #183935;
-    color: #fff;!important
+    color: #fff !important;
 }
 
 .button-left:focus {

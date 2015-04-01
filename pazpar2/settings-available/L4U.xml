@@ -13,8 +13,8 @@
   <set target="library.arborg.com:210/Default" name="symbol" value="MAB"/>
 
 <!-- Evergreen Regional Library - Gimli -->
-  <set target="206.45.206.184:210/Default" name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
-  <set target="206.45.206.184:210/Default" name="symbol" value="MGE"/>
+  <set target="208.72.170.242:210/Default" name="pz:name" value="Evergreen Regional Library - Gimli (L4U)"/>
+  <set target="208.72.170.242:210/Default" name="symbol" value="MGE"/>
 
 <!-- Evergreen Regional Library - Riverton -->
   <set target="206.45.204.145:210/Default" name="pz:name" value="Evergreen Regional Library - Riverton (L4U)"/>

@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/unfilled-1.4.js"></script>
+<script type="text/javascript" src="/js/unfilled-1.5.js"></script>
 
 
 <script type="text/javascript">
@@ -11,61 +11,12 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-    $.getJSON('/cgi-bin/get-unfilled-list.cgi', {lid: <TMPL_VAR name="lid">},
-            function(data){
-                //alert (data.unfilled[0].id+" "+data.unfilled[0].title+" "+data.unfilled[0].author+" "+data.unfilled[0].patron_barcode+" "+data.unfilled[0].ts); //further debug
-                build_table(data); 
-
-                //$('#gradient-style').dataTable();
-                oTable = $('#unfilled-table').dataTable({
-                       "bJQueryUI": true,
-                       "sPaginationType": "full_numbers",
-                       "bInfo": true,
-                       "bSort": true,
-                       "sDom": '<"H"Tfr>t<"F"ip>',
-                       // TableTools requires Flash version 10...
-	               "oTableTools": {
-                           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-		           "aButtons": [
-			      "copy", "csv", "xls", "pdf", "print",
-			      {
-				"sExtends":    "collection",
-				"sButtonText": "Save",
-				"aButtons":    [ "csv", "xls", "pdf" ]
-			      }
-		           ]
-        	       },
-                       "columnDefs": [ {
-                           "targets": [0,1,2],
-                           "visible": false
-                       } ],
-                      "fnInitComplete": function() {
-                         // this handles a bug(?) in this version of datatables;
-                         // hidden columns caused the table width to be set to 100px, not 100% 
-                         $("#unfilled-table").css("width","100%");
-                      }
-
-                  });
-            });
-
-    $(function() {
-           $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    });
-
-    $(function() {
-           update_menu_counters( <TMPL_VAR name="lid"> );
-    });
-
-});
-
 </script>
 
 
 <div id="center" role="main">
 
-    <div id="waitDiv">     Loading... <img src="/wait.gif">
+    <div id="waitDiv">     Loading... <img src="/wait.gif" alt="loading indicator">
     </div>
 
     <div id="myDiv">

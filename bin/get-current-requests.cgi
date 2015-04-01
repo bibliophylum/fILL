@@ -28,7 +28,7 @@ my $SQL="select
   date_trunc('second',ra.ts) as ts, 
   (case when (ra.msg_to=?) then l1.name else l2.name end) as lender, 
   (case when (ra.msg_to=?) then l1.library else l2.library end) as library_name,
-  ra.status, 
+  replace(ra.status,'|',' ') as status, 
   ra.message
 from requests_active ra
   left join request r on r.id=ra.request_id
@@ -53,7 +53,7 @@ $SQL = "select
   l.name as requested_by, 
   l.library,
   date_trunc('second',ra.ts) as ts, 
-  ra.status, 
+  replace(ra.status,'|',' ') as status, 
   ra.message 
 from requests_active ra
   left join request r on r.id=ra.request_id
@@ -76,7 +76,7 @@ $SQL = "select
   l.name as requested_by, 
   l.library,
   date_trunc('second',ra.ts) as ts, 
-  ra.status, 
+  replace(ra.status,'|',' ') as status, 
   ra.message 
 from requests_active ra
   left join request r on r.id=ra.request_id

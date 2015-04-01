@@ -309,7 +309,7 @@ button {
 	color: #fff !important;
 }
 
-.button-left:link {
+.button-left:link, .button-left:visited {
 	color: #fff !important;
 }
 
@@ -347,30 +347,30 @@ div.termtitle {
 
 /*** FILL #fill-table STYLES **/
 
-#fill-table {
+.fill-table {
 	background: #e3e3e3;
 	border: 2px solid #b3b3b3;
 	color: #505050;
 }
 
-#fill-table td {
+.fill-table td {
 }
 
-#fill-table th {
+.fill-table th {
 }
 
-#fill-table td, #fill-table th {
+.fill-table td, #fill-table th {
   border: 1px solid #fff;
 }
-#fill-table tr:first-child th {
+.fill-table tr:first-child th {
 }
-#fill-table tr:last-child td {
+.fill-table tr:last-child td {
 }
-#fill-table tr td:first-child,
-#fill-table tr th:first-child {
+.fill-table tr td:first-child,
+.fill-table tr th:first-child {
 }
-#fill-table tr td:last-child,
-#fill-table tr th:last-child {
+.fill-table tr td:last-child,
+.fill-table tr th:last-child {
 }
 
 .table-width-pub {

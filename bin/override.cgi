@@ -50,7 +50,7 @@ where
 order by ra.ts";
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $cid);
 my $href = pop(@$aref);
-print STDERR Dumper($href);
+#print STDERR Dumper($href);
 my $reqid = $href->{"request_id"};
 
 $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
@@ -92,14 +92,40 @@ switch( $override ) {
 	$lender_id = $href->{"lender_id"};
 	# can only cancel if the lender hasn't answered yet
 	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status like 'ILL-Answer%';", undef, $reqid, $lender_id );
-	print STDERR "cntAnswers: $cntAnswers\n";
+	#print STDERR "cntAnswers: $cntAnswers\n";
 	if ((defined $cntAnswers) && ($cntAnswers == 0)) {
-	    print STDERR "...so cancelling\n";
+	    #print STDERR "...so cancelling\n";
 	    $message = $href->{"borrower"} . " cancelled the request to " . $href->{"lender"};
 	    # borrower sends a message about overriding
 	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, $status, $message );
 	    # force the ILL to be marked as Cancelled by the lender
 	    $retval = $dbh->do( $SQL, undef, $reqid, $lender_id, $borrower_id, 'Cancelled', "override by $href->{borrower}" );	
+
+	    # if this is a patron-generated request, copy it to the Declined table
+	    my $declined_href = $dbh->selectrow_hashref( "select 
+                g.requester, 
+                g.patron_barcode, 
+                g.patron_generated, 
+                g.title, 
+                g.author, 
+                g.medium,
+                p.pid
+               from 
+                request_group g
+                left join request_chain c on c.group_id = g.group_id
+                left join request r on r.chain_id = c.chain_id
+                left join patrons p on p.card=g.patron_barcode and p.home_library_id=g.requester 
+               where
+                g.patron_generated=true
+                and g.requester=?
+                and r.id=?", undef, $href->{"borrower_id"}, $reqid);
+#	    print STDERR Dumper($declined_href);
+	    if ((defined $declined_href) && ($declined_href->{"patron_generated"})) {
+#		print STDERR "inserting into patron_requests_declined\n";
+		$SQL = "insert into patron_requests_declined (prid, title, author, pid, lid, medium, reason, message) values (?,?,?,?,?,?,?,?)";
+		my $rows = $dbh->do($SQL, undef, $reqid, $declined_href->{"title"}, $declined_href->{"author"}, $declined_href->{"pid"}, $declined_href->{"requester"}, $declined_href->{"medium"}, 'Cancelled by your library.', 'Please contact the library for details.' );
+	    }
+
 	    # ...and move to history
 	    $retval = move_to_history( $dbh, $reqid );
 	    $return_data_href->{ success } = $retval;

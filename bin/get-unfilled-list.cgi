@@ -20,7 +20,7 @@ my $SQL = "select
   ra.msg_from, 
   l.name as from, 
   l.library, 
-  ra.status, 
+  replace(ra.status,'|',' ') as status, 
   ra.message, 
   (select count(*) from sources s where g.group_id=s.group_id and tried=true) as tried, 
   (select count(*) from sources s2 where g.group_id=s2.group_id) as sources 
