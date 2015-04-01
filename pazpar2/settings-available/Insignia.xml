@@ -78,9 +78,9 @@
   <set target="catalogue.thompsonlibrary.com:210/ILS" name="symbol" value="MTH"/>
 
 <!-- Valley Regional Library -->
-  <set target="www.insigniasoftware.com:210/Morris_ILS" name="pz:name" value="Valley Regional Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/Morris_ILS" name="symbol" value="MMVR"/>
-  <set target="www.insigniasoftware.com:210/Morris_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
+  <set target="morrispl.insigniails.com:210/morris_ILS" name="pz:name" value="Valley Regional Library (Insignia)"/>
+  <set target="morrispl.insigniails.com:210/morris_ILS" name="symbol" value="MMVR"/>
+  <set target="morrispl.insigniails.com:210/morris_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Victoria Municipal Library -->
   <set target="208.92.138.194:210/ILS" name="pz:name" value="Victoria Municipal Library (Insignia)"/>
