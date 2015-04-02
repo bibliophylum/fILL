@@ -39,6 +39,13 @@
 <script type="text/javascript">
 $('document').ready(function(){
 
+//    $(window).bind('beforeunload', function() {
+//        $.getJSON('/cgi-bin/sip2-logout.cgi', {user: $("#username").text(), lid: $("#lid").text() },
+//            function(data){
+//                // don't need to do anything with the return value
+//            });
+//    });
+
     setFontSizeFromCookies();
 
     $('#incrFont').click(function () {

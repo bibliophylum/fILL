@@ -31,6 +31,7 @@ use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-
 use Data::Dumper;
 use JSON;
 use Biblio::SIP2::Client;
+use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
 
@@ -71,7 +72,7 @@ sub cgiapp_init {
     $self->authen->config(
 	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],
 	DRIVER => [ 
-	    [ 'Generic', sub { return $self->checkSip2( @_ ); } ],
+	    [ 'Generic', sub { return $self->sip2Authenticate( @_ ); } ],
 	    [ 'DBI',
 	      TABLE => 'patrons',
 	      CONSTRAINTS => {
@@ -85,8 +86,9 @@ sub cgiapp_init {
 	LOGIN_RUNMODE  => 'loginFOO',
 	POST_LOGIN_CALLBACK => \&update_login_date,
 	POST_LOGIN_RUNMODE => 'search_form',
-#	POST_LOGIN_RUNMODE => 'test_form',
 	LOGOUT_RUNMODE => 'logged_out',
+	# force re-authentication if idle for more than 30 minutes
+	LOGIN_SESSION_TIMEOUT => '30m',
 	);
     #publicbase->authen->protected_runmodes(':all');
     # protect everything but the self-registration form:
@@ -130,6 +132,49 @@ sub cgiapp_init {
 #--------------------------------------------------------------------------------
 #
 #
+sub sip2Authenticate {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    my $pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
+    if ($pname) {
+	# authenticated user.  Is there a fILL patron record?
+	my $href = $self->dbh->selectrow_hashref(
+	    "select pid from patrons where home_library_id=? and card=?",
+	    undef,
+	    $lid,
+	    $barcode
+	    );
+	if (defined $href) {
+	    # fILL patron record exists
+	    # patron's name and username are set to their barcode on logout;
+	    # set them here to the patron's name as returned by the SIP2 server.
+	    # This will allow display of the patron's name (to themselves) while
+	    # they're logged in.  
+	    my $rows_affected = $self->dbh->do("update patrons set username=?, name=? where pid=?", undef, $pname, $pname, $href->{"pid"});
+
+	} else {
+	    # from bin/register-sip2-patron.cgi:
+	    my $SR = new String::Random;
+	    my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
+
+	    my $rows_affected = $self->dbh->do("INSERT INTO patrons (is_sip2, username, password, home_library_id, name, card, is_verified) VALUES (?,?,md5(?),?,?,?,?)", undef, 
+					       1,
+					       $pname,
+					       $pass,
+					       $lid,
+					       $pname,
+					       $barcode,
+					       1
+		);
+	}
+    }
+    return $pname;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
 sub checkSip2 {
     # from sip2-authenticate.cgi
     my $self = shift;
@@ -137,7 +182,7 @@ sub checkSip2 {
 
     $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
 
-    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password from library_sip2 where lid=?";
+    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where lid=?";
     my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
 
     $self->log->debug( "returned from DBI:\n" . Dumper($href) );
@@ -152,13 +197,14 @@ sub checkSip2 {
 	return undef;
     }
 
-    $self->log->debug("creating bsc\n");
+#    $self->log->debug("creating bsc\n");
     my $bsc = Biblio::SIP2::Client->new( %$href );
     $bsc->connect();
     my $authorized_href = $bsc->verifyPatron($barcode,$pin);
+
     $bsc->disconnect();
-    $self->log->debug("done with bsc\n");
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+#    $self->log->debug("done with bsc\n");
+#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
     return $authorized_href->{'patronname'};
 }
@@ -206,7 +252,6 @@ sub error {
 #--------------------------------------------------------------------------------
 #
 #
-#sub welcome_process {
 sub update_login_date {
     # The application object
     my $self = shift;
@@ -245,13 +290,27 @@ sub show_logged_out_process {
     # The application object
     my $self = shift;
 
+    # Gah.  At this point, $self->authen->username is undef.
+
+#    # When SIP2 user logs out, set the username and patron name to their barcode so
+#    # the system isn't storing names (for privacy reasons).
+#    my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+#    my $href = $self->dbh->selectrow_hashref("select is_sip2 from patrons where pid=?",	undef, $pid);
+#    if (defined $href) {
+#	if ($href->{"is_sip2"}) {
+#	    my $rows_affected = $self->dbh->do("update patrons set username=card, name=card where pid=?", undef, $pid);
+#	}
+#    }
+
     my $template = $self->load_tmpl(	    
-	                      'public/logged_out.tmpl',
-			      cache => 1,
-			     );	
+	'public/logged_out.tmpl',
+	cache => 1,
+	);
     $template->param( pagetitle => 'fILL Logged Out',
 		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
+#		      pid => $pid,
+#		      is_sip2 => $href->{"is_sip2"},
 	);
 
     $self->session->delete();

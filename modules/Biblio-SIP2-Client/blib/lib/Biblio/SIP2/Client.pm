@@ -8,6 +8,7 @@ use strict;
 use IO::Socket::INET;
 use Scalar::Util qw(looks_like_number);
 use Carp;
+use Data::Dumper;
 
 our $VERSION = '0.01';
 
@@ -46,8 +47,12 @@ sub new {
     $self->{PWDalgorithm} = 0;   # undefined in documentation
     $self->{scLocation}   = '';  # Location Code
 
+    # Some SIP2 servers use Patron Information call rather than Patron Status call
+    $self->{validate_using_info} = $parms{'validate_using_info'} || 0;
+
     # Debug
     $self->{debug}        = $parms{'debug'} || 0;
+    $self->{debugmsg}     = "DEBUG LOG:\n";
    
     # Private variables for building messages
     $self->{AO} = 'BibliophylumSIP';
@@ -872,6 +877,7 @@ sub _debugmsg {
     if ($self->{debug}) {
 	# trigger_error( $message, E_USER_NOTICE);  <-- DC: without E_USER_NOTICE, this would be: warn $message;
 	#croak $message;
+	$self->{'debugmsg'} = $self->{'debugmsg'} . $message . "\n";
 	carp $message;
     }      
 }
@@ -1009,13 +1015,24 @@ sub verifyPatron {
 	}
     }
     
-    #$self->setPatron("20967000590071","3296");
     $self->setPatron($barcode,$pin);
 
-    my $msg = $self->msgPatronStatusRequest();
-    my $response = $self->get_message( $msg );
-    my $parsed = $self->parsePatronStatusResponse( $response );
+    my $parsed;
+    if ($self->{"validate_using_info"}) {
+	my $msg = $self->msgPatronInformation( 'none' );
+	my $response = $self->get_message( $msg );
+	$self->{response} = $response;  # for debugging
+	$parsed = $self->parsePatronInfoResponse( $response );
+    } else {
+	# default - validate using Patron Status call
+	my $msg = $self->msgPatronStatusRequest();
+	my $response = $self->get_message( $msg );
+	$self->{response} = $response;  # for debugging
+	$parsed = $self->parsePatronStatusResponse( $response );
+    }
     #print_parsed_response($parsed);
+
+    $self->{parsed} = $parsed;  # for debugging
 
     # BL - valid patron, Y or N
     # CQ - valid password, Y or N
@@ -1032,18 +1049,35 @@ sub verifyPatron {
 	"screenmessage" => $parsed->{'variable'}{'AF'} || undef,
 	);
 
-    # just for testing:
-    #$msg = $self->msgPatronInformation( 'none' );
-    #$response = $self->get_message( $msg );
-    #$parsed = $self->parsePatronInfoResponse( $response );
-    #print_parsed_response($parsed);
-
-    $msg = $self->msgEndPatronSession();
-    $response = $self->get_message( $msg );
+    my $msg = $self->msgEndPatronSession();
+    my $response = $self->get_message( $msg );
     $parsed = $self->parseEndSessionResponse( $response );
 
     return \%authorized;
 }
 
+#----------------------------------------------------------------------------------
+#
+# Debugging stuff
+#
+sub debugGetRawResponse {
+    my $self = shift;
+    return $self->{response};
+}
+
+sub debugGetParsedResponse {
+    my $self = shift;
+    return $self->{parsed};
+}
+
+sub debugGetDebugMsg {
+    my $self = shift;
+    return $self->{debugmsg};
+}
+
+sub asString {
+    my $self = shift;
+    return Dumper( $self );
+}
 
 1;
