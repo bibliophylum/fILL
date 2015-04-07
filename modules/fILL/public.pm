@@ -95,7 +95,7 @@ sub test_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template;
     $template = $self->load_tmpl('public/test.tmpl');
@@ -121,7 +121,7 @@ sub search_process {
     my $query = $q->param("query") || '';
     $self->log->debug( "search_process parm:\n" . Dumper($query) );
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template;
     if ($is_enabled) {
@@ -146,7 +146,7 @@ sub myaccount_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
     my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $lid, $pid );
@@ -171,7 +171,7 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/current.tmpl');	
     $template->param( pagetitle => "Current interlibrary loans",
@@ -192,7 +192,7 @@ sub about_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/about.tmpl');	
     $template->param( pagetitle => "About fILL",
@@ -211,7 +211,7 @@ sub help_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/help.tmpl');	
     $template->param( pagetitle => "Help fILL",
@@ -230,7 +230,7 @@ sub faq_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/faq.tmpl');	
     $template->param( pagetitle => "FAQ fILL",
@@ -250,7 +250,7 @@ sub contact_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $hr_lib = $self->dbh->selectrow_hashref(
 	"select library, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, name from libraries where lid=?",
@@ -303,7 +303,7 @@ sub registration_process {
 
 
 #--------------------------------------------------------------------------------
-sub get_patron_and_library {
+sub get_patron_and_library_DEPRECATED {
     my $self = shift;
     my $username = shift;
     # Get this user's library id

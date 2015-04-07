@@ -258,7 +258,7 @@ sub update_login_date {
 
     #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
-    my ($pid, $lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
+    my ($pid, $lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     #$self->log->debug("update login date, pid [$pid], lid [$lid], library [$library], is_enabled [$is_enabled]\n");
 
@@ -287,18 +287,6 @@ sub show_logged_out_process {
     # The application object
     my $self = shift;
 
-    # Gah.  At this point, $self->authen->username is undef.
-
-#    # When SIP2 user logs out, set the username and patron name to their barcode so
-#    # the system isn't storing names (for privacy reasons).
-#    my ($pid, $lid,$library) = get_patron_and_library($self, $self->authen->username);  # do error checking!
-#    my $href = $self->dbh->selectrow_hashref("select is_sip2 from patrons where pid=?",	undef, $pid);
-#    if (defined $href) {
-#	if ($href->{"is_sip2"}) {
-#	    my $rows_affected = $self->dbh->do("update patrons set username=card, name=card where pid=?", undef, $pid);
-#	}
-#    }
-
     my $template = $self->load_tmpl(	    
 	'public/logged_out.tmpl',
 	cache => 1,
@@ -306,8 +294,6 @@ sub show_logged_out_process {
     $template->param( pagetitle => 'fILL Logged Out',
 		      username => "Logged out. ",
 		      sessionid => $self->session->id(),
-#		      pid => $pid,
-#		      is_sip2 => $href->{"is_sip2"},
 	);
 
     $self->session->delete();
@@ -365,7 +351,6 @@ sub environment_process {
 #--------------------------------------------------------------------------------
 sub get_patron_and_library {
     my $self = shift;
-    my $username = shift;
 
     #$self->log->debug("get patron and library\n");
 
@@ -386,7 +371,7 @@ sub get_patron_and_library {
 	$hr_id = $self->dbh->selectrow_hashref(
 	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
 	    undef,
-	    $username
+	    $self->authen->username
 	    );
     }
     #$self->log->debug( Dumper( $hr_id ) );
