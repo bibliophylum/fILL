@@ -147,28 +147,28 @@ sub sip2Authenticate {
 	    );
 	if (defined $href) {
 	    # fILL patron record exists
-	    # patron's name and username are set to their barcode on logout;
-	    # set them here to the patron's name as returned by the SIP2 server.
-	    # This will allow display of the patron's name (to themselves) while
-	    # they're logged in.  
-	    my $rows_affected = $self->dbh->do("update patrons set username=?, name=? where pid=?", undef, $pname, $pname, $href->{"pid"});
-
 	} else {
 	    # from bin/register-sip2-patron.cgi:
 	    my $SR = new String::Random;
 	    my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
-
+	    # note that we don't store user name for SIP2-authenticated patrons;
+	    # use barcode instead.
+	    # patron name is stored in session (so it can be displayed on user's
+	    # pages), and only valid while session is active
 	    my $rows_affected = $self->dbh->do("INSERT INTO patrons (is_sip2, username, password, home_library_id, name, card, is_verified) VALUES (?,?,md5(?),?,?,?,?)", undef, 
 					       1,
-					       $pname,
+					       $barcode,
 					       $pass,
 					       $lid,
-					       $pname,
+					       $barcode,
 					       $barcode,
 					       1
 		);
 	}
+	$self->session->param('fILL-card',$barcode);
+	$self->log->debug("session param fILL-card [" . $self->session->param('fILL-card') . "]\n");
     }
+    $self->log->debug( "sip2authenticate returned [$pname]\n" );
     return $pname;
 }
 
@@ -204,7 +204,7 @@ sub checkSip2 {
 
     $bsc->disconnect();
 #    $self->log->debug("done with bsc\n");
-#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
     return $authorized_href->{'patronname'};
 }
@@ -256,31 +256,28 @@ sub update_login_date {
     # The application object
     my $self = shift;
 
-    my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
-    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
-				       undef,
-				       $self->authen->username,
-	);
+    my ($pid, $lid,$library,$is_enabled) = get_patron_and_library($self, $self->authen->username);  # do error checking!
 
-#    # Open the html template
-#    # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
-#    # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
-#    my $template = $self->load_tmpl(	    
-#	                      'public/welcome.tmpl',
-#			      cache => 0,
-#			     );	
-#    $template->param( pagetitle => 'Public fILL Welcome',
-#		      username => $self->authen->username,
-#		      sessionid => $self->session->id(),
-#		      lid => $lid,
-#		      library => $library,
-#	);
-#
-#    # Parse the template
-#    my $html_output = $template->output;
-#    return $html_output;
+    #$self->log->debug("update login date, pid [$pid], lid [$lid], library [$library], is_enabled [$is_enabled]\n");
 
+    my $rows_affected;
+    if ($self->session->param('fILL-card')) {
+	# this is a SIP2-authenticated patron
+	#$self->log->debug("update login date for SIP2-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
+	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
+					undef,
+					$lid,
+					$self->session->param('fILL-card'),
+	    );
+    } else {
+	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
+					undef,
+					$self->authen->username,
+	    );
+    }
+    #$self->log->debug("finished update login date, rows affected: $rows_affected\n");
 }
 
 #--------------------------------------------------------------------------------
@@ -294,7 +291,7 @@ sub show_logged_out_process {
 
 #    # When SIP2 user logs out, set the username and patron name to their barcode so
 #    # the system isn't storing names (for privacy reasons).
-#    my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+#    my ($pid, $lid,$library) = get_patron_and_library($self, $self->authen->username);  # do error checking!
 #    my $href = $self->dbh->selectrow_hashref("select is_sip2 from patrons where pid=?",	undef, $pid);
 #    if (defined $href) {
 #	if ($href->{"is_sip2"}) {
@@ -366,17 +363,34 @@ sub environment_process {
 
 
 #--------------------------------------------------------------------------------
-sub get_patron_from_username {
+sub get_patron_and_library {
     my $self = shift;
     my $username = shift;
+
+    #$self->log->debug("get patron and library\n");
+
     # Get this user's library id
-    my $hr_id = $self->dbh->selectrow_hashref(
-	"select p.pid, p.home_library_id, l.library from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
-	undef,
-	$username
-	);
-    $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library});
+    my $hr_id;
+    if ($self->session->param('fILL-card')) {
+	#$self->log->debug("session param fILL-card exists: " . $self->session->param('fILL-card') . "\n");
+
+	# The session parameter 'fILL-card' will be set if this is a SIP2 user;
+	# Patron name is not stored in the database.
+	$hr_id = $self->dbh->selectrow_hashref(
+	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
+	    undef,
+	    $self->session->param('fILL-card')
+	    );
+    } else {
+	#$self->log->debug("session param fILL-card DOES NOT exist\n");
+	$hr_id = $self->dbh->selectrow_hashref(
+	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
+	    undef,
+	    $username
+	    );
+    }
+    #$self->log->debug( Dumper( $hr_id ) );
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
 }
 
 #--------------------------------------------------------------------------------
