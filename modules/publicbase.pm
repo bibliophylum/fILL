@@ -356,26 +356,50 @@ sub get_patron_and_library {
 
     # Get this user's library id
     my $hr_id;
-    if ($self->session->param('fILL-card')) {
-	#$self->log->debug("session param fILL-card exists: " . $self->session->param('fILL-card') . "\n");
-
-	# The session parameter 'fILL-card' will be set if this is a SIP2 user;
-	# Patron name is not stored in the database.
-	$hr_id = $self->dbh->selectrow_hashref(
-	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
-	    undef,
-	    $self->session->param('fILL-card')
+    if ($self->session->param('fILL-pid') 
+	 && $self->session->param('fILL-lid') 
+	 && $self->session->param('fILL-library') 
+	 && $self->session->param('fILL-is_enabled')
+	) {
+	
+	my %patron = (
+	    'pid' => $self->session->param('fILL-pid'),
+	    'home_library_id' => $self->session->param('fILL-lid'),
+	    'library' => $self->session->param('fILL-library'),
+	    'is_enabled' => $self->session->param('fILL-is_enabled'),
 	    );
+	$hr_id = \%patron;
+	
     } else {
-	#$self->log->debug("session param fILL-card DOES NOT exist\n");
-	$hr_id = $self->dbh->selectrow_hashref(
-	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
-	    undef,
-	    $self->authen->username
-	    );
+
+	if ($self->session->param('fILL-card')) {
+	    #$self->log->debug("session param fILL-card exists: " . $self->session->param('fILL-card') . "\n");
+	    
+	    # The session parameter 'fILL-card' will be set if this is a SIP2 user;
+	    # Patron name is not stored in the database.
+	    $hr_id = $self->dbh->selectrow_hashref(
+		"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
+		undef,
+		$self->session->param('fILL-card')
+		);
+	} else {
+	    #$self->log->debug("session param fILL-card DOES NOT exist\n");
+	    $hr_id = $self->dbh->selectrow_hashref(
+		"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
+		undef,
+		$self->authen->username
+		);
+	}
+
+	# set the session parameters so we don't have to hit the database again
+	$self->session->param('fILL-pid',$hr_id->{pid}); 
+	$self->session->param('fILL-lid',$hr_id->{home_library_id}); 
+	$self->session->param('fILL-library',$hr_id->{library}); 
+	$self->session->param('fILL-is_enabled',$hr_id->{is_enabled});
     }
     #$self->log->debug( Dumper( $hr_id ) );
     return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
+
 }
 
 #--------------------------------------------------------------------------------

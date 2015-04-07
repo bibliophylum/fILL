@@ -302,30 +302,4 @@ sub registration_process {
 }
 
 
-#--------------------------------------------------------------------------------
-sub get_patron_and_library_DEPRECATED {
-    my $self = shift;
-    my $username = shift;
-    # Get this user's library id
-    my $hr_id;
-    if ($self->session->param('fILL-card')) {
-	# The session parameter 'card' will be set if this is a SIP2-authenticated user;
-	# Patron name is not stored in the database.
-	$hr_id = $self->dbh->selectrow_hashref(
-	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
-	    undef,
-	    $self->session->param('fILL-card')
-	    );
-    } else {
-	$hr_id = $self->dbh->selectrow_hashref(
-	    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
-	    undef,
-	    $username
-	    );
-    }
-    $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
-}
-
-
 1; # so the 'require' or 'use' succeeds
