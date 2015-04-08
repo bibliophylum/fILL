@@ -20,13 +20,13 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 # When SIP2 user logs out, set the username and patron name to their barcode so
 # the system isn't storing names (for privacy reasons).
 my $href = $self->dbh->selectrow_hashref(
-    "select pid, is_sip2 from patrons where username=? and home_library_id=?",
+    "select pid, is_externally_authenticated from patrons where username=? and home_library_id=?",
     undef,
     $user, $lid
     );
 my $rows_affected = 0;
 if (defined $href) {
-    if ($href->{"is_sip2"}) {
+    if ($href->{"is_externally_authenticated"}) {
 	$rows_affected = $self->dbh->do("update patrons set username=card, name=card where pid=?", undef, $pid);
     }
 }

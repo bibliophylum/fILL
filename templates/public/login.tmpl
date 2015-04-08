@@ -27,19 +27,19 @@ $('document').ready(function(){
               choose_library(data);
         });
     } else {
-        if ($.cookie("fILL-authentication") === "sip2") {
-            $("#sip2").show();
-            $("#non-sip2").hide();
-            $("#authen_barcode").val( $.cookie("fILL-barcode") );
-            $("#authen_loginfield").val( "using-sip2" );
-            $("#authen_passwordfield").val( "using-sip2" );
-            $("#authen_pin").focus();
-	} else {
-            $("#sip2").hide();
-            $("#non-sip2").show();
-            $("#authen_barcode").val( "not-using-sip2" );
-            $("#authen_pin").val( "not-using-sip2" );
+        if ($.cookie("fILL-authentication") === "fILL") {
+            $("#extAuth").hide();
+            $("#fILLAuth").show();
+            $("#authen_barcode").val( "not-using-ea" );
+            $("#authen_pin").val( "not-using-ea" );
             $("#authen_loginfield").focus();
+	} else {
+            $("#extAuth").show();
+            $("#fILLAuth").hide();
+            $("#authen_barcode").val( $.cookie("fILL-barcode") );
+            $("#authen_loginfield").val( "using-ea" );
+            $("#authen_passwordfield").val( "using-ea" );
+            $("#authen_pin").focus();
 	}
         $("#authen_lid").val( $.cookie("fILL-lid") );
         $("#sign-in").show();
@@ -59,30 +59,18 @@ $('document').ready(function(){
             // these cookies don't exist, so create them.
             if ($("#authen_barcode").val()) {
                 $.cookie("fILL-barcode", $("#authen_barcode").val(), { expires: 365, path: '/' });
-                $.cookie("fILL-authentication", "sip2", { expires: 365, path: '/' });
-                $("#authen_loginfield").val( "using-sip2" );
-                $("#authen_passwordfield").val( "using-sip2" );
+                $.cookie("fILL-authentication", "external", { expires: 365, path: '/' });
+                $("#authen_loginfield").val( "using-ea" );
+                $("#authen_passwordfield").val( "using-ea" );
             } else {
                 $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
-                $("#authen_barcode").val( "not-using-sip2" );
-                $("#authen_pin").val( "not-using-sip2" );
+                $("#authen_barcode").val( "not-using-ea" );
+                $("#authen_pin").val( "not-using-ea" );
             }
         }
 
         this.submit();
     });
-
-//    $("#auth-sip2").on("click",function(){
-//        $("#sip2").show();
-//        $("#non-sip2").hide();
-//        $("#sign-in").show();
-//    });
-//
-//    $("#auth-fILL").on("click",function(){
-//        $("#sip2").hide();
-//        $("#non-sip2").show();
-//        $("#sign-in").show();
-//    });
 
     $("#nav2").append(' | </span><a href="/cgi-bin/admin.cgi">Admin</a><span style="color:#aabdba;">');
     $("#nav2").append(' | </span><a href="/cgi-bin/lightning.cgi">Library Staff</a>');
@@ -128,7 +116,7 @@ $('document').ready(function(){
 	</table>
       </div>
 
-      <div id="sip2" style="display:none">
+      <div id="extAuth" style="display:none">
 	<p>Log in using your library barcode and PIN</p>
         <div id="chooseLibrary" style="display:none">
 	  <div id="region">
@@ -141,15 +129,15 @@ $('document').ready(function(){
           <label for="authen_pin">PIN number</label>
           <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
         </fieldset>
-      </div> <!-- div id sip2 -->
+      </div> <!-- div id extAuth -->
 
-      <div id="non-sip2" style="display:none">
+      <div id="fILLAuth" style="display:none">
 	<p>Log in using your fILL username and password</p>
         <label for="authen_username">User Name</label>
         <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
         <label for="authen_password">Password</label>
         <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
-      </div> <!-- div id non-sip2 -->
+      </div> <!-- div id fILLAuth -->
 
     </fieldset>
 

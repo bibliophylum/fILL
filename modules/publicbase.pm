@@ -31,6 +31,7 @@ use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-
 use Data::Dumper;
 use JSON;
 use Biblio::SIP2::Client;
+use Biblio::Authentication::L4U;
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
@@ -72,7 +73,7 @@ sub cgiapp_init {
     $self->authen->config(
 	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],
 	DRIVER => [ 
-	    [ 'Generic', sub { return $self->sip2Authenticate( @_ ); } ],
+	    [ 'Generic', sub { return $self->externallyAuthenticate( @_ ); } ],
 	    [ 'DBI',
 	      TABLE => 'patrons',
 	      CONSTRAINTS => {
@@ -132,43 +133,63 @@ sub cgiapp_init {
 #--------------------------------------------------------------------------------
 #
 #
-sub sip2Authenticate {
+sub createPatronRecordIfRequired {
+    my $self = shift;
+    my ($lid, $barcode) = @_;
+
+    # authenticated user.  Is there a fILL patron record?
+    my $href = $self->dbh->selectrow_hashref(
+	"select pid from patrons where home_library_id=? and card=?",
+	undef,
+	$lid,
+	$barcode
+	);
+    if (defined $href) {
+	# fILL patron record exists
+    } else {
+	# from bin/register-sip2-patron.cgi:
+	my $SR = new String::Random;
+	my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
+	# note that we don't store user name for SIP2-authenticated patrons;
+	# use barcode instead.
+	# patron name is stored in session (so it can be displayed on user's
+	# pages), and only valid while session is active
+	my $rows_affected = $self->dbh->do("INSERT INTO patrons (is_externally_authenticated, username, password, home_library_id, name, card, is_verified) VALUES (?,?,md5(?),?,?,?,?)", undef, 
+					   1,
+					   $barcode,
+					   $pass,
+					   $lid,
+					   $barcode,
+					   $barcode,
+					   1
+	    );
+    }
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub externallyAuthenticate {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
 
-    my $pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
+    my $pname;
+    # is this a SIP2 library?
+    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from libraries where lid=?", undef, $lid);
+
+    if ($lib_href->{patron_authentication_method} eq 'sip2') {
+	$pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
+
+    } elsif ($lib_href->{patron_authentication_method} eq 'L4U') {
+	$pname = $self->checkL4U($username, $password, $barcode, $pin, $lid);
+    }
+
     if ($pname) {
-	# authenticated user.  Is there a fILL patron record?
-	my $href = $self->dbh->selectrow_hashref(
-	    "select pid from patrons where home_library_id=? and card=?",
-	    undef,
-	    $lid,
-	    $barcode
-	    );
-	if (defined $href) {
-	    # fILL patron record exists
-	} else {
-	    # from bin/register-sip2-patron.cgi:
-	    my $SR = new String::Random;
-	    my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
-	    # note that we don't store user name for SIP2-authenticated patrons;
-	    # use barcode instead.
-	    # patron name is stored in session (so it can be displayed on user's
-	    # pages), and only valid while session is active
-	    my $rows_affected = $self->dbh->do("INSERT INTO patrons (is_sip2, username, password, home_library_id, name, card, is_verified) VALUES (?,?,md5(?),?,?,?,?)", undef, 
-					       1,
-					       $barcode,
-					       $pass,
-					       $lid,
-					       $barcode,
-					       $barcode,
-					       1
-		);
-	}
+	$self->createPatronRecordIfRequired( $lid, $barcode );
 	$self->session->param('fILL-card',$barcode);
 	$self->log->debug("session param fILL-card [" . $self->session->param('fILL-card') . "]\n");
     }
-    $self->log->debug( "sip2authenticate returned [$pname]\n" );
+    $self->log->debug( "externallyAuthenticate returned [$pname] using auth method [" . $lib_href->{patron_authentication_method} . "]\n" );
     return $pname;
 }
 
@@ -204,6 +225,33 @@ sub checkSip2 {
 
     $bsc->disconnect();
 #    $self->log->debug("done with bsc\n");
+    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    return $authorized_href->{'patronname'};
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkL4U {
+    # from sip2-authenticate.cgi
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    $self->log->debug( "checkL4U:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='L4U'";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+
+    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (!defined $href) {
+	return undef;
+    }
+
+    my $L4U = Biblio::Authentication::L4U->new( %$href );
+    my $authorized_href = $L4U->verifyPatron($barcode,$pin);
+
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
     return $authorized_href->{'patronname'};

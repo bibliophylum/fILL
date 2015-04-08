@@ -27,6 +27,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 if ($query->param('sip2_enabled') && ($query->param('sip2_enabled') == 1)) {
+    # DAVID
 }
 
 my $SQL = "select lid from libraries where city=?";

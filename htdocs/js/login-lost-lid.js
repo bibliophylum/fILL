@@ -65,36 +65,38 @@ function build_libraries_div( data ) {
 }
 
 function set_cookies( but ) {
-    $.getJSON('/cgi-bin/check-library-sip2-support.cgi', { city: but.innerHTML }, 
+    $.getJSON('/cgi-bin/check-library-authentication-method.cgi', { city: but.innerHTML }, 
             function(data){
-                if (data.sip2.enabled === 1) {
-		    $.cookie("fILL-authentication", "sip2", { expires: 365, path: '/' });
-		    $("#sip2").show();
-		    $("#non-sip2").hide();
+		if (data.ea.enabled === 1) {
+		    $.cookie("fILL-authentication", 
+			     "external",
+			     { expires: 365, path: '/' });
+		    $("#extAuth").show();
+		    $("#fILLAuth").hide();
 
 		} else {
 		    $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
-		    $("#sip2").hide();
-		    $("#non-sip2").show();
+		    $("#extAuth").hide();
+		    $("#fILLAuth").show();
 		}
-		$("#lid").val( data.sip2.lid );
-                $("#authen_lid").val( data.sip2.lid );
+		$("#lid").val( data.ea.lid );
+                $("#authen_lid").val( data.ea.lid );
 		$.cookie("fILL-location", but.innerHTML, { expires: 365, path: '/' });
-		$.cookie("fILL-lid", data.sip2.lid, { expires: 365, path: '/' });
+		$.cookie("fILL-lid", data.ea.lid, { expires: 365, path: '/' });
 
-		if ($.cookie("fILL-authentication") === "sip2") {
-                    $("#sip2").show();
-                    $("#non-sip2").hide();
-                    $("#authen_barcode").val( $.cookie("fILL-barcode") );
-                    $("#authen_loginfield").val( "using-sip2" );
-                    $("#authen_passwordfield").val( "using-sip2" );
-                    $("#authen_pin").focus();
-		} else {
-                    $("#sip2").hide();
-                    $("#non-sip2").show();
-                    $("#authen_barcode").val( "not-using-sip2" );
-                    $("#authen_pin").val( "not-using-sip2" );
+		if ($.cookie("fILL-authentication") === "fILL") {	
+                    $("#extAuth").hide();
+                    $("#fILLAuth").show();
+                    $("#authen_barcode").val( "not-using-ea" );
+                    $("#authen_pin").val( "not-using-ea" );
                     $("#authen_loginfield").focus();
+		} else {
+                    $("#extAuth").show();
+                    $("#fILLAuth").hide();
+                    $("#authen_barcode").val( $.cookie("fILL-barcode") );
+                    $("#authen_loginfield").val( "using-ea" );
+                    $("#authen_passwordfield").val( "using-ea" );
+                    $("#authen_pin").focus();
 		}
                 $("#sign-in").show();
            })

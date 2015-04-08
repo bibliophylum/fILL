@@ -27,7 +27,7 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $SR = new String::Random;
 my $pass = $SR->randregex("[\w]{75}"); # generate a random-ish string for a password that will never be used.
 
-my $rows_affected = $dbh->do("INSERT INTO patrons (is_sip2, username, password, home_library_id, name, card) VALUES (?,?,md5(?),?,?,?,?)", undef, 
+my $rows_affected = $dbh->do("INSERT INTO patrons (is_externally_authenticated, username, password, home_library_id, name, card) VALUES (?,?,md5(?),?,?,?,?)", undef, 
 			     1,
 			     $query->param('patron_name'),
 			     $pass,
