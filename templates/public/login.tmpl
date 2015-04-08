@@ -48,6 +48,8 @@ $('document').ready(function(){
     $("#loginform").on('submit', function(e){
         e.preventDefault();
 
+        $("#waitDiv").show();
+
         var myAlert = "";
         $("#loginform :input").each(function(i){
           var $input = $(this);
@@ -129,6 +131,11 @@ $('document').ready(function(){
           <label for="authen_pin">PIN number</label>
           <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
         </fieldset>
+	
+      <div id="waitDiv" style="display:none">
+        Authenticating... <img src="/wait.gif" alt="loading indicator">
+      </div>
+
       </div> <!-- div id extAuth -->
 
       <div id="fILLAuth" style="display:none">
