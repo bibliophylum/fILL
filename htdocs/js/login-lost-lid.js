@@ -96,7 +96,7 @@ function set_cookies( but ) {
                     $("#authen_barcode").val( $.cookie("fILL-barcode") );
                     $("#authen_loginfield").val( "using-ea" );
                     $("#authen_passwordfield").val( "using-ea" );
-                    $("#authen_pin").focus();
+                    $("#authen_barcode").focus();
 		}
                 $("#sign-in").show();
            })

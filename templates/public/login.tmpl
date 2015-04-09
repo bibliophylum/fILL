@@ -57,8 +57,8 @@ $('document').ready(function(){
         });
         //alert(myAlert);
 
-        if (! $.cookie("fILL-authentication")) {
-            // these cookies don't exist, so create them.
+//        if (! $.cookie("fILL-authentication")) {
+//            // these cookies don't exist, so create them.
             if ($("#authen_barcode").val()) {
                 $.cookie("fILL-barcode", $("#authen_barcode").val(), { expires: 365, path: '/' });
                 $.cookie("fILL-authentication", "external", { expires: 365, path: '/' });
@@ -69,7 +69,7 @@ $('document').ready(function(){
                 $("#authen_barcode").val( "not-using-ea" );
                 $("#authen_pin").val( "not-using-ea" );
             }
-        }
+//        }
 
         this.submit();
     });
@@ -151,7 +151,7 @@ $('document').ready(function(){
     <div id="sign-in" style="display:none">
       <fieldset>
 	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-	<input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
+<!--	<input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br> -->
       </fieldset>
     </div>
       

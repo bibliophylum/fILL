@@ -83,7 +83,12 @@ function my_onshow(data) {
 	    $recDiv.append( renderDetails(curDetRecData) );
 	    // handle the form submission:
 	    $("#request_form").submit(function( event ) {
-		$("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+		if ($.cookie("fILL-authentication") === "fILL") {
+		    $("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+		} else {
+		    // externally authenticated, so username is barcode
+		    $("#request_form").append('<input type="hidden" name="username" value="' + $.cookie("fILL-barcode") + '">'); 
+		}
 		request();
 		event.preventDefault();
 	    });
@@ -183,7 +188,12 @@ function my_onrecord(data) {
 
     // handle the form submission:
     $("#request_form").submit(function( event ) {
-	$("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+	if ($.cookie("fILL-authentication") === "fILL") {
+	    $("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
+	} else {
+	    // externally authenticated, so username is barcode
+	    $("#request_form").append('<input type="hidden" name="username" value="' + $.cookie("fILL-barcode") + '">'); 
+	}
 	request();
 	event.preventDefault();
     });
