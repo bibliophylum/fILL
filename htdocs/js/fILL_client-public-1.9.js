@@ -87,7 +87,7 @@ function my_onshow(data) {
 		    $("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
 		} else {
 		    // externally authenticated, so username is barcode
-		    $("#request_form").append('<input type="hidden" name="username" value="' + $.cookie("fILL-barcode") + '">'); 
+		    $("#request_form").append('<input type="hidden" name="username" value="' + $("#barcode").text() + '">'); 
 		}
 		request();
 		event.preventDefault();
@@ -192,7 +192,7 @@ function my_onrecord(data) {
 	    $("#request_form").append('<input type="hidden" name="username" value="' + $("#username").text() + '">'); 
 	} else {
 	    // externally authenticated, so username is barcode
-	    $("#request_form").append('<input type="hidden" name="username" value="' + $.cookie("fILL-barcode") + '">'); 
+	    $("#request_form").append('<input type="hidden" name="username" value="' + $("#barcode").text() + '">'); 
 	}
 	request();
 	event.preventDefault();

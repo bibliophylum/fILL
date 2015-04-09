@@ -341,6 +341,7 @@ sub show_logged_out_process {
 	);
     $template->param( pagetitle => 'fILL Logged Out',
 		      username => "Logged out. ",
+		      barcode => '',
 		      sessionid => $self->session->id(),
 	);
 
@@ -365,6 +366,7 @@ sub forbidden_process {
 			     );	
     $template->param( pagetitle => 'fILL Forbidden',
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      sessionid => $self->session->id(),
 	);
 

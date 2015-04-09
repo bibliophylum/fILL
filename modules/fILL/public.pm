@@ -101,6 +101,7 @@ sub test_process {
     $template = $self->load_tmpl('public/test.tmpl');
     $template->param( pagetitle => "fILL test",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 	);
@@ -131,6 +132,7 @@ sub search_process {
     }
     $template->param( pagetitle => "fILL Public Search",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 		      query => $query,
@@ -154,6 +156,7 @@ sub myaccount_process {
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
     $template->param( pagetitle => "fILL patron account",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 		      pid => $pid,
@@ -176,6 +179,7 @@ sub current_process {
     my $template = $self->load_tmpl('public/current.tmpl');	
     $template->param( pagetitle => "Current interlibrary loans",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 		      pid => $pid
@@ -197,6 +201,7 @@ sub about_process {
     my $template = $self->load_tmpl('public/about.tmpl');	
     $template->param( pagetitle => "About fILL",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 #		      pid => $pid
@@ -216,6 +221,7 @@ sub help_process {
     my $template = $self->load_tmpl('public/help.tmpl');	
     $template->param( pagetitle => "Help fILL",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 #		      pid => $pid
@@ -235,6 +241,7 @@ sub faq_process {
     my $template = $self->load_tmpl('public/faq.tmpl');	
     $template->param( pagetitle => "FAQ fILL",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 #		      pid => $pid
@@ -271,6 +278,7 @@ sub contact_process {
     my $template = $self->load_tmpl('public/contact.tmpl');	
     $template->param( pagetitle => "Contact",
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      lid => $lid,
 		      library => $library,
 		      email_address => $hr_lib->{email_address},
