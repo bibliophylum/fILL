@@ -31,6 +31,7 @@ use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-
 use Data::Dumper;
 use JSON;
 use Biblio::SIP2::Client;
+use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::L4U;
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
@@ -180,6 +181,9 @@ sub externallyAuthenticate {
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
 
+    } elsif ($lib_href->{patron_authentication_method} eq 'Biblionet') {
+	$pname = $self->checkBiblionet($username, $password, $barcode, $pin, $lid);
+
     } elsif ($lib_href->{patron_authentication_method} eq 'L4U') {
 	$pname = $self->checkL4U($username, $password, $barcode, $pin, $lid);
     }
@@ -233,6 +237,32 @@ sub checkSip2 {
 #--------------------------------------------------------------------------------
 #
 #
+sub checkBiblionet {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    $self->log->debug( "checkBiblionet:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='Biblionet'";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+
+    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (!defined $href) {
+	return undef;
+    }
+
+    my $authenticator = Biblio::Authentication::Biblionet->new( %$href );
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+
+    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    return $authorized_href->{'patronname'};
+}
+
+#--------------------------------------------------------------------------------
+#
+#
 sub checkL4U {
     # from sip2-authenticate.cgi
     my $self = shift;
@@ -249,8 +279,8 @@ sub checkL4U {
 	return undef;
     }
 
-    my $L4U = Biblio::Authentication::L4U->new( %$href );
-    my $authorized_href = $L4U->verifyPatron($barcode,$pin);
+    my $authenticator = Biblio::Authentication::L4U->new( %$href );
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 

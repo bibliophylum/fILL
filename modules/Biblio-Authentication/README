@@ -1,4 +1,4 @@
-Biblio-Authentication-L4U
+Biblio-Authentication
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -31,16 +31,16 @@ perldoc command.
 You can also look for information at:
 
     RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Biblio-Authentication-L4U
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Biblio-Authentication
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Biblio-Authentication-L4U
+        http://annocpan.org/dist/Biblio-Authentication
 
     CPAN Ratings
-        http://cpanratings.perl.org/d/Biblio-Authentication-L4U
+        http://cpanratings.perl.org/d/Biblio-Authentication
 
     Search CPAN
-        http://search.cpan.org/dist/Biblio-Authentication-L4U/
+        http://search.cpan.org/dist/Biblio-Authentication/
 
 
 LICENSE AND COPYRIGHT

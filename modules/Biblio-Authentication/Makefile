@@ -22,8 +22,8 @@
 #     PREREQ_PM => { Test::More=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Biblio/Authentication/L4U.pm]
-#     clean => { FILES=>q[Biblio-Authentication-L4U-*] }
-#     dist => { SUFFIX=>q[gz], COMPRESS=>q[gzip -9f] }
+#     clean => { FILES=>q[Biblio-Authentication-*] }
+#     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz] }
 
 # --- MakeMaker post_initialize section:
 
@@ -166,7 +166,8 @@ C_FILES  =
 O_FILES  = 
 H_FILES  = 
 MAN1PODS = 
-MAN3PODS = lib/Biblio/Authentication/L4U.pm
+MAN3PODS = lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/L4U.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIB)$(DFSEP)Config.pm $(PERL_INC)$(DFSEP)config.h
@@ -188,9 +189,12 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Biblio/Authentication/L4U.pm
+TO_INST_PM = lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/L4U.pm
 
-PM_TO_BLIB = lib/Biblio/Authentication/L4U.pm \
+PM_TO_BLIB = lib/Biblio/Authentication/Biblionet.pm \
+	blib/lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/L4U.pm \
 	blib/lib/Biblio/Authentication/L4U.pm
 
 
@@ -414,9 +418,11 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/Biblio/Authentication/L4U.pm
+	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/Biblionet.pm
 	$(NOECHO) $(POD2MAN) --section=$(MAN3EXT) --perm_rw=$(PERM_RW) \
-	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) 
+	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) \
+	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) 
 
 
 
@@ -443,24 +449,24 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  lib$(BASEEXT).def MYMETA.yml \
-	  $(MAKE_APERL_FILE) $(INST_ARCHAUTODIR)/extralibs.all \
-	  perlmain.c tmon.out \
-	  *$(OBJ_EXT) core.[0-9][0-9][0-9][0-9] \
-	  $(BASEEXT).def $(BASEEXT).exp \
-	  *perl.core core.[0-9] \
-	  core.*perl.*.? pm_to_blib.ts \
-	  *$(LIB_EXT) core.[0-9][0-9] \
-	  perl$(EXE_EXT) core.[0-9][0-9][0-9] \
-	  $(BASEEXT).bso $(INST_ARCHAUTODIR)/extralibs.ld \
-	  core.[0-9][0-9][0-9][0-9][0-9] perl.exe \
-	  so_locations mon.out \
-	  $(BOOTSTRAP) MYMETA.json \
-	  core pm_to_blib \
-	  $(BASEEXT).x perl \
-	  blibdirs.ts 
+	  *perl.core core.[0-9][0-9][0-9][0-9] \
+	  $(INST_ARCHAUTODIR)/extralibs.all pm_to_blib.ts \
+	  $(BASEEXT).bso pm_to_blib \
+	  perl$(EXE_EXT) core.*perl.*.? \
+	  lib$(BASEEXT).def *$(LIB_EXT) \
+	  $(BOOTSTRAP) core.[0-9] \
+	  tmon.out core.[0-9][0-9][0-9] \
+	  MYMETA.json perlmain.c \
+	  $(BASEEXT).x core \
+	  $(BASEEXT).exp MYMETA.yml \
+	  *$(OBJ_EXT) $(BASEEXT).def \
+	  perl.exe blibdirs.ts \
+	  $(MAKE_APERL_FILE) core.[0-9][0-9][0-9][0-9][0-9] \
+	  so_locations perl \
+	  mon.out core.[0-9][0-9] \
+	  $(INST_ARCHAUTODIR)/extralibs.ld 
 	- $(RM_RF) \
-	  blib Biblio-Authentication-L4U-* 
+	  Biblio-Authentication-* blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
 
 
@@ -473,7 +479,7 @@ realclean_subdirs :
 # Delete temporary files (via clean) and also delete dist files
 realclean purge ::  clean realclean_subdirs
 	- $(RM_F) \
-	  $(MAKEFILE_OLD) $(FIRST_MAKEFILE) 
+	  $(FIRST_MAKEFILE) $(MAKEFILE_OLD) 
 	- $(RM_RF) \
 	  $(DISTVNAME) 
 
@@ -832,6 +838,7 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
+	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm \
 	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
