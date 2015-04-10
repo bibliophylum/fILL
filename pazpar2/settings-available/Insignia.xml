@@ -25,10 +25,9 @@
   <set target="www.insigniasoftware.com:210/boyne" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Emerson Public Library -->
-  <set target="www.insigniasoftware.com:210/Emerson" name="pz:name" value="Emerson Public Library (Insignia)"/>
-  <set target="www.insigniasoftware.com:210/Emerson" name="symbol" value="MEPL"/>
-  <!-- <set target="206.45.102.208:210/ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=al 2=3"/> -->
-  <set target="www.insigniasoftware.com:210/Emerso" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
+  <set target="emersonpl.insigniails.com:210/EmersonPL_ILS" name="pz:name" value="Emerson Public Library (Insignia)"/>
+  <set target="emersonpl.insigniails.com:210/EmersonPL_ILS" name="symbol" value="MEPL"/>
+  <set target="emersonpl.insigniails.com:210/EmersonPL_ILS" name="pz:cclmap:term" value="u=1016 t=l,r s=6 2=102"/>
 
 <!-- Jake Epp Library -->
   <set target="216.55.201.10:210/ils" name="pz:name" value="Jake Epp Library (Insignia)"/>
