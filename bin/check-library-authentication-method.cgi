@@ -32,6 +32,7 @@ if ($lib_href) {
 	    );
 	$lib_href->{enabled} = $href->{enabled};
     } elsif (($lib_href->{patron_authentication_method} eq 'L4U') 
+	     || ($lib_href->{patron_authentication_method} eq 'FollettDestiny')
 	     || ($lib_href->{patron_authentication_method} eq 'Biblionet')) {
 	my $href = $dbh->selectrow_hashref(
 	    "select enabled from library_nonsip2 where lid=?", 

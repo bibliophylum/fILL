@@ -167,6 +167,7 @@ O_FILES  =
 H_FILES  = 
 MAN1PODS = 
 MAN3PODS = lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm
 
 # Where is the Config information that we are using/depend on
@@ -190,12 +191,15 @@ PERL_ARCHIVE_AFTER =
 
 
 TO_INST_PM = lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm
 
-PM_TO_BLIB = lib/Biblio/Authentication/Biblionet.pm \
-	blib/lib/Biblio/Authentication/Biblionet.pm \
+PM_TO_BLIB = lib/Biblio/Authentication/FollettDestiny.pm \
+	blib/lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm \
-	blib/lib/Biblio/Authentication/L4U.pm
+	blib/lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/Biblionet.pm \
+	blib/lib/Biblio/Authentication/Biblionet.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -418,11 +422,13 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/Biblio/Authentication/L4U.pm \
-	lib/Biblio/Authentication/Biblionet.pm
+	lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/FollettDestiny.pm \
+	lib/Biblio/Authentication/L4U.pm
 	$(NOECHO) $(POD2MAN) --section=$(MAN3EXT) --perm_rw=$(PERM_RW) \
-	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) \
-	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) 
+	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) \
+	  lib/Biblio/Authentication/FollettDestiny.pm $(INST_MAN3DIR)/Biblio::Authentication::FollettDestiny.$(MAN3EXT) \
+	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) 
 
 
 
@@ -449,22 +455,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  *perl.core core.[0-9][0-9][0-9][0-9] \
-	  $(INST_ARCHAUTODIR)/extralibs.all pm_to_blib.ts \
-	  $(BASEEXT).bso pm_to_blib \
-	  perl$(EXE_EXT) core.*perl.*.? \
-	  lib$(BASEEXT).def *$(LIB_EXT) \
-	  $(BOOTSTRAP) core.[0-9] \
-	  tmon.out core.[0-9][0-9][0-9] \
-	  MYMETA.json perlmain.c \
-	  $(BASEEXT).x core \
-	  $(BASEEXT).exp MYMETA.yml \
-	  *$(OBJ_EXT) $(BASEEXT).def \
-	  perl.exe blibdirs.ts \
-	  $(MAKE_APERL_FILE) core.[0-9][0-9][0-9][0-9][0-9] \
-	  so_locations perl \
-	  mon.out core.[0-9][0-9] \
-	  $(INST_ARCHAUTODIR)/extralibs.ld 
+	  core.[0-9][0-9] perl.exe \
+	  core.*perl.*.? *$(LIB_EXT) \
+	  perlmain.c blibdirs.ts \
+	  core.[0-9][0-9][0-9][0-9][0-9] $(INST_ARCHAUTODIR)/extralibs.all \
+	  core.[0-9] $(BASEEXT).x \
+	  core $(BASEEXT).exp \
+	  $(BOOTSTRAP) so_locations \
+	  $(MAKE_APERL_FILE) pm_to_blib.ts \
+	  MYMETA.yml $(BASEEXT).bso \
+	  perl$(EXE_EXT) core.[0-9][0-9][0-9][0-9] \
+	  *$(OBJ_EXT) tmon.out \
+	  pm_to_blib lib$(BASEEXT).def \
+	  mon.out $(BASEEXT).def \
+	  perl MYMETA.json \
+	  core.[0-9][0-9][0-9] $(INST_ARCHAUTODIR)/extralibs.ld \
+	  *perl.core 
 	- $(RM_RF) \
 	  Biblio-Authentication-* blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
@@ -838,8 +844,9 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm \
-	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm 
+	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm \
+	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm \
+	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 
