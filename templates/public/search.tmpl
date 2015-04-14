@@ -124,6 +124,20 @@
         resetFontSizeToDefault();
     });
 
+    if (! $.cookie("fILL-lid")) {
+        $.cookie("fILL-lid", $("#lid").text(), { expires: 365, path: '/' });
+        //$.cookie("fILL-location", xxx, { expires: 365, path: '/' });
+    }
+
+    $("#clearCookies").on("click",function(e){
+        e.preventDefault();
+        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-location", { path: '/' });
+        $.removeCookie("fILL-barcode", { path: '/' });
+        $.removeCookie("fILL-authentication", { path: '/' });
+        window.location.href="?authen_logout=1";
+    });
+
   });
 </script>
 
@@ -165,6 +179,7 @@
 
 	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
           <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
+          <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
       </div>
     </div>
 

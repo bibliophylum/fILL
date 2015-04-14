@@ -45,6 +45,13 @@ $('document').ready(function(){
         event.preventDefault();
     });
 
+    $("#sip2_registration_form").submit(function( event ) {
+        if (ValidateSIP2Form()) {
+          sip2_authenticate_and_register();
+        }
+        event.preventDefault();
+    });
+
     $( "#reg_username" ).blur(function() {
 
         if ($("#reg_username").val() === undefined || $("#reg_username").val().length == 0) {

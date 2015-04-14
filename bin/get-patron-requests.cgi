@@ -42,7 +42,7 @@ my $SQL="select
         when ra.status='Renew-Answer|Ok' then 'The lender has given you a renewal on the loan.  The item is now '||ra.message
         else ra.status
   end) as status,
-  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details,
+  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details, 
   date_trunc('second',ra.ts) as ts,
   -1 as declined_id 
 from requests_active ra
@@ -51,8 +51,8 @@ from requests_active ra
   left join request_group g on g.group_id = c.group_id
   left join libraries l1 on (l1.lid=ra.msg_from) 
   left join libraries l2 on (l2.lid=ra.msg_to) 
-  left join patrons p on (p.home_library_id=g.requester)
-  left join sources s on (s.group_id=g.group_id)
+  left join patrons p on (p.home_library_id=g.requester and p.card=g.patron_barcode)
+  left join sources s on (s.group_id=g.group_id) 
 where 
   g.patron_barcode=(select card from patrons where pid=?)
   and g.requester=?
@@ -63,7 +63,19 @@ order by ra.ts desc
 # There will be one row per request in the chain
 my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid, $lid );
 
-
+#$SQL = "select 
+#  g.group_id, 
+#  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details 
+#from 
+#  request_group g
+#  left join sources s on (s.group_id=g.group_id) 
+#where 
+#  g.patron_barcode=(select card from patrons where pid=?)
+#";
+#my $aref_sources = $dbh->selectall_arrayref($SQL, { Slice => {} }, $pid);
+#foreach my $src (@$aref_sources) {
+#    
+#}
 
 # Get patron requests that the library hasn't handled yet:
 $SQL = "select 

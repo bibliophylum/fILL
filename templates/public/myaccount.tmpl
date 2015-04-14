@@ -40,6 +40,10 @@ function change_password() {
 
 $('document').ready(function(){
 
+    if ($.cookie("fILL-authentication") === "external") {
+      $("#showChangePassButton").hide();
+    }
+
     $("#changePassword_form").submit(function( event ) {
       if ( $("#newpass").val() === $("#newpass2").val() ) {
           change_password();
