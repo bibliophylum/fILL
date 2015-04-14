@@ -12,11 +12,11 @@ Biblio::Authentication::L4U - check if patron credentials authorize against L4U 
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -92,40 +92,61 @@ sub verifyPatron {
 	my $loginLink = $mech->find_link( id => "Login" );
 	if ($loginLink) {
 	    $mech->follow_link( url => $loginLink->url() );
-	    my $resp = $mech->submit_form(
-		form_name => 'common_servlet_LoginForm',
-		fields    => { userLoginName  => $barcode, userLoginPassword => $pin},
-		);
-	    my $tree = HTML::TreeBuilder->new_from_content( $mech->content() );
-	    my $e = $tree->look_down(id => 'Logout');
-	    if ($e) {
-		# successful login
-		my $p = $e->parent();
-		my $pname = $p->look_down(_tag => 'b');
-		if ($pname) {
+
+	    my $resp;
+	    my @forms = $mech->forms();
+	    foreach my $form (@forms) {
+		if (($form->attr("name") eq "consortium_servlet_ConsortiumLoginForm")
+		    || ($form->attr("name") eq "common_servlet_LoginForm")) {
+		    
+		    $resp = $mech->submit_form(
+			form_name => $form->attr("name"),
+			fields    => { userLoginName  => $barcode, 
+				       userLoginPassword => $pin },
+			);
+		    last;
+		}
+	    }
+	    if ($resp) {
+		my $tree = HTML::TreeBuilder->new_from_content( $mech->content() );
+		my $e = $tree->look_down(id => 'Logout');
+		if ($e) {
+		    # successful login
+		    my $p = $e->parent();
+		    my $pname = $p->look_down(_tag => 'b');
+		    if ($pname) {
+			my %authorized = (
+			    "validbarcode"  => 'Y',
+			    "validpin"      => 'Y',
+			    "patronname"    => $pname->as_text(),
+			    "screenmessage" => undef,
+			    );
+			$authref = \%authorized;
+		    }
+		    # play nice and logout
+		    my $logoutLink = $mech->find_link( id => "Logout" );
+		    if ($logoutLink) {
+			$mech->follow_link( url => $logoutLink->url() );
+		    }
+		} else {
 		    my %authorized = (
-			"validbarcode"  => 'Y',
-			"validpin"      => 'Y',
-			"patronname"    => $pname->as_text(),
-			"screenmessage" => undef,
+			"validbarcode"  => 'N',
+			"validpin"      => 'N',
+			"patronname"    => undef,
+			"screenmessage" => "Invalid card or PIN",
 			);
 		    $authref = \%authorized;
 		}
-		# play nice and logout
-		my $logoutLink = $mech->find_link( id => "Logout" );
-		if ($logoutLink) {
-		    $mech->follow_link( url => $logoutLink->url() );
-		}
+		$tree->delete();
 	    } else {
 		my %authorized = (
 		    "validbarcode"  => 'N',
 		    "validpin"      => 'N',
 		    "patronname"    => undef,
-		    "screenmessage" => "Invalid card or PIN",
+		    "screenmessage" => "Unable to access library login form",
 		    );
 		$authref = \%authorized;
 	    }
-	    $tree->delete();
 	} else {
 	    my %authorized = (
 		"validbarcode"  => 'N',
