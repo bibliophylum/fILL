@@ -37,6 +37,9 @@ function choose_library( data ) {
 function get_libraries( but ) {
     $.getJSON('/cgi-bin/get-libraries-in-region.cgi', { region: but.innerHTML }, 
             function(data){
+		$("#region").hide();
+		$("#selectedRegion").text( but.innerHTML );
+		$("#breadcrumbs").show();
                 build_libraries_div(data);
            })
         .success(function() {
@@ -65,6 +68,8 @@ function build_libraries_div( data ) {
 }
 
 function set_cookies( but ) {
+    $("#libraries").hide();
+    $("#selectedLibrary").text( but.innerHTML );
     $.getJSON('/cgi-bin/check-library-authentication-method.cgi', { city: but.innerHTML }, 
             function(data){
 		if (data.ea.enabled === 1) {
@@ -78,6 +83,8 @@ function set_cookies( but ) {
 		    $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
 		    $("#extAuth").hide();
 		    $("#fILLAuth").show();
+		    // no need for signup if everyone authenticates via their library ILS...
+		    //$("#signup").show();  
 		}
 		$("#lid").val( data.ea.lid );
                 $("#authen_lid").val( data.ea.lid );

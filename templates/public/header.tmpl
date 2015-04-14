@@ -39,13 +39,6 @@
 <script type="text/javascript">
 $('document').ready(function(){
 
-//    $(window).bind('beforeunload', function() {
-//        $.getJSON('/cgi-bin/sip2-logout.cgi', {user: $("#username").text(), lid: $("#lid").text() },
-//            function(data){
-//                // don't need to do anything with the return value
-//            });
-//    });
-
     setFontSizeFromCookies();
 
     $('#incrFont').click(function () {
@@ -58,6 +51,19 @@ $('document').ready(function(){
         resetFontSizeToDefault();
     });
 
+    $("#startOver").on("click",function(e){
+        e.preventDefault();
+        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-location", { path: '/' });
+        $.removeCookie("fILL-barcode", { path: '/' });
+        $.removeCookie("fILL-authentication", { path: '/' });
+        $("#breadcrumbs").hide();
+        $("#extAuth").hide();
+        $("#fILLAuth").hide();
+        $("#sign-in").hide();
+        $(".login-footer").append("<p>Starting over...</p>");
+        window.location.href="/cgi-bin/public.cgi";
+    });
     $("#clearCookies").on("click",function(e){
         e.preventDefault();
         $.removeCookie("fILL-lid", { path: '/' });

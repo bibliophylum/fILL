@@ -98,16 +98,14 @@ $('document').ready(function(){
 
       <legend>Login</legend>
 
+      <div id="breadcrumbs" style="display:none">
+	<p id="selectedRegion" style="display:inline"></p>
+	<p id="selectedLibrary" style="display:inline"></p>
+	<a id="startOver" href="?"><u>Start over</u></a>
+      </div>
+
       <div id="region"></div>
       <div id="libraries"></div>
-
-<!--
-      <div id="authentication-method" style="display:none">
-	<p>How do you log in to fILL?</p>
-	<input id="auth-sip2" class="public-style" type="button" value="My library  " /> Use my library card and PIN<br/>
-	<input id="auth-fILL" class="public-style" type="button" value="fILL account" /> Use my fILL username and password<br/>
-      </div>
--->
 
       <div id="home-library" style="display:none">
 	<table>
@@ -164,8 +162,12 @@ $('document').ready(function(){
       
 
     <div class="login-footer">
-      <p><strong>Don&rsquo;t have an account?</strong></p>
-      <a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign up now</a>
+<!-- No need for signup if everyone authenticates via their library ILS...
+      <div id="signup" style="display:none">
+	<p><strong>Don&rsquo;t have an account?</strong></p>
+	<a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign up now</a>
+      </div>
+-->
       <p>If you cannot remember your user name or password, please contact your local public library.</p>
 
     </div> <!--div class login-footer -->
