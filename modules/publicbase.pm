@@ -235,6 +235,7 @@ sub checkSip2 {
 #    $self->log->debug("done with bsc\n");
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};
 }
 
@@ -261,6 +262,7 @@ sub checkBiblionet {
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};
 }
 
@@ -287,6 +289,7 @@ sub checkFollettDestiny {
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};
 }
 
@@ -314,6 +317,7 @@ sub checkL4U {
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};
 }
 
@@ -517,9 +521,13 @@ sub get_patron_and_library {
 #
 sub login_foo {
     my $self = shift;
+    my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
-    $template->param( pagetitle => 'fILL public login' );
+    $template->param( 
+	pagetitle => 'fILL public login',
+	screenmessage => $screenmessage,
+	);
     return $template->output;
 }
 

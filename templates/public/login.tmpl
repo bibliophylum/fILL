@@ -118,6 +118,13 @@ $('document').ready(function(){
 	</table>
       </div>
 
+      <!-- if there is a login error: -->
+      <TMPL_IF name="screenmessage">
+	<div id="auth-screenmessage">
+	  <p><strong><TMPL_VAR name="screenmessage"></strong></p>
+	</div>
+      </TMPL_IF>
+
       <div id="extAuth" style="display:none">
 	<p>Log in using your library barcode and PIN</p>
         <div id="chooseLibrary" style="display:none">
