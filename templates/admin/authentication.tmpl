@@ -1,0 +1,102 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/js/admin-authentication-1.0.js"></script>
+
+<div id="center" role="main">
+  <div id="main-left">
+    <div id="scrolling-table">
+      <table id="libraries" class="row-border">
+	<thead>
+	  <tr><th>Library</th><th>Authen</th></tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_list">
+	    <tr id='<TMPL_VAR NAME="lid">' style="outline: thin solid">
+	      <td><TMPL_VAR NAME="library"></td>
+	      <td><input type="button" class="action-button" value=<TMPL_VAR NAME="auth_method"> /></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="main-right">
+
+    <div id="initialMessage">
+      <p>Edit a library's authentication method by clicking on the library's method button in the list to the left.</p>
+    </div>
+
+    <div id="waitDiv" style="display:none">
+      Loading... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <form id="editAuthentication" action="#">
+
+      <div id="auth-common" style="display:none">
+	<label>Library: <strong><span id="library-name"></span></strong></label>
+      </div>
+
+      <div id="auth-none" style="display:none">
+	<p>This library does not authenticate users via their ILS.</p>
+      </div>
+
+      <div id="auth-sip2" style="display:none">
+	<table>
+	  <tr>
+	    <td>Enabled?</td>
+	    <td>
+	      <input type="radio" name="sipEnabled" value="1">Yes</input>
+	      <input type="radio" name="sipEnabled" value="0">No</input>
+	    </td>
+	  </tr>
+	  <tr><td>Host</td><td><input id="sipHost" name="sipHost" size="45"></td></tr>
+	  <tr><td>Port</td><td><input id="sipPort" name="sipPort"></td></tr>
+	  <tr>
+	    <td>Terminator</td>
+	    <td>
+	      <input type="radio" name="sipTerminator" value="Standard">Standard</input>
+	      <input type="radio" name="sipTerminator" value="CR">Carriage return</input>
+	    </td>
+	  </tr>
+	  <tr><td>SIP server login</td><td><input id="sipServerLogin" name="sipServerLogin"></td></tr>
+	  <tr><td>SIP server password</td><td><input id="sipServerPass" name="sipServerPass"></td></tr>
+	  <tr>
+	    <td>Use SIP2 method</td>
+	    <td>
+	      <input type="radio" name="sipMethod" value="Status">Status (standard)</input>
+	      <input type="radio" name="sipMethod" value="Info">Info (non-standard)</input>
+	    </td>
+	  </tr>
+	</table>
+      </div>
+
+
+
+      <div id="auth-other" style="display:none">
+	<table>
+	  <tr>
+	    <td>Enabled?</td>
+	    <td>
+	      <input type="radio" name="nonsipEnabled" value="1">Yes</input>
+	      <input type="radio" name="nonsipEnabled" value="0">No</input>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>Authentication type</td>
+	    <td>
+	      <input type="radio" name="nonsipAuthType" value="Biblionet">Biblionet</input><br />
+	      <input type="radio" name="nonsipAuthType" value="FollettDestiny">Follett Destiny</input><br />
+	      <input type="radio" name="nonsipAuthType" value="L4U">L4U</input>
+	    </td>
+	  </tr>
+	  <tr><td>URL of OPAC</td><td><input id="nonsipURL" name="nonsipURL" size="45"></td></tr>
+	</table>
+      </div>
+
+    </form>
+  </div><!-- main-right -->
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

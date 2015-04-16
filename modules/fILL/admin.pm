@@ -34,7 +34,25 @@ sub setup {
     $self->run_modes(
 	'test_zserver'         => 'test_zserver_process',
 	'spruce_ill'           => 'load_spruce_ill_numbers_process',
+	'authentication'       => 'authentication_process',
 	);
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub authentication_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select lid, library, case when patron_authentication_method is null then 'none' else patron_authentication_method end as auth_method from libraries order by library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/authentication.tmpl');	
+    $template->param( pagetitle => "Authentication methods",
+		      library_list => $libraries_aref,
+	);
+    return $template->output;
+    
 }
 
 #--------------------------------------------------------------------------------

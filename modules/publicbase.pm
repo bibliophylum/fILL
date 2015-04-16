@@ -34,6 +34,7 @@ use Biblio::SIP2::Client;
 use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::FollettDestiny;
 use Biblio::Authentication::L4U;
+use Biblio::Authentication::TLC;
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
@@ -190,6 +191,9 @@ sub externallyAuthenticate {
 
     } elsif ($lib_href->{patron_authentication_method} eq 'L4U') {
 	$pname = $self->checkL4U($username, $password, $barcode, $pin, $lid);
+
+    } elsif ($lib_href->{patron_authentication_method} eq 'TLC') {
+	$pname = $self->checkTLC($username, $password, $barcode, $pin, $lid);
     }
 
     if ($pname) {
@@ -313,6 +317,33 @@ sub checkL4U {
     }
 
     my $authenticator = Biblio::Authentication::L4U->new( %$href );
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+
+    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
+    return $authorized_href->{'patronname'};
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkTLC {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;
+
+    $self->log->debug( "checkTLC:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='TLC'";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+
+    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (!defined $href) {
+	return undef;
+    }
+
+    my $authenticator = Biblio::Authentication::TLC->new( %$href );
     my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");

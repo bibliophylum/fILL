@@ -23,7 +23,7 @@
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Biblio/Authentication/L4U.pm]
 #     clean => { FILES=>q[Biblio-Authentication-*] }
-#     dist => { COMPRESS=>q[gzip -9f], SUFFIX=>q[gz] }
+#     dist => { SUFFIX=>q[gz], COMPRESS=>q[gzip -9f] }
 
 # --- MakeMaker post_initialize section:
 
@@ -168,7 +168,8 @@ H_FILES  =
 MAN1PODS = 
 MAN3PODS = lib/Biblio/Authentication/Biblionet.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
-	lib/Biblio/Authentication/L4U.pm
+	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/TLC.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIB)$(DFSEP)Config.pm $(PERL_INC)$(DFSEP)config.h
@@ -192,14 +193,17 @@ PERL_ARCHIVE_AFTER =
 
 TO_INST_PM = lib/Biblio/Authentication/Biblionet.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
-	lib/Biblio/Authentication/L4U.pm
+	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/TLC.pm
 
-PM_TO_BLIB = lib/Biblio/Authentication/L4U.pm \
-	blib/lib/Biblio/Authentication/L4U.pm \
+PM_TO_BLIB = lib/Biblio/Authentication/FollettDestiny.pm \
+	blib/lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
 	blib/lib/Biblio/Authentication/Biblionet.pm \
-	lib/Biblio/Authentication/FollettDestiny.pm \
-	blib/lib/Biblio/Authentication/FollettDestiny.pm
+	lib/Biblio/Authentication/TLC.pm \
+	blib/lib/Biblio/Authentication/TLC.pm \
+	lib/Biblio/Authentication/L4U.pm \
+	blib/lib/Biblio/Authentication/L4U.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -424,10 +428,12 @@ POD2MAN = $(POD2MAN_EXE)
 manifypods : pure_all  \
 	lib/Biblio/Authentication/L4U.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/TLC.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm
 	$(NOECHO) $(POD2MAN) --section=$(MAN3EXT) --perm_rw=$(PERM_RW) \
 	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) \
 	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) \
+	  lib/Biblio/Authentication/TLC.pm $(INST_MAN3DIR)/Biblio::Authentication::TLC.$(MAN3EXT) \
 	  lib/Biblio/Authentication/FollettDestiny.pm $(INST_MAN3DIR)/Biblio::Authentication::FollettDestiny.$(MAN3EXT) 
 
 
@@ -455,22 +461,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  core.*perl.*.? core \
-	  *$(OBJ_EXT) $(INST_ARCHAUTODIR)/extralibs.all \
-	  $(MAKE_APERL_FILE) perl \
-	  mon.out MYMETA.json \
-	  lib$(BASEEXT).def so_locations \
-	  perlmain.c tmon.out \
-	  perl.exe pm_to_blib.ts \
-	  $(BASEEXT).exp core.[0-9][0-9] \
-	  *perl.core MYMETA.yml \
-	  $(BOOTSTRAP) $(BASEEXT).x \
-	  blibdirs.ts pm_to_blib \
-	  perl$(EXE_EXT) $(BASEEXT).bso \
-	  core.[0-9][0-9][0-9][0-9] $(BASEEXT).def \
-	  $(INST_ARCHAUTODIR)/extralibs.ld core.[0-9] \
-	  core.[0-9][0-9][0-9][0-9][0-9] core.[0-9][0-9][0-9] \
-	  *$(LIB_EXT) 
+	  $(BASEEXT).x core.[0-9] \
+	  core.[0-9][0-9] pm_to_blib.ts \
+	  *$(LIB_EXT) core.[0-9][0-9][0-9][0-9] \
+	  so_locations perlmain.c \
+	  $(MAKE_APERL_FILE) $(BASEEXT).def \
+	  blibdirs.ts perl$(EXE_EXT) \
+	  $(BOOTSTRAP) *perl.core \
+	  MYMETA.yml core \
+	  core.*perl.*.? pm_to_blib \
+	  perl $(INST_ARCHAUTODIR)/extralibs.all \
+	  perl.exe core.[0-9][0-9][0-9] \
+	  $(BASEEXT).bso core.[0-9][0-9][0-9][0-9][0-9] \
+	  lib$(BASEEXT).def MYMETA.json \
+	  mon.out *$(OBJ_EXT) \
+	  tmon.out $(BASEEXT).exp \
+	  $(INST_ARCHAUTODIR)/extralibs.ld 
 	- $(RM_RF) \
 	  Biblio-Authentication-* blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
@@ -844,9 +850,10 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm \
+	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm \
 	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm \
-	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm 
+	  lib/Biblio/Authentication/TLC.pm blib/lib/Biblio/Authentication/TLC.pm \
+	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 
