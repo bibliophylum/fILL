@@ -851,6 +851,11 @@ input[type="button"]:hover.action-button-highlighted {
     padding: 20px;
 }
 
+.disabled-while-searching {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
 #progress_empty {

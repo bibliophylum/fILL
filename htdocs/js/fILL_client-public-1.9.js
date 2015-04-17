@@ -39,6 +39,7 @@ var SourceMax = 16;
 var SubjectMax = 10;
 var AuthorMax = 10;
 var useELMcover = 0;  // Manitoba-specific
+var isSearching = 0;
 
 //
 // pz2.js event handlers:
@@ -66,7 +67,11 @@ function my_onshow(data) {
 	var $recDiv = $('<div/>', { 'class': "record", 'id': "recdiv_"+hit.recid });
 	$recDiv.append( $('<hr>') );
 	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
-	$recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
+	if (isSearching) {
+	    $recDiv.append( $('<a class="disabled-while-searching" href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
+	} else {
+	    $recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
+	}
 
 	if (hit["md-title-remainder"] !== undefined) {
 	    $recDiv.append( $('<span class="indent">' + hit["md-title-remainder"] + ' </span>') );
@@ -127,6 +132,10 @@ function my_onstat(data) {
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
+	    $(".disabled-while-searching").removeClass("disabled-while-searching");
+	    $("#result-instructions").text("Click on a title for more information.");
+	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
+	    isSearching = 0;
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){
@@ -245,6 +254,8 @@ function onFormSubmitEventHandler()
 {
     resetPage();
     loadSelect();
+    $("#result-instructions").text("You will be able to click on the titles when the search is done.");
+    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
     triggerSearch();
     submitted = true;
     $("#image").hide();
@@ -276,6 +287,7 @@ function resetPage()
 
 function triggerSearch ()
 {
+    isSearching = 1;
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);
 }
 
