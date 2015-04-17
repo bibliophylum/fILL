@@ -57,19 +57,16 @@ $('document').ready(function(){
         });
         //alert(myAlert);
 
-//        if (! $.cookie("fILL-authentication")) {
-//            // these cookies don't exist, so create them.
-            if ($("#authen_barcode").val()) {
-                $.cookie("fILL-barcode", $("#authen_barcode").val(), { expires: 365, path: '/' });
-                $.cookie("fILL-authentication", "external", { expires: 365, path: '/' });
-                $("#authen_loginfield").val( "using-ea" );
-                $("#authen_passwordfield").val( "using-ea" );
-            } else {
-                $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
-                $("#authen_barcode").val( "not-using-ea" );
-                $("#authen_pin").val( "not-using-ea" );
-            }
-//        }
+        if ($("#authen_barcode").val()) {
+            $.cookie("fILL-barcode", $("#authen_barcode").val(), { expires: 365, path: '/' });
+            $.cookie("fILL-authentication", "external", { expires: 365, path: '/' });
+            $("#authen_loginfield").val( "using-ea" );
+            $("#authen_passwordfield").val( "using-ea" );
+        } else {
+            $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
+            $("#authen_barcode").val( "not-using-ea" );
+            $("#authen_pin").val( "not-using-ea" );
+        }
 
         this.submit();
     });

@@ -184,17 +184,9 @@ sub externallyAuthenticate {
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
 
-    } elsif ($lib_href->{patron_authentication_method} eq 'Biblionet') {
-	$pname = $self->checkBiblionet($username, $password, $barcode, $pin, $lid);
-
-    } elsif ($lib_href->{patron_authentication_method} eq 'FollettDestiny') {
-	$pname = $self->checkFollettDestiny($username, $password, $barcode, $pin, $lid);
-
-    } elsif ($lib_href->{patron_authentication_method} eq 'L4U') {
-	$pname = $self->checkL4U($username, $password, $barcode, $pin, $lid);
-
-    } elsif ($lib_href->{patron_authentication_method} eq 'TLC') {
-	$pname = $self->checkTLC($username, $password, $barcode, $pin, $lid);
+    } else {
+	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $lid, 
+	    $lib_href->{patron_authentication_method});
     }
 
     if ($pname) {
@@ -242,142 +234,47 @@ sub checkSip2 {
 #--------------------------------------------------------------------------------
 #
 #
-sub checkSip2_orig {
-    # from sip2-authenticate.cgi
+sub checkNonSip2 {
     my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
-
-    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
-
-    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where lid=?";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
-
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
-
-    if (defined $href) {
-	# need to translate from postgresql field name to SIP2 field name
-	if ($href->{terminator}) {
-	    $href->{msgTerminator} = $href->{terminator};
-	}
-    } else {
-	# no SIP2 server, so bail
-	return undef;
-    }
-
-#    $self->log->debug("creating bsc\n");
-    my $bsc = Biblio::SIP2::Client->new( %$href );
-    $bsc->connect();
-    my $authorized_href = $bsc->verifyPatron($barcode,$pin);
-
-    $bsc->disconnect();
-#    $self->log->debug("done with bsc\n");
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
-
-    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
-    return $authorized_href->{'patronname'};
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub checkBiblionet {
-    my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+    my ($username, $password, $barcode, $pin, $lid, $authmethod) = @_;
 
     $self->log->debug( "checkBiblionet:\n" . Dumper(@_) . "\n" );
 
-    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='Biblionet'";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+    my $SQL = "select url from library_nonsip2 where lid=? and auth_type=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid,$authmethod);
 
     $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
     if (!defined $href) {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Unable to determine authentication method.  Please contact your library."
+	    );
 	return undef;
     }
 
-    my $authenticator = Biblio::Authentication::Biblionet->new( %$href );
-    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+    my $authenticator;
+    if ($authmethod eq 'Biblionet') {
+	$authenticator = Biblio::Authentication::Biblionet->new( %$href );
 
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+    } elsif ($authmethod eq 'FollettDestiny') {
+	$authenticator = Biblio::Authentication::FollettDestiny->new( %$href );
 
-    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
-    return $authorized_href->{'patronname'};
-}
+    } elsif ($authmethod eq 'L4U') {
+	$authenticator = Biblio::Authentication::L4U->new( %$href );
 
-#--------------------------------------------------------------------------------
-#
-#
-sub checkFollettDestiny {
-    my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;
+    } elsif ($authmethod eq 'TLC') {
+	$authenticator = Biblio::Authentication::TLC->new( %$href );
+    }
 
-    $self->log->debug( "checkFollettDestiny:\n" . Dumper(@_) . "\n" );
-
-    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='FollettDestiny'";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
-
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
-
-    if (!defined $href) {
+    if (!defined $authenticator) {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Unable to determine authentication method.  Please contact your library."
+	    );
 	return undef;
     }
 
-    my $authenticator = Biblio::Authentication::FollettDestiny->new( %$href );
-    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
-
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
-
-    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
-    return $authorized_href->{'patronname'};
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub checkL4U {
-    # from sip2-authenticate.cgi
-    my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
-
-    $self->log->debug( "checkL4U:\n" . Dumper(@_) . "\n" );
-
-    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='L4U'";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
-
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
-
-    if (!defined $href) {
-	return undef;
-    }
-
-    my $authenticator = Biblio::Authentication::L4U->new( %$href );
-    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
-
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
-
-    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
-    return $authorized_href->{'patronname'};
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub checkTLC {
-    my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;
-
-    $self->log->debug( "checkTLC:\n" . Dumper(@_) . "\n" );
-
-    my $SQL = "select url from library_nonsip2 where lid=? and auth_type='TLC'";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
-
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
-
-    if (!defined $href) {
-	return undef;
-    }
-
-    my $authenticator = Biblio::Authentication::TLC->new( %$href );
     my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
     $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
@@ -554,8 +451,8 @@ sub get_patron_and_library {
 	if ($self->session->param('fILL-card')) {
 	    #$self->log->debug("session param fILL-card exists: " . $self->session->param('fILL-card') . "\n");
 	    
-	    # The session parameter 'fILL-card' will be set if this is a SIP2 user;
-	    # Patron name is not stored in the database.
+	    # The session parameter 'fILL-card' will be set if this is an externally 
+	    # authenticated  user; Patron name is not stored in the database.
 	    $hr_id = $self->dbh->selectrow_hashref(
 		"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
 		undef,
