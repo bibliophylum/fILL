@@ -51,6 +51,7 @@ my %WESTERN_MB_TO_MAPLIN = (
 my $q = new CGI;
 
 my $username = $q->param('username');
+my $lid = $q->param('lid');
 
 my @inParms = $q->param;
 my @parms;
@@ -81,17 +82,24 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # Get this user's (requester's) library id
 my $hr_id = $dbh->selectrow_hashref(
-    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=?",
+    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=? and p.home_library_id=?",
     undef,
-    $username
+    $username,
+    $lid
     );
-print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id);
+
+#print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id) . "\n";
+
 my $pid = $hr_id->{pid};
-my $lid = $hr_id->{home_library_id};
+
+#print STDERR "pid: $pid\n";
+#exit; 
+
+#my $lid = $hr_id->{home_library_id};
 my $library = $hr_id->{library};
 my $is_enabled = $hr_id->{is_enabled};
 
-if (not defined $lid) {
+if (not defined $pid) {
     # should never get here...
     # go to some error page.
 }

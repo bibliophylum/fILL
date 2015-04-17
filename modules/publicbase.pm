@@ -141,6 +141,8 @@ sub createPatronRecordIfRequired {
     my $self = shift;
     my ($lid, $barcode) = @_;
 
+    my $pid;
+
     # authenticated user.  Is there a fILL patron record?
     my $href = $self->dbh->selectrow_hashref(
 	"select pid from patrons where home_library_id=? and card=?",
@@ -150,11 +152,13 @@ sub createPatronRecordIfRequired {
 	);
     if (defined $href) {
 	# fILL patron record exists
+	$pid = $href->{pid};
+
     } else {
 	# from bin/register-sip2-patron.cgi:
 	my $SR = new String::Random;
 	my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
-	# note that we don't store user name for SIP2-authenticated patrons;
+	# note that we don't store user name for externally-authenticated patrons;
 	# use barcode instead.
 	# patron name is stored in session (so it can be displayed on user's
 	# pages), and only valid while session is active
@@ -167,7 +171,15 @@ sub createPatronRecordIfRequired {
 					   $barcode,
 					   1
 	    );
+	my $href = $self->dbh->selectrow_hashref(
+	    "select pid from patrons where home_library_id=? and card=?",
+	    undef,
+	    $lid,
+	    $barcode
+	    );
+	$pid = $href->{pid};
     }
+    return $pid;
 }
 
 #--------------------------------------------------------------------------------
@@ -179,7 +191,7 @@ sub externallyAuthenticate {
 
     my $pname;
     # is this a SIP2 library?
-    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from libraries where lid=?", undef, $lid);
+    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, library from libraries where lid=?", undef, $lid);
 
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
@@ -190,9 +202,12 @@ sub externallyAuthenticate {
     }
 
     if ($pname) {
-	$self->createPatronRecordIfRequired( $lid, $barcode );
+	my $pid = $self->createPatronRecordIfRequired( $lid, $barcode );
 	$self->session->param('fILL-card',$barcode);
-	$self->log->debug("session param fILL-card [" . $self->session->param('fILL-card') . "]\n");
+	$self->session->param('fILL-pid',$pid);
+	$self->session->param('fILL-lid',$lid);
+	$self->session->param('fILL-library', $lib_href->{'library'}); 
+	$self->session->param('fILL-is_enabled',1); # if they authenticated, they're enabled
     }
     $self->log->debug( "externallyAuthenticate returned [$pname] using auth method [" . $lib_href->{patron_authentication_method} . "]\n" );
     return $pname;
@@ -238,7 +253,7 @@ sub checkNonSip2 {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $lid, $authmethod) = @_;
 
-    $self->log->debug( "checkBiblionet:\n" . Dumper(@_) . "\n" );
+    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
 
     my $SQL = "select url from library_nonsip2 where lid=? and auth_type=?";
     my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid,$authmethod);
@@ -337,20 +352,20 @@ sub update_login_date {
     #$self->log->debug("update login date, pid [$pid], lid [$lid], library [$library], is_enabled [$is_enabled]\n");
 
     my $rows_affected;
-    if ($self->session->param('fILL-card')) {
-	# this is a SIP2-authenticated patron
-	#$self->log->debug("update login date for SIP2-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
-	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
+#    if ($self->session->param('fILL-card')) {
+#	# this is an externally-authenticated patron
+#	#$self->log->debug("update login date for externally-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
+#	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
+#					undef,
+#					$lid,
+#					$self->session->param('fILL-card'),
+#	    );
+#    } else {
+	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE pid=?",
 					undef,
-					$lid,
-					$self->session->param('fILL-card'),
+					$pid,
 	    );
-    } else {
-	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
-					undef,
-					$self->authen->username,
-	    );
-    }
+#    }
     #$self->log->debug("finished update login date, rows affected: $rows_affected\n");
 }
 

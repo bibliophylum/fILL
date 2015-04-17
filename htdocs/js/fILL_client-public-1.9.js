@@ -89,6 +89,7 @@ function my_onshow(data) {
 		    // externally authenticated, so username is barcode
 		    $("#request_form").append('<input type="hidden" name="username" value="' + $("#barcode").text() + '">'); 
 		}
+		$("#request_form").append('<input type="hidden" name="lid" value=' + $("#lid").text() + '">');
 		request();
 		event.preventDefault();
 	    });
@@ -194,6 +195,7 @@ function my_onrecord(data) {
 	    // externally authenticated, so username is barcode
 	    $("#request_form").append('<input type="hidden" name="username" value="' + $("#barcode").text() + '">'); 
 	}
+	$("#request_form").append('<input type="hidden" name="lid" value="' + $("#lid").text() + '">');
 	request();
 	event.preventDefault();
     });
@@ -707,7 +709,7 @@ function request() {
     var $myForm=$("#request_form");
     $.getJSON('/cgi-bin/make-patron-request.cgi', $myForm.serialize(),
 	      function(data){
-//		  alert('...');
+		  //alert('...');
 	      })
 	.success(function( data ) {
 //	    alert('success');
@@ -739,7 +741,7 @@ function request() {
 	    $("#primary").toggle();
 	    $("#confirmed").toggle();
 	})
-	.error(function() {
+	.error(function( data ) {
 	    alert('error: could not make this request at this time');
 	})
 	.complete(function() {
