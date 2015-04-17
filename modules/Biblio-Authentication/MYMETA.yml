@@ -1,5 +1,5 @@
 ---
-abstract: 'check if patron credentials authorize against L4U library PAC'
+abstract: 'base class for integrated library system authentication'
 author:
   - 'David Christensen <David.A.Christensen@gmail.com>'
 build_requires:
@@ -12,11 +12,12 @@ license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Biblio-Authentication-L4U
+name: Biblio-Authentication
 no_index:
   directory:
     - t
     - inc
 requires:
+  Biblio::SIP2::Client: 0.01
   perl: 5.006
 version: 0.01

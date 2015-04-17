@@ -1,10 +1,6 @@
 package Biblio::Authentication::L4U;
 
-use 5.006;
-use strict;
-use warnings FATAL => 'all';
-use WWW::Mechanize;
-use HTML::TreeBuilder 5 -weak;
+use parent 'Biblio::Authentication';
 
 =head1 NAME
 
@@ -53,13 +49,8 @@ sub new {
 
     my %parms = @_;
 
-    my $self  = {};
+    my $self  = $class->SUPER::new(@_);
 
-    # Public variables for configuration
-    $self->{url}          = $parms{'url'};
-    $self->{library}      = $parms{'library'} || '';
-
-    bless ($self, $class);
     return $self;
 }
 
@@ -109,7 +100,7 @@ sub verifyPatron {
 		    "patronname"    => $pnameHeader->as_text(),
 		    "screenmessage" => undef,
 		    );
-		$authref = \%authorized;
+		$self->{'authorized'} = \%authorized;
 
 		# play nice and logout
 		my $logoutLink = $mech->find_link( class => "LogoutTab" );
@@ -128,7 +119,7 @@ sub verifyPatron {
 		    "patronname"    => undef,
 		    "screenmessage" => "Invalid card or PIN",
 		    );
-		$authref = \%authorized;
+		$self->{'authorized'} = \%authorized;
 	    }
 	    $tree->delete();
 	} else {
@@ -138,7 +129,7 @@ sub verifyPatron {
 		"patronname"    => undef,
 		"screenmessage" => "Unable to access library login page",
 		);
-	    $authref = \%authorized;
+	    $self->{'authorized'} = \%authorized;
 	}
     } else {
 	my %authorized = (
@@ -147,11 +138,11 @@ sub verifyPatron {
 	    "patronname"    => undef,
 	    "screenmessage" => "Unable to access library web site",
 	    );
-	$authref = \%authorized;
+	$self->{'authorized'} = \%authorized;
     }
     
-#    print STDERR Dumper(%authorized);
-    return $authref;
+#    print STDERR Dumper($self->{'authorized'});
+    return $self->{'authorized'};
 }
 
 =head1 AUTHOR

@@ -1,10 +1,14 @@
-package Biblio::Authentication::Biblionet;
+package Biblio::Authentication;
 
-use parent 'Biblio::Authentication';
+use 5.006;
+use strict;
+use warnings FATAL => 'all';
+use WWW::Mechanize;
+use HTML::TreeBuilder 5 -weak;
 
 =head1 NAME
 
-Biblio::Authentication::Biblionet - check if patron credentials authorize against Biblionet library PAC
+Biblio::Authentication - base class for integrated library system authentication
 
 =head1 VERSION
 
@@ -17,26 +21,26 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Check if patron credentials authorize against Biblionet library PAC.
+Don't use this class itself; use (or create) a class specific to the ILS you're authenticating against.
 
-    use Biblio::Authentication::Biblionet;
+Derived classes use whatever is appropriate to handle the authentication (e.g. SIP2, RESTful API, screen-scrape using WWW::Mechanize, etc)
 
-    my $Biblionet = Biblio::Authentication::Biblionet->new(
-        'url' => "http://aaa.bbb.ccc.ddd",
+For example:
+
+Check if patron credentials authorize against L4U library PAC.
+
+    use Biblio::Authentication::L4U;
+
+    my $authenticator = Biblio::Authentication::L4U->new(
+        'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
     );
-    my $authorized_href = $Biblionet->verifyPatron( $barcode, $pin );
-
-Biblio::Authentication::Biblionet looks for the 'Login' link on the library's PAC,
-follows it to the login page, fills in the user credentials (as passed in
-to verifyPatron), and checks to see if it ends up at a patron information
-page.  If so, it logs out and returns.
-
+    my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-my $Biblionet = Biblio::Authentication::Biblionet->new(
-    'url' => "http://aaa.bbb.ccc.ddd",
+my $L4U = Biblio::Authentication::L4U->new(
+    'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
 );
 
 'url' is the URL to the library's public catalogue.
@@ -49,14 +53,29 @@ sub new {
 
     my %parms = @_;
 
-    my $self  = $class->SUPER::new(@_);
+    my $self  = {};
 
+    # Public variables for configuration
+    $self->{url}          = $parms{'url'};
+    $self->{library}      = $parms{'library'} || '';
+
+    # Private
+    $self->{authorized} = {
+	"validbarcode"  => 'N',
+	"validpin"      => 'N',
+	"patronname"    => undef,
+	"screenmessage" => undef,
+    };
+
+    bless ($self, $class);
     return $self;
 }
 
 =head2 verifyPatron
 
-my $authorized_href = $Biblionet->verifyPatron( $barcode, $pin );
+Each derived class must implement the verifyPatron method.
+
+my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
 
 verifyPatron returns a hash reference to a hash that looks like:
 		my %authorized = (
@@ -73,66 +92,7 @@ sub verifyPatron {
     my $self = shift;
     my ($barcode, $pin) = @_;
 
-    my $authref;
-
-    my $url = $self->{url};
-    $url .= "/4DCGI/C4DI_com_post_formulaire?C4DI_login=" . $barcode . "&C4dI_mot_de_passe=" . $pin . "&C4DI_Nom_Requete=C4DI_com_demande_dossier_personnel";
-
-    my $mech = WWW::Mechanize->new( autocheck => 1 );
-    
-    $mech->get( $url );
-    if ($mech->success()) {
-	# Logout link appears on every page?
-
-	# get the patron's name:
-	
-	my $tree = HTML::TreeBuilder->new_from_content( $mech->content() );
-	my @h4 = $tree->look_down(_tag => 'h4');
-	foreach my $e (@h4) {
-	    my $txt = $e->as_text();
-	    if ($txt =~ /Dossier de/) {
-		# Found it!
-		my $pname = $txt;
-		$pname =~ s/\s/ /g;
-		$pname =~ s/\xa0/ /g;  # Biblionet includes a &nbsp; between name parts
-		$pname =~ s/^Dossier de (.*)$/$1/;
-		#print "txt [$txt], pname [$pname]\n";
-		my %authorized = (
-		    "validbarcode"  => 'Y',
-		    "validpin"      => 'Y',
-		    "patronname"    => $pname,
-		    "screenmessage" => undef,
-		    );
-		$authref = \%authorized;
-		last;
-	    }
-	}
-	
-	$tree->delete();
-	
-	if (!defined $authref) {
-#	    print "no patron info\n";
-	    my %authorized = (
-		"validbarcode"  => 'N',
-		"validpin"      => 'N',
-		"patronname"    => undef,
-		"screenmessage" => "Invalid user number or password",
-		);
-	    $authref = \%authorized;
-	}
-	
-    } else {
-	my %authorized = (
-	    "validbarcode"  => 'N',
-	    "validpin"      => 'N',
-	    "patronname"    => undef,
-	    "screenmessage" => "Unable to access library web site",
-	    );
-	$authref = \%authorized;
-    }
-    
-#    print STDERR Dumper(%authorized);
-    return $authref;
+    return $self->{authorized};
 }
 
 =head1 AUTHOR
@@ -182,4 +142,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Biblio::Authentication::Biblionet
+1; # End of Biblio::Authentication::L4U

@@ -27,6 +27,22 @@ sudo rm -rf /opt/fILL/updates
 #echo Creating new /opt/fILL...
 #sudo mkdir /opt/fILL
 
+echo Building Perl modules...
+topdir=$(pwd)
+cd modules/Biblio-SIP2-Client
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+cd modules/Biblio-Authentication
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
 #echo Changing ownership...
 #sudo chown david:david /opt/fILL
 

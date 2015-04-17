@@ -1,10 +1,7 @@
 package Biblio::Authentication::TLC;
 
-use 5.006;
-use strict;
-use warnings FATAL => 'all';
-use WWW::Mechanize;
-use HTML::TreeBuilder 5 -weak;
+use parent 'Biblio::Authentication';
+
 use Time::HiRes qw(gettimeofday);
 use JSON;
 
@@ -52,13 +49,8 @@ sub new {
 
     my %parms = @_;
 
-    my $self  = {};
+    my $self  = $class->SUPER::new(@_);
 
-    # Public variables for configuration
-    $self->{url}          = $parms{'url'};
-    $self->{library}      = $parms{'library'} || '';
-
-    bless ($self, $class);
     return $self;
 }
 

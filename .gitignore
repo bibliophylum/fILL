@@ -6,6 +6,9 @@
 css-classes-in-fILL.txt
 devdocs/analyzing-requests.txt
 devdocs/sql-to-get-unfilled-reasons.txt
+devdocs/sql-to-get-request-rejection-history.txt
+devdocs/sql-to-get-shipped.txt
+devdocs/sql-to-get-unfilled-borrowers.txt
 externals/bst.err
 externals/bst.txt
 externals/carhartl-jquery-cookie-92b7715/
@@ -25,7 +28,14 @@ htdocs/themes/fILL-night/
 htdocs/themes/fILL-wonky/
 htdocs/themes/jquery-ui-1.11.2.custom.zip
 install-with-pazpar-debug-logging.sh
-modules/Biblio-SIP2-Client/
+modules/Biblio-SIP2-Client/blib/
+modules/Biblio-SIP2-Client/Makefile
+modules/Biblio-SIP2-Client/MYMETA.json
+modules/Biblio-SIP2-Client/MYMETA.yml
+modules/Biblio-Authentication/blib/
+modules/Biblio-Authentication/Makefile
+modules/Biblio-Authentication/MYMETA.json
+modules/Biblio-Authentication/MYMETA.yml
 pazpar2/settings/Jolys.xml
 services/reports/report-net-all-libraries.pl
 updates/20.will-not-loan-newer-than.sql
@@ -34,3 +44,7 @@ updates/new-ucn-libraries.sql
 updates/search-test.html
 updates/tmp-drop-tables-including-rotations.sql
 updates/update-french-libraries.sql
+updates/Spruce_ILL/
+updates/blocks/
+updates/fILL-Library-Websites-with-sql.csv
+updates/fILL-Library-Websites.csv

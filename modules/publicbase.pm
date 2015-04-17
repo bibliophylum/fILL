@@ -30,7 +30,8 @@ use CGI::Application::Plugin::LogDispatch;
 use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
 use JSON;
-use Biblio::SIP2::Client;
+#use Biblio::SIP2::Client;
+use Biblio::Authentication::SIP2;
 use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::FollettDestiny;
 use Biblio::Authentication::L4U;
@@ -209,6 +210,39 @@ sub externallyAuthenticate {
 #
 #
 sub checkSip2 {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where lid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+
+    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (defined $href) {
+	# need to translate from postgresql field name to SIP2 field name
+	if ($href->{terminator}) {
+	    $href->{msgTerminator} = $href->{terminator};
+	}
+    } else {
+	# no SIP2 server, so bail
+	return undef;
+    }
+
+    my $authenticator = Biblio::Authentication::SIP2->new( %$href );
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+
+    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
+    return $authorized_href->{'patronname'};
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkSip2_orig {
     # from sip2-authenticate.cgi
     my $self = shift;
     my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen

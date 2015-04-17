@@ -1,10 +1,13 @@
-package Biblio::Authentication::Biblionet;
+package Biblio::Authentication::SIP2;
 
 use parent 'Biblio::Authentication';
 
+use Biblio::SIP2::Client;
+#use Data::Dumper; # debugging
+
 =head1 NAME
 
-Biblio::Authentication::Biblionet - check if patron credentials authorize against Biblionet library PAC
+Biblio::Authentication::SIP2 - check if patron credentials authorize against SIP2 server
 
 =head1 VERSION
 
@@ -17,29 +20,34 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Check if patron credentials authorize against Biblionet library PAC.
+Check if patron credentials authorize against SIP2 library PAC.
 
-    use Biblio::Authentication::Biblionet;
+    use Biblio::Authentication::SIP2;
 
-    my $Biblionet = Biblio::Authentication::Biblionet->new(
-        'url' => "http://aaa.bbb.ccc.ddd",
+    my $SIP2 = Biblio::Authentication::SIP2->new(
+        'host' => 'aaa.bbb.ccc.ddd',
+        'port' => '2112',
+        'terminator' => "\r",  # only if non-standard terminator
+        'sip_server_login' => 'xxxxxx',   # if sip server requires login befor allowing auth
+        'sip_server_password' => 'sekrit',
+        'validate_using_info' => 1   # if sip server uses patron info rather than patron status
     );
-    my $authorized_href = $Biblionet->verifyPatron( $barcode, $pin );
+    my $authorized_href = $SIP2->verifyPatron( $barcode, $pin );
 
-Biblio::Authentication::Biblionet looks for the 'Login' link on the library's PAC,
-follows it to the login page, fills in the user credentials (as passed in
-to verifyPatron), and checks to see if it ends up at a patron information
-page.  If so, it logs out and returns.
+All of the heavy lifting is done by the Biblio::SIP2::Client module.
 
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-my $Biblionet = Biblio::Authentication::Biblionet->new(
-    'url' => "http://aaa.bbb.ccc.ddd",
-);
+my %Insignia_SIP2 = ( 
+    host => "aaa.bbb.ccc.ddd",
+    port => 2135,
+    msgTerminator => "\r",
+    validate_using_info => 1,
+    );
 
-'url' is the URL to the library's public catalogue.
+my $SIP2 = Biblio::Authentication::SIP2->new( \%Insignia_SIP2 );
 
 =cut
 
@@ -49,14 +57,24 @@ sub new {
 
     my %parms = @_;
 
-    my $self  = $class->SUPER::new(@_);
+    my $self = $class->SUPER::new(@_);
+
+    $self->{sipParms} = {
+	"host" => $parms{'host'},
+	"port" => $parms{'port'},
+	"msgTerminator" => $parms{'terminator'},  # NOTE the name difference
+	"sip_server_login" => $parms{'sip_server_login'},
+	"sip_server_password" => $parms{'sip_server_password'},
+	"validate_using_info" => $parms{'validate_using_info'} || 0,
+    };
+    $self->{bsc} = Biblio::SIP2::Client->new( %{ $self->{sipParms} } );
 
     return $self;
 }
 
 =head2 verifyPatron
 
-my $authorized_href = $Biblionet->verifyPatron( $barcode, $pin );
+my $authorized_href = $SIP2->verifyPatron( $barcode, $pin );
 
 verifyPatron returns a hash reference to a hash that looks like:
 		my %authorized = (
@@ -73,66 +91,11 @@ sub verifyPatron {
     my $self = shift;
     my ($barcode, $pin) = @_;
 
-    my $authref;
+    $self->{bsc}->connect();
+    $self->{'authorized'} = $self->{bsc}->verifyPatron($barcode,$pin);
+    $self->{bsc}->disconnect();
 
-    my $url = $self->{url};
-    $url .= "/4DCGI/C4DI_com_post_formulaire?C4DI_login=" . $barcode . "&C4dI_mot_de_passe=" . $pin . "&C4DI_Nom_Requete=C4DI_com_demande_dossier_personnel";
-
-    my $mech = WWW::Mechanize->new( autocheck => 1 );
-    
-    $mech->get( $url );
-    if ($mech->success()) {
-	# Logout link appears on every page?
-
-	# get the patron's name:
-	
-	my $tree = HTML::TreeBuilder->new_from_content( $mech->content() );
-	my @h4 = $tree->look_down(_tag => 'h4');
-	foreach my $e (@h4) {
-	    my $txt = $e->as_text();
-	    if ($txt =~ /Dossier de/) {
-		# Found it!
-		my $pname = $txt;
-		$pname =~ s/\s/ /g;
-		$pname =~ s/\xa0/ /g;  # Biblionet includes a &nbsp; between name parts
-		$pname =~ s/^Dossier de (.*)$/$1/;
-		#print "txt [$txt], pname [$pname]\n";
-		my %authorized = (
-		    "validbarcode"  => 'Y',
-		    "validpin"      => 'Y',
-		    "patronname"    => $pname,
-		    "screenmessage" => undef,
-		    );
-		$authref = \%authorized;
-		last;
-	    }
-	}
-	
-	$tree->delete();
-	
-	if (!defined $authref) {
-#	    print "no patron info\n";
-	    my %authorized = (
-		"validbarcode"  => 'N',
-		"validpin"      => 'N',
-		"patronname"    => undef,
-		"screenmessage" => "Invalid user number or password",
-		);
-	    $authref = \%authorized;
-	}
-	
-    } else {
-	my %authorized = (
-	    "validbarcode"  => 'N',
-	    "validpin"      => 'N',
-	    "patronname"    => undef,
-	    "screenmessage" => "Unable to access library web site",
-	    );
-	$authref = \%authorized;
-    }
-    
-#    print STDERR Dumper(%authorized);
-    return $authref;
+    return $self->{'authorized'};
 }
 
 =head1 AUTHOR
@@ -182,4 +145,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Biblio::Authentication::Biblionet
+1; # End of Biblio::Authentication::SIP2

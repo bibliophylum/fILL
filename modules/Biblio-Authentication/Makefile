@@ -1,4 +1,4 @@
-# This Makefile is for the Biblio::Authentication::L4U extension to perl.
+# This Makefile is for the Biblio::Authentication extension to perl.
 #
 # It was generated automatically by MakeMaker version
 # 6.66 (Revision: 66600) from the contents of
@@ -11,17 +11,17 @@
 
 #   MakeMaker Parameters:
 
-#     ABSTRACT_FROM => q[lib/Biblio/Authentication/L4U.pm]
+#     ABSTRACT_FROM => q[lib/Biblio/Authentication.pm]
 #     AUTHOR => [q[David Christensen <David.A.Christensen@gmail.com>]]
 #     BUILD_REQUIRES => { Test::More=>q[0] }
 #     CONFIGURE_REQUIRES => { ExtUtils::MakeMaker=>q[0] }
 #     LICENSE => q[Artistic_2_0]
 #     MIN_PERL_VERSION => q[5.006]
-#     NAME => q[Biblio::Authentication::L4U]
+#     NAME => q[Biblio::Authentication]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0] }
+#     PREREQ_PM => { Test::More=>q[0], Biblio::SIP2::Client=>q[0.01] }
 #     TEST_REQUIRES => {  }
-#     VERSION_FROM => q[lib/Biblio/Authentication/L4U.pm]
+#     VERSION_FROM => q[lib/Biblio/Authentication.pm]
 #     clean => { FILES=>q[Biblio-Authentication-*] }
 #     dist => { SUFFIX=>q[gz], COMPRESS=>q[gzip -9f] }
 
@@ -60,8 +60,8 @@ VENDORLIBEXP = /usr/share/perl5
 AR_STATIC_ARGS = cr
 DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
-NAME = Biblio::Authentication::L4U
-NAME_SYM = Biblio_Authentication_L4U
+NAME = Biblio::Authentication
+NAME_SYM = Biblio_Authentication
 VERSION = 0.01
 VERSION_MACRO = VERSION
 VERSION_SYM = 0_01
@@ -150,11 +150,11 @@ MM_REVISION = 66600
 # PARENT_NAME = NAME without BASEEXT and no trailing :: (eg Foo::Bar)
 # DLBASE  = Basename part of dynamic library. May be just equal BASEEXT.
 MAKE = make
-FULLEXT = Biblio/Authentication/L4U
-BASEEXT = L4U
-PARENT_NAME = Biblio::Authentication
+FULLEXT = Biblio/Authentication
+BASEEXT = Authentication
+PARENT_NAME = Biblio
 DLBASE = $(BASEEXT)
-VERSION_FROM = lib/Biblio/Authentication/L4U.pm
+VERSION_FROM = lib/Biblio/Authentication.pm
 OBJECT = 
 LDFROM = $(OBJECT)
 LINKTYPE = dynamic
@@ -166,17 +166,19 @@ C_FILES  =
 O_FILES  = 
 H_FILES  = 
 MAN1PODS = 
-MAN3PODS = lib/Biblio/Authentication/Biblionet.pm \
+MAN3PODS = lib/Biblio/Authentication.pm \
+	lib/Biblio/Authentication/Biblionet.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/SIP2.pm \
 	lib/Biblio/Authentication/TLC.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIB)$(DFSEP)Config.pm $(PERL_INC)$(DFSEP)config.h
 
 # Where to build things
-INST_LIBDIR      = $(INST_LIB)/Biblio/Authentication
-INST_ARCHLIBDIR  = $(INST_ARCHLIB)/Biblio/Authentication
+INST_LIBDIR      = $(INST_LIB)/Biblio
+INST_ARCHLIBDIR  = $(INST_ARCHLIB)/Biblio
 
 INST_AUTODIR     = $(INST_LIB)/auto/$(FULLEXT)
 INST_ARCHAUTODIR = $(INST_ARCHLIB)/auto/$(FULLEXT)
@@ -191,19 +193,25 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Biblio/Authentication/Biblionet.pm \
+TO_INST_PM = lib/Biblio/Authentication.pm \
+	lib/Biblio/Authentication/Biblionet.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/SIP2.pm \
 	lib/Biblio/Authentication/TLC.pm
 
-PM_TO_BLIB = lib/Biblio/Authentication/FollettDestiny.pm \
-	blib/lib/Biblio/Authentication/FollettDestiny.pm \
+PM_TO_BLIB = lib/Biblio/Authentication.pm \
+	blib/lib/Biblio/Authentication.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
 	blib/lib/Biblio/Authentication/Biblionet.pm \
-	lib/Biblio/Authentication/TLC.pm \
-	blib/lib/Biblio/Authentication/TLC.pm \
+	lib/Biblio/Authentication/SIP2.pm \
+	blib/lib/Biblio/Authentication/SIP2.pm \
 	lib/Biblio/Authentication/L4U.pm \
-	blib/lib/Biblio/Authentication/L4U.pm
+	blib/lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/FollettDestiny.pm \
+	blib/lib/Biblio/Authentication/FollettDestiny.pm \
+	lib/Biblio/Authentication/TLC.pm \
+	blib/lib/Biblio/Authentication/TLC.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -271,8 +279,8 @@ CI = ci -u
 RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
-DISTNAME = Biblio-Authentication-L4U
-DISTVNAME = Biblio-Authentication-L4U-0.01
+DISTNAME = Biblio-Authentication
+DISTVNAME = Biblio-Authentication-0.01
 
 
 # --- MakeMaker macro section:
@@ -426,15 +434,19 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/SIP2.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication.pm \
 	lib/Biblio/Authentication/TLC.pm \
-	lib/Biblio/Authentication/FollettDestiny.pm
+	lib/Biblio/Authentication/FollettDestiny.pm \
+	lib/Biblio/Authentication/L4U.pm
 	$(NOECHO) $(POD2MAN) --section=$(MAN3EXT) --perm_rw=$(PERM_RW) \
-	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) \
+	  lib/Biblio/Authentication/SIP2.pm $(INST_MAN3DIR)/Biblio::Authentication::SIP2.$(MAN3EXT) \
 	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) \
+	  lib/Biblio/Authentication.pm $(INST_MAN3DIR)/Biblio::Authentication.$(MAN3EXT) \
 	  lib/Biblio/Authentication/TLC.pm $(INST_MAN3DIR)/Biblio::Authentication::TLC.$(MAN3EXT) \
-	  lib/Biblio/Authentication/FollettDestiny.pm $(INST_MAN3DIR)/Biblio::Authentication::FollettDestiny.$(MAN3EXT) 
+	  lib/Biblio/Authentication/FollettDestiny.pm $(INST_MAN3DIR)/Biblio::Authentication::FollettDestiny.$(MAN3EXT) \
+	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) 
 
 
 
@@ -461,24 +473,24 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  $(BASEEXT).x core.[0-9] \
-	  core.[0-9][0-9] pm_to_blib.ts \
-	  *$(LIB_EXT) core.[0-9][0-9][0-9][0-9] \
-	  so_locations perlmain.c \
-	  $(MAKE_APERL_FILE) $(BASEEXT).def \
-	  blibdirs.ts perl$(EXE_EXT) \
-	  $(BOOTSTRAP) *perl.core \
-	  MYMETA.yml core \
-	  core.*perl.*.? pm_to_blib \
-	  perl $(INST_ARCHAUTODIR)/extralibs.all \
-	  perl.exe core.[0-9][0-9][0-9] \
-	  $(BASEEXT).bso core.[0-9][0-9][0-9][0-9][0-9] \
-	  lib$(BASEEXT).def MYMETA.json \
-	  mon.out *$(OBJ_EXT) \
-	  tmon.out $(BASEEXT).exp \
-	  $(INST_ARCHAUTODIR)/extralibs.ld 
+	  perl$(EXE_EXT) core.[0-9] \
+	  tmon.out $(INST_ARCHAUTODIR)/extralibs.all \
+	  lib$(BASEEXT).def *$(LIB_EXT) \
+	  core.[0-9][0-9][0-9][0-9] $(BASEEXT).x \
+	  pm_to_blib.ts so_locations \
+	  $(BOOTSTRAP) core.*perl.*.? \
+	  MYMETA.yml pm_to_blib \
+	  $(BASEEXT).bso perl \
+	  core.[0-9][0-9] *perl.core \
+	  core.[0-9][0-9][0-9][0-9][0-9] mon.out \
+	  $(BASEEXT).def *$(OBJ_EXT) \
+	  blibdirs.ts perl.exe \
+	  $(INST_ARCHAUTODIR)/extralibs.ld core.[0-9][0-9][0-9] \
+	  core $(MAKE_APERL_FILE) \
+	  $(BASEEXT).exp perlmain.c \
+	  MYMETA.json 
 	- $(RM_RF) \
-	  Biblio-Authentication-* blib 
+	  blib Biblio-Authentication-* 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
 
 
@@ -500,7 +512,7 @@ realclean purge ::  clean realclean_subdirs
 metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) '---' > META_new.yml
-	$(NOECHO) $(ECHO) 'abstract: '\''check if patron credentials authorize against L4U library PAC'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'abstract: '\''base class for integrated library system authentication'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  - '\''David Christensen <David.A.Christensen@gmail.com>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
@@ -513,18 +525,19 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) 'meta-spec:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  url: http://module-build.sourceforge.net/META-spec-v1.4.html' >> META_new.yml
 	$(NOECHO) $(ECHO) '  version: 1.4' >> META_new.yml
-	$(NOECHO) $(ECHO) 'name: Biblio-Authentication-L4U' >> META_new.yml
+	$(NOECHO) $(ECHO) 'name: Biblio-Authentication' >> META_new.yml
 	$(NOECHO) $(ECHO) 'no_index:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  directory:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - t' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - inc' >> META_new.yml
 	$(NOECHO) $(ECHO) 'requires:' >> META_new.yml
+	$(NOECHO) $(ECHO) '  Biblio::SIP2::Client: 0.01' >> META_new.yml
 	$(NOECHO) $(ECHO) '  perl: 5.006' >> META_new.yml
 	$(NOECHO) $(ECHO) 'version: 0.01' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
-	$(NOECHO) $(ECHO) '   "abstract" : "check if patron credentials authorize against L4U library PAC",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "abstract" : "base class for integrated library system authentication",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "author" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '      "David Christensen <David.A.Christensen@gmail.com>"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
@@ -537,7 +550,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",' >> META_new.json
 	$(NOECHO) $(ECHO) '      "version" : "2"' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
-	$(NOECHO) $(ECHO) '   "name" : "Biblio-Authentication-L4U",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "name" : "Biblio-Authentication",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "no_index" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "directory" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '         "t",' >> META_new.json
@@ -557,6 +570,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      },' >> META_new.json
 	$(NOECHO) $(ECHO) '      "runtime" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '         "requires" : {' >> META_new.json
+	$(NOECHO) $(ECHO) '            "Biblio::SIP2::Client" : "0.01",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "perl" : "5.006"' >> META_new.json
 	$(NOECHO) $(ECHO) '         }' >> META_new.json
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
@@ -836,10 +850,11 @@ testdb_static :: testdb_dynamic
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
 	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="$(VERSION)">' > $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '    <ABSTRACT>check if patron credentials authorize against L4U library PAC</ABSTRACT>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '    <ABSTRACT>base class for integrated library system authentication</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>David Christensen &lt;David.A.Christensen@gmail.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <PERLCORE VERSION="5,006,0,0" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE VERSION="0.01" NAME="Biblio::SIP2::Client" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.18" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
@@ -850,10 +865,12 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm \
+	  lib/Biblio/Authentication.pm blib/lib/Biblio/Authentication.pm \
 	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm \
-	  lib/Biblio/Authentication/TLC.pm blib/lib/Biblio/Authentication/TLC.pm \
-	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm 
+	  lib/Biblio/Authentication/SIP2.pm blib/lib/Biblio/Authentication/SIP2.pm \
+	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm \
+	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm \
+	  lib/Biblio/Authentication/TLC.pm blib/lib/Biblio/Authentication/TLC.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

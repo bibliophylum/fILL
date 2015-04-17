@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Biblio::Authentication::Biblionet 3pm"
-.TH Biblio::Authentication::Biblionet 3pm "2015-04-14" "perl v5.18.2" "User Contributed Perl Documentation"
+.TH Biblio::Authentication::Biblionet 3pm "2015-04-17" "perl v5.18.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -151,7 +151,7 @@ Check if patron credentials authorize against Biblionet library \s-1PAC.\s0
 \&    use Biblio::Authentication::Biblionet;
 \&
 \&    my $Biblionet = Biblio::Authentication::Biblionet\->new(
-\&        \*(Aqurl\*(Aq => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
+\&        \*(Aqurl\*(Aq => "http://aaa.bbb.ccc.ddd",
 \&    );
 \&    my $authorized_href = $Biblionet\->verifyPatron( $barcode, $pin );
 .Ve
@@ -165,7 +165,7 @@ page.  If so, it logs out and returns.
 .SS "new"
 .IX Subsection "new"
 my \f(CW$Biblionet\fR = Biblio::Authentication::Biblionet\->new(
-    'url' => \*(L"http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def\*(R",
+    'url' => \*(L"http://aaa.bbb.ccc.ddd\*(R",
 );
 .PP
 \&'url' is the \s-1URL\s0 to the library's public catalogue.
