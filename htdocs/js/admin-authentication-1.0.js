@@ -79,12 +79,16 @@ $('document').ready(function() {
 			      $('input:radio[name=nonsipEnabled]')[0].checked = false;
 			      $('input:radio[name=nonsipEnabled]')[1].checked = true;
 			  }
-			  if (data.nonsip2.auth_type === "Biblionet") {
-			      $('input:radio[name=nonsipAuthType]')[0].checked = true;
-			  } else if (data.nonsip2.auth_type === "FollettDestiny") {
-			      $('input:radio[name=nonsipAuthType]')[1].checked = true;
-			  } else {
-			      $('input:radio[name=nonsipAuthType]')[2].checked = true;
+			  $("#auth-other-authtypes").empty();
+			  for (var i=0;i<data.authtypes.length;i++) {
+			      if ((data.authtypes[i] != "") && (data.authtypes[i] != "sip2")) {
+				  var $r = $('<input type="radio" name="nonsipAuthType" value="'+data.authtypes[i]+'">'+data.authtypes[i]+'</input>'); 
+				  if (data.nonsip2.auth_type == data.authtypes[i]) {
+				      $r.attr('checked', 'checked');
+				  }
+				  $("#auth-other-authtypes").append($r);
+				  $("#auth-other-authtypes").append('<br />');
+			      }
 			  }
 			  $("#nonsipURL").val( data.nonsip2.url );
 
