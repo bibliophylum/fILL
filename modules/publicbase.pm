@@ -36,6 +36,7 @@ use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::FollettDestiny;
 use Biblio::Authentication::L4U;
 use Biblio::Authentication::TLC;
+use Biblio::Authentication::Dummy;   # for testing
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
@@ -280,6 +281,9 @@ sub checkNonSip2 {
 
     } elsif ($authmethod eq 'TLC') {
 	$authenticator = Biblio::Authentication::TLC->new( %$href );
+
+    } elsif ($authmethod eq 'Dummy') {
+	$authenticator = Biblio::Authentication::Dummy->new( %$href );
     }
 
     if (!defined $authenticator) {

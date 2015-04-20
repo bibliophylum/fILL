@@ -20,4 +20,4 @@ no_index:
 requires:
   Biblio::SIP2::Client: 0.01
   perl: 5.006
-version: 0.01
+version: 0.03

@@ -12,11 +12,11 @@ Biblio::Authentication - base class for integrated library system authentication
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 
 =head1 SYNOPSIS
@@ -35,6 +35,12 @@ Check if patron credentials authorize against L4U library PAC.
         'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
     );
     my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
+
+There is a dummy authenticator available, Biblio::Authentication::Dummy, which can be used for testing your code that requires authetication.
+    my $authenticator = Biblio::Authentication::Dummy();
+    my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
+The dummy authenticator always returns a positive (i.e. patron is authenticated) result.
+
 =head1 SUBROUTINES/METHODS
 
 =head2 new

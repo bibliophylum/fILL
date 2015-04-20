@@ -1,4 +1,5 @@
 Changes
+lib/Biblio/Authentication/Dummy.pm
 lib/Biblio/Authentication/SIP2.pm
 lib/Biblio/Authentication/Biblionet.pm
 lib/Biblio/Authentication/FollettDestiny.pm

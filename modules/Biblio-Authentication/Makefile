@@ -19,7 +19,7 @@
 #     MIN_PERL_VERSION => q[5.006]
 #     NAME => q[Biblio::Authentication]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0], Biblio::SIP2::Client=>q[0.01] }
+#     PREREQ_PM => { Biblio::SIP2::Client=>q[0.01], Test::More=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Biblio/Authentication.pm]
 #     clean => { FILES=>q[Biblio-Authentication-*] }
@@ -62,11 +62,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Biblio::Authentication
 NAME_SYM = Biblio_Authentication
-VERSION = 0.01
+VERSION = 0.03
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_01
+VERSION_SYM = 0_03
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.01
+XS_VERSION = 0.03
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -168,6 +168,7 @@ H_FILES  =
 MAN1PODS = 
 MAN3PODS = lib/Biblio/Authentication.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/Dummy.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm \
 	lib/Biblio/Authentication/SIP2.pm \
@@ -195,23 +196,26 @@ PERL_ARCHIVE_AFTER =
 
 TO_INST_PM = lib/Biblio/Authentication.pm \
 	lib/Biblio/Authentication/Biblionet.pm \
+	lib/Biblio/Authentication/Dummy.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/L4U.pm \
 	lib/Biblio/Authentication/SIP2.pm \
 	lib/Biblio/Authentication/TLC.pm
 
-PM_TO_BLIB = lib/Biblio/Authentication.pm \
-	blib/lib/Biblio/Authentication.pm \
-	lib/Biblio/Authentication/Biblionet.pm \
-	blib/lib/Biblio/Authentication/Biblionet.pm \
-	lib/Biblio/Authentication/SIP2.pm \
-	blib/lib/Biblio/Authentication/SIP2.pm \
+PM_TO_BLIB = lib/Biblio/Authentication/FollettDestiny.pm \
+	blib/lib/Biblio/Authentication/FollettDestiny.pm \
+	lib/Biblio/Authentication/Dummy.pm \
+	blib/lib/Biblio/Authentication/Dummy.pm \
 	lib/Biblio/Authentication/L4U.pm \
 	blib/lib/Biblio/Authentication/L4U.pm \
-	lib/Biblio/Authentication/FollettDestiny.pm \
-	blib/lib/Biblio/Authentication/FollettDestiny.pm \
 	lib/Biblio/Authentication/TLC.pm \
-	blib/lib/Biblio/Authentication/TLC.pm
+	blib/lib/Biblio/Authentication/TLC.pm \
+	lib/Biblio/Authentication.pm \
+	blib/lib/Biblio/Authentication.pm \
+	lib/Biblio/Authentication/SIP2.pm \
+	blib/lib/Biblio/Authentication/SIP2.pm \
+	lib/Biblio/Authentication/Biblionet.pm \
+	blib/lib/Biblio/Authentication/Biblionet.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -280,7 +284,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Biblio-Authentication
-DISTVNAME = Biblio-Authentication-0.01
+DISTVNAME = Biblio-Authentication-0.03
 
 
 # --- MakeMaker macro section:
@@ -434,19 +438,21 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/Biblio/Authentication/SIP2.pm \
-	lib/Biblio/Authentication/Biblionet.pm \
-	lib/Biblio/Authentication.pm \
-	lib/Biblio/Authentication/TLC.pm \
+	lib/Biblio/Authentication/Dummy.pm \
 	lib/Biblio/Authentication/FollettDestiny.pm \
-	lib/Biblio/Authentication/L4U.pm
+	lib/Biblio/Authentication/L4U.pm \
+	lib/Biblio/Authentication/TLC.pm \
+	lib/Biblio/Authentication.pm \
+	lib/Biblio/Authentication/SIP2.pm \
+	lib/Biblio/Authentication/Biblionet.pm
 	$(NOECHO) $(POD2MAN) --section=$(MAN3EXT) --perm_rw=$(PERM_RW) \
-	  lib/Biblio/Authentication/SIP2.pm $(INST_MAN3DIR)/Biblio::Authentication::SIP2.$(MAN3EXT) \
-	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) \
-	  lib/Biblio/Authentication.pm $(INST_MAN3DIR)/Biblio::Authentication.$(MAN3EXT) \
-	  lib/Biblio/Authentication/TLC.pm $(INST_MAN3DIR)/Biblio::Authentication::TLC.$(MAN3EXT) \
+	  lib/Biblio/Authentication/Dummy.pm $(INST_MAN3DIR)/Biblio::Authentication::Dummy.$(MAN3EXT) \
 	  lib/Biblio/Authentication/FollettDestiny.pm $(INST_MAN3DIR)/Biblio::Authentication::FollettDestiny.$(MAN3EXT) \
-	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) 
+	  lib/Biblio/Authentication/L4U.pm $(INST_MAN3DIR)/Biblio::Authentication::L4U.$(MAN3EXT) \
+	  lib/Biblio/Authentication/TLC.pm $(INST_MAN3DIR)/Biblio::Authentication::TLC.$(MAN3EXT) \
+	  lib/Biblio/Authentication.pm $(INST_MAN3DIR)/Biblio::Authentication.$(MAN3EXT) \
+	  lib/Biblio/Authentication/SIP2.pm $(INST_MAN3DIR)/Biblio::Authentication::SIP2.$(MAN3EXT) \
+	  lib/Biblio/Authentication/Biblionet.pm $(INST_MAN3DIR)/Biblio::Authentication::Biblionet.$(MAN3EXT) 
 
 
 
@@ -473,22 +479,22 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  perl$(EXE_EXT) core.[0-9] \
-	  tmon.out $(INST_ARCHAUTODIR)/extralibs.all \
-	  lib$(BASEEXT).def *$(LIB_EXT) \
-	  core.[0-9][0-9][0-9][0-9] $(BASEEXT).x \
-	  pm_to_blib.ts so_locations \
-	  $(BOOTSTRAP) core.*perl.*.? \
-	  MYMETA.yml pm_to_blib \
-	  $(BASEEXT).bso perl \
-	  core.[0-9][0-9] *perl.core \
-	  core.[0-9][0-9][0-9][0-9][0-9] mon.out \
-	  $(BASEEXT).def *$(OBJ_EXT) \
-	  blibdirs.ts perl.exe \
-	  $(INST_ARCHAUTODIR)/extralibs.ld core.[0-9][0-9][0-9] \
-	  core $(MAKE_APERL_FILE) \
+	  *$(LIB_EXT) lib$(BASEEXT).def \
+	  perl$(EXE_EXT) core \
+	  so_locations MYMETA.json \
+	  *perl.core core.[0-9][0-9] \
+	  core.*perl.*.? $(BASEEXT).x \
+	  pm_to_blib.ts tmon.out \
+	  core.[0-9] core.[0-9][0-9][0-9][0-9] \
 	  $(BASEEXT).exp perlmain.c \
-	  MYMETA.json 
+	  $(BOOTSTRAP) $(INST_ARCHAUTODIR)/extralibs.all \
+	  mon.out $(INST_ARCHAUTODIR)/extralibs.ld \
+	  blibdirs.ts perl \
+	  MYMETA.yml $(BASEEXT).def \
+	  perl.exe core.[0-9][0-9][0-9] \
+	  pm_to_blib $(BASEEXT).bso \
+	  $(MAKE_APERL_FILE) *$(OBJ_EXT) \
+	  core.[0-9][0-9][0-9][0-9][0-9] 
 	- $(RM_RF) \
 	  blib Biblio-Authentication-* 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
@@ -533,7 +539,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) 'requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Biblio::SIP2::Client: 0.01' >> META_new.yml
 	$(NOECHO) $(ECHO) '  perl: 5.006' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.01' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.03' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
@@ -576,7 +582,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.01"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.03"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
@@ -865,12 +871,13 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Biblio/Authentication.pm blib/lib/Biblio/Authentication.pm \
-	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm \
-	  lib/Biblio/Authentication/SIP2.pm blib/lib/Biblio/Authentication/SIP2.pm \
-	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm \
 	  lib/Biblio/Authentication/FollettDestiny.pm blib/lib/Biblio/Authentication/FollettDestiny.pm \
-	  lib/Biblio/Authentication/TLC.pm blib/lib/Biblio/Authentication/TLC.pm 
+	  lib/Biblio/Authentication/Dummy.pm blib/lib/Biblio/Authentication/Dummy.pm \
+	  lib/Biblio/Authentication/L4U.pm blib/lib/Biblio/Authentication/L4U.pm \
+	  lib/Biblio/Authentication/TLC.pm blib/lib/Biblio/Authentication/TLC.pm \
+	  lib/Biblio/Authentication.pm blib/lib/Biblio/Authentication.pm \
+	  lib/Biblio/Authentication/SIP2.pm blib/lib/Biblio/Authentication/SIP2.pm \
+	  lib/Biblio/Authentication/Biblionet.pm blib/lib/Biblio/Authentication/Biblionet.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 
