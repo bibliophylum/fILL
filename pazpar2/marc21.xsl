@@ -319,6 +319,21 @@
 	<xsl:value-of select="$medium"/>
       </pz:metadata>
       
+      <pz:metadata type="largeprint">
+	<xsl:choose>
+	  <!-- fixed fields in MARC start counting position at 0, in here at 1.... -->
+          <xsl:when test="contains(substring(marc:controlfield[@tag='008'], 24, 1),'d')">
+            <xsl:text>LARGE PRINT</xsl:text>
+          </xsl:when>
+          <xsl:when test="contains(substring(marc:controlfield[@tag='007'], 1, 2),'tb')">
+	    <xsl:text>LARGE PRINT</xsl:text>
+          </xsl:when>
+	  <xsl:when test="contains(marc:datafield[@tag='650']/marc:subfield[@code='a'],'Large type books.')">
+	    <xsl:text>LARGE PRINT</xsl:text>
+	  </xsl:when>
+	</xsl:choose>
+      </pz:metadata>
+      
       <xsl:for-each select="marc:datafield[@tag='900']/marc:subfield[@code='a']">
         <pz:metadata type="fulltext">
           <xsl:value-of select="."/>

@@ -33,7 +33,7 @@ var curDetRecData = null;
 var curSort = 'relevance';
 var curFilter = null;
 var submitted = false;
-var SourceMax = 16;
+var SourceMax = 25;
 var SubjectMax = 10;
 var AuthorMax = 10;
 
@@ -75,6 +75,9 @@ function my_onshow(data) {
 
 	if (hit["md-medium"] != undefined) {
 	    html.push(' <span><font style="background-color: white; font-weight: bold">' + hit["md-medium"] + '</font></span>');
+	}
+	if (hit["md-largeprint"] != undefined) {
+	    html.push(' <span><font style="background-color: white; font-color: midnight-blue; font-weight: bold">' + hit["md-largeprint"] + '</font></span>');
 	}
 
         if (hit.recid == curDetRecId) {
@@ -247,6 +250,7 @@ function triggerSearch ()
 	query += 'series="' + document.search.adv_series.value + '"';
 	document.search.adv_series.value=null;
     }
+
     if ($('#advanced_search').is(':visible')) { toggleAdvanced(); }
     document.search.query.value = query;  // update query so user can see it
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);
@@ -307,7 +311,7 @@ function drawPager (pagerDiv)
 
     var prev = '<span id="prev">&#60;&#60; Prev</span><b> | </b>';
     if (curPage > 1)
-        var prev = '<a href="#" id="prev" onclick="pagerPrev();">'
+        var prev = '<a href="#main" id="prev" onclick="pagerPrev();">'
         +'&#60;&#60; Prev</a><b> | </b>';
 
     var middle = '';
@@ -316,13 +320,13 @@ function drawPager (pagerDiv)
         if(i == curPage)
             numLabel = '<b>' + i + '</b>';
 
-        middle += '<a href="#" onclick="showPage(' + i + ')"> '
+        middle += '<a href="#main" onclick="showPage(' + i + ')"> '
             + numLabel + ' </a>';
     }
     
     var next = '<b> | </b><span id="next">Next &#62;&#62;</span>';
     if (pages - curPage > 0)
-    var next = '<b> | </b><a href="#" id="next" onclick="pagerNext()">'
+    var next = '<b> | </b><a href="#main" id="next" onclick="pagerNext()">'
         +'Next &#62;&#62;</a>';
 
     predots = '';
