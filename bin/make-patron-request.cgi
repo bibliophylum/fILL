@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Encode;
@@ -49,6 +50,11 @@ my %WESTERN_MB_TO_MAPLIN = (
 
 
 my $q = new CGI;
+my $session = CGI::Session->load(undef, $q, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 
 my $username = $q->param('username');
 my $lid = $q->param('lid');

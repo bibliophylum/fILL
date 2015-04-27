@@ -3,11 +3,20 @@ use strict;
 use warnings;
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Data::Dumper;
 
 my $query = new CGI;
+#my $session = new CGI::Session(undef, $query, {Directory=>"/tmp"});
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+
+my $dr = $session->dataref();
 
 my $lid = $query->param('lid');
 my $email_address = $query->param('email_address');
@@ -29,4 +38,4 @@ my $retval = $dbh->do( $SQL, undef, $email_address, $website, $lid );
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $retval } );
+print "Content-Type:application/json\n\n" . to_json( { success => $retval, orig => $dr } );

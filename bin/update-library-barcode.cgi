@@ -1,11 +1,17 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 #print STDERR Dumper($query->param('value'));  # ducks
 #print STDERR Dumper($query->param('id'));
 #print STDERR Dumper($query->param('row_id')); # 85_137

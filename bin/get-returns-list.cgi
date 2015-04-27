@@ -1,10 +1,16 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $lid = $query->param('lid');
 
 # sql to get items shipped to this library, which this library has not yet marked as received and has not asked for a renewal

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use CGI;
+use CGI::Session;
 use DBI;
 #use JSON;
 use GD::Barcode;
@@ -12,6 +13,11 @@ use MIME::Base64;
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $reqid = $query->param('reqid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",

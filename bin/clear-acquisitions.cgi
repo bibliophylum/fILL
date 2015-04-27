@@ -1,10 +1,16 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $q = new CGI;
+my $session = CGI::Session->load(undef, $q, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $lid = $q->param('lid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",

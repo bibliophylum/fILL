@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 #use strict;
 use CGI;
+use CGI::Session;
 use JSON;
 use ZOOM;
 use MARC::Record;
@@ -9,6 +10,11 @@ use Data::Dumper;
 no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~") has been made experimental.
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $libsym = $query->param('libsym');
 my $keepLog = $query->param('log') || 0;
 my $result_href = { "success" => 0, 

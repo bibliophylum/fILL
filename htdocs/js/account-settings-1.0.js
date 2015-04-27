@@ -50,12 +50,13 @@ $('document').ready(function(){
 	    "email_address": $("#email_address").val(),
 	    "website": $("#website").val(),
 	};
-	alert('Email address: ['+ $("#email_address").val() + ']');
 	$.getJSON('/cgi-bin/update-library-settings-contact.cgi', parms,
 		  function(data){
+		      //alert(data);
 		  })
 	    .success(function() {
 		//alert('success');
+		$("#contactButton").hide();
 	    })
 	    .error(function() {
 		alert('error');
@@ -80,6 +81,7 @@ $('document').ready(function(){
 		  })
 	    .success(function() {
 		//alert('success');
+		$("#mailingButton").hide();
 	    })
 	    .error(function() {
 		alert('error');
@@ -102,6 +104,7 @@ $('document').ready(function(){
 		  })
 	    .success(function() {
 		//alert('success');
+		$("#z3950Button").hide();
 	    })
 	    .error(function() {
 		alert('error');
@@ -123,6 +126,7 @@ $('document').ready(function(){
 		  })
 	    .success(function() {
 		//alert('success');
+		$("#otherButton").hide();
 	    })
 	    .error(function() {
 		alert('error');

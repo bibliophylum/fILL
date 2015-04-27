@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI;
+use CGI::Session;
 use DBI;
 use Text::CSV::Slurp;
 use File::Copy qw(move);
@@ -10,6 +11,11 @@ use Data::Dumper;
 use JSON;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 
 my $uploads_dir = '/opt/fILL/ill_uploads';
 my $archive_dir = '/opt/fILL/ill_loaded';
