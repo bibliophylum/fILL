@@ -40,6 +40,8 @@ sub setup {
 	);
 }
 
+
+
 #--------------------------------------------------------------------------------
 #
 #
@@ -48,8 +50,54 @@ sub myaccount_settings_process {
     my $q = $self->query;
 
     my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my $SQL = "SELECT l.lid, l.name, l.password, l.email_address, l.website, l.library, l.mailing_address_line1, l.city, l.province, l.post_code, l.slips_with_barcodes, l.centralized_ill, z.server_address, z.server_port, z.database_name FROM libraries l left join library_z3950 z on z.lid=l.lid WHERE l.lid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,{},$lid);
+
+    my $logoPath = "/img/fill-contact.jpg";
+    my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
+    my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
+    if (-f "/opt/fILL/htdocs/img/logos/" . $href->{name} . ".png") {
+	$logoPath = "/img/logos/" . $href->{name} . ".png";
+	$logoAltText = $href->{"library"} . " logo";
+	$logoCredit = $href->{"library"} . ". Used with permission.";
+    }
+
+    my $template = $self->load_tmpl('myaccount/settings.tmpl');
+    $template->param(pagetitle => "fILL MyAccount Settings",
+		     username     => $self->authen->username,
+		     lid          => $lid,
+		     symbol       => $symbol,
+		     library      => $library,
+		     email_address => $href->{email_address},
+		     website  => $href->{website},
+		     library  => $href->{library},
+		     mailing_address_line1 => $href->{mailing_address_line1},
+		     city     => $href->{city},
+		     province => $href->{province},
+		     post_code => $href->{post_code},
+		     z3950_server_address => $href->{server_address},
+		     z3950_server_port => $href->{server_port},
+		     z3950_database_name => $href->{database_name},
+		     slips_with_barcodes => $href->{slips_with_barcodes},
+		     centralized_ill => $href->{centralized_ill},
+		     logo_path => $logoPath,
+		     logo_alt_text => $logoAltText,
+		     logo_credit => $logoCredit
+	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub myaccount_settings_process_DEPRECATED {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
     my $status;
-    my @searchprefs;
+
+
 
     # If the user has clicked the 'update' button, $q->param("lid") will be defined
     # (the user is submitting a change)

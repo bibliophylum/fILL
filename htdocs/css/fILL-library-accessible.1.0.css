@@ -370,6 +370,16 @@ zyes, zno {
   float: right;
 }
 
+/* Library account settings */
+.balanced-fields label, .balanced-fields input {
+  /* display:inline-block; */ /* label beside textbox */
+  display:block;   /* label above textbox */
+}
+
+.balanced-fields label {
+  width:300px; 
+}
+
 /***---End of new library client side CSS--**/
 
 

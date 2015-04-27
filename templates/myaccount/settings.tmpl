@@ -1,6 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
+<script type="text/javascript" src="/js/account-settings-1.0.js"></script>
+
 <script type="text/javascript">
   <!--
   set_secondary_tab("menu_myaccount_settings");
@@ -9,65 +11,126 @@
 
 <div id="center" role="main">
 
-  <h4><TMPL_VAR NAME="status"></h4>
-  
-  <div id="main-info-left" class="tone-box" role="main">
+    <div id="main-info-left" class="tone-box" role="main">
 
-    <form method="post" action="#">
+    <div id="tabs">
+      <ul>
+	<li><a href="#tabs-1">Contact information</a></li>
+	<li><a href="#tabs-2">ILL mailing address</a></li>
+	<li><a href="#tabs-3">z39.50 server</a></li>
+	<li><a href="#tabs-4">Other settings</a></li>
+      </ul>
       
-      <div id="instructions" class="tone-box">
-	<input TYPE="hidden" NAME="lid" VALUE="<TMPL_VAR NAME=editLID>">
-	<input TYPE="hidden" NAME="name" VALUE="<TMPL_VAR NAME=editName>">
-	
-	<label for="email_address">Email address:</label><br>
-	<input id="email_address" TYPE="text" NAME="email_address" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editEmail>"><br />
-	
-	<label for="website">Web site:</label><br>
-	<input id="website" TYPE="text" NAME="website" VALUE="<TMPL_VAR NAME=editWebsite>">
-	
-	<h3>Interlibrary Loan Mailing address</h3> 
-	<label for="library">Library:</label><br>
-	<input id="library" TYPE="text" NAME="library" MAXLENGTH="120" VALUE="<TMPL_VAR NAME=editLibrary>"><br />
-	
-	<label for="mailing_address_line1">Street address or PO Box Number:</label><br>
-	<input id="mailing_address_line1" TYPE="text" NAME="mailing_address_line1" MAXLENGTH="200" VALUE="<TMPL_VAR NAME=editMailingAddressLine1>"><br />
-	
-	<label for="city">Town/City:</label><br>
-	<input id="city" TYPE="text" NAME="city" VALUE="<TMPL_VAR NAME=editCity>"><br />
-	
-	<label for="province">Province:</label><br>
-	<input id="province" TYPE="text" NAME="province" MAXLENGTH="2" VALUE="<TMPL_VAR NAME=editProvince>"><br />
-	
-	<label for="post_code">Postal code:</label><br>
-	<input id="post_code" TYPE="text" NAME="post_code" MAXLENGTH="6" VALUE="<TMPL_VAR NAME=editPostalCode>"> (no spaces)
-	
-	<h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
-	
-	<TMPL_IF NAME="editSlipsWithBarcodes">
-	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t' CHECKED>Yes
-	  <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f'>No
-	  <TMPL_ELSE>
-	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='t'>Yes
-	    <input TYPE="radio" NAME="slips_with_barcodes" VALUE='f' CHECKED>No
-	</TMPL_IF>
-	
-	<h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
-	
-	<TMPL_IF NAME="editCentralizedILL">
-	  <input TYPE="radio" NAME="centralized_ill" VALUE='t' CHECKED>Yes
-	  <input TYPE="radio" NAME="centralized_ill" VALUE='f'>No
-	  <TMPL_ELSE>
-	    <input TYPE="radio" NAME="centralized_ill" VALUE='t'>Yes
-	    <input TYPE="radio" NAME="centralized_ill" VALUE='f' CHECKED>No
-	</TMPL_IF>
+      <div id="tabs-1">
+	<form id="contact_information" onSubmit="return false;">
+	  <fieldset id="contact_information_fieldset" class="balanced-fields">
+
+	    <input type="hidden" name="lid" value="<TMPL_VAR name=lid>" />
+	    <input id="symbol" type="hidden" name="name" value="<TMPL_VAR name=symbol>" />
+	  
+	    <div>
+	      <label for="email_address">Email address:</label>
+	      <input id="email_address" type="text" name="email_address" maxlength="120" value="<TMPL_VAR name=email_address>" />
+	    </div>
+
+	    <div>
+	      <label for="website">Web site:</label>
+	      <input id="website" type="text" name="website" value="<TMPL_VAR name=website>" />
+	    </div>
+	  </fieldset>
+          <input id="contactButton" type="button" class="library-style" value="Save changes">
+	</form>
+      </div>
+	  
+      <div id="tabs-2">
+	<form id="mailing_information" onSubmit="return false;">
+	  <fieldset id="mailing_information_fieldset" class="balanced-fields">
+	    <hr/>
+	    <p><strong>Interlibrary Loan Mailing address</strong></p> 
+	    <div>
+	      <label for="library">Library:</label>
+	      <input id="library" type="text" name="library" maxlength="120" value="<TMPL_VAR name=library>" />
+	    </div>
+	  
+	    <div>
+	      <label for="mailing_address_line1">Street address or PO Box Number:</label>
+	      <input id="mailing_address_line1" type="text" name="mailing_address_line1" maxlength="200" value="<TMPL_VAR name=mailing_address_line1>" />
+	    </div>
+	  
+	    <div>
+	      <label for="city">Town/City:</label>
+	      <input id="city" type="text" name="city" value="<TMPL_VAR name=city>" />
+	    </div>
+	  
+	    <div>
+	      <label for="province">Province:</label>
+	      <input id="province" type="text" name="province" maxlength="2" value="<TMPL_VAR name=province>" />
+	    </div>
+	    
+	    <div>
+	      <label for="post_code">Postal code:</label>
+	      <input id="post_code" type="text" name="post_code" maxlength="6" value="<TMPL_VAR name=post_code>" /> (no spaces)
+	    </div>
+
+	  </fieldset>
+          <input id="mailingButton" type="button" class="library-style" value="Save changes">
+	</form>
+      </div>
       
-      </div><!--div id instrucitons -->
+      <div id="tabs-3">
+	<form id="z3950" onSubmit="return false;">
+	  <fieldset id="z3950_fieldset" class="balanced-fields">
+
+	    <div>
+	      <label for="z3950_server_address">z39.50 server address:</label>
+	      <input id="z3950_server_address" type="text" name="z3950_server_address" value="<TMPL_VAR name=z3950_server_address>" />
+	    </div>
+	  	  
+	    <div>
+	      <label for="z3950_server_port">z39.50 server port:</label>
+	      <input id="z3950_server_port" type="text" name="z3950_server_port" value="<TMPL_VAR name=z3950_server_port>" />
+	    </div>
+	  	  
+	    <div>
+	      <label for="z3950_database_name">z39.50 database name:</label>
+	      <input id="z3950_database_name" type="text" name="z3950_database_name" value="<TMPL_VAR name=z3950_database_name>" />
+	    </div>
+
+            <input id="z3950Button" type="button" class="library-style" value="Save changes">
+
+	  </fieldset>
+	</form>
+      </div>
+      
+      <div id="tabs-4">
+	<form id="otherForm">
+	  <h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
+	  
+	  <TMPL_IF name="slips_with_barcodes">
+	    <input type="radio" name="slips_with_barcodes" value='t' CHECKED>Yes
+	    <input type="radio" name="slips_with_barcodes" value='f'>No
+	    <TMPL_ELSE>
+	      <input type="radio" name="slips_with_barcodes" value='t'>Yes
+	      <input type="radio" name="slips_with_barcodes" value='f' CHECKED>No
+	  </TMPL_IF>
+	  
+	  <h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
+	  
+	  <TMPL_IF name="centralized_ill">
+	    <input type="radio" name="centralized_ill" value='t' CHECKED>Yes
+	    <input type="radio" name="centralized_ill" value='f'>No
+	    <TMPL_ELSE>
+	      <input type="radio" name="centralized_ill" value='t'>Yes
+	      <input type="radio" name="centralized_ill" value='f' CHECKED>No
+	  </TMPL_IF>
+
+          <br/>
+	  <input id="otherButton" type="button" class="library-style" value="Save changes">
+	</form>
+      </div>
+	
+    </div><!-- tabs -->
     
-      <input TYPE="hidden" NAME="rm" VALUE="myaccount_settings_form">
-      <br />
-      <input type="submit" name="submit" value="Update" class="library-style" />
-
-    </form>
   </div><!-- main-info-left -->
 
   <div id="aside-img-right" role="complementary">
@@ -79,4 +142,4 @@
 
 </div><!-- center -->
 
-<TMPL_INCLUDE NAME="footer.tmpl">
+<TMPL_INCLUDE name="footer.tmpl">
