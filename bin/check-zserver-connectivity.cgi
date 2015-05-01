@@ -74,15 +74,22 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 	    $t =~ s/^.*(target=.*) name=.*/$1/;
 	} else {
 	    # Individual library profile... doesn't have connection info in the <set ...>,
-	    # instead, it shows up once in the first line (<settings target=...>)
-	    # (This will eventually become the default!)
+	    # instead, it shows up once in the "settings" line (<settings target=...>)
+	    # (This is now the default!)
 	    my $fn = $t;
 	    $fn =~ s/^(.*\.xml):.*/$1/;
 	    open(my $file, '<', $fn) or die "Can't open $fn for read: $!";
-	    my $firstline = <$file>;
+	    # these files are tiny, so just slurp the whole thing:
+	    my @lines = <$file>;
+	    foreach (@lines) {
+		next unless /^<settings /;
+		chomp;
+		my $line = $_;
+		$line =~ s/^<settings (target=.*)>$/$1/;
+		$t = $line;
+		last;
+	    }
 	    close $file;
-	    $firstline =~ s/^<settings (target=.*)>$/$1/;
-	    $t = $firstline;
 	}
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);

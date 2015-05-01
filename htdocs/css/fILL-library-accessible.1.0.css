@@ -380,6 +380,27 @@ zyes, zno {
   width:300px; 
 }
 
+.balanced-fields-column-left {
+    width: 48%;
+    padding: 1em;
+    float: left;
+    display: inline;
+    margin-bottom: 1em;
+}
+
+.balanced-fields-clear {
+    clear: both;
+}
+
+.scrollStyle {
+    overflow-x:auto;
+}
+
+/* For a narrow-width datatable, pull the search box to the left */
+.pull-left {
+    float:left!important;
+}
+
 /***---End of new library client side CSS--**/
 
 

@@ -32,9 +32,11 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'test_zserver'         => 'test_zserver_process',
-	'spruce_ill'           => 'load_spruce_ill_numbers_process',
 	'authentication'       => 'authentication_process',
+	'spruce_ill'           => 'load_spruce_ill_numbers_process',
+	'zserver_test'         => 'zserver_test_process',
+	'zserver_pazpar_control' => 'zserver_pazpar_control_process',
+	'zserver_settings'     => 'zserver_settings_process',
 	);
 }
 
@@ -58,23 +60,6 @@ sub authentication_process {
 #--------------------------------------------------------------------------------
 #
 #
-sub test_zserver_process {
-    my $self = shift;
-    my $q = $self->query;
-
-    my $libraries_aref = $self->dbh->selectall_arrayref("select name,library from libraries order by library", { Slice => {} } );
-
-    my $template = $self->load_tmpl('admin/test-zserver.tmpl');	
-    $template->param( pagetitle => "Test zServer",
-		      library_list => $libraries_aref
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
 sub load_spruce_ill_numbers_process {
     my $self = shift;
     my $q = $self->query;
@@ -85,6 +70,56 @@ sub load_spruce_ill_numbers_process {
     $template->param( pagetitle => "Admin - load untracked ILL numbers" );
     return $template->output;
     
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub zserver_settings_process {
+    my $self = shift;
+    my $q = $self->query;
+
+# Do it this way if you want to list all libraries, whether or not they have a zServer:
+#    my $libraries_aref = $self->dbh->selectall_arrayref("select l.lid,l.name,l.library,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from libraries l left join library_z3950 z on z.lid=l.lid order by l.library", { Slice => {} } );
+    my $libraries_aref = $self->dbh->selectall_arrayref("select l.lid,l.name,l.library,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from library_z3950 z left join libraries l on z.lid=l.lid order by l.library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/zserver-settings.tmpl');	
+    $template->param( pagetitle => "zServer settings",
+		      library_list => $libraries_aref
+	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub zserver_pazpar_control_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select name,library from libraries order by library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/pazpar-control.tmpl');	
+    $template->param( pagetitle => "Pazpar control",
+		      library_list => $libraries_aref
+	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub zserver_test_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select name,library from libraries order by library", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/zserver-test.tmpl');	
+    $template->param( pagetitle => "Test zServer",
+		      library_list => $libraries_aref
+	);
+    return $template->output;
 }
 
 1; # so the 'require' or 'use' succeeds

@@ -74,6 +74,11 @@ echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp
 sudo chmod g+w /opt/fILL/htdocs/tmp
 
+echo Allowing web server to write to pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings-available
+sudo chgrp www-data /opt/fILL/pazpar2/tmp
+
 #echo Creating symlink to apache sites-available
 #sudo ln -s /opt/fILL/conf/fILL.conf /etc/apache2/sites-available/fILL.conf
 

@@ -16,7 +16,8 @@ create table library_z3950 (
   index_isbn varchar(255),
   index_issn varchar(255),
   index_date varchar(255),
-  index_series varchar(255)
+  index_series varchar(255),
+  enabled smallint default 1
 );
 
 create table library_z3950_template (
