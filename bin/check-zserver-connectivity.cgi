@@ -10,10 +10,13 @@ use Data::Dumper;
 no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~") has been made experimental.
 
 my $query = new CGI;
-my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
-if (($session->is_expired) || ($session->is_empty)) {
-    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
-    exit;
+my $session;
+if ($ENV{GATEWAY_INTERFACE} =~ /CGI/) {  # only worry about session if we're a cgi
+    $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+    if (($session->is_expired) || ($session->is_empty)) {
+	print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+	exit;
+    }
 }
 my $libsym = $query->param('libsym');
 my $keepLog = $query->param('log') || 0;
@@ -65,6 +68,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 
     # see if that symbol shows up in any of the pazpar2/settings/ files:
     my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
+    #print STDERR "cmd [$cmd]\n";
     my @f = `$cmd`;
 
     if (scalar @f == 1) {
@@ -103,7 +107,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 	$result_href->{libsym} => "$libsym connection information not found.";
     }
 }
-#print STDERR "result:\n" . Dumper($result_href) . "\n";
+print STDERR "result:\n" . Dumper($result_href) . "\n";
 my $success = 0;
 if (($result_href->{zServer_status}{connection}) && ($result_href->{zServer_status}{connection}{success})
     && ($result_href->{zServer_status}{search}) && ($result_href->{zServer_status}{search}{success})

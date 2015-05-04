@@ -1,101 +1,12 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_z3950.tmpl">
 
-<script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
-
-<script language="javascript">
-
-$('document').ready(function() {
-
-  // Most primary tabs are set as the current tab in the submenu_xxxxx.
-  // welcome menu doesn't have a submenu, so we set the current tab here.
-  //
-  //set_primary_tab("menu_zserver");
-  set_secondary_tab("menu_zserver_test");
-
-  $(".zstatus").hide();
-  $("#waitDiv").hide();
-
-  $(".action-button").on("click",function(){
-    $("#libtotest").text( $(this).val() );
-    $("#waitDiv").show();
-    $(".zstatus").hide();
-    $.getJSON('/cgi-bin/check-zserver-connectivity.cgi', { libsym: $(this).val(), log: 1 },
-            function(data){
-               $(".zstatus").show();
-               $("#zPresent").attr("class","zno");
-               $("#zPresent").text("No "+String.fromCharCode(10007));
-               if (data.success == 1) {
-                 $("#zPresent").attr("class","zyes");
-                 $("#zPresent").text("Yes "+String.fromCharCode(10004));
-               }
-
-               $("#zConnect").attr("class","zno");
-               $("#zConnect").text("No "+String.fromCharCode(10007));
-               if (data.zServer_status.connection != null) {
-                 if (data.zServer_status.connection.success != null) {
-                   if (data.zServer_status.connection.success == 1) {
-                     $("#zConnect").attr("class","zyes");
-                     $("#zConnect").text("Yes "+String.fromCharCode(10004));
-                   }
-                 }
-               }
-
-               $("#zSearch").attr("class","zno");
-               $("#zSearch").text("No "+String.fromCharCode(10007));
-               if (data.zServer_status.search != null) {
-                 if (data.zServer_status.search.success != null) {
-                   if (data.zServer_status.search.success == 1) {
-                     $("#zSearch").attr("class","zyes");
-                     $("#zSearch").text("Yes "+String.fromCharCode(10004));
-                   }
-                 }
-               }
-
-               $("#zRecord").attr("class","zno");
-               $("#zRecord").text("No "+String.fromCharCode(10007));
-               if (data.zServer_status.record != null) {
-                 if (data.zServer_status.record.success != null) {
-                   if (data.zServer_status.record.success == 1) {
-                     $("#zRecord").attr("class","zyes");
-                     $("#zRecord").text("Yes "+String.fromCharCode(10004));
-                   }
-                 }
-               }
-
-               //data.log = data.log.replace(/\n/g,"<br />");
-               $("#log").text( data.log );
-           })
-	.done(function() {
-	    //alert('success!\n'+data);
-	})
-	.fail(function() {
-	    //alert('error testing zServer!');
-	})
-	.always(function() {
-            //alert('ajax complete');
-            $("#waitDiv").hide();
-	});
-  });
-
-
-  $("#scrolling-table").slimScroll({
-    height: '350px',
-    alwaysVisible: true,
-    railVisible: true,
-    wheelStep: 1,
-    allowPageScroll: false,
-    disableFadeOut: false,
-    scrollBy: '10px'
-  });
-
-});
-</script>
+<script type="text/javascript" src="/js/admin-z3950-check-1.0.js"></script>
 
 <div id="center" role="main">
 
 <div id="main-left">
-  <div id="scrolling-table">
+  <div id="libraries-table">
     <table id="libraries" class="row-border">
       <thead>
 	<tr><th>Symbol</th><th>Library</th>
