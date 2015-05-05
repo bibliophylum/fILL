@@ -107,7 +107,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 	$result_href->{libsym} => "$libsym connection information not found.";
     }
 }
-print STDERR "result:\n" . Dumper($result_href) . "\n";
+#print STDERR "result:\n" . Dumper($result_href) . "\n";
 my $success = 0;
 if (($result_href->{zServer_status}{connection}) && ($result_href->{zServer_status}{connection}{success})
     && ($result_href->{zServer_status}{search}) && ($result_href->{zServer_status}{search}{success})
