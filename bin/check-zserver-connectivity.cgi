@@ -11,7 +11,7 @@ no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~
 
 my $query = new CGI;
 my $session;
-if ($ENV{GATEWAY_INTERFACE} =~ /CGI/) {  # only worry about session if we're a cgi
+if (($ENV{GATEWAY_INTERFACE}) && $ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only worry about session if we're a cgi
     $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
     if (($session->is_expired) || ($session->is_empty)) {
 	print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
