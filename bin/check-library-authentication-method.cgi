@@ -3,15 +3,16 @@ use warnings;
 use strict;
 use JSON;
 use CGI;
-use CGI::Session;
+#use CGI::Session;
 use DBI;
 
 my $query = new CGI;
-my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
-if (($session->is_expired) || ($session->is_empty)) {
-    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
-    exit;
-}
+# This cgi is used on login... there is no session established until after authentication
+#my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+#if (($session->is_expired) || ($session->is_empty)) {
+#    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+#    exit;
+#}
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
@@ -21,7 +22,6 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                         PrintError => 0,
                        }
     ) or die $DBI::errstr;
-#$dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 my $lib_href = $dbh->selectrow_hashref(
     "select lid, patron_authentication_method from libraries where city=?", 
