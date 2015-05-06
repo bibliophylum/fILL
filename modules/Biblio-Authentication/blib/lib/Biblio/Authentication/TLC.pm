@@ -77,6 +77,7 @@ sub verifyPatron {
     my $authref;
 
     my $mech = WWW::Mechanize->new( autocheck => 1 );
+    $mech->add_header( 'User-agent' => $self->{userAgent} );    
 
     my %form = (
 	"username" => $barcode,

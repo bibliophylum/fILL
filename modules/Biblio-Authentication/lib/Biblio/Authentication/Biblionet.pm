@@ -79,7 +79,7 @@ sub verifyPatron {
     $url .= "/4DCGI/C4DI_com_post_formulaire?C4DI_login=" . $barcode . "&C4dI_mot_de_passe=" . $pin . "&C4DI_Nom_Requete=C4DI_com_demande_dossier_personnel";
 
     my $mech = WWW::Mechanize->new( autocheck => 1 );
-    
+    $mech->add_header( 'User-agent' => $self->{userAgent} );    
     $mech->get( $url );
     if ($mech->success()) {
 	# Logout link appears on every page?

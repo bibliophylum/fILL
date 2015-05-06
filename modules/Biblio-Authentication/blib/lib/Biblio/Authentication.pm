@@ -72,6 +72,7 @@ sub new {
 	"patronname"    => undef,
 	"screenmessage" => undef,
     };
+    $self->{userAgent} = 'fILL-authentication'; # used by www::mechanize authenticators
 
     bless ($self, $class);
     return $self;

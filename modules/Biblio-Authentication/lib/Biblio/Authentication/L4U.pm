@@ -76,6 +76,7 @@ sub verifyPatron {
     my $authref;
 
     my $mech = WWW::Mechanize->new( autocheck => 1 );
+    $mech->add_header( 'User-agent' => $self->{userAgent} );    
     
     $mech->get( $self->{url} );
     if ($mech->success()) {
