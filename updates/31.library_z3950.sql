@@ -4,7 +4,7 @@ create table library_z3950 (
   server_address varchar(255),
   server_port integer,
   database_name varchar(40),
-  enabled boolean default true,
+  enabled smallint default 1,
   request_syntax varchar(20),
   elements varchar(5),
   nativesyntax varchar(15),
@@ -16,8 +16,7 @@ create table library_z3950 (
   index_isbn varchar(255),
   index_issn varchar(255),
   index_date varchar(255),
-  index_series varchar(255),
-  enabled smallint default 1
+  index_series varchar(255)
 );
 
 create table library_z3950_template (
