@@ -25,6 +25,8 @@ $('document').ready(function() {
     // admin menu doesn't have a submenu, so we set the current tab here.
     
     set_primary_tab("menu_authentication");
+    $("#form-buttons").hide();
+
 /*    
     $("#scrolling-table").slimScroll({
 	height: '500px',
@@ -39,6 +41,11 @@ $('document').ready(function() {
 
     $("#change-authtype-btn").on("click",function(){
 	$("#choose-authtype").show();
+	$("#form-buttons").show();
+    });
+
+    $('input').on("change",function(){
+	$("#form-buttons").show();
     });
 
     $('input[name="rAuthtype"]:radio').on("change",function(){
@@ -86,7 +93,7 @@ $('document').ready(function() {
 			      $('input:radio[name=sipTerminator]')[0].checked = true;
 			  }
 			  $("#sipServerLogin").val( data.sip2.sip_server_login );
-			  $("#sipServerPass").val( data.sip2.sip_server_pass );
+			  $("#sipServerPass").val( data.sip2.sip_server_password );
 			  if ( data.sip2.validate_using_info ) {
 			      $('input:radio[name=sipMethod]')[1].checked = true;
 			  } else {
@@ -147,6 +154,7 @@ $('document').ready(function() {
 		      //alert("returned from ajax call");
 		  })
 	    .success(function( data ) {
+		$("#form-buttons").hide();
 	    })
 	    .error(function( data ) {
 		alert( data.error_message );
