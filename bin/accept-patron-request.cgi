@@ -15,6 +15,8 @@ my $prid = $query->param('prid');
 my $lid = $query->param('lid');
 
 my $success = 0;
+my $message = "";
+my %status;
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
@@ -40,7 +42,7 @@ if ($patronRequest) {
 
         # These should be atomic...
         # create the request_group
-	$dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, patron_barcode, patron_generated) VALUES (?,?,?,?,?,?,?)",
+	$status{"insert-request-group"} = $dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, patron_barcode, patron_generated) VALUES (?,?,?,?,?,?,?)",
 		 undef,
 		 1,        # default copies_requested
 		 $patronRequest->{"title"},
@@ -52,13 +54,13 @@ if ($patronRequest) {
 	    );
 	my $group_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
 	
-	$dbh->do("INSERT INTO request_chain (group_id) VALUES (?)",
+	$status{"insert-request-chain"} = $dbh->do("INSERT INTO request_chain (group_id) VALUES (?)",
 		 undef,
 		 $group_id
 	    );
 	my $chain_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_chain_seq'});
 	
-	$dbh->do("INSERT INTO request (requester, chain_id) VALUES (?,?)",
+	$status{"insert-request"} = $dbh->do("INSERT INTO request (requester, chain_id) VALUES (?,?)",
 		 undef,
 		 $lid,
 		 $chain_id
@@ -68,7 +70,7 @@ if ($patronRequest) {
 	$SQL = "select sequence_number, lid, call_number from patron_request_sources where prid = ? order by sequence_number";
 	my $sources_aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $prid );
 	for my $source (@$sources_aref) {
-	    $dbh->do("INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)",
+	    $status{"insert-sources"} = $dbh->do("INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)",
 		     undef,
 		     $source->{"sequence_number"},
 		     $source->{"lid"},
@@ -77,7 +79,7 @@ if ($patronRequest) {
 		);
 	}
 	
-	$dbh->do("INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)",
+	$status{"insert-requests-active"} = $dbh->do("INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)",
 		 undef,
 		 $request_id,
 		 $lid,
@@ -85,24 +87,24 @@ if ($patronRequest) {
 		 'ILL-Request'
 	    );
 	
-	$dbh->do("UPDATE sources SET tried=true, request_id=? WHERE group_id=? AND sequence_number=?",
+	$status{"update-sources"} = $dbh->do("UPDATE sources SET tried=true, request_id=? WHERE group_id=? AND sequence_number=?",
 		 undef,
 		 $request_id,
 		 $group_id,
 		 1
 	    );
 
-	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
+	$status{"delete-patron-request-sources"} = $dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
+		 undef,
+		 $prid
+	    );
+	$status{"delete-patron-request"} = $dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
 		 undef,
 		 $prid,
 		 $lid
 	    );
-	$dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
-		 undef,
-		 $prid
-	    );
 
-	$dbh->do("UPDATE patrons SET ill_requests = ill_requests+1 WHERE pid=?",
+	$status{"update-patrons"} = $dbh->do("UPDATE patrons SET ill_requests = ill_requests+1 WHERE pid=?",
 		 undef,
 		 $patronRequest->{"pid"}
 	    );
@@ -110,7 +112,8 @@ if ($patronRequest) {
 	$dbh->commit;
     };  # end of eval
     if ($@) {
-	warn "accept-patron-request transaction aborted because $@";
+	$message = "accept-patron-request transaction aborted because $@";
+	warn $message;
 	eval { $dbh->rollback };
     } else {
 	$success = 1;
@@ -118,4 +121,7 @@ if ($patronRequest) {
 }
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $success } );
+print "Content-Type:application/json\n\n" . to_json( { success => $success,
+						       message => $message,
+						       status => \%status
+						     } );

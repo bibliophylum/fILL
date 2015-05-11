@@ -288,7 +288,7 @@ function createILL( requestId ) {
     }
     $.getJSON('/cgi-bin/accept-patron-request.cgi', parms,
 	      function(data){
-//		  alert('change request status: '+data+'\n'+parms[0].status);
+//		  alert('accept patron request: '+data.success+'\n'+data.message+'\n');
 	      })
 	.success(function() {
 	    //alert('success');
