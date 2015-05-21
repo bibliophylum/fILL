@@ -128,6 +128,14 @@ function build_table( data ) {
 	    var requestId = data.renewals[i].id;
 	    b1.onclick = make_renewals_handler( requestId );
 	    divResponses.appendChild(b1);
+	} else if (data.renewals[i].status == 'Renew') {
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Cancel renewal request";
+	    b1.className = "action-button";
+	    var requestId = data.renewals[i].id;
+	    b1.onclick = make_cancel_handler( requestId );
+	    divResponses.appendChild(b1);
 	}
 	
 	cell.appendChild( divResponses );
@@ -171,6 +179,49 @@ function request_renewal( requestId ) {
 	    var tbl = $('#renewals-table').DataTable(); // note the capitalized "DataTable"
 	    var cell = tbl.cell( aPos, 9 );
 	    cell.data('Renew');
+	    var jQcell = cell.nodes();
+	    $(jQcell).stop(true,true).effect("highlight", {}, 2000);
+	    $("#divResponses"+requestId).empty();  // remove the button
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    // Hmm... don't actually want the row removed, just updated.
+	    //$("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
+
+function make_cancel_handler( requestId ) {
+    return function() { cancel_renewal( requestId ) };
+}
+
+function cancel_renewal( requestId ) {
+    var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#renewals-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[8]; // 9th column (0-based!), hidden or not
+
+    var parms = {
+	"reqid": requestId,
+	"msg_to": msg_to,
+	"lid": $("#lid").text(),
+	"status": "Cancel-Renewal-Request",
+	"message": ""
+    };
+    $.getJSON('/cgi-bin/cancel-renewal-request.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    // alert('success');
+	    // change the text of the Status column, and highlight it.
+	    var tbl = $('#renewals-table').DataTable(); // note the capitalized "DataTable"
+	    var cell = tbl.cell( aPos, 9 );
+	    cell.data('Received');
 	    var jQcell = cell.nodes();
 	    $(jQcell).stop(true,true).effect("highlight", {}, 2000);
 	    $("#divResponses"+requestId).empty();  // remove the button
