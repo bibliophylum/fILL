@@ -18,6 +18,80 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+  $("circCount").hide();
+
+  oTable = $('#datatable_scanned').dataTable({
+    "bJQueryUI": true,
+    "sPaginationType": "full_numbers",
+    "bInfo": true,
+    "bSort": true,
+    "sDom": '<"H"Tfr>t<"F"ip>',
+    // TableTools requires Flash version 10...
+    "oTableTools": {
+      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+    },
+    "columnDefs": [{
+      "targets": 0,
+      "visible": false
+    }] 
+  });
+
+  oTable.fnSort( [ [7,'desc'] ] );
+
+  $("#barcode").on("change", function() {
+    barcode_scanned(this.value); 
+    this.value=''; 
+    this.focus(); 
+  });
+
+  // some users are reporting that the scanned barcode doesn't
+  // automatically appear in the data table (i.e. that the onChange
+  // wasn't firing.  So let's add a manual option:
+  $("#scanOk").on("click", function() {
+    // button does nothing except change focus from text input,
+    // which triggers onChange.
+    $("#barcode").focus();
+    return false;
+  });
+
+
+  // start with focus on barcode field
+  $("#barcode").focus();
+
+});
+
+function barcode_scanned( bc ) {
+  if ( $("#lid").text() == 101 ) {
+      $("#circCount").hide();
+  }
+  $.getJSON('/cgi-bin/rotation-item-scanned.cgi', {lid: $("#lid").text(), barcode: bc },
+    function(data){
+        if ( $("#lid").text() == "101" ) {
+	    $("#circCount").text("Total circulation: "+data.circs);
+	    if (data.circs == 0) {
+	        $("#circCount").css("background-color","#f78181");
+            } else {
+	        $("#circCount").css("background-color","#ffffff");
+            }
+            $("#circCount").show();
+        }
+        add_row_to_table(data);
+    }
+  );
+};
+
+function downloadMarc() {
+  $.getJSON('/cgi-bin/rotations-MARC-file.cgi', {lid: $("#lid").text() },
+    function(data){
+	// alert(data.filename);
+	window.open( '/rotations-MARC/' );
+        }
+  );
+}
+
+
 function add_row_to_table_DEPRECATED( data ) {
     for (var i=0;i<data.item.length;i++) {
         var ai = oTable.fnAddData( data.item[i] );
