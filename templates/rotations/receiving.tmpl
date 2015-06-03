@@ -12,6 +12,8 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
+  $("circCount").hide();
+
   oTable = $('#datatable_scanned').dataTable({
     "bJQueryUI": true,
     "sPaginationType": "full_numbers",
@@ -53,10 +55,22 @@ $('document').ready(function(){
 });
 
 function barcode_scanned( bc ) {
+  if ( $("#lid").text() == 101 ) {
+      $("#circCount").hide();
+  }
   $.getJSON('/cgi-bin/rotation-item-scanned.cgi', {lid: <TMPL_VAR name="lid">, barcode: bc },
     function(data){
-        add_row_to_table(data);
+        if ( $("#lid").text() == "101" ) {
+	    $("#circCount").text("Total circulation: "+data.circs);
+	    if (data.circs == 0) {
+	        $("#circCount").css("background-color","#f78181");
+            } else {
+	        $("#circCount").css("background-color","#ffffff");
+            }
+            $("#circCount").show();
         }
+        add_row_to_table(data);
+    }
   );
 };
 
@@ -87,6 +101,7 @@ function downloadMarc() {
 		<p>
 		  Scan a barcode: <input id="barcode" type="text" name="barcode">
 		  <input id="scanOk" type="button" value="Ok" class="library-style">
+		  <span id="circCount" />
 		</p>
 		<br/>
 	      </form>

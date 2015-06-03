@@ -60,6 +60,9 @@ where
 
 my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $barcode );
 
+$SQL = "select coalesce(sum(circs),0) as count from rotations_stats where barcode=?";
+my $circs = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $barcode );
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { item => $aref });
+print "Content-Type:application/json\n\n" . to_json( { item => $aref, circs => $circs->[0] });
