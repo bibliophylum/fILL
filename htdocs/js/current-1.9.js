@@ -415,6 +415,7 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 	'<thead><th>Action</th><th>Do this...</th></thead>';
 
     sOut = sOut+'<tr><td><button id="bReceive" class="override-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bLost" class="override-button">Lost</button></td><td>if your patron or your library has lost the item, or the lender marked it as "Shipped" but you never received it.<br/>When the lender confirms the "Lost" message, the request will be closed and moved to history.</td></tr>';
     sOut = sOut+'<tr><td><button id="bClose" class="override-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
 
     sOut = sOut+'</table>'+'</div>';
@@ -434,6 +435,14 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 	var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Shipped'.");
 	if (hasConfirmed == true) {
 	    override( this, aData[2], null, oTable, nTr );
+	}
+	return false; 
+    });
+    $('#bLost').button();
+    $('#bLost').click(function() { 
+	var borrowerMessage = prompt("Please enter a message for the lender:");
+	if (borrowerMessage != null) {
+	    override( this, aData[2], borrowerMessage, oTable, nTr );
 	}
 	return false; 
     });

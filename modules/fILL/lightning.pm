@@ -99,6 +99,7 @@ sub setup {
 	'current'                  => 'current_process',
 	'new_patron_requests'      => 'new_patron_requests_process',
 	'pending'                  => 'pending_process',
+	'lost'                     => 'lost_process',
 	);
 }
 
@@ -848,6 +849,25 @@ sub pending_process {
 
     my $template = $self->load_tmpl('search/pending.tmpl');	
     $template->param( pagetitle => "ILL requests with no response yet",
+		      username => $self->authen->username,
+		      lid => $lid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub lost_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/lost.tmpl');	
+    $template->param( pagetitle => "Lost items reported by borrowers",
 		      username => $self->authen->username,
 		      lid => $lid,
 		      library => $library,

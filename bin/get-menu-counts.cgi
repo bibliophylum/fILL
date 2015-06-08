@@ -71,7 +71,10 @@ $SQL = "select count(prid) from patron_request where lid=?";
 my @patron_requests = $dbh->selectrow_array($SQL, undef, $lid );
 @patron_requests[0] = 0 unless (@patron_requests);
 
+$SQL = "select count(r.id) from request r left join requests_active ra on ra.request_id=r.id where ra.msg_to=? and ra.status = 'Lost'";
+my @lost = $dbh->selectrow_array($SQL, undef, $lid );
+@lost[0] = 0 unless (@lost);
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0] } } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0], lost => $lost[0] } } );

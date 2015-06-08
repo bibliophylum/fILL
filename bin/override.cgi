@@ -92,6 +92,25 @@ switch( $override ) {
 	}
     }
 
+    case "bLost" {
+	# borrowing override
+	$borrower_id = $href->{"borrower_id"};
+	$lender_id = $href->{"lender_id"};
+	# can only set status to 'Lost' if the lender has marked it as 'Shipped'
+	my $cntAnswers = $dbh->selectrow_array( "select count(*) from requests_active where request_id=? and msg_from=? and status like 'Shipped';", undef, $reqid, $lender_id );
+	if ((defined $cntAnswers) && ($cntAnswers == 1)) {
+	    $retval = $dbh->do( $SQL, undef, $reqid, $borrower_id, $lender_id, 'Lost', $data );
+	    $return_data_href->{ success } = $retval;
+	    $return_data_href->{ status } = "Lost";
+	    $return_data_href->{ message } = $data;
+	} else {
+	    $return_data_href->{ success } = 0;
+	    $return_data_href->{ status } = "Could not mark as 'Lost'";
+	    $return_data_href->{ message } = "Lender has not shipped.";
+	    $return_data_href->{ alert_text } = "Could not mark as 'Lost',\nlender has not shipped.\n";
+	}
+    }
+
     case "bClose" {
 	# borrowing override
 	$borrower_id = $href->{"borrower_id"};

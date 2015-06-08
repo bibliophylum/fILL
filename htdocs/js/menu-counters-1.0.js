@@ -77,6 +77,11 @@ function update_menu_counters( lid ) {
                     patron_requests[0].innerHTML = 'New patron requests: <span class="circle">'+data.counts.patron_requests+'</span>';
 		}
             };
-            //alert('get-menu-borrow-counts\nunfilled: '+data.counts.unfilled+'\nholds: '+data.counts.holds+'\noverdue: '+data.counts.overdue+'\nwaiting for response: '+data.counts.waiting+'\nrenewal requests: '+data.counts.renewalRequests);
+            if (data.counts.lost > 0) {
+		var lost = $('#menu_lend_lost a');
+		if (lost.length > 0) {
+                    lost[0].innerHTML = 'Lost: <span class="circle">'+data.counts.lost+'</span>';
+		}
+            };
     });
 }

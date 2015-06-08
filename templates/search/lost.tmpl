@@ -1,0 +1,35 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_lend.tmpl">
+
+<script type="text/javascript" src="/js/lost-1.0.js"></script>
+
+
+<script type="text/javascript">
+set_secondary_tab("menu_lend_lost");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+</script>
+
+
+<div id="center" role="main">
+
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif" alt="loading indicator">
+  </div>
+  
+  <div id="myDiv">
+    <div id="mylistDiv"></div>
+  </div>
+  
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+    <p>If a lending library has reported an item lost, that request will be shown here.</p>
+    <p>When you are finished with a particular row (e.g. used the information to create a bill), click the 'Move to history' button.</p>
+  </div><!-- instructions -->
+
+</div><!-- center -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">
