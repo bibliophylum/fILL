@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.8.js"></script>
+<script type="text/javascript" src="/js/current-1.9.js"></script>
 
 <script type="text/javascript">
 
@@ -59,26 +59,6 @@ $.ajaxSetup ({
 	  The request will be added to your ‘Receiving’ list so that you can control slip printing.
 	</td>
       </tr>
-      
-      <tr>
-	<td>Try next lender</td>
-	<td>if you have requested a book, but have not received a response from the (potential) lender in a timely fashion. This request will be cancelled, and the next lender will be tried.</td>
-      </tr>
-      
-      <tr>
-	<td>No further sources</td>
-	<td>if there are no further sources for you to try.
-	  This request will be closed and moved to history.
-	</td>
-      </tr>
-      
-      <tr>
-	<td>Cancel</td>
-	<td>if the lender has not yet responded to your request. <br>
-	  An override message will be added to the request, and it will be closed and moved to history.
-	</td>
-      </tr>
-      
       <tr>
 	<td>Close</td>
 	<td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as ‘Checked in to ILS’
