@@ -33,6 +33,8 @@
 <script type="text/javascript" src="/js/pz2.js"></script>
 <script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
 
+<script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
+
 <script type="text/javascript">
 
   function set_primary_tab(tab_id) {
@@ -111,6 +113,14 @@
     $(".coverlink").click(function( event ) {
         event.preventDefault();
         var $title = $(this).attr("title");
+        $("#query").val( $title );
+        $("#search-submit-button").click();
+    });
+
+    $(".flow .item").click(function( event ) {
+        event.preventDefault();
+        var $title = $(".caption",this).html();
+        //alert( $title );
         $("#query").val( $title );
         $("#search-submit-button").click();
     });
@@ -220,14 +230,31 @@
 <!--***************ARIA MARKER 'MAIN'***************-->
 <div id="content">
 
-<div id="AVnotice" class="tone-box">
+<!-- <div id="AVnotice" class="tone-box"> -->
+<div id="AVnotice" style="background: black">
 
   <h2>Featured</h2><br>
 
-        <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
+  <! -- The class="coverlink" is used to drive the click-the-image-to-search code;
        The keywords to search for are taken from the "title" attribute.
-  -->
+     -->
 
+  <div class="ContentFlow">
+    <div class="loadIndicator"><div class="indicator"></div></div>
+    <div class="flow">
+      <!-- <img class="item" src="someImageFile.jpg" title="Your_Image_Title"/> -->
+      <!-- Add as many items as you like. -->
+      <a class="item" href="#"><img class="content" src="/img/covers/cr14-andthebirdsraineddown-220.jpg"><div class="caption">And The Birds Rained Down Jocelyne Saucier</div></a>
+      <a class="item" href="#"><img class="content" src="/img/covers/cr14-intolerable-220.jpg"><div class="caption">Intolerable: A Memoir of Extremes Kamal Al Solaylee</div></a>
+      <a class="item" href="#"><img class="content" src="/img/covers/cr14-ru-kim-thuy-books100.jpg"><div class="caption">Ru kim thuy</div></a>
+      <a class="item" href="#"><img class="content" src="/img/covers/cr14-theinconvenientindian-220.jpg"><div class="caption">The Inconvenient Indian Thomas King</div></a>
+      <a class="item" href="#"><img class="content" src="/img/covers/cr14-wheneverythingfeelslikethemovies-220.jpg"><div class="caption">When everything feels like the movies Raziel Reid</div></a>
+    </div>
+    <div class="globalCaption"></div>
+    <div class="scrollbar"><div class="slider"><div class="position"></div></div></div>
+  </div>
+
+<!--
   <div id="covers">
 
     <a href="#" class="coverlink" title="And The Birds Rained Down Jocelyne Saucier"><img class="covers5" src="/img/covers/cr14-andthebirdsraineddown-220.jpg" alt="And The Birds Rained Down Jocelyne Saucier"></a>
@@ -237,10 +264,10 @@
     <a href="#" class="coverlink" title="When everything feels like the movies Raziel Reid"><img class="covers5" src="/img/covers/cr14-wheneverythingfeelslikethemovies-220.jpg" alt="When everything feels like the movies Raziel Reid"></a>
 
   </div>
-
   <p><strong>Canada Reads 2015 Finalists</strong></p> 
+-->
        
-</div><!--div id AV display-->
+</div><!--div id AV display -->
 
 <main id="main" class="tone-box" role="main">
 
