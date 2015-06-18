@@ -74,7 +74,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
     if (scalar @f == 1) {
 	my $t = $f[0];
 	chomp $t;
-	if ($t =~ /target=/) {
+	if ($t =~ /set target=/) {
 	    $t =~ s/^.*(target=.*) name=.*/$1/;
 	} else {
 	    # Individual library profile... doesn't have connection info in the <set ...>,
@@ -143,7 +143,7 @@ sub _test_zserver {
     my $scan = shift;
 
     $preferredRecordSyntax = "usmarc" unless ($preferredRecordSyntax);
-    $elementSet = "f" unless ($elementSet);
+    $elementSet = "F" unless ($elementSet);  # TLC server doesn't recognize 'f', but does recognize 'F'... standard says it is case insensitive.
     $pqf = '@attr 1=4 "ducks"' unless ($pqf);
 
     my $conn;
