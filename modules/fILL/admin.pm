@@ -37,6 +37,7 @@ sub setup {
 	'zserver_test'         => 'zserver_test_process',
 	'zserver_pazpar_control' => 'zserver_pazpar_control_process',
 	'zserver_settings'     => 'zserver_settings_process',
+	'public_featured'      => 'public_featured_process',
 	);
 }
 
@@ -119,6 +120,18 @@ sub zserver_test_process {
     $template->param( pagetitle => "Test zServer",
 		      library_list => $libraries_aref
 	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub public_featured_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $template = $self->load_tmpl('admin/public-featured.tmpl');	
+    $template->param( pagetitle => "Admin - Public - Featured" );
     return $template->output;
 }
 
