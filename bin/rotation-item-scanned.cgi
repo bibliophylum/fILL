@@ -11,7 +11,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $barcode = $query->param('barcode');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
@@ -29,7 +29,7 @@ $dbh->{AutoCommit} = 0;  # enable transactions, if possible
 $dbh->{RaiseError} = 1;
 eval {
     my $SQL = "update rotations set previous_library = current_library, current_library = ?, ts = now() where barcode = ?";
-    my $rows = $dbh->do($SQL, undef, $lid, $barcode);
+    my $rows = $dbh->do($SQL, undef, $oid, $barcode);
     $dbh->commit;   # commit the changes if we get this far
 };
 if ($@) {
@@ -47,13 +47,13 @@ my $SQL = "select
  r.title, 
  r.author,
  r.barcode,
- l1.name as current_library,
- l2.name as previous_library,
+ o1.symbol as current_library,
+ o2.symbol as previous_library,
  r.ts as timestamp
 from 
  rotations r
- left join libraries l1 on l1.lid=r.current_library
- left join libraries l2 on l2.lid=r.previous_library
+ left join org o1 on o1.oid=r.current_library
+ left join org o2 on o2.oid=r.previous_library
 where 
   barcode=? 
 ";

@@ -162,7 +162,7 @@ sub complete_the_request_process {
 	    );
 	my $cid = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_chain_seq'});
 	
-	my $source_library = $sources[$seq-1]->{"lid"};
+	my $source_library = $sources[$seq-1]->{"oid"};
 	
 	# create the request
 	$self->dbh->do("INSERT INTO request (requester,current_source_sequence_number,chain_id) VALUES (?,?,?)",
@@ -182,14 +182,14 @@ sub complete_the_request_process {
 		       undef, $reqid, $group_id, $sources[$seq-1]->{"sequence_number"} );
 	
 	# does the selected source library want immediate notification, by email, of new requests?
-	my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM libraries WHERE lid=?",
+	my @notify = $self->dbh->selectrow_array("SELECT request_email_notification, email_address FROM org WHERE oid=?",
 						 undef,$source_library);
 	if ($notify[0]) {
 	    send_notification($self,$notify[1],$reqid);
 	}
     }
 
-    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, l.name as symbol, l.library, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join libraries l on l.lid=s.lid where s.group_id=? and l.name<>? and s.tried=true", { Slice => {} }, $group_id, uc($symbol));
+    my $trying_aref = $self->dbh->selectall_arrayref("select g.group_id, c.chain_id, s.request_id, o.symbol, o.org_name, s.call_number from sources s left join request r on r.id=s.request_id left join request_chain c on c.chain_id=r.chain_id left join request_group g on g.group_id=c.group_id left join org o on o.oid=s.oid where s.group_id=? and o.symbol<>? and s.tried=true", { Slice => {} }, $group_id, uc($symbol));
 
     if ($self->is_spruce_library($symbol)) {
 	my $i = 0;
@@ -207,7 +207,7 @@ sub complete_the_request_process {
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",
 		      username => $self->authen->username,
-		      lid => $requester,
+		      oid => $requester,
 		      title => $req_href->{"title"},
 		      author => $req_href->{"author"},
 		      medium => $req_href->{"medium"},
@@ -227,12 +227,12 @@ sub lightning_search_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/lightning.tmpl');	
     $template->param( pagetitle => "fILL Lightning Search",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -246,7 +246,7 @@ sub pull_list_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     # sql to get requests to this library, which this library has not responded to yet
     my $SQL="select 
@@ -255,17 +255,17 @@ sub pull_list_process {
   g.author, 
   g.note, 
   date_trunc('second',ra.ts) as ts, 
-  l.name as from, 
-  l.library, 
+  o.symbol as from, 
+  o.org_name as library, 
   s.call_number,
   g.pubdate  
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
-  left join library_barcodes b on (ra.msg_from = b.borrower and b.lid=?) 
-  left join sources s on (s.group_id = g.group_id and s.lid = ra.msg_to) 
-  left join libraries l on l.lid = ra.msg_from
+  left join library_barcodes b on (ra.msg_from = b.borrower and b.oid=?) 
+  left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
+  left join org o on o.oid = ra.msg_from
 where 
   ra.msg_to=? 
   and ra.status='ILL-Request' 
@@ -273,7 +273,7 @@ where
 order by s.call_number
 ";
 
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $lid );
+    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid );
 
     # generate barcodes (code39 requires '*' as start and stop characters
     foreach my $request (@$pulls) {
@@ -285,7 +285,7 @@ order by s.call_number
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
     $template->param( pagetitle => "Pull-list",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      pulls => $pulls,
 	);
@@ -401,8 +401,8 @@ sub request_process {
 #    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
     # Get this user's (requester's) library id
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    if (not defined $lid) {
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    if (not defined $oid) {
 	# should never get here...
 	# go to some error page.
     }
@@ -429,7 +429,7 @@ sub request_process {
 	$title,
 	$author,
 	$medium,
-	$lid,     # requester
+	$oid,     # requester
 	$isbn,
 	$pubdate,
 	);
@@ -471,37 +471,37 @@ sub request_process {
 #    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
 
     # other branches in this regional library (if this is a regional library)
-    my $SQL = "select lid from regional_libraries_branches where rlid in (select rlid from regional_libraries_branches where lid=?)";
-    my $same_regional = $self->dbh->selectall_arrayref($SQL,undef,$lid);
+    my $SQL = "select oid from regional_libraries_branches where rlid in (select rlid from regional_libraries_branches where oid=?)";
+    my $same_regional = $self->dbh->selectall_arrayref($SQL,undef,$oid);
 #    $self->log->debug("same regional system (array):\n" . Dumper(@$same_regional));
     my %sameReg = map { $_->[0] => 1 } @$same_regional;
 #    $self->log->debug("same regional system:\n" . Dumper(%sameReg));
 
     # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
     # NBLC - keyword just to make finding this in source easier
-    $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
-    my $nblc_href = $self->dbh->selectall_hashref($SQL,'name');
+    $SQL = "select o.oid, o.symbol, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from org o left outer join requests_active ra on ra.msg_from=o.oid group by o.oid, o.symbol order by o.symbol";
+    my $nblc_href = $self->dbh->selectall_hashref($SQL,'symbol');
 
-    my $untracked_href = $self->dbh->selectall_hashref("select lid, borrowed, loaned from libraries_untracked_ill",'lid');
+    my $untracked_href = $self->dbh->selectall_hashref("select oid, borrowed, loaned from libraries_untracked_ill",'oid');
 
     foreach my $src (@unique_sources) {
 	if (exists $nblc_href->{ $src->{symbol} }) {
 	    $src->{net} = $nblc_href->{ $src->{symbol} }{net};
-	    $src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+	    $src->{oid} = $nblc_href->{ $src->{symbol} }{oid};
 	    $self->log->debug( "NBLC for " . $src->{symbol} . ": " . $src->{net} );
-	    if (exists $untracked_href->{ $src->{lid} } ) {
+	    if (exists $untracked_href->{ $src->{oid} } ) {
 		# does this library have any untracked-by-fILL ILL counts imported into the system?
-		$src->{net} = $src->{net} + $untracked_href->{ $src->{lid} }{loaned} - $untracked_href->{ $src->{lid} }{borrowed};
+		$src->{net} = $src->{net} + $untracked_href->{ $src->{oid} }{loaned} - $untracked_href->{ $src->{oid} }{borrowed};
 		$self->log->debug( "...untracked ILL counts being included, new net is " . $src->{net} );
 	    }
 	} else {
 	    $src->{net} = 0;
-	    $src->{lid} = undef;
+	    $src->{oid} = undef;
 	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
 	}
 
 	$src->{sameRegion} = 0;
-	$src->{sameRegion} = 1 if ($sameReg{ $src->{lid} });
+	$src->{sameRegion} = 1 if ($sameReg{ $src->{oid} });
     }
 #    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
 
@@ -514,7 +514,7 @@ sub request_process {
     $index = 0; 
     while ($index <= $#sorted_sources ) { 
 	my $src = $sorted_sources[$index]; 
-	if ( not defined $src->{lid} ) { 
+	if ( not defined $src->{oid} ) { 
 	    splice @sorted_sources, $index, 1; 
 	} else { 
 	    $index++; 
@@ -524,9 +524,9 @@ sub request_process {
 
     # create the sources list for this request
     my $sequence = 1;
-    $SQL = "INSERT INTO sources (sequence_number, lid, call_number, group_id, tried) VALUES (?,?,?,?,?)";
+    $SQL = "INSERT INTO sources (sequence_number, oid, call_number, group_id, tried) VALUES (?,?,?,?,?)";
     foreach my $src (@sorted_sources) {
-	my $lenderID = $src->{lid};
+	my $lenderID = $src->{oid};
 	next unless defined $lenderID;
 	my $isSelfRequest = $src->{'symbol'} eq $symbol ? 1 : 0;
 	my $tried = undef;
@@ -558,7 +558,7 @@ sub request_process {
     my $template = $self->load_tmpl('search/make_request.tmpl');	
     $template->param( pagetitle => "fILL Request an ILL",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      title => $title || ' ',
 		      author => $author || ' ',
@@ -579,12 +579,12 @@ sub holds_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/holds.tmpl');	
     $template->param( pagetitle => "Lenders have placed holds",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -598,12 +598,12 @@ sub respond_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -617,12 +617,12 @@ sub on_hold_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/on_hold.tmpl');	
     $template->param( pagetitle => "On hold",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -636,12 +636,12 @@ sub shipping_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/shipping.tmpl');	
     $template->param( pagetitle => "Shipping",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -655,12 +655,12 @@ sub receiving_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/receiving.tmpl');	
     $template->param( pagetitle => "Receive items to fill your requests",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -674,12 +674,12 @@ sub renewals_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renewals.tmpl');	
     $template->param( pagetitle => "Ask for renewals on borrowed items",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -693,12 +693,12 @@ sub renew_answer_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renew-answer.tmpl');	
     $template->param( pagetitle => "Respond to renewal requests",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -712,12 +712,12 @@ sub returns_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/returns.tmpl');	
     $template->param( pagetitle => "Return items to lending libraries",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -731,12 +731,12 @@ sub overdue_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/overdue.tmpl');	
     $template->param( pagetitle => "Overdue items to be returned to lender",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -750,12 +750,12 @@ sub checkins_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/checkins.tmpl');	
     $template->param( pagetitle => "Loan items to be checked back into your ILS",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -769,12 +769,12 @@ sub history_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/history.tmpl');	
     $template->param( pagetitle => "ILL history",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -788,12 +788,12 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/current.tmpl');	
     $template->param( pagetitle => "Current ILLs",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -807,12 +807,12 @@ sub unfilled_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/unfilled.tmpl');	
     $template->param( pagetitle => "Unfilled ILL requests",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -826,12 +826,12 @@ sub new_patron_requests_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/new_patron_requests.tmpl');	
     $template->param( pagetitle => "New requests from your patrons",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -845,12 +845,12 @@ sub pending_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/pending.tmpl');	
     $template->param( pagetitle => "ILL requests with no response yet",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -864,12 +864,12 @@ sub lost_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/lost.tmpl');	
     $template->param( pagetitle => "Lost items reported by borrowers",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -884,7 +884,7 @@ sub send_notification {
 
 #    $self->log->info( "Source wants an email" );
 
-    my ($lid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
 #    my @tac = $self->dbh->selectrow_array("select r.title, r.author, s.call_number from request r left join sources s on s.request_id = r.id where r.id=?",
 #					  undef,$reqid);
@@ -898,9 +898,9 @@ from request r
   left join request_group g on g.group_id = c.group_id
   left join sources s on s.group_id = g.group_id 
 where r.id=?
-  and s.lid=?
+  and s.oid=?
 ";
-    my @tac = $self->dbh->selectrow_array($SQL,undef,$reqid,$lid);
+    my @tac = $self->dbh->selectrow_array($SQL,undef,$reqid,$oid);
 
     my $subject = "Subject: ILL Request: " . $tac[0] . "\n";
     my $content = "fILL notification\n\n";
@@ -930,7 +930,7 @@ where r.id=?
 
 }
 
-#--------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
 sub is_spruce_library {
     my $self = shift;
     my $symbol = shift;
@@ -945,17 +945,17 @@ sub is_spruce_library {
     return $found;
 }
 
-#--------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
 sub get_library_from_username {
     my $self = shift;
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.library, l.name as symbol from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select o.oid, o.org_name, o.symbol from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{library}, $hr_id->{symbol});
+    return ($hr_id->{oid}, $hr_id->{org_name}, $hr_id->{symbol});
 }
 
 1; # so the 'require' or 'use' succeeds

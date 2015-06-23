@@ -44,7 +44,7 @@
   <script id="themeroller-js" type="text/javascript" src="/themes/fILL-clean/jquery-ui.js"></script>
 
 
-  <script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
+  <script type="text/javascript" src="/js/menu-counters-1.1.js"></script>
 
 <!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
   <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
@@ -61,7 +61,7 @@ $('document').ready(function(){
     setFontSizeFromCookies();
 
     $.getJSON('/cgi-bin/rotations-allowed.cgi', 
-        {lid: <TMPL_VAR name="lid"> },
+        {oid: <TMPL_VAR name="oid"> },
         function(data){
             if (data.allowed == "1") {
                 $("#menu_rotations").show();
@@ -75,12 +75,12 @@ $('document').ready(function(){
         })
         .complete(function() { 
             // hack for admin:
-            if (<TMPL_VAR name="lid"> === 101) {
+            if (<TMPL_VAR name="oid"> === 101) {
               $("#menu_rotations_admin").show();
             }
         });
 
-    update_menu_counters( <TMPL_VAR name="lid"> );
+    update_menu_counters( <TMPL_VAR name="oid"> );
 
     $('#theme1').click(function () {
         $("#csstheme").attr("href", "/css/themes-library-colors.css");
@@ -257,7 +257,7 @@ $('document').ready(function(){
 	<div id="patron-info">
 	  <p style="display:none"><TMPL_VAR NAME="username"></p>
 	  <p id="library_name"><TMPL_VAR NAME="library"></p>
-	  <p id="lid" style="display:none"><TMPL_VAR NAME="lid"></p>  <!-- used in a LOT of js files -->
+	  <p id="oid" style="display:none"><TMPL_VAR NAME="oid"></p>  <!-- used in a LOT of js files -->
 	  <input id="theme1" class="theme-chooser1" type="button" value="A" />
 	  <input id="theme2" class="theme-chooser2" type="button" value="A" />
 	  <input id="theme3" class="theme-chooser3" type="button" value="A" />

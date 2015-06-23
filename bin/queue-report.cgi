@@ -13,7 +13,7 @@ my $obj = new Net::Telnet( Host => 'localhost',
 #			   Dump_Log => '/opt/fILL/logs/telnet.log',
     );
 my $ok = $obj->print( to_json( { rid => $query->param('rid'), 
-				 lid => $query->param('lid'),
+				 oid => $query->param('oid'),
 				 range_start => $query->param('start'),
 				 range_end => $query->param('end')
 			       } ));

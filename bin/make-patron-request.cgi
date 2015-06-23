@@ -57,7 +57,7 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 
 my $username = $q->param('username');
-my $lid = $q->param('lid');
+my $oid = $q->param('oid');
 
 my @inParms = $q->param;
 my @parms;
@@ -88,10 +88,10 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # Get this user's (requester's) library id
 my $hr_id = $dbh->selectrow_hashref(
-    "select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (l.lid = p.home_library_id) where p.username=? and p.home_library_id=?",
+    "select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (o.oid = p.home_library_id) where p.username=? and p.home_library_id=?",
     undef,
     $username,
-    $lid
+    $oid
     );
 
 #print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id) . "\n";
@@ -101,8 +101,8 @@ my $pid = $hr_id->{pid};
 #print STDERR "pid: $pid\n";
 #exit; 
 
-#my $lid = $hr_id->{home_library_id};
-my $library = $hr_id->{library};
+#my $oid = $hr_id->{home_library_id};
+my $library = $hr_id->{org_name};
 my $is_enabled = $hr_id->{is_enabled};
 
 if (not defined $pid) {
@@ -123,9 +123,9 @@ my $isbn = $q->param('isbn');
 
 # check if this is a duplicate of an existing request (e.g. patron hit 'reload')
 my $matching = $dbh->selectall_arrayref(
-    "select prid from patron_request where pid=? and lid=? and title=? and author=?",
+    "select prid from patron_request where pid=? and oid=? and title=? and author=?",
     undef,
-    $pid, $lid, $title, $author
+    $pid, $oid, $title, $author
     ); 
 if (@$matching) {
     $dbh->disconnect;
@@ -216,17 +216,17 @@ $medium  = sprintf("%.80s", $medium);
 $pubdate = sprintf("%.20s", $pubdate);
 $isbn    = sprintf("%.20s", $isbn);
 
-#print STDERR "pid [$pid] lid [$lid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
+#print STDERR "pid [$pid] oid [$oid] isbn [$isbn] pubdate [$pubdate] title [$title]\n";
 
 # These should be atomic...
 # create the request_group
-$dbh->do("INSERT INTO patron_request (title, author, medium, pid, lid, pubdate, isbn) VALUES (?,?,?,?,?,?,?)",
+$dbh->do("INSERT INTO patron_request (title, author, medium, pid, oid, pubdate, isbn) VALUES (?,?,?,?,?,?,?)",
 	 undef,
 	 $title,
 	 $author,
 	 $medium,
 	 $pid,     # requester
-	 $lid,     # requester's home library
+	 $oid,     # requester's home library
 	 $pubdate,
 	 $isbn
     );
@@ -266,15 +266,15 @@ my %seen = ();
 my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 
 # net borrower/lender count  (loaned - borrowed)  based on all currently active requests
-my $SQL = "select l.lid, l.name, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from libraries l left outer join requests_active ra on ra.msg_from=l.lid group by l.lid, l.name order by l.name";
-my $nblc_href = $dbh->selectall_hashref($SQL,'name');
+my $SQL = "select o.oid, o.symbol, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from org o left outer join requests_active ra on ra.msg_from=o.oid group by o.oid, o.symbol order by o.symbol";
+my $nblc_href = $dbh->selectall_hashref($SQL,'symbol');
 foreach my $src (@unique_sources) {
     if (exists $nblc_href->{ $src->{symbol} }) {
 	$src->{net} = $nblc_href->{ $src->{symbol} }{net};
-	$src->{lid} = $nblc_href->{ $src->{symbol} }{lid};
+	$src->{oid} = $nblc_href->{ $src->{symbol} }{oid};
     } else {
 	$src->{net} = 0;
-	$src->{lid} = undef;
+	$src->{oid} = undef;
 	#print STDERR $src->{'symbol'} . " not found in net-borrower/net-lender counts.";
     }
 }
@@ -284,9 +284,9 @@ my @sorted_sources = sort { $a->{net} <=> $b->{net} } @unique_sources;
 
 # create the sources list for this request
 my $sequence = 1;
-$SQL = "INSERT INTO patron_request_sources (sequence_number, lid, call_number, prid) VALUES (?,?,?,?)";
+$SQL = "INSERT INTO patron_request_sources (sequence_number, oid, call_number, prid) VALUES (?,?,?,?)";
 foreach my $src (@sorted_sources) {
-    my $lenderID = $src->{lid};
+    my $lenderID = $src->{oid};
     next unless defined $lenderID;
     my $rows_added = $dbh->do($SQL,
 			      undef,

@@ -31,8 +31,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 #$dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select host,port,terminator,sip_server_login,sip_server_password from library_sip2 where lid=?";
-my $href = $dbh->selectrow_hashref($SQL,undef,$query->param('lid'));
+my $SQL = "select host,port,terminator,sip_server_login,sip_server_password from library_sip2 where oid=?";
+my $href = $dbh->selectrow_hashref($SQL,undef,$query->param('oid'));
 $dbh->disconnect;
 
 #print STDERR Dumper($href);

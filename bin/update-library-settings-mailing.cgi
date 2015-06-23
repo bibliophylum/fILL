@@ -15,8 +15,8 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 
-my $lid = $query->param('lid');
-my $library = $query->param('library');
+my $oid = $query->param('oid');
+my $org_name = $query->param('library');
 my $mailing_address_line1 = $query->param('mailing_address_line1');
 my $city = $query->param('city');
 my $province = $query->param('province');
@@ -33,8 +33,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update libraries set library=?, mailing_address_line1=?, city=?, province=?, post_code=? where lid=?"; 
-my $retval = $dbh->do( $SQL, undef, $library, $mailing_address_line1, $city, $province, $post_code, $lid );
+my $SQL = "update org set org_name=?, mailing_address_line1=?, city=?, province=?, post_code=? where oid=?"; 
+my $retval = $dbh->do( $SQL, undef, $org_name, $mailing_address_line1, $city, $province, $post_code, $oid );
 
 $dbh->disconnect;
 

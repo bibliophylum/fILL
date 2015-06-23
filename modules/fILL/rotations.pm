@@ -30,8 +30,7 @@ sub receive_process {
     my $self = shift;
     my $q = $self->query;
 
-#    my ($lid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl(	    
 	                      'rotations/receiving.tmpl',
@@ -39,7 +38,7 @@ sub receive_process {
 			     );	
     $template->param( username => $self->authen->username,
 #		      sessionid => $self->session->id(),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     # Parse the template
@@ -54,64 +53,21 @@ sub circstats_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol, $library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol, $library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select name, library from rotations_order ro left join libraries l on l.lid=ro.to_lid where ro.from_lid=?",
+	"select symbol, org_name from rotations_order ro left join org o on o.oid=ro.to_oid where ro.from_oid=?",
 	undef,
-	$lid
+	$oid
 	);
-    my $reminder = "Reminder: You are sending these books to " . $hr_id->{library} . " (" . $hr_id->{name} . ")";
+    my $reminder = "Reminder: You are sending these books to " . $hr_id->{org_name} . " (" . $hr_id->{symbol} . ")";
 
     my $template = $self->load_tmpl('rotations/enter_stats.tmpl');	
     $template->param( pagetitle => "Rotations - enter stats",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      reminder => $reminder,
-	);
-    return $template->output;
-    
-}
-
-#--------------------------------------------------------------------------------
-#
-#
-sub current_process_orig {
-    my $self = shift;
-    my $q = $self->query;
-
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $SQL = "select 
- r.id,
- r.callno,
- r.title, 
- r.author,
- r.barcode,
- r.ts as timestamp
-from 
- rotations r
- left join rotations_stats s on (s.barcode=r.barcode and s.lid=r.current_library and s.ts_start=r.ts)
-where 
-  r.current_library=? 
-";
-
-    my $aref = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
-
-    # generate barcodes (code39 requires '*' as start and stop characters
-    foreach my $rotationItem (@$aref) {
-	if (( $rotationItem->{barcode} ) && ( $rotationItem->{barcode} =~ /\d+/)) {
-	    $rotationItem->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $rotationItem->{barcode} . '*' )->plot->png);
-	}
-    }
-
-    my $template = $self->load_tmpl('rotations/at_my_library.tmpl');	
-    $template->param( pagetitle => "Rotations - at my library",
-		      username => $self->authen->username,
-		      lid => $lid,
-		      library => $library,
-		      rotationItems => $aref,
 	);
     return $template->output;
     
@@ -124,12 +80,12 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('rotations/at_my_library.tmpl');	
     $template->param( pagetitle => "Rotations - at my library",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -143,17 +99,17 @@ sub holdings_setup_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     $self->log->info("in holdings_setup_process" . Dumper($q));
 
-    if ($q->param('lid')) {
+    if ($q->param('oid')) {
 	$self->log->info("data passed in");
 	# update
-	my $cnt = $self->dbh->selectrow_arrayref("select count(lid) from rotations_lib_holdings_fields where lid=?", undef, $lid);
+	my $cnt = $self->dbh->selectrow_arrayref("select count(oid) from rotations_lib_holdings_fields where oid=?", undef, $oid);
 	if ((defined $cnt) && ($cnt->[0] > 0)) {
 	    $self->log->info("existing record, updating");
-	    my $retval = $self->dbh->do("update rotations_lib_holdings_fields set holdings_field=?, barcode_subfield=?, callno_subfield=?, library_subfield=?, library_default=?, location_subfield=?, location_default=?, collection_subfield=?, collection_default=? where lid=?",
+	    my $retval = $self->dbh->do("update rotations_lib_holdings_fields set holdings_field=?, barcode_subfield=?, callno_subfield=?, library_subfield=?, library_default=?, location_subfield=?, location_default=?, collection_subfield=?, collection_default=? where oid=?",
 					undef,
 					$q->param('holdings_field'),
 					$q->param('barcode_subfield'),
@@ -164,14 +120,14 @@ sub holdings_setup_process {
 					$q->param('location_default'),
 					$q->param('collection_subfield'),
 					$q->param('collection_default'),
-					$lid
+					$oid
 		);
 	    die "update returned undef!" unless $retval;
 	} else {
 	    $self->log->info("new record, inserting");
-	    my $retval = $self->dbh->do("insert into rotations_lib_holdings_fields (lid, holdings_field, barcode_subfield, callno_subfield, library_subfield, library_default, location_subfield, location_default, collection_subfield, collection_default) values (?,?,?,?,?,?,?,?,?,?)",
+	    my $retval = $self->dbh->do("insert into rotations_lib_holdings_fields (oid, holdings_field, barcode_subfield, callno_subfield, library_subfield, library_default, location_subfield, location_default, collection_subfield, collection_default) values (?,?,?,?,?,?,?,?,?,?)",
 					undef,
-					$lid,
+					$oid,
 					$q->param('holdings_field'),
 					$q->param('barcode_subfield'),
 					$q->param('callno_subfield'),
@@ -187,9 +143,9 @@ sub holdings_setup_process {
     }
 
     my $currentSettings = $self->dbh->selectrow_hashref(
-	"select holdings_field, barcode_subfield, callno_subfield, library_subfield, library_default, location_subfield, location_default, collection_subfield, collection_default from rotations_lib_holdings_fields where lid=?",
+	"select holdings_field, barcode_subfield, callno_subfield, library_subfield, library_default, location_subfield, location_default, collection_subfield, collection_default from rotations_lib_holdings_fields where oid=?",
 	undef,
-	$lid
+	$oid
 	);
     if (defined $currentSettings) {
 	$currentSettings->{library_default} = $symbol unless (defined $currentSettings->{library_default});
@@ -208,7 +164,7 @@ sub holdings_setup_process {
     my $template = $self->load_tmpl('rotations/holdings_settings.tmpl');	
     $template->param( pagetitle => "Rotations - Holdings setup",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      holdings_field => $currentSettings->{holdings_field},
 		      barcode_subfield => $currentSettings->{barcode_subfield},
@@ -230,11 +186,11 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select o.oid, o.symbol, o.org_name from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
+    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name});
 }
 
 1; # so the 'require' or 'use' succeeds

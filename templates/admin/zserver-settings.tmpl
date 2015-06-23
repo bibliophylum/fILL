@@ -8,7 +8,7 @@
   <div id="edit" style="display:none" class="balanced-fields">
     <form id="editForm" action="#">
       <h3 id="library"></h3>
-      <input id="editLID" type="hidden" name="editLID"></input>
+      <input id="editOID" type="hidden" name="editOID"></input>
 
       <div class="balanced-fields-column-left">
 	<fieldset data-role="controlgroup" data-type="horizontal">
@@ -84,9 +84,9 @@
       <table id="libraries" class="row-border" cellpadding="0" cellspacing="0" border="0" >
 	<thead>
 	  <tr>
-	    <th>LID</th>
+	    <th>OID</th>
 	    <th>Symbol</th>
-	    <th>Library</th>
+	    <th>Org Name</th>
 	    <th>Enabled?</th>
 	    <th>Server</th>
 	    <th>Port</th>
@@ -107,10 +107,10 @@
 	</thead>
 	<tbody>
 	  <TMPL_LOOP name="library_list">
-	    <tr id="lid<TMPL_VAR NAME='lid'>">
-	      <td><TMPL_VAR NAME="lid"></td>
-	      <td><TMPL_VAR NAME="name"></td>
-	      <td><TMPL_VAR NAME="library"></td>
+	    <tr id="oid<TMPL_VAR NAME='oid'>">
+	      <td><TMPL_VAR NAME="oid"></td>
+	      <td><TMPL_VAR NAME="symbol"></td>
+	      <td><TMPL_VAR NAME="org_name"></td>
 	      <td><TMPL_VAR NAME="enabled"></td>
 	      <td><TMPL_VAR NAME="server_address"></td>
 	      <td><TMPL_VAR NAME="server_port"></td>

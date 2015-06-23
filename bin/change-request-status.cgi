@@ -11,7 +11,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $msg_from = $query->param('lid');
+my $msg_from = $query->param('oid');
 my $reqid = $query->param('reqid');
 my $msg_to = $query->param('msg_to');
 my $status = $query->param('status');

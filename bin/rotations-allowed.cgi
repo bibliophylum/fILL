@@ -11,10 +11,10 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $isAllowed;
 
-if ($lid =~ m/^\d+$/) {
+if ($oid =~ m/^\d+$/) {
 
     my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 			   "mapapp",
@@ -28,9 +28,9 @@ if ($lid =~ m/^\d+$/) {
     $dbh->do("SET TIMEZONE='America/Winnipeg'");
     
     $isAllowed = $dbh->selectrow_array(
-	"select count(*) from rotations_participants where lid=?", 
+	"select count(*) from rotations_participants where oid=?", 
 	undef,
-	$lid
+	$oid
 	);
     
     $dbh->disconnect;

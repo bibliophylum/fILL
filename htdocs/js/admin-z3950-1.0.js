@@ -31,7 +31,7 @@ $('document').ready(function() {
 	e.preventDefault();
 	//alert("Submit clicked.");
 	var parms = {
-	    "lid": $("#editLID").val(),
+	    "oid": $("#editOID").val(),
 	    "server": $("#server").val(),
 	    "port": $("#port").val(),
 	    "database": $("#database").val(),
@@ -66,7 +66,7 @@ $('document').ready(function() {
     });
     
     $('#libraries tbody').on('click', 'tr', function () {
-	$("#editLID").val( $('td:eq(0)', this).text() );
+	$("#editOID").val( $('td:eq(0)', this).text() );
 	// symbol is td:eq(1), but we don't use it
 	$("#library").text( $('td:eq(2)', this).text() );
 	var isEnabled = $('td:eq(3)').text();
@@ -101,7 +101,7 @@ $('document').ready(function() {
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	"ajax": "/cgi-bin/admin-get-z3950settings.cgi",
 	"columns": [    
-	    { "data": "lid" },    
+	    { "data": "oid" },    
 	    { "data": "name" },    
 	    { "data": "library" },    
 	    { "data": "enabled" },

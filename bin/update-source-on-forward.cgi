@@ -16,7 +16,7 @@ my $hq = $query->param('hq');
 my $branch = $query->param('branch');
 
 # sql to change the source from hq to branch
-my $SQL = "update sources set lid=? where request_id=? and lid=?";
+my $SQL = "update sources set oid=? where request_id=? and oid=?";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",

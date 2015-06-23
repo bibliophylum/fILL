@@ -11,11 +11,11 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $SQL="select
- l.library,
- l.name,
+ o.org_name as library,
+ o.symbol,
  s.ts_start::date,
  s.ts_end::date,
  r.title,
@@ -25,10 +25,10 @@ my $SQL="select
 from
  rotations r
  inner join rotations_stats s on s.barcode=r.barcode
- left join libraries l on l.lid=s.lid 
+ left join org o on o.oid=s.oid 
 group by
- l.library,
- l.name,
+ o.org_name,
+ o.symbol,
  s.ts_start::date,
  s.ts_end::date,
  r.title,
@@ -36,8 +36,8 @@ group by
  r.barcode,
  s.circs 
 order by
- l.library,
- l.name,
+ o.org_name,
+ o.symbol,
  s.ts_start::date,
  s.ts_end::date,
  r.title,

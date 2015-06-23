@@ -16,11 +16,11 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 #print STDERR Dumper($query->param('value'));
 #print STDERR Dumper($query->param('pid'));
-#print STDERR Dumper($query->param('lid'));
+#print STDERR Dumper($query->param('oid'));
 #print STDERR Dumper($query->param('column'));
 
 my $pid = $query->param('pid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $column = $query->param('column');
 my $value = $query->param('value');
 
@@ -47,7 +47,7 @@ if ($column == 2) {
     # if the patron barcode has changed, we need to change it in all active requests
     my $aref = $dbh->selectrow_arrayref("select card from patrons where pid=?",undef,$pid);
     $original_card = $aref->[0];
-    $dbh->do("update request_group set patron_barcode=? where patron_barcode=? and requester=?",undef,$value,$original_card,$lid);
+    $dbh->do("update request_group set patron_barcode=? where patron_barcode=? and requester=?",undef,$value,$original_card,$oid);
     $SQL = "update patrons set card=? where home_library_id=? and pid=?"; 
 }
 elsif ($column == 4) { $SQL = "update patrons set email_address=? where home_library_id=? and pid=?"; } 
@@ -56,7 +56,7 @@ elsif ($column == 6) { $value = (lc($value) eq "yes") ? 1 : 0;  $SQL = "update p
 elsif ($column == 9) { $SQL = "update patrons set password=md5(?) where home_library_id=? and pid=?"; } 
 else { print "Content-Type:application/json\n\n" . to_json( { success => 0, data => $query->param('value') } ); exit; }
 
-my $retval = $dbh->do( $SQL, undef, $value, $lid, $pid );
+my $retval = $dbh->do( $SQL, undef, $value, $oid, $pid );
 
 # if patron card updated, need to update it in any active requests (request_group table)
 

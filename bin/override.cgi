@@ -38,9 +38,9 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $SQL = "select 
   ra.request_id, 
   ra.msg_from as borrower_id, 
-  l.name as borrower, 
+  o.symbol as borrower, 
   ra.msg_to as lender_id, 
-  l2.name as lender, 
+  o2.symbol as lender, 
   ra.status, 
   ra.message 
 from 
@@ -48,8 +48,8 @@ from
   left join request_chain c on c.group_id = g.group_id
   left join request r on r.chain_id = c.chain_id
   left join requests_active ra on ra.request_id = r.id
-  left join libraries l on (l.lid=ra.msg_from) 
-  left join libraries l2 on (l2.lid=ra.msg_to) 
+  left join org o on (o.oid=ra.msg_from) 
+  left join org o2 on (o2.oid=ra.msg_to) 
 where 
   c.chain_id=?
   and status='ILL-Request' 

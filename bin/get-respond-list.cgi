@@ -11,7 +11,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 # sql to get requests to this library, which this library has not responded to yet
 my $SQL="select 
@@ -23,8 +23,8 @@ my $SQL="select
   g.note, 
   g.medium,
   date_trunc('second',ra.ts) as ts, 
-  l.name as from, 
-  l.library, 
+  o.symbol as from, 
+  o.org_name as library, 
   ra.msg_from, 
   s.call_number,
   g.place_on_hold,
@@ -33,8 +33,8 @@ from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
-  left join sources s on (s.group_id = g.group_id and s.lid = ra.msg_to) 
-  left join libraries l on l.lid = ra.msg_from
+  left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
+  left join org o on o.oid = ra.msg_from
 where 
   ra.msg_to=? 
   and ra.status='ILL-Request' 
@@ -53,16 +53,16 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid );
 
-$SQL = "select can_forward_to_children from libraries where lid=?";
-my @flags = $dbh->selectrow_array($SQL, undef, $lid );
+$SQL = "select can_forward_to_children from org where oid=?";
+my @flags = $dbh->selectrow_array($SQL, undef, $oid );
 @flags[0] = 0 unless (@flags);
 
-$SQL = "select ls.child_id as lid, l.name, l.library, l.city from library_systems ls left join libraries l on ls.child_id=l.lid where parent_id=? order by l.city";
+$SQL = "select ls.child_id as oid, o.symbol, o.org_name, o.city from library_systems ls left join org o on ls.child_id=o.oid where parent_id=? order by o.city";
 my $retargets;
 if (@flags[0]) {
-    $retargets = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
+    $retargets = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid );
 }
 
 $dbh->disconnect;

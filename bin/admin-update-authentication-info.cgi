@@ -36,14 +36,14 @@ my $retval = 0;
 $dbh->{AutoCommit} = 0;  # enable transactions, if possible
 $dbh->{RaiseError} = 1;
 eval {
-    if (($parms{"rAuthtype"}) && ($parms{"editLID"})) {
+    if (($parms{"rAuthtype"}) && ($parms{"editOID"})) {
 	# delete old data, if any:
-	$dbh->do("delete from library_sip2 where lid=?", undef, $parms{"editLID"});
-	$dbh->do("delete from library_nonsip2 where lid=?", undef, $parms{"editLID"});
+	$dbh->do("delete from library_sip2 where oid=?", undef, $parms{"editOID"});
+	$dbh->do("delete from library_nonsip2 where oid=?", undef, $parms{"editOID"});
 	
 	if ($parms{"rAuthtype"} =~ /SIP2/) {
-	    $retval = $dbh->do("insert into library_sip2 (lid,enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info) values (?,?,?,?,?,?,?,?)",undef,
-			       $parms{"editLID"},
+	    $retval = $dbh->do("insert into library_sip2 (oid,enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info) values (?,?,?,?,?,?,?,?)",undef,
+			       $parms{"editOID"},
 			       $parms{"sipEnabled"},
 			       $parms{"sipHost"},
 			       $parms{"sipPort"},
@@ -52,31 +52,31 @@ eval {
 			       $parms{"sipServerPass"},
 			       $parms{"sipMethod"} eq "Info" ? 1 : 0
 		);
-	    $dbh->do("update libraries set patron_authentication_method=? where lid=?", undef, 
+	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
 		     "sip2", 
-		     $parms{"editLID"}
+		     $parms{"editOID"}
 		);
 	    
 	} elsif ($parms{"rAuthtype"} =~ /Other/) {
-	    $retval = $dbh->do("insert into library_nonsip2 (lid,enabled,auth_type,url) values (?,?,?,?)",undef,
-			       $parms{"editLID"},
+	    $retval = $dbh->do("insert into library_nonsip2 (oid,enabled,auth_type,url) values (?,?,?,?)",undef,
+			       $parms{"editOID"},
 			       $parms{"nonsipEnabled"},
 			       $parms{"nonsipAuthType"},
 			       $parms{"nonsipURL"}
 		);
-	    $dbh->do("update libraries set patron_authentication_method=? where lid=?", undef, 
+	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
 		     $parms{"nonsipAuthType"}, 
-		     $parms{"editLID"}
+		     $parms{"editOID"}
 		);
 
 	} else {  # None
-	    $dbh->do("update libraries set patron_authentication_method=? where lid=?", undef, 
+	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
 		     undef, 
-		     $parms{"editLID"}
+		     $parms{"editOID"}
 		);
 	}
     } else {
-	$error_message = "missing rAuthtype and/or editLID";
+	$error_message = "missing rAuthtype and/or editOID";
     }
     $dbh->commit;   # commit the changes if we get this far
 };

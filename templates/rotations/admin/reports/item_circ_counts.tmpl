@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
 
-<script type="text/javascript" src="/js/rotation-reports-1.0.js"></script>
+<script type="text/javascript" src="/js/rotation-reports-1.1.js"></script>
 
 <script type="text/javascript">
 
@@ -13,7 +13,7 @@ $('document').ready(function(){
 
   set_secondary_tab("menu_rotations_report_item_circ_counts");
 
-  $.getJSON('/cgi-bin/get-rotations-item-circ-counts.cgi', {lid: <TMPL_VAR name="lid">},
+  $.getJSON('/cgi-bin/get-rotations-item-circ-counts.cgi', {oid: <TMPL_VAR name="oid">},
         function(data){
             build_item_circ_counts_table(data);
         })

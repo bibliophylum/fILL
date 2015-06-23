@@ -30,7 +30,7 @@
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
 
 <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/menu-counters-1.0.js"></script>
+<script type="text/javascript" src="/js/menu-counters-1.1.js"></script>
 
 <!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
@@ -53,7 +53,7 @@ $('document').ready(function(){
 
     $("#startOver").on("click",function(e){
         e.preventDefault();
-        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-oid", { path: '/' });
         $.removeCookie("fILL-location", { path: '/' });
         $.removeCookie("fILL-barcode", { path: '/' });
         $.removeCookie("fILL-authentication", { path: '/' });
@@ -66,7 +66,7 @@ $('document').ready(function(){
     });
     $("#clearCookies").on("click",function(e){
         e.preventDefault();
-        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-oid", { path: '/' });
         $.removeCookie("fILL-location", { path: '/' });
         $.removeCookie("fILL-barcode", { path: '/' });
         $.removeCookie("fILL-authentication", { path: '/' });
@@ -164,7 +164,7 @@ $('document').ready(function(){
     -->
         <div id="username"><TMPL_VAR name="username"></div>
         <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
-        <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
+        <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
         <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
 	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
     </div>

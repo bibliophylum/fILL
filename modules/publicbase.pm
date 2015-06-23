@@ -76,7 +76,7 @@ sub cgiapp_init {
 
     # configure authentication
     $self->authen->config(
-	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_lid'],
+	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_oid'],
 	DRIVER => [ 
 	    [ 'Generic', sub { return $self->externallyAuthenticate( @_ ); } ],
 	    [ 'DBI',
@@ -106,10 +106,10 @@ sub cgiapp_init {
 	DRIVER => [
 	    'DBI',
 	    DBH         => $self->dbh,
-	    TABLES      => [ 'libraries','library_authgroups','authgroups' ],
-	    JOIN_ON     => 'libraries.lid = library_authgroups.lid AND library_authgroups.gid = authgroups.gid',
+	    TABLES      => [ 'org','library_authgroups','authgroups' ],
+	    JOIN_ON     => 'org.oid = library_authgroups.oid AND library_authgroups.gid = authgroups.gid',
 	    CONSTRAINTS => {
-		'libraries.name' => '__USERNAME__',
+		'org.symbol' => '__USERNAME__',
 		'authgroups.authorization_group' => '__PARAM_1__',
 	    },
 	],
@@ -140,7 +140,7 @@ sub cgiapp_init {
 #
 sub createPatronRecordIfRequired {
     my $self = shift;
-    my ($lid, $barcode) = @_;
+    my ($oid, $barcode) = @_;
 
     my $pid;
 
@@ -148,7 +148,7 @@ sub createPatronRecordIfRequired {
     my $href = $self->dbh->selectrow_hashref(
 	"select pid from patrons where home_library_id=? and card=?",
 	undef,
-	$lid,
+	$oid,
 	$barcode
 	);
     if (defined $href) {
@@ -167,7 +167,7 @@ sub createPatronRecordIfRequired {
 					   1,
 					   $barcode,
 					   $pass,
-					   $lid,
+					   $oid,
 					   $barcode,
 					   $barcode,
 					   1
@@ -175,7 +175,7 @@ sub createPatronRecordIfRequired {
 	my $href = $self->dbh->selectrow_hashref(
 	    "select pid from patrons where home_library_id=? and card=?",
 	    undef,
-	    $lid,
+	    $oid,
 	    $barcode
 	    );
 	$pid = $href->{pid};
@@ -188,25 +188,25 @@ sub createPatronRecordIfRequired {
 #
 sub externallyAuthenticate {
     my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+    my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
 
     my $pname;
     # is this a SIP2 library?
-    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, library from libraries where lid=?", undef, $lid);
+    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, org_name from org where oid=?", undef, $oid);
 
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	$pname = $self->checkSip2($username, $password, $barcode, $pin, $lid);
+	$pname = $self->checkSip2($username, $password, $barcode, $pin, $oid);
 
     } else {
-	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $lid, 
+	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $oid, 
 	    $lib_href->{patron_authentication_method});
     }
 
     if ($pname) {
-	my $pid = $self->createPatronRecordIfRequired( $lid, $barcode );
+	my $pid = $self->createPatronRecordIfRequired( $oid, $barcode );
 	$self->session->param('fILL-card',$barcode);
 	$self->session->param('fILL-pid',$pid);
-	$self->session->param('fILL-lid',$lid);
+	$self->session->param('fILL-oid',$oid);
 	$self->session->param('fILL-library', $lib_href->{'library'}); 
 	$self->session->param('fILL-is_enabled',1); # if they authenticated, they're enabled
     }
@@ -219,12 +219,12 @@ sub externallyAuthenticate {
 #
 sub checkSip2 {
     my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid) = @_;  # username and password should be undefined if this is a sip2 authen
+    my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
 
     $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
 
-    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where lid=?";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid);
+    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where oid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid);
 
     $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
@@ -252,12 +252,12 @@ sub checkSip2 {
 #
 sub checkNonSip2 {
     my $self = shift;
-    my ($username, $password, $barcode, $pin, $lid, $authmethod) = @_;
+    my ($username, $password, $barcode, $pin, $oid, $authmethod) = @_;
 
     $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
 
-    my $SQL = "select url from library_nonsip2 where lid=? and auth_type=?";
-    my $href = $self->dbh->selectrow_hashref($SQL,undef,$lid,$authmethod);
+    my $SQL = "select url from library_nonsip2 where oid=? and auth_type=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid,$authmethod);
 
     $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
@@ -351,9 +351,9 @@ sub update_login_date {
 
     #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
-    my ($pid, $lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid, $oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
-    #$self->log->debug("update login date, pid [$pid], lid [$lid], library [$library], is_enabled [$is_enabled]\n");
+    #$self->log->debug("update login date, pid [$pid], oid [$oid], library [$library], is_enabled [$is_enabled]\n");
 
     my $rows_affected;
 #    if ($self->session->param('fILL-card')) {
@@ -361,7 +361,7 @@ sub update_login_date {
 #	#$self->log->debug("update login date for externally-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
 #	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
 #					undef,
-#					$lid,
+#					$oid,
 #					$self->session->param('fILL-card'),
 #	    );
 #    } else {
@@ -452,14 +452,14 @@ sub get_patron_and_library {
     # Get this user's library id
     my $hr_id;
     if ($self->session->param('fILL-pid') 
-	 && $self->session->param('fILL-lid') 
+	 && $self->session->param('fILL-oid') 
 	 && $self->session->param('fILL-library') 
 	 && $self->session->param('fILL-is_enabled')
 	) {
 	
 	my %patron = (
 	    'pid' => $self->session->param('fILL-pid'),
-	    'home_library_id' => $self->session->param('fILL-lid'),
+	    'home_library_id' => $self->session->param('fILL-oid'),
 	    'library' => $self->session->param('fILL-library'),
 	    'is_enabled' => $self->session->param('fILL-is_enabled'),
 	    );
@@ -473,14 +473,14 @@ sub get_patron_and_library {
 	    # The session parameter 'fILL-card' will be set if this is an externally 
 	    # authenticated  user; Patron name is not stored in the database.
 	    $hr_id = $self->dbh->selectrow_hashref(
-		"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.card=?",
+		"select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (p.home_library_id = o.oid) where p.card=?",
 		undef,
 		$self->session->param('fILL-card')
 		);
 	} else {
 	    #$self->log->debug("session param fILL-card DOES NOT exist\n");
 	    $hr_id = $self->dbh->selectrow_hashref(
-		"select p.pid, p.home_library_id, l.library, p.is_enabled from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
+		"select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (p.home_library_id = o.oid) where p.username=?",
 		undef,
 		$self->authen->username
 		);
@@ -488,12 +488,12 @@ sub get_patron_and_library {
 
 	# set the session parameters so we don't have to hit the database again
 	$self->session->param('fILL-pid',$hr_id->{pid}); 
-	$self->session->param('fILL-lid',$hr_id->{home_library_id}); 
-	$self->session->param('fILL-library',$hr_id->{library}); 
+	$self->session->param('fILL-oid',$hr_id->{home_library_id}); 
+	$self->session->param('fILL-library',$hr_id->{org_name}); 
 	$self->session->param('fILL-is_enabled',$hr_id->{is_enabled});
     }
     #$self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library}, $hr_id->{is_enabled});
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{org_name}, $hr_id->{is_enabled});
 
 }
 

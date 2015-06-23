@@ -32,10 +32,10 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 my $servers_aref;
 if ($libsym eq 'ALL') {
-    $servers_aref = $dbh->selectall_arrayref("select l.name from library_z3950 z left join libraries l on l.lid=z.lid");
+    $servers_aref = $dbh->selectall_arrayref("select o.symbol from library_z3950 z left join org o on o.oid=z.oid");
 } else {
     # make sure there *is* a z39.50 server for this library...
-    $servers_aref = $dbh->selectall_arrayref("select l.name from library_z3950 z left join libraries l on l.lid=z.lid where l.name=?", undef, $libsym);
+    $servers_aref = $dbh->selectall_arrayref("select o.symbol from library_z3950 z left join org o on o.oid=z.oid where o.symbol=?", undef, $libsym);
 }
 #print STDERR Dumper($servers_aref);
 
@@ -43,14 +43,14 @@ my $retval = 1;
 foreach my $sym (@$servers_aref) {
     #print STDERR "server: $sym->[0]\n";
 
-    my $z = $dbh->selectrow_hashref("select l.lid,l.name,l.library,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series,z.enabled from library_z3950 z left join libraries l on z.lid=l.lid where l.name=? order by l.library", undef, $sym->[0] );
+    my $z = $dbh->selectrow_hashref("select o.oid,o.symbol,o.org_name,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series,z.enabled from library_z3950 z left join org o on z.oid=o.oid where o.symbol=? order by o.org_name", undef, $sym->[0] );
 #    print STDERR Dumper($z) . "\n";
 
     my $s = "";
     $s .= "<!-- " . $z->{library} . " -->\n";
     $s .= "<settings target=\"" . $z->{server_address} . ":" . $z->{server_port} . "/" . $z->{database_name} . "\">\n";
-    $s .= '  <set name="pz:name" value="' . $z->{library} . "\"/>\n";
-    $s .= '  <set name="symbol" value="' . $z->{name} . "\"/>\n";
+    $s .= '  <set name="pz:name" value="' . $z->{org_name} . "\"/>\n";
+    $s .= '  <set name="symbol" value="' . $z->{symbol} . "\"/>\n";
     if ($z->{enabled}) {
 	# default is enabled
     } else {

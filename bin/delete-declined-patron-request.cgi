@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $prid = $query->param('prid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
@@ -25,8 +25,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "delete from patron_requests_declined where prid=? and lid=?";
-my $rows = $dbh->do($SQL, undef, $prid, $lid );
+my $SQL = "delete from patron_requests_declined where prid=? and oid=?";
+my $rows = $dbh->do($SQL, undef, $prid, $oid );
 
 $dbh->disconnect;
 

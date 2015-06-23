@@ -43,7 +43,7 @@ my $aref = $dbh->selectrow_arrayref($SQL, undef, $reqid ) or die "could not get 
 my $from = $aref->[0];
 my $to = $aref->[1];
 
-$SQL = "select library, mailing_address_line1, city, province, post_code from libraries where lid=?";
+$SQL = "select library, mailing_address_line1, city, province, post_code from libraries where oid=?";
 my $from_aref = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $from );
 my $to_aref   = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $to );
 $dbh->disconnect;

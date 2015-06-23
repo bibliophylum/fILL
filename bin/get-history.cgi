@@ -11,7 +11,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $start = $query->param('start');
 my $end = $query->param('end');
 
@@ -36,35 +36,35 @@ my $SQL="select
   hg.title, 
   hg.author, 
   date_trunc('second',rh.ts) as ts, 
-  l1.name as from,
-  l1.library as from_library,
-  l2.name as to,
-  l2.library as to_library,
+  o1.symbol as from,
+  o1.org_name as from_library,
+  o2.symbol as to,
+  o2.org_name as to_library,
   replace(rh.status,'|',' ') as status, 
   rh.message 
 from requests_history rh
   left join request_closed rc on rc.id=rh.request_id
   left join history_chain hc on hc.chain_id = rc.chain_id
   left join history_group hg on hg.group_id = hc.group_id
-  left join libraries l1 on l1.lid=rh.msg_from
-  left join libraries l2 on l2.lid=rh.msg_to
+  left join org o1 on o1.oid=rh.msg_from
+  left join org o2 on o2.oid=rh.msg_to
 where 
   rc.requester=?
   and rh.ts=(select max(ts) from requests_history rh2 left join request_closed r2 on r2.id=rh2.request_id left join history_chain hc2 on hc2.chain_id=r2.chain_id where r2.chain_id=hc.chain_id)
   and rh.ts >= ?
   and rh.ts < ?
-group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, status, rh.message, l1.name, l1.library, l2.name, l2.library   
+group by gid, cid, hg.title, hg.author, hg.patron_barcode, ts, status, rh.message, o1.symbol, o1.org_name, o2.symbol, o2.org_name   
 order by ts
 ";
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $start, $end );
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $start, $end );
 
 # sql to get this library's lending history
 $SQL="select 
   hc.chain_id as cid, 
   hg.title, 
   hg.author, 
-  l.name as requested_by, 
-  l.library,
+  o.symbol as requested_by, 
+  o.org_name as library,
   date_trunc('second',rh.ts) as ts, 
   replace(rh.status,'|',' ') as status, 
   rh.message 
@@ -72,7 +72,7 @@ from requests_history rh
   left join request_closed rc on rc.id=rh.request_id
   left join history_chain hc on hc.chain_id = rc.chain_id
   left join history_group hg on hg.group_id = hc.group_id
-  left join libraries l on l.lid = rc.requester
+  left join org o on o.oid = rc.requester
 where 
   rc.requester<>? 
   and rh.ts in (select max(ts) from requests_history where msg_from=? group by request_id) 
@@ -80,7 +80,7 @@ where
   and rh.ts < ? 
 order by ts
 ";
-my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid, $start, $end );
+my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $start, $end );
 
 $dbh->disconnect;
 

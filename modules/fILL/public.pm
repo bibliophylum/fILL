@@ -95,14 +95,14 @@ sub test_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template;
     $template = $self->load_tmpl('public/test.tmpl');
     $template->param( pagetitle => "fILL test",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -122,7 +122,7 @@ sub search_process {
     my $query = $q->param("query") || '';
     $self->log->debug( "search_process parm:\n" . Dumper($query) );
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template;
     if ($is_enabled) {
@@ -133,7 +133,7 @@ sub search_process {
     $template->param( pagetitle => "fILL Public Search",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      query => $query,
 	);
@@ -148,16 +148,16 @@ sub myaccount_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
-    my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $lid, $pid );
+    my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $oid, $pid );
 
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
     $template->param( pagetitle => "fILL patron account",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      pid => $pid,
 		      name => $href->{name},
@@ -174,13 +174,13 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/current.tmpl');	
     $template->param( pagetitle => "Current interlibrary loans",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      pid => $pid
 	);
@@ -196,13 +196,13 @@ sub about_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/about.tmpl');	
     $template->param( pagetitle => "About fILL",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 #		      pid => $pid
 	);
@@ -216,13 +216,13 @@ sub help_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/help.tmpl');	
     $template->param( pagetitle => "Help fILL",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 #		      pid => $pid
 	);
@@ -236,13 +236,13 @@ sub faq_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $template = $self->load_tmpl('public/faq.tmpl');	
     $template->param( pagetitle => "FAQ fILL",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 #		      pid => $pid
 	);
@@ -257,21 +257,21 @@ sub contact_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($pid,$lid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
     my $hr_lib = $self->dbh->selectrow_hashref(
-	"select library, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, name from libraries where lid=?",
+	"select org_name, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, symbol from org where oid=?",
 	undef,
-	$lid
+	$oid
 	);
 
     my $logoPath = "/img/fill-contact.jpg";
     my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
     my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
-    if (-f "/opt/fILL/htdocs/img/logos/" . $hr_lib->{name} . ".png") {
-	$logoPath = "/img/logos/" . $hr_lib->{name} . ".png";
-	$logoAltText = $hr_lib->{"library"} . " logo";
-	$logoCredit = $hr_lib->{"library"} . ". Used with permission.";
+    if (-f "/opt/fILL/htdocs/img/logos/" . $hr_lib->{symbol} . ".png") {
+	$logoPath = "/img/logos/" . $hr_lib->{symbol} . ".png";
+	$logoAltText = $hr_lib->{org_name} . " logo";
+	$logoCredit = $hr_lib->{org_name} . ". Used with permission.";
     }
     $self->log->debug( "contact logo:\n" . Dumper($hr_lib) . "\npath: $logoPath\nalt: $logoAltText\ncredit: $logoCredit\n" );
     
@@ -279,7 +279,7 @@ sub contact_process {
     $template->param( pagetitle => "Contact",
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      email_address => $hr_lib->{email_address},
 		      website => $hr_lib->{website},

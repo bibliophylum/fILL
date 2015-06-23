@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_z3950.tmpl">
 
-<script type="text/javascript" src="/js/admin-pazpar-1.0.js"></script>
+<script type="text/javascript" src="/js/admin-pazpar-1.1.js"></script>
 
 <div id="center" role="main">
 
@@ -15,9 +15,9 @@
 	  <TMPL_LOOP name="library_list">
 	    <tr>
 	      <td>
-		<input type="button" class="action-button" value=<TMPL_VAR NAME="name"> />
+		<input type="button" class="action-button" value=<TMPL_VAR NAME="symbol"> />
 	      </td>
-	      <td><TMPL_VAR NAME="library"></td>
+	      <td><TMPL_VAR NAME="org_name"></td>
 	    </tr>
 	  </TMPL_LOOP>
 	</tbody>

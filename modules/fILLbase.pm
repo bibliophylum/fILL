@@ -87,10 +87,10 @@ sub cgiapp_init {
 	DRIVER => [
 	    'DBI',
 	    DBH         => $self->dbh,
-	    TABLES      => [ 'libraries','library_authgroups','authgroups' ],
-	    JOIN_ON     => 'libraries.lid = library_authgroups.lid AND library_authgroups.gid = authgroups.gid',
+	    TABLES      => [ 'org','library_authgroups','authgroups' ],
+	    JOIN_ON     => 'org.oid = library_authgroups.oid AND library_authgroups.gid = authgroups.gid',
 	    CONSTRAINTS => {
-		'libraries.name' => '__USERNAME__',
+		'org.symbol' => '__USERNAME__',
 		'authgroups.authorization_group' => '__PARAM_1__',
 	    },
 	],
@@ -165,11 +165,11 @@ sub welcome_process {
     # The application object
     my $self = shift;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $rows_affected = $self->dbh->do("UPDATE libraries SET last_login=NOW() WHERE lid=?",
+    my $rows_affected = $self->dbh->do("UPDATE org SET last_login=NOW() WHERE oid=?",
 				       undef,
-				       $lid,
+				       $oid,
 	);
 
 
@@ -183,7 +183,7 @@ sub welcome_process {
     $template->param( pagetitle => 'fILL Welcome',
 		      username => $self->authen->username,
 		      sessionid => $self->session->id(),
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 		      libsym => $symbol,   # needed for z39.50 connectivity check
 	);
@@ -286,12 +286,12 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select o.oid, o.symbol, o.org_name from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
     $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
+    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name});
 }
 
 

@@ -30,12 +30,12 @@ sub upload_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('rotations/admin/upload.tmpl');	
     $template->param( pagetitle => "Rotations - Upload records",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -49,12 +49,12 @@ sub report_received_cnt_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('rotations/admin/reports/received_counts.tmpl');	
     $template->param( pagetitle => "Rotations - report on received counts",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -68,12 +68,12 @@ sub report_item_circs_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('rotations/admin/reports/item_circ_counts.tmpl');	
     $template->param( pagetitle => "Rotations - report on item circ counts",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -87,12 +87,12 @@ sub report_item_highcirc_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('rotations/admin/reports/item_highcirc.tmpl');	
     $template->param( pagetitle => "Rotations - report on items with high circ counts",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -105,11 +105,11 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select o.oid, o.symbol, o.org_name from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
+    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name});
 }
 
 1; # so the 'require' or 'use' succeeds

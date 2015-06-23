@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $pid = $query->param('pid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $library = $query->param('library');
 my $is_enabled = $query->param('is_enabled');
 
@@ -32,7 +32,7 @@ my $SQL="select
   c.chain_id as cid,
   g.title, 
   g.author, 
-  (case when (ra.msg_to=?) then l1.library else l2.library end) as lender, 
+  (case when (ra.msg_to=?) then o1.org_name else o2.org_name end) as lender, 
   (case when ra.status='ILL-Request' then 'Your library has requested it.'
         when ra.status like 'ILL-Answer|Will-Supply%' then 'The lender will lend it.'
         when ra.status like 'ILL-Answer|Hold-Placed%' then 'The lender has placed a hold for you. They expect to have it for you by '||ra.message 
@@ -55,33 +55,19 @@ from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
-  left join libraries l1 on (l1.lid=ra.msg_from) 
-  left join libraries l2 on (l2.lid=ra.msg_to) 
+  left join org o1 on (o1.oid=ra.msg_from) 
+  left join org o2 on (o2.oid=ra.msg_to) 
   left join patrons p on (p.home_library_id=g.requester and p.card=g.patron_barcode)
   left join sources s on (s.group_id=g.group_id) 
 where 
   g.patron_barcode=(select card from patrons where pid=?)
   and g.requester=?
   and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id)
-group by g.title, g.author, ts, ra.status, ra.message, c.chain_id, ra.msg_to, l1.library, l2.library 
+group by g.title, g.author, ts, ra.status, ra.message, c.chain_id, ra.msg_to, o1.org_name, o2.org_name 
 order by ra.ts desc
 ";
 # There will be one row per request in the chain
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid, $lid );
-
-#$SQL = "select 
-#  g.group_id, 
-#  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details 
-#from 
-#  request_group g
-#  left join sources s on (s.group_id=g.group_id) 
-#where 
-#  g.patron_barcode=(select card from patrons where pid=?)
-#";
-#my $aref_sources = $dbh->selectall_arrayref($SQL, { Slice => {} }, $pid);
-#foreach my $src (@$aref_sources) {
-#    
-#}
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid, $oid );
 
 # Get patron requests that the library hasn't handled yet:
 $SQL = "select 
@@ -96,11 +82,11 @@ $SQL = "select
 from
   patron_request
 where 
-  lid=?
+  oid=?
   and pid=?
 order by ts desc";
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
 
 # add to aref_borr:
 foreach my $href (@$aref) {
@@ -125,11 +111,11 @@ foreach my $href (@$aref) {
 #from
 #  acquisitions
 #where 
-#  lid=?
+#  oid=?
 #  and pid=?
 #order by ts desc";
 #
-#$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+#$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
 ## add to aref_borr:
 #foreach my $href (@$aref) {
 #    push @$aref_borr, $href;
@@ -157,11 +143,11 @@ $SQL = "select
 from
   patron_requests_declined
 where 
-  lid=?
+  oid=?
   and pid=?
 order by ts desc";
 
-$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $pid );
+$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
 # add to aref_borr:
 foreach my $href (@$aref) {
     push @$aref_borr, $href;

@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $prid = $query->param('prid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $success = 0;
 
@@ -28,17 +28,17 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get new (not yet handled) patron requests
-my $SQL = "select pr.prid, pr.pid, pr.title, pr.author, pr.medium, pr.isbn, pr.pubdate, pr.ts from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.lid = ?";
-my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $lid );
+my $SQL = "select pr.prid, pr.pid, pr.title, pr.author, pr.medium, pr.isbn, pr.pubdate, pr.ts from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.oid = ?";
+my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $oid );
 if ($patronRequest) {
 
     eval {
 
         # These should be atomic...
         # create the request_group
-	$dbh->do("INSERT INTO acquisitions (lid, pid, title, author, medium, isbn, pubdate, ts) VALUES (?,?,?,?,?,?,?,?)",
+	$dbh->do("INSERT INTO acquisitions (oid, pid, title, author, medium, isbn, pubdate, ts) VALUES (?,?,?,?,?,?,?,?)",
 		 undef,
-		 $lid,     # requester
+		 $oid,     # requester
 		 $patronRequest->{"pid"},
 		 $patronRequest->{"title"},
 		 $patronRequest->{"author"},
@@ -51,10 +51,10 @@ if ($patronRequest) {
 # NOTE: adding a patron request to the "wish list" now triggers a 
 # "decline-patron-request.cgi", which does the following:
 #
-#	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
+#	$dbh->do("DELETE FROM patron_request WHERE prid=? and oid=?",
 #		 undef,
 #		 $prid,
-#		 $lid
+#		 $oid
 #	    );
 #	$dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
 #		 undef,

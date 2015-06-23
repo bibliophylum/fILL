@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $user = $query->param("user");
-my $lid = $query->param("lid");
+my $oid = $query->param("oid");
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
@@ -28,7 +28,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 my $href = $self->dbh->selectrow_hashref(
     "select pid, is_externally_authenticated from patrons where username=? and home_library_id=?",
     undef,
-    $user, $lid
+    $user, $oid
     );
 my $rows_affected = 0;
 if (defined $href) {

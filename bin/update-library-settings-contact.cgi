@@ -18,7 +18,7 @@ if (($session->is_expired) || ($session->is_empty)) {
 
 my $dr = $session->dataref();
 
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $email_address = $query->param('email_address');
 my $website = $query->param('website');
 
@@ -33,8 +33,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update libraries set email_address=?, website=? where lid=?"; 
-my $retval = $dbh->do( $SQL, undef, $email_address, $website, $lid );
+my $SQL = "update org set email_address=?, website=? where oid=?"; 
+my $retval = $dbh->do( $SQL, undef, $email_address, $website, $oid );
 
 $dbh->disconnect;
 

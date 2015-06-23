@@ -31,7 +31,7 @@
 <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
 
 <script type="text/javascript" src="/js/pz2.js"></script>
-<script type="text/javascript" src="/js/fILL_client-public-1.9.js"></script>
+<script type="text/javascript" src="/js/fILL_client-public-1.10.js"></script>
 
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
 
@@ -135,14 +135,14 @@
         resetFontSizeToDefault();
     });
 
-    if (! $.cookie("fILL-lid")) {
-        $.cookie("fILL-lid", $("#lid").text(), { expires: 365, path: '/' });
+    if (! $.cookie("fILL-oid")) {
+        $.cookie("fILL-oid", $("#oid").text(), { expires: 365, path: '/' });
         //$.cookie("fILL-location", xxx, { expires: 365, path: '/' });
     }
 
     $("#clearCookies").on("click",function(e){
         e.preventDefault();
-        $.removeCookie("fILL-lid", { path: '/' });
+        $.removeCookie("fILL-oid", { path: '/' });
         $.removeCookie("fILL-location", { path: '/' });
         $.removeCookie("fILL-barcode", { path: '/' });
         $.removeCookie("fILL-authentication", { path: '/' });
@@ -189,7 +189,7 @@
           <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
 
 	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
-          <div id="lid" style="display:none"><TMPL_VAR name="lid"></div>
+          <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
           <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
       </div>
     </div>

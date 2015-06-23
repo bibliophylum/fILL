@@ -24,7 +24,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
     ) or die $DBI::errstr;
 
 my $lib_href = $dbh->selectrow_hashref(
-    "select lid, patron_authentication_method from libraries where city=?", 
+    "select oid, patron_authentication_method from org where city=?", 
     { Slice => {} }, 
     $query->param('city')
     );
@@ -32,9 +32,9 @@ my $lib_href = $dbh->selectrow_hashref(
 if ($lib_href) {
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
 	my $href = $dbh->selectrow_hashref(
-	    "select enabled from library_sip2 where lid=?", 
+	    "select enabled from library_sip2 where oid=?", 
 	    { Slice => {} }, 
-	    $lib_href->{lid}
+	    $lib_href->{oid}
 	    );
 	$lib_href->{enabled} = $href->{enabled};
     } elsif (($lib_href->{patron_authentication_method} eq 'L4U') 
@@ -43,9 +43,9 @@ if ($lib_href) {
 	     || ($lib_href->{patron_authentication_method} eq 'Biblionet') 
 	     || ($lib_href->{patron_authentication_method} eq 'Dummy')) {
 	my $href = $dbh->selectrow_hashref(
-	    "select enabled from library_nonsip2 where lid=?", 
+	    "select enabled from library_nonsip2 where oid=?", 
 	    { Slice => {} }, 
-	    $lib_href->{lid}
+	    $lib_href->{oid}
 	    );
 	$lib_href->{enabled} = $href->{enabled};
     }

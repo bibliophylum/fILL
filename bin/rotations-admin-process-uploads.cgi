@@ -140,7 +140,7 @@ sub load_records_to_rotation_manager {
     my $f = \%$fhash;
 
     my $cnt = 0;
-    my $lid = 101; # magic number.  library id for default library to load recs to.
+    my $oid = 101; # magic number.  library id for default library to load recs to.
     my $holdingsField = '949';
     my %holdingsSubfields = ( "barcode" => 'b',
 			      "callno" => 'd'
@@ -182,7 +182,7 @@ sub load_records_to_rotation_manager {
 	    $sth->bind_param(2, $rec{"title"});
 	    $sth->bind_param(3, $rec{"author"});
 	    $sth->bind_param(4, $rec{"callno"});
-	    $sth->bind_param(5, $lid);
+	    $sth->bind_param(5, $oid);
 	    $sth->bind_param(6, $marc->as_usmarc(), { pg_type => DBD::Pg::PG_BYTEA });
 	    $sth->bind_param(7, $rec{"barcode"});
 	    my $rv = $sth->execute();

@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_info.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/report-folder-1.0.js"></script>
+<script type="text/javascript" src="/js/report-folder-1.1.js"></script>
 
 <script type="text/javascript">
 set_secondary_tab("menu_info_report-folder");
@@ -103,7 +103,7 @@ $('document').ready(function(){
     });
 
     $(function() {
-        $.getJSON('/cgi-bin/get-report-folder.cgi', {lid: <TMPL_VAR name="lid">},
+        $.getJSON('/cgi-bin/get-report-folder.cgi', {oid: <TMPL_VAR name="oid">},
             function(data){
                build_table(data);
             })
@@ -124,7 +124,7 @@ $('document').ready(function(){
 
 <div id="center" role="main">
 
-  <div lid=<TMPL_VAR name="lid">>
+  <div oid=<TMPL_VAR name="oid">>
 
     <div id="myDiv">
       <h3>Report folder</h3>

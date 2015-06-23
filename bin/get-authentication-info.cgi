@@ -11,7 +11,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
     exit;
 }
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -24,17 +24,17 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where lid=?";
-my $sip2_href = $dbh->selectrow_hashref($SQL, undef, $lid );
+my $SQL = "select enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where oid=?";
+my $sip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
-$SQL = "select enabled,auth_type,url from library_nonsip2 where lid=?";
-my $nonsip2_href = $dbh->selectrow_hashref($SQL, undef, $lid );
+$SQL = "select enabled,auth_type,url from library_nonsip2 where oid=?";
+my $nonsip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
 $SQL = "select distinct patron_authentication_method from libraries order by patron_authentication_method";
 my $authtypes_aref = $dbh->selectall_arrayref($SQL);
 
-$SQL = "select lid, library from libraries where lid=?";
-my $library_href = $dbh->selectrow_hashref($SQL, undef, $lid );
+$SQL = "select oid, library from libraries where oid=?";
+my $library_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
 
 

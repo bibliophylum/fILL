@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $prid = $query->param('prid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $success = 0;
 my $message = "";
@@ -30,8 +30,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get new (not yet handled) patron requests
-my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author, pr.medium from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.lid = ?";
-my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $lid );
+my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author, pr.medium from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.oid = ?";
+my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $oid );
 if ($patronRequest) {
 
     if ((not defined ($patronRequest->{"card"}) || ($patronRequest->{"card"} =~ /^\s*$/ ))) {
@@ -48,7 +48,7 @@ if ($patronRequest) {
 		 $patronRequest->{"title"},
 		 $patronRequest->{"author"},
 		 $patronRequest->{"medium"},
-		 $lid,     # requester
+		 $oid,     # requester
 		 $patronRequest->{"card"},
 		 1,        # patron_generated
 	    );
@@ -62,18 +62,18 @@ if ($patronRequest) {
 	
 	$status{"insert-request"} = $dbh->do("INSERT INTO request (requester, chain_id) VALUES (?,?)",
 		 undef,
-		 $lid,
+		 $oid,
 		 $chain_id
 	    );
 	my $request_id = $dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_seq'});
 	
-	$SQL = "select sequence_number, lid, call_number from patron_request_sources where prid = ? order by sequence_number";
+	$SQL = "select sequence_number, oid, call_number from patron_request_sources where prid = ? order by sequence_number";
 	my $sources_aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $prid );
 	for my $source (@$sources_aref) {
-	    $status{"insert-sources"} = $dbh->do("INSERT INTO sources (sequence_number, lid, call_number, group_id) VALUES (?,?,?,?)",
+	    $status{"insert-sources"} = $dbh->do("INSERT INTO sources (sequence_number, oid, call_number, group_id) VALUES (?,?,?,?)",
 		     undef,
 		     $source->{"sequence_number"},
-		     $source->{"lid"},
+		     $source->{"oid"},
 		     $source->{"call_number"},
 		     $group_id
 		);
@@ -82,8 +82,8 @@ if ($patronRequest) {
 	$status{"insert-requests-active"} = $dbh->do("INSERT INTO requests_active (request_id, msg_from, msg_to, status) VALUES (?,?,?,?)",
 		 undef,
 		 $request_id,
-		 $lid,
-		 $sources_aref->[0]->{"lid"},
+		 $oid,
+		 $sources_aref->[0]->{"oid"},
 		 'ILL-Request'
 	    );
 	
@@ -98,10 +98,10 @@ if ($patronRequest) {
 		 undef,
 		 $prid
 	    );
-	$status{"delete-patron-request"} = $dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
+	$status{"delete-patron-request"} = $dbh->do("DELETE FROM patron_request WHERE prid=? and oid=?",
 		 undef,
 		 $prid,
-		 $lid
+		 $oid
 	    );
 
 	$status{"update-patrons"} = $dbh->do("UPDATE patrons SET ill_requests = ill_requests+1 WHERE pid=?",

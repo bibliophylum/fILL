@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_authentication.tmpl">
 
 <script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
-<script type="text/javascript" src="/js/admin-authentication-1.0.js"></script>
+<script type="text/javascript" src="/js/admin-authentication-1.1.js"></script>
 
 <script type="text/javascript">
   set_secondary_tab("menu_authentication_methods");
@@ -18,8 +18,8 @@
 	</thead>
 	<tbody>
 	  <TMPL_LOOP name="library_list">
-	    <tr id='<TMPL_VAR NAME="lid">'>
-	      <td><TMPL_VAR NAME="library"></td>
+	    <tr id='<TMPL_VAR NAME="oid">'>
+	      <td><TMPL_VAR NAME="org_name"></td>
 	      <td><input type="button" class="action-button" value=<TMPL_VAR NAME="auth_method"> /></td>
 	    </tr>
 	  </TMPL_LOOP>
@@ -45,7 +45,7 @@
 	<label>
 	  Authentication type: <strong><span id="authtype"></span></strong> <input id="change-authtype-btn" type="button" class="library-style" value="Change..." />
 	</label>
-	<input id="editLID" type="hidden" name="editLID"/>
+	<input id="editOID" type="hidden" name="editOID"/>
       </div>
 
       <div id="choose-authtype" style="display:none">

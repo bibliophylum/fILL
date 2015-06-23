@@ -28,7 +28,7 @@ $('document').ready(function(){
   $("#csssubmenu").hide();
   $("#logout-button").hide();
 
-//  update_menu_counters( <TMPL_VAR name="lid"> );
+//  update_menu_counters( <TMPL_VAR name="oid"> );
   $("#pbarcode").focus();
 });
 
@@ -114,7 +114,7 @@ $('document').ready(function(){
       <tr><td>symbol</td><td>location</td><td>holding</td><td>callnumber</td><td>net loaned</td><td></td></tr>
       <TMPL_LOOP name="sources">
 	<tr>
-	  <!-- <TMPL_VAR name="lid"> -->
+	  <!-- <TMPL_VAR name="oid"> -->
 	  <td><TMPL_VAR name="symbol"></td>
 	  <td><TMPL_VAR name="location"></td>
 	  <td><TMPL_VAR name="holding"></td>

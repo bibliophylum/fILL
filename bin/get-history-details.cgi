@@ -28,17 +28,17 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $SQL = "select 
   rh.request_id,
   date_trunc('second',rh.ts) as ts, 
-  f.name as from, 
+  f.symbol as from, 
   rh.msg_from, 
-  t.name as to, 
+  t.symbol as to, 
   rh.msg_to, 
   rh.status, 
   rh.message 
 from 
   requests_history rh 
   left join request_closed rc on rc.id = rh.request_id 
-  left join libraries f on rh.msg_from = f.lid 
-  left join libraries t on rh.msg_to = t.lid 
+  left join org f on rh.msg_from = f.oid 
+  left join org t on rh.msg_to = t.oid 
 where 
   rc.chain_id=? 
 order by ts";

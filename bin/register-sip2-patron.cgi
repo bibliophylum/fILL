@@ -11,7 +11,7 @@ my $query = new CGI;
 
 #print STDERR $query->param('patron_name') . "\n";
 #print STDERR $query->param('patron_card') . "\n";
-#print STDERR $query->param('lid') . "\n";
+#print STDERR $query->param('oid') . "\n";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -31,7 +31,7 @@ my $rows_affected = $dbh->do("INSERT INTO patrons (is_externally_authenticated, 
 			     1,
 			     $query->param('patron_name'),
 			     $pass,
-			     $query->param('lid'),
+			     $query->param('oid'),
 			     $query->param('patron_name'),
 			     $query->param('patron_card'),
 			     1

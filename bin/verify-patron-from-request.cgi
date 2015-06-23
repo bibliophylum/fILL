@@ -12,7 +12,7 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $prid = $query->param('prid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $success = 0;
 
@@ -27,8 +27,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select pid from patron_request where prid = ? and lid=?";
-my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $lid );
+my $SQL = "select pid from patron_request where prid = ? and oid=?";
+my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $oid );
 
 if ($patronRequest) {
 

@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/login-lost-lid.js"></script>
+<script type="text/javascript" src="/js/login-lost-oid.js"></script>
 
 <script type="text/javascript">
   
@@ -14,14 +14,14 @@ $('document').ready(function(){
 
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
 
-    var homeLibraryLID = $.cookie("fILL-lid");
+    var homeLibraryOID = $.cookie("fILL-oid");
     var homeLibraryLocation = $.cookie("fILL-location");
     var patronBarcode = $.cookie("fILL-barcode");
     if (homeLibraryLocation) {
         $("#home-library-location").text( homeLibraryLocation );
         $("#home-library").show();
     }
-    if (! $.cookie("fILL-lid")) {
+    if (! $.cookie("fILL-oid")) {
         $.getJSON('/cgi-bin/get-map-regions.cgi', 
             function(data){
               choose_library(data);
@@ -41,7 +41,7 @@ $('document').ready(function(){
             $("#authen_passwordfield").val( "using-ea" );
             $("#authen_pin").focus();
 	}
-        $("#authen_lid").val( $.cookie("fILL-lid") );
+        $("#authen_oid").val( $.cookie("fILL-oid") );
         $("#sign-in").show();
     }
 
@@ -169,7 +169,7 @@ $('document').ready(function(){
 
     </div> <!--div class login-footer -->
     <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
-    <input type="hidden" name="authen_lid" id="authen_lid" value="">
+    <input type="hidden" name="authen_oid" id="authen_oid" value="">
     <input type="hidden" value="authen_login" name="rm">
   </form>
   </div><!--div class login-->
