@@ -1,0 +1,52 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_public.tmpl">
+
+<script type="text/javascript" src="/js/admin-public-1.0.js"></script>
+
+<div id="center" role="main">
+
+  <form id="editForm" action="#">
+    <input id="editFID" type="hidden" name="editFID"></input>
+    <label for="isbn">ISBN</label>
+    <input id="isbn" type="text" name="isbn"></input>
+    <label for="title">Title</label>
+    <input id="title" type="text" name="title"></input>
+    <label for="author">Author</label>
+    <input id="author" type="text" name="author"></input>
+    <input id="formSubmit" type="submit" value="Add book" class="library-style" />
+  </form>
+
+  <div id="myDiv">
+    <div id="mylistDiv">
+      <table id="featured" class="row-border" cellpadding="0" cellspacing="0" border="0" >
+	<thead>
+	  <tr>
+	    <th>FID</th>
+	    <th>ISBN</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Cover</th>
+	    <th>Added</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="featured_list">
+	    <tr id="fid<TMPL_VAR NAME='fid'>">
+	      <td><TMPL_VAR NAME="fid"></td>
+	      <td><TMPL_VAR NAME="isbn"></td>
+	      <td><TMPL_VAR NAME="title"></td>
+	      <td><TMPL_VAR NAME="author"></td>
+	      <td><TMPL_VAR NAME="cover"></td>
+	      <td><TMPL_VAR NAME="added"></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    </div><!-- mylistDiv -->
+  </div><!-- myDiv -->
+
+</div>
+
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">
