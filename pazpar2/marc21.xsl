@@ -18,12 +18,33 @@
 
   <xsl:template match="marc:record">
     <xsl:variable name="title_medium" select="marc:datafield[@tag='245']/marc:subfield[@code='h']"/>
+    <xsl:variable name="rda_carrier" select="marc:datafield[@tag='338']/marc:subfield[@code='a']"/>
+    <xsl:variable name="digital_file_characteristics" select="marc:datafield[@tag='347']/marc:subfield[@code='b']"/>
     <xsl:variable name="journal_title" select="marc:datafield[@tag='773']/marc:subfield[@code='t']"/>
     <xsl:variable name="electronic_location_url" select="marc:datafield[@tag='856']/marc:subfield[@code='u']"/>
     <xsl:variable name="fulltext_a" select="marc:datafield[@tag='900']/marc:subfield[@code='a']"/>
     <xsl:variable name="fulltext_b" select="marc:datafield[@tag='900']/marc:subfield[@code='b']"/>
     <xsl:variable name="medium">
       <xsl:choose>
+	<!-- DC: prefer RDA digital file characteristics, then RDA carrier, then GMD, then default to 'book' -->
+	<xsl:when test="$rda_carrier">
+	  <xsl:choose>
+	    <xsl:when test="$rda_carrier='volume'">
+	      <xsl:text>book</xsl:text>
+	    </xsl:when>
+	    <xsl:otherwise>
+	      <xsl:choose>
+		<xsl:when test="$digital_file_characteristics">
+		  <xsl:value-of select="$digital_file_characteristics"/>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="$rda_carrier"/>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:otherwise>
+	  </xsl:choose>
+	</xsl:when>
+
 	<xsl:when test="$title_medium">
 	  <xsl:value-of select="translate($title_medium, ' []/', '')"/>
 	</xsl:when>
