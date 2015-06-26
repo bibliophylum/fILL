@@ -42,6 +42,7 @@ sub t_login {
 
 #-------------------------------------------------------------------------------
 sub t_logout {
+    my $elem = wait_until { $d->find_element('Log Out','link_text') };
     my $lnkLogout = $d->find_element('Log Out','link_text');
     $lnkLogout->click();
 

@@ -18,44 +18,44 @@ subtest 'Borrowing submenus' => sub {
     plan tests => 9;
     # because 'search' is the default submenu, we start with the next one
     # and finish by going back to 'search'
-    ok( t_borrow_newPatronRequests() == 1, "'new patron requests' page load" );
-    ok( t_borrow_pending() == 1, "'pending' page load" );
-    ok( t_borrow_unfilled() == 1, "'unfilled' page load" );
-    ok( t_borrow_holdsPlaced() == 1, "'holds placed' page load" );
-    ok( t_borrow_receiving() == 1, "'receiving' page load" );
-    ok( t_borrow_renewals() == 1, "'renewals' page load" );
-    ok( t_borrow_returns() == 1, "'returns' page load" );
-    ok( t_borrow_overdue() == 1, "'overdue' page load" );
-    ok( t_borrow_search() == 1, "'search' page load" );
+    ok( t_borrow_newPatronRequests() == 1, "[new patron requests] page load" );
+    ok( t_borrow_pending() == 1, "[pending] page load" );
+    ok( t_borrow_unfilled() == 1, "[unfilled] page load" );
+    ok( t_borrow_holdsPlaced() == 1, "[holds placed] page load" );
+    ok( t_borrow_receiving() == 1, "[receiving] page load" );
+    ok( t_borrow_renewals() == 1, "[renewals] page load" );
+    ok( t_borrow_returns() == 1, "[returns] page load" );
+    ok( t_borrow_overdue() == 1, "[overdue] page load" );
+    ok( t_borrow_search() == 1, "[search] page load" );
 };
 ok( t_menu_lend() == 1, "Lending menu" );
 subtest 'Lending submenus' => sub {
     plan tests => 7;
-    ok( t_lend_respond() == 1, "'respond' page load" );
-    ok( t_lend_onHold() == 1, "'on hold' page load" );
-    ok( t_lend_shipping() == 1, "'shipping' page load" );
-    ok( t_lend_renewalRequests() == 1, "'renewal requests' page load" );
-    ok( t_lend_lost() == 1, "'lost' page load" );
-    ok( t_lend_checkins() == 1, "'checkins' page load" );
-    ok( t_lend_pullList() == 1, "'pull list' page load" );
+    ok( t_lend_respond() == 1, "[respond] page load" );
+    ok( t_lend_onHold() == 1, "[on hold] page load" );
+    ok( t_lend_shipping() == 1, "[shipping] page load" );
+    ok( t_lend_renewalRequests() == 1, "[renewal requests] page load" );
+    ok( t_lend_lost() == 1, "[lost] page load" );
+    ok( t_lend_checkins() == 1, "[checkins] page load" );
+    ok( t_lend_pullList() == 1, "[pull list] page load" );
 };
 ok( t_menu_current() == 1, "Current menu" );
 ok( t_menu_history() == 1, "History menu" );
 ok( t_menu_myaccount() == 1, "Account menu" );
 subtest 'Lending submenus' => sub {
     plan tests => 5;
-    ok( t_myaccount_libraryBarcodes() == 1, "'library barcodes' page load" );
-    ok( t_myaccount_patronList() == 1, "'patron list' page load" );
-    ok( t_myaccount_wishList() == 1, "'wish list' page load" );
-    ok( t_myaccount_testMyZServer() == 1, "'test my zserver' page load" );
-    ok( t_myaccount_settings() == 1, "'settings' page load" );
+    ok( t_myaccount_libraryBarcodes() == 1, "[library barcodes] page load" );
+    ok( t_myaccount_patronList() == 1, "[patron list] page load" );
+    ok( t_myaccount_wishList() == 1, "[wish list] page load" );
+    ok( t_myaccount_testMyZServer() == 1, "[test my zserver] page load" );
+    ok( t_myaccount_settings() == 1, "[settings] page load" );
 };
 ok( t_menu_reports() == 1, "Reports menu" );
 subtest 'Reports submenus' => sub {
     plan tests => 3;
-    ok( t_info_reports() == 1, "'reports' page load" );
-    ok( t_info_averageTimes() == 1, "'average times' page load" );
-    ok( t_info_contacts() == 1, "'contacts' page load" );
+    ok( t_info_reports() == 1, "[reports] page load" );
+    ok( t_info_averageTimes() == 1, "[average times] page load" );
+    ok( t_info_contacts() == 1, "[contacts] page load" );
 };
 
 ok( teardown() == 1, "Tear down" );
