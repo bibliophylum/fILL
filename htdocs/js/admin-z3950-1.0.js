@@ -102,8 +102,8 @@ $('document').ready(function() {
 	"ajax": "/cgi-bin/admin-get-z3950settings.cgi",
 	"columns": [    
 	    { "data": "oid" },    
-	    { "data": "name" },    
-	    { "data": "library" },    
+	    { "data": "symbol" },    
+	    { "data": "org_name" },    
 	    { "data": "enabled" },
 	    { "data": "server_address" },    
 	    { "data": "server_port" },  

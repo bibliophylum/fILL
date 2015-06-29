@@ -34,7 +34,7 @@ if ($libsym) {
     $libraries_aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $libsym );
 
 } else {
-    $SQL = "select o.lid,o.symbol,o.org_name,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from library_z3950 z left join org o on z.oid=o.oid order by o.org_name";
+    $SQL = "select o.oid,o.symbol,o.org_name,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from library_z3950 z left join org o on z.oid=o.oid order by o.org_name";
     $libraries_aref = $dbh->selectall_arrayref($SQL, { Slice => {} } );
 }
 
