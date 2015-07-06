@@ -42,6 +42,7 @@ sub setup {
 	'send_report_output'      => 'send_report_output',
 	'info_new_reports_form'   => 'info_new_reports_process',
 	'info_average_times_form' => 'info_average_times_process',
+	'info_borrowers_lenders_form' => 'info_borrowers_lenders_process',
 	);
 }
 
@@ -312,6 +313,24 @@ sub info_average_times_process {
 
     my $template = $self->load_tmpl('info/average-times.tmpl');
     $template->param(pagetitle => "Average Handling Times",
+		     username => $self->authen->username,
+	             oid => $oid,
+		     library => $library,
+	);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_borrowers_lenders_process {
+    my $self = shift;
+
+    my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('info/borrowers-lenders.tmpl');
+    $template->param(pagetitle => "Borrowers/Lenders Report",
 		     username => $self->authen->username,
 	             oid => $oid,
 		     library => $library,
