@@ -52,9 +52,10 @@ subtest 'Lending submenus' => sub {
 };
 ok( t_menu_reports() == 1, "Reports menu" );
 subtest 'Reports submenus' => sub {
-    plan tests => 3;
+    plan tests => 4;
     ok( t_info_reports() == 1, "[reports] page load" );
     ok( t_info_averageTimes() == 1, "[average times] page load" );
+    ok( t_info_borrowersLenders() == 1, "[borrowers-lenders] page load" );
     ok( t_info_contacts() == 1, "[contacts] page load" );
 };
 
@@ -329,6 +330,16 @@ sub t_info_averageTimes {
     $lnk->click();
     my $elem = wait_until { $d->find_element('title','tag_name') };
     return $d->get_title eq 'Average Handling Times';
+}
+
+#-------------------------------------------------------------------------------
+sub t_info_borrowersLenders {
+    my $li = $d->find_element('menu_info_borrowers_lenders','id');
+    return 0 unless ($li);
+    my $lnk = $d->find_element('Borrowers/Lenders','link_text');
+    $lnk->click();
+    my $elem = wait_until { $d->find_element('title','tag_name') };
+    return $d->get_title eq 'Borrowers/Lenders Report';
 }
 
 #-------------------------------------------------------------------------------
