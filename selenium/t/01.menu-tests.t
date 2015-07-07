@@ -77,7 +77,7 @@ sub t_borrow_newPatronRequests {
     return 0 unless ($li);
     # does the link exist with the proper text, and does clicking it 
     # take us to the right page?
-    my $lnk = $d->find_element('New patron requests','link_text');
+    my $lnk = $d->find_element('New patron requests','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'New requests from your patrons';
 }
@@ -86,7 +86,7 @@ sub t_borrow_newPatronRequests {
 sub t_borrow_pending {
     my $li = $d->find_element('menu_borrow_pending','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Pending','link_text');
+    my $lnk = $d->find_element('Pending','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'ILL requests with no response yet';
 }
@@ -95,7 +95,7 @@ sub t_borrow_pending {
 sub t_borrow_unfilled {
     my $li = $d->find_element('menu_borrow_unfilled','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Unfilled','link_text');
+    my $lnk = $d->find_element('Unfilled','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Unfilled ILL requests';
 }
@@ -104,7 +104,7 @@ sub t_borrow_unfilled {
 sub t_borrow_holdsPlaced {
     my $li = $d->find_element('menu_borrow_holds','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Holds placed','link_text');
+    my $lnk = $d->find_element('Holds placed','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Lenders have placed holds';
 }
@@ -113,7 +113,7 @@ sub t_borrow_holdsPlaced {
 sub t_borrow_receiving {
     my $li = $d->find_element('menu_borrow_receive','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Receiving','link_text');
+    my $lnk = $d->find_element('Receiving','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Receive items to fill your requests';
 }
@@ -122,7 +122,7 @@ sub t_borrow_receiving {
 sub t_borrow_renewals {
     my $li = $d->find_element('menu_borrow_renewals','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Renewals','link_text');
+    my $lnk = $d->find_element('Renewals','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Ask for renewals on borrowed items';
 }
@@ -131,7 +131,7 @@ sub t_borrow_renewals {
 sub t_borrow_returns {
     my $li = $d->find_element('menu_borrow_returns','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Returns','link_text');
+    my $lnk = $d->find_element('Returns','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Return items to lending libraries';
 }
@@ -140,7 +140,7 @@ sub t_borrow_returns {
 sub t_borrow_overdue {
     my $li = $d->find_element('menu_borrow_overdue','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Overdue','link_text');
+    my $lnk = $d->find_element('Overdue','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Overdue items to be returned to lender';
 }
@@ -149,7 +149,7 @@ sub t_borrow_overdue {
 sub t_borrow_search {
     my $li = $d->find_element('menu_borrow_lightning','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Search','link_text');
+    my $lnk = $d->find_element('Search','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'fILL Lightning Search';
 }
@@ -167,7 +167,7 @@ sub t_menu_lend {
 sub t_lend_respond {
     my $li = $d->find_element('menu_lend_respond','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Respond','link_text');
+    my $lnk = $d->find_element('Respond','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Respond to ILL requests';
 }
@@ -176,7 +176,7 @@ sub t_lend_respond {
 sub t_lend_onHold {
     my $li = $d->find_element('menu_lend_holds','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('On hold','link_text');
+    my $lnk = $d->find_element('On hold','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'On hold';
 }
@@ -185,7 +185,7 @@ sub t_lend_onHold {
 sub t_lend_shipping {
     my $li = $d->find_element('menu_lend_shipping','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Shipping','link_text');
+    my $lnk = $d->find_element('Shipping','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Shipping';
 }
@@ -194,7 +194,7 @@ sub t_lend_shipping {
 sub t_lend_renewalRequests {
     my $li = $d->find_element('menu_lend_renewal_requests','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Renewal requests','link_text');
+    my $lnk = $d->find_element('Renewal requests','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Respond to renewal requests';
 }
@@ -203,7 +203,7 @@ sub t_lend_renewalRequests {
 sub t_lend_lost {
     my $li = $d->find_element('menu_lend_lost','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Lost','link_text');
+    my $lnk = $d->find_element('Lost','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Lost items reported by borrowers';
 }
@@ -212,7 +212,7 @@ sub t_lend_lost {
 sub t_lend_checkins {
     my $li = $d->find_element('menu_lend_checkins','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Check-ins','link_text');
+    my $lnk = $d->find_element('Check-ins','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Loan items to be checked back into your ILS';
 }
@@ -221,7 +221,7 @@ sub t_lend_checkins {
 sub t_lend_pullList {
     my $li = $d->find_element('menu_lend_pull','id');
     return 0 unless ($li);
-    my $lnk = $d->find_element('Pull list','link_text');
+    my $lnk = $d->find_element('Pull list','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Pull-list';
 }
