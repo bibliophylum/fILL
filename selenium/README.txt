@@ -19,3 +19,21 @@ to run the tests.
 
 
 Tests live in fILL/selenium/t/
+
+----------------------------------------------------
+Running headless tests on remote system
+
+1. install xvfb:
+   $ sudo apt-get install xvfb
+
+2. Set up screen:
+   $ Xvfb :1 -screen 5 1024x768x8 &
+
+3. Export display:
+   $ export DISPLAY=:1.5
+
+4. Run tests:
+   $ cd prj/fILL/selenium
+   $ perl Makefile.PL
+   $ make
+   $ make test
