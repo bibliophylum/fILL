@@ -30,10 +30,10 @@ my $sip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 $SQL = "select enabled,auth_type,url from library_nonsip2 where oid=?";
 my $nonsip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
-$SQL = "select distinct patron_authentication_method from libraries order by patron_authentication_method";
+$SQL = "select distinct patron_authentication_method from org order by patron_authentication_method";
 my $authtypes_aref = $dbh->selectall_arrayref($SQL);
 
-$SQL = "select oid, library from libraries where oid=?";
+$SQL = "select oid, org_name from org where oid=?";
 my $library_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
 

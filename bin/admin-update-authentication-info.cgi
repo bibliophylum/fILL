@@ -52,7 +52,7 @@ eval {
 			       $parms{"sipServerPass"},
 			       $parms{"sipMethod"} eq "Info" ? 1 : 0
 		);
-	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
+	    $dbh->do("update org set patron_authentication_method=? where oid=?", undef, 
 		     "sip2", 
 		     $parms{"editOID"}
 		);
@@ -64,13 +64,13 @@ eval {
 			       $parms{"nonsipAuthType"},
 			       $parms{"nonsipURL"}
 		);
-	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
+	    $dbh->do("update org set patron_authentication_method=? where oid=?", undef, 
 		     $parms{"nonsipAuthType"}, 
 		     $parms{"editOID"}
 		);
 
 	} else {  # None
-	    $dbh->do("update libraries set patron_authentication_method=? where oid=?", undef, 
+	    $dbh->do("update org set patron_authentication_method=? where oid=?", undef, 
 		     undef, 
 		     $parms{"editOID"}
 		);
