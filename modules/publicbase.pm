@@ -190,11 +190,14 @@ sub externallyAuthenticate {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
 
+    #$self->log->debug( "externallyAuthenticate....\n" );
     my $pname;
     # is this a SIP2 library?
     my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, org_name from org where oid=?", undef, $oid);
 
+    #$self->log->debug( "externallyAuthenticate: $barcode, $pin, $oid\n" );
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
+	#$self->log->debug( "externallyAuthenticate using sip2\n" );
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $oid);
 
     } else {
@@ -221,12 +224,12 @@ sub checkSip2 {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
 
-    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
+#    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
 
     my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where oid=?";
     my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid);
 
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+#    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
     if (defined $href) {
 	# need to translate from postgresql field name to SIP2 field name
@@ -238,10 +241,12 @@ sub checkSip2 {
 	return undef;
     }
 
+#    $self->log->debug( "attempting to authenticate user...\n" );
+    $href->{debug} = 1;
     my $authenticator = Biblio::Authentication::SIP2->new( %$href );
     my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
     $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};
@@ -254,12 +259,12 @@ sub checkNonSip2 {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $oid, $authmethod) = @_;
 
-    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
+#    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
 
     my $SQL = "select url from library_nonsip2 where oid=? and auth_type=?";
     my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid,$authmethod);
 
-    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+#    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
     if (!defined $href) {
 	$self->session->param(
@@ -296,7 +301,7 @@ sub checkNonSip2 {
 
     my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
-    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
 
     $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
     return $authorized_href->{'patronname'};

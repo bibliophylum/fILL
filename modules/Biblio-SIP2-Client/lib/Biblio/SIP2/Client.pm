@@ -26,6 +26,8 @@ sub new {
     $self->{port}         = $parms{'port'};
     $self->{library}      = $parms{'library'} || '';
     $self->{language}     = $parms{'language'} || '001'; # 001= english
+    $self->{sip_server_login}    = $parms{'sip_server_login'};
+    $self->{sip_server_password} = $parms{'sip_server_password'};
 
     # Patron ID
     $self->{patron}       = $parms{'patron'} || ''; # AA
@@ -35,8 +37,8 @@ sub new {
     $self->{AC}           = $parms{'termpwd'} || ''; # AC
    
     # Maximum number of resends allowed before get_message gives up
-#    $self->{maxretry}     = 3;
-    $self->{maxretry}     = 0;  # debugging
+    $self->{maxretry}     = 3;
+#    $self->{maxretry}     = 0;  # debugging
    
     # Terminator s
     $self->{fldTerminator} = '|';
@@ -220,7 +222,7 @@ sub msgLogin {
     my $self = shift;
     my ($sipLogin, $sipPassword) = @_;
 
-    # Login (93) - untested
+    # Login (93)
     $self->_newMessage('93');
     $self->_addFixedOption($self->{UIDalgorithm}, 1);
     $self->_addFixedOption($self->{PWDalgorithm}, 1);
@@ -998,11 +1000,10 @@ sub hdump {
 # bundle everything needed to verify a patron's credentials in one handy sub
 sub verifyPatron {
     my $self = shift;
-    my ($barcode, $pin, $sip_server_login, $sip_server_password) = @_;
+    my ($barcode, $pin) = @_;
 
-    # if SIP2 server requires login (untested):
-    if (defined $sip_server_login) {
-	my $msg = $self->msgLogin($sip_server_login,$sip_server_password);
+    if ((defined $self->{'sip_server_login'}) && (defined $self->{'sip_server_password'})) {
+	my $msg = $self->msgLogin($self->{'sip_server_login'},$self->{'sip_server_password'});
 	my $response = $self->get_message( $msg );
 	my $parsed = $self->parseLoginResponse( $response );
 	
@@ -1011,7 +1012,13 @@ sub verifyPatron {
 	} else {
 	    # invalid SIP2 server credentials, so bail
 	    #bail("Library SIP2 server login failed");
-	    return undef;
+	    my %authorized = (
+		"validbarcode" => undef,
+		"validpin" => undef,
+		"patronname" => undef,
+		"screenmessage" => "SIP2 server did not accept server credentials, please retry."
+		);
+	    return \%authorized;
 	}
     }
     
