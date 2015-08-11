@@ -36,6 +36,7 @@ alter table patron_request rename lid to oid;
 alter table patron_requests_declined rename lid to oid;
 alter table shipping_tracking_number rename lid to oid;
 alter table rotations_stats rename lid to oid;
+alter table rotations_participants rename lid to oid;
 alter table library_barcodes rename lid to oid;
 alter table patron_request_sources rename lid to oid;
 alter table sources rename lid to oid;
