@@ -53,7 +53,7 @@ sub new {
     $self->{validate_using_info} = $parms{'validate_using_info'} || 0;
 
     # Debug
-    $self->{debug}        = $parms{'debug'} || 0;
+    $self->{debug}        = $parms{'debug'};
     $self->{debugmsg}     = "DEBUG LOG:\n";
    
     # Private variables for building messages
@@ -803,7 +803,7 @@ sub _datestamp {
     if ($timestamp) {
 	# Generate a proper date time from the date provided
 #	return date('Ymd    His', $timestamp);
-	print STDERR "Timestamp: [$timestamp]\n";
+#	print STDERR "Timestamp: [$timestamp]\n";
 	$sip_ts = $timestamp; # THIS WILL NEED FORMATTING!
     } else {
 	# Current Date/Time

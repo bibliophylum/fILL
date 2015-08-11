@@ -24,6 +24,8 @@ $('document').ready(function(){
     $("#contactButton").hide();
     $("#mailingButton").hide();
     $("#z3950Button").hide();
+    $("#myTestPatronButton").hide();
+    $("#waitDiv").hide();
     $("#otherButton").hide();
 
     $("#tabs").tabs();
@@ -39,6 +41,10 @@ $('document').ready(function(){
     });
     $("#z3950_fieldset input").on("change",function(){
 	$("#z3950Button").show();
+    });
+    $("#my_test_patron_fieldset input").on("change",function(){
+	$("#myTestPatronButton").show();  // save-the-changes button
+	$("#testPatronButton").hide();    // run-the-test button
     });
     $("#otherForm input").on("change",function(){
 	$("#otherButton").show();
@@ -111,6 +117,59 @@ $('document').ready(function(){
 	    })
 	    .complete(function() {
 		//alert('ajax complete');
+	    });
+    });
+
+
+    $("#myTestPatronButton").on("click", function() {
+	var parms = {
+	    "oid": $("#oid").text(),
+	    "barcode": $("#my_test_patron_barcode").val(),
+	    "pin": $("#my_test_patron_pin").val(),
+	};
+	$.getJSON('/cgi-bin/update-library-settings-testpatron.cgi', parms,
+		  function(data){
+		  })
+	    .success(function() {
+		//alert('success');
+		$("#myTestPatronButton").hide(); // save-the-changes button
+		$("#testPatronButton").show();   // run-the-test button
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+		//alert('ajax complete');
+	    });
+    });
+
+
+    $("#testPatronButton").on("click", function() {
+	$("#testPatronButton").hide();
+	$("#waitDiv").show();
+	var parms = {
+	    "oid": $("#oid").text(),
+	};
+	$.getJSON('/cgi-bin/test-authentication.cgi', parms,
+		  function(data){
+		  })
+	    .success(function(data) {
+		//alert('success');
+		$("#test_patron_last_tested").val( data.result.lasttested );
+		$("#test_patron_test_result").val( data.result.status );
+		$("#test_patron_validbarcode").val( data.result.validbarcode );
+		$("#test_patron_validpin").val( data.result.validpin );
+		$("#test_patron_patronname").val( data.result.patronname );
+		$("#test_patron_screenmessage").val( data.result.screenmessage );
+		$("#test_patron_auth_method").val( data.result.authentication_method );
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+		//alert('ajax complete');
+		$("#waitDiv").hide();
+		$("#testPatronButton").show();
 	    });
     });
 

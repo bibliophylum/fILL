@@ -66,7 +66,7 @@ sub new {
 	"sip_server_login" => $parms{'sip_server_login'},
 	"sip_server_password" => $parms{'sip_server_password'},
 	"validate_using_info" => $parms{'validate_using_info'} || 0,
-	"debug" => $parms{'debug'} || 0,
+	"debug" => $parms{'debug'},
     };
     $self->{bsc} = Biblio::SIP2::Client->new( %{ $self->{sipParms} } );
 

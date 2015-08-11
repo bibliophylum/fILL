@@ -18,7 +18,8 @@
 	<li><a href="#tabs-1">Contact information</a></li>
 	<li><a href="#tabs-2">ILL mailing address</a></li>
 	<li><a href="#tabs-3">z39.50 server</a></li>
-	<li><a href="#tabs-4">Other settings</a></li>
+	<li><a href="#tabs-4">Test patron</a></li>
+	<li><a href="#tabs-5">Other settings</a></li>
       </ul>
       
       <div id="tabs-1">
@@ -103,6 +104,80 @@
       </div>
       
       <div id="tabs-4">
+	<div style="width: 45%; float: left; margin: 20px">
+	  <form id="my_test_patron" onSubmit="return false;">
+	    <p>If you have created a "testing" patron in your ILS, you can enter that patron's login information here.</p>
+	    <p>This will allow you to check whether your patrons can authenticate correctly.</p>
+
+	    <fieldset id="my_test_patron_fieldset" class="balanced-fields">
+
+	      <div>
+		<label for="my_test_patron_barcode">Barcode/Username:</label>
+		<input id="my_test_patron_barcode" type="text" name="my_test_patron_barcode" value="<TMPL_VAR name=my_test_patron_barcode>" />
+	      </div>
+	      
+	      <div>
+		<label for="my_test_patron_pin">PIN/Password:</label>
+		<input id="my_test_patron_pin" type="text" name="my_test_patron_pin" value="<TMPL_VAR name=my_test_patron_pin>" />
+	      </div>
+	      
+              <input id="myTestPatronButton" type="button" class="library-style" value="Save changes">
+
+	    </fieldset>
+	  </form>
+	</div> <!-- form div -->
+
+	<div style="width: 45%; float: left; margin: 20px">
+	  <form id="test_patron" onSubmit="return false;">
+	    <h3>Authentication test</h3>
+
+	    <fieldset id="test_patron_fieldset" class="balanced-fields">
+
+	      <div>
+		<label for="test_patron_auth_method">Authentication method:</label>
+		<input id="test_patron_auth_method" type="text" name="test_patron_auth_method" value="<TMPL_VAR name=test_patron_auth_method>" disabled="disabled" />
+	      </div>
+	      
+	      <div>
+		<label for="test_patron_last_tested">Last tested:</label>
+		<input id="test_patron_last_tested" type="text" name="test_patron_last_tested" value="<TMPL_VAR name=test_patron_last_tested>" disabled="disabled" />
+	      </div>
+	      
+	      <div>
+		<label for="test_patron_test_result">Test result:</label>
+		<input id="test_patron_test_result" type="text" name="test_patron_test_result" value="<TMPL_VAR name=test_patron_test_result>" size="40" disabled="disabled" />
+	      </div>
+	      
+	      <div>
+		<label for="test_patron_validbarcode">Valid barcode/username?</label>
+		<input id="test_patron_validbarcode" type="text" name="test_patron_validbarcode" value="<TMPL_VAR name=test_patron_validbarcode>" disabled="disabled" />
+	      </div>
+
+	      <div>
+		<label for="test_patron_validpin">Valid PIN/password?</label>
+		<input id="test_patron_validpin" type="text" name="test_patron_validpin" value="<TMPL_VAR name=test_patron_validpin>" disabled="disabled" />
+	      </div>	      
+
+	      <div>
+		<label for="test_patron_patronname">Patron name:</label>
+		<input id="test_patron_patronname" type="text" name="test_patron_patronname" value="<TMPL_VAR name=test_patron_patronname>" disabled="disabled" />
+	      </div>
+	      
+	      <div>
+		<label for="test_patron_screenmessage">Screen message:</label>
+		<input id="test_patron_screenmessage" type="text" name="test_patron_screenmessage" value="<TMPL_VAR name=test_patron_screenmessage>" size="40" disabled="disabled" />
+	      </div>
+	      
+              <input id="testPatronButton" type="button" class="library-style" value="Test!">
+	      <div id="waitDiv">
+		Testing... <img src="/wait.gif" alt="loading indicator">
+	      </div>
+	  </form>
+	</div> <!-- test results div -->
+
+      </div>
+      
+      <div id="tabs-5">
 	<form id="otherForm">
 	  <h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
 	  
