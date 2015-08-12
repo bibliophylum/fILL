@@ -48,3 +48,4 @@ updates/Spruce_ILL/
 updates/blocks/
 updates/fILL-Library-Websites-with-sql.csv
 updates/fILL-Library-Websites.csv
+modules/Biblio-SIP2-Client/blib/lib/Biblio/SIP2/Client.pm

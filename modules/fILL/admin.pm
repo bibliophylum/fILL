@@ -33,6 +33,7 @@ sub setup {
     $self->mode_param('rm');
     $self->run_modes(
 	'authentication'       => 'authentication_process',
+	'authentication_tests' => 'authentication_tests_process',
 	'spruce_ill'           => 'load_spruce_ill_numbers_process',
 	'zserver_test'         => 'zserver_test_process',
 	'zserver_pazpar_control' => 'zserver_pazpar_control_process',
@@ -52,6 +53,23 @@ sub authentication_process {
 
     my $template = $self->load_tmpl('admin/authentication.tmpl');	
     $template->param( pagetitle => "Authentication methods",
+		      library_list => $libraries_aref,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub authentication_tests_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select oid, org_name, case when patron_authentication_method is null then 'none' else patron_authentication_method end as auth_method from org order by org_name", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/authentication_tests.tmpl');	
+    $template->param( pagetitle => "Authentication tests",
 		      library_list => $libraries_aref,
 	);
     return $template->output;
