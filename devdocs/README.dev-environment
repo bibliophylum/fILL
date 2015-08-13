@@ -1,0 +1,10 @@
+Setting up your dev environment:
+
+sudo groupadd devel
+sudo usermod -G devel david
+
+
+Note that install.sh needs to be tweaked for the first install...
+- add conf and logs to the directories being copied
+- uncomment the bits about symlinking fILL.conf to apache2/sites-available
+- uncomment the bits about apache2 in general...
