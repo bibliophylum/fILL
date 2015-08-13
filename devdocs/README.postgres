@@ -1,3 +1,38 @@
 Command for getting into postgresql:
 $ psql -U mapapp -h localhost -d maplin
 (password: maplin3db)
+
+Clone an existing fILL database:
+david@david:~$ pg_dump -U mapapp -h localhost maplin --create -f fill-laptop.dump
+
+Starting from a fresh postgresql install:
+
+$ sudo su -
+# su - postgres
+postgres@saiph:~$ createdb maplin
+postgres@saiph:~$ createuser mapapp
+postgres@saiph:~$ psql
+
+postgres=# alter role mapapp password 'maplin3db';
+ALTER ROLE
+postgres=# alter role mapapp createdb;
+ALTER ROLE
+postgres=# alter role mapapp login;
+ALTER ROLE
+postgres=# \q
+postgres@saiph:~$ psql -U mapapp -h localhost -d maplin
+Password for user mapapp: 
+psql (9.4.4)
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+
+maplin=> \q
+
+Copy the .dump file to the new machine, /var/lib/postgresql/xxxx.dump
+
+On the new machine, su to the postgres user.
+postgres@saiph:~$ psql <xxxx.dump
+
+
+
+

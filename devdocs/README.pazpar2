@@ -34,14 +34,17 @@ These packages are signed with a key you can install as follows:
  wget http://ftp.indexdata.dk/debian/indexdata.asc
  sudo apt-key add indexdata.asc
 
+Don't forget to "sudo apt-get update" after altering /etc/apt/sources.list!
 
 Then use your system's package management to install:
 pazpar2
-pazpar2-apache2
+pazpar2-apache2 <-- this doesn't seem to exist any more...
 pazpar2-doc
 pazpar2-js
 pazpar2-jsdemo
 pazpar2-test1
+
+All in one:  sudo apt-get install pazpar2 pazpar2-doc pazpar2-js pazpar2-jsdemo pazpar2-test1
 
 Important!  Now go to /etc/pazpar2/services-enabled, and (as root) unlink default.xml
 (or else you'll have problems starting the pazpar2 service later....)
