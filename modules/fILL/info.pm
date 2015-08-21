@@ -23,6 +23,8 @@ use strict;
 use base 'fILLbase';
 use CGI::Application::Plugin::Stream (qw/stream_file/);
 use Data::Dumper;
+use fILL::stats;
+#use fILL::charts;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
@@ -43,6 +45,7 @@ sub setup {
 	'info_new_reports_form'   => 'info_new_reports_process',
 	'info_average_times_form' => 'info_average_times_process',
 	'info_borrowers_lenders_form' => 'info_borrowers_lenders_process',
+	'info_board_report_form' => 'info_board_report_process',
 	);
 }
 
@@ -158,95 +161,12 @@ sub info_new_reports_process {
     $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
     my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $aryref;
-    my %Stats;
-
-    # Borrowing
-    # Note: counting stats for requests initiated within the month, regardless of when the answers came.
-    foreach my $tbl (qw/active history/) {
-	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts,'Month') as month, count(distinct rc.chain_id) as books_requested, count(distinct request_id) as requests_made from $req_tbl rc left join requests_$tbl h on h.request_id=rc.id where h.msg_from=? and h.status='ILL-Request' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested} += $row->{books_requested};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made} += $row->{requests_made};
-	}
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as responded_unfilled from requests_$tbl where msg_to=? and status like 'ILL-Answer|Unfilled%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled} += $row->{responded_unfilled};
-	}
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as shipped from requests_$tbl where msg_to=? and status='Shipped' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped} += $row->{shipped};
-	}
-	
-	# To calculate the # of requests that we cancelled before receiving a reply:
-	# 1. Find the requests we initiated in that time frame (status = 'ILL-Request')
-	# 2. Ignore the requests that someone replied to (status like 'ILL-Answer%')
-	# 3. Count the entries where status = 'Cancelled'
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as we_cancelled from requests_$tbl where msg_from=? and status='Cancelled' and request_id in (select request_id from requests_$tbl where msg_from=? and status='ILL-Request') and request_id not in (select request_id from requests_$tbl where msg_to=? and status like 'ILL-Answer%') group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid, $oid, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled} += $row->{we_cancelled};
-	}
-
-    }
-
-    # Lending
-    # Counting answers made within the date range, regardless of when the request was initiated.
-    foreach my $tbl (qw/active history/) {
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts,'Month') as month, count(request_id) as requests_to_lend from requests_$tbl where msg_to=? and status='ILL-Request' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend} += $row->{requests_to_lend};
-	}
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as could_not_fill from requests_$tbl where msg_from=? and status like 'ILL-Answer|Unfilled%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill} += $row->{could_not_fill};
-	}
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as shipped from requests_$tbl where msg_from=? and status='Shipped' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{shipped} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{shipped});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{shipped} += $row->{shipped};
-	}
-
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) forward_to_branch from requests_$tbl where msg_from=? and status like 'ILL-Answer|Locations-provided%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch} += $row->{forward_to_branch};
-	}
-	
-	# the 'msg_from is not null' bit has to do with an ancient bug that created "phantom" requests... requests to/from null.
-	# the bug has been fixed, but libraries are still cleaning up their data (by cancelling the phantom requests).
-	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as borrower_cancelled from requests_$tbl where msg_to=? and status='Cancelled' and msg_from is not null group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
-	foreach my $row (@$aryref) {
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled});
-	    $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled} += $row->{borrower_cancelled};
-	}
-    }
+    my $Stats_href = $self->_get_stats( $oid );  # this needs to start using fILL-stats....
 
     # build our array to pass to HTML::Template
     my @allStats;
-    foreach my $year (sort keys %Stats) {
-	my $href = $Stats{$year};
+    foreach my $year (sort keys %{$Stats_href}) {
+	my $href = $Stats_href->{$year};
 	foreach my $monthnum (sort keys %{$href}) {
 	    $href->{$monthnum}->{year} = $year;
 	    $href->{$monthnum}->{monthnum} = $monthnum;
@@ -338,6 +258,208 @@ sub info_borrowers_lenders_process {
     return $template->output;
 }
 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_board_report_process {
+    my $self = shift;
+
+    my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('info/board-monthly.tmpl');
+    $template->param(pagetitle => "Board Report",
+		     username => $self->authen->username,
+	             oid => $oid,
+		     library => $library,
+	);
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
+sub info_board_report_process_orig {
+    my $self = shift;
+
+    my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $year = 2015;
+    my $month_num = 5;
+    my $month = "May";
+
+    my $s = fILL::stats->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
+    my $stats = $s->get_stats();
+
+#    my $charts = fILL::charts->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
+    my $charts = fILL::charts->new('stats' => $stats);
+    $charts->create_report(); # create the charts
+
+    my $sPrev = fILL::stats->new('oid' => $oid, 'year' => ($year - 1), 'month' => $month_num);
+    my $statsPrev = $sPrev->get_stats();
+    my $borrowingChange = undef;
+    if ((exists $statsPrev->{borrowing}{requests}{books_requested}{total})
+	&& ($statsPrev->{borrowing}{requests}{books_requested}{total} > 0)) {
+	my $bc = ($stats->{borrowing}{requests}{books_requested}{total} - $statsPrev->{borrowing}{requests}{books_requested}{total}) / $statsPrev->{borrowing}{requests}{books_requested}{total} * 100.0;
+	if ($bc > 0.0) {
+	    $borrowingChange = sprintf("%.0f%% increase ",$bc);
+	} else {
+	    $borrowingChange = sprintf("%.0f%% decrease ",-$bc);
+	}
+    }
+
+    my $lendingRequestsChange = undef;
+    if ((exists $statsPrev->{lending}{requests_to_lend}{total})
+	&& ($statsPrev->{lending}{requests_to_lend}{total} > 0)) {
+	my $lch = ($stats->{lending}{requests_to_lend}{total} - $statsPrev->{lending}{requests_to_lend}{total}) / $statsPrev->{lending}{requests_to_lend}{total} * 100.0;
+	if ($lch > 0.0) {
+	    $lendingRequestsChange = sprintf("%.0f%% increase ",$lch);
+	} else {
+	    $lendingRequestsChange = sprintf("%.0f%% decrease ",-$lch);
+	}
+    }
+
+    my $lendingShippedChange = undef;
+    if ((exists $statsPrev->{lending}{shipped}{total})
+	&& ($statsPrev->{lending}{shipped}{total} > 0)) {
+	my $lch = ($stats->{lending}{shipped}{total} - $statsPrev->{lending}{shipped}{total}) / $statsPrev->{lending}{shipped}{total} * 100.0;
+	if ($lch > 0.0) {
+	    $lendingShippedChange = sprintf("%.0f%% increase ",$lch);
+	} else {
+	    $lendingShippedChange = sprintf("%.0f%% decrease ",-$lch);
+	}
+    }
+
+    my @borrowingTypes;
+    my $bt = $stats->{borrowing}{requests}{books_requested}{type};
+    foreach my $key (sort keys %{$bt}) {
+	push @borrowingTypes, { 'type' => $key, 'count' => $bt->{$key} };
+    }
+
+    my $template = $self->load_tmpl('info/board-monthly.tmpl');
+    $template->param(library => $library,
+		     month => $month,
+		     year => $year,
+		     borrowing_requests => $stats->{borrowing}{requests}{books_requested}{total},
+		     borrowing_borrowed => $stats->{borrowing}{we_received}{total},
+		     borrowing_types => \@borrowingTypes,
+		     borrowing_unfilled => $stats->{borrowing}{requests_unfilled}{total},
+#		     borrowing_unfilled_fiction => '17',
+#		     borrowing_unfilled_nonfiction => '9',
+#		     borrowing_unfilled_av => '0',
+#		     acquisitions => '4',
+		     borrowing_change => $borrowingChange,
+#		     borrowing_wait => '3 days',
+		     borrowing_value => $stats->{borrowing}{we_received}{total} * 25.00,
+		     lending_requests => $stats->{lending}{requests_to_lend}{total},
+		     lending_shipped => $stats->{lending}{shipped}{total},
+#		     lending_num_libraries => '39',
+		     lending_unfilled => $stats->{lending}{responded_unfilled}{total},
+#		     lending_unfilled_in_use => '54',
+#		     lending_unfilled_policy => '0',
+#		     lending_unfilled_on_order => '5',
+#		     lending_wait => '3 days',
+		     lending_change => $lendingRequestsChange,
+		     shipped_change => $lendingShippedChange,
+		     chart_borrowing => $charts->get_borrowing_chart(),
+		     chart_lending => $charts->get_lending_chart(),
+	);
+    return $template->output;
+}
+
+
+#----------------------------------------------------------------------------------
+sub _get_stats_DEPRECATED {
+    my $self = shift;
+    my $oid = shift;
+    my $aryref;
+    my %Stats;
+
+    # Borrowing
+    # Note: counting stats for requests initiated within the month, regardless of when the answers came.
+    foreach my $tbl (qw/active history/) {
+	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts,'Month') as month, count(distinct rc.chain_id) as books_requested, count(distinct request_id) as requests_made from $req_tbl rc left join requests_$tbl h on h.request_id=rc.id where h.msg_from=? and h.status='ILL-Request' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{books_requested} += $row->{books_requested};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_made} += $row->{requests_made};
+	}
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as responded_unfilled from requests_$tbl where msg_to=? and status like 'ILL-Answer|Unfilled%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{responded_unfilled} += $row->{responded_unfilled};
+	}
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as shipped from requests_$tbl where msg_to=? and status='Shipped' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{lender_shipped} += $row->{shipped};
+	}
+	
+	# To calculate the # of requests that we cancelled before receiving a reply:
+	# 1. Find the requests we initiated in that time frame (status = 'ILL-Request')
+	# 2. Ignore the requests that someone replied to (status like 'ILL-Answer%')
+	# 3. Count the entries where status = 'Cancelled'
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as we_cancelled from requests_$tbl where msg_from=? and status='Cancelled' and request_id in (select request_id from requests_$tbl where msg_from=? and status='ILL-Request') and request_id not in (select request_id from requests_$tbl where msg_to=? and status like 'ILL-Answer%') group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid, $oid, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{we_cancelled} += $row->{we_cancelled};
+	}
+
+    }
+
+    # Lending
+    # Counting answers made within the date range, regardless of when the request was initiated.
+    foreach my $tbl (qw/active history/) {
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts,'Month') as month, count(request_id) as requests_to_lend from requests_$tbl where msg_to=? and status='ILL-Request' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{requests_to_lend} += $row->{requests_to_lend};
+	}
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as could_not_fill from requests_$tbl where msg_from=? and status like 'ILL-Answer|Unfilled%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{could_not_fill} += $row->{could_not_fill};
+	}
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as shipped from requests_$tbl where msg_from=? and status='Shipped' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{shipped} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{shipped});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{shipped} += $row->{shipped};
+	}
+
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) forward_to_branch from requests_$tbl where msg_from=? and status like 'ILL-Answer|Locations-provided%' group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{forward_to_branch} += $row->{forward_to_branch};
+	}
+	
+	# the 'msg_from is not null' bit has to do with an ancient bug that created "phantom" requests... requests to/from null.
+	# the bug has been fixed, but libraries are still cleaning up their data (by cancelling the phantom requests).
+	$aryref = $self->dbh->selectall_arrayref("select extract(YEAR from ts) as year, extract(MONTH from ts) as monthnum, to_char(ts, 'Month') as month, count(request_id) as borrower_cancelled from requests_$tbl where msg_to=? and status='Cancelled' and msg_from is not null group by year, monthnum, month order by year, monthnum, month", { Slice => {} }, $oid);
+	foreach my $row (@$aryref) {
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{month} = $row->{month};
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled} = 0 unless (exists $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled});
+	    $Stats{ $row->{year} }{ $row->{monthnum} }{borrower_cancelled} += $row->{borrower_cancelled};
+	}
+    }
+
+    return \%Stats;
+}
 
 #----------------------------------------------------------------------------------
 sub get_library_from_username {

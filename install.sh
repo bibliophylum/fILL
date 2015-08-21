@@ -29,6 +29,7 @@ sudo rm -rf /opt/fILL/updates
 
 echo Building Perl modules...
 topdir=$(pwd)
+echo ---[ Biblio-SIP2-Client ]------------
 cd modules/Biblio-SIP2-Client
 perl Makefile.PL
 make
@@ -36,7 +37,24 @@ make test
 sudo make install
 cd $topdir
 
+echo ---[ Biblio-Authentication ]------------
 cd modules/Biblio-Authentication
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+echo ---[ fILL-stats ]------------
+cd modules/fILL-stats
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+echo ---[ fILL-charts ]------------
+cd modules/fILL-charts
 perl Makefile.PL
 make
 make test
