@@ -1,6 +1,7 @@
 /** print-reports.1.0.css **/
 /** based on http://alistapart.com/article/goingtoprint **/
 
+/** NOTE that font sizes are in pt, not px or em. **/
 
 @page { 
     size: auto;   /* auto is the initial value */ 
@@ -12,6 +13,7 @@
 body { 
     background: white; 
     font-size: 12pt; 
+    font-family: Sans-Serif;
 } 
 
 h1 {
@@ -24,16 +26,21 @@ h2 {
     font-weight: bold;
 }
 
-h2.page-break {
+h1.page-break {
     page-break-before: always;
 }
 
-#content { 
+#report-content { 
     width: auto; 
     border: 0; 
     margin: 0 5%; 
     padding: 0; 
     float: none !important; 
+}
+
+#report-content p {
+    font-size: 12pt !important; 
+    font-family: Sans-Serif;
 }
 
 .inner-right > ul > li {
@@ -59,5 +66,5 @@ div.inner-right {
     float:right;
     width: 45%;
     font-family: Sans-Serif;
-    font-size: 10pt;
+    font-size: 12pt;
 }

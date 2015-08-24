@@ -29,8 +29,8 @@
   Generating report... <img src="/wait.gif" alt="loading indicator">
 </div>
 
-<div id="content">
-  <h1><span id="title-library" />, Interlibrary Loans Board Report for <span id="title-month" /> <span id="title-year" /></h1>
+<div id="report-content">
+  <h1><span id="title-library"></span><br/>Interlibrary Loans Board Report for <span id="title-month"></span> <span id="title-year"></span></h1>
 
   <h2>Borrowing from other libraries</h2>
   
@@ -47,7 +47,7 @@
 	</li>
 	<li>Chart: items received or requests unfilled in <span id="chart-info-month"></span>, for patron requests made this month or earlier:</li>
 	<ul>
-	  <li>We received <strong><span id="borrowing-borrowed"></span></strong> items</li>
+	  <li>The library received <strong><span id="borrowing-borrowed"></span></strong> items</li>
 	  <li><strong><span id="borrowing-unfilled"></span></strong> requests could not be filled by any library:
 	    <ul id="borrowing-unfilled-types"></ul>
 	  </li>
@@ -59,11 +59,14 @@
     <br style="clear:both;"/>
   </div>
 
-  <p id="p-borrowing-change">The <span id="borrowing-requests-change-base"></span> requests our patrons made in <span id="borrowing-requests-change-month"></span> was a <span id="borrowing-change"></span> from the previous year.</p>
+  <p id="p-borrowing-change">The <span id="borrowing-requests-change-base"></span> requests our patrons made in <span id="borrowing-requests-change-month"></span> was a <span id="borrowing-change"></span> from <span id="borrowing-requests-change-month2"></span> of last year.</p>
 
   <p>The approximate value of the items received by <span id="borrowing-value-library"></span> in <span id="borrowing-value-month"></span> was $<span id="borrowing-value"></span></p>
+
   <hr />
-  <h2 class="page-break">Lending to other Libraries</h2>
+  <h1 class="page-break"><span id="title2-library"></span><br/>Interlibrary Loans Board Report for <span id="title2-month"></span> <span id="title2-year"></span></h1>
+
+  <h2>Lending to other Libraries</h2>
   
   <div class="details"> <!-- border... -->
     <div id="lending-left" class="inner-left">
@@ -71,10 +74,11 @@
     </div>
     
     <div id="lending-right" class="inner-right">
+      <p>In <span id="lending-detail-month"></span>:</p>
       <ul>
 	<li><span id="lending-detail-library"></span> received <span id="lending-requests"></span> ILL requests from other libraries.</li>
 	<li><span id="lending-shipped"></span> items were shipped to other libraries in Manitoba</li>
-	<li>We did not fill <span id="lending-unfilled"></span> requests.</li>
+	<li>The library did not fill <span id="lending-unfilled"></span> requests, for the following reasons:</li>
 	<ul id="lending-unfilled-status"></ul>
       </ul>
     </div> <!-- lending-right -->
@@ -82,8 +86,8 @@
     <br style="clear:both;"/>
   </div>
   <!--    <p>On average, the time from the date of request until the date of receipt at the receiving library was <TMPL_VAR name="lending_wait">.</p> -->
-  <p>The <span id="lending-requests-change-base"></span> requests received from other libraries in <span id="lending-requests-change-month"></span> was a <span id="lending-requests-change"></span> from the previous year.</p>
-  <p>The <span id="lending-shipped-change-base"></span> items shipped to other libraries in <span id="lending-shipped-change-month"></span> was a <span id="lending-shipped-change"></span> from the previous year.</p>
+  <p id="p-lending-requests-change">The <span id="lending-requests-change-base"></span> requests received from other libraries in <span id="lending-requests-change-month"></span> was a <span id="lending-requests-change"></span> from <span id="lending-requests-change-month2"></span> of last year.</p>
+  <p id="p-lending-shipping-change">The <span id="lending-shipped-change-base"></span> items shipped to other libraries in <span id="lending-shipped-change-month"></span> was a <span id="lending-shipped-change"></span> from <span id="lending-shipped-change-month2"></span> of last year.</p>
 </div> <!-- content -->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

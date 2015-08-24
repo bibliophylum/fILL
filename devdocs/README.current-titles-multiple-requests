@@ -1,0 +1,7 @@
+\copy (select title, author, count(title) as requests from request_group group by title, author having count(title) > 3) to '/tmp/ill-multiple-current.csv' with csv
+
+
+
+select title, author, count(title) as requests from request_group group by title, author having count(title) > 5;
+
+select g.title, g.author, g.isbn, s.call_number, count(g.title) as requests from request_group g left join request_chain c on c.group_id=g.group_id left join request r on r.chain_id=c.chain_id left join sources s on s.request_id=r.id group by g.title, g.author, g.isbn, s.call_number having count(g.title) > 5;

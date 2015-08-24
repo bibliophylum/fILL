@@ -20,7 +20,6 @@ where
  and ra.status='Message'
  and ra.message='No further sources'
  and ra.ts = (select max(ts) from requests_active ra2 where ra2.request_id = ra.request_id) 
- and ((select count(*) from sources s where g.group_id=s.group_id and tried=true) < (select count(*) from sources s2 where g.group_id=s2.group_id))
 order by ts
 ) to '/tmp/rids-to-historize.txt' with csv;
 
@@ -29,3 +28,8 @@ $ cp /tmp/rids-to-historize.txt ~/rids-to-historize.txt
 $ cd prj/fILL/bin
 $ cat ~/rid-to-historize.txt |xargs -n 1 -I % ./move-to-history.cgi reqid=%
 
+
+
+Aside: to get just the ones where there are still sources to try, add this to the select:
+
+ and ((select count(*) from sources s where g.group_id=s.group_id and tried=true) < (select count(*) from sources s2 where g.group_id=s2.group_id))
