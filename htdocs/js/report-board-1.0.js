@@ -94,9 +94,13 @@ $('document').ready(function(){
 		      $("#lending-requests").text( l.requests_to_lend.total );
 		      $("#lending-shipped").text( l.shipped.total );
 		      $("#lending-unfilled").text( l.responded_unfilled.total );
-		      $.each(l.responded_unfilled.status, function( key, value ){
-			  $("#lending-unfilled-status").append("<li>"+key+": "+value+"</li>");
-		      });
+		      if (l.responded_unfilled.status !== undefined) {
+			  $.each(l.responded_unfilled.status, function( key, value ){
+			      $("#lending-unfilled-status").append("<li>"+key+": "+value+"</li>");
+			  });
+		      } else {
+			  $("#lending-unfilled-status").parent().text("We filled all ILL requests this month");
+		      }
 		      $("#lending-requests-change-base").text( l.requests_to_lend.total );
 		      $("#lending-requests-change-month").text( data.report.month_name );
 		      $("#lending-requests-change").text( l.change_over_previous_year.requests );
