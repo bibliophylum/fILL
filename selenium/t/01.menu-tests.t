@@ -352,6 +352,16 @@ sub t_info_contacts {
     return $d->get_title eq 'fILL Info Contacts';
 }
 
+#-------------------------------------------------------------------------------
+sub t_info_board {
+    my $li = $d->find_element('menu_info_board_report','id');
+    return 0 unless ($li);
+    my $lnk = $d->find_element('Board report','link_text');
+    $lnk->click();
+    my $elem = wait_until { $d->find_element('title','tag_name') };
+    return $d->get_title eq 'Board Report';
+}
+
 
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------

@@ -161,7 +161,7 @@ sub info_new_reports_process {
     $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
     my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    my $Stats_href = $self->_get_stats( $oid );  # this needs to start using fILL-stats....
+    my $Stats_href = $self->_get_stats_DEPRECATED( $oid );  # this needs to start using fILL-stats....
 
     # build our array to pass to HTML::Template
     my @allStats;
@@ -272,98 +272,6 @@ sub info_board_report_process {
 		     username => $self->authen->username,
 	             oid => $oid,
 		     library => $library,
-	);
-    return $template->output;
-}
-
-
-#--------------------------------------------------------------------------------
-#
-#
-sub info_board_report_process_orig {
-    my $self = shift;
-
-    my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    my $year = 2015;
-    my $month_num = 5;
-    my $month = "May";
-
-    my $s = fILL::stats->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
-    my $stats = $s->get_stats();
-
-#    my $charts = fILL::charts->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
-    my $charts = fILL::charts->new('stats' => $stats);
-    $charts->create_report(); # create the charts
-
-    my $sPrev = fILL::stats->new('oid' => $oid, 'year' => ($year - 1), 'month' => $month_num);
-    my $statsPrev = $sPrev->get_stats();
-    my $borrowingChange = undef;
-    if ((exists $statsPrev->{borrowing}{requests}{books_requested}{total})
-	&& ($statsPrev->{borrowing}{requests}{books_requested}{total} > 0)) {
-	my $bc = ($stats->{borrowing}{requests}{books_requested}{total} - $statsPrev->{borrowing}{requests}{books_requested}{total}) / $statsPrev->{borrowing}{requests}{books_requested}{total} * 100.0;
-	if ($bc > 0.0) {
-	    $borrowingChange = sprintf("%.0f%% increase ",$bc);
-	} else {
-	    $borrowingChange = sprintf("%.0f%% decrease ",-$bc);
-	}
-    }
-
-    my $lendingRequestsChange = undef;
-    if ((exists $statsPrev->{lending}{requests_to_lend}{total})
-	&& ($statsPrev->{lending}{requests_to_lend}{total} > 0)) {
-	my $lch = ($stats->{lending}{requests_to_lend}{total} - $statsPrev->{lending}{requests_to_lend}{total}) / $statsPrev->{lending}{requests_to_lend}{total} * 100.0;
-	if ($lch > 0.0) {
-	    $lendingRequestsChange = sprintf("%.0f%% increase ",$lch);
-	} else {
-	    $lendingRequestsChange = sprintf("%.0f%% decrease ",-$lch);
-	}
-    }
-
-    my $lendingShippedChange = undef;
-    if ((exists $statsPrev->{lending}{shipped}{total})
-	&& ($statsPrev->{lending}{shipped}{total} > 0)) {
-	my $lch = ($stats->{lending}{shipped}{total} - $statsPrev->{lending}{shipped}{total}) / $statsPrev->{lending}{shipped}{total} * 100.0;
-	if ($lch > 0.0) {
-	    $lendingShippedChange = sprintf("%.0f%% increase ",$lch);
-	} else {
-	    $lendingShippedChange = sprintf("%.0f%% decrease ",-$lch);
-	}
-    }
-
-    my @borrowingTypes;
-    my $bt = $stats->{borrowing}{requests}{books_requested}{type};
-    foreach my $key (sort keys %{$bt}) {
-	push @borrowingTypes, { 'type' => $key, 'count' => $bt->{$key} };
-    }
-
-    my $template = $self->load_tmpl('info/board-monthly.tmpl');
-    $template->param(library => $library,
-		     month => $month,
-		     year => $year,
-		     borrowing_requests => $stats->{borrowing}{requests}{books_requested}{total},
-		     borrowing_borrowed => $stats->{borrowing}{we_received}{total},
-		     borrowing_types => \@borrowingTypes,
-		     borrowing_unfilled => $stats->{borrowing}{requests_unfilled}{total},
-#		     borrowing_unfilled_fiction => '17',
-#		     borrowing_unfilled_nonfiction => '9',
-#		     borrowing_unfilled_av => '0',
-#		     acquisitions => '4',
-		     borrowing_change => $borrowingChange,
-#		     borrowing_wait => '3 days',
-		     borrowing_value => $stats->{borrowing}{we_received}{total} * 25.00,
-		     lending_requests => $stats->{lending}{requests_to_lend}{total},
-		     lending_shipped => $stats->{lending}{shipped}{total},
-#		     lending_num_libraries => '39',
-		     lending_unfilled => $stats->{lending}{responded_unfilled}{total},
-#		     lending_unfilled_in_use => '54',
-#		     lending_unfilled_policy => '0',
-#		     lending_unfilled_on_order => '5',
-#		     lending_wait => '3 days',
-		     lending_change => $lendingRequestsChange,
-		     shipped_change => $lendingShippedChange,
-		     chart_borrowing => $charts->get_borrowing_chart(),
-		     chart_lending => $charts->get_lending_chart(),
 	);
     return $template->output;
 }

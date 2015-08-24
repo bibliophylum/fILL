@@ -36,6 +36,14 @@ modules/Biblio-Authentication/blib/**
 modules/Biblio-Authentication/Makefile
 modules/Biblio-Authentication/MYMETA.json
 modules/Biblio-Authentication/MYMETA.yml
+modules/fILL-charts/blib/**
+modules/fILL-charts/Makefile
+modules/fILL-charts/MYMETA.json
+modules/fILL-charts/MYMETA.yml
+modules/fILL-stats/blib/**
+modules/fILL-stats/Makefile
+modules/fILL-stats/MYMETA.json
+modules/fILL-stats/MYMETA.yml
 pazpar2/settings/Jolys.xml
 services/reports/report-net-all-libraries.pl
 updates/20.will-not-loan-newer-than.sql
@@ -49,3 +57,9 @@ updates/blocks/
 updates/fILL-Library-Websites-with-sql.csv
 updates/fILL-Library-Websites.csv
 modules/Biblio-SIP2-Client/blib/lib/Biblio/SIP2/Client.pm
+selenium/blib/**
+selenium/MYMETA.json
+selenium/MYMETA.yml
+selenium/Makefile
+selenium/selenium-IDE-test-cases/
+selenium/pm_to_blib

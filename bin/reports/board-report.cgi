@@ -33,29 +33,15 @@ my $month_name = $months[$month-1];
 
 if ($month) { $month = sprintf("%02d",$month); }
 
-#my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
-#                       "mapapp",
-#                       "maplin3db",
-#                       {AutoCommit => 1, 
-#                        RaiseError => 1, 
-#                        PrintError => 0,
-#                       }
-#    ) or die $DBI::errstr;
-
-#$dbh->do("SET TIMEZONE='America/Winnipeg'");
-
-#my $s = fILL::stats->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
 my $s = fILL::stats->new('oid' => $oid, 'year' => $year, 'month' => $month);
 my $stats = $s->get_stats();
 $stats->{month_name} = $month_name;
 
-#    my $charts = fILL::charts->new('oid' => $oid, 'year' => $year, 'month' => $month_num);
 my $charts = fILL::charts->new('stats' => $stats);
 $charts->create_report(); # create the charts
 $stats->{charts}{borrowing} = $charts->get_borrowing_chart();
 $stats->{charts}{lending}   = $charts->get_lending_chart();
 
-#my $sPrev = fILL::stats->new('oid' => $oid, 'year' => ($year - 1), 'month' => $month_num);
 my $sPrev = fILL::stats->new('oid' => $oid, 'year' => ($year - 1), 'month' => $month);
 my $statsPrev = $sPrev->get_stats();
 my $borrowingChange = undef;
