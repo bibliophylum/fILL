@@ -3,6 +3,7 @@
 *.orig
 *.tar.gz
 *blocks-2014-*
+*.directory
 css-classes-in-fILL.txt
 devdocs/analyzing-requests.txt
 devdocs/sql-to-get-unfilled-reasons.txt

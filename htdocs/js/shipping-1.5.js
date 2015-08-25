@@ -157,7 +157,7 @@ function build_table( data ) {
 	var b2 = document.createElement("input");
 	b2.type = "button";
 	b2.id = "unship"+requestId;
-	b2.value = "Oops! Return this to the Respond list.";
+	b2.value = "Oops! Return this to the Respond or On Hold list.";
 	// class unship-button is used in function set_default_due_date()
 	b2.className = "action-button unship-button";
 	b2.onclick = make_unship_handler( requestId );

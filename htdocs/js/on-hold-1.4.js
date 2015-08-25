@@ -120,7 +120,17 @@ function build_table( data ) {
 	    b1.className = "action-button";
 	    b1.onclick = make_shipper_handler( requestId );
 	}
+
 	divResponses.appendChild(b1);
+
+	if (data.on_hold[i].cancel != 1) {
+	    var b2 = document.createElement("input");
+	    b2.type = "button";
+	    b2.value = "Un-hold (return to Respond)";
+	    b2.className = "action-button";
+	    b2.onclick = make_unhold_handler( requestId );
+	    divResponses.appendChild(b2);
+	}
 	
 	cell.appendChild( divResponses );
     }
@@ -206,3 +216,37 @@ function cancelled( requestId ) {
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+
+function make_unhold_handler( requestId ) {
+    return function() { unhold( requestId ) };
+}
+
+function unhold( requestId ) {
+    var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#on-hold-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
+
+    var parms = {
+	"reqid": requestId,
+	"msg_to": msg_to,
+	"oid": $("#oid").text()
+    };
+    $.getJSON('/cgi-bin/cancel-hold.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    update_menu_counters( $("#oid").text() );
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // slideUp doesn't work for <tr>
+	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
+	});
+}
+
