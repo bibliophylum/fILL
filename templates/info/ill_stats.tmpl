@@ -2,41 +2,17 @@
 <TMPL_INCLUDE NAME="submenu_info.tmpl">
 
 <script type="text/javascript">
-set_secondary_tab("menu_info_ill_stats");
-
-$.ajaxSetup ({  
-  cache: false  
-});  
-
-$('document').ready(function(){
-
-    $('#datatable_report').DataTable({
-        "jQueryUI": true,
-        "pagingType": "full_numbers",
-        "info": true,
-      	"ordering": true,
-	"dom": '<"H"Tfr>t<"F"ip>',
-        "pageLength": 12,
-        "lengthMenu": [[12, 24, 48, -1], [12, 24, 48, "All"]],
-	"tableTools": {
-          "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	},
-        "order": [[0,"asc"],[1,"asc"]],
-        "autoWidth": true,
-        "scrollX": true, 
-        "initComplete": function() {
-            // this handles a bug(?) in this version of datatables;
-            // hidden columns caused the table width to be set to 100px, not 100%
-            $("#datatable_report").css("width","100%");
-        }
-    });
-
-});
-
+  set_secondary_tab("menu_info_ill_stats");
 </script>
+
+<script type="text/javascript" src="/js/ill-stats-1.0.js"></script>
 
 
 <div id="center" role="main">
+
+  <div id="waitDiv">
+    Compiling statistics... <img src="/wait.gif" alt="loading indicator">
+  </div>
 
     <div id="myDiv">
     

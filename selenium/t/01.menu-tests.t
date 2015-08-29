@@ -42,18 +42,18 @@ subtest 'Lending submenus' => sub {
 ok( t_menu_current() == 1, "Current menu" );
 ok( t_menu_history() == 1, "History menu" );
 ok( t_menu_myaccount() == 1, "Account menu" );
-subtest 'Lending submenus' => sub {
+subtest 'MyAccount submenus' => sub {
     plan tests => 5;
     ok( t_myaccount_libraryBarcodes() == 1, "[library barcodes] page load" );
+    ok( t_myaccount_settings() == 1, "[settings] page load" );
     ok( t_myaccount_patronList() == 1, "[patron list] page load" );
     ok( t_myaccount_wishList() == 1, "[wish list] page load" );
     ok( t_myaccount_testMyZServer() == 1, "[test my zserver] page load" );
-    ok( t_myaccount_settings() == 1, "[settings] page load" );
 };
 ok( t_menu_reports() == 1, "Reports menu" );
 subtest 'Reports submenus' => sub {
     plan tests => 4;
-    ok( t_info_reports() == 1, "[reports] page load" );
+    ok( t_info_illStats() == 1, "[ill stats] page load" );
     ok( t_info_averageTimes() == 1, "[average times] page load" );
     ok( t_info_borrowersLenders() == 1, "[borrowers-lenders] page load" );
     ok( t_info_contacts() == 1, "[contacts] page load" );
@@ -311,12 +311,12 @@ sub t_menu_reports {
 }
 
 #-------------------------------------------------------------------------------
-sub t_info_reports {
-    my $li = $d->find_element('menu_info_reports','id');
+sub t_info_illStats {
+    my $li = $d->find_element('menu_info_ill_stats','id');
     return 0 unless ($li);
     # There are two "Reports" links - main menu and submenu.
     #my $lnk = $d->find_element('Reports','link_text');
-    my $lnk = $d->find_element("#menu_info_reports > a","css");
+    my $lnk = $d->find_element("#menu_info_ill_stats > a","css");
     $lnk->click();
     my $elem = wait_until { $d->find_element('title','tag_name') };
     return $d->get_title eq 'fILL Info Stats Report';

@@ -152,6 +152,24 @@ sub info_feeds_process {
 
 
 #--------------------------------------------------------------------------------
+# This new way of gathering the overall stats is too slow...
+# Need to update fILL::stats to handle multiple months/years at once.
+sub info_new_reports_process_TOO_SLOW {
+    my $self = shift;
+
+    my ($oid,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('info/ill_stats.tmpl');
+    $template->param(pagetitle => "fILL Info Stats Report",
+		     username => $self->authen->username,
+		     oid => $oid,
+		     library => $library
+	    );
+    return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
 # NOTE: this is an interim measure until we get the real reporting system built
 #
 sub info_new_reports_process {
