@@ -38,6 +38,7 @@ my %SPRUCE_TO_MAPLIN = (
     'MRD' => 'MRD',          # Russell
     'MBI' => 'MBI',          # Binscarth
     'MSCL' => 'MSCL',        # St.Claude
+    'MNDP' => 'MNDP',        # Pere Champagne
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
