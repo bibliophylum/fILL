@@ -1,0 +1,140 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_z3950.tmpl">
+
+<script type="text/javascript" src="/js/admin-z3950-1.0.js"></script>
+
+<div id="center" role="main">
+
+  <div id="edit" style="display:none" class="balanced-fields">
+    <form id="editForm" action="#">
+      <h3 id="library"></h3>
+      <input id="editOID" type="hidden" name="editOID"></input>
+
+      <div class="balanced-fields-column-left">
+	<fieldset data-role="controlgroup" data-type="horizontal">
+	  <legend>Will fILL search this server?</legend>
+	  <label for="e1">Yes (enabled)</label>
+	  <input id="e1" type="radio" name="enabled" value="1">
+	  <label for="e0">No (disabled)</label>
+	  <input id="e0" type="radio" name="enabled" value="0">
+	</fieldset>
+
+	<label for="server">Server address</label>
+	<input id="server" type="text" name="server"></input>
+	
+	<label for="port">Port</label>
+	<input id="port" type="text" name="port"></input>
+	<br/>
+	<label for="database">Database</label>
+	<input id="database" type="text" name="database"></input>
+	
+	<label for="request_syntax">Request syntax</label>
+	<input id="request_syntax" type="text" name="request_syntax"></input>
+	<br/>
+	
+	<label for="elements">Elements</label>
+	<input id="elements" type="text" name="elements"></input>
+	
+	<label for="nativesyntax">Native syntax</label>
+	<input id="nativesyntax" type="text" name="nativesyntax"></input>
+	<br/>
+	
+	<label for="xslt">xslt</label>
+	<input id="xslt" type="text" name="xslt"></input>	
+      </div>
+
+      <div class="balanced-fields-column-left">
+	<label for="index_keyword">Index: Keyword</label>
+	<input id="index_keyword" type="text" name="index_keyword"></input>
+	<br/>
+	
+	<label for="index_author">Index: Author</label>
+	<input id="index_author" type="text" name="index_author"></input>
+	
+	<label for="index_title">Index: Title</label>
+	<input id="index_title" type="text" name="index_title"></input>
+	<br/>
+	
+	<label for="index_subject">Index: Subject</label>
+	<input id="index_subject" type="text" name="index_subject"></input>
+	
+	<label for="index_isbn">Index: ISBN</label>
+	<input id="index_isbn" type="text" name="index_isbn"></input>
+	<br/>
+	
+	<label for="index_issn">Index: ISSN</label>
+	<input id="index_issn" type="text" name="index_issn"></input>
+	
+	<label for="index_date">Index: Date</label>
+	<input id="index_date" type="text" name="index_date"></input>
+	<br/>
+	
+	<label for="index_series">Index: Series</label>
+	<input id="index_series" type="text" name="index_series"></input>
+      </div>
+
+      <div class="balanced-fields-clear"></div><!-- stop the floatiness -->
+      <input id="formSubmit" type="submit" value="Save changes" class="library-style" />
+
+    </form>
+  </div>
+
+  <div id="myDiv">
+    <div id="mylistDiv">
+      <table id="libraries" class="row-border" cellpadding="0" cellspacing="0" border="0" >
+	<thead>
+	  <tr>
+	    <th>OID</th>
+	    <th>Symbol</th>
+	    <th>Org Name</th>
+	    <th>Enabled?</th>
+	    <th>Server</th>
+	    <th>Port</th>
+	    <th>Database</th>
+	    <th>Req.Syn</th>
+	    <th>Elem</th>
+	    <th>Nat.Syn</th>
+	    <th>xslt</th>
+	    <th>i keyw</th>
+	    <th>i auth</th>
+	    <th>i title</th>
+	    <th>i subj</th>
+	    <th>i isbn</th>
+	    <th>i issn</th>
+	    <th>i date</th>
+	    <th>i series</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_list">
+	    <tr id="oid<TMPL_VAR NAME='oid'>">
+	      <td><TMPL_VAR NAME="oid"></td>
+	      <td><TMPL_VAR NAME="symbol"></td>
+	      <td><TMPL_VAR NAME="org_name"></td>
+	      <td><TMPL_VAR NAME="enabled"></td>
+	      <td><TMPL_VAR NAME="server_address"></td>
+	      <td><TMPL_VAR NAME="server_port"></td>
+	      <td><TMPL_VAR NAME="database_name"></td>
+	      <td><TMPL_VAR NAME="request_syntax"></td>
+	      <td><TMPL_VAR NAME="elements"></td>
+	      <td><TMPL_VAR NAME="nativesyntax"></td>
+	      <td><TMPL_VAR NAME="xslt"></td>
+	      <td><TMPL_VAR NAME="index_keyword"></td>
+	      <td><TMPL_VAR NAME="index_author"></td>
+	      <td><TMPL_VAR NAME="index_title"></td>
+	      <td><TMPL_VAR NAME="index_subject"></td>
+	      <td><TMPL_VAR NAME="index_isbn"></td>
+	      <td><TMPL_VAR NAME="index_issn"></td>
+	      <td><TMPL_VAR NAME="index_date"></td>
+	      <td><TMPL_VAR NAME="index_series"></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    </div><!-- mylistDiv -->
+  </div><!-- myDiv -->
+
+</div>
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

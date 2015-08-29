@@ -1,0 +1,46 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_z3950.tmpl">
+
+<script type="text/javascript" src="/js/admin-z3950-check-1.0.js"></script>
+
+<div id="center" role="main">
+
+<div id="main-left">
+  <div id="libraries-table">
+    <table id="libraries" class="row-border">
+      <thead>
+	<tr><th>Symbol</th><th>Library</th>
+      </thead>
+      <tbody>
+	<TMPL_LOOP name="library_list">
+	  <tr>
+	    <td>
+	      <input type="button" class="action-button" value=<TMPL_VAR NAME="symbol"> />
+	    </td>
+	    <td><TMPL_VAR NAME="org_name"></td>
+	  </tr>
+	</TMPL_LOOP>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="main-right">
+  <p id="libtotest">Choose a library...</p>
+  <div id="zserver">
+    <a href="https://mintaka.gotdns.org/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form"><h3>Z Server Status Check</h3></a>
+    <div id="waitDiv">Checking...<img src="/wait.gif" alt="loading indicator"></div>
+    <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
+    <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
+    <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
+    <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+  </div>
+
+  <div>
+    <p>Log:</p>
+    <pre id="log"></pre>
+  </div>
+</div>
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

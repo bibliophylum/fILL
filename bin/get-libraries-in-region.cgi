@@ -7,7 +7,7 @@ use JSON;
 my $query = new CGI;
 my $region = $query->param('region');
 
-my $SQL = "select lid,city,library from libraries where region=? order by city";
+my $SQL = "select oid,city,org_name from org where region=? order by city";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",

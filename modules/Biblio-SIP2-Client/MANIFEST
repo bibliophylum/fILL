@@ -1,0 +1,6 @@
+MANIFEST
+Makefile.PL
+lib/Biblio/SIP2/Comm.pm
+t/01_basic.t
+META.yml
+META.json

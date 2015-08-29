@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_rotations.tmpl">
 
-<script type="text/javascript" src="/js/rotation-stats-1.0.js"></script>
+<script type="text/javascript" src="/js/rotation-stats-1.1.js"></script>
 
 
 <script type="text/javascript">
@@ -13,7 +13,7 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-  $.getJSON('/cgi-bin/get-current-rotation-list.cgi', {lid: <TMPL_VAR name="lid">},
+  $.getJSON('/cgi-bin/get-current-rotation-list.cgi', {oid: <TMPL_VAR name="oid">},
         function(data){
             build_table(data);
         })

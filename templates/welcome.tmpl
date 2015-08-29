@@ -9,6 +9,12 @@ $('document').ready(function() {
 
   set_primary_tab("menu_home");
 
+  $(function() {
+    $("#accordion").accordion({
+      heightStyle: "content"
+    });
+  });
+
   $("#zserver").on("click", function(e){
     e.preventDefault();
     window.location = "/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form";
@@ -71,143 +77,186 @@ $('document').ready(function() {
 </script>
 <div id="center" role="main">
 
-<div id="main-left" class="tone-box" >
+  <div id="main-left" class="tone-box" >
 
-  <div class="alert-box" >
-    <p>You can now add patron requests to your <a href="/cgi-bin/myaccount.cgi?rm=myaccount_acquisitions_form">'wish list'</a></p>
+    <div class="alert-box" >
+      <p>fILL's URL has changed:<br>&nbsp;<br><a href="https://fill.mb.libraries.coop/">https://fill.mb.libraries.coop/</a><br>&nbsp;<br>You'll need to update your web site links!</p>
+    </div>
+    <hr>
+    <div id="zserver">
+      <a href="https://mintaka.gotdns.org/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form"><h3>Z Server Status Check</h3></a>
+      <div id="waitDiv">Checking...<img src="/wait.gif" alt="loading indicator"></div>
+      <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
+      <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
+      <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
+      <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
+    </div>
+    <p>If any Z Server check indicates 'No &#x2717;' please notify your ILS admistrator and email <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>
+      <hr>
+      
+      <h2>Quick Links</h2>
+      <!--
+	  <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
+          <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
+	  -->
+      
+    <p><strong>Public fILL</strong></p>
+    <ul>
+      <li>Public fILL access: <a href="https://fill.mb.libraries.coop/"><span style="text-decoration: underline;">https://fill.mb.libraries.coop/</span></a></li>
+      <li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
+      <li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
+    </ul>
+    
+    <p><strong>Library fILL</strong></p>
+    <ul>
+      <li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
+      <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
+      <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
+      <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
+    </ul>
+    
+    <p><strong>Counting Opinions</strong></p> 	
+    <ul> 	
+      <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
+      <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
+      <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
+      <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
+    </ul>
+    
   </div>
-  <hr>
-  <div id="zserver">
-    <a href="https://mintaka.gotdns.org/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form"><h3>Z Server Status Check</h3></a>
-    <div id="waitDiv">Checking...<img src="/wait.gif" alt="loading indicator"></div>
-    <div class="zstatus">Z Server Present <span id="zPresent" class="zno">...</span></div>
-    <div class="zstatus">Able to Connect <span id="zConnect" class="zno">...</span></div>
-    <div class="zstatus">Able to Search <span id="zSearch" class="zno">...</span></div>
-    <div class="zstatus">Able to Retrieve Record <span id="zRecord" class="zno">...</span></div>
-  </div>
-  <p>If any Z Server check indicates 'No &#x2717;' please notify your ILS admistrator and email <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>
-  <hr>
-
-  <h2>Quick Links</h2>
-  <!--
-      <p class="debuginfo">Logged in as [<TMPL_VAR NAME="username">]</p>
-  <p class="debuginfo">Session id [<TMPL_VAR NAME="sessionid">]</p>
-  -->
-
-  <p><strong>Public fILL</strong></p>
-  <ul>
-    <li><a href="https://fill.sitka.bclibraries.ca/">Public fILL access</a></li>
-    <li><a href="/fILL-Patron_Guide.pdf">Patron brochure</a></li>
-    <li><a href="/patrons-searching-tutorial.pdf">Patron tutorial on Searching and Requesting</a></li>
-  </ul>
   
-  <p><strong>Library fILL</strong></p>
-  <ul>
-    <li><a href="/Librarian%20-%20How%20to%20handle%20patron%20requests.pdf">How to handle patron requests</a></li>
-    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_-_User_Guide.pdf">fILL User's Guide</a></li>
-    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
-    <li><a href="/cgi-bin/info.cgi?rm=send_pdf&amp;doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
-  </ul>
-  
-  <p><strong>Counting Opinions</strong></p> 	
-  <ul> 	
-    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">Statistics/Ready Reports</a></li> 	
-    <li><a href="http://mb.countingopinions.com/memberlist_details.php?l=14702">Addresses, phone numbers, and links to library web sites</a></li> 	
-    <li><a href="http://mb.countingopinions.com/locations.php?l=14702">Map of Manitoba Public Libraries</a></li> 	
-    <li><a href="http://mb.countingopinions.com/index.php?page_id=4">eLibraries Manitoba monthly statistics</a></li> 	
-  </ul>
+  <div id="main-right" class="tone-box" role="complementary">
+    <h2>Updates</h2>
+    <hr>
+    <div id="accordion">
+      <h3>Monday 31st August 2015 Release notes</h3>
+      <div>
+	<p>There are some very important changes in this package.  Here are the highlights:</p>
+	<strong>Update your websites!</strong>
+	<p>The fILL URL will be changing.  The new URL will be:  http://fill.mb.libraries.coop/   You can update your links right now, although for the moment the new URL simply redirects to the existing one.</p>
+	<strong>Patron Authentication</strong>
+	<p>Your patrons used to be required to create an account on the fILL system in order to do their own searching and requesting.</p>
+	<p>Patrons will now use their barcode and PIN (or username and password) from their accounts on your ILS, just as they do with Overdrive.  fILL does not store any patron-identifying information other than the barcode (or username) the patron uses to authenticate.</p>
+	<p>This major update puts control over your patron’s accounts back in your hands – if you disable or block a patron account in your ILS, that patron will also be unable able to log in to fILL (again, just like with Overdrive).</p>
+	<p>Existing patron accounts on fILL will not be automatically updated;  new, non-personally-identifying accounts get created the first time patrons log in using the new authentication method.  Patrons will not be able to access the old accounts, but library staff can still see the information.  Old accounts will still exist (for the library’s benefit) until any currently active ILLs associated with the account are completed.</p>
+	<p>As with Overdrive, SIP2 is the standard authentication method.  If your ILS does not have a SIP2 server, fILL has some work-arounds which will still let your patrons authenticate.</p>
+	<p>It is important that you create a “test” user in your ILS, and verify that the user can log in to your library OPAC’s “My Account” section.  Send your test patron barcode/PIN to PLS@gov.mb.ca with your library name and the phrase "test patron", and we will ensure that patron authentication is set up in fILL for your library. Once authentication is configured for your library, you can go into Account > Settings > Test Patron at any time to verify that authentication is working correctly.</p>
+	<strong>Individual library z39.50 profiles</strong>
+	<p>Z39.50 profiles – how fILL searches your catalogue, which indexes are available, and so on – were previously grouped by ILS vendor.  This led to some issues where different libraries were on different versions of a given vendor’s product.</p>
+	<p>fILL now has a separate z39.50 profile for each library.  This will enable us to individually adjust how fILL interacts with the idiosyncrasies of your z39.50 server.</p>
+	<strong>Monthly ILL Board Report</strong>
+	<p>A new, simple report on your ILL borrowing and lending in any given month will let you give consistent, easily understandable information at your board meetings.</p>
+	<p>Under the hood, this uses the brand-new fILL statistics and fILL charting modules.  This is the first of many new reports under development, and we certainly invite feedback!</p>
+	<p>You’ll find the new report under Reports > Board report.</p>
+	<strong>Borrowers/Lenders Report</strong>
+	<p>The new Borrowers/Lenders report will let you see which libraries you’ve been borrowing from and which you’ve been lending to, broken out by month or collapsed into a yearly total.</p>
+	<p>You’ll find this report under Reports > Borrowers/Lenders.</p>
+	<strong>“Lost” items</strong>
+	<p>Borrowing libraries can now use a new “Lost” override (in Current > Borrowing) to indicate that an item has been lost.  Lenders will see this show up on a new list (Lending > Lost);  once the borrower and lender have made whatever arrangements they need, the lender can close the ILL transaction from the Lost list, and it will move to history.</p>
+	<strong>Cancelling Renewal requests</strong>
+	<p>Borrowers can now cancel a renewal request if the lender has not yet responded to it.  This puts the request back into the borrower’s Returns list, so it can be marked as returned.</p>
+	<strong>Cancelling Holds placed</strong>
+	<p>Lenders can now cancel a hold they've placed. This puts the request back into the lenders Respond list, so they can either reply to the borrower with a "fill" or "can't fill" (or re-place the hold with a different expected date).</p>
+	<strong>LARGE PRINT indication in search results</strong>
+	<p>Books catalogued as large print, either by setting the 007 field (position 1=’t’, 2=’b’) or the 008 field (position 24=’d’), or setting the 650$a=”Large type books.” will now show a “LARGE PRINT” indication in the search results.  Large print titles will show up separately from regular print, which means that if there are multiple lenders for a given large print title, they will be grouped together.</p>
+	<strong>Medium (a.k.a. Format) and RDA</strong>
+	<p>In the search results, Medium is now RDA-aware.  fILL will now look first for the RDA “digital file characteristics”, secondly for the RDA “carrier”, and finally fall back on the pre-RDA “general material designation” it used to use.</p>
+	<strong>Borrowing overrides cleanup</strong>
+	<p>Some actions which used to be borrowing overrides – “try next lender”, “no further sources”, and “cancel” – have been integrated into normal borrowing workflows.</p>
+      </div>
 
-</div>
+      <h3>Wednesday 25th March 2015 Release notes</h3>
+      <div>
+	<strong>Landing Page</strong>
+	<p>The landing page for both libraries and users has been updated to improve the patron experience.</p>
+	<ul>
+	  <li>Patrons are now able to log in to the system from the landing page.</li>
+	  <li>Librarians are able to access their login page from a link in the footer.</li>
+	</ul>
+	<strong>Library side</strong>
+	<p>The home page now features a zServer status check on the left-hand side.  Clicking on the results of the check will take you to the full zServer test.</p>
+	<p>The patron list has been moved under Account.  Within the patron list, you can now use <strong>Yes</strong> and <strong>No</strong> instead of 1 and 0 to indicate verified and enabled.  You are also able to edit a patron's card number.</p>
+	<p>Info has received a name change to Reports.</p>
+	<p>Font-size changes are now "sticky" across all fILL pages.</p>
+	<p>Added message From and To fields in History, and removed patron barcode (ILL history records no longer contain any patron-identifying information).</p>
+	<p>Items waiting for a renewal answer no longer show on the Returns list.</p>
+	<p>Bug fix to the lender override due date.</p>
+	<strong>Patron side</strong>
+	<p>Libraries that were able to send us a copy of their logo or their local authorities logo have had these added to the system.  Now when patrons view the Contact page, the library's logo will appear.</p>
+	<p>The Help page has been updated to improve accessibility.</p>
+	<p>Many fixes to Internet Explorer problems.</p>
+      </div>
+      
+      <h3>Monday 19th December 2014 Release notes</h3>
+      <div>
+	<p>The improvements represented below have been inspired through the collective input received from the library community and some have been integrated from direct feedback. We will continue to refine areas of the site wherever necessary and your ongoing support and advice is very much appreciated. If your library has ideas on how we can improve fILL together, please send your thoughts to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a></p>
+	<strong>Updates and bug fixes</strong>
+	<p>The update release notes have been divided into two sections to best articulate the updates and fixes.</p>
+	<strong>Library Side</strong>
+	<ul>
+	  <li>Added pub date information to both the ‘Respond’ and ‘Unfilled’ tables</li>
+	  <li>Canada post tracking number option added to Shipping-returning table; includes link to CP package tracking site <span class="community">(Community Suggestion - Vickie Short, Lac du Bonnet Regional Library)</span></li>
+	  <li>Added ability to easily perform advanced searches based on limiters; title, author, subject and series</li>
+	  <li>Added ability to display the reason a patron request was declined by home library system</li>
+	  <li>New alert message "You can now add patron requests to your 'wish list'"</li>
+	  <li>Ability to clear items from the wish list</li>
+	  <li>Wish list now includes the patron barcode of title requests originating from your library service area.<span class="community">(Community Suggestion - Mary Toma, South Central Regional Library)</span></li>
+	</ul>
+	<strong>Patron Side</strong>
+	<ul>
+	  <li>eLM resources in results now link directly to eLM record</li>
+	  <li>Placeholder cover images show in search results wherever title images are not available at source</li>
+	  <li>Enhanced mobile optimisation; improved viewing on mobile and smaller screens. As an ongoing work in progress, please advise if you are viewing on a particular device with a small screen that requires some adjusting</li>
+	  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li>
+	  <li>New featured titles from 2013 Scotia Bank prize shortlist</li>
+	  <li>Other minor code tweaks and bug fixes</li>
+	</ul>
+      </div>
+      
+      <h3>Monday 24th November Release notes</h3>
+      <div>
+	<p>We invited your first impressions about the newly redesigned fILL platform and we've received a great response from libraries across the province.</p>
+	<p>Since re-launching the platform on November 18th, the fILL development team has been working to incorporate great ideas raised by the library community, address some of your critiques and further refine the platform in order to make improvements that can benefit all invested in resource sharing; from creating a more responsive user experience and effective operations to management and policy controls in order to make it easier than ever to manage your library's ILL workflows.</p>
+	<p>We hope the fixes and features released today are helpful to you and your colleagues:</p>
+	<ul>
+	  <li>Dividing lines placed in-between rows in tables, to clearly indicate which buttons belong to which records</li>
+	  <li>Due date bug fixed - the default date no longer overrides the date you entered</li>
+	  <li>Publication date field added to 'New patron requests' table, so you can see if an item is too new to request</li>
+	  <li>New alert message on welcome page; The current alert is a reminder to be mindful when placing requests for newer items</li>
+	  <li>Wish list (see below)</li>
+	  <li>GID and CID, placed into 'place request' page (see below)</li>
+	</ul>
+	<strong>Wish List</strong>
+	<p>There is now a new section in fILL under 'Accounts' called 'Wish list'. The Wish list page will help you file away titles that you may wish to acquire instead of place an ILL. When viewing your 'New patron requests' you may decide that an item is too new or too popular to request through ILL, you can now choose 'Add to Wish list' and the information of the request will be placed in the Wish list page. You can also 'Add to Wish list' from the Unfilled tab.  The table on this page can then be printed or downloaded or saved as usual. If you choose to do so, you can forward the list onto your collections staff for consideration for purchase.</p>
+	<p><strong>Note:</strong> moving requests to the wish list cancels the ILL, so you may want to contact your patron beforehand to let them know.</p>
+	<strong>GID and CID</strong>
+	<p>We had feedback from libraries about the removal of the GID and CID numbers from the tables. Previously we had thought that this functionality was only useful for the internal working of fILL. We have made the GID and CID numbers available on the 'place request' page for your reference. Some libraries have noted that they use the numbers to track Canada Post items, we are currently investigating how we can use the Canada Post tracking number to address this issue.</p>
+      </div>
+      
+      <h3>18th November 2014</h3>  
+      <div>
+	<strong>Refresh of the fILL Librarian interface</strong>
+	<p>We hope your patrons have discovered the fresh public face of fILL and that the redisign has made their experience and your ILL workflows easier.
+	  We have collected a lot of constructive feedback around this development and your support has been extremely helpful in improving the system and
+	  accessibility overall.</p>
+	<p>Over the last several months, the fILL development team at PLSB has received many great suggestions from the library community regarding how we can 
+	  improve the fILL dashboard for interlibrary loan staff.  We are very excited to share that we've been able to incorporate many of your ideas and
+	  they are available to everyone today!  There are some remaining suggestions that could not be immediately achieved which have been documented and
+	  will be considered for future development.  We believe these improvements will make it easier for interlibrary loan staff to navigate the fILL
+	  platform, view the information, perform various ILL related tasks and maximize efficiency by improving local workflows.</p>
+	<p>Your ongoing feedback is key to ensure our development resources are focused on the elements and features that are important across the library
+	  community.  Once you've had a chance to review the changes, we'd really appreciate if you would let us know what you think and share your first
+	  impressions with us be sending your feedback to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>.</p>
+	<p>Among the many user interface updates you'll see:</p>
+	<ul>
+	  <li>Larger text</li>
+	  <li>Enhanced menu notifications</li>
+	  <li>Accessibility features</li>
+	</ul>
+	<p>- the fILL development team</p>
+      </div>
 
-<div id="main-right" class="tone-box" role="complementary">
-  <h2>Updates</h2>
-  <hr>
-  <strong>Wednesday 25th March 2015 Release notes</strong> <span style="color:red;"> (new!)</span>
-  <h2>Landing Page</h2>
-  <p>The landing page for both libraries and users has been updated to improve the patron experience.</p>
-  <ul>
-    <li>Patrons are now able to log in to the system from the landing page.</li>
-    <li>Librarians are able to access their login page from a link in the footer.</li>
-  </ul>
-  <h2>Library side</h2>
-  <p>The home page now features a zServer status check on the left-hand side.  Clicking on the results of the check will take you to the full zServer test.</p>
-  <p>The patron list has been moved under Account.  Within the patron list, you can now use <strong>Yes</strong> and <strong>No</strong> instead of 1 and 0 to indicate verified and enabled.  You are also able to edit a patron's card number.</p>
-  <p>Info has received a name change to Reports.</p>
-  <p>Font-size changes are now "sticky" across all fILL pages.</p>
-  <p>Added message From and To fields in History, and removed patron barcode (ILL history records no longer contain any patron-identifying information).</p>
-  <p>Items waiting for a renewal answer no longer show on the Returns list.</p>
-  <p>Bug fix to the lender override due date.</p>
-  <h2>Patron side</h2>
-  <p>Libraries that were able to send us a copy of their logo or their local authorities logo have had these added to the system.  Now when patrons view the Contact page, the library's logo will appear.</p>
-  <p>The Help page has been updated to improve accessibility.</p>
-  <p>Many fixes to Internet Explorer problems.</p>
-
-
-  <hr>
-  <strong>Monday 19th December 2014 Release notes</strong>
-  <p>The improvements represented below have been inspired through the collective input received from the library community and some have been integrated from direct feedback. We will continue to refine areas of the site wherever necessary and your ongoing support and advice is very much appreciated. If your library has ideas on how we can improve fILL together, please send your thoughts to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a></p>
-<h3>Updates and bug fixes</h3>
-<p>The update release notes have been divided into two sections to best articulate the updates and fixes.</p>
-<h3>Library Side</h3>
-<ul>
-  <li>Added pub date information to both the ‘Respond’ and ‘Unfilled’ tables</li>
-  <li>Canada post tracking number option added to Shipping-returning table; includes link to CP package tracking site <span class="community">(Community Suggestion - Vickie Short, Lac du Bonnet Regional Library)</span></li>
-  <li>Added ability to easily perform advanced searches based on limiters; title, author, subject and series</li>
-  <li>Added ability to display the reason a patron request was declined by home library system</li>
-  <li>New alert message "You can now add patron requests to your 'wish list'"</li>
-  <li>Ability to clear items from the wish list</li>
-  <li>Wish list now includes the patron barcode of title requests originating from your library service area.<span class="community">(Community Suggestion - Mary Toma, South Central Regional Library)</span></li>
-</ul>
-<h3>Patron Side</h3>
-<ul>
-  <li>eLM resources in results now link directly to eLM record</li>
-  <li>Placeholder cover images show in search results wherever title images are not available at source</li>
-  <li>Enhanced mobile optimisation; improved viewing on mobile and smaller screens. As an ongoing work in progress, please advise if you are viewing on a particular device with a small screen that requires some adjusting</li>
-  <li>Added fILL notifications for declined requests and those added to wish list, previously patrons were only notified if a ILL request was approved</li>
-  <li>New featured titles from 2013 Scotia Bank prize shortlist</li>
-  <li>Other minor code tweaks and bug fixes</li>
-</ul>
-<hr>
-
-  <strong>Monday 24th November Release notes</strong>
-  <p>We invited your first impressions about the newly redesigned fILL platform and we've received a great response from libraries across the province.</p>
-  <p>Since re-launching the platform on November 18th, the fILL development team has been working to incorporate great ideas raised by the library community, address some of your critiques and further refine the platform in order to make improvements that can benefit all invested in resource sharing; from creating a more responsive user experience and effective operations to management and policy controls in order to make it easier than ever to manage your library's ILL workflows.</p>
-  <p>We hope the fixes and features released today are helpful to you and your colleagues:</p>
-  <ul>
-    <li>Dividing lines placed in-between rows in tables, to clearly indicate which buttons belong to which records</li>
-    <li>Due date bug fixed - the default date no longer overrides the date you entered</li>
-    <li>Publication date field added to 'New patron requests' table, so you can see if an item is too new to request</li>
-    <li>New alert message on welcome page; The current alert is a reminder to be mindful when placing requests for newer items</li>
-    <li>Wish list (see below)</li>
-    <li>GID and CID, placed into 'place request' page (see below)</li>
-  </ul>
-  <h3>Wish List</h3>
-  <p>There is now a new section in fILL under 'Accounts' called 'Wish list'. The Wish list page will help you file away titles that you may wish to acquire instead of place an ILL. When viewing your 'New patron requests' you may decide that an item is too new or too popular to request through ILL, you can now choose 'Add to Wish list' and the information of the request will be placed in the Wish list page. You can also 'Add to Wish list' from the Unfilled tab.  The table on this page can then be printed or downloaded or saved as usual. If you choose to do so, you can forward the list onto your collections staff for consideration for purchase.</p>
-  <p><strong>Note:</strong> moving requests to the wish list cancels the ILL, so you may want to contact your patron beforehand to let them know.</p>
-  <h3>GID and CID</h3>
-  <p>We had feedback from libraries about the removal of the GID and CID numbers from the tables. Previously we had thought that this functionality was only useful for the internal working of fILL. We have made the GID and CID numbers available on the 'place request' page for your reference. Some libraries have noted that they use the numbers to track Canada Post items, we are currently investigating how we can use the Canada Post tracking number to address this issue.</p>
- 
-  <hr>
-  <strong>18th November 2014</strong>
-  <h3>Refresh of the fILL Librarian interface</h3>
-  <p>We hope your patrons have discovered the fresh public face of fILL and that the redisign has made their experience and your ILL workflows easier.
-    We have collected a lot of constructive feedback around this development and your support has been extremely helpful in improving the system and
-    accessibility overall.</p>
-  <p>Over the last several months, the fILL development team at PLSB has received many great suggestions from the library community regarding how we can 
-    improve the fILL dashboard for interlibrary loan staff.  We are very excited to share that we've been able to incorporate many of your ideas and
-    they are available to everyone today!  There are some remaining suggestions that could not be immediately achieved which have been documented and
-    will be considered for future development.  We believe these improvements will make it easier for interlibrary loan staff to navigate the fILL
-    platform, view the information, perform various ILL related tasks and maximize efficiency by improving local workflows.</p>
-  <p>Your ongoing feedback is key to ensure our development resources are focused on the elements and features that are important across the library
-    community.  Once you've had a chance to review the changes, we'd really appreciate if you would let us know what you think and share your first
-    impressions with us be sending your feedback to <a href="mailto:pls@gov.mb.ca">pls@gov.mb.ca</a>.</p>
-  <p>Among the many user interface updates you'll see:</p>
-  <ul>
-    <li>Larger text</li>
-    <li>Enhanced menu notifications</li>
-    <li>Accessibility features</li>
-  </ul>
-  <p>- the fILL development team</p>
-</div>	
+    </div><!-- div id accordion -->
+  </div><!-- div id main-right -->
 </div><!--div id center-->
 <TMPL_INCLUDE NAME="footer.tmpl">

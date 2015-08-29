@@ -1,3 +1,5 @@
+## Deprecated.  See README.postgres instead.
+
 Hard way:
 
 $ sudo su -

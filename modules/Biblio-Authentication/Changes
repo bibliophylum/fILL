@@ -1,0 +1,6 @@
+Revision history for Biblio-Authentication
+
+0.03	 2015-04-20  Added dummy authenticator
+0.02	 2015-04-17  Rolled SIP2 authentication into Biblio::Authentication
+0.01	 Date/time   First version, released on an unsuspecting world.
+

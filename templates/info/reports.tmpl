@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_info.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/reports-1.0.js"></script>
+<script type="text/javascript" src="/js/reports-1.1.js"></script>
 
 <script type="text/javascript">
 set_secondary_tab("menu_info_reports");
@@ -226,7 +226,7 @@ $('document').ready(function(){
 		Run reports from (yyyy-mm-dd): <input id="startdate" type="text">
 		<br>up to (but not including) (yyyy-mm-dd): <input id="enddate" type="text">
 	      </td><td>
-		<input type="button" value="Set the date range for the reports" onClick="requery(<TMPL_VAR name="lid">); return false;">
+		<input type="button" value="Set the date range for the reports" onClick="requery(<TMPL_VAR name="oid">); return false;">
 	      </td>
 	    </tr>
 	  </table>

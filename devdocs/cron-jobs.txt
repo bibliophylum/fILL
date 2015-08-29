@@ -1,0 +1,9 @@
+Cron jobs that need to be run as root (i.e. "sudo crontab -e" to set up):
+
+1. Every 5 minutes, check if a pazpar restart has been requested (via fILL admin)
+   crontab entry:
+   */5 * * * * /opt/fILL/externals/pazpar-restart-if-requested.sh >/dev/null 2>&1
+
+2. Once/day (at midnight), restart pazpar regardless
+   crontab entry:
+   0 0 * * * /opt/fILL/externals/pazpar-restart.sh >/dev/null 2>&1

@@ -844,6 +844,18 @@ input[type="button"]:hover.action-button-highlighted {
     border-radius:5px;
 }
 
+#auth-screenmessage {
+    border-radius: 25px;
+    border: 2px solid #FF0000;
+    background-color: #FFFFFF;
+    padding: 20px;
+}
+
+.disabled-while-searching {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 /*------------------------------------------------------*/
 /* from Ohio Web Library */
 #progress_empty {

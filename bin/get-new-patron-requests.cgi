@@ -1,11 +1,17 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 
 # sql to get new (not yet handled) patron requests
 my $SQL = "select 
@@ -23,7 +29,7 @@ from
   patron_request pr 
   left join patrons p on p.pid = pr.pid 
 where 
-  pr.lid = ? 
+  pr.oid = ? 
 order by 
   name, ts";
 
@@ -38,10 +44,10 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid );
 
 # any of them local?
-my $localcopy_href = $dbh->selectall_hashref("select prid from patron_request_sources where lid=?", 'prid', undef, $lid);
+my $localcopy_href = $dbh->selectall_hashref("select prid from patron_request_sources where oid=?", 'prid', undef, $oid);
 
 foreach my $href (@$aref) {
     if (exists $localcopy_href->{ $href->{prid} }) {

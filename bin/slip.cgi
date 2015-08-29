@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use CGI;
+use CGI::Session;
 use DBI;
 #use JSON;
 use GD::Barcode;
@@ -12,6 +13,11 @@ use MIME::Base64;
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $reqid = $query->param('reqid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
@@ -31,13 +37,13 @@ my $SQL = "select
   g.title, 
   g.author, 
   g.patron_barcode, 
-  l.library, 
+  o.org_name as library, 
   ra.message 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
-  left join libraries l on l.lid = ra.msg_from
+  left join org o on o.oid = ra.msg_from
 where 
   r.id=? 
   and ra.status='Shipped'
@@ -56,7 +62,7 @@ if ($@) {
 
 my $slips_href;
 eval {
-    $slips_href = $dbh->selectrow_hashref("select slips_with_barcodes from libraries where lid=(select requester from request where id=?)", 
+    $slips_href = $dbh->selectrow_hashref("select slips_with_barcodes from org where oid=(select requester from request where id=?)", 
 					  undef, 
 					  $reqid
 	);
@@ -72,7 +78,6 @@ print "<h4>Interlibrary Loan</h4>\n";
 print '<p>for patron ' . $href->{patron_barcode} . "</p>\n";
 
 if ($slips_href->{slips_with_barcodes}) {
-#    if (( $href->{patron_barcode} ) && ( $href->{patron_barcode} =~ /^\d+$/)) {
     if ( $href->{patron_barcode} ) {
         # generate barcodes (code39 requires '*' as start and stop characters)
 	my $oGdBar;

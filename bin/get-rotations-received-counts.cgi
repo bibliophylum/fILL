@@ -1,30 +1,36 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 
 # number of rotation titles received at each participating library
 # in the last two months.
 my $SQL="select
- l1.library as now_at,
- l1.name as symbol,
+ o.org_name as now_at,
+ o.symbol,
  count(r.id) 
 from
  rotations_participants p
- left join libraries l1 on l1.lid=p.lid
- left join rotations r on r.current_library = l1.lid
+ left join org o on o.oid=p.oid
+ left join rotations r on r.current_library = o.oid
 where 
  r.ts >= now() - interval '2 months'
 group by
- l1.library,
- l1.name 
+ o.org_name,
+ o.symbol  
 order by
- l1.library,
- l1.name
+ o.org_name,
+ o.symbol
 ";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",

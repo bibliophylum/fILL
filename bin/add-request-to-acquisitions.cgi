@@ -1,13 +1,19 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $rid = $query->param('rid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 
 my $success = 0;
 
@@ -31,9 +37,9 @@ if ($req) {
     eval {
 
         # These should be atomic...
-	$dbh->do("INSERT INTO acquisitions (lid, title, author, medium, isbn, pubdate, pid) VALUES (?,?,?,?,?,?,?)",
+	$dbh->do("INSERT INTO acquisitions (oid, title, author, medium, isbn, pubdate, pid) VALUES (?,?,?,?,?,?,?)",
 		 undef,
-		 $lid,     # requester
+		 $oid,     # requester
 		 $req->{"title"},
 		 $req->{"author"},
 		 $req->{"medium"},
@@ -42,10 +48,10 @@ if ($req) {
 		 $req->{"pid"}
 	    );
 	
-#	$dbh->do("DELETE FROM patron_request WHERE prid=? and lid=?",
+#	$dbh->do("DELETE FROM patron_request WHERE prid=? and oid=?",
 #		 undef,
 #		 $prid,
-#		 $lid
+#		 $oid
 #	    );
 #	$dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
 #		 undef,

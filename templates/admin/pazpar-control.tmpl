@@ -1,0 +1,57 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_z3950.tmpl">
+
+<script type="text/javascript" src="/js/admin-pazpar-1.1.js"></script>
+
+<div id="center" role="main">
+
+  <div id="main-left">
+    <div id="libraries-table">
+      <table id="libraries" class="row-border">
+	<thead>
+	  <tr><th>Symbol</th><th>Library</th>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_list">
+	    <tr>
+	      <td>
+		<input type="button" class="action-button" value=<TMPL_VAR NAME="symbol"> />
+	      </td>
+	      <td><TMPL_VAR NAME="org_name"></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div id="main-right">
+    <h1>Pazpar2 Control</h1>
+    <p>There are two things you can do here: write a new pazpar .xml file for a library (or all libraries) from the fILL database, and/or restart the pazpar2 system.</p>
+
+    <div id="choose">
+      Choose a library from the list to the left, or click the 'All zServers' button. <input id="all-zservers" type="button" class="library-style" value="All zServers" />
+    </div>
+    <div id="chosen">
+      <p id="libtowrite"></p>
+    </div>
+
+    <div id="zserver" class="balanced-fields-column-left">
+      <label for="server">Server address</label><input id="server" type="text" name="server" disabled>
+      <label for="port">Server port</label><input id="port" type="text" name="port" disabled>
+      <label for="database">Database name</label><input id="database" type="text" name="database" disabled>
+    </div>
+    <div class="balanced-fields-clear"></div><!-- stop the floatiness -->
+    <div id="writexml">
+      <input id="writexmlbtn" type="button" class="library-style" value="Write .xml file(s)" />
+    </div>
+    
+    <div id="restart-pazpar-div">
+      <hr />
+      <p>Restarting the pazpar2 system will interrupt any user searches in progress.  The pazpar2 system is automatically restarted every night, so only use this button if you need to restart immediately.</p>
+      <input id="restart-pazpar" type="button" class="library-style" value="Restart pazpar2" />
+    </div>
+  </div>
+  
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

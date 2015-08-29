@@ -63,6 +63,8 @@ $('document').ready(function(){
     });
     
     $("#processButton").on("click",function(data){
+	$("#processButton").attr("disabled","disabled");
+	$("body").css("cursor", "wait");
         $.getJSON('/cgi-bin/admin-process-untracked-ill.cgi', 
 		  function(data){
 		      $.each( data, function( fileset, fsdata ){
@@ -87,6 +89,8 @@ $('document').ready(function(){
 	    })
 	    .always(function() {
 		//alert('ajax complete');
+		$("body").css("cursor", "default");
+		$("#processButton").removeAttr("disabled");
 	    });  // end of .complete()
 	
     });

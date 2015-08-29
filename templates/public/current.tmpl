@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/public-requests-1.0.js"></script>
+<script type="text/javascript" src="/js/public-requests-1.1.js"></script>
 
 <script type="text/javascript">
 
@@ -46,7 +46,7 @@ $('document').ready(function(){
 
     });
 
-    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, lid: <TMPL_VAR name="lid">},
+    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, oid: <TMPL_VAR name="oid">},
             function(data){
                 build_table(data);
 

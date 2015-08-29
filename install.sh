@@ -27,6 +27,40 @@ sudo rm -rf /opt/fILL/updates
 #echo Creating new /opt/fILL...
 #sudo mkdir /opt/fILL
 
+echo Building Perl modules...
+topdir=$(pwd)
+echo ---[ Biblio-SIP2-Client ]------------
+cd modules/Biblio-SIP2-Client
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+echo ---[ Biblio-Authentication ]------------
+cd modules/Biblio-Authentication
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+echo ---[ fILL-stats ]------------
+cd modules/fILL-stats
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
+echo ---[ fILL-charts ]------------
+cd modules/fILL-charts
+perl Makefile.PL
+make
+make test
+sudo make install
+cd $topdir
+
 #echo Changing ownership...
 #sudo chown david:david /opt/fILL
 
@@ -58,6 +92,11 @@ echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp
 sudo chmod g+w /opt/fILL/htdocs/tmp
 
+echo Allowing web server to write to pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings-available
+sudo chgrp www-data /opt/fILL/pazpar2/tmp
+
 #echo Creating symlink to apache sites-available
 #sudo ln -s /opt/fILL/conf/fILL.conf /etc/apache2/sites-available/fILL.conf
 
@@ -83,6 +122,8 @@ sudo touch /var/log/pazpar2.log
 sudo ln -s /var/log/pazpar2.log /opt/fILL/logs/pazpar2.log
 echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
+# dump XML to logfile with -d option: (only for debugging!)
+#sudo /usr/sbin/pazpar2 -d -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
 echo Restarting reporter daemon
 sudo /opt/fILL/services/fILLreporter.pl

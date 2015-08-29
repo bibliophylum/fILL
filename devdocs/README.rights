@@ -1,0 +1,28 @@
+Apache user must have rights to certain directories:
+
+/opt/:
+drwxrwxr-x 22 david www-data 4096 Aug 12 14:33 fILL/
+
+/opt/fILL/:
+drwxrwxr-x 22 david www-data  4096 Aug 12 14:33 ./
+drwxr-xr-x  6 root  www-data  4096 Jan 16  2015 ../
+drwxrwxr-x  3 david david    12288 Aug 12 14:33 bin/
+drwxrwxr-x  2 david www-data  4096 Apr  7 16:19 brm_loaded/
+drwxrwxr-x  2 david www-data  4096 Apr  7 16:19 brm_uploads/
+drwxrwxr-x  2 david david     4096 Aug  6 10:08 conf/
+drwxrwxr-x  2 david david     4096 Aug 12 14:33 devdocs/
+drwxrwxr-x  4 david david     4096 Aug 12 14:33 externals/
+drwxrwxr-x  8 david david     4096 Aug 12 14:33 htdocs/
+drwxrwxr-x  2 david www-data  4096 Aug 11 08:35 ill_loaded/
+drwxrwxr-x  2 david www-data  4096 Aug 11 08:35 ill_uploads/
+drwxrwxr-x  2 david www-data  4096 Aug 13 14:25 logs/
+drwxrwxr-x  6 david david     4096 Aug 12 14:33 modules/
+drwxrwxr-x  6 david david     4096 Aug 12 14:33 pazpar2/
+drwxrwxr-x  2 david www-data  4096 Jan 22  2013 report-output/
+drwxrwxr-x  2 david david     4096 Aug 12 14:33 restricted_docs/
+drwxrwxr-x  2 david www-data  4096 Jun 23 14:13 rotations-MARC/
+drwxrwxr-x  5 david david     4096 Aug 12 14:33 selenium/
+drwxrwxr-x  3 david david     4096 Aug 12 14:33 services/
+drwxrwxr-x 10 david david     4096 Aug 12 14:33 templates/
+drwxrwxr-x  2 david david     4096 Aug 12 14:33 testing/
+drwxrwxr-x  5 david david     4096 Aug 12 14:33 updates/

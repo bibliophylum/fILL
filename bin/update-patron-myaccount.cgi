@@ -3,13 +3,19 @@ use strict;
 use warnings;
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $pid = $query->param('pid');
-my $lid = $query->param('lid');
+my $oid = $query->param('oid');
 my $userSetting = $query->param('usersetting');
 my $value = $query->param('value');
 
@@ -46,7 +52,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $retval = $dbh->do( $SQL, undef, $value, $lid, $pid );
+my $retval = $dbh->do( $SQL, undef, $value, $oid, $pid );
 
 $dbh->disconnect;
 

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 #use Getopt::Long;
@@ -21,6 +22,11 @@ use constant {
 };
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $reqid = $query->param('reqid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
@@ -37,7 +43,7 @@ my $aref = $dbh->selectrow_arrayref($SQL, undef, $reqid ) or die "could not get 
 my $from = $aref->[0];
 my $to = $aref->[1];
 
-$SQL = "select library, mailing_address_line1, city, province, post_code from libraries where lid=?";
+$SQL = "select library, mailing_address_line1, city, province, post_code from libraries where oid=?";
 my $from_aref = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $from );
 my $to_aref   = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $to );
 $dbh->disconnect;

@@ -1,0 +1,117 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_authentication.tmpl">
+
+<!-- <script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script> -->
+<script type="text/javascript" src="/js/admin-authentication-test-1.0.js"></script>
+
+<div id="center" role="main">
+  <div id="main-left">
+    <!-- <div id="scrolling-table"> -->
+      <table id="libraries" class="row-border">
+	<thead>
+	  <tr><th>Library</th><th>Authen</th></tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_list">
+	    <tr id='<TMPL_VAR NAME="oid">'>
+	      <td><TMPL_VAR NAME="org_name"></td>
+	      <td><input type="button" class="action-button" value=<TMPL_VAR NAME="auth_method"> /></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    <!-- </div> -->
+  </div>
+
+  <div id="main-right">
+
+    <div id="initialMessage">
+      <p>Test a library's authentication method by clicking on the library's method button in the list to the left.</p>
+    </div>
+
+    <div id="waitDiv" style="display:none">
+      Loading... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <div id="no-data">
+      <p>This library does not have a test user entered.</p>
+    </div>
+
+    <div id="test-user">
+      <fieldset id="my_test_patron_fieldset" class="balanced-fields">
+
+	<div>
+	  <label for="library-name">Library:</label>
+	  <input id="library-name" type="text" name="library-name" value="" disabled="disabled" />
+	</div>
+	  
+	<div>
+	  <label for="selected-oid">OID:</label>
+	  <input id="selected-oid" type="text" name="selected-oid" value="" disabled="disabled" />
+	</div>
+	  
+	<div>
+	  <label for="test_patron_auth_method">Authentication method:</label>
+	  <input id="test_patron_auth_method" type="text" name="test_patron_auth_method" value="" disabled="disabled" />
+	</div>
+	  
+	<div>
+	  <label for="test_patron_last_tested">Last tested:</label>
+	  <input id="test_patron_last_tested" type="text" name="test_patron_last_tested" value="" disabled="disabled" />
+	</div>
+	      
+	<div>
+	  <label for="my_test_patron_barcode">Barcode/Username:</label>
+	  <input id="my_test_patron_barcode" type="text" name="my_test_patron_barcode" value="" disabled="disabled" />
+	</div>
+	      
+	<div>
+	  <label for="my_test_patron_pin">PIN/Password:</label>
+	  <input id="my_test_patron_pin" type="text" name="my_test_patron_pin" value="" disabled="disabled" />
+	</div>
+
+        <input id="testPatronButton" type="button" class="library-style" value="Test!">
+
+      </fieldset>
+    </div>
+
+    <div id="waitDiv-testing">
+      Testing... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <div id="test-results">
+	<h3>Authentication test</h3>
+	
+	<fieldset id="test_patron_fieldset" class="balanced-fields">
+	  
+	  <div>
+	    <label for="test_patron_test_result">Test result:</label>
+	    <input id="test_patron_test_result" type="text" name="test_patron_test_result" value="" size="40" disabled="disabled" />
+	  </div>
+	      
+	  <div>
+	    <label for="test_patron_validbarcode">Valid barcode/username?</label>
+	    <input id="test_patron_validbarcode" type="text" name="test_patron_validbarcode" value="<TMPL_VAR name=test_patron_validbarcode>" disabled="disabled" />
+	  </div>
+
+	  <div>
+	    <label for="test_patron_validpin">Valid PIN/password?</label>
+	    <input id="test_patron_validpin" type="text" name="test_patron_validpin" value="<TMPL_VAR name=test_patron_validpin>" disabled="disabled" />
+	  </div>	      
+
+	  <div>
+	    <label for="test_patron_patronname">Patron name:</label>
+	    <input id="test_patron_patronname" type="text" name="test_patron_patronname" value="<TMPL_VAR name=test_patron_patronname>" disabled="disabled" />
+	  </div>
+	      
+	  <div>
+	    <label for="test_patron_screenmessage">Screen message:</label>
+	    <input id="test_patron_screenmessage" type="text" name="test_patron_screenmessage" value="<TMPL_VAR name=test_patron_screenmessage>" size="40" disabled="disabled" />
+	  </div>
+	      
+    </div> <!-- test results div -->
+
+  </div><!-- main-right -->
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

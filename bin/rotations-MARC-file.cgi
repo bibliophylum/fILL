@@ -1,13 +1,19 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use MARC::Record;
 use JSON;
 use Data::Dumper;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -19,17 +25,17 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
     ) or die $DBI::errstr;
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
-my $SQL = "select name from libraries where lid=?";
-my $aref = $dbh->selectrow_arrayref($SQL, undef, $lid );
+my $SQL = "select symbol from org where oid=?";
+my $aref = $dbh->selectrow_arrayref($SQL, undef, $oid );
 my $libsym = $aref->[0];
 my $filename = $libsym . ".mrc";
 
-$SQL = "select holdings_field,barcode_subfield,callno_subfield,library_subfield,library_default,location_subfield,location_default,collection_subfield,collection_default from rotations_lib_holdings_fields where lid=?";
-$holdings = $dbh->selectrow_hashref($SQL, undef, $lid );
+$SQL = "select holdings_field,barcode_subfield,callno_subfield,library_subfield,library_default,location_subfield,location_default,collection_subfield,collection_default from rotations_lib_holdings_fields where oid=?";
+$holdings = $dbh->selectrow_hashref($SQL, undef, $oid );
 #print Dumper($holdings);
 
 $SQL = "select marc, barcode, callno from rotations where current_library=? and ts >= (now() - interval '1 month')";
-$aref = $dbh->selectall_arrayref($SQL, undef, $lid );
+$aref = $dbh->selectall_arrayref($SQL, undef, $oid );
 $dbh->disconnect;
 
 open(MRC,'>',"/opt/fILL/rotations-MARC/$filename") or die $!;

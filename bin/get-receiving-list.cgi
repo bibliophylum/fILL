@@ -1,11 +1,17 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 
 # sql to get items shipped to this library, which this library has not yet marked as received
 my $SQL="select 
@@ -16,8 +22,8 @@ my $SQL="select
   g.author, 
   g.patron_barcode, 
   date_trunc('second',ra.ts) as ts, 
-  l.name as from, 
-  l.library, 
+  o.symbol as from, 
+  o.org_name as library, 
   ra.msg_from, 
   ra.message,
   t.tracking  
@@ -25,7 +31,7 @@ from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
-  left join libraries l on l.lid = ra.msg_from
+  left join org o on o.oid = ra.msg_from
   left join shipping_tracking_number t on t.rid=r.id 
 where 
   ra.msg_to=? 
@@ -45,7 +51,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lid, $lid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid );
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { receiving => $aref } );

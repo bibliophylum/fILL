@@ -5,3 +5,5 @@ Add this to the /opt/conf/fILL.conf <VirtualHost *:442> section:
 	RewriteEngine On
 	RewriteRule ^/?$ /cgi-bin/public.cgi [R=302,L]
 
+$ sudo a2enmod rewrite
+$ sudo service apache2 restart

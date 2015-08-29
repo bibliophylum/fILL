@@ -1,0 +1,79 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript">
+  set_secondary_tab("menu_info_ill_stats");
+</script>
+
+<script type="text/javascript" src="/js/ill-stats-1.0.js"></script>
+
+
+<div id="center" role="main">
+
+  <div id="waitDiv">
+    Compiling statistics... <img src="/wait.gif" alt="loading indicator">
+  </div>
+
+    <div id="myDiv">
+    
+	<div class="dataTable_wrapper">
+	  <table id="datatable_report" class="cell-border">
+	    <thead>
+	      <tr>
+		<th colspan="3">Date</th><th colspan="5">Borrowing</th><th colspan="5">Lending</th>
+              </tr>
+	      <tr>
+		<th>Year</th><th>Month Number</th><th>Month</th><th>Books requested</th><th>Actual requests</th><th>Unfilled responses</th><th>Lender shipped</th><th>We cancelled</th><th>Requests to lend</th><th>Could not fill</th><th>Shipped</th><th>Forward to branch</th><th>Borrower cancelled</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+
+	      <TMPL_LOOP NAME="allStats">
+		<tr>
+		  <td><TMPL_VAR NAME="year"></td>
+		  <td><TMPL_VAR NAME="monthnum"></td>
+		  <td><TMPL_VAR NAME="month"></td>
+		  <td><TMPL_VAR NAME="books_requested"></td>
+		  <td><TMPL_VAR NAME="requests_made"></td>
+		  <td><TMPL_VAR NAME="responded_unfilled"></td>
+		  <td><TMPL_VAR NAME="lender_shipped"></td>
+		  <td><TMPL_VAR NAME="we_cancelled"></td>
+		  <td><TMPL_VAR NAME="requests_to_lend"></td>
+		  <td><TMPL_VAR NAME="could_not_fill"></td>
+		  <td><TMPL_VAR NAME="shipped"></td>
+		  <td><TMPL_VAR NAME="forward_to_branch"></td>
+		  <td><TMPL_VAR NAME="borrower_cancelled"></td>
+		</tr>
+	      </TMPL_LOOP>
+
+	    </tbody>
+	  </table>
+	</div>
+  </div>
+
+
+  <div id="instructions" class="tone-box">
+    <h2>Instructions</h2>
+
+    <h3>Borrowing</h3>
+    <table class="fill-table table-width-lib">
+      <tr><td style="border:1px solid black;">Items requested</td><td style="border:1px solid black;">Number of items you've requested.</td></tr>
+      <tr><td style="border:1px solid black;">Actual requests</td><td style="border:1px solid black;">Number of requests made to lenders, including unfilled requests</td></tr>
+      <tr><td style="border:1px solid black;">Unfilled requests</td><td style="border:1px solid black;">Number of unfilled requests</td></tr>
+      <tr><td style="border:1px solid black;">Lender shipped</td><td style="border:1px solid black;">Number of items received from lenders.</td></tr>
+      <tr><td style="border:1px solid black;">We cancelled</td><td style="border:1px solid black;">Number of requests you cancelled.</td></tr>
+    </table>
+
+    <h3>Lending</h3>
+    <table class="fill-table table-width-lib">
+      <tr><td style="border:1px solid black;">Requests to lend</td><td style="border:1px solid black;">Number of requests you received from other libraries</td></tr>
+      <tr><td style="border:1px solid black;">Could not fill</td><td style="border:1px solid black;">Number of requests to which you responded 'unfilled'</td></tr>
+      <tr><td style="border:1px solid black;">Shipped</td><td style="border:1px solid black;">Number of items you sent out.</td></tr>
+      <tr><td style="border:1px solid black;">Forward to branch</td><td style="border:1px solid black;">Number of requests you forwarded to one of your branches</td></tr>
+      <tr><td style="border:1px solid black;">Borrower cancelled</td><td style="border:1px solid black;">Number of requests the borrower cancelled before you could respond.</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

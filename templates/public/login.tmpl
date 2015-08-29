@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-
+<script type="text/javascript" src="/js/login-lost-oid.js"></script>
 
 <script type="text/javascript">
   
@@ -13,6 +13,63 @@ $('document').ready(function(){
     $("#menu_new").show();
 
     $("#fill-button").hide();  // hide the logout button, as it makes no sense here
+
+    var homeLibraryOID = $.cookie("fILL-oid");
+    var homeLibraryLocation = $.cookie("fILL-location");
+    var patronBarcode = $.cookie("fILL-barcode");
+    if (homeLibraryLocation) {
+        $("#home-library-location").text( homeLibraryLocation );
+        $("#home-library").show();
+    }
+    if (! $.cookie("fILL-oid")) {
+        $.getJSON('/cgi-bin/get-map-regions.cgi', 
+            function(data){
+              choose_library(data);
+        });
+    } else {
+        if ($.cookie("fILL-authentication") === "fILL") {
+            $("#extAuth").hide();
+            $("#fILLAuth").show();
+            $("#authen_barcode").val( "not-using-ea" );
+            $("#authen_pin").val( "not-using-ea" );
+            $("#authen_loginfield").focus();
+	} else {
+            $("#extAuth").show();
+            $("#fILLAuth").hide();
+            $("#authen_barcode").val( $.cookie("fILL-barcode") );
+            $("#authen_loginfield").val( "using-ea" );
+            $("#authen_passwordfield").val( "using-ea" );
+            $("#authen_pin").focus();
+	}
+        $("#authen_oid").val( $.cookie("fILL-oid") );
+        $("#sign-in").show();
+    }
+
+    $("#loginform").on('submit', function(e){
+        e.preventDefault();
+
+        $("#waitDiv").show();
+
+        var myAlert = "";
+        $("#loginform :input").each(function(i){
+          var $input = $(this);
+          myAlert += $input.attr('name')+':'+$input.val()+'\n';
+        });
+        //alert(myAlert);
+
+        if ($("#authen_barcode").val()) {
+            $.cookie("fILL-barcode", $("#authen_barcode").val(), { expires: 365, path: '/' });
+            $.cookie("fILL-authentication", "external", { expires: 365, path: '/' });
+            $("#authen_loginfield").val( "using-ea" );
+            $("#authen_passwordfield").val( "using-ea" );
+        } else {
+            $.cookie("fILL-authentication", "fILL", { expires: 365, path: '/' });
+            $("#authen_barcode").val( "not-using-ea" );
+            $("#authen_pin").val( "not-using-ea" );
+        }
+
+        this.submit();
+    });
 
     $("#nav2").append(' | </span><a href="/cgi-bin/admin.cgi">Admin</a><span style="color:#aabdba;">');
     $("#nav2").append(' | </span><a href="/cgi-bin/lightning.cgi">Library Staff</a>');
@@ -33,33 +90,86 @@ $('document').ready(function(){
 
   <div class="login">
 
-    <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
-          <fieldset name="login">
+  <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
+    <fieldset name="login">
 
-          <legend>Login</legend>
+      <legend>Login</legend>
 
-            <label for="authen_loginfield">User Name</label>
-            <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
+      <div id="breadcrumbs" style="display:none">
+	<p id="selectedRegion" style="display:inline"></p>
+	<p id="selectedLibrary" style="display:inline"></p>
+	<a id="startOver" href="?"><u>Start over</u></a>
+      </div>
 
-            <label for="authen_passwordfield">Password</label>
-            <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+      <div id="region"></div>
+      <div id="libraries"></div>
 
-          </fieldset>
+      <div id="home-library" style="display:none">
+	<table>
+	  <tr>
+	    <td>Home library location:</td>
+	    <td><p id="home-library-location"></p></td>
+	</tr>
+	</table>
+      </div>
 
-          <fieldset>
-            <input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-            <input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br>
-          </fieldset>
-        
+      <!-- if there is a login error: -->
+      <TMPL_IF name="screenmessage">
+	<div id="auth-screenmessage">
+	  <p><strong><TMPL_VAR name="screenmessage"></strong></p>
+	</div>
+      </TMPL_IF>
 
-        <div class="login-footer">
-          <p><strong>Don&rsquo;t have an account? <a href="?rm=registration_form" >Sign up now</a></strong></p>
-            <p>If you cannot remember your user name or password, please contact your local public library.</p>
+      <div id="extAuth" style="display:none">
+	<p>Log in using your library barcode and PIN</p>
+        <div id="chooseLibrary" style="display:none">
+	  <div id="region">
+	  </div>
         </div>
 
+	<fieldset name="login">
+	  <label for="authen_barcode">Library card number</label>
+	  <input type="text" value="" size="15" name="authen_barcode" tabindex="1" id="authen_barcode"><br>
+          <label for="authen_pin">PIN number</label>
+          <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
+        </fieldset>
+	
+      <div id="waitDiv" style="display:none">
+        Authenticating... <img src="/wait.gif" alt="loading indicator">
+      </div>
 
+      </div> <!-- div id extAuth -->
 
-    <input type="hidden" value="https://localhost/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
+      <div id="fILLAuth" style="display:none">
+	<p>Log in using your fILL username and password</p>
+        <label for="authen_username">User Name</label>
+        <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
+        <label for="authen_password">Password</label>
+        <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+      </div> <!-- div id fILLAuth -->
+
+    </fieldset>
+
+    <div id="sign-in" style="display:none">
+      <fieldset>
+	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
+<!--	<input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br> -->
+      </fieldset>
+    </div>
+      
+
+    <div class="login-footer">
+<!-- No need for signup if everyone authenticates via their library ILS...
+      <div id="signup" style="display:none">
+	<p><strong>Don&rsquo;t have an account?</strong></p>
+	<a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign up now</a>
+      </div>
+-->
+      <p>If you cannot remember your user name or password, please contact your local public library.</p>
+
+    </div> <!--div class login-footer -->
+    <input type="hidden" value="/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
+    <input type="hidden" name="authen_oid" id="authen_oid" value="">
     <input type="hidden" value="authen_login" name="rm">
   </form>
   </div><!--div class login-->

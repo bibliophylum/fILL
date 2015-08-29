@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 #use strict;
 use CGI;
+use CGI::Session;
 use JSON;
 use ZOOM;
 use MARC::Record;
@@ -9,6 +10,14 @@ use Data::Dumper;
 no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~") has been made experimental.
 
 my $query = new CGI;
+my $session;
+if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only worry about session if we're a cgi
+    $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+    if (($session->is_expired) || ($session->is_empty)) {
+	print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+	exit;
+    }
+}
 my $libsym = $query->param('libsym');
 my $keepLog = $query->param('log') || 0;
 my $result_href = { "success" => 0, 
@@ -59,12 +68,33 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 
     # see if that symbol shows up in any of the pazpar2/settings/ files:
     my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
+    #print STDERR "cmd [$cmd]\n";
     my @f = `$cmd`;
 
     if (scalar @f == 1) {
 	my $t = $f[0];
 	chomp $t;
-	$t =~ s/^.*(target=.*) name=.*/$1/;
+	if ($t =~ /set target=/) {
+	    $t =~ s/^.*(target=.*) name=.*/$1/;
+	} else {
+	    # Individual library profile... doesn't have connection info in the <set ...>,
+	    # instead, it shows up once in the "settings" line (<settings target=...>)
+	    # (This is now the default!)
+	    my $fn = $t;
+	    $fn =~ s/^(.*\.xml):.*/$1/;
+	    open(my $file, '<', $fn) or die "Can't open $fn for read: $!";
+	    # these files are tiny, so just slurp the whole thing:
+	    my @lines = <$file>;
+	    foreach (@lines) {
+		next unless /^<settings /;
+		chomp;
+		my $line = $_;
+		$line =~ s/^<settings (target=.*)>$/$1/;
+		$t = $line;
+		last;
+	    }
+	    close $file;
+	}
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);
 
@@ -113,7 +143,7 @@ sub _test_zserver {
     my $scan = shift;
 
     $preferredRecordSyntax = "usmarc" unless ($preferredRecordSyntax);
-    $elementSet = "f" unless ($elementSet);
+    $elementSet = "F" unless ($elementSet);  # TLC server doesn't recognize 'f', but does recognize 'F'... standard says it is case insensitive.
     $pqf = '@attr 1=4 "ducks"' unless ($pqf);
 
     my $conn;

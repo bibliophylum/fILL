@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
 
-<script type="text/javascript" src="/js/rotation-reports-1.0.js"></script>
+<script type="text/javascript" src="/js/rotation-reports-1.1.js"></script>
 
 <script type="text/javascript">
 
@@ -19,7 +19,7 @@ $('document').ready(function(){
 
       $.getJSON('/cgi-bin/get-rotations-items-highcirc.cgi', 
         {
-          lid: <TMPL_VAR name="lid">, 
+          oid: <TMPL_VAR name="oid">, 
           sdate: $("#sdate").val(), 
           edate: $("#edate").val(), 
           limit: $("#limit").val()

@@ -40,6 +40,8 @@ sub setup {
 	);
 }
 
+
+
 #--------------------------------------------------------------------------------
 #
 #
@@ -47,78 +49,47 @@ sub myaccount_settings_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    my $status;
-    my @searchprefs;
-
-    # If the user has clicked the 'update' button, $q->param("lid") will be defined
-    # (the user is submitting a change)
-    if (defined $q->param("lid")) {
-
-	$self->log->debug("MyAccount:Settings: User " . $self->authen->username . " updating lid [$lid], library [" . $q->param("library") . "]");
-
-	$self->dbh->do("UPDATE libraries SET email_address=?, website=?, library=?, mailing_address_line1=?, city=?, province=?, post_code=?, slips_with_barcodes=?, centralized_ill=? WHERE lid=?",
-		       undef,
-		       $q->param("email_address"),
-		       $q->param("website"),
-		       $q->param("library"),
-		       $q->param("mailing_address_line1"),
-		       $q->param("city"),
-		       $q->param("province"),
-		       $q->param("post_code"),
-		       $q->param("slips_with_barcodes"),
-		       $q->param("centralized_ill"),
-		       $lid
-	    );
-
-	$status = "Updated.";
-#	$self->_set_header_to_get_fresh_page();
-
-    }
-
-    # Get the form data
-    my $SQL_getLibrary = "SELECT lid, name, password, email_address, website, library, mailing_address_line1, city, province, post_code, slips_with_barcodes, centralized_ill FROM libraries WHERE lid=?";
-    my $href = $self->dbh->selectrow_hashref(
-	$SQL_getLibrary,
-	{},
-	$lid,
-	);
-    $self->log->debug("MyAccount:Settings: Edit user lid:$href->{lid}, username:" . $self->authen->username .  ", library:$href->{library}");
-
-    $status = "Editing in process." unless $status;
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, z.server_address, z.server_port, z.database_name, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,{},$oid);
 
     my $logoPath = "/img/fill-contact.jpg";
     my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
     my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
-    if (-f "/opt/fILL/htdocs/img/logos/" . $href->{name} . ".png") {
-	$logoPath = "/img/logos/" . $href->{name} . ".png";
+    if (-f "/opt/fILL/htdocs/img/logos/" . $href->{symbol} . ".png") {
+	$logoPath = "/img/logos/" . $href->{symbol} . ".png";
 	$logoAltText = $href->{"library"} . " logo";
 	$logoCredit = $href->{"library"} . ". Used with permission.";
     }
 
     my $template = $self->load_tmpl('myaccount/settings.tmpl');
-    $template->param(pagetitle => "fILL MyAccount Settings",
-		     username     => $self->authen->username,
-		     lid          => $lid,
-		     library      => $library,
-	             status       => $status,
-		     editLID      => $href->{lid},
-		     editEmail    => $href->{email_address},
-		     editWebsite  => $href->{website},
-		     editLibrary  => $href->{library},
-		     editMailingAddressLine1 => $href->{mailing_address_line1},
-		     editCity     => $href->{city},
-		     editProvince => $href->{province},
-		     editPostalCode => $href->{post_code},
-		     editSlipsWithBarcodes => $href->{slips_with_barcodes},
-		     editCentralizedILL => $href->{centralized_ill},
-		     logo_path => $logoPath,
+    $template->param(pagetitle     => "fILL MyAccount Settings",
+		     username      => $self->authen->username,
+		     oid           => $oid,
+		     symbol        => $symbol,
+		     library       => $href->{org_name},
+		     email_address => $href->{email_address},
+		     website       => $href->{website},
+		     mailing_address_line1 => $href->{mailing_address_line1},
+		     city          => $href->{city},
+		     province      => $href->{province},
+		     post_code     => $href->{post_code},
+		     z3950_server_address => $href->{server_address},
+		     z3950_server_port    => $href->{server_port},
+		     z3950_database_name  => $href->{database_name},
+		     my_test_patron_barcode  => $href->{barcode},
+		     my_test_patron_pin      => $href->{pin},
+		     test_patron_auth_method => $href->{patron_authentication_method},
+		     test_patron_last_tested => $href->{last_tested} || "Never.",
+		     test_patron_test_result => $href->{test_result},
+		     slips_with_barcodes  => $href->{slips_with_barcodes},
+		     centralized_ill      => $href->{centralized_ill},
+		     logo_path     => $logoPath,
 		     logo_alt_text => $logoAltText,
-		     logo_credit => $logoCredit
+		     logo_credit   => $logoCredit
 	);
     return $template->output;
 }
-
 
 #--------------------------------------------------------------------------------
 #
@@ -127,12 +98,12 @@ sub myaccount_library_barcodes_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('myaccount/library-barcodes.tmpl');	
     $template->param( pagetitle => $self->authen->username . " barcodes from ILS",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -146,11 +117,11 @@ sub myaccount_test_zserver_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
     my $template = $self->load_tmpl('myaccount/test-zserver.tmpl');
     $template->param(pagetitle => "fILL MyAccount test zServer",
 		     username     => $self->authen->username,
-		     lid          => $lid,
+		     oid          => $oid,
 		     libsym       => $symbol,
 		     library      => $library,
 	);
@@ -165,11 +136,11 @@ sub myaccount_acquisitions_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
     my $template = $self->load_tmpl('myaccount/acquisitions.tmpl');
     $template->param(pagetitle => "fILL acquisitions list",
 		     username     => $self->authen->username,
-		     lid          => $lid,
+		     oid          => $oid,
 		     library      => $library,
 	);
     return $template->output;
@@ -183,12 +154,12 @@ sub myaccount_patrons_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($lid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('myaccount/patrons.tmpl');	
     $template->param( pagetitle => "Patrons using public fILL",
 		      username => $self->authen->username,
-		      lid => $lid,
+		      oid => $oid,
 		      library => $library,
 	);
     return $template->output;
@@ -201,11 +172,11 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select l.lid, l.name, l.library from users u left join libraries l on (u.lid = l.lid) where u.username=?",
+	"select o.oid, o.symbol, o.org_name from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{lid}, $hr_id->{name}, $hr_id->{library});
+    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name});
 }
 
 1; # so the 'require' or 'use' succeeds

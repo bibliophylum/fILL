@@ -22,7 +22,7 @@ $('document').ready(function(){
 
   set_secondary_tab("menu_rotations_current");
 
-  $.getJSON('/cgi-bin/get-rotations-current.cgi', {lid: <TMPL_VAR name="lid">},
+  $.getJSON('/cgi-bin/get-rotations-current.cgi', {oid: <TMPL_VAR name="oid">},
      function(data){
        build_table(data); 
 

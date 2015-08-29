@@ -1,0 +1,44 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript" src="/js/report-borrowers-lenders-1.0.js"></script>
+
+<script type="text/javascript">
+
+set_secondary_tab("menu_info_borrowers_lenders");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+</script>
+
+
+<div id="center" role="main">
+
+  <div id="dateRange">
+    <form id="dateForm">
+      Year:<input id="year" type="text" name="year" size="4" maxlength="4" />
+      Month: 
+      <input type="radio" name="mtype" value="all">All months, 
+      <input type="radio" name="mtype" value="one">Specific month: <input id="month" type="text" name="month" size="2" maxlength="2" />, or 
+      <input type="radio" name="mtype" value="none" checked="true">No months (year summary)
+      <input id="dateButton" type="button" class="library-style" value="Create report">
+    </form>
+  </div>
+
+  <div id="waitDiv">
+    Calculating... <img src="/wait.gif" alt="loading indicator">
+  </div>
+
+  <div id="myDiv">
+    <div id="mylistDiv"></div>
+  </div>
+
+
+  <div id="instructions" class="tone-box">
+  </div>
+
+</div>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,10 +1,19 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
+my $session;
+if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only worry about session if we're a cgi
+    $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+    if (($session->is_expired) || ($session->is_empty)) {
+	print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+	exit;
+    }
+}
 my $reqid = $query->param('reqid');
 
 #print STDERR "move-to-history: $reqid\n";
@@ -87,7 +96,7 @@ eval {
 	#print STDERR "move-to-history: requests_active deleted for reqid $chained_req\n";
 
 	# copy sources to sources_history - including request_id (i.e. before nulling it)
-	$SQL = "insert into sources_history (request_id, sequence_number, lid, call_number, group_id, tried) select request_id, sequence_number, lid, call_number, group_id, tried from sources where request_id=?";
+	$SQL = "insert into sources_history (request_id, sequence_number, oid, call_number, group_id, tried) select request_id, sequence_number, oid, call_number, group_id, tried from sources where request_id=?";
 	$rSourcesHist = ($dbh->do( $SQL, undef, $chained_req ) ? 1 : 0);
 	#print STDERR "move-to-history: sources for this request have been moved to sources history\n";
 

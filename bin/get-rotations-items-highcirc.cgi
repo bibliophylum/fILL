@@ -1,11 +1,17 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 my $sdate = $query->param('sdate');
 my $edate = $query->param('edate');
 my $limit = $query->param('limit') || 3;

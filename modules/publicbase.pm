@@ -29,48 +29,19 @@ use CGI::Application::Plugin::Authorization;
 use CGI::Application::Plugin::LogDispatch;
 use Digest::SHA;  # (k)ubuntu 12.04 replaces libdigest-sha1-perl with libdigest-sha-perl
 use Data::Dumper;
+use JSON;
+#use Biblio::SIP2::Client;
+use Biblio::Authentication::SIP2;
+use Biblio::Authentication::Biblionet;
+use Biblio::Authentication::FollettDestiny;
+use Biblio::Authentication::L4U;
+use Biblio::Authentication::TLC;
+use Biblio::Authentication::Dummy;   # for testing
+use String::Random;
+#use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
+#use Capture::Tiny ':all';
 
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
-
-#my %config = (
-#    DRIVER         => [ 'DBI',
-#			TABLE => 'users',
-#			CONSTRAINTS => {
-#			    'users.username' => '__CREDENTIAL_1__',
-#			    'MD5:users.password' => '__CREDENTIAL_2__'
-#			},
-#
-#    ],
-#    STORE          => 'Session',
-#    POST_LOGIN_RUNMODE => 'welcome',
-#    LOGOUT_RUNMODE => 'logged_out',
-#    LOGIN_RUNMODE => 'login',
-#    );
-#
-#fILLbase->authen->config(%config);
-#fILLbase->authen->protected_runmodes(':all');
-
-my %config = (
-    DRIVER         => [ 'DBI',
-			TABLE => 'patrons',
-			CONSTRAINTS => {
-			    'patrons.username' => '__CREDENTIAL_1__',
-			    'MD5:patrons.password' => '__CREDENTIAL_2__',
-#			    'patrons.is_enabled' => 1
-			},
-
-    ],
-    STORE          => 'Session',
-    LOGIN_RUNMODE  => 'loginFOO',
-    POST_LOGIN_CALLBACK => \&update_login_date,
-    POST_LOGIN_RUNMODE => 'search_form',
-    LOGOUT_RUNMODE => 'logged_out',
-    );
-
-publicbase->authen->config(%config);
-#publicbase->authen->protected_runmodes(':all');
-# protect everything but the self-registration form:
-publicbase->authen->protected_runmodes(qr/^(?!registration_)/);
 
 
 #--------------------------------------------------------------------------------
@@ -103,15 +74,42 @@ sub cgiapp_init {
       APPEND_NEWLINE => 1,
     );
 
+    # configure authentication
+    $self->authen->config(
+	CREDENTIALS => ['authen_username','authen_password','authen_barcode','authen_pin','authen_oid'],
+	DRIVER => [ 
+	    [ 'Generic', sub { return $self->externallyAuthenticate( @_ ); } ],
+	    [ 'DBI',
+	      TABLE => 'patrons',
+	      CONSTRAINTS => {
+		  'patrons.username' => '__CREDENTIAL_1__',
+		  'MD5:patrons.password' => '__CREDENTIAL_2__',
+#	      'patrons.is_enabled' => 1
+	      },
+	    ],
+	],
+	STORE          => 'Session',
+	LOGIN_RUNMODE  => 'loginFOO',
+	POST_LOGIN_CALLBACK => \&update_login_date,
+	POST_LOGIN_RUNMODE => 'search_form',
+	LOGOUT_RUNMODE => 'logged_out',
+	# force re-authentication if idle for more than 30 minutes
+	LOGIN_SESSION_TIMEOUT => '30m',
+	);
+    #publicbase->authen->protected_runmodes(':all');
+    # protect everything but the self-registration form:
+    $self->authen->protected_runmodes(qr/^(?!registration_)/);
+
+
     # Configure authorization
     $self->authz->config(
 	DRIVER => [
 	    'DBI',
 	    DBH         => $self->dbh,
-	    TABLES      => [ 'libraries','library_authgroups','authgroups' ],
-	    JOIN_ON     => 'libraries.lid = library_authgroups.lid AND library_authgroups.gid = authgroups.gid',
+	    TABLES      => [ 'org','library_authgroups','authgroups' ],
+	    JOIN_ON     => 'org.oid = library_authgroups.oid AND library_authgroups.gid = authgroups.gid',
 	    CONSTRAINTS => {
-		'libraries.name' => '__USERNAME__',
+		'org.symbol' => '__USERNAME__',
 		'authgroups.authorization_group' => '__PARAM_1__',
 	    },
 	],
@@ -125,17 +123,6 @@ sub cgiapp_init {
 	reports_home_zServers_form => 'reports',
 	);
 
-#    # common runmodes
-#    $self->run_modes(
-##	'dbtest'        => 'display_db_entries',
-##	'emailtest'     => 'send_test_email',
-#
-#	'login'                      => 'login_process',
-#	'welcome'                    => 'welcome_process',
-#	'logged_out'                 => 'show_logged_out_process',
-#	'forbidden'                  => 'forbidden_process',
-#	'environment_form'           => 'environment_process',
-#	);
     # common runmodes
     $self->run_modes(
 	'loginFOO'                   => 'login_foo',
@@ -147,6 +134,178 @@ sub cgiapp_init {
 
 }
 
+
+#--------------------------------------------------------------------------------
+#
+#
+sub createPatronRecordIfRequired {
+    my $self = shift;
+    my ($oid, $barcode) = @_;
+
+    my $pid;
+
+    # authenticated user.  Is there a fILL patron record?
+    my $href = $self->dbh->selectrow_hashref(
+	"select pid from patrons where home_library_id=? and card=?",
+	undef,
+	$oid,
+	$barcode
+	);
+    if (defined $href) {
+	# fILL patron record exists
+	$pid = $href->{pid};
+
+    } else {
+	# from bin/register-sip2-patron.cgi:
+	my $SR = new String::Random;
+	my $pass = $SR->randregex('[\w]{75}'); # generate a random-ish string for a password that will never be used.
+	# note that we don't store user name for externally-authenticated patrons;
+	# use barcode instead.
+	# patron name is stored in session (so it can be displayed on user's
+	# pages), and only valid while session is active
+	my $rows_affected = $self->dbh->do("INSERT INTO patrons (is_externally_authenticated, username, password, home_library_id, name, card, is_verified) VALUES (?,?,md5(?),?,?,?,?)", undef, 
+					   1,
+					   $barcode,
+					   $pass,
+					   $oid,
+					   $barcode,
+					   $barcode,
+					   1
+	    );
+	my $href = $self->dbh->selectrow_hashref(
+	    "select pid from patrons where home_library_id=? and card=?",
+	    undef,
+	    $oid,
+	    $barcode
+	    );
+	$pid = $href->{pid};
+    }
+    return $pid;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub externallyAuthenticate {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+    #$self->log->debug( "externallyAuthenticate....\n" );
+    my $pname;
+    # is this a SIP2 library?
+    my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, org_name from org where oid=?", undef, $oid);
+
+    #$self->log->debug( "externallyAuthenticate: $barcode, $pin, $oid\n" );
+    if ($lib_href->{patron_authentication_method} eq 'sip2') {
+	#$self->log->debug( "externallyAuthenticate using sip2\n" );
+	$pname = $self->checkSip2($username, $password, $barcode, $pin, $oid);
+
+    } else {
+	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $oid, 
+	    $lib_href->{patron_authentication_method});
+    }
+
+    if ($pname) {
+	my $pid = $self->createPatronRecordIfRequired( $oid, $barcode );
+	$self->session->param('fILL-card',$barcode);
+	$self->session->param('fILL-pid',$pid);
+	$self->session->param('fILL-oid',$oid);
+	$self->session->param('fILL-library', $lib_href->{'library'}); 
+	$self->session->param('fILL-is_enabled',1); # if they authenticated, they're enabled
+    }
+    $self->log->debug( "externallyAuthenticate returned [$pname] using auth method [" . $lib_href->{patron_authentication_method} . "]\n" );
+    return $pname;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkSip2 {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $oid) = @_;  # username and password should be undefined if this is a sip2 authen
+
+#    $self->log->debug( "checkSip2:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where oid=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid);
+
+#    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (defined $href) {
+	# need to translate from postgresql field name to SIP2 field name
+	if ($href->{terminator}) {
+	    $href->{msgTerminator} = $href->{terminator};
+	}
+    } else {
+	# no SIP2 server, so bail
+	return undef;
+    }
+
+#    $self->log->debug( "attempting to authenticate user...\n" );
+    $href->{debug} = 1;
+    my $authenticator = Biblio::Authentication::SIP2->new( %$href );
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+
+#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
+    return $authorized_href->{'patronname'};
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub checkNonSip2 {
+    my $self = shift;
+    my ($username, $password, $barcode, $pin, $oid, $authmethod) = @_;
+
+#    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
+
+    my $SQL = "select url from library_nonsip2 where oid=? and auth_type=?";
+    my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid,$authmethod);
+
+#    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+
+    if (!defined $href) {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Unable to determine authentication method.  Please contact your library."
+	    );
+	return undef;
+    }
+
+    my $authenticator;
+    if ($authmethod eq 'Biblionet') {
+	$authenticator = Biblio::Authentication::Biblionet->new( %$href );
+
+    } elsif ($authmethod eq 'FollettDestiny') {
+	$authenticator = Biblio::Authentication::FollettDestiny->new( %$href );
+
+    } elsif ($authmethod eq 'L4U') {
+	$authenticator = Biblio::Authentication::L4U->new( %$href );
+
+    } elsif ($authmethod eq 'TLC') {
+	$authenticator = Biblio::Authentication::TLC->new( %$href );
+
+    } elsif ($authmethod eq 'Dummy') {
+	$authenticator = Biblio::Authentication::Dummy->new( %$href );
+    }
+
+    if (!defined $authenticator) {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Unable to determine authentication method.  Please contact your library."
+	    );
+	return undef;
+    }
+
+    my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
+
+#    $self->log->debug( "authorized:\n" . Dumper($authorized_href) . "\n");
+
+    $self->session->param('fILL-auth-screenmessage',$authorized_href->{'screenmessage'});
+    return $authorized_href->{'patronname'};
+}
 
 #--------------------------------------------------------------------------------
 # Execute the following before we execute the requested run mode
@@ -191,36 +350,32 @@ sub error {
 #--------------------------------------------------------------------------------
 #
 #
-#sub welcome_process {
 sub update_login_date {
     # The application object
     my $self = shift;
 
-    my ($pid, $lid,$library) = get_patron_from_username($self, $self->authen->username);  # do error checking!
+    #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
-    my $rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE username=?",
-				       undef,
-				       $self->authen->username,
-	);
+    my ($pid, $oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
-#    # Open the html template
-#    # NOTE 1: load_tmpl() is a CGI::Application method, not a HTML::Template method.
-#    # NOTE 2: Setting the 'cache' flag caches the template if used with mod_perl. 
-#    my $template = $self->load_tmpl(	    
-#	                      'public/welcome.tmpl',
-#			      cache => 0,
-#			     );	
-#    $template->param( pagetitle => 'Public fILL Welcome',
-#		      username => $self->authen->username,
-#		      sessionid => $self->session->id(),
-#		      lid => $lid,
-#		      library => $library,
-#	);
-#
-#    # Parse the template
-#    my $html_output = $template->output;
-#    return $html_output;
+    #$self->log->debug("update login date, pid [$pid], oid [$oid], library [$library], is_enabled [$is_enabled]\n");
 
+    my $rows_affected;
+#    if ($self->session->param('fILL-card')) {
+#	# this is an externally-authenticated patron
+#	#$self->log->debug("update login date for externally-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
+#	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
+#					undef,
+#					$oid,
+#					$self->session->param('fILL-card'),
+#	    );
+#    } else {
+	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE pid=?",
+					undef,
+					$pid,
+	    );
+#    }
+    #$self->log->debug("finished update login date, rows affected: $rows_affected\n");
 }
 
 #--------------------------------------------------------------------------------
@@ -231,11 +386,12 @@ sub show_logged_out_process {
     my $self = shift;
 
     my $template = $self->load_tmpl(	    
-	                      'public/logged_out.tmpl',
-			      cache => 1,
-			     );	
+	'public/logged_out.tmpl',
+	cache => 1,
+	);
     $template->param( pagetitle => 'fILL Logged Out',
 		      username => "Logged out. ",
+		      barcode => '',
 		      sessionid => $self->session->id(),
 	);
 
@@ -260,6 +416,7 @@ sub forbidden_process {
 			     );	
     $template->param( pagetitle => 'fILL Forbidden',
 		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
 		      sessionid => $self->session->id(),
 	);
 
@@ -291,18 +448,58 @@ sub environment_process {
 }
 
 
-#--------------------------------------------------------------------------------------------
-sub get_patron_from_username {
+#--------------------------------------------------------------------------------
+sub get_patron_and_library {
     my $self = shift;
-    my $username = shift;
+
+    #$self->log->debug("get patron and library\n");
+
     # Get this user's library id
-    my $hr_id = $self->dbh->selectrow_hashref(
-	"select p.pid, p.home_library_id, l.library from patrons p left join libraries l on (p.home_library_id = l.lid) where p.username=?",
-	undef,
-	$username
-	);
-    $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{library});
+    my $hr_id;
+    if ($self->session->param('fILL-pid') 
+	 && $self->session->param('fILL-oid') 
+	 && $self->session->param('fILL-library') 
+	 && $self->session->param('fILL-is_enabled')
+	) {
+	
+	my %patron = (
+	    'pid' => $self->session->param('fILL-pid'),
+	    'home_library_id' => $self->session->param('fILL-oid'),
+	    'library' => $self->session->param('fILL-library'),
+	    'is_enabled' => $self->session->param('fILL-is_enabled'),
+	    );
+	$hr_id = \%patron;
+	
+    } else {
+
+	if ($self->session->param('fILL-card')) {
+	    #$self->log->debug("session param fILL-card exists: " . $self->session->param('fILL-card') . "\n");
+	    
+	    # The session parameter 'fILL-card' will be set if this is an externally 
+	    # authenticated  user; Patron name is not stored in the database.
+	    $hr_id = $self->dbh->selectrow_hashref(
+		"select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (p.home_library_id = o.oid) where p.card=?",
+		undef,
+		$self->session->param('fILL-card')
+		);
+	} else {
+	    #$self->log->debug("session param fILL-card DOES NOT exist\n");
+	    $hr_id = $self->dbh->selectrow_hashref(
+		"select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (p.home_library_id = o.oid) where p.username=?",
+		undef,
+		$self->authen->username
+		);
+	}
+
+	# set the session parameters so we don't have to hit the database again
+	$self->session->param('fILL-pid',$hr_id->{pid}); 
+	$self->session->param('fILL-oid',$hr_id->{home_library_id}); 
+	$self->session->param('fILL-library',$hr_id->{org_name}); 
+	$self->session->param('fILL-is_enabled',$hr_id->{is_enabled});
+    }
+    #$self->log->debug( Dumper( $hr_id ) );
+    return ($hr_id->{pid}, $hr_id->{home_library_id}, $hr_id->{org_name}, $hr_id->{is_enabled});
+
 }
 
 #--------------------------------------------------------------------------------
@@ -310,9 +507,13 @@ sub get_patron_from_username {
 #
 sub login_foo {
     my $self = shift;
+    my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
-    $template->param( pagetitle => 'fILL public login' );
+    $template->param( 
+	pagetitle => 'fILL public login',
+	screenmessage => $screenmessage,
+	);
     return $template->output;
 }
 
@@ -333,6 +534,45 @@ sub login_foo {
 #    return $html_output;
 #}
 
+#---------------------------------------------------------------
+# for debugging...
+#---------------------------------------------------------------
+sub print_parsed_response {
+    my $self = shift;
+    my $parsed = shift;
+
+    $self->log->debug( "Fixed:\n");
+    my $href = $parsed->{'fixed'};
+    foreach my $key (keys %$href) { 
+	$self->log->debug( "$key\t"); 
+	if (ref( $href->{$key} ) eq "ARRAY") {
+	    $self->log->debug( "\n");
+	    foreach my $elem (@{$href->{$key}}) {
+		$elem =~ s/\r//;
+		$self->log->debug( "\t$elem\n");
+	    }
+	} else {
+	    $href->{$key} =~ s/\r//;
+	    $self->log->debug( "[" . $href->{$key} . "]\n"); 
+	}
+    }
+
+    $self->log->debug( "Variable:\n");
+    $href = $parsed->{'variable'};
+    foreach my $key (keys %$href) { 
+	$self->log->debug( "$key\t"); 
+	if (ref( $href->{$key} ) eq "ARRAY") {
+	    $self->log->debug( "\n");
+	    foreach my $elem (@{$href->{$key}}) {
+		$elem =~ s/\r//;
+		$self->log->debug( "\t$elem\n");
+	    }
+	} else {
+	    $href->{$key} =~ s/\r//;
+	    $self->log->debug( "[" . $href->{$key} . "]\n" ); 
+	}
+    }
+}
 
 
 1; # so the 'require' or 'use' succeeds

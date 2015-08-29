@@ -1,12 +1,18 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use Data::Dumper;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 #print STDERR Dumper($query->param(pass));
 #print STDERR Dumper($query->param(newpass));
 #print STDERR Dumper($query->param(pid));

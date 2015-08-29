@@ -1,0 +1,93 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_info.tmpl">
+
+<script type="text/javascript">
+  set_secondary_tab("menu_info_board_report");
+</script>
+
+<script type="text/javascript" src="/js/report-board-1.0.js"></script>
+<!-- jquery-migrate is necessary for printElement to work.
+     see https://stackoverflow.com/questions/18354861/jquery-printelement-not-responding-at-all
+-->
+<script type="text/javascript" src="/plugins/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/plugins/jquery.printElement.min.js"></script>
+
+<link type="text/css" rel="stylesheet" media="all" href="/css/print-reports.1.0.css"/>
+
+<div id="dateRange">
+  <p>Create the Board Report for:</p>
+  <form id="dateForm">
+    Year:<input id="year" type="text" name="year" size="4" maxlength="4" />
+    Month: <input id="month" type="text" name="month" size="2" maxlength="2" /> 
+    <input id="dateButton" type="button" class="library-style" value="Create report">
+    <input id="printButton" type="button" class="library-style" value="Print">
+    <span id="printNote"><em>You can disable the URL, page, and time in your browser's print settings.</em></span>
+  </form>
+</div>
+
+<div id="waitDiv">
+  Generating report... <img src="/wait.gif" alt="loading indicator">
+</div>
+
+<div id="report-content">
+  <h1><span id="title-library"></span><br/>Interlibrary Loans Board Report for <span id="title-month"></span> <span id="title-year"></span></h1>
+
+  <h2>Borrowing from other libraries</h2>
+  
+  <div class="details"> <!-- border... -->
+    <div id="borrow-left" class="inner-left">
+      <img id="chart-borrowing"/>
+    </div>
+    
+    <div id="borrow-right" class="inner-right">
+      <p>In <span id="borrowing-detail-month"></span>:</p>
+      <ul>
+	<li>Our patrons asked to borrow <strong><span id="borrowing-requests"></span></strong> items from other libraries:
+	  <ul id="borrowing-request-types"></ul>
+	</li>
+	<li>Chart: items received or requests unfilled in <span id="chart-info-month"></span>, for patron requests made this month or earlier:</li>
+	<ul>
+	  <li>The library received <strong><span id="borrowing-borrowed"></span></strong> items</li>
+	  <li><strong><span id="borrowing-unfilled"></span></strong> requests could not be filled by any library:
+	    <ul id="borrowing-unfilled-types"></ul>
+	  </li>
+	</ul>
+	<!--	  <li>We added <strong><TMPL_VAR name="acquisitions"></strong> items to our acquisitions list, rather than requesting an interlibrary loan.</li> -->
+      </ul>
+    </div><!-- borrow-right -->
+    
+    <br style="clear:both;"/>
+  </div>
+
+  <p id="p-borrowing-change">The <span id="borrowing-requests-change-base"></span> requests our patrons made in <span id="borrowing-requests-change-month"></span> was a <span id="borrowing-change"></span> from <span id="borrowing-requests-change-month2"></span> of last year.</p>
+
+  <p>The approximate value of the items received by <span id="borrowing-value-library"></span> in <span id="borrowing-value-month"></span> was $<span id="borrowing-value"></span></p>
+
+  <hr />
+  <h1 class="page-break"><span id="title2-library"></span><br/>Interlibrary Loans Board Report for <span id="title2-month"></span> <span id="title2-year"></span></h1>
+
+  <h2>Lending to other Libraries</h2>
+  
+  <div class="details"> <!-- border... -->
+    <div id="lending-left" class="inner-left">
+      <img id="chart-lending"/>
+    </div>
+    
+    <div id="lending-right" class="inner-right">
+      <p>In <span id="lending-detail-month"></span>:</p>
+      <ul>
+	<li><span id="lending-detail-library"></span> received <span id="lending-requests"></span> ILL requests from other libraries.</li>
+	<li><span id="lending-shipped"></span> items were shipped to other libraries in Manitoba</li>
+	<li>The library did not fill <span id="lending-unfilled"></span> requests, for the following reasons:</li>
+	<ul id="lending-unfilled-status"></ul>
+      </ul>
+    </div> <!-- lending-right -->
+    
+    <br style="clear:both;"/>
+  </div>
+  <!--    <p>On average, the time from the date of request until the date of receipt at the receiving library was <TMPL_VAR name="lending_wait">.</p> -->
+  <p id="p-lending-requests-change">The <span id="lending-requests-change-base"></span> requests received from other libraries in <span id="lending-requests-change-month"></span> was a <span id="lending-requests-change"></span> from <span id="lending-requests-change-month2"></span> of last year.</p>
+  <p id="p-lending-shipping-change">The <span id="lending-shipped-change-base"></span> items shipped to other libraries in <span id="lending-shipped-change-month"></span> was a <span id="lending-shipped-change"></span> from <span id="lending-shipped-change-month2"></span> of last year.</p>
+</div> <!-- content -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

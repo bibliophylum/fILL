@@ -1,13 +1,19 @@
 #!/usr/bin/perl
 
 use CGI;
+use CGI::Session;
 use DBI;
 use JSON;
 
 use Data::Dumper;
 
 my $query = new CGI;
-my $lid = $query->param('lid');
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
+my $oid = $query->param('oid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -25,7 +31,7 @@ my $SQL = "
 -- Time stats, average for all libraries over the last year
 --
 select
- (select -1) as lid,
+ (select -1) as oid,
 
  (select 'Average') as library,
 
@@ -101,21 +107,21 @@ my $global_href = $dbh->selectrow_hashref($SQL);
 
 
 
-$SQL = "select lid from libraries where active=1";
+$SQL = "select oid from org where active=1";
 my $libs_aref = $dbh->selectcol_arrayref($SQL);
 
 my @libraryStats = ();
-#my $lid = 79;
-foreach my $lid (@$libs_aref) {
+#my $oid = 79;
+foreach my $oid (@$libs_aref) {
 
 $SQL = "
 --
 -- Time stats, average for one library over the last year
 --
 select
- (select lid from libraries where lid=?) as lid,
+ (select oid from org where oid=?) as oid,
 
- (select library from libraries where lid=?) as library,
+ (select org_name from org where oid=?) as library,
 
  (select
   extract(day from avg(extract(epoch from respond.ts) - extract(epoch from request.ts)) / (60*60*24) * interval '1 day') as request_to_response_average_days
@@ -189,7 +195,7 @@ select
   and h1.msg_to=?
  ) as returned_to_checked_in_days
 ";
-my $library_href = $dbh->selectrow_hashref($SQL, undef, $lid, $lid, $lid, $lid, $lid, $lid, $lid, $lid);
+my $library_href = $dbh->selectrow_hashref($SQL, undef, $oid, $oid, $oid, $oid, $oid, $oid, $oid, $oid);
 #print Dumper($library_href);
 push @libraryStats, { %$library_href };
 }

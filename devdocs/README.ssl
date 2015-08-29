@@ -1,0 +1,30 @@
+Setting up self-signed cert:
+
+$ sudo a2enmod ssl
+$ sudo service apache2 restart
+
+$ sudo mkdir /etc/apache2/ssl
+$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/saiph.key -out /etc/apache2/ssl/saiph.crt
+
+country name: CA
+state or province name: Manitoba
+Locality name: Brandon
+Organization Name: fILL
+Org unit name: 
+Common name: saiph.gotdns.org
+Email address:
+
+
+$ sudo su -
+# cd /etc/apache2/ssl
+# mv saiph.crt /etc/ssl/certs
+# mv saiph.key /etc/ssl/private
+
+Edit fILL.conf:
+  SSLEngine on
+  SSLCertificateFile /etc/ssl/certs/saiph.crt
+  SSLCertificateKeyFile /etc/ssl/private/saiph.key
+
+Then:
+$ sudo a2ensite default-ssl.conf
+$ sudo service apache2 reload

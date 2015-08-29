@@ -24,6 +24,11 @@
 
 $('document').ready(function() {
 
+  // bootstrap has its own idea of what the background color should be.
+  // Because it's loaded after our css (which are in header.tmpl), the bootstrap
+  // overrides.  Let's override the override:
+  $('body').css('backgroundColor','#fcf283');
+
   // Most primary tabs are set as the current tab in the submenu_xxxxx.
   // welcome menu doesn't have a submenu, so we set the current tab here.
 

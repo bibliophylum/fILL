@@ -1,0 +1,70 @@
+/** print-reports.1.0.css **/
+/** based on http://alistapart.com/article/goingtoprint **/
+
+/** NOTE that font sizes are in pt, not px or em. **/
+
+@page { 
+    size: auto;   /* auto is the initial value */ 
+
+    /* this affects the margin in the printer settings */ 
+    margin: 25mm 25mm 25mm 25mm;  
+} 
+
+body { 
+    background: white; 
+    font-size: 12pt; 
+    font-family: Sans-Serif;
+} 
+
+h1 {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+h1.page-break {
+    page-break-before: always;
+}
+
+#report-content { 
+    width: auto; 
+    border: 0; 
+    margin: 0 5%; 
+    padding: 0; 
+    float: none !important; 
+}
+
+#report-content p {
+    font-size: 12pt !important; 
+    font-family: Sans-Serif;
+}
+
+.inner-right > ul > li {
+    margin: 0 0 10px 0;
+}
+
+.inner-right > ul > li > ul {
+    margin: 0 0 0 10px;    
+}
+
+div.details {
+    border-radius: 25px;
+    border: 2px solid #8AC007;
+    padding: 20px;
+}
+
+div.inner-left {
+    float:left;
+    width: 45%;
+}
+
+div.inner-right {
+    float:right;
+    width: 45%;
+    font-family: Sans-Serif;
+    font-size: 12pt;
+}

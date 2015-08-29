@@ -1,0 +1,130 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_authentication.tmpl">
+
+<script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/js/admin-authentication-1.1.js"></script>
+
+<script type="text/javascript">
+  set_secondary_tab("menu_authentication_methods");
+</script>
+
+
+<div id="center" role="main">
+  <div id="main-left">
+    <!-- <div id="scrolling-table"> -->
+      <table id="libraries" class="row-border">
+	<thead>
+	  <tr><th>Library</th><th>Authen</th></tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_list">
+	    <tr id='<TMPL_VAR NAME="oid">'>
+	      <td><TMPL_VAR NAME="org_name"></td>
+	      <td><input type="button" class="action-button" value=<TMPL_VAR NAME="auth_method"> /></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    <!-- </div> -->
+  </div>
+
+  <div id="main-right">
+
+    <div id="initialMessage">
+      <p>Edit a library's authentication method by clicking on the library's method button in the list to the left.</p>
+    </div>
+
+    <div id="waitDiv" style="display:none">
+      Loading... <img src="/wait.gif" alt="loading indicator">
+    </div>
+
+    <form id="editAuthentication" action="" method="post">
+
+      <div id="auth-common" style="display:none">
+	<label>Library: <strong><span id="library-name"></span></strong></label><br/>
+	<label>
+	  Authentication type: <strong><span id="authtype"></span></strong> <input id="change-authtype-btn" type="button" class="library-style" value="Change..." />
+	</label>
+	<input id="editOID" type="hidden" name="editOID"/>
+      </div>
+
+      <div id="choose-authtype" style="display:none">
+	<fieldset data-role="controlgroup" data-type="horizontal">
+	  <legend>What type of patron authentication does this library provide?</legend>
+	  <input type="radio" name="rAuthtype" value="SIP2">SIP2</input>
+	  <input type="radio" name="rAuthtype" value="Other">Other</input>
+	  <input type="radio" name="rAuthtype" value="None">None</input>
+	</fieldset>
+      </div>
+
+      <div id="auth-none" style="display:none">
+	<fieldset data-role="controlgroup" data-type="horizontal">
+	  <legend>No authentication method provided</legend>
+	  <p>This library does not authenticate users via their ILS.</p>
+	</fieldset>
+      </div>
+
+      <div id="auth-sip2" style="display:none">
+	<fieldset data-role="controlgroup" data-type="horizontal">
+	  <legend>SIP2 Authentication</legend>
+	  <table>
+	    <tr>
+	      <td>Enabled?</td>
+	      <td>
+		<input type="radio" name="sipEnabled" value="1">Yes</input>
+		<input type="radio" name="sipEnabled" value="0">No</input>
+	      </td>
+	    </tr>
+	    <tr><td>Host</td><td><input id="sipHost" name="sipHost" size="45"></td></tr>
+	    <tr><td>Port</td><td><input id="sipPort" name="sipPort"></td></tr>
+	    <tr>
+	      <td>Terminator</td>
+	      <td>
+		<input type="radio" name="sipTerminator" value="Standard">Standard</input>
+		<input type="radio" name="sipTerminator" value="CR">Carriage return</input>
+	      </td>
+	    </tr>
+	    <tr><td>SIP server login</td><td><input id="sipServerLogin" name="sipServerLogin"></td></tr>
+	    <tr><td>SIP server password</td><td><input id="sipServerPass" name="sipServerPass"></td></tr>
+	    <tr>
+	      <td>Use SIP2 method</td>
+	      <td>
+		<input type="radio" name="sipMethod" value="Status">Status (standard)</input>
+		<input type="radio" name="sipMethod" value="Info">Info (non-standard)</input>
+	      </td>
+	    </tr>
+	  </table>
+	</fieldset>
+      </div>
+
+
+      <div id="auth-other" style="display:none">
+	<fieldset data-role="controlgroup" data-type="horizontal">
+	  <legend>Other authentication method</legend>
+	  <table>
+	    <tr>
+	      <td>Enabled?</td>
+	      <td>
+		<input type="radio" name="nonsipEnabled" value="1">Yes</input>
+		<input type="radio" name="nonsipEnabled" value="0">No</input>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>Authentication type</td>
+	      <td id="auth-other-authtypes" style="border:solid 1px">
+	      </td>
+	    </tr>
+	    <tr><td>URL of OPAC</td><td><input id="nonsipURL" name="nonsipURL" size="45"></td></tr>
+	  </table>
+	</fieldset>
+      </div>
+
+      <div id="form-buttons">
+	<input id="save-btn" type="button" class="library-style" value="Save changes" />
+      </div>
+      
+    </form>
+  </div><!-- main-right -->
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

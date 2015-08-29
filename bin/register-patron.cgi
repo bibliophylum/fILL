@@ -26,7 +26,11 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select lid from libraries where city=?";
+if ($query->param('sip2_enabled') && ($query->param('sip2_enabled') == 1)) {
+    # DAVID
+}
+
+my $SQL = "select oid from org where city=?";
 my $aref = $dbh->selectrow_arrayref($SQL,undef,$query->param('home_library'));
 my $rows_affected = 0;
 if ($aref) {

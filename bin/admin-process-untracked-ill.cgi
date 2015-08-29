@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI;
+use CGI::Session;
 use DBI;
 use Text::CSV::Slurp;
 use File::Copy qw(move);
@@ -10,6 +11,11 @@ use Data::Dumper;
 use JSON;
 
 my $query = new CGI;
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 
 my $uploads_dir = '/opt/fILL/ill_uploads';
 my $archive_dir = '/opt/fILL/ill_loaded';
@@ -25,10 +31,10 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $sth_getid = $dbh->prepare("select lid from libraries where name=?");
-my $sth_currdata = $dbh->prepare("select lid, borrowed, loaned from libraries_untracked_ill where lid=?");
-my $sth_update = $dbh->prepare("update libraries_untracked_ill set borrowed=borrowed+?, loaned=loaned+? where lid=?");
-my $sth_insert = $dbh->prepare("insert into libraries_untracked_ill (lid,borrowed,loaned) values (?,?,?)");
+my $sth_getid = $dbh->prepare("select oid from org where symbol=?");
+my $sth_currdata = $dbh->prepare("select oid, borrowed, loaned from libraries_untracked_ill where oid=?");
+my $sth_update = $dbh->prepare("update libraries_untracked_ill set borrowed=borrowed+?, loaned=loaned+? where oid=?");
+my $sth_insert = $dbh->prepare("insert into libraries_untracked_ill (oid,borrowed,loaned) values (?,?,?)");
 my $sth_isSibling = $dbh->prepare("select
  case 
  when (? = (select parent_id from library_systems where child_id=?)) then 1
@@ -66,24 +72,24 @@ print "Content-Type:application/json\n\n" . to_json( \%files );
 #--------------------------------------------------------------------------------
 sub is_sibling {
     my ($lib1, $lib2) = @_;
-    my $lid1;
-    my $lid2;
+    my $oid1;
+    my $oid2;
 
     my $rv = $sth_getid->execute($lib1);
     my $aref = $sth_getid->fetchrow_arrayref();
     if (defined $aref) {
-	$lid1 = $aref->[0];
+	$oid1 = $aref->[0];
     }
     $rv = $sth_getid->execute($lib2);
     $aref = $sth_getid->fetchrow_arrayref();
     if (defined $aref) {
-	$lid2 = $aref->[0];
+	$oid2 = $aref->[0];
     }
 
     #local $sth_isSibling->{TraceLevel} = "2";
     my $sibs = 0;
-    if ($lid1 && $lid2) {
-	$sth_isSibling->execute($lid1,$lid2, $lid2,$lid1, $lid1,$lid2);
+    if ($oid1 && $oid2) {
+	$sth_isSibling->execute($oid1,$oid2, $oid2,$oid1, $oid1,$oid2);
 	$aref = $sth_isSibling->fetchrow_arrayref();
 	if (defined $aref) {
 	    $sibs = $aref->[0];
