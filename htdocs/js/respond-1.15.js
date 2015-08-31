@@ -470,9 +470,12 @@ function forward( requestId, retargets ) {
     $("#forwardradioset").buttonset();
 
     for (var i = 0; i < retargets.length; i++) {
-	var s="<input type='radio' name='radioset' value='"+retargets[i].oid+"' id='"+retargets[i].name+"'/><label for='"+retargets[i].name+"'>"+retargets[i].city+"</label>";
-	$("#forwardradioset").append(s);
+	if (retargets[i].city) {
+	    var s="<input type='radio' name='radioset' value='"+retargets[i].oid+"' id='"+retargets[i].oid+"'/><label for='"+retargets[i].oid+"'>"+retargets[i].city+"</label>";
+	    $("#forwardradioset").append(s);
+	}
     }
 
     $("#forwardradioset").buttonset('refresh');
+
 }

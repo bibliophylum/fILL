@@ -242,7 +242,7 @@ sub checkSip2 {
     }
 
 #    $self->log->debug( "attempting to authenticate user...\n" );
-    $href->{debug} = 1;
+    $href->{debug} = 0;
     my $authenticator = Biblio::Authentication::SIP2->new( %$href );
     my $authorized_href = $authenticator->verifyPatron($barcode,$pin);
 
