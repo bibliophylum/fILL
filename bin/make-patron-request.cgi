@@ -57,7 +57,11 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 
 my $username = $q->param('username');
-my $oid = $q->param('oid');
+#my $oid = $q->param('oid');
+my $oid = $session->param('fILL-oid');
+my $pid = $session->param('fILL-pid');
+my $library = $session->param('fILL-library');
+my $is_enabled = $session->param('fILL-is_enabled');
 
 my @inParms = $q->param;
 my @parms;
@@ -86,24 +90,24 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-# Get this user's (requester's) library id
-my $hr_id = $dbh->selectrow_hashref(
-    "select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (o.oid = p.home_library_id) where p.username=? and p.home_library_id=?",
-    undef,
-    $username,
-    $oid
-    );
-
-#print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id) . "\n";
-
-my $pid = $hr_id->{pid};
-
-#print STDERR "pid: $pid\n";
-#exit; 
-
-#my $oid = $hr_id->{home_library_id};
-my $library = $hr_id->{org_name};
-my $is_enabled = $hr_id->{is_enabled};
+## Get this user's (requester's) library id
+#my $hr_id = $dbh->selectrow_hashref(
+#    "select p.pid, p.home_library_id, o.org_name, p.is_enabled from patrons p left join org o on (o.oid = p.home_library_id) where p.username=? and p.home_library_id=?",
+#    undef,
+#    $username,
+#    $oid
+#    );
+#
+##print STDERR "requester's (" . $username . ") id info: " . Dumper($hr_id) . "\n";
+#
+#my $pid = $hr_id->{pid};
+#
+##print STDERR "pid: $pid\n";
+##exit; 
+#
+##my $oid = $hr_id->{home_library_id};
+#my $library = $hr_id->{org_name};
+#my $is_enabled = $hr_id->{is_enabled};
 
 if (not defined $pid) {
     # should never get here...
