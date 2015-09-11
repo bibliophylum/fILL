@@ -37,8 +37,8 @@ unless (@$matching) {
     exit;
 }
 
-$dbh->do("delete from patron_request where prid=?", undef, $prid );
 $dbh->do("delete from patron_request_sources where prid=?", undef, $prid );
+$dbh->do("delete from patron_request where prid=?", undef, $prid );
 
 $dbh->disconnect;
 print "Content-Type:application/json\n\n" . to_json( { success => 1 } );
