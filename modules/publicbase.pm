@@ -37,6 +37,7 @@ use Biblio::Authentication::FollettDestiny;
 use Biblio::Authentication::L4U;
 use Biblio::Authentication::TLC;
 use Biblio::Authentication::Dummy;   # for testing
+use Biblio::Authentication::TempNorthNorfolk;   # Dummy clone
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
@@ -259,12 +260,12 @@ sub checkNonSip2 {
     my $self = shift;
     my ($username, $password, $barcode, $pin, $oid, $authmethod) = @_;
 
-#    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
+    $self->log->debug( "checkNonSip2:\n" . Dumper(@_) . "\n" );
 
     my $SQL = "select url from library_nonsip2 where oid=? and auth_type=?";
     my $href = $self->dbh->selectrow_hashref($SQL,undef,$oid,$authmethod);
 
-#    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
+    $self->log->debug( "returned from DBI:\n" . Dumper($href) );
 
     if (!defined $href) {
 	$self->session->param(
@@ -289,6 +290,9 @@ sub checkNonSip2 {
 
     } elsif ($authmethod eq 'Dummy') {
 	$authenticator = Biblio::Authentication::Dummy->new( %$href );
+
+    } elsif ($authmethod eq 'TempNorthNorfolk') {
+	$authenticator = Biblio::Authentication::TempNorthNorfolk->new( %$href );
     }
 
     if (!defined $authenticator) {
