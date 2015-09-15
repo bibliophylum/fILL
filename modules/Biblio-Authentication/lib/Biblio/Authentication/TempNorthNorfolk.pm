@@ -1,55 +1,37 @@
-package Biblio::Authentication;
+package Biblio::Authentication::TempNorthNorfolk;
 
-use 5.006;
-use strict;
-use warnings FATAL => 'all';
-use WWW::Mechanize;
-use HTML::TreeBuilder 5 -weak;
+use parent 'Biblio::Authentication';
 
 =head1 NAME
 
-Biblio::Authentication - base class for integrated library system authentication
+Biblio::Authentication::Dummy - an authentication module that always says yes
 
 =head1 VERSION
 
-Version 0.03
+Version 0.01
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.01';
 
 
 =head1 SYNOPSIS
 
-Don't use this class itself; use (or create) a class specific to the ILS you're authenticating against.
+Check if patron credentials authorize against Dummy library PAC.
 
-Derived classes use whatever is appropriate to handle the authentication (e.g. SIP2, RESTful API, screen-scrape using WWW::Mechanize, etc)
+    use Biblio::Authentication::Dummy;
 
-For example:
+    my $Dummy = Biblio::Authentication::Dummy->new();
+    my $authorized_href = $Dummy->verifyPatron( $barcode, $pin );
 
-Check if patron credentials authorize against L4U library PAC.
-
-    use Biblio::Authentication::L4U;
-
-    my $authenticator = Biblio::Authentication::L4U->new(
-        'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
-    );
-    my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
-
-There is a dummy authenticator available, Biblio::Authentication::Dummy, which can be used for testing your code that requires authetication.
-    my $authenticator = Biblio::Authentication::Dummy();
-    my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
-The dummy authenticator always returns a positive (i.e. patron is authenticated) result.
+Biblio::Authentication::Dummy is a dummy authenticator (for testing) which
+always says 'yes, this is a valid patron'.
 
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-my $L4U = Biblio::Authentication::L4U->new(
-    'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
-);
-
-'url' is the URL to the library's public catalogue.
+my $Dummy = Biblio::Authentication::Dummy->new();
 
 =cut
 
@@ -59,30 +41,14 @@ sub new {
 
     my %parms = @_;
 
-    my $self  = {};
+    my $self  = $class->SUPER::new(@_);
 
-    # Public variables for configuration
-    $self->{url}          = $parms{'url'};
-    $self->{library}      = $parms{'library'} || '';
-
-    # Private
-    $self->{authorized} = {
-	"validbarcode"  => 'N',
-	"validpin"      => 'N',
-	"patronname"    => undef,
-	"screenmessage" => undef,
-    };
-    $self->{userAgent} = 'fILL-authentication'; # used by www::mechanize authenticators
-
-    bless ($self, $class);
     return $self;
 }
 
 =head2 verifyPatron
 
-Each derived class must implement the verifyPatron method.
-
-my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
+my $authorized_href = $Dummy->verifyPatron( $barcode, $pin );
 
 verifyPatron returns a hash reference to a hash that looks like:
 		my %authorized = (
@@ -99,7 +65,15 @@ sub verifyPatron {
     my $self = shift;
     my ($barcode, $pin) = @_;
 
-    return $self->{authorized};
+    my %authorized = (
+	"validbarcode"  => 'Y',
+	"validpin"      => 'Y',
+	"patronname"    => "MMNN $barcode",
+	"screenmessage" => undef,
+	);
+    $self->{'authorized'} = \%authorized;
+
+    return $self->{'authorized'};
 }
 
 =head1 AUTHOR
@@ -149,4 +123,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Biblio::Authentication
+1; # End of Biblio::Authentication::Dummy
