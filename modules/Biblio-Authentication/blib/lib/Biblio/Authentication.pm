@@ -149,4 +149,4 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =cut
 
-1; # End of Biblio::Authentication::L4U
+1; # End of Biblio::Authentication
