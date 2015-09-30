@@ -71,6 +71,7 @@ my %WESTERN_MB_TO_MAPLIN = (
     'Hartney / Cameron Library' => 'MHW',
     );
 
+
 #--------------------------------------------------------------------------------
 # Define our runmodes
 #
@@ -301,6 +302,118 @@ sub request_process {
     my $self = shift;
     my $q = $self->query;
 
+    my %sources = $self->_turn_request_parms_into_sources_hash( $q );
+
+    my ($title,$author,$medium,$isbn,$pubdate) = $self->_normalize_request_data(
+	$q->param('title') || '--',
+	$q->param('author') || '--',
+	$q->param('medium_0'), # fILL-client.js groups by medium, so all sources' mediums should be the same.
+	$q->param('isbn') || '--',
+	$q->param('pubdate') || '--'
+	);
+
+    my @sources = $self->_isolate_and_normalize_source_callnos( \%sources );
+
+    # Get this user's (requester's) library id
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    if (not defined $oid) {
+	# should never get here...
+	# go to some error page.
+    }
+    my $isRequesterSpruce = $self->is_spruce_library($symbol);
+
+    # These should be atomic...
+    # create the request_group
+    $self->dbh->do("INSERT INTO request_group (copies_requested, title, author, medium, requester, isbn, pubdate) VALUES (?,?,?,?,?,?,?)",
+	undef,
+	1,        # default copies_requested
+	$title,
+	$author,
+	$medium,
+	$oid,     # requester
+	$isbn,
+	$pubdate,
+	);
+    my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
+
+    # ...end of atomic
+
+    # re-consolidate MW/MDA locations - they handle ILL for all branches centrally
+    @sources = $self->_consolidate_locations( \@sources );
+
+    # remove duplicates for a given library/location (they may have multiple holdings)
+    my %seen = ();
+    my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
+
+    my @sorted_sources = $self->_sort_sources_by_region_and_NBLC( $oid, \@unique_sources );
+
+    # remove garbage sources
+    my $index = 0; 
+    while ($index <= $#sorted_sources ) { 
+	my $src = $sorted_sources[$index]; 
+	if ( not defined $src->{oid} ) { 
+	    splice @sorted_sources, $index, 1; 
+	} else { 
+	    $index++; 
+	} 
+    }
+
+    # create the sources list for this request
+    my $sequence = 1;
+    my $SQL = "INSERT INTO sources (sequence_number, oid, call_number, group_id, tried) VALUES (?,?,?,?,?)";
+    foreach my $src (@sorted_sources) {
+	my $lenderID = $src->{oid};
+	next unless defined $lenderID;
+	my $isSelfRequest = $src->{'symbol'} eq $symbol ? 1 : 0;
+	my $tried = undef;
+	$tried = 1 if (($isSelfRequest) || ($isRequesterSpruce && $src->{'is_spruce'}));
+	$src->{'msg'} = "";
+	if ($isSelfRequest) {
+	    $src->{'msg'} = "You have a copy (but fILL will not try to request from you).";
+	} elsif ($isRequesterSpruce && $src->{'is_spruce'}) {
+	    $src->{'msg'} = "As a Spruce library, you've already tried other Spruce libraries (so fILL will skip this lender).";
+	}
+	delete $src->{'is_spruce'};
+	delete $src->{sameRegion};
+#	$self->log->debug("current src:\n" . Dumper($src));
+	my $rows_added = $self->dbh->do($SQL,
+					undef,
+					$sequence++,
+					$lenderID,
+					substr($src->{"callnumber"},0,99),  # some libraries don't clean up copy-cat recs
+					$group_id,
+					$tried,
+	    );
+	unless (1 == $rows_added) {
+	    $self->log->debug( "Could not add source: group_id $group_id, sequence_number " . ($sequence - 1), ", library $lenderID, call_number " . substr($src->{"callnumber"},0,99) );
+	}
+    }
+#    $self->log->debug("sources:\n" . Dumper(@sorted_sources));
+
+    my $template = $self->load_tmpl('search/make_request.tmpl');	
+    $template->param( pagetitle => "fILL Request an ILL",
+		      username => $self->authen->username,
+		      oid => $oid,
+		      library => $library,
+		      title => $title,
+		      author => $author,
+		      medium => $medium,
+		      group_id => $group_id,
+		      num_sources => scalar @sorted_sources,
+		      copies_requested => 1,    # default copies requested
+		      sources => \@sorted_sources,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub request_process_orig {
+    my $self = shift;
+    my $q = $self->query;
+
     my @inParms = $q->param;
     my @parms;
     my %sources;
@@ -386,8 +499,13 @@ sub request_process {
 		    # sometime the horizon zserver does not return local holdings info...
 		    # so force it to the original symbol and let MBW forward to branches.
 		    $src{'symbol'} = $sources{$num}{'symbol'} if (not defined $src{'symbol'});
-		} elsif ($sources{$num}{'symbol'} eq 'MDA') {
-		    # temp - testing Parklands... eventually this will work like Spruce or WMRL
+#		} elsif ($sources{$num}{'symbol'} eq 'MDA') {
+#		    $loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
+		} elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
+		    # all Parkland requests go to MDA
+#		    $sources{$num}{'symbol'} = 'MDA';
+		    $src{'symbol'} = 'MDA';
+##		    $self->log->debug("Parkland loc [$loc], callno [" . $loc_callno{ $loc } . "]\n");
 		    $loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
@@ -395,11 +513,12 @@ sub request_process {
 		$src{'location'} = $loc;
 		$src{'holding'} = '---';
 		$src{'callnumber'} = $loc_callno{ $loc };
+		$self->log->debug("Location [$loc], src:\n" . Dumper(\%src) . "\n");
 		push @sources, \%src;
 	    }
 	}
     }
-#    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
+    $self->log->debug( "request_process sources array:\n" . Dumper(@sources) );
 
     # Get this user's (requester's) library id
     my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -438,16 +557,18 @@ sub request_process {
 
     # ...end of atomic
 
-    # re-consolidate MW locations - they handle ILL for all branches centrally
+    # re-consolidate MW/MDA locations - they handle ILL for all branches centrally
     my $index = 0; 
     my $cn;
     my $primary;
+    my $consolidatedSymbol;
     while ($index <= $#sources ) { 
 	if ((!exists( $sources[$index]{'symbol'} )) || (!defined( $sources[$index]{'symbol'} )) ) {
 	    $self->log->debug( "sources[" . $index . "] has no symbol:\n" . Dumper( $sources[$index] ));
 	}
 	my $value = $sources[$index]{symbol}; 
 	if ( $value eq "MW" ) { 
+	    $consolidatedSymbol = "MW";
 	    if ($sources[$index]{location} =~ /^Millennium/ ) {
 		$primary = "" unless $primary;
 		$primary = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
@@ -456,13 +577,25 @@ sub request_process {
 		$cn = $cn . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
 	    }
 	    splice @sources, $index, 1; 
+
+#	} elsif ( $value eq "MDA" ) {
+#	    $consolidatedSymbol = "MDA";
+#	    if ($sources[$index]{location} =~ /^Dauphin/ ) {
+#		$primary = "" unless $primary;
+#		$primary = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+#	    } else {
+#		$cn = "" unless $cn;
+#		$cn = $cn . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+#	    }
+
 	} else { 
 	    $index++; 
 	} 
     }
     if (($cn) || ($primary)) {
 	$cn = $primary . $cn;  # callnumber is a limited length; make sure the primary branch is first.
-	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
+#	push @sources, { 'symbol' => 'MW', 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
+	push @sources, { 'symbol' => $consolidatedSymbol, 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn };
     }
 #    $self->log->debug( "request_process sources array after MW reconsolidation:\n" . Dumper(@sources) );
 
@@ -470,11 +603,11 @@ sub request_process {
     my %seen = ();
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 #    my @unique_sources = grep { ! $seen{ $_->{'symbol'} . '|' . $_->{'location'} }++ } @sources;
+#    $self->log->debug("unique sources:\n" . Dumper(@unique_sources));
 
     # other branches in this regional library (if this is a regional library)
-    my $SQL = "select oid from regional_libraries_branches where rlid in (select rlid from regional_libraries_branches where oid=?)";
+    my $SQL = "select member_id from org_members where oid=(select oid from org_members where member_id=?);";
     my $same_regional = $self->dbh->selectall_arrayref($SQL,undef,$oid);
-#    $self->log->debug("same regional system (array):\n" . Dumper(@$same_regional));
     my %sameReg = map { $_->[0] => 1 } @$same_regional;
 #    $self->log->debug("same regional system:\n" . Dumper(%sameReg));
 
@@ -957,6 +1090,251 @@ sub get_library_from_username {
 	$username
 	);
     return ($hr_id->{oid}, $hr_id->{org_name}, $hr_id->{symbol});
+}
+
+
+#----------------------------------------------------------------------------------
+sub _turn_request_parms_into_sources_hash {
+    my $self = shift;
+    my $q = shift;
+
+    my @inParms = $q->param;
+    my %sources;
+    foreach my $parm_name (@inParms) {
+	if ($parm_name =~ /_\d+/) {
+	    my ($pname,$num) = split /_/,$parm_name;
+	    $sources{$num}{$pname} = $q->param($parm_name);
+	    $sources{$num}{$pname} = uc($sources{$num}{$pname}) if ($pname eq 'symbol');
+#	} else {  # debugging...
+#	    $self->log->debug("param: $parm_name [" . $q->param($parm_name) . "]\n");
+	}
+    }
+#    foreach my $num (sort keys %sources) {
+#	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
+#    }
+
+    return %sources;
+}
+
+#----------------------------------------------------------------------------------
+sub _normalize_request_data {
+    my $self = shift;
+    my ($t,$a,$m,$i,$p) = @_;
+
+#    $self->log->debug("normalize request data:\nt\t$t\na\t$a\nm\t$m\ni\t$i\np\t$p\n");
+
+    my $title = eval { decode( 'UTF-8', $t, Encode::FB_CROAK ) };
+    if ($@) {
+	$title = unidecode( $t );
+    }
+    my $author = eval { decode( 'UTF-8', $a, Encode::FB_CROAK ) };
+    if ($@) {
+	$author = unidecode( $a );
+    }
+    my $medium  = sprintf("%.40s", $m);
+    my $isbn    = sprintf("%.40s", $i);
+    my $pubdate = sprintf("%.40s", $p);
+
+#    $self->log->debug("...becomes normalized:\nt\t$title\na\t$author\nm\t$medium\ni\t$isbn\np\t$pubdate\n");
+    return ($title,$author,$medium,$isbn,$pubdate);
+}
+
+#----------------------------------------------------------------------------------
+# Call numbers can appear in various places in a record, depending on the ILS.
+# Let's check the usual suspects, and herd them all into a standard place.
+sub _isolate_and_normalize_source_callnos {
+    my $self = shift;
+    my $sourcesref = shift;
+    my %sources = %$sourcesref;
+
+#    my $medium;
+    my @sources;
+
+    foreach my $num (sort keys %sources) {
+
+	my %src;
+
+	if ($sources{$num}{'medium'}) {      # medium will be the same for each, and
+	    delete $sources{$num}{'medium'}; #  doesn't appear in template loop, so
+	}                                    #  toast it.
+
+	if (($sources{$num}{'locallocation'}) && ($sources{$num}{'locallocation'} eq 'undefined')) { # yes, the string 'undefined'
+	    $sources{$num}{'locallocation'} = $sources{$num}{'symbol'};
+	}
+
+#	$self->log->debug( "source [" . $num . "]" . Dumper( $sources{$num} ));
+	if ($sources{$num}{'locallocation'}) {
+
+	    # split the combined locallocation into separate locations
+	    my @locs = split /\,/, $sources{$num}{'locallocation'};
+	    delete $sources{$num}{'locallocation'};
+	    my @callnos;
+	    # confusingly, the text string 'undefined' is passed in rather than undef
+	    if (($sources{$num}{'localcallno'}) && ($sources{$num}{'localcallno'} ne 'undefined')) {
+		@callnos = split /\,/, $sources{$num}{'localcallno'};
+	    } elsif (($sources{$num}{'callnumber'}) && ($sources{$num}{'callnumber'} ne 'undefined')) {
+		@callnos = split /\,/, $sources{$num}{'callnumber'};
+	    }
+	    delete $sources{$num}{'localcallno'};
+	    delete $sources{$num}{'callnumber'};
+	    my %loc_callno = ();
+	    # if there are call numbers at all, there will be one per location...
+	    for (my $i=0; $i < @locs; $i++) {
+		if (@callnos) {
+		    if ($callnos[$i] ne 'PAZPAR2_NULL_VALUE') {
+			$loc_callno{ $locs[$i] } = $callnos[$i];
+		    } else {
+			$loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
+		    }
+		} elsif ($sources{$num}{'holding'}) {
+		    # ...otherwise, there might be one single 'holding' entry
+		    $loc_callno{ $locs[$i] } = $sources{$num}{'holding'};
+		} else {
+		    $loc_callno{ $locs[$i] } = 'No callno info';
+		}
+	    }
+	    
+	    my %seen;
+	    foreach my $loc (@locs) {
+		next if $seen{$loc};
+		$seen{$loc} = 1;
+		my %src;
+		foreach my $pname (keys %{$sources{$num}}) {
+		    $src{$pname} = $sources{$num}{$pname};
+		}
+		$src{'is_spruce'} = 0;
+		# really need to generalize this....
+		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
+		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		    $src{'is_spruce'} = 1;
+
+		} elsif ($sources{$num}{'symbol'} eq 'MW') {
+		    # leave as-is... requests to all MW branches go to MW
+
+#		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
+		} elsif ($sources{$num}{'symbol'} eq 'WMRL') {
+		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
+		    # sometime the horizon zserver does not return local holdings info...
+		    # so force it to MBW and let MBW forward to branches.
+		    $src{'symbol'} = 'MBW' if (not defined $src{'symbol'});
+
+		} elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
+		    # all Parkland requests go to MDA
+		    $src{'symbol'} = 'MDA';
+                    # This is handled in _consolidate_locations()....
+		    #$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
+
+		} else {
+		    $src{'symbol'} = $sources{$num}{'symbol'};
+		}
+		$src{'location'} = $loc;
+		$src{'holding'} = '---';
+		$src{'callnumber'} = $loc_callno{ $loc };
+		push @sources, \%src;
+	    }
+	}
+    }
+    return @sources;
+}
+
+#----------------------------------------------------------------------------------
+sub _consolidate_locations {
+    my $self = shift;
+    my $sourcesref = shift;
+    my @sources = @$sourcesref;
+
+    my $index = 0; 
+    my %cn;      # hold consolidated call number for given symbol
+    my %primary;
+    while ($index <= $#sources ) { 
+	if ((!exists( $sources[$index]{'symbol'} )) || (!defined( $sources[$index]{'symbol'} )) ) {
+	    $self->log->debug( "sources[" . $index . "] has no symbol:\n" . Dumper( $sources[$index] ));
+	}
+	my $value = $sources[$index]{symbol}; 
+#	$self->log->debug("cons: source [$index], symbol [$value]\n");
+	if ( $value eq "MW" ) { 
+	    if ($sources[$index]{location} =~ /^Millennium/ ) {
+		$primary{$value} = "" unless $primary{$value};
+		$primary{$value} = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    } else {
+		$cn{$value} = "" unless $cn{$value};
+		$cn{$value} = $cn{$value} . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    }
+	    splice @sources, $index, 1; 
+	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
+
+	} elsif ( $value eq "MDA" ) {
+	    if ($sources[$index]{location} =~ /^Dauphin/ ) {
+		$primary{$value} = "" unless $primary{$value};
+		$primary{$value} = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    } else {
+		$cn{$value} = "" unless $cn{$value};
+		$cn{$value} = $cn{$value} . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+	    }
+	    splice @sources, $index, 1; 
+	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
+
+	} else { 
+	    $index++; 
+	} 
+    }
+    # can't just use keys %cn, because there might be a primary and no cn...
+    foreach my $key ("MW","MDA") {
+	if (($cn{$key}) || ($primary{$key})) {
+	    $cn{$key} = $primary{$key} . $cn{$key};  # callnumber is a limited length; make sure the primary branch is first.
+	    push @sources, { 'symbol' => $key, 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn{$key} };
+	}
+    }
+
+#    $self->log->debug("consolidation:\n" . Dumper(\%cn) . "\n");
+
+    return @sources;
+}
+
+#----------------------------------------------------------------------------------
+sub _sort_sources_by_region_and_NBLC {
+    my $self = shift;
+    my $oid = shift;
+    my $uniquesourcesref = shift;
+    my @unique_sources = @$uniquesourcesref;
+
+    # other branches in this regional library (if this is a regional library)
+    my $SQL = "select member_id from org_members where oid=(select oid from org_members where member_id=?);";
+    my $same_regional = $self->dbh->selectall_arrayref($SQL,undef,$oid);
+    my %sameReg = map { $_->[0] => 1 } @$same_regional;
+
+    # net borrower/lender count (loaned - borrowed) based on all currently active requests
+    $SQL = "select o.oid, o.symbol, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from org o left outer join requests_active ra on ra.msg_from=o.oid group by o.oid, o.symbol order by o.symbol";
+    my $nblc_href = $self->dbh->selectall_hashref($SQL,'symbol');
+
+    my $untracked_href = $self->dbh->selectall_hashref("select oid, borrowed, loaned from libraries_untracked_ill",'oid');
+
+    foreach my $src (@unique_sources) {
+	if (exists $nblc_href->{ $src->{symbol} }) {
+	    $src->{net} = $nblc_href->{ $src->{symbol} }{net};
+	    $src->{oid} = $nblc_href->{ $src->{symbol} }{oid};
+#	    $self->log->debug( "NBLC for " . $src->{symbol} . ": " . $src->{net} );
+	    if (exists $untracked_href->{ $src->{oid} } ) {
+		# does this library have any untracked-by-fILL ILL counts imported into the system?
+		$src->{net} = $src->{net} + $untracked_href->{ $src->{oid} }{loaned} - $untracked_href->{ $src->{oid} }{borrowed};
+		$self->log->debug( "...untracked ILL counts being included, new net is " . $src->{net} );
+	    }
+	} else {
+	    $src->{net} = 0;
+	    $src->{oid} = undef;
+	    $self->log->debug( $src->{'symbol'} . " not found in net-borrower/net-lender counts." );
+	}
+
+	$src->{sameRegion} = 0;
+	$src->{sameRegion} = 1 if ($sameReg{ $src->{oid} });
+    }
+#    $self->log->debug( "Unique sources:\n" . Dumper(@unique_sources) );
+
+    # sort sources by same-region-ness and then by net borrower/lender count
+    my @sorted_sources = sort { $b->{sameRegion} <=> $a->{sameRegion} || $a->{net} <=> $b->{net} } @unique_sources;
+#    $self->log->debug( "Sorted sources:\n" . Dumper(@sorted_sources) );
+
+    return @sorted_sources;
 }
 
 1; # so the 'require' or 'use' succeeds
