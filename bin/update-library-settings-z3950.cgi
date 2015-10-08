@@ -16,6 +16,7 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 
 my $oid = $query->param('oid');
+my $enabled = $query->param('z3950_enabled');
 my $server = $query->param('z3950_server_address');
 my $port = $query->param('z3950_server_port');
 my $database = $query->param('z3950_database_name');
@@ -31,8 +32,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update library_z3950 set server_address=?, server_port=?, database_name=? where oid=?"; 
-my $retval = $dbh->do( $SQL, undef, $server, $port, $database, $oid );
+my $SQL = "update library_z3950 set enabled=?, server_address=?, server_port=?, database_name=? where oid=?"; 
+my $retval = $dbh->do( $SQL, undef, $enabled, $server, $port, $database, $oid );
 
 $dbh->disconnect;
 

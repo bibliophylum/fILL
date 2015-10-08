@@ -50,8 +50,21 @@ sub myaccount_settings_process {
     my $q = $self->query;
 
     my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, z.server_address, z.server_port, z.database_name, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
+    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, z.server_address, z.server_port, z.database_name, z.enabled, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
     my $href = $self->dbh->selectrow_hashref($SQL,{},$oid);
+
+    my $zServer_controlled_by_parent = 0;
+    my $parent_href;
+    my $siblings_aoh = [];
+    if (not defined $href->{server_address}) {
+	$zServer_controlled_by_parent = 1;
+	my @parent_oid = $self->dbh->selectrow_array("select oid from org_members where member_id=?",undef,$oid);
+	if (@parent_oid) {
+	    $parent_href = $self->dbh->selectrow_hashref("select o.org_name, o.symbol, z.server_address, z.server_port, z.database_name from org o left join library_z3950 z on z.oid=o.oid where o.oid=?", {}, $parent_oid[0]);
+	    $siblings_aoh = $self->dbh->selectall_arrayref("select org_name from org where oid in (select member_id from org_members where oid=?)", { Slice => {} }, $parent_oid[0]);
+	    #$self->log->debug("siblings:\n" . Dumper($siblings_aoh) . "\n");
+	}
+    }
 
     my $logoPath = "/img/fill-contact.jpg";
     my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
@@ -74,6 +87,11 @@ sub myaccount_settings_process {
 		     city          => $href->{city},
 		     province      => $href->{province},
 		     post_code     => $href->{post_code},
+		     zserver_controlled_by_parent => $zServer_controlled_by_parent,
+		     zserver_parent_orgname => $parent_href->{org_name} || ' ',
+		     zserver_parent_symbol => $parent_href->{symbol} || ' ',
+		     zserver_siblings => $siblings_aoh,
+		     z3950_enabled => $href->{enabled},
 		     z3950_server_address => $href->{server_address},
 		     z3950_server_port    => $href->{server_port},
 		     z3950_database_name  => $href->{database_name},

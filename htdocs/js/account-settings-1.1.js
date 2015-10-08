@@ -39,6 +39,11 @@ $('document').ready(function(){
     $("#mailing_information_fieldset input").on("change",function(){
 	$("#mailingButton").show();
     });
+    $('input[name=z3950_enabled]', '#z3950').on("change",function(){
+	$("#z3950Button").show();
+	$("#z3950_enabled_change_notice").show();
+	$("#z3950_enabled_change_notice").stop(true,true).effect("highlight", {}, 2000);
+    });
     $("#z3950_fieldset input").on("change",function(){
 	$("#z3950Button").show();
     });
@@ -101,6 +106,7 @@ $('document').ready(function(){
     $("#z3950Button").on("click", function() {
 	var parms = {
 	    "oid": $("#oid").text(),
+	    "z3950_enabled": $('input[name=z3950_enabled]:checked', '#z3950').val(),
 	    "z3950_server_address": $("#z3950_server_address").val(),
 	    "z3950_server_port": $("#z3950_server_port").val(),
 	    "z3950_database_name": $("#z3950_database_name").val(),
