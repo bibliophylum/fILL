@@ -151,7 +151,7 @@ function build_rows( tBody, data ) {
 	b1.onclick = make_shipit_handler( requestId );
 	divResponses.appendChild(b1);
 	
-	if (data.canForwardToChildren) {
+	if (data.canForwardToSiblings) {
 	    var b2 = document.createElement("input");
 	    b2.type = "button";
 	    b2.value = "Forward to branch";
@@ -469,13 +469,15 @@ function forward( requestId, retargets ) {
     // do this in jQuery... FF and IE handle DOM-created radiobuttons differently.
     $("#forwardradioset").buttonset();
 
+    var iFirst;
     for (var i = 0; i < retargets.length; i++) {
 	if (retargets[i].city) {
+	    if (typeof iFirst == 'undefined') { iFirst = i; }
 	    var s="<input type='radio' name='radioset' value='"+retargets[i].oid+"' id='"+retargets[i].oid+"'/><label for='"+retargets[i].oid+"'>"+retargets[i].city+"</label>";
 	    $("#forwardradioset").append(s);
 	}
     }
 
     $("#forwardradioset").buttonset('refresh');
-
+    $("#"+retargets[iFirst].oid).prop("checked",true).button('refresh');
 }
