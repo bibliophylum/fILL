@@ -28,7 +28,8 @@ my $SQL = "select can_forward_to_children from org where oid=?";
 my @flags = $dbh->selectrow_array($SQL, undef, $oid );
 @flags[0] = 0 unless (@flags);
 
-$SQL = "select ls.child_id as oid, o.symbol, o.org_name, o.city from library_systems ls left join org o on ls.child_id=o.oid where parent_id=? order by o.city";
+#$SQL = "select ls.child_id as oid, o.symbol, o.org_name, o.city from library_systems ls left join org o on ls.child_id=o.oid where parent_id=? order by o.city";
+$SQL = "select oid, symbol, org_name, city from org where oid in (select member_id from org_members where oid=?) order by city";
 my $retargets;
 if (@flags[0]) {
     $retargets = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid );

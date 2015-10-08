@@ -925,6 +925,10 @@ sub _isolate_and_normalize_source_callnos {
                     # This is handled in _consolidate_locations()....
 		    #$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
 
+		} elsif ($sources{$num}{'symbol'} eq 'ALLARD') {
+		    # all Allard requests go to MSTG
+		    $src{'symbol'} = 'MSTG';
+
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
 		}
