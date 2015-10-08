@@ -79,28 +79,56 @@
       </div>
       
       <div id="tabs-3">
-	<form id="z3950" onSubmit="return false;">
-	  <fieldset id="z3950_fieldset" class="balanced-fields">
+	<TMPL_IF name="zserver_controlled_by_parent">
+	  <p>Your z39.50 server is managed by your parent organization, <TMPL_VAR name="zserver_parent_orgname"> (<TMPL_VAR name="zserver_parent_symbol">).</p>
+	  <p>The zServer managed by <TMPL_VAR name="zserver_parent_orgname"> is shared with:</p>
+	  <ul>
+	    <TMPL_LOOP name="zserver_siblings">
+	      <li><TMPL_VAR name="org_name"></li>
+	    </TMPL_LOOP>
+	  </ul>
+	  <p>Please log in as the parent organization to change the z39.50 server settings.</p>
+	</TMPL_IF>
+
+	<TMPL_UNLESS name="zserver_controlled_by_parent">
+	  <form id="z3950" onSubmit="return false;">
 
 	    <div>
-	      <label for="z3950_server_address">z39.50 server address:</label>
-	      <input id="z3950_server_address" type="text" name="z3950_server_address" value="<TMPL_VAR name=z3950_server_address>" />
+	      <p>Allow fILL to search this zServer?</p>
+	      <TMPL_IF name="z3950_enabled">
+		<label><input type="radio" name="z3950_enabled" value="1" checked>Yes, allow fILL to search, or </label>
+		<label><input type="radio" name="z3950_enabled" value="0">No, don't let fILL search</label>
+              <TMPL_ELSE>
+		  <label><input type="radio" name="z3950_enabled" value="1">Yes, allow fILL to search, or  </label>
+		  <label><input type="radio" name="z3950_enabled" value="0" checked>No, don't let fILL search.</label>
+	      </TMPL_IF>
+	      <p id="z3950_enabled_change_notice" style="display:none">This change will happen overnight.</p>
 	    </div>
+
+	    <hr/>
+
+	    <fieldset id="z3950_fieldset" class="balanced-fields">
+
+	      <div>
+		<label for="z3950_server_address">z39.50 server address:</label>
+		<input id="z3950_server_address" type="text" name="z3950_server_address" value="<TMPL_VAR name=z3950_server_address>" />
+	      </div>
 	  	  
-	    <div>
-	      <label for="z3950_server_port">z39.50 server port:</label>
-	      <input id="z3950_server_port" type="text" name="z3950_server_port" value="<TMPL_VAR name=z3950_server_port>" />
-	    </div>
+	      <div>
+		<label for="z3950_server_port">z39.50 server port:</label>
+		<input id="z3950_server_port" type="text" name="z3950_server_port" value="<TMPL_VAR name=z3950_server_port>" />
+	      </div>
 	  	  
-	    <div>
-	      <label for="z3950_database_name">z39.50 database name:</label>
-	      <input id="z3950_database_name" type="text" name="z3950_database_name" value="<TMPL_VAR name=z3950_database_name>" />
-	    </div>
+	      <div>
+		<label for="z3950_database_name">z39.50 database name:</label>
+		<input id="z3950_database_name" type="text" name="z3950_database_name" value="<TMPL_VAR name=z3950_database_name>" />
+	      </div>
 
-            <input id="z3950Button" type="button" class="library-style" value="Save changes">
-
-	  </fieldset>
-	</form>
+              <input id="z3950Button" type="button" class="library-style" value="Save changes">
+	      
+	    </fieldset>
+	  </form>
+	</TMPL_UNLESS>
       </div>
       
       <div id="tabs-4">

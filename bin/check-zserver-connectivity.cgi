@@ -5,6 +5,7 @@ use CGI::Session;
 use JSON;
 use ZOOM;
 use MARC::Record;
+use DBI;
 use Data::Dumper;
 
 no if $] >= 5.017011, warnings => 'experimental::smartmatch';  # smartmatch ("~~") has been made experimental.
@@ -45,56 +46,38 @@ my $result_href = { "success" => 0,
 		    "log" => "",
 };
 
-my @SpruceLibraries = qw(MWPL MAOW MMIOW MMOW MWOW MBOM MMA MSTR AB MWP MSTOS MTSIR MMCA MVE ME MS MSOG MDB MPLP MSSC MEC MNH MSRH MTK MTPK MWMW MRD MBI MSCL MNDP);
-my @ParklandLibraries = qw(MDPGL MDPGP MDPMC MDPHA MDA MDPSL MDPFO MDPBO MDPGV MDPBR MDPLA MDPBI MDPSI MDPST MDPMI MDPRO MDPOR MDPWP MDPER MDPSLA MDP MRO);
-my @WesternLibraries = qw(MCNC MHW MGW MNW MBW);
-
+my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
+		       "mapapp",
+		       "maplin3db",
+		       {AutoCommit => 1, 
+			RaiseError => 1, 
+			PrintError => 0,
+		       }
+    ) or die $DBI::errstr;
+    
 if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
-    # pre-Perl 5.10, you'd have to use something like (untested):
-    #    @SpruceLibraries = grep (/\Q$libsym\E/,@SpruceLibraries);
-    #    if (scalar @SpruceLibraries == 1) { $libsym = "SPRUCE" }
+#    print STDERR "Checking symbol [$libsym]\n";
+    my @org = $dbh->selectrow_array("select oid from org where symbol=?", undef, $libsym);
+#    print STDERR Dumper(@org);
+    my $settingsFileName = get_settings_filename( $org[0] );	    
+    my $path = "/opt/fILL/pazpar2/settings";
 
-    # smartmatch has been made 'experimental'....
-    if ($libsym ~~ @SpruceLibraries) {
-	$libsym = "SPRUCE";
-    }
-    if ($libsym ~~ @ParklandLibraries) {
-	$libsym = "MDA";
-    }
-    if ($libsym ~~ @WesternLibraries) {
-	$libsym = "MBW";
-    }
-    $result_href->{libsym} = $libsym;
-
-    # see if that symbol shows up in any of the pazpar2/settings/ files:
-    my $cmd = '/bin/grep "name=\"symbol\" value=\"' . $libsym . '\"" /opt/fILL/pazpar2/settings/*.xml';
-    #print STDERR "cmd [$cmd]\n";
-    my @f = `$cmd`;
-
-    if (scalar @f == 1) {
-	my $t = $f[0];
-	chomp $t;
-	if ($t =~ /set target=/) {
-	    $t =~ s/^.*(target=.*) name=.*/$1/;
-	} else {
-	    # Individual library profile... doesn't have connection info in the <set ...>,
-	    # instead, it shows up once in the "settings" line (<settings target=...>)
-	    # (This is now the default!)
-	    my $fn = $t;
-	    $fn =~ s/^(.*\.xml):.*/$1/;
-	    open(my $file, '<', $fn) or die "Can't open $fn for read: $!";
-	    # these files are tiny, so just slurp the whole thing:
-	    my @lines = <$file>;
-	    foreach (@lines) {
-		next unless /^<settings /;
-		chomp;
-		my $line = $_;
-		$line =~ s/^<settings (target=.*)>$/$1/;
-		$t = $line;
-		last;
-	    }
-	    close $file;
+    # We could just pull the connection info out of the DB, but that might not be in sync with the pazpar2 settings file...
+    if ( $settingsFileName && -f "$path/$settingsFileName" ) {
+	open(my $file, '<', "$path/$settingsFileName") or die "Can't open $path/$settingsFileName for read: $!";
+	my $t;
+	# these files are tiny, so just slurp the whole thing:
+	my @lines = <$file>;
+	foreach (@lines) {
+	    next unless /^<settings /;
+	    chomp;
+	    my $line = $_;
+	    $line =~ s/^<settings (target=.*)>$/$1/;
+	    $t = $line;
+	    last;
 	}
+	close $file;
+
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);
 
@@ -116,11 +99,42 @@ if (($result_href->{zServer_status}{connection}) && ($result_href->{zServer_stat
 }
 $result_href->{success} = $success;
 
-#print "Content-Type:application/json\n\n" . to_json( { success => $success, libsym => $libsym, zServer_status => $result_href } );
 print "Content-Type:application/json\n\n" . to_json( $result_href );
 
 #print Dumper($result_href);
 exit;
+
+#--------------------------------------------------------------------------------
+# Recursive...
+#
+sub get_settings_filename {
+    my ($oid, $maxdepth) = @_;
+    $maxdepth = 4 unless defined $maxdepth;
+#    print STDERR "depth: $maxdepth\n";
+#    print STDERR "depth limit reached, exiting\n" if ($maxdepth <= 0);
+    return undef if ($maxdepth <= 0);
+
+    my @lz39 = $dbh->selectrow_array("select count(oid) from library_z3950 where oid=?", undef, $oid);
+
+    if (@lz39 && $lz39[0] != 0) {
+#	print STDERR "oid [$oid] has zServer\n";
+	my @org = $dbh->selectrow_array("select org_name from org where oid=?", undef, $oid);
+	my $s = $org[0];
+	$s =~ s/ /_/g;
+	$s .= ".xml";
+	return $s;
+
+    } else {
+#	print STDERR "oid [$oid] does not have zServer, checking for parent.\n";
+	my @parent = $dbh->selectrow_array("select oid from org_members where member_id=?", undef, $oid);
+	if (@parent) {
+#	    print STDERR "...parent is oid [" . $parent[0] . "], checking parent\n";
+	    return get_settings_filename($parent[0], ($maxdepth - 1));
+	}
+#	print STDERR "...no parent found\n";
+	return undef;
+    }
+}
 
 #--------------------------------------------------------------------------------
 # INTERNAL
