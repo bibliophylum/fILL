@@ -511,11 +511,39 @@ sub get_patron_and_library {
 #
 sub login_foo {
     my $self = shift;
+
+    my $loginText_href;
+# Hmm.  User not logged in yet, so no session params...
+#    my $oid = $self->session->param('fILL-oid');
+# How about cookies?
+    my $oid = $self->query->cookie('fILL-oid');
+    if ($oid) {
+	# is this a SIP2 library?
+	my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from org where oid=?", undef, $oid);
+
+	if ($lib_href->{patron_authentication_method} eq 'sip2') {
+	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
+	    
+	} else {
+	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
+	}
+    } else {
+	$loginText_href = { 
+	    "login_text" => "Log in using your library barcode and PIN",
+	    "barcode_label_text" => "Library card number",
+	    "pin_label_text" => "PIN number"
+	};
+    }
+
+
     my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
     $template->param( 
 	pagetitle => 'fILL public login',
+	login_text => $loginText_href->{"login_text"},
+	barcode_label_text => $loginText_href->{"barcode_label_text"},
+	pin_label_text => $loginText_href->{"pin_label_text"},
 	screenmessage => $screenmessage,
 	);
     return $template->output;

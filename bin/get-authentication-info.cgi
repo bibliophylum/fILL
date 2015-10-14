@@ -24,10 +24,10 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "select enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info from library_sip2 where oid=?";
+my $SQL = "select enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info,login_text,barcode_label_text,pin_label_text from library_sip2 where oid=?";
 my $sip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
-$SQL = "select enabled,auth_type,url from library_nonsip2 where oid=?";
+$SQL = "select enabled,auth_type,url,login_text,barcode_label_text,pin_label_text from library_nonsip2 where oid=?";
 my $nonsip2_href = $dbh->selectrow_hashref($SQL, undef, $oid );
 
 $SQL = "select distinct patron_authentication_method from org order by patron_authentication_method";
