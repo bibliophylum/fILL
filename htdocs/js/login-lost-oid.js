@@ -76,6 +76,9 @@ function set_cookies( but ) {
 		    $.cookie("fILL-authentication", 
 			     "external",
 			     { expires: 365, path: '/' });
+		    $("#login_text").text( data.ea.login_text );
+		    $("label[for = authen_barcode]").text( data.ea.barcode_label_text );
+		    $("label[for = authen_pin]").text( data.ea.pin_label_text );
 		    $("#extAuth").show();
 		    $("#fILLAuth").hide();
 

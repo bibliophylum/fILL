@@ -42,7 +42,7 @@ eval {
 	$dbh->do("delete from library_nonsip2 where oid=?", undef, $parms{"editOID"});
 	
 	if ($parms{"rAuthtype"} =~ /SIP2/) {
-	    $retval = $dbh->do("insert into library_sip2 (oid,enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info) values (?,?,?,?,?,?,?,?)",undef,
+	    $retval = $dbh->do("insert into library_sip2 (oid,enabled,host,port,terminator,sip_server_login,sip_server_password,validate_using_info,login_text,barcode_label_text,pin_label_text) values (?,?,?,?,?,?,?,?,?,?,?)",undef,
 			       $parms{"editOID"},
 			       $parms{"sipEnabled"},
 			       $parms{"sipHost"},
@@ -50,7 +50,10 @@ eval {
 			       $parms{"sipTeminator"} eq "Standard" ? undef : "\r",
 			       $parms{"sipServerLogin"},
 			       $parms{"sipServerPass"},
-			       $parms{"sipMethod"} eq "Info" ? 1 : 0
+			       $parms{"sipMethod"} eq "Info" ? 1 : 0,
+			       $parms{"login_text"},
+			       $parms{"barcode_label_text"},
+			       $parms{"pin_label_text"}
 		);
 	    $dbh->do("update org set patron_authentication_method=? where oid=?", undef, 
 		     "sip2", 
@@ -58,11 +61,14 @@ eval {
 		);
 	    
 	} elsif ($parms{"rAuthtype"} =~ /Other/) {
-	    $retval = $dbh->do("insert into library_nonsip2 (oid,enabled,auth_type,url) values (?,?,?,?)",undef,
+	    $retval = $dbh->do("insert into library_nonsip2 (oid,enabled,auth_type,url,login_text,barcode_label_text,pin_label_text) values (?,?,?,?,?,?,?)",undef,
 			       $parms{"editOID"},
 			       $parms{"nonsipEnabled"},
 			       $parms{"nonsipAuthType"},
-			       $parms{"nonsipURL"}
+			       $parms{"nonsipURL"},
+			       $parms{"login_text"},
+			       $parms{"barcode_label_text"},
+			       $parms{"pin_label_text"}
 		);
 	    $dbh->do("update org set patron_authentication_method=? where oid=?", undef, 
 		     $parms{"nonsipAuthType"}, 

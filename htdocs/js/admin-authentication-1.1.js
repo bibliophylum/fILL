@@ -76,6 +76,7 @@ $('document').ready(function() {
 		      $("#initialMessage").hide();
 		      $("#library-name").text( data.library.library );
 		      $("#auth-common").show();
+		      $("#auth-labels").show();
 
 		      if (data.sip2) {
 			  $("#authtype").text("SIP2");
@@ -99,6 +100,9 @@ $('document').ready(function() {
 			  } else {
 			      $('input:radio[name=sipMethod]')[0].checked = true;
 			  }
+			  $("#login_text").val( data.sip2.login_text );
+			  $("#barcode_label_text").val( data.sip2.barcode_label_text );
+			  $("#pin_label_text").val( data.sip2.pin_label_text );
 			  $("#auth-none").hide();
 			  $("#auth-sip2").show();
 			  $("#auth-other").hide();
@@ -114,6 +118,9 @@ $('document').ready(function() {
 			      $('input:radio[name=nonsipEnabled]')[1].checked = true;
 			  }
 			  $("#nonsipURL").val( data.nonsip2.url );
+			  $("#login_text").val( data.nonsip2.login_text );
+			  $("#barcode_label_text").val( data.nonsip2.barcode_label_text );
+			  $("#pin_label_text").val( data.nonsip2.pin_label_text );
 
 			  $("#auth-none").hide();
 			  $("#auth-sip2").hide();

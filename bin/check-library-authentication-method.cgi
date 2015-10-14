@@ -32,11 +32,15 @@ my $lib_href = $dbh->selectrow_hashref(
 if ($lib_href) {
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
 	my $href = $dbh->selectrow_hashref(
-	    "select enabled from library_sip2 where oid=?", 
+	    "select enabled, login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", 
 	    { Slice => {} }, 
 	    $lib_href->{oid}
 	    );
 	$lib_href->{enabled} = $href->{enabled};
+	$lib_href->{login_text} = $href->{login_text};
+	$lib_href->{barcode_label_text} = $href->{barcode_label_text};
+	$lib_href->{pin_label_text} = $href->{pin_label_text};
+
     } elsif (($lib_href->{patron_authentication_method} eq 'L4U') 
 	     || ($lib_href->{patron_authentication_method} eq 'FollettDestiny')
 	     || ($lib_href->{patron_authentication_method} eq 'TLC')
@@ -44,11 +48,14 @@ if ($lib_href) {
 	     || ($lib_href->{patron_authentication_method} eq 'TempNorthNorfolk') 
 	     || ($lib_href->{patron_authentication_method} eq 'Dummy')) {
 	my $href = $dbh->selectrow_hashref(
-	    "select enabled from library_nonsip2 where oid=?", 
+	    "select enabled, login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", 
 	    { Slice => {} }, 
 	    $lib_href->{oid}
 	    );
 	$lib_href->{enabled} = $href->{enabled};
+	$lib_href->{login_text} = $href->{login_text};
+	$lib_href->{barcode_label_text} = $href->{barcode_label_text};
+	$lib_href->{pin_label_text} = $href->{pin_label_text};
     }
 }
 $dbh->disconnect;
