@@ -61,9 +61,11 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 #    print STDERR Dumper(@org);
     my $settingsFileName = get_settings_filename( $org[0] );	    
     my $path = "/opt/fILL/pazpar2/settings";
+#    print STDERR "looking for $path/$settingsFileName\n";
 
     # We could just pull the connection info out of the DB, but that might not be in sync with the pazpar2 settings file...
     if ( $settingsFileName && -f "$path/$settingsFileName" ) {
+#	print STDERR "file [$settingsFileName] found\n";
 	open(my $file, '<', "$path/$settingsFileName") or die "Can't open $path/$settingsFileName for read: $!";
 	my $t;
 	# these files are tiny, so just slurp the whole thing:
@@ -80,7 +82,7 @@ if ($libsym =~ /^[A-Z]{2,7}$/) {  # some sanity checking
 
 	$t =~ s/\"//g;
 	my ($garbage,$target) = split(/=/, $t);
-
+#	print STDERR "target [$target]\n";
 	$result_href = _test_zserver($result_href, $target);
 #	# temporary, for testing
 #	my $log = $result_href->{log} if ($keepLog);
@@ -121,6 +123,8 @@ sub get_settings_filename {
 	my @org = $dbh->selectrow_array("select org_name from org where oid=?", undef, $oid);
 	my $s = $org[0];
 	$s =~ s/ /_/g;
+	$s =~ s/\.//g;
+	$s =~ s/:/-/g;
 	$s .= ".xml";
 	return $s;
 
