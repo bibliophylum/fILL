@@ -75,6 +75,11 @@ $SQL = "select count(r.id) from request r left join requests_active ra on ra.req
 my @lost = $dbh->selectrow_array($SQL, undef, $oid );
 @lost[0] = 0 unless (@lost);
 
+$SQL = "select count(r.id) as pending from requests_active ra left join request r on r.id=ra.request_id left join request_chain c on c.chain_id = r.chain_id left join request_group g on g.group_id = c.group_id left join org o on o.oid = ra.msg_to where ra.msg_from=? and ra.status = 'ILL-Request' and r.id not in (select request_id from requests_active where status like 'ILL-Answer%') and ra.ts = (select max(ts) from requests_active ra2 where ra2.request_id = ra.request_id)";
+my @pending = $dbh->selectrow_array($SQL, undef, $oid );
+@pending[0] = 0 unless (@pending);
+
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0], lost => $lost[0] } } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0], lost => $lost[0], pending => $pending[0] } } );

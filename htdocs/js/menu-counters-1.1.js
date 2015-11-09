@@ -83,5 +83,11 @@ function update_menu_counters( oid ) {
                     lost[0].innerHTML = 'Lost: <span class="circle">'+data.counts.lost+'</span>';
 		}
             };
+            if (data.counts.pending > 0) {
+		var pending = $('#menu_borrow_pending a');
+		if (pending.length > 0) {
+                    pending[0].innerHTML = 'Pending: <span class="circle">'+data.counts.pending+'</span>';
+		}
+            };
     });
 }
