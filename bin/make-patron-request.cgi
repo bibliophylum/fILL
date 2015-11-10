@@ -193,15 +193,30 @@ foreach my $num (sort keys %sources) {
 		$src{$pname} = $sources{$num}{$pname};
 	    }
 	    # really need to generalize this....
+	    # SEE ALSO modules/lightning.pm, _isolate_and_normalize_source_callnos()
 	    if ($sources{$num}{'symbol'} eq 'SPRUCE') {
 		$src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+
 	    } elsif ($sources{$num}{'symbol'} eq 'MW') {
 		# leave as-is... requests to all MW branches go to MW
-	    } elsif ($sources{$num}{'symbol'} eq 'MBW') {
+
+#	    } elsif ($sources{$num}{'symbol'} eq 'MBW') {
+	    } elsif ($sources{$num}{'symbol'} eq 'WMRL') {
 		$src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
-	    } elsif ($sources{$num}{'symbol'} eq 'MDA') {
-		# temp - testing Parklands... eventually this will work like Spruce or WMRL
-		$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
+		# sometime the horizon zserver does not return local holdings info...
+		# so force it to MBW and let MBW forward to branches.
+		$src{'symbol'} = 'MBW' if (not defined $src{'symbol'});
+
+	    } elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
+		# all Parkland requests go to MDA
+		$src{'symbol'} = 'MDA';
+		# This is handled in _consolidate_locations()....
+		#$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
+
+	    } elsif ($sources{$num}{'symbol'} eq 'ALLARD') {
+		# all Allard requests go to MSTG
+		$src{'symbol'} = 'MSTG';
+
 	    } else {
 		$src{'symbol'} = $sources{$num}{'symbol'};
 	    }

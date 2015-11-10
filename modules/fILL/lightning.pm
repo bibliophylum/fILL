@@ -811,7 +811,7 @@ sub _turn_request_parms_into_sources_hash {
 	}
     }
 #    foreach my $num (sort keys %sources) {
-#	$self->log->debug( "request_process sources $num hash:\n " . Dumper( $sources{$num} ) );
+#	$self->log->debug("request_process sources $num hash:\n " . Dumper($sources{$num}));
 #    }
 
     return %sources;
@@ -905,6 +905,7 @@ sub _isolate_and_normalize_source_callnos {
 		}
 		$src{'is_spruce'} = 0;
 		# really need to generalize this....
+		# SEE ALSO bin/make-patron-request.cgi
 		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
 		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
 		    $src{'is_spruce'} = 1;
