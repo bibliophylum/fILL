@@ -930,6 +930,10 @@ sub _isolate_and_normalize_source_callnos {
 		    # all Allard requests go to MSTG
 		    $src{'symbol'} = 'MSTG';
 
+		} elsif ($sources{$num}{'symbol'} eq 'LAKELAND') {
+		    # all Lakeland requests go to MKL
+		    $src{'symbol'} = 'MKL';
+
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
 		}
