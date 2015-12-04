@@ -288,6 +288,7 @@ function resetPage()
 function triggerSearch ()
 {
     isSearching = 1;
+    ga('send', 'event', 'Public search', 'begin');
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);
 }
 
@@ -718,6 +719,7 @@ function toggleLocationDetails() {
 
 
 function request() {
+    ga('send', 'event', 'Public search', 'request made');
     var $myForm=$("#request_form");
     $.getJSON('/cgi-bin/make-patron-request.cgi', $myForm.serialize(),
 	      function(data){
@@ -763,6 +765,7 @@ function request() {
 
 
 function cancel_request() {
+    ga('send', 'event', 'Public search', 'request cancelled');
     var $myForm=$("#cancel_form");
     $.getJSON('/cgi-bin/cancel-patron-request.cgi', $myForm.serialize(),
 	      function(data){
