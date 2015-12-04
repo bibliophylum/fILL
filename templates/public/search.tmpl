@@ -123,12 +123,15 @@
     });
 
     $('#incrFont').click(function () {
+        ga('send', 'event', 'Font-size', 'increase');
         increaseFontSize();
     });
     $('#decrFont').click(function () {
+        ga('send', 'event', 'Font-size', 'decrease');
         decreaseFontSize();
     });
     $('#resetFont').click(function () {
+        ga('send', 'event', 'Font-size', 'reset');
         resetFontSizeToDefault();
     });
 
