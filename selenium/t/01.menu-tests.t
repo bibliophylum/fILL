@@ -30,13 +30,14 @@ subtest 'Borrowing submenus' => sub {
 };
 ok( t_menu_lend() == 1, "Lending menu" );
 subtest 'Lending submenus' => sub {
-    plan tests => 7;
+    plan tests => 8;
     ok( t_lend_respond() == 1, "[respond] page load" );
     ok( t_lend_onHold() == 1, "[on hold] page load" );
     ok( t_lend_shipping() == 1, "[shipping] page load" );
     ok( t_lend_renewalRequests() == 1, "[renewal requests] page load" );
     ok( t_lend_lost() == 1, "[lost] page load" );
     ok( t_lend_checkins() == 1, "[checkins] page load" );
+    ok( t_lend_overdues() == 1, "[lend_overdues] page load" );
     ok( t_lend_pullList() == 1, "[pull list] page load" );
 };
 ok( t_menu_current() == 1, "Current menu" );
@@ -215,6 +216,15 @@ sub t_lend_checkins {
     my $lnk = $d->find_element('Check-ins','partial_link_text');
     $lnk->click();
     return $d->get_title eq 'Loan items to be checked back into your ILS';
+}
+
+#-------------------------------------------------------------------------------
+sub t_lend_overdues {
+    my $li = $d->find_element('menu_lend_overdue','id');
+    return 0 unless ($li);
+    my $lnk = $d->find_element('Overdue','partial_link_text');
+    $lnk->click();
+    return $d->get_title eq 'Lender list of overdue items';
 }
 
 #-------------------------------------------------------------------------------
