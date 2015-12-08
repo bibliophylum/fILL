@@ -84,11 +84,11 @@ function build_table( data ) {
     cell = document.createElement("TH"); cell.innerHTML = "Last update"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Status"; row.appendChild(cell);
     cell = document.createElement("TH"); cell.innerHTML = "Due date"; row.appendChild(cell);
-    cell = document.createElement("TH"); cell.innerHTML = "Email"; row.appendChild(cell);
+    cell = document.createElement("TH"); cell.innerHTML = "Email (if you use web-based email, right-click the address to open in a new tab)"; row.appendChild(cell);
     
     var tFoot = myTable.createTFoot();
     row = tFoot.insertRow(-1);
-    cell = row.insertCell(-1); cell.colSpan = "10"; cell.innerHTML = "These items are now overdue.";
+    cell = row.insertCell(-1); cell.colSpan = "11"; cell.innerHTML = "These items are now overdue.<br/><br/>If you use a web-based email client, such as GMail or Hotmail, right-click the email address to open your email client in a new tab.<br/>If you use a stand-alone email client, such as Outlook or Thunderbird, you can just click on the email address.";
     
     // explicit creation of TBODY element to make IE happy
     var tBody = document.createElement("TBODY");
@@ -107,7 +107,7 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].status;
         cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].due_date;
-        cell = row.insertCell(-1); cell.innerHTML = data.overdue[i].email_address;
+        cell = row.insertCell(-1); cell.innerHTML = '<a href="mailto:'+data.overdue[i].email_address+'?subject=Overdue:+'+data.overdue[i].title+'&body=The+title+%22'+data.overdue[i].title+'%22,+borrowed+from+'+data.overdue[i].lending_library+',+was+due+on+'+data.overdue[i].due_date+'.%0D%0A%0D%0AIf+you+have+already+returned+this+title,+please+mark+it+as+%22Returned%22+in+fILL.%0D%0A%0D%0AThank+you">'+data.overdue[i].email_address+'</a>';
     }
     
     document.getElementById('mylistDiv').appendChild(myTable);

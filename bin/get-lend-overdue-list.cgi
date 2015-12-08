@@ -30,13 +30,15 @@ my $SQL="select
   date_trunc('second',ra2.ts) as ts, 
   ra2.status,
   substring(ra.message from 'due (.*)') as due_date,
-  o.email_address 
+  o.email_address,
+  o2.org_name as lending_library  
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_to
   left join requests_active ra2 on ra2.request_id=ra.request_id 
+  left join org o2 on o2.oid = ra.msg_from 
 where 
   ra.msg_from=? 
   and ra.ts=(select ts from requests_active where request_id=ra.request_id and (status='Shipped' or status='Renew-Answer|Ok') order by ts desc limit 1) 
