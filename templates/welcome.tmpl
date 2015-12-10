@@ -80,7 +80,10 @@ $('document').ready(function() {
   <div id="main-left" class="tone-box" >
 
     <div class="alert-box" >
-      <p>fILL's URL has changed:<br>&nbsp;<br><a href="https://fill.mb.libraries.coop/">https://fill.mb.libraries.coop/</a><br>&nbsp;<br>You'll need to update your web site links!</p>
+      <!--
+      <p>fILL's URL has changed:<br>&nbsp;<br><a href="https://fill.mb.libraries.coop/">https://fill.mb.libraries.coop/</a><br>&nbsp;<br>You'll need to update your web site links!</p> 
+      -->
+      <p>The "unknown override: [bTryNextLender]" bug has been resolved.</p><p>Check Pending, there may be older requests to cancel.</p>
     </div>
     <hr>
     <div id="zserver">
@@ -129,6 +132,24 @@ $('document').ready(function() {
     <h2>Updates</h2>
     <hr>
     <div id="accordion">
+      <h3>Thursday 10th December 2015 Release notes</h3>
+      <div>
+	<p>This is mainly a bug-fix update, including fixes for
+	  <ul>
+	    <li>z39.50 server status checking</li>
+	    <li>the "unknown override: [bTryNextLender]" bug</li>
+	    <li>libraries that handle ILL centrally</li>
+	    <li>Menu counter for Pending tab</li>
+	  </ul>
+	<p>
+	<p>New features:
+	  <ul>
+	    <li>We can now set the text for patron login fields (eg "Barcode/PIN" or "Username/Password") independently for each library.  Let us know if you'd like yours changed!</li>
+	    <li>Lender's list of overdue loans.  You can click on the borrowing library's email address to craft a reminder email.</li>
+	  </ul>
+	</p>
+      </div>
+
       <h3>Monday 31st August 2015 Release notes</h3>
       <div>
 	<p>There are some very important changes in this package.  Here are the highlights:</p>
