@@ -102,6 +102,7 @@ sub setup {
 	'new_patron_requests'      => 'new_patron_requests_process',
 	'pending'                  => 'pending_process',
 	'lost'                     => 'lost_process',
+	'lend_overdue'             => 'lend_overdue_process',
 	);
 }
 
@@ -570,6 +571,25 @@ sub overdue_process {
 
     my $template = $self->load_tmpl('search/overdue.tmpl');	
     $template->param( pagetitle => "Overdue items to be returned to lender",
+		      username => $self->authen->username,
+		      oid => $oid,
+		      library => $library,
+	);
+    return $template->output;
+    
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub lend_overdue_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+
+    my $template = $self->load_tmpl('search/lend_overdue.tmpl');	
+    $template->param( pagetitle => "Lender list of overdue items",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
