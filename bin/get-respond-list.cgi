@@ -39,6 +39,7 @@ where
   ra.msg_to=? 
   and ra.status='ILL-Request' 
   and ra.request_id not in (select request_id from requests_active where msg_from=?) 
+  and ra.request_id not in (select request_id from requests_active where msg_to=? and message='Trying next source') 
 order by s.call_number, g.author, g.title
 ";
 
@@ -53,7 +54,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid );
 
 $SQL = "select can_forward_to_siblings from org where oid=?";
 my @flags = $dbh->selectrow_array($SQL, undef, $oid );

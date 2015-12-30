@@ -273,10 +273,11 @@ where
   ra.msg_to=? 
   and ra.status='ILL-Request' 
   and ra.request_id not in (select request_id from requests_active where msg_from=?) 
+  and ra.request_id not in (select request_id from requests_active where msg_to=? and message='Trying next source') 
 order by s.call_number
 ";
 
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid );
+    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid );
 
     # generate barcodes (code39 requires '*' as start and stop characters
     foreach my $request (@$pulls) {

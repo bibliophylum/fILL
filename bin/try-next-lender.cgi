@@ -30,11 +30,17 @@ my @gcr = $dbh->selectrow_array("select g.group_id, c.chain_id, r.id from reques
 $SQL = "select oid, sequence_number from sources where group_id=? and (tried is null or tried=false) order by sequence_number";
 my @ary = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
 
+my @curr = $dbh->selectrow_array("select msg_to from requests_active where request_id=? and status='ILL-Request' order by ts desc", undef, $reqid);
+
 my $retval = 0;
 if (@ary) {
-    # message to requesting library
+    # message to self (requesting library)
     $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
     $dbh->do($SQL, undef, $reqid, $msg_from, $msg_from, "Message", "Trying next source");
+
+    # message to lender (so this request doesn't show up on lender's respond list)
+    $SQL = "insert into requests_active (request_id, msg_from, msg_to, status, message) values (?,?,?,?,?)";
+    $dbh->do($SQL, undef, $reqid, $msg_from, $curr[0], "Message", "Trying next source");
 
     # begin the ILL conversation
     $SQL = "INSERT INTO request (requester, current_source_sequence_number, chain_id) values (?,?,?)";
