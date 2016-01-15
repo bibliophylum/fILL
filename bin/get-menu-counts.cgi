@@ -40,8 +40,8 @@ $SQL = "select count(r.id) as renewals from request r left join requests_active 
 my @renews = $dbh->selectrow_array($SQL, undef, $oid, $oid );
 @renews[0] = 0 unless (@renews);
 
-$SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?)";
-my @waiting = $dbh->selectrow_array($SQL, undef, $oid, $oid );
+$SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_to=? and ra.status='ILL-Request' and ra.request_id not in (select request_id from requests_active where msg_from=?) and ra.request_id not in (select request_id from requests_active where msg_to=? and message='Trying next source')";
+my @waiting = $dbh->selectrow_array($SQL, undef, $oid, $oid, $oid );
 @waiting[0] = 0 unless (@waiting);
 
 $SQL = "select count(r.id) from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_from=? and ra.status like '%Hold-Placed%' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Shipped') and ra.request_id not in (select request_id from requests_active where msg_from=? and status like '%being-processed-for-supply%')";
