@@ -89,7 +89,7 @@ foreach my $sym (@$servers_aref) {
     $s .= "\n";
     $s .= "  <!-- Result normalization settings -->\n";
     $s .= "\n";
-    $s .= '  <set name="pz:nativesyntax" value="' . $z->{nativesyntax} . "\"/>\n";
+    $s .= '  <set name="pz:nativesyntax" value="' . ($z->{nativesyntax} ? $z->{nativesyntax} : "") . "\"/>\n";
     $s .= '  <set name="pz:xslt" value="' . $z->{xslt} . "\"/>\n";
     $s .= "\n";
     $s .= "</settings>\n";
