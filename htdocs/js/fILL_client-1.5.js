@@ -463,15 +463,15 @@ function renderDetails(data, marker)
     for (var i=0; i<len; i++) {
 
 	// temp fix for skipping Spruce locations
-	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
+	if ("Spruce Libraries Cooperative" === data["location"][i]["@name"]) {
 	    if (data["location"][i]["md-locallocation"] != undefined) {
 		var bail=0;
 		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
 		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
 			bail=1;
 		    }
-		    // Boissevain temporarily closed
-		    if ("MBOM" === data["location"][i]["md-locallocation"][lloc]) {
+		    // UCN The Pas temporarily closed
+		    if ("MTPK" === data["location"][i]["md-locallocation"][lloc]) {
 			bail=1;
 		    }
 		}
