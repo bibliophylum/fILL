@@ -99,8 +99,20 @@ function build_table( data ) {
     var tBody = document.createElement("TBODY");
     myTable.appendChild(tBody);
     
+    // Need to create a default due date:
+    var now = new Date();
+    var d = new Date(now.getTime() + (27 * 24 * 60 * 60 * 1000)); 
+// Doesn't work on older version of Internet Explorer...
+//	var iso = d.toISOString();
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+    var iso = d.getFullYear() + '-' +
+	((''+month).length<2 ? '0' : '') + month + '-' +
+	((''+day).length<2 ? '0' : '') + day;
+
     for (var i=0;i<data.renewRequests.length;i++) 
     {
+	var requestId = data.renewRequests[i].id;
         row = tBody.insertRow(-1); row.id = 'req'+data.renewRequests[i].id;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].gid;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].cid;
@@ -112,20 +124,26 @@ function build_table( data ) {
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].title;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].ts;
         cell = row.insertCell(-1); cell.innerHTML = data.renewRequests[i].original_due_date;
-	// Need to set a default due date:
-	var now = new Date();
-	var d = new Date(now.getTime() + (27 * 24 * 60 * 60 * 1000)); 
-// Doesn't work on older version of Internet Explorer...
-//	var iso = d.toISOString();
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-	var iso = d.getFullYear() + '-' +
-	    ((''+month).length<2 ? '0' : '') + month + '-' +
-	    ((''+day).length<2 ? '0' : '') + day;
-        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10); cell.setAttribute('class','due-date');
+//        cell = row.insertCell(-1); cell.innerHTML = iso.substring(0,10); cell.setAttribute('class','due-date');
+	cell = row.insertCell(-1); cell.setAttribute('class','due-date');
+	var dd=$("<input/>").attr({ type: "text", id: 'dd'+requestId, size: "10" }).val(iso.substring(0,10));
+	cell.appendChild( dd[0] );
+	dd.datepicker({ dateFormat: 'yy-mm-dd' });
+	
+//        cell = row.insertCell(-1); cell.innerHTML = '<input id="dd'+requestId+'" disabled="disabled">'+iso.substring(0,10)+'</input>'; cell.setAttribute('class','due-date');
+//        cell = row.insertCell(-1); cell.innerHTML = '<span id="dd'+requestId+'">'+iso.substring(0,10)+'</span>'; cell.setAttribute('class','due-date');
+/*
+	$("#dd"+requestId).datepicker({ dateFormat: 'yy-mm-dd' });
+	// and a change button
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.id = "changeDD"+requestId;
+	b1.value = "Change";
+	b1.className = "action-button";
+	b1.onclick = make_changeSingleDate_handler( requestId );
+	cell.appendChild(b1);
+*/
         cell = row.insertCell(-1); 
-
-	var requestId = data.renewRequests[i].id;
 	var divResponses = document.createElement("div");
 	divResponses.id = 'divResponses'+requestId;
 
@@ -170,8 +188,9 @@ function renewalAnswer( requestId ) {
     var oTable = $('#renewal-answer-table').dataTable();
     var aPos = oTable.fnGetPosition( nTr );
     var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
-    var due_date = oTable.fnGetData( aPos )[9];
-
+//    var due_date = oTable.fnGetData( aPos )[9];
+    var due_date = $("#dd"+requestId).val();
+    
     if (due_date.length == 0) {
 	var retVal = confirm("You have not entered a due date.  Continue without due date?");
 	if (retVal == false) {
@@ -262,17 +281,29 @@ function cannotRenew( requestId ) {
     });
 }
 
+function make_changeSingleDate_handler( requestId ) {
+    return function() { changeSingleDate( requestId ) };
+}
+
+function changeSingleDate( requestId ) {
+    $("#dd"+requestId).datepicker( "show" );
+}
+
 function set_default_due_date(oForm) {
     var defaultDueDate = oForm.elements["datepicker"].value;
     var tbl = $("#renewal-answer-table").DataTable(); // note the capitalized "DataTable"
 
     $(".due-date").each(function(){
-	tbl.cell(this).data( defaultDueDate );
+	var cellNode = tbl.cell(this).node();
+	var dd = $(cellNode).children(":first");  // wrap cellNode in $() to jqueryify it
+	dd.val(defaultDueDate);
     });
+
+    // now that we're not using cell.data any longer, do we still need this?
 
     // using cell.data() recreates the row, losing the dynamically created
     // button handlers in the process.  We need to recreate them:
-
+/*
     $(".renew-it-button").each(function(){
 	var requestId = this.id.slice(5); // button id starts with "renew"
 	this.onclick = make_renewalAnswer_handler( requestId );
@@ -282,6 +313,6 @@ function set_default_due_date(oForm) {
 	var requestId = this.id.slice(7); // button id starts with "norenew"
 	this.onclick = make_cannotRenew_handler( requestId );
     });
-
+*/
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
