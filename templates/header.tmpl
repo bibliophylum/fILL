@@ -121,6 +121,13 @@ $('document').ready(function(){
         $('#'+curTheme).click();
     }    
 
+    //alert(window.location.hostname);
+    if (window.location.hostname == 'rigel.gotdns.org') {
+	$("#localdev").show();
+    }
+    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
+	$("#filldev").show();
+    }
 });
 
 </script> <!-- end of document.ready -->
@@ -241,6 +248,9 @@ $('document').ready(function(){
 
 <body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
 
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
   <div id="container"><!-- closed in footer.tmpl -->
     <p>&nbsp;</p>
     <div id="header" class="header-library">
