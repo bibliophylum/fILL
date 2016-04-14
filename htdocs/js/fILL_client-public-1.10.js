@@ -132,10 +132,10 @@ function my_onstat(data) {
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
+	    isSearching = 0;
 	    $(".disabled-while-searching").removeClass("disabled-while-searching");
 	    $("#result-instructions").text("Click on a title for more information.");
 	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
-	    isSearching = 0;
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){
@@ -148,6 +148,8 @@ function my_onstat(data) {
 		    results.innerHTML = "<br>" + querybox.value + " returned 0 results";
 		    termlist.innerHTML = '';
 		}
+	    } else {
+		my_paz.show(0, recPerPage, curSort);
 	    }
 	}
     }
