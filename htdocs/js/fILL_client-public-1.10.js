@@ -68,7 +68,7 @@ function my_onshow(data) {
 	$recDiv.append( $('<hr>') );
 	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
 	if (isSearching) {
-	    $recDiv.append( $('<a class="disabled-while-searching" href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
+	    $recDiv.append( $('<a class="disabled-while-searching" href="#" id="rec_'+hit.recid+'"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 	} else {
 	    $recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 	}
