@@ -68,7 +68,7 @@ function my_onshow(data) {
 	$recDiv.append( $('<hr>') );
 	$recDiv.append( $('<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>') );
 	if (isSearching) {
-	    $recDiv.append( $('<a class="disabled-while-searching" href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
+	    $recDiv.append( $('<a class="disabled-while-searching" href="#" id="rec_'+hit.recid+'"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 	} else {
 	    $recDiv.append( $('<a href="#" id="rec_'+hit.recid+'" onclick="showDetails(this.id);return false;"><b>'+hit["md-title"] +' </b></a><br/>') ); 
 	}
@@ -132,10 +132,10 @@ function my_onstat(data) {
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
+	    isSearching = 0;
 	    $(".disabled-while-searching").removeClass("disabled-while-searching");
 	    $("#result-instructions").text("Click on a title for more information.");
 	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
-	    isSearching = 0;
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){
@@ -148,6 +148,8 @@ function my_onstat(data) {
 		    results.innerHTML = "<br>" + querybox.value + " returned 0 results";
 		    termlist.innerHTML = '';
 		}
+	    } else {
+		my_paz.show(0, recPerPage, curSort);
 	    }
 	}
     }
