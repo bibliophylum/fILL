@@ -35,6 +35,9 @@
 
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
 
+<script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
+<link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
+
 <script type="text/javascript">
 
   function set_primary_tab(tab_id) {
@@ -75,7 +78,8 @@
                 'font-size': fs + "px"
             });
         }
-    });
+  });
+  
   } 
 
 </script>
@@ -148,6 +152,27 @@
         $.removeCookie("fILL-authentication", { path: '/' });
         window.location.href="?authen_logout=1";
     });
+
+    $("#countdown").TimeCircles( { start: false,
+                                   time: { Days: { show: false },
+                                           Hours: { show: false },
+                                           Minutes: { show: false }
+                                         }
+                                 }
+                                ).addListener(function(unit, value, total) {
+                                                if (total == 0) {
+                                                  $("#countdown").TimeCircles().stop();
+                                                  var stoppedAt = stopTheSearch("Timer done");
+            	                                  $("#status-header").text("Search complete.");
+                                                  $("#countdown-finished").empty();
+                                                  $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+ 	                                          $("#status-note").hide();
+                                                  $("#countdown-finished").show();
+                                                  $("#countdown-div").hide();
+                                                  $("#count-or-percent-div").hide();
+                                                  $("#percent-div").hide();
+                                                }
+                                              }, type="visible");
 
     if (window.location.hostname == 'rigel.gotdns.org') {
 	$("#localdev").show();
@@ -341,7 +366,18 @@
 
 <div id="aside" class="tone-box" role="complementary">
   <div id="image"></div>
-  <div id="stat"></div>
+  <div><h1 id="status-header">Searching all libraries</h1>
+    <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
+    <div id="countdown-div"><h2>Finishing in:</h2>
+      <div id="countdown" data-timer="45" style="width:100%"></div>
+    </div>
+    <div id="count-or-percent-div"><h2>...or...</h2></div>
+    <div id="percent-div"><h2>% of libraries:</h2>
+      <div id="stat"></div>
+    </div>
+    <div id="countdown-finished" style="display:none"></div>
+    <div id="libraries-finished" style="display:none"></div>
+  </div>
   <div id="leftcontent"></div>
   <div id="termlist"></div>
 </div>
