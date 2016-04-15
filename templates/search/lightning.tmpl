@@ -63,53 +63,56 @@ $('document').ready(function(){
    <a href="#" onclick="switchView('targetview')">Target Info</a>
   </div>
 
-      <div id="ranking">
-       <form name="select">
-        Sort by
-        <select name="sort" id="sort">
-         <option value="relevance" selected="selected">relevance</option>
-         <option value="title:1">title</option>
-         <option value="date:0">newest</option>
-         <option value="date:1">oldest</option>
-        </select>
-        and show 
-        <select name="perpage" id="perpage">
-         <option value="10">10</option>
-         <option value="20" selected="selected">20</option>
-         <option value="30">30</option>
-         <option value="50">50</option>
-        </select>
-        per page.
-       </form>
-      </div>
-      <div id="pager"></div>
-      <div id="navi"></div>
-      <div id="results"></div>
-  
+  <div id="recordview">
+    <div id="ranking">
+      <form name="select">
+	Sort by
+	<select name="sort" id="sort">
+          <option value="relevance" selected="selected">relevance</option>
+          <option value="title:1">title</option>
+          <option value="date:0">newest</option>
+          <option value="date:1">oldest</option>
+	</select>
+	and show 
+	<select name="perpage" id="perpage">
+          <option value="10">10</option>
+          <option value="20" selected="selected">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+	</select>
+	per page.
+      </form>
+    </div>
+    
+    <div id="pager"></div>
+    <div id="navi"></div>
+    
+    <div id="results"></div>
+
+  </div> <!-- end of recordview -->
+    
   <div id="targetview" style="display: none">
-   <div id="bytarget">
-       No information available yet.
-   </div>
+    <hr/>
+    <div id="bytarget">No information available yet.</div>
   </div>
- </main> 
+  
+</main> 
 
  <!--***************ARIA MARKER 'COMPLEMENTARY'***************-->
 <div id="aside" class="tone-box" role="complementary">
-  <div id="recordview">
-    <div id="search-status"><h1 id="status-header">Searching all libraries</h1>
-      <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
-      <div id="countdown-div"><h2>Finishing in:</h2>
-	<div id="countdown" data-timer="46" style="width:100%"></div>
-      </div>
-      <div id="count-or-percent-div"><h2>...or...</h2></div>
-      <div id="percent-div"><h2>% of libraries:</h2>
-	<div id="stat"></div>
-      </div>
-      <div id="countdown-finished" style="display:none"></div>
-      <div id="libraries-finished" style="display:none"></div>
+  <div id="search-status"><h1 id="status-header">Searching all libraries</h1>
+    <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
+    <div id="countdown-div"><h2>Finishing in:</h2>
+      <div id="countdown" data-timer="46" style="width:100%"></div>
     </div>
-  <div id="termlist"></div>
+    <div id="count-or-percent-div"><h2>...or...</h2></div>
+    <div id="percent-div"><h2>% of libraries:</h2>
+      <div id="stat"></div>
+    </div>
+    <div id="countdown-finished" style="display:none"></div>
+    <div id="libraries-finished" style="display:none"></div>
   </div>
+  <div id="termlist"></div>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

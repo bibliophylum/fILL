@@ -423,16 +423,16 @@ function switchView(view) {
     var records = document.getElementById('recordview');
     
     switch(view) {
-        case 'targetview':
-            targets.style.display = "block";            
-            records.style.display = "none";
-            break;
-        case 'recordview':
-            targets.style.display = "none";            
-            records.style.display = "block";
-            break;
-        default:
-            alert('Unknown view.');
+    case 'targetview':
+        targets.style.display = "block";            
+        records.style.display = "none";
+        break;
+    case 'recordview':
+        targets.style.display = "none";            
+        records.style.display = "block";
+        break;
+    default:
+        alert('Unknown view.');
     }
 }
 
