@@ -1,6 +1,9 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <script type="text/javascript" src="/js/pz2.js"></script>
-<script type="text/javascript" src="/js/fILL_client-1.5.js"></script>
+<script type="text/javascript" src="/js/fILL_client-1.6.js"></script>
+
+<script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
+<link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
 
 <script type="text/javascript">
   function searchHelp(e) {
@@ -11,8 +14,32 @@
 <script type="text/javascript">
 
 $('document').ready(function(){
+  $("#status-header").text("Search status");  
+  $("#status-note").text("The timer will start when you begin a search.  Your search will finish when either the timer runs out, or all libraries have responded.");
   $("#search-container").show();
   $("#query").focus();
+
+  $("#countdown").TimeCircles( { start: false,
+                                 time: { Days: { show: false },
+                                         Hours: { show: false },
+                                         Minutes: { show: false }
+                                       }
+                               }
+                              ).addListener(function(unit, value, total) {
+                                              if (total == 0) {
+                                                $("#countdown").TimeCircles().stop();
+                                                var stoppedAt = stopTheSearch("Timer done");
+       	                                        $("#status-header").text("Search complete.");
+                                                $("#countdown-finished").empty();
+                                                $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+ 	                                        $("#status-note").hide();
+                                                $("#countdown-finished").show();
+                                                $("#countdown-div").hide();
+                                                $("#count-or-percent-div").hide();
+                                                $("#percent-div").hide();
+                                              }
+                                            }, type="visible");
+
 });
 
 </script>
@@ -69,8 +96,19 @@ $('document').ready(function(){
  <!--***************ARIA MARKER 'COMPLEMENTARY'***************-->
 <div id="aside" class="tone-box" role="complementary">
   <div id="recordview">
-       <div id="stat"></div>
-       <div id="termlist"></div>
+    <div id="search-status"><h1 id="status-header">Searching all libraries</h1>
+      <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
+      <div id="countdown-div"><h2>Finishing in:</h2>
+	<div id="countdown" data-timer="46" style="width:100%"></div>
+      </div>
+      <div id="count-or-percent-div"><h2>...or...</h2></div>
+      <div id="percent-div"><h2>% of libraries:</h2>
+	<div id="stat"></div>
+      </div>
+      <div id="countdown-finished" style="display:none"></div>
+      <div id="libraries-finished" style="display:none"></div>
+    </div>
+  <div id="termlist"></div>
   </div>
 </div>
 

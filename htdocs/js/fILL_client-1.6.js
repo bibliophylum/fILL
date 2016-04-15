@@ -36,6 +36,8 @@ var submitted = false;
 var SourceMax = 25;
 var SubjectMax = 10;
 var AuthorMax = 10;
+var isSearching = 0;
+var completionStatus = {};
 
 //
 // pz2.js event handlers:
@@ -61,11 +63,19 @@ function my_onshow(data) {
     var html = [];
     for (var i = 0; i < data.hits.length; i++) {
         var hit = data.hits[i];
-	html.push('<div class="record" id="recdiv_'+hit.recid+'" >'
-		  +'<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>'
-		  +'<a href="#" id="rec_'+hit.recid
-		  +'" onclick="showDetails(this.id);return false;"><b>' 
-		  + hit["md-title"] +' </b></a>'); 
+	if (isSearching) {
+	    html.push('<div class="record" id="recdiv_'+hit.recid+'" >'
+		      +'<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>'
+		      +'<a href="#" class="disabled-while-searching" id="rec_'+hit.recid
+		      +'"><b>' 
+		      + hit["md-title"] +' </b></a>');
+	} else {
+	    html.push('<div class="record" id="recdiv_'+hit.recid+'" >'
+		      +'<span>'+ (i + 1 + recPerPage * (curPage - 1)) +'. </span>'
+		      +'<a href="#" id="rec_'+hit.recid
+		      +'" onclick="showDetails(this.id);return false;"><b>' 
+		      + hit["md-title"] +' </b></a>');
+	}
 	if (hit["md-title-remainder"] !== undefined) {
 	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
 	}
@@ -104,13 +114,27 @@ function my_onshow(data) {
 function my_onstat(data) {
     var stat = document.getElementById('stat');
     if(stat != null){
+	completionStatus = {clients: data.clients, active: data.activeclients };
 	if(data.activeclients != 0){
-        stat.innerHTML = '<div style="text-align:left;">Searching...</div>';
-        stat.innerHTML += '<div id="progress_empty" style="">'; //Further styles for progress_empty in css
-        stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*130)+'px;"/>';//Further styles for progress filler in css	    stat.innerHTML += '</div></div><br />';
+	    stat.innerHTML = '<div style="text-align:left;">Responses from<br />'+(data.clients - data.activeclients)+' of '+data.clients+' libraries.</div>';
+	    stat.innerHTML += '<div id="progress_empty" style="">'; //Further styles for progress_empty in css
+	    stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*130)+'px;"/>';//Further styles for progress filler in css
+	    //stat.innerHTML += '<div id="stopper" style=""><input id="stopIt" type="button" value="Stop!" onClick="javascript:stopTheSearch(); return false;" class="library-style" />'
+	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
+	    isSearching = 0;
+	    $("#countdown").TimeCircles().stop();
+	    $("#status-header").text("Search complete.");
+	    $("#libraries-finished").empty();
+	    $("#libraries-finished").append("<p>All zServers responded to your search within "+Math.min(45,Math.round( 60 - $("#countdown").TimeCircles().getTime() ))+" seconds.</p>");
+	    $("#status-note").hide();
+            $("#libraries-finished").show();
+            $("#countdown-div").hide();
+            $("#count-or-percent-div").hide();
+            $("#percent-div").hide();
+
 	    if(data.hits[0] < 1){
 		var querybox = document.getElementById("query");
 		if(querybox.value != ""){
@@ -123,6 +147,8 @@ function my_onstat(data) {
 		    results.innerHTML = "<br>" + querybox.value + " returned 0 results";
 		    termlist.innerHTML = '';
 		}
+	    } else {
+		my_paz.show(0, recPerPage, curSort);
 	    }
 	}
     }
@@ -226,6 +252,17 @@ function resetPage()
 
 function triggerSearch ()
 {
+    isSearching = 1;
+    $("#search-status").show();
+    $("#countdown-finished").hide();
+    $("#libraries-finished").hide();
+    $("#countdown-div").show();
+    $("#count-or-percent-div").show();
+    $("#percent-div").show();
+    $("#status-header").text("Searching all libraries");
+    $("#status-note").text("Your search will finish when either the timer runs out, or all libraries have responded.");
+    $("#status-note").show();
+
     var query = '';
     if (document.search.query.value) {
 	query += document.search.query.value;
@@ -253,6 +290,7 @@ function triggerSearch ()
 
     if ($('#advanced_search').is(':visible')) { toggleAdvanced(); }
     document.search.query.value = query;  // update query so user can see it
+    $("#countdown").TimeCircles().restart();
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);
 }
 
@@ -360,6 +398,22 @@ function pagerPrev() {
     if ( my_paz.showPrev() != false )
         curPage--;
 }
+
+function stopTheSearch(reason) {
+    var retval = { finished: (completionStatus.clients - completionStatus.active),
+		   waiting: (completionStatus.active - 0)
+		 };
+    my_paz.stop();
+    if (reason == null) {
+	reason = "Search stopped."
+    }
+    var stat = document.getElementById('stat');
+    stat.innerHTML = '<div style="text-align:left;">'+reason+'</div>';
+    isSearching = 0;
+    my_paz.show(0, recPerPage, curSort); // make the title links active
+    return retval;
+}
+
 
 // swithing view between targets and records
 
