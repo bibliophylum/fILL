@@ -312,6 +312,10 @@ function triggerSearch ()
     $("#status-header").text("Searching all libraries");
     $("#status-note").show();
     
+    var query = document.search.query.value;
+    query = query.replace(/\,/g,"");  // causes 'malformed query' on some zServers
+    document.search.query.value = query;
+
     ga('send', 'event', 'Public search', 'begin');
     $("#countdown").TimeCircles().restart();
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);

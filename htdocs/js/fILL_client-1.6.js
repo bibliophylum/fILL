@@ -288,6 +288,8 @@ function triggerSearch ()
 	document.search.adv_series.value=null;
     }
 
+    query = query.replace(/\,/g,"");  // causes 'malformed query' on some zServers
+
     if ($('#advanced_search').is(':visible')) { toggleAdvanced(); }
     document.search.query.value = query;  // update query so user can see it
     $("#countdown").TimeCircles().restart();
