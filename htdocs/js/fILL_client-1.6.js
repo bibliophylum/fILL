@@ -518,17 +518,19 @@ function renderDetails(data, marker)
     details += '<tr><td><b>locations</b></td><td><b>:</b> ' + len + '</td></tr>';
     for (var i=0; i<len; i++) {
 
-	// temp fix for skipping Spruce locations
+	// skipping Spruce locations which are closed
 	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
 	    if (data["location"][i]["md-locallocation"] != undefined) {
 		var bail=0;
 		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
-		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
-			bail=1;
-		    }
-		    // Boissevain temporarily closed
-		    if ("MBOM" === data["location"][i]["md-locallocation"][lloc]) {
-			bail=1;
+//		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
+//			bail=1;
+//		    }
+		    for (var x = 0; x < window.SpruceClosed.closed.length; x++) {
+			alert(window.SpruceClosed.closed[x].symbol + ' is closed.');
+			if (window.SpruceClosed.closed[x].symbol === data["location"][i]["md-locallocation"][lloc]) {
+			    bail=1;
+			}
 		    }
 		}
 		if (bail) continue; // skip the details section below, just go on to the next pass through the loop
