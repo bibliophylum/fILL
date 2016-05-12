@@ -21,7 +21,7 @@ div#mylistDiv {
     width: 100%;
 }
 #gradient-style th {
-    background: url("img/table-head-gradient.png") repeat-x scroll 0 0 #B9C9FE;
+    background: url("/img/table-head-gradient.png") repeat-x scroll 0 0 #B9C9FE;
     border-bottom: 1px solid #FFFFFF;
     border-top: 2px solid #D3DDFF;
     color: #003399;
@@ -30,7 +30,7 @@ div#mylistDiv {
     padding: 8px;
 }
 #gradient-style td {
-    background: url("img/table-row-gradient.png") repeat-x scroll 0 0 #E8EDFF;
+    background: url("/img/table-row-gradient.png") repeat-x scroll 0 0 #E8EDFF;
     border-bottom: 1px solid #FFFFFF;
     border-top: 1px solid #FFFFFF;
     color: #666699;

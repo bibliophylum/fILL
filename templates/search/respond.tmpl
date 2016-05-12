@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/respond-1.16.js"></script>
+<script type="text/javascript" src="/js/respond-1.17.js"></script>
 
 
 <script type="text/javascript">
@@ -45,7 +45,32 @@ $.ajaxSetup ({
   </div>
 
   <div id="myDiv">
-    <div id="mylistDiv"></div>
+    <div id="mylistDiv">
+      <table id="respond-table" class="row-border">
+	<thead>
+	  <tr>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>ID</th>
+	    <th>From</th>
+	    <th>From (ID)</th>
+	    <th>Call Number</th>
+	    <th>Author</th>
+	    <th>Title</th>
+	    <th>Borrower note</th>
+	    <th>Last update</th>
+	    <th>Format</th>
+	    <th>Pub date</th>
+	    <th>Hold requested?</th>
+	    <th>Response</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="14">As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the "Current ILLs" screen.</td></tr>
+	</tfoot>
+      </table>
+    </div>
   </div>
 
   <div id="instructions" class="tone-box">

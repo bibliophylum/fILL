@@ -1,0 +1,30 @@
+-- sql-to-get-stats
+
+-- how many titles requested?
+select
+ count(distinct g.group_id) 
+from
+ history_group g
+ left join history_chain c on c.group_id=g.group_id
+ left join request_closed r on r.chain_id=c.chain_id
+ left join requests_history h on h.request_id=r.id 
+where
+ h.ts >= '2014-01-01'
+ and h.ts < '2015-01-01'
+;
+
+-- how many items shipped?
+select 
+ count(distinct g.group_id) 
+from
+ history_group g
+ left join history_chain c on c.group_id=g.group_id
+ left join request_closed r on r.chain_id=c.chain_id
+ left join requests_history h on h.request_id=r.id 
+where
+ h.ts >= '2014-01-01'
+ and h.ts < '2015-01-01'
+ and h.status = 'Shipped'
+;
+
+

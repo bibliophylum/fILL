@@ -28,7 +28,8 @@ my $SQL="select
   ra.msg_from, 
   s.call_number,
   g.place_on_hold,
-  g.pubdate 
+  g.pubdate,
+  ra.lender_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id

@@ -401,6 +401,10 @@ zyes, zno {
     float:left!important;
 }
 
+.datatable-detail {
+    background-color: #D1D0CE
+}
+
 /***---End of new library client side CSS--**/
 
 

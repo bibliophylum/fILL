@@ -1,5 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
-<script type="text/javascript" src="/js/current-1.10.js"></script>
+<script type="text/javascript" src="/js/current-1.11.js"></script>
 
 <script type="text/javascript">
 
@@ -37,9 +37,72 @@ $.ajaxSetup ({
       <li><a href="#tabs-3">We could not lend</a></li>
     </ul>
 
-    <div id="tabs-1"></div>
-    <div id="tabs-2"></div>
-    <div id="tabs-3"></div>
+    <div id="tabs-1">
+      <table id="datatable_borrowing" class="row-border">
+	<thead>
+	  <tr>
+	    <th> </th>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Patron barcode</th>
+	    <th>Lender</th>
+	    <th>Last update</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	    <th>Overrides</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="11">Items you are currently borrowing from other libraries.</td></tr>
+	</tfoot>
+      </table>
+    </div>
+    
+    <div id="tabs-2">
+      <table id="datatable_lending" class="row-border">
+	<thead>
+	  <tr>
+	    <th> </th>
+	    <th>cid</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Requested by</th>
+	    <th>Last update</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	    <th>Overrides</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="9">Items you are currently lending to other libraries.</td></tr>
+	</tfoot>
+      </table>
+    </div>
+    
+    <div id="tabs-3">
+      <table id="datatable_notfilled" class="row-border">
+	<thead>
+	  <tr>
+	    <th> </th>
+	    <th>cid</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Requested by</th>
+	    <th>Last update</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="8">Requested items that you could not lend.</td></tr>
+	</tfoot>
+      </table>
+    </div>
     
   </div><!-- tabs -->
 

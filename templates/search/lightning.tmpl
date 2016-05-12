@@ -40,6 +40,15 @@ $('document').ready(function(){
                                               }
                                             }, type="visible");
 
+
+  // Because all Spruce libraries share a zServer, we need a mechanism to indicate
+  // that specific libraries are unavailable for requesting from...
+  // The other half of this is in fILL_client-1.x.js; look for "skipping Spruce locations"
+  $.getJSON('/cgi-bin/get-Spruce-closed.cgi', {},
+    function(data){
+      window.SpruceClosed = data;
+  });
+
 });
 
 </script>

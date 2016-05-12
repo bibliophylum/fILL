@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/returns-1.3.js"></script>
+<script type="text/javascript" src="/js/returns-1.4.js"></script>
 
 
 <script type="text/javascript">
@@ -16,14 +16,33 @@ $.ajaxSetup ({
 
 <div id="center" role="main">
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif" alt="loading indicator">
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif" alt="loading indicator">
+  </div>
+  
+  <div id="myDiv">
+    <div id="mylistDiv">
+      <table id="returns-table" class="row-border">
+	<thead>
+	  <tr>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>ID</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Last update</th>
+	    <th>Return to</th>
+	    <th>Return to (ID)</th>
+	    <th>Actions</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="9">As items are returned, they are removed from this list.  You can see the status of all of your active ILLs in the "Current ILLs" screen.</td></tr>
+	</tfoot>
+      </table>
     </div>
-
-    <div id="myDiv">
-
-      <div id="mylistDiv"></div>
-    </div>
+  </div>
 
 <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
