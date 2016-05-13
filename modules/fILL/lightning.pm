@@ -251,47 +251,11 @@ sub pull_list_process {
 
     my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
-    # sql to get requests to this library, which this library has not responded to yet
-    my $SQL="select 
-  b.barcode, 
-  g.title, 
-  g.author, 
-  g.note, 
-  date_trunc('second',ra.ts) as ts, 
-  o.symbol as from, 
-  o.org_name as library, 
-  s.call_number,
-  g.pubdate  
-from requests_active ra
-  left join request r on r.id=ra.request_id
-  left join request_chain c on c.chain_id = r.chain_id
-  left join request_group g on g.group_id = c.group_id
-  left join library_barcodes b on (ra.msg_from = b.borrower and b.oid=?) 
-  left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
-  left join org o on o.oid = ra.msg_from
-where 
-  ra.msg_to=? 
-  and ra.status='ILL-Request' 
-  and ra.request_id not in (select request_id from requests_active where msg_from=?) 
-  and ra.request_id not in (select request_id from requests_active where msg_to=? and message='Trying next source') 
-order by s.call_number
-";
-
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid );
-
-    # generate barcodes (code39 requires '*' as start and stop characters
-    foreach my $request (@$pulls) {
-	if (( $request->{barcode} ) && ( $request->{barcode} =~ /\d+/)) {
-	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $request->{barcode} . '*' )->plot->png);
-	}
-    }
-
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
     $template->param( pagetitle => "Pull-list",
 		      username => $self->authen->username,
 		      oid => $oid,
-		      library => $library,
-		      pulls => $pulls,
+		      library => $library
 	);
     return $template->output;
     
