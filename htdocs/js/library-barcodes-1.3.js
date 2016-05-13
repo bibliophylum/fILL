@@ -40,32 +40,6 @@ $('document').ready(function(){
 	    // hidden columns caused the table width to be set to 100px, not 100%
 	    $("#datatable_barcodes").css("width","100%");
         },
-/*	
-	"drawCallback": function( settings ) {
-	    
-	    // rows not on the current page are not in the DOM, and won't have
-	    // the .edit class applied from the .complete callback.
-	    // On a table redraw, those rows may get added, so we need to apply
-	    // the class and make them editable.
-	    $("tr").find("td:eq(2):not([class*='edit'])").addClass("edit");
-	    $(".edit").editable( '/cgi-bin/update-library-barcode.cgi', {
-		"callback": function( sValue, y ) {
-		    var obj = jQuery.parseJSON( sValue );
-		    dTable.cell( this ).data( obj.data );
-		},
-         	"submitdata": function ( value, settings ) {
-		    var col = dTable.cell( this ).index().column;
-		    // row_id holds oid and borrower oid separated by underscore: XX_YY
-		    return {
-			"row_id": this.parentNode.getAttribute('id'),
-			"column": dTable.cell( this ).index().column
-		    };
-        	},
-		"height": "14px",
-		"select": true
-	    });
-	}
-*/
     });
 
     var anOpenBarcodes = [];
@@ -82,26 +56,6 @@ $('document').ready(function(){
 	    alert('error');
 	})
 	.complete(function() {
-	    /* Apply the jEditable handlers to the table */
-/*	    
-            $("tr").find("td:eq(2)").addClass("edit");
-	    $(".edit").editable( '/cgi-bin/update-library-barcode.cgi', {
-	        "callback": function( sValue, y ) {
-	            var obj = jQuery.parseJSON( sValue );
-                    dTable.cell( this ).data( obj.data );
-	        },
-         	"submitdata": function ( value, settings ) {
-                    var col = dTable.cell( this ).index().column;
-	            // row_id holds oid and borrower oid separated by underscore: XX_YY
-	            return {
-		        "row_id": this.parentNode.getAttribute('id'),
-			"column": dTable.cell( this ).index().column
-		    };
-        	},
-	        "height": "14px",
-	        "select": true
-            });
-*/
        });
 });
 
