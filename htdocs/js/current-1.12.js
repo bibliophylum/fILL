@@ -28,12 +28,9 @@ $('document').ready(function(){
         }
     } );
   
-
-    var anOpenBorrowing = [];
-    var anOpenLending = [];
-    var anOpenNotfilled = [];
     var sImageUrl = "/img/";
 
+    //-----------------------------------------------------------------------------
     $('#datatable_borrowing').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
@@ -62,6 +59,7 @@ $('document').ready(function(){
         }
     });
     
+    //-----------------------------------------------------------------------------
     $('#datatable_lending').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
@@ -90,6 +88,7 @@ $('document').ready(function(){
         }
     });
     
+    //-----------------------------------------------------------------------------
     $('#datatable_notfilled').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
@@ -114,6 +113,7 @@ $('document').ready(function(){
     });
     
 
+    //-----------------------------------------------------------------------------
     $.getJSON('/cgi-bin/get-current-requests.cgi', {oid: $("#oid").text()},
             function(data){
 		build_table_borrowing( data );
@@ -131,7 +131,7 @@ $('document').ready(function(){
 	})
 	.complete(function() {
             //alert('ajax complete');
-
+/*
 	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
 	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
 	    activate_detail_control( $("#datatable_notfilled"), anOpenNotfilled );
@@ -139,10 +139,224 @@ $('document').ready(function(){
 	    activate_overrides_control( $("#datatable_borrowing"), anOpenBorrowing );
 	    activate_overrides_control( $("#datatable_lending"),   anOpenLending   );
 	    activate_overrides_control( $("#datatable_notfilled"), anOpenNotfilled );
-
+*/
 	});  // end of .complete()
+
+    //-----------------------------------------------------------------------------
+    $('#datatable_borrowing tbody').on('click', 'td.control', function () {
+	var table = $('#datatable_borrowing').DataTable();
+	
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[2] }; // borrowing, cid is 2; lending/notfilled it's 1
+	$.getJSON('/cgi-bin/get-current-request-details.cgi', parms,
+		  function(data){
+		      if (row.child.isShown()){
+			  $('div.innerDetails', row.child()).slideUp( function () {
+			      row.child.hide();
+			      tr.removeClass('details');
+			  });
+		      }
+		      else {
+			  tr.addClass('details');
+			  row.child( format(data) ).show();
+			  $('div.innerDetails', row.child()).slideDown();
+		      }
+		  })
+	    .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+	    });
+
+    });  // end of .on('click')
+    
+    //-----------------------------------------------------------------------------
+    $('#datatable_borrowing tbody').on('click', 'td.overrides', function () {
+	var table = $('#datatable_borrowing').DataTable();
+	
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[2] }; // borrowing, cid is 2; lending/notfilled it's 1
+
+	if (row.child.isShown()){
+	    $('div.innerDetails', row.child()).slideUp( function () {
+		row.child.hide();
+		tr.removeClass('details');
+	    });
+	}
+	else {
+	    tr.addClass('details');
+	    row.child( formatBorrowingOverrides( parms ) ).show();
+	    $('div.innerDetails', row.child()).slideDown();
+
+	    $('#bReceive').button();
+	    $('#bReceive').click(function() { 
+		var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Shipped'.");
+		if (hasConfirmed == true) {
+		    override( this, parms.cid, null, table, row );
+		    $('div.innerDetails', row.child()).slideUp( function () {
+			row.child.hide();
+			tr.removeClass('details');
+		    });
+		}
+		return false; 
+	    });
+	    $('#bLost').button();
+	    $('#bLost').click(function() { 
+		var borrowerMessage = prompt("Please enter a message for the lender:");
+		if (borrowerMessage != null) {
+		    override( this, parms.cid, borrowerMessage, table, row );
+		    $('div.innerDetails', row.child()).slideUp( function () {
+			row.child.hide();
+			tr.removeClass('details');
+		    });
+		}
+		return false; 
+	    });
+	    $('#bClose').button();
+	    $('#bClose').click(function() { 
+		var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the lender but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Checked-in'.");
+		if (hasConfirmed == true) {
+		    override( this, parms.cid, null, table, row );
+		    $('div.innerDetails', row.child()).slideUp( function () {
+			row.child.hide();
+			tr.removeClass('details');
+		    });
+		    row.remove().draw();
+		}
+		return false; 
+	    });
+	}
+    });  // end of .on('click')
+    
+    //-----------------------------------------------------------------------------
+    $('#datatable_lending tbody').on('click', 'td.control', function () {
+	var table = $('#datatable_lending').DataTable();
+	
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[1] }; // borrowing, cid is 2; lending/notfilled it's 1
+	$.getJSON('/cgi-bin/get-current-request-details.cgi', parms,
+		  function(data){
+		      if (row.child.isShown()){
+			  $('div.innerDetails', row.child()).slideUp( function () {
+			      row.child.hide();
+			      tr.removeClass('details');
+			  });
+		      }
+		      else {
+			  tr.addClass('details');
+			  row.child( format(data) ).show();
+			  $('div.innerDetails', row.child()).slideDown();
+		      }
+		  })
+	    .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+	    });
+
+    });  // end of .on('click')
+    
+    //-----------------------------------------------------------------------------
+    $('#datatable_lending tbody').on('click', 'td.overrides', function () {
+	var table = $('#datatable_lending').DataTable();
+	
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[1] }; // borrowing, cid is 2; lending/notfilled it's 1
+	if (row.child.isShown()){
+	    $('div.innerDetails', row.child()).slideUp( function () {
+		row.child.hide();
+		tr.removeClass('details');
+	    });
+	}
+	else {
+	    tr.addClass('details');
+	    row.child( formatLendingOverrides( parms) ).show();
+	    $('div.innerDetails', row.child()).slideDown();
+
+	    $('#bReturned').button();
+	    $('#bReturned').click(function() { 
+		var hasConfirmed = confirm("Overrides are a last resort.\n\nIf you have tried to contact the borrower but had no response, click 'Ok' to force this action.\n\nOtherwise, please click 'Cancel', contact them, and ask them to mark the request as 'Returned'.");
+		if (hasConfirmed == true) {
+		    override( this, parms.cid, null, table, row );
+		    $('div.innerDetails', row.child()).slideUp( function () {
+			row.child.hide();
+			tr.removeClass('details');
+		    });
+		}
+		return false; 
+	    });
+	    
+	    $("#bDueDate")
+		.button()
+		.click(function() {
+		    $( "#dialog-form" )
+			.data('fromButton',this)
+			.data('cid',parms.cid)
+			.data('table',table)
+			.data('row',row)
+			.dialog( "open" );
+		});
+	    
+	}
+
+    });  // end of .on('click')
+    
+    //-----------------------------------------------------------------------------
+    $('#datatable_notfilled tbody').on('click', 'td.control', function () {
+	var table = $('#datatable_notfilled').DataTable();
+	
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[1] }; // borrowing, cid is 2; lending/notfilled it's 1
+	$.getJSON('/cgi-bin/get-current-request-details.cgi', parms,
+		  function(data){
+		      if (row.child.isShown()){
+			  $('div.innerDetails', row.child()).slideUp( function () {
+			      row.child.hide();
+			      tr.removeClass('details');
+			  });
+		      }
+		      else {
+			  tr.addClass('details');
+			  row.child( format(data) ).show();
+			  $('div.innerDetails', row.child()).slideDown();
+		      }
+		  })
+	    .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+	    });
+
+    });  // end of .on('click')
+    
+
 });
 
+//-----------------------------------------------------------------------------
 function build_table_borrowing( data ) {
     var t = $('#datatable_borrowing').DataTable();
     
@@ -169,6 +383,7 @@ function build_table_borrowing( data ) {
     }
 }
 
+//-----------------------------------------------------------------------------
 function build_table_lending( data ) {
     var t = $('#datatable_lending').DataTable();
 
@@ -193,6 +408,7 @@ function build_table_lending( data ) {
     }
 }
 
+//-----------------------------------------------------------------------------
 function build_table_notfilled( data ) {
     var t = $('#datatable_notfilled').DataTable();
 
@@ -215,7 +431,8 @@ function build_table_notfilled( data ) {
 	$(rowNode).children(":eq(3)").attr("title",data.active.notfilled[i].library);
     }
 }
-
+/*
+//-----------------------------------------------------------------------------
 function fnFormatDetails( $tbl, nTr )
 {
     var oTable = $tbl.dataTable();
@@ -270,37 +487,78 @@ function fnFormatDetails( $tbl, nTr )
             $('div.innerDetails', nDetailsRow).slideDown();
 	});
 }
+*/
+//-----------------------------------------------------------------------------
+function format( data ) {
+    var sOut;
+    var numDetails = data.request_details.length; 
+    sOut = '<div class="innerDetails">';
+    var hasTracking = data.tracking.length;
+    if (hasTracking) {
+	sOut += '<div><p>Canada Post tracking number: '+data.tracking[0].tracking+' &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber='+data.tracking[0].tracking+'" target="_blank" style="text-decoration:underline;">Open CP tracking site...</a></p></div>';
+    }
+    
+    sOut += '<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
+    for (var i = 0; i < numDetails; i++) {
+	var detRow = '<tr>'+
+	    '<td>'+data.request_details[i].request_id+'</td>'+
+	    '<td>'+data.request_details[i].ts+'</td>'+
+	    '<td>'+data.request_details[i].from+'</td>'+
+	    '<td>'+data.request_details[i].to+'</td>'+
+	    '<td>'+data.request_details[i].status+'</td>'+
+	    '<td>'+data.request_details[i].message+'</td>'+
+	    '</tr>';
+	sOut=sOut+detRow;
+    }
+    sOut = sOut+'</table>'+'</div>';
+    var jQ = $($.parseHTML(sOut));
+    return jQ;
+}
 
-
-function override( e, cid, localData, oTable, nTr )
+//-----------------------------------------------------------------------------
+function override( e, cid, localData, table, row )
 {
 //    alert("cid: "+cid+"\noverride: "+e.id+"\ndata: "+localData);
     $.getJSON('/cgi-bin/override.cgi', {"cid": cid, "override": e.id, "data":localData},
 	      function(data){
-		  $(nTr).children('.overrides').click();
 		  // lending table has different number of columns than borrowing table
 		  if ((e.id == "bReturned") || (e.id == "bDueDate")) {
-		      if (data.status) { oTable.fnUpdate( data.status, nTr, 6 ); };
-		      if (data.message) { oTable.fnUpdate( data.message, nTr, 7 ); };
+		      if (data.status) { table.cell(row,6).data(data.status).draw(); }
+		      if (data.message) { table.cell(row,7).data(data.message).draw(); }
 		  } else {
-		      if (data.status) { oTable.fnUpdate( data.status, nTr, 8 ); };
-		      if (data.message) { oTable.fnUpdate( data.message, nTr, 9 ); };
+		      if (data.status) { table.cell(row,8).data(data.status).draw(); }
+		      if (data.message) { table.cell(row,9).data(data.message).draw(); }
 		  }
 		  if (data.alert_text) { alert(data.alert_text); };
-//		  if (data.success) { oTable.fnDeleteRow( nTr ); };
 	      })
 	.success(function() {
-//	    alert('success');
 	})
 	.error(function() {
 	    alert('error');
 	})
 	.complete(function() {
-	    // slideUp doesn't work for <tr>
-//	    $("#req"+oData.id).fadeOut(400, function() { $(e).remove(); }); // toast the row
 	});
 }
 
+//-----------------------------------------------------------------------------
+function formatBorrowingOverrides( parms ) {
+    var sOut = '<div class="innerDetails">'+
+	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<thead><th>Action</th><th>Do this...</th></thead>';
+
+    sOut = sOut+'<tr><td><button id="bReceive" class="override-button">Receive</button></td><td>if you have received the book from the lender, but the lender has not marked it as "Shipped".<br/>An override message will be added to the request, and it will be forced to "Shipped".<br/>The request will be added to your "Receiving" list so that you can control slip printing.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bLost" class="override-button">Lost</button></td><td>if your patron or your library has lost the item, or the lender marked it as "Shipped" but you never received it.<br/>When the lender confirms the "Lost" message, the request will be closed and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bClose" class="override-button">Close</button></td><td>if you have returned the book to the lender, but you get an Overdue notice because the lender has not marked it as "Checked-in"<br/>An override message will be added to the request, and it will be closed and moved to history.</td></tr>';
+
+    sOut = sOut+'</table>'+'</div>';
+    var jQ = $($.parseHTML(sOut));
+    return jQ;
+}
+
+
+/*
+//-----------------------------------------------------------------------------
 function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
 {
     var oTable = $tbl.dataTable();
@@ -352,8 +610,24 @@ function fnFormatBorrowingOverrides( $tbl, nTr, anOpen )
     });
     $('div.innerDetails', nDetailsRow).slideDown();
 }
+*/
 
+//-----------------------------------------------------------------------------
+function formatLendingOverrides( parms ) {
+    var sOut = '<div class="innerDetails">'+
+	'<table id="overrides-list" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<thead><th>Action</th><th>Do this...</th></thead>';
 
+    sOut = sOut+'<tr><td><button id="bReturned" class="override-button">Returned</button></td><td>if you have received the book back from the borrower, but the borrower has not marked it as "Returned"<br/>An override message will be added to the request, and it will be marked as "Checked in to ILS" and moved to history.</td></tr>';
+    sOut = sOut+'<tr><td><button id="bDueDate" class="override-button">Change due date</button></td><td>if you have said Shipped, but need to change the due date (and the borrower has not marked it as "Received" yet)<br/></td></tr>';
+
+    sOut = sOut+'</table>'+'</div>';
+    var jQ = $($.parseHTML(sOut));
+    return jQ;
+}
+
+/*
+//-----------------------------------------------------------------------------
 function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 {
     var oTable = $tbl.dataTable();
@@ -392,7 +666,8 @@ function fnFormatLendingOverrides( $tbl, nTr, anOpen )
 
     $('div.innerDetails', nDetailsRow).slideDown();
 }
-
+*/
+/*
 function activate_detail_control( $tbl, anOpen ) {
 
     $tbl.on("click", "td.control", function() {
@@ -432,7 +707,8 @@ function activate_detail_control( $tbl, anOpen ) {
       }
     } );
 }
-
+*/
+/*
 function activate_overrides_control( $tbl, anOpen ) {
 
     $tbl.on("click", "td.overrides", function() {           // reduce bubble-up
@@ -482,6 +758,7 @@ function activate_overrides_control( $tbl, anOpen ) {
 	}
     });
 }
+*/
 
 $(function() {
 // Keeping this around so I remember how to build allFields :-)
@@ -519,28 +796,39 @@ $(function() {
 	height: 400,
 	width: 400,
 	modal: true,
-	buttons: {
-	    "Update due date": function() {
-		var bValid = true;
-		allFields.removeClass( "ui-state-error" );
-		bValid = bValid && checkRegexp( duedate, /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/, "Due date must be in YYYY-MM-DD format." );
-		if ( bValid ) {
-		    var fromButton = $(this).data('fromButton');
-		    var aData = $(this).data('aData');
-		    var oTable = $(this).data('oTable');
-		    var nTr = $(this).data('nTr');
-		    //alert('fromButton:'+fromButton+'\naData[1]:'+aData[1]+'\nduedate.val():'+duedate.val()+'\noTable:'+oTable+'\nnTr:'+nTr);
-		    override( fromButton, aData[1], duedate.val(), oTable, nTr );
-		    $( this ).dialog( "close" );
-		}
+	buttons: [
+	    { "text": "Update due date",
+	      "class": "override-dialog-button",
+	      "click": function() {
+		  var bValid = true;
+		  allFields.removeClass( "ui-state-error" );
+		  bValid = bValid && checkRegexp( duedate, /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/, "Due date must be in YYYY-MM-DD format." );
+		  if ( bValid ) {
+		      var fromButton = $(this).data('fromButton');
+		      var cid = $(this).data('cid');
+		      var table = $(this).data('table');
+		      var row = $(this).data('row');
+
+		      override( fromButton, cid, duedate.val(), table, row );
+
+		      $( this ).dialog( "close" );
+		      $('div.innerDetails', row.child()).slideUp( function () {
+			  row.child.hide();
+			  tr.removeClass('details');
+		      });
+		  }
+	      }
 	    },
-	    Cancel: function() {
-		$( this ).dialog( "close" );
+	    { "text": "Cancel",
+	      "class": "override-dialog-button",
+	      "click": function() {
+		  $( this ).dialog( "close" );
+	      }
 	    }
-	},
+	],
 	close: function() {
 	    allFields.val( "" ).removeClass( "ui-state-error" );
-	}
-    });
+	},
+   });
 
 });

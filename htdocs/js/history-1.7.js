@@ -18,14 +18,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-var anOpenBorrowing;
-var anOpenLending;
 
 $('document').ready(function(){
     set_primary_tab("menu_history");
-
-    anOpenBorrowing = [];
-    anOpenLending = [];
 
     var sImageUrl = "/img/";
 
@@ -100,18 +95,86 @@ $('document').ready(function(){
   
 
     $("#dateButton").on("click", function() {
-        requery( $("#oid").text(), anOpenBorrowing, anOpenLending )
+        requery( $("#oid").text() )
     });
 
     // Load the initial data:
     $(function() {
-	requery( $("#oid").text(), anOpenBorrowing, anOpenLending );
+	requery( $("#oid").text() );
     });
+
+    // See this: https://www.datatables.net/forums/discussion/24968/trying-to-using-ajax-to-fill-child-rows
+    
+    $('#datatable_borrowing tbody').on('click', 'td.control', function () {
+	var table = $('#datatable_borrowing').DataTable();
+    
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[2] }; // borrowing, cid is 2; lending it's 1
+	$.getJSON('/cgi-bin/get-history-details.cgi', parms,
+		  function(data){
+		      if (row.child.isShown()){
+			  $('div.innerDetails', row.child()).slideUp( function () {
+			      row.child.hide();
+			      tr.removeClass('details');
+			  });
+		      }
+		      else {
+			  tr.addClass('details');
+			  row.child( format(data) ).show();
+			  $('div.innerDetails', row.child()).slideDown();
+		      }
+		  })
+	    .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+	    });
+
+    });  // end of .on('click')
+    
+    $('#datatable_lending tbody').on('click', 'td.control', function () {
+	var table = $('#datatable_lending').DataTable();
+    
+	var tr = $(this).parents('tr');
+	var row = table.row( tr );
+
+	var d = table.row(this).data();
+	var parms = { "cid": d[1] }; // borrowing, cid is 2; lending it's 1
+	$.getJSON('/cgi-bin/get-history-details.cgi', parms,
+		  function(data){
+		      if (row.child.isShown()){
+			  $('div.innerDetails', row.child()).slideUp( function () {
+			      row.child.hide();
+			      tr.removeClass('details');
+			  });
+		      }
+		      else {
+			  tr.addClass('details');
+			  row.child( format(data) ).show();
+			  $('div.innerDetails', row.child()).slideDown();
+		      }
+		  })
+	    .success(function() {
+		//alert('success');
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+	    });
+
+    });  // end of .on('click')
+    
 });
 
 
-function requery( oid, anOpenBorrowing, anOpenLending ) 
-{
+function requery( oid ) {
     var d_s = moment( $("#startdate").datepicker("getDate") ).format("YYYY-MM-DD");
     var d_e = moment( $("#enddate").datepicker("getDate") ).format("YYYY-MM-DD");
 
@@ -139,39 +202,9 @@ function requery( oid, anOpenBorrowing, anOpenLending )
             alert('error');
        	})
        	.complete(function() {
-	    // alert('ajax complete');
-	    // reset the arrays that track open details:
-            anOpenBorrowing.length = 0;
-            anOpenLending.length = 0;
-	    // make the details buttons clickable:
-	    activate_detail_control( $("#datatable_borrowing"), anOpenBorrowing );
-	    activate_detail_control( $("#datatable_lending"),   anOpenLending   );
        	});
 };
 
-
-function activate_detail_control( $tbl, anOpen ) {
-
-    $tbl.on("click", "td.control", function() {
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
-      var sImageUrl = "/img/";
-   
-      if ( i === -1 ) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails($tbl, nTr);
-        anOpen.push( nTr );
-      }
-      else {
-        $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-        $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-          $tbl.fnClose( nTr );
-          anOpen.splice( i, 1 );
-        });
-      }
-    });
-
-}
 
 function build_table_borrowing( data ) {
     var t = $('#datatable_borrowing').DataTable();
@@ -222,52 +255,30 @@ function build_table_lending( data ) {
     }
 }
 
-function fnFormatDetails( $tbl, nTr )
-{
-    var oTable = $tbl.dataTable();
-    var aData = oTable.fnGetData( nTr );
-//    alert('getting details for reqid: '+oData.id);
-
-    var cid;
-    var id = $tbl.attr("id");
-    if (id == "datatable_borrowing") {
-        cid = aData[2];
-    } else if (id == "datatable_lending") {
-        cid = aData[1];
+function format( data ) {
+    var sOut;
+    var numDetails = data.request_history.length; 
+    sOut = '<div class="innerDetails">'+   // innerDetails hidden by default
+//    sOut = '<div>'+
+	'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	// if you want to turn this into a DataTable, you'll need a distinct ID:
+	//<table id="history-detail-'+data.request_history[0].request_id+'" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+	'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
+    for (var i = 0; i < numDetails; i++) {
+	var detRow = '<tr>'+
+	    '<td>'+data.request_history[i].request_id+'</td>'+
+	    '<td>'+data.request_history[i].ts+'</td>'+
+	    '<td>'+data.request_history[i].from+'</td>'+
+	    '<td>'+data.request_history[i].to+'</td>'+
+	    '<td>'+data.request_history[i].status+'</td>'+
+	    '<td>'+data.request_history[i].message+'</td>'+
+	    '</tr>';
+	sOut=sOut+detRow;
     }
-
-    $.getJSON('/cgi-bin/get-history-details.cgi', { "cid": cid },
-	      function(data){
-		  //alert('first success');
-	      })
-	.success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function(jqXHRObject) {
-	    var data = $.parseJSON(jqXHRObject.responseText)
-	    var sOut;
-	    var numDetails = data.request_history.length; 
-	    sOut = '<div class="innerDetails">'+
-		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
-	    for (var i = 0; i < numDetails; i++) {
-		var detRow = '<tr>'+
-		    '<td>'+data.request_history[i].request_id+'</td>'+
-		    '<td>'+data.request_history[i].ts+'</td>'+
-		    '<td>'+data.request_history[i].from+'</td>'+
-		    '<td>'+data.request_history[i].to+'</td>'+
-		    '<td>'+data.request_history[i].status+'</td>'+
-		    '<td>'+data.request_history[i].message+'</td>'+
-		    '</tr>';
-		sOut=sOut+detRow;
-	    }
-	    sOut = sOut+'</table>'+'</div>';
-            var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
-            $('div.innerDetails', nDetailsRow).slideDown();
-
-	});
+    sOut = sOut+'</table>'+'</div>';
+    var jQ = $($.parseHTML(sOut));
+    // Turn it into a DataTable thusly:
+    //$('#history-detail-'+data.request_history[0].request_id).DataTable();
+    return jQ;
 }
 
