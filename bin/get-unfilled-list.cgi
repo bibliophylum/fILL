@@ -37,7 +37,7 @@ from requests_active ra
   left join org o on o.oid = ra.msg_from
 where 
   ra.msg_to=?
-  and ra.status like 'ILL-Answer|Unfilled%' 
+  and (ra.status like 'ILL-Answer|Unfilled%' or (ra.status='Message' and message='No further sources'))
   and r.id not in (select request_id from requests_active where status='Message' and message='Requester closed the request.') 
   and ra.ts = (select max(ts) from requests_active ra2 where ra2.request_id = ra.request_id) 
 order by ra.ts
