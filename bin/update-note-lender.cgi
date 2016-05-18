@@ -30,11 +30,16 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 my $retval;
-my $aref = $dbh->selectrow_arrayref("select count(*) from internal_note where request_id=? and private_to=?", undef, $reqid, $private_to);
-if ($aref && $aref->[0]) {
-    $retval = $dbh->do( "update internal_note set note=? where request_id=? and private_to=?", undef, $note, $reqid, $private_to );
+if ($note) {
+    my $aref = $dbh->selectrow_arrayref("select count(*) from internal_note where request_id=? and private_to=?", undef, $reqid, $private_to);
+    if ($aref && $aref->[0]) {
+	$retval = $dbh->do( "update internal_note set note=? where request_id=? and private_to=?", undef, $note, $reqid, $private_to );
+    } else {
+	$retval = $dbh->do( "insert into internal_note (request_id, private_to, note) values (?,?,?)", undef, $reqid, $private_to, $note);
+    }
 } else {
-    $retval = $dbh->do( "insert into internal_note (request_id, private_to, note) values (?,?,?)", undef, $reqid, $private_to, $note);
+    # passed an empty note, so delete if it exists
+    $retval = $dbh->do( "delete from internal_note where request_id=? and private_to=?", undef, $reqid, $private_to );
 }
 
 $dbh->disconnect;

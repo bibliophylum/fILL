@@ -49,9 +49,15 @@ function lenderNotes_makeEditable() {
     $(".edit").editable( '/cgi-bin/update-note-lender.cgi', {
 	"callback": function( sValue, y ) {
 	    var obj = jQuery.parseJSON( sValue );
-	    this.innerHTML = obj.data;
-	    $(this).removeClass("lender-note-empty");
-	    $(this).addClass("lender-note");
+	    if (obj.data == "") {
+		this.innerHTML = "Click here to add a note only visible to your staff";
+		$(this).removeClass("lender-note");
+		$(this).addClass("lender-note-empty");
+	    } else {
+		this.innerHTML = obj.data;
+		$(this).removeClass("lender-note-empty");
+		$(this).addClass("lender-note");
+	    }
 	},
         "submitdata": function ( value, settings ) {
 	    // closest tr is in the noteLine table; parent is noteLine table,
