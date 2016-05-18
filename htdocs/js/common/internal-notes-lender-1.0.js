@@ -50,10 +50,15 @@ function lenderNotes_makeEditable() {
 	"callback": function( sValue, y ) {
 	    var obj = jQuery.parseJSON( sValue );
 	    this.innerHTML = obj.data;
+	    $(this).removeClass("lender-note-empty");
+	    $(this).addClass("lender-note");
 	},
         "submitdata": function ( value, settings ) {
+	    // closest tr is in the noteLine table; parent is noteLine table,
+	    // closest tr to that is the DataTable child node,
+	    // prev is the DataTable parent node (i.e. the DT entry with an ID)
 	    return {
-		"reqid": $(this).closest('tr').prev().attr('id'),
+		"reqid": $(this).closest('tr').parent().closest('tr').prev().attr('id'),
 		"private_to": $("#oid").text()
 	    };
         },
