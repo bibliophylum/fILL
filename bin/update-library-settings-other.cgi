@@ -16,6 +16,7 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 
 my $oid = $query->param('oid');
+my $lender_internal_notes = $query->param('lender_internal_notes');
 my $slips_with_barcodes = $query->param('slips_with_barcodes');
 my $centralized_ill = $query->param('centralized_ill');
 
@@ -30,8 +31,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update org set slips_with_barcodes=?, centralized_ill=? where oid=?"; 
-my $retval = $dbh->do( $SQL, undef, $slips_with_barcodes, $centralized_ill, $oid );
+my $SQL = "update org set lender_internal_notes_enabled=?, slips_with_barcodes=?, centralized_ill=? where oid=?"; 
+my $retval = $dbh->do( $SQL, undef, $lender_internal_notes, $slips_with_barcodes, $centralized_ill, $oid );
 
 $dbh->disconnect;
 

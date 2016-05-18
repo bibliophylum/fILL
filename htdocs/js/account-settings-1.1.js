@@ -183,11 +183,16 @@ $('document').ready(function(){
     $("#otherButton").on("click", function() {
 	var parms = {
 	    "oid": $("#oid").text(),
+	    "lender_internal_notes": $('input[name=lender_internal_notes]:checked', '#otherForm').val(),
 	    "slips_with_barcodes": $('input[name=slips_with_barcodes]:checked', '#otherForm').val(),
 	    "centralized_ill": $('input[name=centralized_ill]:checked', '#otherForm').val()
 	};
 	$.getJSON('/cgi-bin/update-library-settings-other.cgi', parms,
 		  function(data){
+		      $.cookie('fILL-lender-internal-notes',
+			       parms["lender_internal_notes"] == 't' ? "enabled" : "disabled",
+			       { expires: 365, path: '/' }
+			      );
 		  })
 	    .success(function() {
 		//alert('success');

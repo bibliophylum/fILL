@@ -25,13 +25,15 @@ my $SQL="select
   o.org_name as library, 
   ra.msg_to,
   ra.message as date_expected, 
-  (select count(request_id) from requests_active where request_id=r.id and status='Cancel') as cancel 
+  (select count(request_id) from requests_active where request_id=r.id and status='Cancel') as cancel,
+  n.note as lender_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_to
   left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
+  left join internal_note n on (n.request_id=r.id and n.private_to=ra.msg_from) 
 where 
   ra.msg_from=? 
   and ra.status like '%Hold-Placed%' 

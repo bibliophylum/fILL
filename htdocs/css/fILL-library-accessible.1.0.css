@@ -401,10 +401,21 @@ zyes, zno {
     float:left!important;
 }
 
+/* internal notes - lender */
 .datatable-detail {
-    background-color: #D1D0CE
+    background-color: #D1D0CE;
+    padding: 0 !important;
 }
 
+.lender-note {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.lender-note-empty {
+    font-style: italic;
+    font-weight: lighter;
+}
 /***---End of new library client side CSS--**/
 
 

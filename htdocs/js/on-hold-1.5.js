@@ -84,11 +84,13 @@ function build_table( data ) {
 	$(rowNode).children(":eq(0)").attr("title",data.on_hold[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
-	// lender internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	lenderNotes_insertChild( t, rowNode,
+				 data.on_hold[i].lender_internal_note,
+				 "datatable-detail"
+			       );
     }
+
+    lenderNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -155,6 +157,9 @@ function shipper( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg lender internal notes)
+	    var t = $("#on-hold-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
@@ -193,6 +198,9 @@ function cancelled( requestId ) {
 	})
 	.complete(function() {
 	    update_menu_counters( $("#oid").text() );
+	    // toast any child nodes (eg lender internal notes)
+	    var t = $("#on-hold-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
@@ -226,6 +234,9 @@ function unhold( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg lender internal notes)
+	    var t = $("#on-hold-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});

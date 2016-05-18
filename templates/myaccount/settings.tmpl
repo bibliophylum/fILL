@@ -207,6 +207,16 @@
       
       <div id="tabs-5">
 	<form id="otherForm">
+	  <h3>Do you want to enable "lender-internal" notes?</h3>
+	  <p>These are notes that you, as a lender, can attach to incomming requests.  The notes are only visible to you.</p>
+	  <TMPL_IF name="lender_internal_notes_enabled">
+	    <input type="radio" name="lender_internal_notes" value='t' CHECKED>Yes
+	    <input type="radio" name="lender_internal_notes" value='f'>No
+	    <TMPL_ELSE>
+	    <input type="radio" name="lender_internal_notes" value='t'>Yes
+	    <input type="radio" name="lender_internal_notes" value='f' CHECKED>No
+	  </TMPL_IF>
+	  
 	  <h3>Do you want to print scannable patron barcodes on the date-due slips?</h3>
 	  
 	  <TMPL_IF name="slips_with_barcodes">
@@ -218,7 +228,6 @@
 	  </TMPL_IF>
 	  
 	  <h3>Are you a headquarters library that centrally manages ILL for your branches?</h3>  
-	  
 	  <TMPL_IF name="centralized_ill">
 	    <input type="radio" name="centralized_ill" value='t' CHECKED>Yes
 	    <input type="radio" name="centralized_ill" value='f'>No

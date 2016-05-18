@@ -85,10 +85,12 @@ function build_table( data ) {
 	$(rowNode).children(":eq(0)").attr("title",data.overdue[i].library);
 	//$(rowNode).children(":last").append( divResponses );
 
-	// lender internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	lenderNotes_insertChild( t, rowNode,
+				 data.overdue[i].lender_internal_note,
+				 "datatable-detail"
+			       );
     }
+
+    lenderNotes_makeEditable();
 }
 

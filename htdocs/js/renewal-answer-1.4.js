@@ -111,11 +111,13 @@ function build_table( data ) {
 	$(rowNode).children(":eq(9)").addClass('due-date');
 	$(rowNode).children(":last").append( divResponses );
 
-	// lender internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	lenderNotes_insertChild( t, rowNode,
+				 data.renewRequests[i].lender_internal_note,
+				 "datatable-detail"
+			       );
     }
+
+    lenderNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -187,6 +189,9 @@ function renewalAnswer( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg lender internal notes)
+	    var t = $("#renewal-answer-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
@@ -223,7 +228,7 @@ function cannotRenew( requestId ) {
     var sButton = $("<input type='button' class='action-button' value='Submit'>").appendTo(crForm);
     sButton.bind('click', function() {
 	var reason = $('#crmsg').val();
-	alert( reason );
+	//alert( reason );
 	$("#cannotRenewMessage").remove(); 
 	$("#divResponses"+requestId).show(); 
 	var parms = {
@@ -245,6 +250,9 @@ function cannotRenew( requestId ) {
 		alert('error');
 	    })
 	    .complete(function() {
+		// toast any child nodes (eg lender internal notes)
+		var t = $("#renewal-answer-table").DataTable();
+		t.row("#req"+requestId).child.remove();
 		// slideUp doesn't work for <tr>
 		$("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	    });

@@ -82,11 +82,13 @@ function build_table( data ) {
 	$(rowNode).children(":eq(3)").attr("title",data.checkins[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
-	// lender internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	lenderNotes_insertChild( t, rowNode,
+				 data.checkins[i].lender_internal_note,
+				 "datatable-detail"
+			       );
     }
+
+    lenderNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -151,6 +153,9 @@ function checkin( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg lender internal notes)
+	    var t = $("#checkins-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
