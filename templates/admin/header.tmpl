@@ -13,6 +13,12 @@
 
   <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-admin-default.css"/>
 
+  <!-- This is the new DataTables, with all of the required extensions built in
+       See https://datatables.net/download/ for info on building these files.
+    -->
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+  <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+
   <!-- jQuery-UI theme:
        1. create a new theme using ThemeRoller, and save it to htdocs/themes/xxxx/
        2. comment out the default jquery-ui.css ("/plugins/jquery-ui-1.11.1/jquery-ui.css")
@@ -28,14 +34,7 @@
 <!-- THEME: add new theme: -->
   <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-admin/jquery-ui.css"/>
 
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
-
-
-
-  <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
   <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-
 
 <!-- THEME: comment out default jquery-ui.js:
   <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
@@ -43,12 +42,7 @@
 <!-- THEME: add new theme's .js: -->
   <script id="themeroller-js" type="text/javascript" src="/themes/fILL-admin/jquery-ui.js"></script>
 
-
   <script type="text/javascript" src="/js/menu-counters-1.1.js"></script>
-
-<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
-  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
 
 <script type="text/javascript">
 
