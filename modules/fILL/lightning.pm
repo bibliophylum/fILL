@@ -919,6 +919,10 @@ sub _isolate_and_normalize_source_callnos {
 		    # all Lakeland requests go to MKL
 		    $src{'symbol'} = 'MKL';
 
+		} elsif ($sources{$num}{'symbol'} eq 'JOLYS') {
+		    # all Jolys requests go to MSTP
+		    $src{'symbol'} = 'MSTP';
+
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
 		}
