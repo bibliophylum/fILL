@@ -33,12 +33,12 @@ function lenderNotes_insertChild(table, parentRow, note, childClasses) {
     }
 
     var colCount = table.columns().header().length;
-    var noteLine = $('<table><tr><td class="down-right-arrow datatable-detail">\u2937</td>'
+    var noteLine = $('<tr><td class="down-right-arrow datatable-detail">\u2937</td>'
 		     +'<td colspan="'+(colCount - 1)+'" class="'
 		     +(childClasses ? childClasses+" edit" : "edit")+'">'
 		     +(note || "Click here to add a note only visible to your staff")
-		     +"</td></tr></table>");
-    var row = table.row(parentRow).child( noteLine, childClasses ).show();
+		     +"</td></tr>")[0]; // IE doesn't like .child() having a jQ parm.
+    table.row(parentRow).child( noteLine, childClasses ).show();
     $('.down-right-arrow').css({"font-weight":"bold", "text-align":"right"});
 }
 
@@ -60,11 +60,8 @@ function lenderNotes_makeEditable() {
 	    }
 	},
         "submitdata": function ( value, settings ) {
-	    // closest tr is in the noteLine table; parent is noteLine table,
-	    // closest tr to that is the DataTable child node,
-	    // prev is the DataTable parent node (i.e. the DT entry with an ID)
 	    return {
-		"reqid": $(this).closest('tr').parent().closest('tr').prev().attr('id'),
+		"reqid": $(this).closest('tr').prev().attr('id'),
 		"private_to": $("#oid").text()
 	    };
         },
