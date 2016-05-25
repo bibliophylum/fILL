@@ -22,19 +22,19 @@
 <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
 <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+<!-- This is the new DataTables, with all of the required extensions built in
+     See https://datatables.net/download/ for info on building these files.
+  -->
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
-<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
 
 <script type="text/javascript" src="/js/pz2.js"></script>
 <script type="text/javascript" src="/js/fILL_client-public-1.11.js"></script>
-
+<!--
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
-
+-->
 <script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
 <link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
 
@@ -110,7 +110,7 @@
     $("#image").append("");
 
     $("#query").focus();
-
+/*
     $(".coverlink").click(function( event ) {
         event.preventDefault();
         var $title = $(this).attr("title");
@@ -125,7 +125,7 @@
         $("#query").val( $title );
         $("#search-submit-button").click();
     });
-
+*/
     $('#incrFont').click(function () {
         ga('send', 'event', 'Font-size', 'increase');
         increaseFontSize();
@@ -265,20 +265,17 @@
 <!--***************ARIA MARKER 'MAIN'***************-->
 <div id="content">
 
-<!-- <div id="AVnotice" class="tone-box"> -->
-<div id="AVnotice" style="background: black">
+<!-- <div id="AVnotice" style="background: black"> -->
 
-  <h2>Featured</h2><br>
+<!--  <h2>Featured</h2><br> -->
 
   <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
        The keywords to search for are taken from the "title" attribute.
     -->
-
+<!--
   <div class="ContentFlow">
     <div class="loadIndicator"><div class="indicator"></div></div>
     <div class="flow">
-      <!-- <img class="item" src="someImageFile.jpg" title="Your_Image_Title"/> -->
-      <!-- Add as many items as you like. -->
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-andthebirdsraineddown-220.jpg"><div class="caption">And The Birds Rained Down Jocelyne Saucier</div></a>
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-intolerable-220.jpg"><div class="caption">Intolerable: A Memoir of Extremes Kamal Al Solaylee</div></a>
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-ru-kim-thuy-books100.jpg"><div class="caption">Ru kim thuy</div></a>
@@ -288,21 +285,8 @@
     <div class="globalCaption"></div>
     <div class="scrollbar"><div class="slider"><div class="position"></div></div></div>
   </div>
-
-<!--
-  <div id="covers">
-
-    <a href="#" class="coverlink" title="And The Birds Rained Down Jocelyne Saucier"><img class="covers5" src="/img/covers/cr14-andthebirdsraineddown-220.jpg" alt="And The Birds Rained Down Jocelyne Saucier"></a>
-    <a href="#" class="coverlink" title="Intolerable: A Memoir of Extremes Kamal Al Solaylee"><img class="covers5" src="/img/covers/cr14-intolerable-220.jpg" alt="Intolerable: A Memoir of Extremes Kamal Al Solaylee"></a>
-    <a href="#" class="coverlink" title="Ru kim thuy"><img class="covers5" src="/img/covers/cr14-ru-kim-thuy-books100.jpg" alt="Ru kim thuy"></a>
-    <a href="#" class="coverlink" title="The Inconvenient Indian Thomas King"><img class="covers5" src="/img/covers/cr14-theinconvenientindian-220.jpg" alt="The Inconvenient Indian Thomas King"></a>
-    <a href="#" class="coverlink" title="When everything feels like the movies Raziel Reid"><img class="covers5" src="/img/covers/cr14-wheneverythingfeelslikethemovies-220.jpg" alt="When everything feels like the movies Raziel Reid"></a>
-
-  </div>
-  <p><strong>Canada Reads 2015 Finalists</strong></p> 
 -->
-       
-</div><!--div id AV display -->
+<!-- </div> --><!--div id AV display -->
 
 <main id="main" class="tone-box" role="main">
 
