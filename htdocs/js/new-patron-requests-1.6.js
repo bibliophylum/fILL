@@ -85,6 +85,13 @@ function build_table( data ) {
 	$(rowNode).children(":eq(0)").attr("title",data.new_patron_requests[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
+	// Need to inform Spruce libraries if there are Spruce sources
+	// (they will then make the request within Spruce, and not here)
+	if ((data.am_spruce === 1)
+	    && (data.new_patron_requests[i].spruce_sources > 0)) {
+	    $(rowNode).children(":last").append( $("<p>There are Spruce sources.</p>") );
+	}
+	
 	// borrower internal note:
 	var row = t.row(rowNode).child( 
 	    'This is a child node that we will use for internal notes', "datatable-detail"

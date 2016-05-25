@@ -24,7 +24,16 @@ my $SQL = "select
   pr.medium,
   pr.pubdate,
   pr.isbn,
-  p.is_verified
+  p.is_verified,
+  (select
+    count(*)  
+  from
+    patron_request_sources prs
+    left join org_members om on om.member_id = prs.oid 
+  where
+    prid=pr.prid
+    and om.oid=(select oid from org where symbol='SPRUCE')
+  ) as spruce_sources 
 from 
   patron_request pr 
   left join patrons p on p.pid = pr.pid 
@@ -57,6 +66,11 @@ foreach my $href (@$aref) {
     }
 }
 
+# am I a Spruce library?
+my $isSpruce = $dbh->selectrow_array("select count(*) from org_members where member_id=? and oid=(select oid from org where symbol='SPRUCE')", undef, $oid);
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { new_patron_requests => $aref } );
+print "Content-Type:application/json\n\n" . to_json( { new_patron_requests => $aref,
+						       am_spruce => $isSpruce
+						     } );
