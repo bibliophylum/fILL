@@ -45,6 +45,8 @@ $('document').ready(function(){
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
             $("#datatable_borrowing").css("width","100%");
+
+	    $("#datatable_borrowing").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
         }
     });
 
@@ -69,6 +71,8 @@ $('document').ready(function(){
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
             $("#datatable_lending").css("width","100%");
+
+	    $("#datatable_lending").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
         }
     });
 

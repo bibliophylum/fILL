@@ -33,6 +33,9 @@ $('document').ready(function(){
 
     $("div.balanced-fields div label").autoWidth();
 
+    $("input[name=rows_per_page][value="
+      + $("#rowsPerPage").text() + "]").prop('checked', true);
+    
     $("#contact_information_fieldset input").on("change",function(){
 	$("#contactButton").show();
     });
@@ -185,7 +188,8 @@ $('document').ready(function(){
 	    "oid": $("#oid").text(),
 	    "lender_internal_notes": $('input[name=lender_internal_notes]:checked', '#otherForm').val(),
 	    "slips_with_barcodes": $('input[name=slips_with_barcodes]:checked', '#otherForm').val(),
-	    "centralized_ill": $('input[name=centralized_ill]:checked', '#otherForm').val()
+	    "centralized_ill": $('input[name=centralized_ill]:checked', '#otherForm').val(),
+	    "rows_per_page": $('input[name=rows_per_page]:checked', '#otherForm').val()
 	};
 	$.getJSON('/cgi-bin/update-library-settings-other.cgi', parms,
 		  function(data){

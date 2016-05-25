@@ -1,9 +1,9 @@
-// lost.js
+// checkins.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    lost.js is a part of fILL.
+    checkins.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 */
 $('document').ready(function(){
 
-    $('#lost-table').DataTable({
+    $('#checkins-table').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
         "info": true,
@@ -28,19 +28,21 @@ $('document').ready(function(){
         "dom": '<"H"Bfr>t<"F"ip>',
 	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
         "columnDefs": [ {
-            "targets": [0,1,2],
+            "targets": [0,1,2,7],
             "visible": false
         } ],
         "initComplete": function() {
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
-            $("#lost-table").css("width","100%");
+            $("#checkins-table").css("width","100%");
+
+	    $("#checkins-table").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
         }
     });
-
-    $.getJSON('/cgi-bin/get-lost-list.cgi', {oid: $("#oid").text()},
-	      function(data){
-		  build_table(data); 
+    
+    $.getJSON('/cgi-bin/get-checkin-list.cgi', {oid: $("#oid").text()},
+              function(data){
+                  build_table(data);
 		  $("#waitDiv").hide();
 		  $("#mylistDiv").show();
               })
@@ -49,44 +51,41 @@ $('document').ready(function(){
 	.error(function() {
         })
 	.complete(function() { 
-	});
+        });
 
-  $(function() {
-    update_menu_counters( $("#oid").text() );
-  });
+    $(function() {
+        update_menu_counters( $("#oid").text() );
+    });
 
 });
 
 function build_table( data ) {
-    var t = $('#lost-table').DataTable();
+    var t = $('#checkins-table').DataTable();
     
-    for (var i=0;i<data.lostlist.length;i++) {
+    for (var i=0;i<data.checkins.length;i++) {
 
 	var divResponses = create_action_buttons( data, i );
 
 	// this should match the fields in the template
 	var rdata = [
-            data.lostlist[i].gid,
-            data.lostlist[i].cid,
-            data.lostlist[i].id,
-            data.lostlist[i].title,
-            data.lostlist[i].author,
-            data.lostlist[i].ts,
-            data.lostlist[i].from,
-            data.lostlist[i].phone,
-            data.lostlist[i].library+'<br />'+data.lostlist[i].mailing_address_line1+'<br />'+data.lostlist[i].mailing_address_line2+'<br />'+data.lostlist[i].mailing_address_line3+'<br />'+data.lostlist[i].city+', '+data.lostlist[i].province+'  '+data.lostlist[i].postcode,
-            data.lostlist[i].status,
-            data.lostlist[i].message,
+            data.checkins[i].gid,
+            data.checkins[i].cid,
+            data.checkins[i].id,
+            data.checkins[i].title,
+            data.checkins[i].author,
+            data.checkins[i].ts,
+            data.checkins[i].from,
+            data.checkins[i].msg_from,
 	    ""
 	];
 	var rowNode = t.row.add( rdata ).draw().node();
-	$(rowNode).attr("id",'req'+data.lostlist[i].id);
+	$(rowNode).attr("id",'req'+data.checkins[i].id);
 	// the :eq selector looks at *visible* nodes....
-	$(rowNode).children(":eq(3)").attr("title",data.lostlist[i].library);
+	$(rowNode).children(":eq(3)").attr("title",data.checkins[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,
-				 data.lostlist[i].lender_internal_note,
+				 data.checkins[i].lender_internal_note,
 				 "datatable-detail"
 			       );
     }
@@ -96,16 +95,26 @@ function build_table( data ) {
 
 function create_action_buttons( data, i ) {
     var divResponses = document.createElement("div");
-    var requestId = data.lostlist[i].id;
+    var requestId = data.checkins[i].id;
     divResponses.id = 'divResponses'+requestId;
     
     var b1 = document.createElement("input");
     b1.type = "button";
-    b1.value = "Move to history";
+    b1.value = "Checked in to ILS";
     b1.className = "action-button";
-    b1.onclick = make_movetohistory_handler( requestId );
+    b1.onclick = make_checkin_handler( requestId );
     divResponses.appendChild(b1);
     
+    if (data.checkins[i].tracking) {
+	var $tracking = $('<input/>', 
+			  {
+			      'type':'button', 
+			      'value':'CP tracking', 
+			      'class':'action-button',
+			      'click': make_tracking_handler( data.checkins[i].tracking )
+			  });
+	divResponses.appendChild( $tracking[0] );
+    }
     return divResponses;
 }
 
@@ -113,18 +122,23 @@ function create_action_buttons( data, i ) {
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_movetohistory_handler( requestId ) {
-    return function() { move_to_history( requestId ) };
+function make_checkin_handler( requestId ) {
+    return function() { checkin( requestId ) };
 }
 
-function move_to_history( requestId ) {
+function checkin( requestId ) {
     var myRow=$("#req"+requestId);
+    var nTr = myRow[0]; // convert jQuery object to DOM
+    var oTable = $('#checkins-table').dataTable();
+    var aPos = oTable.fnGetPosition( nTr );
+    var msg_to = oTable.fnGetData( aPos )[7]; // 8th column (0-based!), hidden or not
+
     var parms = {
 	reqid: requestId,
-	msg_to: $("#oid").text(),  // message to myself
+	msg_to: msg_to,  // sending TO whoever original was FROM
 	oid: $("#oid").text(),
-	status: "Message",
-	message: "Lender closed the request (borrower lost item)."
+	status: "Checked-in",
+	message: ""
     }
     $.getJSON('/cgi-bin/change-request-status.cgi', parms,
 	      function(data){
@@ -134,7 +148,7 @@ function move_to_history( requestId ) {
 	    //alert('success');
 	    $.getJSON('/cgi-bin/move-to-history.cgi', { 'reqid' : requestId },
 		      function(data){
-			  //alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
+//			  alert('Moved to history? '+data.success+'\n  Closed? '+data.closed+'\n  History? '+data.history+'\n  Active? '+data.active+'\n  Sources? '+data.sources+'\n  Request? '+data.request);
 		      });
 	})
 	.error(function() {
@@ -142,9 +156,13 @@ function move_to_history( requestId ) {
 	})
 	.complete(function() {
 	    // toast any child nodes (eg lender internal notes)
-	    var t = $("#lost-table").DataTable();
+	    var t = $("#checkins-table").DataTable();
 	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
+}
+
+function make_tracking_handler( tracking ) {
+    return function() { window.open("http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber="+tracking, "_blank"); };
 }
