@@ -80,7 +80,7 @@ function build_table( data ) {
 	    ""
 	];
 	var rowNode = t.row.add( rdata ).draw().node();
-	$(rowNode).attr("id",'req'+data.new_patron_requests[i].id);
+	$(rowNode).attr("id",'pr'+data.new_patron_requests[i].prid);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.new_patron_requests[i].library);
 	$(rowNode).children(":last").append( divResponses );
@@ -267,7 +267,7 @@ function createILL( requestId ) {
     }
     $.getJSON('/cgi-bin/accept-patron-request.cgi', parms,
 	      function(data){
-//		  alert('accept patron request: '+data.success+'\n'+data.message+'\n');
+		  alert('accept patron request: '+data.success+'\n'+data.message+'\n');
 	      })
 	.success(function() {
 	    //alert('success');
