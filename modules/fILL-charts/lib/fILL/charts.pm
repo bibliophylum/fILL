@@ -480,7 +480,7 @@ sub _calculate_percentages {
     if ($total > 0) {
 	for (my $i = 0; $i < $max; $i++) {
 	    my $percent = sprintf("%.0f%%", ($self->{data}[1][$i] / $total) * 100);
-	    push $self->{legendText}, $self->{data}[0][$i] . ": " . $self->{data}[1][$i] . " ($percent)";
+	    push @{ $self->{legendText} }, $self->{data}[0][$i] . ": " . $self->{data}[1][$i] . " ($percent)";
 	    $self->{data}[0][$i] = $percent;
 	}
     }
@@ -497,9 +497,9 @@ sub _get_borrowing_received {
 
     my $colourCnt = 0;
     foreach my $key (sort keys %$href) {
-	push $self->{data}[0], "Received " . $key;
-	push $self->{data}[1], $href->{$key};
-	push $self->{colours}, $self->{receivedColours}[$colourCnt++];
+	push @{ $self->{data}[0] }, "Received " . $key;
+	push @{ $self->{data}[1] }, $href->{$key};
+	push @{ $self->{colours} }, $self->{receivedColours}[$colourCnt++];
     }
 }
 
@@ -514,9 +514,9 @@ sub _get_borrowing_unfilled {
 
     my $colourCnt = 0;
     foreach my $key (sort keys %$href) {
-	push $self->{data}[0], "Unfilled " . $key;
-	push $self->{data}[1], $href->{$key};
-	push $self->{colours}, $self->{unfilledColours}[$colourCnt++];
+	push @{ $self->{data}[0] }, "Unfilled " . $key;
+	push @{ $self->{data}[1] }, $href->{$key};
+	push @{ $self->{colours} }, $self->{unfilledColours}[$colourCnt++];
     }
 }
 
@@ -529,9 +529,9 @@ sub _get_lending_shipped {
     my $self = shift;
     my $href = $self->{param}{stats}{lending}{shipped};
 
-    push $self->{data}[0], "Shipped";
-    push $self->{data}[1], $href->{total};
-    push $self->{colours}, $self->{receivedColours}[0]; # I know... "received" colours.
+    push @{ $self->{data}[0] }, "Shipped";
+    push @{ $self->{data}[1] }, $href->{total};
+    push @{ $self->{colours} }, $self->{receivedColours}[0]; # I know... "received" colours.
 }
 
 #--------------------------------------------------------------------------------
@@ -545,9 +545,9 @@ sub _get_lending_unfilled {
 
     my $colourCnt = 0;
     foreach my $key (sort keys %$href) {
-	push $self->{data}[0], "Unfilled " . $key;
-	push $self->{data}[1], $href->{$key};
-	push $self->{colours}, $self->{unfilledColours}[$colourCnt++];
+	push @{ $self->{data}[0] }, "Unfilled " . $key;
+	push @{ $self->{data}[1] }, $href->{$key};
+	push @{ $self->{colours} }, $self->{unfilledColours}[$colourCnt++];
     }
 }
 
