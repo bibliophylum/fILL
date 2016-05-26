@@ -407,12 +407,12 @@ zyes, zno {
     padding: 0 !important;
 }
 
-.lender-note {
+.lender-note, .borrower-note {
     font-style: normal;
     font-weight: bold;
 }
 
-.lender-note-empty {
+.lender-note-empty, .borrower-note-empty {
     font-style: italic;
     font-weight: lighter;
 }

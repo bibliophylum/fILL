@@ -29,12 +29,14 @@ my $SQL="select
   ra.msg_from, 
   date_trunc('second',ra.ts) as ts, 
   substring(message from 'due (.*)') as due_date, 
-  g.patron_barcode 
+  g.patron_barcode, 
+  n.note as borrower_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_from
+  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_to) 
 where 
   ra.msg_to=? 
   and ra.status='Shipped' 

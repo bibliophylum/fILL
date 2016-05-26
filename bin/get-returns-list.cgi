@@ -23,12 +23,14 @@ my $SQL="select
   date_trunc('second',ra.ts) as ts, 
   o.symbol as to, 
   o.org_name as library, 
-  ra.msg_to 
+  ra.msg_to, 
+  n.note as borrower_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_to
+  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_from) 
 where 
   ra.msg_from=? 
   and ra.status='Received' 

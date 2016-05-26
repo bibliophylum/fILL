@@ -98,11 +98,12 @@ function build_table( data ) {
 	$(rowNode).children(":eq(3)").attr("title",data.receiving[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
-	// borrower internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	borrowerNotes_insertChild( t, rowNode,
+				   data.receiving[i].borrower_internal_note,
+				   "datatable-detail"
+				 );
     }
+    borrowerNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -170,11 +171,22 @@ function receive( requestId ) {
 				     "border-color": "#C1E0FF", 
 				     "border-width":"1px", 
 				     "border-style":"solid",
-				    });
+		    });
 		    var urlSlipWriter='/cgi-bin/slip.cgi?reqid='+requestId;
 		    $("#slip").load( urlSlipWriter, function() {
-			$("#slip").printElement({ leaveOpen:true, printMode:'popup'});
-			//		$("#slip").printElement({ leaveOpen:false, printMode:'iframe'});
+			$("#slip").printThis({
+/*
+			    debug: false,
+			    importCSS: true,
+			    importStyle: false,
+			    printContainer: true,
+			    pageTitle: "",
+			    removeInline: false,
+			    printDelay: 333,
+			    header: null,
+			    formValues: true
+*/
+			});
 		    });
 		} else {
 		    $('<div id="slip"></div>').appendTo("#multiPrint");
@@ -185,9 +197,9 @@ function receive( requestId ) {
 			
 			var para;
 			if ($("#multiPrint > div").length == 1) {
-			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" class="library-style" onclick="printMulti(); return false;" value="Print now"></p>';
+			    para='<p class="slipCount">There is 1 slip to be printed.  <input type="button" class="library-style" onclick="printMulti(); return false;" value="Print now"> <input type="button" onclick="clearMulti(); return false;" value="Clear the print list"></p>';
 			} else {
-			    para='<p class="slipCount">There are '+$("#multiPrint > div").length+' slips to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"></p>';
+			    para='<p class="slipCount">There are '+$("#multiPrint > div").length+' slips to be printed.  <input type="button" onclick="printMulti(); return false;" value="Print now"> <input type="button" onclick="clearMulti(); return false;" value="Clear the print list"></p>';
 			}
 			$('.slipCount').remove();
 			$("#multiCount").append(para);
@@ -201,13 +213,36 @@ function receive( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg borrower internal notes)
+	    var t = $("#receiving-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
 
 function printMulti() {
-    $("#multiPrint").printElement({ leaveOpen:true, printMode:'popup'});
+    $("#multiPrint").printThis({
+/*
+	debug: false,
+	importCSS: true,
+	importStyle: false,
+	printContainer: true,
+	pageTitle: "",
+	removeInline: false,
+	printDelay: 333,
+	header: null,
+	formValues: true
+*/
+    });
+    // There is a delay (and some user interaction required) in printing...
+    // the following lines were toasting the print div before printing happened.
+    // They are now separated out into the clearMulti() function.
+    //    $("#multiPrint > div").remove();
+    //    $('.slipCount').remove();
+}
+
+function clearMulti() {
     $("#multiPrint > div").remove();
     $('.slipCount').remove();
 }

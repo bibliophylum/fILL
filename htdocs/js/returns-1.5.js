@@ -87,11 +87,12 @@ function build_table( data ) {
 	$(rowNode).children(":eq(3)").attr("title",data.returns[i].library);
 	$(rowNode).children(":last").append( divResponses );
 
-	// borrower internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	borrowerNotes_insertChild( t, rowNode,
+				   data.returns[i].borrower_internal_note,
+				   "datatable-detail"
+				 );
     }
+    borrowerNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -156,6 +157,9 @@ function return_item( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg borrower internal notes)
+	    var t = $("#returns-table").DataTable();
+	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});

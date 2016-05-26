@@ -101,11 +101,12 @@ function build_table( data ) {
 	$(rowNode).children(":eq(4)").attr("title",libname);
 	$(rowNode).children(":last").append( divResponses );
 
-	// borrower internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	borrowerNotes_insertChild( t, rowNode,
+				   data.renewals[i].borrower_internal_note,
+				   "datatable-detail"
+				 );
     }
+    borrowerNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {

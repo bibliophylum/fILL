@@ -82,10 +82,11 @@ function build_table( data ) {
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(2)").attr("title",data.overdue[i].library);
 
-	// borrower internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	borrowerNotes_insertChild( t, rowNode,
+				   data.overdue[i].borrower_internal_note,
+				   "datatable-detail"
+				 );
     }
+    borrowerNotes_makeEditable();
 }
 

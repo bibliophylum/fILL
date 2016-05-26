@@ -195,6 +195,9 @@ function noILL_orig( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg borrower internal notes)
+	    var t = $("#new-patron-requests-table").DataTable();
+	    t.row("#pr"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
@@ -243,6 +246,9 @@ function noILL( requestId ) {
 	}
 	$.getJSON('/cgi-bin/decline-patron-request.cgi', parms,
 		  function(data){
+		      // toast any child nodes (eg borrower internal notes)
+		      var t = $("#new-patron-requests-table").DataTable();
+		      t.row("#pr"+requestId).child.remove();
 		      // slideUp doesn't work for <tr>
 		      $("#pr"+requestId).fadeOut(400, function() { $("#pr"+requestId).remove(); }); // toast the row
 		  })
@@ -283,6 +289,9 @@ function createILL( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg borrower internal notes)
+	    var t = $("#new-patron-requests-table").DataTable();
+	    t.row("#pr"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
@@ -380,6 +389,9 @@ function addToAcq( requestId ) {
 	    alert('error');
 	})
 	.complete(function() {
+	    // toast any child nodes (eg borrower internal notes)
+	    var t = $("#new-patron-requests-table").DataTable();
+	    t.row("#pr"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#pr"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	    update_menu_counters( $("#oid").text() );

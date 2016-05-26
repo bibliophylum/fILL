@@ -31,13 +31,15 @@ my $SQL = "select
   o2.symbol as from,
   o2.org_name as from_library,
   replace(ra.status,'|',' ') as status, 
-  ra.message
+  ra.message, 
+  n.note as borrower_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_to
   left join org o2 on o2.oid = ra.msg_from
+  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_from) 
 where 
   ra.request_id in (select request_id
                     from requests_active
