@@ -35,6 +35,7 @@ use Biblio::Authentication::SIP2;
 use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::FollettDestiny;
 use Biblio::Authentication::L4U;
+use Biblio::Authentication::L4U_API;
 use Biblio::Authentication::TLC;
 use Biblio::Authentication::Dummy;   # for testing
 use Biblio::Authentication::TempNorthNorfolk;   # Dummy clone
@@ -284,6 +285,9 @@ sub checkNonSip2 {
 
     } elsif ($authmethod eq 'L4U') {
 	$authenticator = Biblio::Authentication::L4U->new( %$href );
+
+    } elsif ($authmethod eq 'L4U_API') {
+	$authenticator = Biblio::Authentication::L4U_API->new( %$href );
 
     } elsif ($authmethod eq 'TLC') {
 	$authenticator = Biblio::Authentication::TLC->new( %$href );

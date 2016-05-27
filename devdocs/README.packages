@@ -32,12 +32,13 @@ libdata-guid-perl
 libwww-mechanize-perl
 libstring-random-perl
 libpdf-api2-perl
+libxml-libxml-perl
 
 See also README.pazpar2 for information on installing IndexData's pazpar2 packages.
 
 All at once:
 
-sudo apt-get install libdbi-perl libdbd-pg-perl libhtml-template-perl libmarc-perl libcolor-calc-perl libapache-htpasswd-perl libapache-htgroup-perl libcgi-application-perl libcgi-session-perl libcgi-application-plugin-dbh-perl libcgi-application-plugin-session-perl libcgi-application-plugin-authentication-perl libcgi-application-plugin-authorization-perl libclone-perl libnet-z3950-zoom-perl libdatetime-perl libgd-gd2-perl libgd-graph-perl libgd-barcode-perl libjson-perl libnet-server-perl libnet-telnet-perl libgetopt-long-descriptive-perl libdigest-sha-perl libjs-jquery libjs-jquery-ui libtext-unidecode-perl libdata-guid-perl libwww-mechanize-perl libstring-random-perl libpdf-api2-perl
+sudo apt-get install libdbi-perl libdbd-pg-perl libhtml-template-perl libmarc-perl libcolor-calc-perl libapache-htpasswd-perl libapache-htgroup-perl libcgi-application-perl libcgi-session-perl libcgi-application-plugin-dbh-perl libcgi-application-plugin-session-perl libcgi-application-plugin-authentication-perl libcgi-application-plugin-authorization-perl libclone-perl libnet-z3950-zoom-perl libdatetime-perl libgd-gd2-perl libgd-graph-perl libgd-barcode-perl libjson-perl libnet-server-perl libnet-telnet-perl libgetopt-long-descriptive-perl libdigest-sha-perl libjs-jquery libjs-jquery-ui libtext-unidecode-perl libdata-guid-perl libwww-mechanize-perl libstring-random-perl libpdf-api2-perl libxml-libxml-perl
 
 See README.pazpar2 for instructions on installing the pazpar2 libraries.
 
