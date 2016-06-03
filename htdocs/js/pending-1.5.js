@@ -146,14 +146,6 @@ function try_next_lender( requestId, chainId ) {
 	oid: $("#oid").text(),
     }
     $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
-
-// Use override.cgi instead of try-next-lender.cgi - we want the override msg
-// No... bTryNextLender is no longer a valid override. -DC 2015-12-10
-//    var parms = {
-//	cid: chainId,
-//	override: 'bTryNextLender',
-//    }
-//    $.getJSON('/cgi-bin/override.cgi', parms,
 	      function(data){
 		  if (data.alert_text) { alert(data.alert_text); };
 	      })

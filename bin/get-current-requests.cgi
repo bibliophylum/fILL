@@ -44,12 +44,13 @@ from requests_active ra
   left join org o2 on (o2.oid=ra.msg_to) 
 where 
   r.requester=?
+  and r.id not in (select request_id from requests_active where (message='Trying next source' and msg_to=?)) 
   and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id)
 group by gid, cid, g.title, g.author, g.patron_barcode, ts, lender, library_name, ra.status, ra.message
 order by ra.ts
 ";
 # There will be one row per request in the chain
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid );
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid );
 
 # sql to get this library's current lending
 $SQL = "select 
@@ -69,10 +70,11 @@ from requests_active ra
 where r.requester<>? 
   and r.id in (select request_id from requests_active where status='ILL-Request' and msg_to=?) 
   and r.id not in (select request_id from requests_active where (status like 'CancelReply%' or status like 'ILL-Answer|Unfilled%') and msg_from=?) 
+  and r.id not in (select request_id from requests_active where (message='Trying next source' and msg_to=?))
   and ra.ts in (select max(ts) from requests_active where (msg_from=? or msg_to=?) and status<>'ILL-Request' group by request_id) 
 order by ts
 ";
-my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid, $oid );
+my $aref_lend = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid, $oid, $oid );
 
 # sql to get this libraries could-not-fill
 $SQL = "select 

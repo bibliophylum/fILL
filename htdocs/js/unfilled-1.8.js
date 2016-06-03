@@ -159,7 +159,7 @@ function try_next_lender( requestId ) {
     }
     $.getJSON('/cgi-bin/try-next-lender.cgi', parms,
 	      function(data){
-//		  alert('change request status: '+data+'\n'+parms[0].status);
+		  if (data.alert_text) { alert(data.alert_text); };
 	      })
 	.success(function() {
 	    //alert('success');
