@@ -4,14 +4,16 @@ use CGI;
 use CGI::Session;
 use DBI;
 use JSON;
+use Data::Dumper;
 
 my $query = new CGI;
-#my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
-#if (($session->is_expired) || ($session->is_empty)) {
-#    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
-#    exit;
-#}
+my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+if (($session->is_expired) || ($session->is_empty)) {
+    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+    exit;
+}
 my $msg_from = $query->param('oid');
+my $oid = $msg_from;
 my $reqid = $query->param('reqid');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
@@ -28,16 +30,19 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $retval = 0;
 my $retmsg = "";
 
-$dbh->begin_work;  # wrap this in a transaction
-
 my $SQL = "select count(request_id) from requests_active where request_id=? and ((msg_to=? and status like 'ILL-Answer%') or (msg_from=? and message='Trying next source'))";
 my $lenderUpdated = $dbh->selectrow_array($SQL,undef,$reqid,$oid,$oid);
+print STDERR Dumper($lenderUpdated);
 
 if ((defined $lenderUpdated) && ($lenderUpdated != 0)) {
     # the lender updated the record before we got to it
     $retmsg = "Lender has responded - please reload this page.";
+    print STDERR $retmsg;
 
 } else {
+
+    $dbh->begin_work;  # wrap this in a transaction
+
     eval {
 	my @gcr = $dbh->selectrow_array("select g.group_id, c.chain_id, r.id from request r left join request_chain c on c.chain_id=r.chain_id left join request_group g on c.group_id=g.group_id where r.id=?", undef, $reqid);
 
