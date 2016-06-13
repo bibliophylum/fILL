@@ -20,7 +20,16 @@
 */
 $('document').ready(function(){
 
-    $('#renewals-table').DataTable({
+    // From https://localhost/plugins/DataTables-1.10.2/examples/api/tabs_and_scrolling.html
+    $("#tabs").tabs( {
+        "activate": function(event, ui) {
+            $( $.fn.dataTable.tables( true ) ).DataTable().columns.adjust();
+        }
+    } );
+    
+
+    //-----------------------------------------------------------------------------
+    $('#renewals-table-ask').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
         "info": true,
@@ -34,18 +43,85 @@ $('document').ready(function(){
         "initComplete": function() {
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100% 
-            $("#renewals-table").css("width","100%");
+            $("#renewals-table-ask").css("width","100%");
 
-	    $("#renewals-table").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+	    $("#renewals-table-ask").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
         }
 	
     });
 
+    //-----------------------------------------------------------------------------
+    $('#renewals-table-waiting').DataTable({
+        "jQueryUI": true,
+        "pagingType": "full_numbers",
+        "info": true,
+        "ordering": true,
+        "dom": '<"H"Bfr>t<"F"ip>',
+	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+        "columnDefs": [ {
+            "targets": [0,1,2,8],
+            "visible": false
+        } ],
+        "initComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100% 
+            $("#renewals-table-waiting").css("width","100%");
+
+	    $("#renewals-table-waiting").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+        }
+	
+    });
+
+    //-----------------------------------------------------------------------------
+    $('#renewals-table-ok').DataTable({
+        "jQueryUI": true,
+        "pagingType": "full_numbers",
+        "info": true,
+        "ordering": true,
+        "dom": '<"H"Bfr>t<"F"ip>',
+	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+        "columnDefs": [ {
+            "targets": [0,1,2,8],
+            "visible": false
+        } ],
+        "initComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100% 
+            $("#renewals-table-ok").css("width","100%");
+
+	    $("#renewals-table-ok").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+        }
+	
+    });
+
+    //-----------------------------------------------------------------------------
+    $('#renewals-table-cannot-renew').DataTable({
+        "jQueryUI": true,
+        "pagingType": "full_numbers",
+        "info": true,
+        "ordering": true,
+        "dom": '<"H"Bfr>t<"F"ip>',
+	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+        "columnDefs": [ {
+            "targets": [0,1,2,8],
+            "visible": false
+        } ],
+        "initComplete": function() {
+            // this handles a bug(?) in this version of datatables;
+            // hidden columns caused the table width to be set to 100px, not 100% 
+            $("#renewals-table-cannot-renew").css("width","100%");
+
+	    $("#renewals-table-cannot-renew").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+        }
+	
+    });
+
+    
     $.getJSON('/cgi-bin/get-renewals-list.cgi', {oid: $("#oid").text()},
               function(data){
                   build_table(data);
 		$("#waitDiv").hide();
-		$("#mylistDiv").show();
+		$("#tabs").show();
               })
 	.success(function() {
         })
@@ -61,7 +137,10 @@ $('document').ready(function(){
 });
 
 function build_table( data ) {
-    var t = $('#renewals-table').DataTable();
+    var tAsk     = $('#renewals-table-ask').DataTable();
+    var tWaiting = $('#renewals-table-waiting').DataTable();
+    var tOk      = $('#renewals-table-ok').DataTable();
+    var tNo      = $('#renewals-table-cannot-renew').DataTable();
     
     for (var i=0;i<data.renewals.length;i++) {
 
@@ -70,14 +149,25 @@ function build_table( data ) {
 	var libsym;
 	var libname;
 	var libid;
+	var t;
 	if (data.renewals[i].status.search(/Renew-Answer/) != -1) {
             libsym = data.renewals[i].from;
 	    libname = data.renewals[i].from_library;
             libid = data.renewals[i].msg_from;
+	    if (data.renewals[i].status.search(/Ok/) != -1) {
+		t = tOk;
+	    } else {
+		t = tNo;
+	    }
 	} else {
             libsym =  data.renewals[i].to;
 	    libname = data.renewals[i].to_library;
             libid = data.renewals[i].msg_to;
+	    if (data.renewals[i].status.search(/Received/) != -1) {
+		t = tAsk;
+	    } else {
+		t = tWaiting;
+	    }
 	}
 
 	// this should match the fields in the template
@@ -144,7 +234,7 @@ function make_renewals_handler( requestId ) {
 function request_renewal( requestId ) {
     var myRow=$("#req"+requestId);
     var nTr = myRow[0]; // convert jQuery object to DOM
-    var oTable = $('#renewals-table').dataTable();
+    var oTable = $('#renewals-table-ask').dataTable();
     var aPos = oTable.fnGetPosition( nTr );
     var msg_to = oTable.fnGetData( aPos )[8]; // 9th column (0-based!), hidden or not
 
@@ -162,7 +252,7 @@ function request_renewal( requestId ) {
 	.success(function() {
 	    // alert('success');
 	    // change the text of the Status column, and highlight it.
-	    var tbl = $('#renewals-table').DataTable(); // note the capitalized "DataTable"
+	    var tbl = $('#renewals-table-ask').DataTable(); // note the capitalized "DataTable"
 	    var cell = tbl.cell( aPos, 9 );
 	    cell.data('Renew');
 	    var jQcell = cell.nodes();
@@ -187,7 +277,7 @@ function make_cancel_handler( requestId ) {
 function cancel_renewal( requestId ) {
     var myRow=$("#req"+requestId);
     var nTr = myRow[0]; // convert jQuery object to DOM
-    var oTable = $('#renewals-table').dataTable();
+    var oTable = $('#renewals-table-waiting').dataTable();
     var aPos = oTable.fnGetPosition( nTr );
     var msg_to = oTable.fnGetData( aPos )[8]; // 9th column (0-based!), hidden or not
 
@@ -205,7 +295,7 @@ function cancel_renewal( requestId ) {
 	.success(function() {
 	    // alert('success');
 	    // change the text of the Status column, and highlight it.
-	    var tbl = $('#renewals-table').DataTable(); // note the capitalized "DataTable"
+	    var tbl = $('#renewals-table-waiting').DataTable(); // note the capitalized "DataTable"
 	    var cell = tbl.cell( aPos, 9 );
 	    cell.data('Received');
 	    var jQcell = cell.nodes();

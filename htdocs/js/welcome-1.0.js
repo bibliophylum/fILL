@@ -73,6 +73,10 @@ $('document').ready(function() {
 			    "text":"Holds placed by lender:",
 			    "count":data.counts.holds
 			  },
+			  { "id":"glance-cannot-renew",
+			    "text":"Could not be renewed:",
+			    "count":data.counts.cannot_renew
+			  },
 			  { "id":"glance-renewalRequests",
 			    "text":"Renewal requests:",
 			    "count":data.counts.renewalRequests
