@@ -42,6 +42,7 @@ where
   and ra.status='Shipped' 
   and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned') 
   and ra.request_id not in (select request_id from requests_active where msg_to=? and status='Renew-Answer|Ok') 
+  and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Lost') 
   and substring(message from 'due (.*)') < ? 
 order by g.patron_barcode, g.title
 ";
@@ -57,7 +58,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $today );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid, $today );
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { overdue => $aref } );
