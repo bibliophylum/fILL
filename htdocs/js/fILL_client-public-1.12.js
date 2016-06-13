@@ -647,7 +647,8 @@ function buildRequestForm(data) {
     for (var i=0; i<len; i++) {
 
 	if (data["location"][i]["md-medium"] != undefined) {
-	    if (data["location"][i]["md-medium"] == "electronicresource")
+	    if ((data["location"][i]["md-medium"] == "electronicresource")
+		|| (data["location"][i]["md-medium"] == "online resource"))
 		isElectronicResource = true;
 	}
 	requestForm += '<input type="hidden" name="symbol_' + i + '" value="' + data["location"][i]["md-symbol"] + '">';
