@@ -187,6 +187,7 @@ $('document').ready(function(){
 	var parms = {
 	    "oid": $("#oid").text(),
 	    "lender_internal_notes": $('input[name=lender_internal_notes]:checked', '#otherForm').val(),
+	    "borrower_internal_notes": $('input[name=borrower_internal_notes]:checked', '#otherForm').val(),
 	    "slips_with_barcodes": $('input[name=slips_with_barcodes]:checked', '#otherForm').val(),
 	    "centralized_ill": $('input[name=centralized_ill]:checked', '#otherForm').val(),
 	    "rows_per_page": $('input[name=rows_per_page]:checked', '#otherForm').val()
@@ -195,6 +196,11 @@ $('document').ready(function(){
 		  function(data){
 		      $.cookie('fILL-lender-internal-notes',
 			       parms["lender_internal_notes"] == 't' ? "enabled" : "disabled",
+			       { expires: 365, path: '/' }
+			      );
+
+		      $.cookie('fILL-borrower-internal-notes',
+			       parms["borrower_internal_notes"] == 't' ? "enabled" : "disabled",
 			       { expires: 365, path: '/' }
 			      );
 		  })

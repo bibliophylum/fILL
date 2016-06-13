@@ -217,6 +217,16 @@
 	    <input type="radio" name="lender_internal_notes" value='f' CHECKED>No
 	  </TMPL_IF>
 
+	  <h3>Do you want to enable "borrower-internal" notes?</h3>
+	  <p>These are notes that you, as a borrower, can attach to outgoing requests.  The notes are only visible to you.</p>
+	  <TMPL_IF name="borrower_internal_notes_enabled">
+	    <input type="radio" name="borrower_internal_notes" value='t' CHECKED>Yes
+	    <input type="radio" name="borrower_internal_notes" value='f'>No
+	    <TMPL_ELSE>
+	    <input type="radio" name="borrower_internal_notes" value='t'>Yes
+	    <input type="radio" name="borrower_internal_notes" value='f' CHECKED>No
+	  </TMPL_IF>
+
 	  <h3>How many table rows per page would you like displayed?</h3>
 	  <p id="rowsPerPage" style="display:none"><TMPL_VAR name="rows_per_page"></p>
 	  <input type="radio" name="rows_per_page" value='-1'>All
