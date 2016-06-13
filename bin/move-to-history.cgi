@@ -48,6 +48,10 @@ eval {
     my @gcr = $dbh->selectrow_array( $SQL, undef, $reqid );
     #print STDERR "move-to-history: gid [$gcr[0]], cid [$gcr[1]], rid [$gcr[2]]\n";
     
+    # delete any borrower internal notes (which are based on gid)
+    $SQL = "delete from internal_note_borrower where gid=?";
+    my $rv_internal_note_borrower = $dbh->do( $SQL, undef, $gcr[0] );
+    
     # see if the group already exists in history
     $SQL = "select count(group_id) from history_group where group_id=?";
     my @hg = $dbh->selectrow_array( $SQL, undef, $gcr[0] );
@@ -81,6 +85,10 @@ eval {
 	my $chained_req = $req_aref->[0];
 	#print STDERR "move-to-history: chain [" . $gcr[1] . "], request [$chained_req]\n";
 
+	# delete any (lender) internal notes, which are based on reqid 
+	$SQL = "delete from internal_note where request_id=?";
+	my $rv_internal_note = $dbh->do( $SQL, undef, $chained_req );
+	
 	# attempts doesn't make sense any more with request_groups / request_chains... need to figure out what to do here.
 	# For now, leave as-is.
 	$SQL = "insert into request_closed (id,requester,chain_id) (select id,requester, chain_id from request where id=?)";

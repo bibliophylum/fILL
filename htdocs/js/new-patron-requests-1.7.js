@@ -92,11 +92,12 @@ function build_table( data ) {
 	    $(rowNode).children(":last").append( $("<p>There are Spruce sources.</p>") );
 	}
 	
-	// borrower internal note:
-	var row = t.row(rowNode).child( 
-	    'This is a child node that we will use for internal notes', "datatable-detail"
-	).show();
+	nprNotes_insertChild( t, rowNode,
+			      data.new_patron_requests[i].note,
+			      "datatable-detail"
+			    );
     }
+    nprNotes_makeEditable();
 }
 
 function create_action_buttons( data, i ) {
@@ -280,7 +281,7 @@ function createILL( requestId ) {
     }
     $.getJSON('/cgi-bin/accept-patron-request.cgi', parms,
 	      function(data){
-		  alert('accept patron request: '+data.success+'\n'+data.message+'\n');
+		  //alert('accept patron request: '+data.success+'\n'+data.message+'\n');
 	      })
 	.success(function() {
 	    //alert('success');

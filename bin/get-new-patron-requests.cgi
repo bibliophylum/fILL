@@ -24,6 +24,7 @@ my $SQL = "select
   pr.medium,
   pr.pubdate,
   pr.isbn,
+  pr.note,
   p.is_verified,
   (select
     count(*)  

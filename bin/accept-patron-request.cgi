@@ -30,7 +30,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 # sql to get new (not yet handled) patron requests
-my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author, pr.medium from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.oid = ?";
+my $SQL = "select pr.prid, pr.pid, p.name, p.card, pr.title, pr.author, pr.medium, pr.note from patron_request pr left join patrons p on p.pid = pr.pid where pr.prid = ? and pr.oid = ?";
 my $patronRequest = $dbh->selectrow_hashref($SQL, undef, $prid, $oid );
 if ($patronRequest) {
 
@@ -86,7 +86,7 @@ if ($patronRequest) {
 		 $sources_aref->[0]->{"oid"},
 		 'ILL-Request'
 	    );
-	
+
 	$status{"update-sources"} = $dbh->do("UPDATE sources SET tried=true, request_id=? WHERE group_id=? AND sequence_number=?",
 		 undef,
 		 $request_id,
@@ -94,6 +94,15 @@ if ($patronRequest) {
 		 1
 	    );
 
+	if (defined $patronRequest->{"note"}) {
+	    $status{"carry-over-internal-note"} = $dbh->do("INSERT INTO internal_note_borrower (gid,private_to,note) VALUES (?,?,?)",
+		undef,
+		$group_id,
+		$oid,
+		$patronRequest->{"note"}
+	    );
+	}
+	
 	$status{"delete-patron-request-sources"} = $dbh->do("DELETE FROM patron_request_sources WHERE prid=?",
 		 undef,
 		 $prid

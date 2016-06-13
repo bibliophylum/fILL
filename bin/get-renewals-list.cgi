@@ -39,7 +39,7 @@ from requests_active ra
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_to
   left join org o2 on o2.oid = ra.msg_from
-  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_from) 
+  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_to) 
 where 
   ra.request_id in (select request_id
                     from requests_active
