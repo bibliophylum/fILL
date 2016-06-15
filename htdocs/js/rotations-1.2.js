@@ -22,23 +22,19 @@ $('document').ready(function(){
 
   $("circCount").hide();
 
-  oTable = $('#datatable_scanned').dataTable({
-    "bJQueryUI": true,
-    "sPaginationType": "full_numbers",
-    "bInfo": true,
-    "bSort": true,
-    "sDom": '<"H"Tfr>t<"F"ip>',
-    // TableTools requires Flash version 10...
-    "oTableTools": {
-      "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-    },
-    "columnDefs": [{
-      "targets": 0,
-      "visible": false
-    }] 
+  oTable = $('#datatable_scanned').DataTable({
+      "bJQueryUI": true,
+      "sPaginationType": "full_numbers",
+      "bInfo": true,
+      "bSort": true,
+      "dom": '<"H"Bfr>t<"F"ip>',
+      buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+      "columnDefs": [{
+	  "targets": 0,
+	  "visible": false
+      }],
+      "order": [[ 7, "desc" ]]
   });
-
-  oTable.fnSort( [ [7,'desc'] ] );
 
   $("#barcode").on("change", function() {
     barcode_scanned(this.value); 
@@ -68,7 +64,7 @@ function barcode_scanned( bc ) {
   }
   $.getJSON('/cgi-bin/rotation-item-scanned.cgi', {oid: $("#oid").text(), barcode: bc },
     function(data){
-        if ( $("#oid").text() == "101" ) {
+        if ( $("#oid").text() == "101" ) {  // I hate magic.
 	    $("#circCount").text("Total circulation: "+data.circs);
 	    if (data.circs == 0) {
 	        $("#circCount").css("background-color","#f78181");
@@ -76,6 +72,14 @@ function barcode_scanned( bc ) {
 	        $("#circCount").css("background-color","#ffffff");
             }
             $("#circCount").show();
+
+	    $("#circHistory").empty(); // get rid of old table
+	    var histTable = "<table><thead><tr><th>Library</th><th>Arrived</th><th>Circs</th></tr></thead><tbody>";
+	    for (var i=0;i<data.history.length;i++) {
+		histTable += "<tr><td>"+data.history[i].org_name+"</td><td>"+data.history[i].arrived+'</td><td align="right">'+data.history[i].circs+"</td></tr>";
+	    }
+	    histTable += "</tbody></table>";
+	    $("#circHistory").append(histTable);
         }
         add_row_to_table(data);
     }

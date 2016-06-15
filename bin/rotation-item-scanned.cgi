@@ -63,6 +63,9 @@ my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $barcode );
 $SQL = "select coalesce(sum(circs),0) as count from rotations_stats where barcode=?";
 my $circs = $dbh->selectrow_arrayref($SQL, { Slice => {} }, $barcode );
 
+$SQL = "select o.org_name, rs.ts_start::date as arrived, rs.circs from rotations_stats rs left join org o on o.oid=rs.oid where rs.barcode=? order by rs.ts_start desc";
+my $history = $dbh->selectall_arrayref($SQL, { Slice => {} }, $barcode );
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { item => $aref, circs => $circs->[0] });
+print "Content-Type:application/json\n\n" . to_json( { item => $aref, circs => $circs->[0], history => $history });
