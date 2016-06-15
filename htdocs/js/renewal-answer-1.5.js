@@ -109,8 +109,8 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.renewRequests[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.renewRequests[i].library);
-	$(rowNode).children(":eq(9)").append( dd );
-	$(rowNode).children(":eq(9)").addClass('due-date');
+	$(rowNode).children(":eq(6)").replaceWith( dd );
+	$(rowNode).children(":eq(6)").addClass('due-date');
 	$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,
