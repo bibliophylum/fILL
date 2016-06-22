@@ -125,6 +125,10 @@ function my_onstat(data) {
 	    stat.innerHTML = '';
 	    //debug("Search Complete");
 	    isSearching = 0;
+	    $(".disabled-while-searching").removeClass("disabled-while-searching");
+	    $("#result-instructions").text("Click on a title for more information.");
+	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
+
 	    $("#countdown").TimeCircles().stop();
 	    $("#status-header").text("Search complete.");
 	    $("#libraries-finished").empty();
@@ -230,6 +234,8 @@ function onFormSubmitEventHandler()
 {
     resetPage();
     loadSelect();
+    $("#result-instructions").text("You will be able to click on the titles when the search is done.");
+    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
     triggerSearch();
     submitted = true;
     return false;
