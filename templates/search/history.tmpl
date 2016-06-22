@@ -14,20 +14,12 @@ $.ajaxSetup ({
 
 <div id="center" role="main">
   
-  <div id="instructions" class="tone-box">
+<!--  <div id="instructions" class="tone-box"> -->
+  <div class="tone-box">
     <h3>View completed ILL requests within this date range:</h3>
-    
     <form>
-      <div id="history">
-	
-        <label for="startdate">Start date:</label>
-        <input id="startdate" type="text"><br>
-	
-        <label for="enddate">End date:</label>
-        <input id="enddate" type="text"><br>
-	
+	From <input id="startdate" type="text" class="history-date"> to <input id="enddate" type="text" class="history-date">
         <input id="dateButton" type="button" class="library-style" value="Fetch requests">
-      </div>
     </form>
     <br>
   </div><!--div id instructions-->

@@ -97,7 +97,6 @@ $('document').ready(function(){
         }
     } );
   
-
     $("#dateButton").on("click", function() {
         requery( $("#oid").text() )
     });

@@ -190,6 +190,11 @@ html, body {
   margin:1em;
 }
 
+html body.example_alt_pagination div#container div#center div.tone-box form input#startdate.history-date,
+html body.example_alt_pagination div#container div#center div.tone-box form input#enddate.history-date{
+    width: 8em;
+}
+
 .community {
   color: #183935;
   background-color: #f3f3f3;
