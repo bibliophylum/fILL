@@ -95,15 +95,23 @@ function build_table( data ) {
 	    data.shipping[i].title,
 	    data.shipping[i].mailing_address,
 	    data.shipping[i].ts,
-	    iso.substring(0,10),
+	    "", // inline date goes here
 	    ""
 	];
+
+	var requestId = data.shipping[i].id;
+	var dd=$("<input/>").attr({ type: "text",
+				    id: 'dd'+requestId,
+				    size: "10" }
+				 ).val(iso.substring(0,10));
+	dd.datepicker({ dateFormat: 'yy-mm-dd' });
 
 	var rowNode = t.row.add( rdata ).draw().node();
 	$(rowNode).attr("id",'req'+data.shipping[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.shipping[i].library);
-	$(rowNode).children(":eq(9)").addClass('due-date');
+	$(rowNode).children(":eq(5)").replaceWith( dd );
+	$(rowNode).children(":eq(5)").addClass('due-date');
 	$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,
@@ -168,7 +176,7 @@ function shipit( requestId ) {
     var oTable = $('#shipping-table').dataTable();
     var aPos = oTable.fnGetPosition( nTr );
     var msg_to = oTable.fnGetData( aPos )[4]; // 5th column (0-based!), hidden or not
-    var due_date = oTable.fnGetData( aPos )[9];
+    var due_date = $("#dd"+requestId).val();
 
     if (due_date.length == 0) {
 	var retVal = confirm("You have not entered a due date.  Continue without due date?");
@@ -268,26 +276,8 @@ function trackit( requestId ) {
 }
 
 function set_default_due_date(oForm) {
-    var defaultDueDate = oForm.elements["datepicker"].value;
-    var tbl = $("#shipping-table").DataTable(); // note the capitalized "DataTable"
-
-    $(".due-date").each(function(){
-	tbl.cell(this).data( defaultDueDate );
-    });
-
-    // using cell.data() recreates the row, losing the dynamically created
-    // button handlers in the process.  We need to recreate them:
-
-    $(".ship-it-button").each(function(){
-	var requestId = this.id.slice(4); // button id starts with "ship"
-	this.onclick = make_shipit_handler( requestId );
-    });
-
-    $(".unship-button").each(function(){
-	var requestId = this.id.slice(6); // button id starts with "unship"
-	this.onclick = make_unship_handler( requestId );
-    });
-
+    var defaultDueDate = $("#datepicker").datepicker("getDate");
+    $(".due-date").datepicker( "setDate", defaultDueDate );
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
 

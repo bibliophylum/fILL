@@ -261,38 +261,8 @@ function cannotRenew( requestId ) {
     });
 }
 
-function make_changeSingleDate_handler( requestId ) {
-    return function() { changeSingleDate( requestId ) };
-}
-
-function changeSingleDate( requestId ) {
-    $("#dd"+requestId).datepicker( "show" );
-}
-
 function set_default_due_date(oForm) {
-    var defaultDueDate = oForm.elements["datepicker"].value;
-    var tbl = $("#renewal-answer-table").DataTable(); // note the capitalized "DataTable"
-
-    $(".due-date").each(function(){
-	var cellNode = tbl.cell(this).node();
-	var dd = $(cellNode).children(":first");  // wrap cellNode in $() to jqueryify it
-	dd.val(defaultDueDate);
-    });
-
-    // now that we're not using cell.data any longer, do we still need this?
-
-    // using cell.data() recreates the row, losing the dynamically created
-    // button handlers in the process.  We need to recreate them:
-/*
-    $(".renew-it-button").each(function(){
-	var requestId = this.id.slice(5); // button id starts with "renew"
-	this.onclick = make_renewalAnswer_handler( requestId );
-    });
-
-    $(".no-renew-button").each(function(){
-	var requestId = this.id.slice(7); // button id starts with "norenew"
-	this.onclick = make_cannotRenew_handler( requestId );
-    });
-*/
+    var defaultDueDate = $("#datepicker").datepicker("getDate");
+    $(".due-date").datepicker( "setDate", defaultDueDate );
     $(".due-date").stop(true,true).effect("highlight", {}, 2000);
 }
