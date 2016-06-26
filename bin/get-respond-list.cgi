@@ -6,10 +6,13 @@ use DBI;
 use JSON;
 
 my $query = new CGI;
-my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
-if (($session->is_expired) || ($session->is_empty)) {
-    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
-    exit;
+my $session;
+if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only worry about session if we're a cgi
+    $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+    if (($session->is_expired) || ($session->is_empty)) {
+        print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+        exit;
+    }
 }
 my $oid = $query->param('oid');
 
@@ -28,13 +31,15 @@ my $SQL="select
   ra.msg_from, 
   s.call_number,
   g.place_on_hold,
-  g.pubdate 
+  g.pubdate,
+  n.note as lender_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
   left join org o on o.oid = ra.msg_from
+  left join internal_note n on (n.request_id=r.id and n.private_to=ra.msg_to) 
 where 
   ra.msg_to=? 
   and ra.status='ILL-Request' 

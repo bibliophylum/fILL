@@ -249,49 +249,14 @@ sub pull_list_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
-
-    # sql to get requests to this library, which this library has not responded to yet
-    my $SQL="select 
-  b.barcode, 
-  g.title, 
-  g.author, 
-  g.note, 
-  date_trunc('second',ra.ts) as ts, 
-  o.symbol as from, 
-  o.org_name as library, 
-  s.call_number,
-  g.pubdate  
-from requests_active ra
-  left join request r on r.id=ra.request_id
-  left join request_chain c on c.chain_id = r.chain_id
-  left join request_group g on g.group_id = c.group_id
-  left join library_barcodes b on (ra.msg_from = b.borrower and b.oid=?) 
-  left join sources s on (s.group_id = g.group_id and s.oid = ra.msg_to) 
-  left join org o on o.oid = ra.msg_from
-where 
-  ra.msg_to=? 
-  and ra.status='ILL-Request' 
-  and ra.request_id not in (select request_id from requests_active where msg_from=?) 
-  and ra.request_id not in (select request_id from requests_active where msg_to=? and message='Trying next source') 
-order by s.call_number
-";
-
-    my $pulls = $self->dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $oid, $oid, $oid );
-
-    # generate barcodes (code39 requires '*' as start and stop characters
-    foreach my $request (@$pulls) {
-	if (( $request->{barcode} ) && ( $request->{barcode} =~ /\d+/)) {
-	    $request->{"barcode_image"} = encode_base64(GD::Barcode::Code39->new( '*' . $request->{barcode} . '*' )->plot->png);
-	}
-    }
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/pull_list.tmpl');	
     $template->param( pagetitle => "Pull-list",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
-		      pulls => $pulls,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -416,13 +381,14 @@ sub holds_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/holds.tmpl');	
     $template->param( pagetitle => "Lenders have placed holds",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -435,13 +401,14 @@ sub respond_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/respond.tmpl');	
     $template->param( pagetitle => "Respond to ILL requests",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -454,13 +421,14 @@ sub on_hold_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/on_hold.tmpl');	
     $template->param( pagetitle => "On hold",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -473,13 +441,14 @@ sub shipping_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/shipping.tmpl');	
     $template->param( pagetitle => "Shipping",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -492,13 +461,14 @@ sub receiving_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/receiving.tmpl');	
     $template->param( pagetitle => "Receive items to fill your requests",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -511,13 +481,14 @@ sub renewals_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renewals.tmpl');	
     $template->param( pagetitle => "Ask for renewals on borrowed items",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -530,13 +501,14 @@ sub renew_answer_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/renew-answer.tmpl');	
     $template->param( pagetitle => "Respond to renewal requests",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -549,13 +521,14 @@ sub returns_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/returns.tmpl');	
     $template->param( pagetitle => "Return items to lending libraries",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -568,13 +541,14 @@ sub overdue_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/overdue.tmpl');	
     $template->param( pagetitle => "Overdue items to be returned to lender",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -587,13 +561,14 @@ sub lend_overdue_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/lend_overdue.tmpl');	
     $template->param( pagetitle => "Lender list of overdue items",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -606,13 +581,14 @@ sub checkins_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/checkins.tmpl');	
     $template->param( pagetitle => "Loan items to be checked back into your ILS",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -625,13 +601,14 @@ sub history_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/history.tmpl');	
     $template->param( pagetitle => "ILL history",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -644,13 +621,14 @@ sub current_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/current.tmpl');	
     $template->param( pagetitle => "Current ILLs",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -663,13 +641,14 @@ sub unfilled_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/unfilled.tmpl');	
     $template->param( pagetitle => "Unfilled ILL requests",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -682,13 +661,14 @@ sub new_patron_requests_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/new_patron_requests.tmpl');	
     $template->param( pagetitle => "New requests from your patrons",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -701,13 +681,14 @@ sub pending_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/pending.tmpl');	
     $template->param( pagetitle => "ILL requests with no response yet",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -720,13 +701,14 @@ sub lost_process {
     my $self = shift;
     my $q = $self->query;
 
-    my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$library,$symbol,$rows_per_page) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $template = $self->load_tmpl('search/lost.tmpl');	
     $template->param( pagetitle => "Lost items reported by borrowers",
 		      username => $self->authen->username,
 		      oid => $oid,
 		      library => $library,
+		      table_rows_per_page => $rows_per_page,
 	);
     return $template->output;
     
@@ -807,11 +789,11 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select o.oid, o.org_name, o.symbol from users u left join org o on (u.oid = o.oid) where u.username=?",
+	"select o.oid, o.org_name, o.symbol, o.rows_per_page from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
-    return ($hr_id->{oid}, $hr_id->{org_name}, $hr_id->{symbol});
+    return ($hr_id->{oid}, $hr_id->{org_name}, $hr_id->{symbol}, $hr_id->{rows_per_page});
 }
 
 
@@ -954,6 +936,10 @@ sub _isolate_and_normalize_source_callnos {
 		} elsif ($sources{$num}{'symbol'} eq 'LAKELAND') {
 		    # all Lakeland requests go to MKL
 		    $src{'symbol'} = 'MKL';
+
+		} elsif ($sources{$num}{'symbol'} eq 'JOLYS') {
+		    # all Jolys requests go to MSTP
+		    $src{'symbol'} = 'MSTP';
 
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};

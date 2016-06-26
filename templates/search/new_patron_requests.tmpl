@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/new-patron-requests-1.4.js"></script>
+<script type="text/javascript" src="/js/new-patron-requests-1.7.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-new-patron-requests-1.0.js"></script>
 
 <script type="text/javascript">
 set_secondary_tab("menu_borrow_new_patron_requests");
@@ -20,7 +21,28 @@ $.ajaxSetup ({
     </div>
 
     <div id="myDiv">
-      <div id="mylistDiv"></div>
+      <div id="mylistDiv">
+	<table id="new-patron-requests-table" class="row-border">
+	  <thead>
+	    <tr>
+	      <td>prid</td>
+	      <td>Last update</td>
+	      <td>Patron</td>
+	      <td>Barcode</td>
+	      <td>Title</td>
+	      <td>Author</td>
+	      <td>Format</td>
+	      <td>PubDate</td>
+	      <td>ISBN</td>
+	      <td>Actions</td>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="10">These are new requests from your patrons.</td></tr>
+	  </tfoot>
+	</table>
+      </div>
     </div>
 
   <div id="instructions" class="tone-box">

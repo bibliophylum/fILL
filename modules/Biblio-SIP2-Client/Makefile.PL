@@ -6,7 +6,7 @@ use 5.008;
 use ExtUtils::MakeMaker;
 WriteMakefile
     (
-     NAME => 'Biblio-SIP2-Client',
+     NAME => 'Biblio::SIP2::Client',
      VERSION_FROM => 'lib/Biblio/SIP2/Client.pm',
      PREREQ_PM => {
 	 'IO::Socket' => '0',

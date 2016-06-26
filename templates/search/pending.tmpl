@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/pending-1.3.js"></script>
+<script type="text/javascript" src="/js/pending-1.5.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-borrower-1.0.js"></script>
 
 
 <script type="text/javascript">
@@ -21,7 +22,30 @@ $.ajaxSetup ({
   </div>
   
   <div id="myDiv">
-    <div id="mylistDiv"></div>
+    <div id="mylistDiv">
+      <table id="pending-table" class="row-border">
+	<thead>
+	  <tr>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>ID</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Patron / Group</th>
+	    <th>Request Placed</th>
+	    <th>Age (days)</th>
+	    <th>To</th>
+	    <th>Status</th>
+	    <th>Trying lender</th>
+	    <th>Actions</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="12">If there are more lenders to try, you can click 'Try next lender'.  You can see the status of all of your active ILLs in the "Current ILLs" screen.</td></tr>
+	</tfoot>
+      </table>
+    </div>
   </div>
   
   <div id="instructions" class="tone-box">

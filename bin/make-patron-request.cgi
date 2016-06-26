@@ -218,6 +218,14 @@ foreach my $num (sort keys %sources) {
 		# all Allard requests go to MSTG
 		$src{'symbol'} = 'MSTG';
 
+	    } elsif ($sources{$num}{'symbol'} eq 'LAKELAND') {
+		# all Lakeland requests go to MKL
+		$src{'symbol'} = 'MKL';
+
+	    } elsif ($sources{$num}{'symbol'} eq 'JOLYS') {
+		# all Jolys requests go to MSTP
+		$src{'symbol'} = 'MSTP';
+
 	    } else {
 		$src{'symbol'} = $sources{$num}{'symbol'};
 	    }

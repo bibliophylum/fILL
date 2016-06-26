@@ -22,18 +22,21 @@
 <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
 <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+<!-- This is the new DataTables, with all of the required extensions built in
+     See https://datatables.net/download/ for info on building these files.
+  -->
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
-<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
 
 <script type="text/javascript" src="/js/pz2.js"></script>
-<script type="text/javascript" src="/js/fILL_client-public-1.11.js"></script>
-
+<script type="text/javascript" src="/js/fILL_client-public-1.12.js"></script>
+<!--
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
+-->
+<script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
+<link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
 
 <script type="text/javascript">
 
@@ -75,7 +78,8 @@
                 'font-size': fs + "px"
             });
         }
-    });
+  });
+  
   } 
 
 </script>
@@ -106,7 +110,7 @@
     $("#image").append("");
 
     $("#query").focus();
-
+/*
     $(".coverlink").click(function( event ) {
         event.preventDefault();
         var $title = $(this).attr("title");
@@ -121,7 +125,7 @@
         $("#query").val( $title );
         $("#search-submit-button").click();
     });
-
+*/
     $('#incrFont').click(function () {
         ga('send', 'event', 'Font-size', 'increase');
         increaseFontSize();
@@ -149,6 +153,34 @@
         window.location.href="?authen_logout=1";
     });
 
+    $("#countdown").TimeCircles( { start: false,
+                                   time: { Days: { show: false },
+                                           Hours: { show: false },
+                                           Minutes: { show: false }
+                                         }
+                                 }
+                                ).addListener(function(unit, value, total) {
+                                                if (total == 0) {
+                                                  $("#countdown").TimeCircles().stop();
+                                                  var stoppedAt = stopTheSearch("Timer done");
+            	                                  $("#status-header").text("Search complete.");
+                                                  $("#countdown-finished").empty();
+                                                  $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+ 	                                          $("#status-note").hide();
+                                                  $("#countdown-finished").show();
+                                                  $("#countdown-div").hide();
+                                                  $("#count-or-percent-div").hide();
+                                                  $("#percent-div").hide();
+                                                }
+                                              }, type="visible");
+
+    if (window.location.hostname == 'rigel.gotdns.org') {
+	$("#localdev").show();
+    }
+    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
+	$("#filldev").show();
+    }
+
   });
 </script>
 
@@ -167,6 +199,9 @@
 
 <!-- from header.tmpl -->
 
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
 <div id="container"><!--closes in footer.tmp-->
 
   <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
@@ -230,20 +265,17 @@
 <!--***************ARIA MARKER 'MAIN'***************-->
 <div id="content">
 
-<!-- <div id="AVnotice" class="tone-box"> -->
-<div id="AVnotice" style="background: black">
+<!-- <div id="AVnotice" style="background: black"> -->
 
-  <h2>Featured</h2><br>
+<!--  <h2>Featured</h2><br> -->
 
   <!-- The class="coverlink" is used to drive the click-the-image-to-search code;
        The keywords to search for are taken from the "title" attribute.
     -->
-
+<!--
   <div class="ContentFlow">
     <div class="loadIndicator"><div class="indicator"></div></div>
     <div class="flow">
-      <!-- <img class="item" src="someImageFile.jpg" title="Your_Image_Title"/> -->
-      <!-- Add as many items as you like. -->
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-andthebirdsraineddown-220.jpg"><div class="caption">And The Birds Rained Down Jocelyne Saucier</div></a>
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-intolerable-220.jpg"><div class="caption">Intolerable: A Memoir of Extremes Kamal Al Solaylee</div></a>
       <a class="item" href="#"><img class="content" src="/img/covers/cr14-ru-kim-thuy-books100.jpg"><div class="caption">Ru kim thuy</div></a>
@@ -253,21 +285,8 @@
     <div class="globalCaption"></div>
     <div class="scrollbar"><div class="slider"><div class="position"></div></div></div>
   </div>
-
-<!--
-  <div id="covers">
-
-    <a href="#" class="coverlink" title="And The Birds Rained Down Jocelyne Saucier"><img class="covers5" src="/img/covers/cr14-andthebirdsraineddown-220.jpg" alt="And The Birds Rained Down Jocelyne Saucier"></a>
-    <a href="#" class="coverlink" title="Intolerable: A Memoir of Extremes Kamal Al Solaylee"><img class="covers5" src="/img/covers/cr14-intolerable-220.jpg" alt="Intolerable: A Memoir of Extremes Kamal Al Solaylee"></a>
-    <a href="#" class="coverlink" title="Ru kim thuy"><img class="covers5" src="/img/covers/cr14-ru-kim-thuy-books100.jpg" alt="Ru kim thuy"></a>
-    <a href="#" class="coverlink" title="The Inconvenient Indian Thomas King"><img class="covers5" src="/img/covers/cr14-theinconvenientindian-220.jpg" alt="The Inconvenient Indian Thomas King"></a>
-    <a href="#" class="coverlink" title="When everything feels like the movies Raziel Reid"><img class="covers5" src="/img/covers/cr14-wheneverythingfeelslikethemovies-220.jpg" alt="When everything feels like the movies Raziel Reid"></a>
-
-  </div>
-  <p><strong>Canada Reads 2015 Finalists</strong></p> 
 -->
-       
-</div><!--div id AV display -->
+<!-- </div> --><!--div id AV display -->
 
 <main id="main" class="tone-box" role="main">
 
@@ -331,7 +350,18 @@
 
 <div id="aside" class="tone-box" role="complementary">
   <div id="image"></div>
-  <div id="stat"></div>
+  <div><h1 id="status-header">Searching all libraries</h1>
+    <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
+    <div id="countdown-div"><h2>Finishing in:</h2>
+      <div id="countdown" data-timer="45" style="width:100%"></div>
+    </div>
+    <div id="count-or-percent-div"><h2>...or...</h2></div>
+    <div id="percent-div"><h2>% of libraries:</h2>
+      <div id="stat"></div>
+    </div>
+    <div id="countdown-finished" style="display:none"></div>
+    <div id="libraries-finished" style="display:none"></div>
+  </div>
   <div id="leftcontent"></div>
   <div id="termlist"></div>
 </div>

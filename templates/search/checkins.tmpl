@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/checkins-1.3.js"></script>
+<script type="text/javascript" src="/js/checkins-1.5.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-lender-1.0.js"></script>
 
 <script type="text/javascript">
 set_secondary_tab("menu_lend_checkins");
@@ -20,8 +21,27 @@ $.ajaxSetup ({
     </div>
 
     <div id="myDiv">
-    
-      <div id="mylistDiv"></div>
+      <div id="mylistDiv">
+	<table id="checkins-table" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>gid</th>
+	      <th>cid</th>
+	      <th>ID</th>
+	      <th>Title</th>
+	      <th>Author</th>
+	      <th>Last update</th>
+	      <th>Back from</th>
+	      <th>Back from (ID)</th>
+	      <th>Check-in</th>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="9">As items are checked in here, they are removed from this list.  They must still be checked in to your ILS.</td></tr>
+	  </tfoot>
+	</table>
+      </div>
     </div>
 
   <div id="instructions" class="tone-box">

@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/lend_overdue-1.0.js"></script>
+<script type="text/javascript" src="/js/lend_overdue-1.2.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-lender-1.0.js"></script>
 
 
 <script type="text/javascript">
@@ -21,8 +22,29 @@ $.ajaxSetup ({
     </div>
 
     <div id="myDiv">
-  
-      <div id="mylistDiv"></div>
+      <div id="mylistDiv">
+	<table id="overdue-table" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>gid</th>
+	      <th>cid</th>
+	      <th>ID</th>
+	      <th>Loaned to</th>
+	      <th>Loaned to (ID)</th>
+	      <th>Title</th>
+	      <th>Author</th>
+	      <th>Last update</th>
+	      <th>Status</th>
+	      <th>Due date</th>
+	      <th>Email (if you use web-based email, right-click the address to open in a new tab)</th>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="11">These items are now overdue.<br/><br/>If you use a web-based email client, such as GMail or Hotmail, right-click the email address to open your email client in a new tab.<br/>If you use a stand-alone email client, such as Outlook or Thunderbird, you can just click on the email address.</td></tr>
+	  </tfoot>
+	</table>
+      </div>
     </div>
 
 <div id="instructions" class="tone-box">

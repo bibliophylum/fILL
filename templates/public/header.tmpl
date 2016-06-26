@@ -21,20 +21,15 @@
 <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
 
-<link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
+<!-- This is the new DataTables, with all of the required extensions built in
+     See https://datatables.net/download/ for info on building these files.
+  -->
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
-
-<script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquery-1.11.1.min.js before going to production -->
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
 
-<script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/menu-counters-1.1.js"></script>
-
-<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
- <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
- <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
 
 <script type="text/javascript">
 $('document').ready(function(){
@@ -72,6 +67,14 @@ $('document').ready(function(){
         $.removeCookie("fILL-authentication", { path: '/' });
         window.location.href="?authen_logout=1";
     });
+
+    if (window.location.hostname == 'rigel.gotdns.org') {
+	$("#localdev").show();
+    }
+    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
+	$("#filldev").show();
+    }
+
 });
 </script>
 
@@ -139,6 +142,9 @@ $('document').ready(function(){
 </head>
 <body class="example_alt_pagination">
 
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
 <div id="container">
 <!--header template from public folder-->
 

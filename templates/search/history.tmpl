@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 
 <script type="text/javascript" src="/js/moment.min.js"></script>
-<script type="text/javascript" src="/js/history-1.5.js"></script>
+<script type="text/javascript" src="/js/history-1.8.js"></script>
 
 <script type="text/javascript">
 
@@ -13,44 +13,76 @@ $.ajaxSetup ({
 
 
 <div id="center" role="main">
-
-<div id="instructions" class="tone-box">
+  
+<!--  <div id="instructions" class="tone-box"> -->
+  <div class="tone-box">
     <h3>View completed ILL requests within this date range:</h3>
-
-      <form>
-        <div id="history">
-
-          <label for="startdate">Start date:</label>
-          <input id="startdate" type="text"><br>
-
-          <label for="enddate">End date:</label>
-          <input id="enddate" type="text"><br>
-      
-          <input id="dateButton" type="button" class="library-style" value="Fetch requests">
-      </div>
+    <form>
+	From <input id="startdate" type="text" class="history-date"> to <input id="enddate" type="text" class="history-date">
+        <input id="dateButton" type="button" class="library-style" value="Fetch requests">
     </form>
-<br>
+    <br>
   </div><!--div id instructions-->
 
-	<div style="clear:both"></div>
+  <div style="clear:both"></div>
 
-    <div id="waitDiv">
-      Getting requests from history... <img src="/wait.gif" alt="loading indicator">
+  <div id="waitDiv">
+    Getting requests from history... <img src="/wait.gif" alt="loading indicator">
+  </div>
+  
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Borrowing history</a></li>
+      <li><a href="#tabs-2">Lending history</a></li>
+    </ul>
+    
+    <div id="tabs-1">
+      <table id="datatable_borrowing" class="row-border">
+	<thead>
+	  <tr>
+	    <th> </th>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Last update</th>
+	    <th>From</th>
+	    <th>To</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="10">History of requests you've made to borrow items.</td></tr>
+	</tfoot>
+      </table>
     </div>
-
-    <div id="tabs">
-      <ul>
-	<li><a href="#tabs-1">Borrowing history</a></li>
-	<li><a href="#tabs-2">Lending history</a></li>
-      </ul>
-
-      <div id="tabs-1"></div>
-
-      <div id="tabs-2"></div>
-
+    
+    <div id="tabs-2">
+      <table id="datatable_lending" class="row-border">
+	<thead>
+	  <tr>
+	    <th> </th>
+	    <th>cid</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Requested by</th>
+	    <th>Last update</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="8">History of requests other libraries have made for you to lend items.</td></tr>
+	</tfoot>
+      </table>
     </div>
-
-
+    
+  </div>
+  
+  
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

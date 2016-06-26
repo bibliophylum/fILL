@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_borrow.tmpl">
 
-<script type="text/javascript" src="/js/overdue-1.3.js"></script>
+<script type="text/javascript" src="/js/overdue-1.5.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-borrower-1.0.js"></script>
 
 
 <script type="text/javascript">
@@ -16,23 +17,43 @@ $.ajaxSetup ({
 
 <div id="center" role="main">
 
-    <div id="waitDiv">
-      Loading... <img src="/wait.gif" alt="loading indicator">
-    </div>
-
-    <div id="myDiv">
+  <div id="waitDiv">
+    Loading... <img src="/wait.gif" alt="loading indicator">
+  </div>
   
-      <div id="mylistDiv"></div>
+  <div id="myDiv">
+    <div id="mylistDiv">
+      <table id="overdue-table" class="row-border">
+	<thead>
+	  <tr>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>ID</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Borrowed from</th>
+	    <th>Borrowed from (ID)</th>
+	    <th>Last update</th>
+	    <th>Due date</th>
+	    <th>Patron</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="10">These items are now overdue.</td></tr>
+	</tfoot>
+      </table>
     </div>
+  </div>
 
-<div id="instructions" class="tone-box">
+  <div id="instructions" class="tone-box">
     <h2>Instructions</h2>
-
-      <p>These items are now overdue, and you will need to contact these patrons.</p>
-      <p>To return the items, got to the Returns tab and click 'Returned'.</p>
-
-</div>
-
+    
+    <p>These items are now overdue, and you will need to contact these patrons.</p>
+    <p>To return the items, got to the Returns tab and click 'Returned'.</p>
+    
+  </div>
+  
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

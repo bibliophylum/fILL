@@ -31,7 +31,8 @@ my $SQL="select
   ra2.status,
   substring(ra.message from 'due (.*)') as due_date,
   o.email_address,
-  o2.org_name as lending_library  
+  o2.org_name as lending_library,
+  n.note as lender_internal_note   
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
@@ -39,6 +40,7 @@ from requests_active ra
   left join org o on o.oid = ra.msg_to
   left join requests_active ra2 on ra2.request_id=ra.request_id 
   left join org o2 on o2.oid = ra.msg_from 
+  left join internal_note n on (n.request_id=r.id and n.private_to=ra.msg_from) 
 where 
   ra.msg_from=? 
   and ra.ts=(select ts from requests_active where request_id=ra.request_id and (status='Shipped' or status='Renew-Answer|Ok') order by ts desc limit 1) 

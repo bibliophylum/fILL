@@ -770,3 +770,10 @@ html body.example_alt_pagination div#container div#center div#tabs.ui-tabs.ui-wi
     color: #fff;
     background-image: none;
 }
+
+/* JQueryUI modal dialog buttons were hard to see... change the button background. */
+.ui-dialog .ui-dialog-buttonpane button.override-dialog-button {
+    background-color: #96b0cf;
+    background-image: none;
+    color: black !important;  /* gah... 'button' has color set as !important */
+}

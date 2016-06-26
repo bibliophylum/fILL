@@ -14,6 +14,13 @@
 
   <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-library-colors.css"/>
 
+  <!-- This is the new DataTables, with all of the required extensions built in
+       See https://datatables.net/download/ for info on building these files.
+    -->
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+  <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+
+
   <!-- jQuery-UI theme:
        1. create a new theme using ThemeRoller, and save it to htdocs/themes/xxxx/
        2. comment out the default jquery-ui.css ("/plugins/jquery-ui-1.11.1/jquery-ui.css")
@@ -22,34 +29,25 @@
        5. add <script... to your new theme ("/themes/xxxx/jquery-ui.js")
 
        The order of these links and scripts is important!
-  -->
-<!-- THEME: comment out default jquery css
-  <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
- -->
-<!-- THEME: add new theme: -->
+    -->
+  <!-- THEME: comment out default jquery css
+       <link rel="stylesheet" type="text/css" href="/plugins/jquery-ui-1.11.1/jquery-ui.css">
+       -->
+  <!-- THEME: add new theme: -->
   <link id="themeroller-css" rel="stylesheet" type="text/css" href="/themes/fILL-clean/jquery-ui.css"/>
 
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/media/css/jquery.dataTables.css"/>
-  <link rel="stylesheet" type="text/css" href="/plugins/DataTables-1.10.2/extensions/TableTools/css/dataTables.tableTools.css"/>
-
-
-
-  <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>  <!-- change to jquer-1.11.1.min.js before going to production -->
   <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 
 
-<!-- THEME: comment out default jquery-ui.js:
-  <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
--->
-<!-- THEME: add new theme's .js: -->
+  <!-- THEME: comment out default jquery-ui.js:
+       <script type="text/javascript" src="/plugins/jquery-ui-1.11.1/jquery-ui.js"></script> 
+       -->
+  <!-- THEME: add new theme's .js: -->
   <script id="themeroller-js" type="text/javascript" src="/themes/fILL-clean/jquery-ui.js"></script>
+  
 
-
-  <script type="text/javascript" src="/js/menu-counters-1.1.js"></script>
-
-<!--  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.js"></script> -->  <!-- THIS WILL CONFLICT WITH jquery-1.11.1.js INCLUDED ABOVE -->
-  <script type="text/javascript" charset="utf-8" src="/plugins/DataTables-1.10.2/media/js/jquery.dataTables.js"></script>
-  <script type="text/javascript" src="/plugins/DataTables-1.10.2/extensions/TableTools/js/dataTables.tableTools.js"></script>
+  <script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
 
 <script type="text/javascript">
 
@@ -121,6 +119,13 @@ $('document').ready(function(){
         $('#'+curTheme).click();
     }    
 
+    //alert(window.location.hostname);
+    if (window.location.hostname == 'rigel.gotdns.org') {
+	$("#localdev").show();
+    }
+    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
+	$("#filldev").show();
+    }
 });
 
 </script> <!-- end of document.ready -->
@@ -241,11 +246,14 @@ $('document').ready(function(){
 
 <body class="example_alt_pagination" onload="callDomReadyIfAvailable();">
 
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
   <div id="container"><!-- closed in footer.tmpl -->
     <p>&nbsp;</p>
     <div id="header" class="header-library">
       <div id="header-left">
-	<div id="fill-logo"><a href="/"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
+	<div id="fill-logo"><a href="/cgi-bin/info.cgi?rm=welcome"><img id="theme-logo" src="/img/fill-lib-logo.png" alt="fill"/></a></div>
 	<div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
       </div>
 
@@ -254,6 +262,7 @@ $('document').ready(function(){
 	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="library-style">log out</a></div>
 	<div id="patron-info">
 	  <p style="display:none"><TMPL_VAR NAME="username"></p>
+	  <p id="table_rows_per_page" style="display:none"><TMPL_VAR NAME="table_rows_per_page"></p>
 	  <p id="library_name"><TMPL_VAR NAME="library"></p>
 	  <p id="oid" style="display:none"><TMPL_VAR NAME="oid"></p>  <!-- used in a LOT of js files -->
 	  <input id="theme1" class="theme-chooser1" type="button" value="A" />

@@ -49,6 +49,17 @@ All in one:  sudo apt-get install pazpar2 pazpar2-doc pazpar2-js pazpar2-jsdemo 
 Important!  Now go to /etc/pazpar2/services-enabled, and (as root) unlink default.xml
 (or else you'll have problems starting the pazpar2 service later....)
 
+NOTE:  As of 2016.05.20, there is a xenial package for libyaz5, but not for pazpar2
+Latest pazpar2 depends on libyaz5.  Before trying to install pazpar2 (which gives
+dependency errors, first install libyaz5)
+You need to have both:
+deb http://ftp.indexdata.dk/ubuntu vivid main
+deb-src http://ftp.indexdata.dk/ubuntu vivid main
+(for libyaz5) ...and...
+deb http://ftp.indexdata.dk/ubuntu xenial main
+deb-src http://ftp.indexdata.dk/ubuntu xenial main
+(for pazpar2)
+
 -----------------------------------------------------------------------------
 targets:
 /etc/pazpar2/settings

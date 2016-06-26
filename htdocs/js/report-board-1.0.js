@@ -30,7 +30,7 @@ $('document').ready(function(){
     $("#month").val( new Date().getMonth() );
 
     $("#printButton").on("click", function() {
-	$("#report-content").printElement();
+	$("#report-content").printThis();
     });
 
     $("#dateButton").on("click", function() {

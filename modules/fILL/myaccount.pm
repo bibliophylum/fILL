@@ -50,7 +50,7 @@ sub myaccount_settings_process {
     my $q = $self->query;
 
     my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, z.server_address, z.server_port, z.database_name, z.enabled, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
+    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, o.lender_internal_notes_enabled, o.borrower_internal_notes_enabled, o.rows_per_page, z.server_address, z.server_port, z.database_name, z.enabled, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
     my $href = $self->dbh->selectrow_hashref($SQL,{},$oid);
 
     my $zServer_controlled_by_parent = 0;
@@ -102,6 +102,9 @@ sub myaccount_settings_process {
 		     test_patron_test_result => $href->{test_result},
 		     slips_with_barcodes  => $href->{slips_with_barcodes},
 		     centralized_ill      => $href->{centralized_ill},
+		     lender_internal_notes_enabled => $href->{lender_internal_notes_enabled},
+		     borrower_internal_notes_enabled => $href->{borrower_internal_notes_enabled},
+		     rows_per_page        => $href->{rows_per_page},
 		     logo_path     => $logoPath,
 		     logo_alt_text => $logoAltText,
 		     logo_credit   => $logoCredit

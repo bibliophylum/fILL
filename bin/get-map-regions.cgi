@@ -6,7 +6,10 @@ use JSON;
 
 my $query = new CGI;
 
-my $SQL = "select distinct region from org where region is not null";
+# Uncomment this on dev
+my $SQL = "select distinct region from org where region is not null order by region";
+# Uncomment this on production
+#my $SQL = "select distinct region from org where region is not null and region <> 'PLS Testing' order by region";
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",

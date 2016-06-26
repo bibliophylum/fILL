@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/lost-1.1.js"></script>
+<script type="text/javascript" src="/js/lost-1.3.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-lender-1.0.js"></script>
 
 
 <script type="text/javascript">
@@ -21,7 +22,30 @@ $.ajaxSetup ({
   </div>
   
   <div id="myDiv">
-    <div id="mylistDiv"></div>
+    <div id="mylistDiv">
+      <table id="lost-table" class="row-border">
+	<thead>
+	  <tr>
+	    <th>gid</th>
+	    <th>cid</th>
+	    <th>ID</th>
+	    <th>Title</th>
+	    <th>Author</th>
+	    <th>Date</th>
+	    <th>From</th>
+	    <th>Phone</th>
+	    <th>Address</th>
+	    <th>Status</th>
+	    <th>Message</th>
+	    <th>Actions</th>
+	  </tr>
+	</thead>
+	<tbody></tbody>
+	<tfoot>
+	  <tr><td colspan="12">As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the "Current ILLs" screen.</td></tr>
+	</tfoot>
+      </table>
+    </div>
   </div>
   
   <div id="instructions" class="tone-box">

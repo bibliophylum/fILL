@@ -745,3 +745,21 @@ input[type="button"]:hover.action-button-highlighted, button:hover.action-button
     color: #fff;
     background-image: none;
 }
+
+
+.dataTable th {
+    background-color: #505050;
+    color: #fff;
+}
+.dataTable td {
+    background-color: #424242;
+    color: #fff;
+}
+
+label .ui-button-text-only.ui-state-default,
+label .ui-button-text-only.ui-state-active {
+    color: #000;
+}
+label .ui-button-text-only .ui-button-text {
+    color: #fff;
+}

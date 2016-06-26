@@ -29,15 +29,17 @@ my $SQL = "select
   replace(ra.status,'|',' ') as status, 
   ra.message, 
   (select count(*) from sources s where g.group_id=s.group_id and tried=true) as tried, 
-  (select count(*) from sources s2 where g.group_id=s2.group_id) as sources 
+  (select count(*) from sources s2 where g.group_id=s2.group_id) as sources, 
+   n.note as borrower_internal_note 
 from requests_active ra
   left join request r on r.id=ra.request_id
   left join request_chain c on c.chain_id = r.chain_id
   left join request_group g on g.group_id = c.group_id
   left join org o on o.oid = ra.msg_from
+  left join internal_note_borrower n on (n.gid=g.group_id and n.private_to=ra.msg_to) 
 where 
   ra.msg_to=?
-  and ra.status like 'ILL-Answer|Unfilled%' 
+  and (ra.status like 'ILL-Answer|Unfilled%' or (ra.status='Message' and message='No further sources'))
   and r.id not in (select request_id from requests_active where status='Message' and message='Requester closed the request.') 
   and ra.ts = (select max(ts) from requests_active ra2 where ra2.request_id = ra.request_id) 
 order by ra.ts

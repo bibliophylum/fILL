@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_lend.tmpl">
 
-<script type="text/javascript" src="/js/renewal-answer-1.3.js"></script>
+<script type="text/javascript" src="/js/renewal-answer-1.5.js"></script>
+<script type="text/javascript" src="/js/common/internal-notes-lender-1.0.js"></script>
 
 
 <script type="text/javascript">
@@ -37,7 +38,30 @@ $.ajaxSetup ({
       </div>
 
       <h3>2. Respond to renewal requests</h3>
-      <div id="mylistDiv"></div>
+      <div id="mylistDiv">
+	<table id="renewal-answer-table" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>gid</th>
+	      <th>cid</th>
+	      <th>ID</th>
+	      <th>From</th>
+	      <th>From (ID)</th>
+	      <th>Callno</th>
+	      <th>Author</th>
+	      <th>Title</th>
+	      <th>Last update</th>
+	      <th>Original due date</th>
+	      <th>New due date</th>
+	      <th>Action</th>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="12">As requests are handled, they are removed from this list.  You can see the status of all of your active ILLs in the "Current ILLs" screen.</td></tr>
+	  </tfoot>
+	</table>
+      </div>
     </div>
 
   <div id="instructions" class="tone-box">

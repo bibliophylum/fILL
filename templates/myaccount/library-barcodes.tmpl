@@ -2,7 +2,7 @@
 <TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<script type="text/javascript" src="/js/library-barcodes-1.2.js"></script>
+<script type="text/javascript" src="/js/library-barcodes-1.3.js"></script>
 
 <script type="text/javascript">
   <!--
@@ -23,6 +23,21 @@
 
     <div id="myDiv">
       <div id="mylistDiv">
+	<table id="datatable_barcodes" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>oid</th>
+	      <th>borrower</th>
+	      <th>symbol</th>
+	      <th>library</th>
+	      <th>barcode</th>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="5">Click on the barcode column to enter the barcode from your ILS."</td></tr>
+	  </tfoot>
+	</table>
       </div>
     </div>
 
