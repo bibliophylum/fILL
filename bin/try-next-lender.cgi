@@ -30,14 +30,14 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $retval = 0;
 my $retmsg = "";
 
-my $SQL = "select count(request_id) from requests_active where request_id=? and ((msg_to=? and status like 'ILL-Answer%') or (msg_from=? and message='Trying next source'))";
-my $lenderUpdated = $dbh->selectrow_array($SQL,undef,$reqid,$oid,$oid);
-print STDERR Dumper($lenderUpdated);
+my $SQL = "select count(request_id) from requests_active where request_id=? and ((msg_to=? and status like 'ILL-Answer|Hold-Placed%') or (msg_to=? and status like 'ILL-Answer|Locations-provided%') or (msg_to=? and status like 'ILL-Answer|Will-Supply%') or (msg_from=? and message='Trying next source'))";
+my $lenderUpdated = $dbh->selectrow_array($SQL,undef,$reqid,$oid,$oid,$oid,$oid);
+#print STDERR Dumper($lenderUpdated);
 
 if ((defined $lenderUpdated) && ($lenderUpdated != 0)) {
     # the lender updated the record before we got to it
     $retmsg = "Lender has responded - please reload this page.";
-    print STDERR $retmsg;
+    #print STDERR $retmsg;
 
 } else {
 
