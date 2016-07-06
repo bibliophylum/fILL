@@ -38,6 +38,7 @@ sub setup {
 	'zserver_test'         => 'zserver_test_process',
 	'zserver_pazpar_control' => 'zserver_pazpar_control_process',
 	'zserver_settings'     => 'zserver_settings_process',
+	'zserver_spruce'       => 'zserver_spruce_process',
 	'public_featured'      => 'public_featured_process',
 	);
 }
@@ -105,6 +106,35 @@ sub zserver_settings_process {
     my $template = $self->load_tmpl('admin/zserver-settings.tmpl');	
     $template->param( pagetitle => "zServer settings",
 		      library_list => $libraries_aref
+	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub zserver_spruce_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $spruce_libraries_aref = $self->dbh->selectall_arrayref("select o.oid,o.symbol,o.org_name from org_members om left join org o on o.oid=om.member_id where (om.oid=139 or om.oid in (select member_id from org_members where oid=139)) order by org_name", { Slice => {} } );
+
+    my $spruce_closed_aref = $self->dbh->selectall_arrayref("select o.oid,o.symbol,o.org_name from spruce_closed_list s left join org o on s.symbol=o.symbol order by o.org_name", { Slice => {} } );
+
+    foreach my $sprucelib (@$spruce_libraries_aref) {
+	my $symbol = $sprucelib->{symbol};
+	$sprucelib->{closed} = 0;
+	foreach my $closed (@$spruce_closed_aref) {
+	    if ($closed->{symbol} eq $symbol) {
+		$sprucelib->{closed} = 1;
+		last;
+	    }
+	}
+    }
+    
+    my $template = $self->load_tmpl('admin/zserver-spruce.tmpl');	
+    $template->param( pagetitle => "Spruce libraries enabled/disabled ",
+		      library_list => $spruce_libraries_aref
 	);
     return $template->output;
 }

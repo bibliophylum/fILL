@@ -1,0 +1,46 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_z3950.tmpl">
+
+  <script>
+    $('document').ready(function() {
+//      $( "#submit" ).click(function() {
+//        alert( "Handler for .click() called." );
+//      });
+
+      var $form = $('form');
+      $form.submit(function(){
+         $.post($(this).attr('action'), $(this).serialize(), function(response){
+               alert('Update saved.');
+         },'json');
+         return false;
+       });
+    });
+  </script>
+  
+<div id="center" role="main">
+
+  <form action="/cgi-bin/admin-update-zserver-spruce.cgi" method="post">
+  <table>
+    <thead>
+      <tr>
+	<th>oid</th><th>symbol</th><th>org_name</th><th>closed?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <TMPL_LOOP NAME="library_list">
+	<tr>
+	  <td><TMPL_VAR NAME="oid"></td>
+	  <td><TMPL_VAR NAME="symbol"></td>
+	  <td><TMPL_VAR NAME="org_name"></td>
+	  <TMPL_IF NAME="closed">
+	    <td><input type="checkbox" name="closed" value=<TMPL_VAR NAME="oid"> checked></td>
+          <TMPL_ELSE>
+	    <td><input type="checkbox" name="closed" value=<TMPL_VAR NAME="oid">></td>
+	  </TMPL_IF>
+      </TMPL_LOOP>
+    </tbody>
+  </table>
+  <input id="formSubmit" type="submit" value="Submit">
+  </form>
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">
