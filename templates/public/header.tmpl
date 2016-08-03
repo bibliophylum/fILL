@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<TMPL_IF name="lang">
+  <html lang=<TMPL_VAR name="lang">
+<TMPL_ELSE>
+  <html lang="en">
+</TMPL_IF>
+      
 <head><title><TMPL_VAR name="pagetitle"></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,9 +36,22 @@
 
 <script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
 
+<script type="text/javascript" src="/js/i18n.js"></script>
+<!-- To handle multilingual, we'll need a variable to hold the JSON string passed in
+     (which contains the ML strings), and (for convenience) another to hold the
+     parsed JSON data structure.  It has to be here (not in i18n.js) because it is
+     a template variable passed in from perl....
+  -->
+<script type="text/javascript">
+  var langDataRaw = '<TMPL_VAR name="lang_data">';
+  var langData;
+</script>
+
+
 <script type="text/javascript">
 $('document').ready(function(){
 
+    i18n_setText();
     setFontSizeFromCookies();
 
     $('#incrFont').click(function () {
@@ -67,6 +85,18 @@ $('document').ready(function(){
         $.removeCookie("fILL-authentication", { path: '/' });
         window.location.href="?authen_logout=1";
     });
+
+    $( "#language" ).selectmenu({
+        change: i18n_select_change
+    });
+
+    if (typeof $.cookie('fILL-language') != 'undefined') {
+        var lang = $.cookie('fILL-language');
+        console.debug('cookie: '+lang+', setting selector and triggering event');
+        lang = i18n_code2language( lang );
+        $("#language").val( lang );
+        $("#language").selectmenu('refresh').trigger("selectmenuchange");
+    }
 
     if (window.location.hostname == 'rigel.gotdns.org') {
 	$("#localdev").show();
@@ -157,6 +187,13 @@ $('document').ready(function(){
   </div>
 
   <div id="header-right">
+    <div id="language-selector">
+      <label for="language">Language</label>
+      <select name="language" id="language">
+	<option selected="selected">English</option>
+	<option>Français</option>
+      </select>
+    </div>
     <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
     <div id="patron-info">
   <!-- The id="username" div is necessary: the username gets extracted (in 
@@ -184,6 +221,8 @@ $('document').ready(function(){
     <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
     <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
     <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
+
+    <li><a id="menu_test" href="/cgi-bin/public.cgi?rm=test_form">Test</a></li>
   </ul>
 </nav>
 

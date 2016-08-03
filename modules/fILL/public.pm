@@ -29,46 +29,8 @@ use Encode;
 use Text::Unidecode;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
-
-my %SPRUCE_TO_MAPLIN = (
-    'MWPL' => 'MWPL',
-    'MAOW' => 'MAOW',        # Altona
-    'MMIOW' => 'MMIOW',      # Miami
-    'MMOW' => 'MMOW',        # Morden
-    'MWOW' => 'MWOW',        # Winkler
-    'MBOM' => 'MBOM',        # Boissevain
-    'MANITOU' => 'MMA',
-    'STEROSE' => 'MSTR',
-    'AB' => 'MWP',
-    'MWP' => 'MWP',
-    'MSTOS' => 'MSTOS',      # Stonewall
-    'MTSIR' => 'MTSIR',      # Teulon
-    'MMCA' => 'MMCA',        # McAuley
-    'MVE' => 'MVE',          # Virden
-    'ME' => 'ME',            # Elkhorn
-    'MS' => 'MS',            # Somerset
-    'MSOG' => 'MSOG',        # Glenwood and Souris
-    'MDB' => 'MDB',          # Bren Del Win
-    'MPLP' => 'MPLP',        # Portage
-    'MSSC' => 'MSSC',        # Shilo
-    'MEC' => 'MEC',
-    'MNH' => 'MNH',
-    'MSRH' => 'UCN',         # University College of the North
-    'MTK' => 'MTK',          #   libraries and campuses
-    'MTPK' => 'MTPK',
-    'MWMW' => 'UCN',
-    'MRD' => 'MRD',          # Russell
-    'MBI' => 'MBI',          # Binscarth
-    'MSCL' => 'MSCL',        # St.Claude
-    );
-
-my %WESTERN_MB_TO_MAPLIN = (
-    'Brandon Public Library' => 'MBW',
-    'Neepawa Public Library' => 'MNW',
-    'Carberry / North Cypress Library' => 'MCNC',
-    'Glenboro / South Cypress Library' => 'MGW',
-    'Hartney / Cameron Library' => 'MHW',
-    );
+use JSON;
+use CGI::Cookie;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
@@ -79,7 +41,7 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'test_form' => 'test_process',
+	'test_form'                => 'test_process',
 	'search_form'              => 'search_process',
 	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
@@ -91,20 +53,81 @@ sub setup {
 	);
 }
 
+#--------------------------------------------------------------------------------
+#
+# A requested language (from the url, language=??) overrides a preferred-
+# language cookie (and changes to cookie to match).
+# Default to English if no requested/preferred language.
+#
+sub determine_language_to_use {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $requestedLanguage;
+    my $parmLanguage = $q->param("language");
+    if (($parmLanguage) && ($parmLanguage =~ /^(en|fr)$/)) {
+	$requestedLanguage = $parmLanguage;
+    }
+    
+    my $preferredLanguage;
+    my $cookieLanguage = $q->cookie('fILL-language');
+    if (($cookieLanguage) && ($cookieLanguage =~ /^(en|fr)$/)) {
+	$preferredLanguage = $cookieLanguage;
+    }
+
+    my $lang = $requestedLanguage || $preferredLanguage || "en";
+
+    # set cookie client-side
+    if ($requestedLanguage) {
+	$self->header_props(
+	    -cookie  =>  $q->cookie(
+		 -expires =>  '+1y',
+		 -name    =>  'fILL-language',
+		 -path    =>  '/',
+		 -value   =>  $lang
+	    ),
+	    );
+    }
+    
+    return $lang;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+#
 sub test_process {
     my $self = shift;
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
+    my $data_perl = $self->get_i18n("public/test.tmpl",$lang);
 
     my $template;
-    $template = $self->load_tmpl('public/test.tmpl');
-    $template->param( pagetitle => "fILL test",
-		      username => $self->authen->username,
-		      barcode => $self->session->param("fILL-card"),
-		      oid => $oid,
-		      library => $library,
-	);
+
+    if (!defined $data_perl) {
+	$template = $self->load_tmpl('public/language-unavailable.tmpl');
+	$template->param( lang => 'en',
+			  pagetitle => "fILL language unavailable",
+			  username => $self->authen->username,
+			  barcode => $self->session->param("fILL-card"),
+			  oid => $oid,
+			  library => $library
+	    );
+    } else {
+	my $json = encode_json \%{ $data_perl->{"js_lang_data"} };
+	
+	$template = $self->load_tmpl('public/test2.tmpl');
+	$template->param( lang => $data_perl->{"tparm"}{"lang"},
+			  pagetitle => $data_perl->{"tparm"}{"pagetitle"},
+			  username => $self->authen->username,
+			  barcode => $self->session->param("fILL-card"),
+			  oid => $oid,
+			  library => $library,
+			  lang_data => $json
+	    );
+    }
     return $template->output;
 }
 
@@ -307,6 +330,29 @@ sub registration_process {
     my $self = shift;
     my $template = $self->load_tmpl('public/registration.tmpl');
     return $template->output;
+}
+
+
+#--------------------------------------------------------------------------------
+#
+# 
+#
+sub get_i18n {
+    my $self = shift;
+    my ($page,$lang) = @_;
+    my $i18n = $self->dbh->selectall_arrayref(
+	"select category,id,text from i18n where page=? and lang=?",
+	{ Slice => {} },
+	$page, $lang
+	);
+    if (@$i18n) { 
+	my %data_perl;
+	foreach my $line (@$i18n) {
+	    $data_perl{ $line->{category} }{ $line->{id} } = $line->{text};
+	}
+	return \%data_perl;
+    }
+    return undef;
 }
 
 
