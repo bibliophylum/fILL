@@ -102,32 +102,18 @@ sub test_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
     my $lang = $self->determine_language_to_use();
-    my $data_perl = $self->get_i18n("public/test.tmpl",$lang);
 
     my $template;
+    $template = $self->load_tmpl('public/test2.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => "fILL test",
+		      template => 'public/test.tmpl',
+		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
+		      oid => $oid,
+		      library => $library,
+	);
 
-    if (!defined $data_perl) {
-	$template = $self->load_tmpl('public/language-unavailable.tmpl');
-	$template->param( lang => 'en',
-			  pagetitle => "fILL language unavailable",
-			  username => $self->authen->username,
-			  barcode => $self->session->param("fILL-card"),
-			  oid => $oid,
-			  library => $library
-	    );
-    } else {
-	my $json = encode_json \%{ $data_perl->{"js_lang_data"} };
-	
-	$template = $self->load_tmpl('public/test2.tmpl');
-	$template->param( lang => $data_perl->{"tparm"}{"lang"},
-			  pagetitle => $data_perl->{"tparm"}{"pagetitle"},
-			  username => $self->authen->username,
-			  barcode => $self->session->param("fILL-card"),
-			  oid => $oid,
-			  library => $library,
-			  lang_data => $json
-	    );
-    }
     return $template->output;
 }
 
@@ -220,34 +206,19 @@ sub about_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
-
     my $lang = $self->determine_language_to_use();
-    my $data_perl = $self->get_i18n("public/about.tmpl",$lang);
 
     my $template;
+    $template = $self->load_tmpl('public/about.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => 'About fILL',
+		      template => 'public/about.tmpl',
+		      username => $self->authen->username,
+		      barcode => $self->session->param("fILL-card"),
+		      oid => $oid,
+		      library => $library,
+	);
 
-    if (!defined $data_perl) {
-	$template = $self->load_tmpl('public/language-unavailable.tmpl');
-	$template->param( lang => 'en',
-			  pagetitle => "fILL language unavailable",
-			  username => $self->authen->username,
-			  barcode => $self->session->param("fILL-card"),
-			  oid => $oid,
-			  library => $library
-	    );
-    } else {
-	my $json = encode_json \%{ $data_perl->{"js_lang_data"} };
-	
-	$template = $self->load_tmpl('public/about.tmpl');
-	$template->param( lang => $data_perl->{"tparm"}{"lang"},
-			  pagetitle => $data_perl->{"tparm"}{"pagetitle"},
-			  username => $self->authen->username,
-			  barcode => $self->session->param("fILL-card"),
-			  oid => $oid,
-			  library => $library,
-			  lang_data => $json
-	    );
-    }
     return $template->output;
 }
 
@@ -349,39 +320,6 @@ sub registration_process {
     my $self = shift;
     my $template = $self->load_tmpl('public/registration.tmpl');
     return $template->output;
-}
-
-
-#--------------------------------------------------------------------------------
-#
-# 
-#
-sub get_i18n {
-    my $self = shift;
-    my ($page,$lang) = @_;
-    my $i18n = $self->dbh->selectall_arrayref(
-	"select category,id,text from i18n where page=? and lang=?",
-	{ Slice => {} },
-	$page, $lang
-	);
-    if (@$i18n) { 
-	my %data_perl;
-	foreach my $line (@$i18n) {
-	    $data_perl{ $line->{category} }{ $line->{id} } = $line->{text};
-	}
-	# Now get common header / footer translations
-	my $common = $self->dbh->selectall_arrayref(
-	    "select category,id,text from i18n where page='public' and lang=? and category='header'",
-	    { Slice => {} },
-	    $lang
-	    );
-	foreach my $line (@$common) {
-	    $data_perl{ "js_lang_data" }{ $line->{id} } = $line->{text};
-	}
-
-	return \%data_perl;
-    }
-    return undef;
 }
 
 

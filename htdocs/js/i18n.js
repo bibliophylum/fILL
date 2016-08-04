@@ -20,20 +20,64 @@
 */
 
 //------------------------------------------------------------------------
-function i18n_setText() {
-    if ((typeof langDataRaw === "undefined") || (!langDataRaw)) {
-	alert('This page needs to be i18n-ized.');
+function i18n_load() {
+    var page;
+    if ( $("#template").length === 1 ) {
+	page = $("#template").text();
     } else {
-	langData = jQuery.parseJSON( langDataRaw );
-	for (var elementID in langData) {
-	    if (langData.hasOwnProperty(elementID)) {
-		//alert(elementID+':'+langData[elementID]);
-		$("#"+elementID).text( langData[elementID] );
-	    }
+	// This can all go away once all CGI::App modules are passing the
+	//   'template' parameter.
+
+	// my javascript regex-fu is bad... we want to turn something like:
+	//   .../public.cgi?rm=test_form&language=en
+	// into:
+	//   public/test
+	
+	var pathname = window.location.pathname;
+	page = pathname.substring( pathname.lastIndexOf('/') + 1 );
+	page = page.substr(0, page.indexOf('.')); // remove ".cgi"
+
+	var parameters = window.location.search.substring(1); // remove leading '?'
+	var rm = parameters.replace(/^.*rm=(.*)/, '$1');
+	if (rm.indexOf('&') > 0) {
+	    rm = rm.substr(0, rm.indexOf('&')); // remove any additional parms
 	}
+	if (rm.indexOf('_') > 0) {
+	    rm = rm.substr(0, rm.indexOf('_')); // remove any "_form"
+	}
+	
+	page = page+'/'+rm+'.tmpl';
     }
+
+    var language = document.documentElement.lang;
+    var parms = {
+	"page": page,
+	"lang": language
+    }
+    //alert('Loading language ['+language+'] for ['+page+']');
+    $.getJSON('/cgi-bin/i18n.cgi', parms,
+              function(data){
+		  //alert('Language data loading');
+		  // automagically parsed from json; don't need to do this:
+		  //var languageData = jQuery.parseJSON( data.i18n.js_lang_data );
+		  var languageData = data.i18n.js_lang_data;
+		  for (var elementID in languageData) {
+		      if (languageData.hasOwnProperty(elementID)) {
+			  //alert(elementID+':'+languageData[elementID]);
+			  $("#"+elementID).text( languageData[elementID] );
+		      }
+		  }
+              })
+	.success(function(data) {
+        })
+	.error(function(data) {
+	    alert('Error loading ['+parms.lang+'] language data for ['+parms.page+'] template.');
+        })
+	.complete(function() { 
+        });
 }
 
+// NOTE to self:
 // An object property name can be any valid JavaScript string, or anything that
 // can be converted to a string, including the empty string. However, any property
 // name that is not a valid JavaScript identifier (for example, a property name

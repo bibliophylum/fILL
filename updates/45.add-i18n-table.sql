@@ -32,8 +32,8 @@ insert into i18n (page,lang,category,id,text) values
 ('public','en','header','menu_about','About'),
 ('public','en','header','menu_help','Help'),
 ('public','en','header','menu_faq','FAQ'),
-('public','en','header','meu_contact','Contact'),
-('public','en','header','meu_test','Test');
+('public','en','header','menu_contact','Contact'),
+('public','en','header','menu_test','Test');
 
 insert into i18n (page,lang,category,id,text) values
 ('public','fr','header','tagline-p','Réseau de bibliothèques, au service des Manitobains'),
@@ -44,6 +44,6 @@ insert into i18n (page,lang,category,id,text) values
 ('public','fr','header','menu_about','À propos de fILL'),
 ('public','fr','header','menu_help','Aide'),
 ('public','fr','header','menu_faq','Questions fréquentes'),
-('public','fr','header','meu_contact','Contact'),
-('public','fr','header','meu_test','Test');
+('public','fr','header','menu_contact','Contact'),
+('public','fr','header','menu_test','Test');
 
