@@ -43,7 +43,7 @@
      a template variable passed in from perl....
   -->
 <script type="text/javascript">
-  var langDataRaw = '<TMPL_VAR name="lang_data">';
+  var langDataRaw = '<TMPL_VAR ESCAPE="JS" name="lang_data">';
   var langData;
 </script>
 
@@ -87,7 +87,8 @@ $('document').ready(function(){
     });
 
     $( "#language" ).selectmenu({
-        change: i18n_select_change
+        change: i18n_select_change,
+        width : 250
     });
 
     if (typeof $.cookie('fILL-language') != 'undefined') {
@@ -183,15 +184,15 @@ $('document').ready(function(){
 
   <div id="header-left">
     <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-    <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
+    <div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
   </div>
 
   <div id="header-right">
     <div id="language-selector">
       <label for="language">Language</label>
       <select name="language" id="language">
-	<option selected="selected">English</option>
-	<option>Français</option>
+	<option lang="en" selected="selected">English</option>
+	<option lang="fr">Français</option>
       </select>
     </div>
     <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>

@@ -221,14 +221,33 @@ sub about_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
-    my $template = $self->load_tmpl('public/about.tmpl');	
-    $template->param( pagetitle => "About fILL",
-		      username => $self->authen->username,
-		      barcode => $self->session->param("fILL-card"),
-		      oid => $oid,
-		      library => $library,
-#		      pid => $pid
-	);
+    my $lang = $self->determine_language_to_use();
+    my $data_perl = $self->get_i18n("public/about.tmpl",$lang);
+
+    my $template;
+
+    if (!defined $data_perl) {
+	$template = $self->load_tmpl('public/language-unavailable.tmpl');
+	$template->param( lang => 'en',
+			  pagetitle => "fILL language unavailable",
+			  username => $self->authen->username,
+			  barcode => $self->session->param("fILL-card"),
+			  oid => $oid,
+			  library => $library
+	    );
+    } else {
+	my $json = encode_json \%{ $data_perl->{"js_lang_data"} };
+	
+	$template = $self->load_tmpl('public/about.tmpl');
+	$template->param( lang => $data_perl->{"tparm"}{"lang"},
+			  pagetitle => $data_perl->{"tparm"}{"pagetitle"},
+			  username => $self->authen->username,
+			  barcode => $self->session->param("fILL-card"),
+			  oid => $oid,
+			  library => $library,
+			  lang_data => $json
+	    );
+    }
     return $template->output;
 }
 
@@ -350,6 +369,16 @@ sub get_i18n {
 	foreach my $line (@$i18n) {
 	    $data_perl{ $line->{category} }{ $line->{id} } = $line->{text};
 	}
+	# Now get common header / footer translations
+	my $common = $self->dbh->selectall_arrayref(
+	    "select category,id,text from i18n where page='public' and lang=? and category='header'",
+	    { Slice => {} },
+	    $lang
+	    );
+	foreach my $line (@$common) {
+	    $data_perl{ "js_lang_data" }{ $line->{id} } = $line->{text};
+	}
+
 	return \%data_perl;
     }
     return undef;

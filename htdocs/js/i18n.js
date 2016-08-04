@@ -64,18 +64,21 @@ function i18n_select_change( event, ui ) {
 
     $.cookie('fILL-language', newLang, { expires:365, path: '/' });
 
-    console.debug('currLang ['+currLang+'], newLang ['+newLang+']');
+    //console.debug('currLang ['+currLang+'], newLang ['+newLang+']');
     if (newLang !== currLang) {
 	var url = window.location.href;
 	if (url.indexOf('language=') >= 0) {
-	    console.debug('Found language in URL');
+	    //console.debug('Found language in URL');
 	    var re = /language=[a-z]{2}/;
 	    url = url.replace(re, 'language='+newLang);
 	} else {
-	    console.debug('No language in URL');
+	    //console.debug('No language in URL');
 	    url+='&language='+newLang
 	}
-	console.debug('New URL: '+url+'\n----------------------');
+	//console.debug('New URL: '+url+'\n----------------------');
+	// As an HTTP redirect:
 	window.location.replace(url);
+	// As a link click:
+	//window.location.href = url;
     }
 }
