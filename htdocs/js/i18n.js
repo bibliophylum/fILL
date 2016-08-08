@@ -31,7 +31,7 @@ function i18n_load() {
 	// my javascript regex-fu is bad... we want to turn something like:
 	//   .../public.cgi?rm=test_form&language=en
 	// into:
-	//   public/test
+	//   public/test.tmpl
 	
 	var pathname = window.location.pathname;
 	page = pathname.substring( pathname.lastIndexOf('/') + 1 );

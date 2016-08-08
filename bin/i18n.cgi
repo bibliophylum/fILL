@@ -6,6 +6,10 @@ use CGI::Session;
 use DBI;
 use JSON;
 
+# Setup for UTF-8 mode.
+binmode STDOUT, ":utf8:";
+$ENV{'PERL_UNICODE'}=1;
+
 my $query = new CGI;
 my $session;
 if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only worry about session if we're a cgi
@@ -30,6 +34,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->{pg_enable_utf8} = -1;  # *every* string coming back from Pg has utf-8 flag set
                               # (db encoding is UTF-8)
+
+$dbh->do("SET client_encoding = 'UTF8'");
 
 my $retval = 0;
 my $i18n = $dbh->selectall_arrayref(
@@ -58,6 +64,6 @@ if (@$i18n) {
 
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { success => $retval,
-						       i18n => \%data_perl
-						     } );
+print "Content-Type:application/json; charset=utf-8\n\n" . to_json( { success => $retval,
+								      i18n => \%data_perl
+								    } );

@@ -66,6 +66,7 @@
         $.removeCookie("fILL-location", { path: '/' });
         $.removeCookie("fILL-barcode", { path: '/' });
         $.removeCookie("fILL-authentication", { path: '/' });
+        $.removeCookie("fILL-language", { path: '/' });
         $("#breadcrumbs").hide();
         $("#extAuth").hide();
         $("#fILLAuth").hide();
@@ -79,6 +80,7 @@
         $.removeCookie("fILL-location", { path: '/' });
         $.removeCookie("fILL-barcode", { path: '/' });
         $.removeCookie("fILL-authentication", { path: '/' });
+        $.removeCookie("fILL-language", { path: '/' });
         window.location.href="?authen_logout=1";
     });
 
@@ -89,7 +91,7 @@
 
     if (typeof $.cookie('fILL-language') != 'undefined') {
         var lang = $.cookie('fILL-language');
-        console.debug('cookie: '+lang+', setting selector and triggering event');
+        //console.debug('cookie: '+lang+', setting selector and triggering event');
         lang = i18n_code2language( lang );
         $("#language").val( lang );
         $("#language").selectmenu('refresh').trigger("selectmenuchange");
