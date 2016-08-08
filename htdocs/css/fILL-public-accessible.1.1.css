@@ -139,7 +139,7 @@ header {
 
 #logout-button {
     float: right;
-	clear: none;
+    clear: none;
     display: inline;
     color: #fff;
 }
@@ -854,6 +854,17 @@ input[type="button"]:hover.action-button-highlighted {
 .disabled-while-searching {
     pointer-events: none;
     opacity: 0.4;
+}
+
+
+.header-control-bar {
+    float: right;
+}
+.header-break {
+    clear: both;
+}
+#language-selector {
+    display: inline;
 }
 
 /*------------------------------------------------------*/

@@ -34,15 +34,8 @@
   <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
   <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-
   <script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
-
-  <script type="text/javascript" src="/js/i18n.js"></script>
-  <!-- To handle multilingual, we'll need a variable to hold the JSON string passed in
-     (which contains the ML strings), and (for convenience) another to hold the
-     parsed JSON data structure.  It has to be here (not in i18n.js) because it is
-     a template variable passed in from perl....
-  -->
+  <script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
 
   <script type="text/javascript">
   $('document').ready(function(){
@@ -86,7 +79,7 @@
 
     $( "#language" ).selectmenu({
         change: i18n_select_change,
-        width : 250
+        width : 150
     });
 
     if (typeof $.cookie('fILL-language') != 'undefined') {
@@ -186,29 +179,42 @@
   </div>
 
   <div id="header-right">
-    <div id="language-selector">
-      <label for="language">Language</label>
-      <select name="language" id="language">
-	<option lang="en" selected="selected">English</option>
-	<option lang="fr">Français</option>
-      </select>
-    </div>
-    <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+
+    <div class="header-control-bar" id="upper-right">
+      <div id="language-selector">
+	<!-- <label for="language">Language</label> -->
+	<select name="language" id="language">
+	  <option lang="en" selected="selected">English</option>
+	  <option lang="fr">Français</option>
+	</select>
+      </div>
+      <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+    </div> <!-- header, upper-right set of controls -->
+    <div class="header-break"></div>
+    
+    <div class="header-control-bar" id="lower-right">
+      <input id="incrFont" class="public-style" type="button" value="+A" />
+      <input id="resetFont" class="public-style" type="button" value="A" />
+      <input id="decrFont" class="public-style" type="button" value="-A" />
+    </div> <!-- header, lower-right set of controls -->
+    <div class="header-break"></div>
+
     <div id="patron-info">
-  <!-- The id="username" div is necessary: the username gets extracted (in 
-       fILL_client-public-x.y.js), and passed to the code that allows the patron 
-       to make an ILL request (we need to know who is making the request :-)
-       It doesn't have to be *here*, but it has to be somewhere....
-    -->
-        <div id="username"><TMPL_VAR name="username"></div>
-        <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
-        <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
-        <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
-	<TMPL_IF name="template">
-	  <div id="template" style="display:none"><TMPL_VAR name="template"></div>
-	</TMPL_IF>
-	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
-    </div>
+      <!-- The id="username" div is necessary: the username gets extracted (in 
+	   fILL_client-public-x.y.js), and passed to the code that allows the patron 
+	   to make an ILL request (we need to know who is making the request :-)
+	   It doesn't have to be *here*, but it has to be somewhere....
+	-->
+      <div id="username"><TMPL_VAR name="username"></div>
+      <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
+      <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
+      <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
+      <TMPL_IF name="template">
+	<div id="template" style="display:none"><TMPL_VAR name="template"></div>
+      </TMPL_IF>
+    </div> <!-- patron-info -->
+    <div class="header-break"></div>
+
   </div>
 
 </header>
