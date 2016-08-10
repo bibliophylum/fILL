@@ -1,0 +1,9 @@
+Just a quick note:  
+
+Using the Perl Selenium::Remote::Driver for automated UI testing, tests got borked when Firefox updated (always went to the FF firstrun page rather than the URL listed in the tests).
+
+Solution:  update Selenium::Remote::Driver (latest update at time of writing, 2016.01.12)
+$ sudo perl -MCPAN -e shell
+cpan[1]> install Selenium::Remote::Driver
+
+Also updated selenium-server-standalone from 2.46.0 to 2.49.0, from selenium web site.

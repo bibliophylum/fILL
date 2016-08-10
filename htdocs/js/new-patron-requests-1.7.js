@@ -339,8 +339,6 @@ function deverify( requestId ) {
 	oid: $("#oid").text(),
     }
 
-    // This doesn't exist yet!  What should happen when a library anti-verifies?
-
     $.getJSON('/cgi-bin/deverify-patron-from-request.cgi', parms,
 	      function(data){
 //		  alert('change request status: '+data+'\n'+parms[0].status);
