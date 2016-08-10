@@ -525,13 +525,10 @@ function renderDetails(data, marker)
     for (var i=0; i<len; i++) {
 
 	// skipping Spruce locations which are closed
-	if ("Spruce Co-operative" === data["location"][i]["@name"]) {
+	if ("Spruce Libraries Cooperative" === data["location"][i]["@name"]) {
 	    if (data["location"][i]["md-locallocation"] != undefined) {
 		var bail=0;
 		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
-//		    if ("MWPL" === data["location"][i]["md-locallocation"][lloc]) {
-//			bail=1;
-//		    }
 		    for (var x = 0; x < window.SpruceClosed.closed.length; x++) {
 			alert(window.SpruceClosed.closed[x].symbol + ' is closed.');
 			if (window.SpruceClosed.closed[x].symbol === data["location"][i]["md-locallocation"][lloc]) {
