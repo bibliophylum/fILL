@@ -125,8 +125,8 @@ sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.
 # dump XML to logfile with -d option: (only for debugging!)
 #sudo /usr/sbin/pazpar2 -d -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
-echo Restarting reporter daemon
-sudo /opt/fILL/services/fILLreporter.pl
+#echo Restarting reporter daemon
+#sudo /opt/fILL/services/fILLreporter.pl
 
 #echo Enabling site...
 #sudo a2ensite fILL.conf
