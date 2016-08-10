@@ -530,7 +530,7 @@ function renderDetails(data, marker)
 		var bail=0;
 		for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
 		    for (var x = 0; x < window.SpruceClosed.closed.length; x++) {
-			alert(window.SpruceClosed.closed[x].symbol + ' is closed.');
+			//alert(window.SpruceClosed.closed[x].symbol + ' is closed.');
 			if (window.SpruceClosed.closed[x].symbol === data["location"][i]["md-locallocation"][lloc]) {
 			    bail=1;
 			}
