@@ -31,7 +31,7 @@ $('document').ready(function(){
                                                 var stoppedAt = stopTheSearch("Timer done");
        	                                        $("#status-header").text("Search complete.");
                                                 $("#countdown-finished").empty();
-                                                $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+                                                $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 20 seconds.</p>");
  	                                        $("#status-note").hide();
                                                 $("#countdown-finished").show();
                                                 $("#countdown-div").hide();
@@ -112,7 +112,7 @@ $('document').ready(function(){
   <div id="search-status"><h1 id="status-header">Searching all libraries</h1>
     <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
     <div id="countdown-div"><h2>Finishing in:</h2>
-      <div id="countdown" data-timer="46" style="width:100%"></div>
+      <div id="countdown" data-timer="21" style="width:100%"></div>
     </div>
     <div id="count-or-percent-div"><h2>...or...</h2></div>
     <div id="percent-div"><h2>% of libraries:</h2>

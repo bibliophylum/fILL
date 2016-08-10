@@ -132,7 +132,7 @@ function my_onstat(data) {
 	    $("#countdown").TimeCircles().stop();
 	    $("#status-header").text("Search complete.");
 	    $("#libraries-finished").empty();
-	    $("#libraries-finished").append("<p>All zServers responded to your search within "+Math.min(45,Math.round( 60 - $("#countdown").TimeCircles().getTime() ))+" seconds.</p>");
+	    $("#libraries-finished").append("<p>All zServers responded to your search within "+Math.min(20,Math.round( 60 - $("#countdown").TimeCircles().getTime() ))+" seconds.</p>");
 	    $("#status-note").hide();
             $("#libraries-finished").show();
             $("#countdown-div").hide();
