@@ -48,23 +48,40 @@ $('document').ready(function(){
 
 //    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, oid: <TMPL_VAR name="oid">},
     $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: $("#pid").text(), oid: $("#oid").text() },
-            function(data){
-                build_table(data);
-
-                oTable_borrowing = $('#datatable_borrowing').dataTable({
-                 "bJQueryUI": true,
-                 "sPaginationType": "full_numbers",
-                 "bInfo": true,
-      	         "bSort": true,
-                 "searching": false,
-	         "sDom": '<"H"r>t<"F"ip>',
-                 "columnDefs": [{
-                   "targets": [0,3],
-                   "visible": false
-                 }]
-               });
-
-           })
+              function(data){
+                  build_table(data);
+		  
+		  if (document.documentElement.lang === 'fr') {
+                      oTable_borrowing = $('#datatable_borrowing').dataTable({
+			  "bJQueryUI": true,
+			  "sPaginationType": "full_numbers",
+			  "bInfo": true,
+      			  "bSort": true,
+			  "searching": false,
+			  "sDom": '<"H"r>t<"F"ip>',
+			  "columnDefs": [{
+			      "targets": [0,3],
+			      "visible": false
+			  }],
+			  "language": {
+			      "url": '/localisation/DataTables/fr_FR.json'
+			  }
+		      });
+		  } else {
+                      oTable_borrowing = $('#datatable_borrowing').dataTable({
+			  "bJQueryUI": true,
+			  "sPaginationType": "full_numbers",
+			  "bInfo": true,
+      			  "bSort": true,
+			  "searching": false,
+			  "sDom": '<"H"r>t<"F"ip>',
+			  "columnDefs": [{
+			      "targets": [0,3],
+			      "visible": false
+			  }]
+		      });
+		  }
+              })
 	.success(function() {
 	    //alert('success');
 	})

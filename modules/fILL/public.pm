@@ -185,8 +185,12 @@ sub current_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
+    my $lang = $self->determine_language_to_use();
+
     my $template = $self->load_tmpl('public/current.tmpl');	
-    $template->param( pagetitle => "Current interlibrary loans",
+    $template->param( lang => $lang,
+		      pagetitle => "Current interlibrary loans",
+		      template => 'public/current.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
