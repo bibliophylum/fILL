@@ -78,35 +78,6 @@ $('document').ready(function(){
             $('#datatable_borrowing').width("100%");
 	});
 
-
-
-//    $('#datatable_borrowing td.control').live( 'click', function () {        // deprecated in jquery 1.7
-//    $(document).on("click", "#datatable_borrowing td.control", function() {  // suggested replacement
-    $("#datatable_borrowing").on("click", "td.control", function() {           // reduce bubble-up
-
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
-
-      if (i === -1) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_borrowing, nTr);
-        anOpenBorrowing.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="conversation"]');
-	if (rOpen.length != 0) {
-          // conversation is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
 });
 
 function build_table( data ) {
@@ -178,45 +149,6 @@ function build_table( data ) {
     
     $("#waitDiv").hide();
     $("#mylistDiv").show();
-}
-
-function fnFormatDetails( oTable, nTr )
-{
-    var oData = oTable.fnGetData( nTr );
-    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "cid": oData.cid },
-	      function(data){
-		  //alert('first success');
-	      })
-	.success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function(jqXHRObject) {
-	    var data = $.parseJSON(jqXHRObject.responseText)
-	    var sOut;
-	    var numDetails = data.request_details.length; 
-	    sOut = '<div class="innerDetails">'+
-		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
-	    for (var i = 0; i < numDetails; i++) {
-		var detRow = '<tr>'+
-		    '<td>'+data.request_details[i].request_id+'</td>'+
-		    '<td>'+data.request_details[i].ts+'</td>'+
-		    '<td>'+data.request_details[i].from+'</td>'+
-		    '<td>'+data.request_details[i].to+'</td>'+
-		    '<td>'+data.request_details[i].status+'</td>'+
-		    '<td>'+data.request_details[i].message+'</td>'+
-		    '</tr>';
-		sOut=sOut+detRow;
-	    }
-	    sOut = sOut+'</table>'+'</div>';
-            var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
-	    $(nDetailsRow).attr('detail','conversation');
-            $('div.innerDetails', nDetailsRow).slideDown();
-
-	});
 }
 
 function make_seenit_handler( declinedID ) {
