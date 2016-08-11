@@ -9,105 +9,6 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-    $("#leftcontent").html('<p>How an interlibrary loan works:</p>');
-    $("#leftcontent").append('<p>You ask your library to request a book from another library (the "lender") by doing a search here.</p>');
-    $("#leftcontent").append('<p>Your library asks the lender if they can borrow it.</p>');
-    $("#leftcontent").append('<p>If the lender says yes, they ship the book to your library.</p>');
-    $("#leftcontent").append('<p>When your library receives it, they will contact you to let you know that you can pick it up.</p>');
-    $("#leftcontent").append('<br/><p>If the lender can\'t send it, your library will try another lender (if the book was found somewhere else)</p>');
-    $("#leftcontent").append('<br/><p>If the lender placed a hold on the book, it is probably out to one of their own patrons.  When they get it back, they will send it to your library.</p>')
-
-    var anOpenBorrowing = [];
-    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
-
-    oTable_borrowing = $('#datatable_borrowing').dataTable({
-       "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-        "searching": false,
-	"sDom": '<"H"r>t<"F"ip>',
-        "aoColumns": [
-            {
-               "mDataProp": null,
-               "sClass": "control center",
-               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
-            },
-            { "mDataProp": "cid", "bVisible": false },
-            { "mDataProp": "title" },
-            { "mDataProp": "author" },
-            { "mDataProp": "status" },
-            { "mDataProp": "details" },
-            { "mDataProp": "ts" },
-            { "mDataProp": "action" }
-        ]
-
-    });
-
-    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, oid: <TMPL_VAR name="oid">},
-            function(data){
-                build_table(data);
-
-                oTable_borrowing = $('#datatable_borrowing').dataTable({
-                 "bJQueryUI": true,
-                 "sPaginationType": "full_numbers",
-                 "bInfo": true,
-      	         "bSort": true,
-                 "searching": false,
-	         "sDom": '<"H"r>t<"F"ip>',
-                 "columnDefs": [{
-                   "targets": [0,3],
-                   "visible": false
-                 }]
-               });
-
-           })
-	.success(function() {
-	    //alert('success');
-	})
-	.error(function(data) {
-	    alert('error');
-	})
-	.complete(function() {
-            //alert('ajax complete');
-            // The following is necessary in order to resize the datatable with the
-            // hidden 'cid' column (which is necessary for the detail drill-down):
-            $('#datatable_borrowing').width("100%");
-	});
-
-
-
-//    $('#datatable_borrowing td.control').live( 'click', function () {        // deprecated in jquery 1.7
-//    $(document).on("click", "#datatable_borrowing td.control", function() {  // suggested replacement
-    $("#datatable_borrowing").on("click", "td.control", function() {           // reduce bubble-up
-
-      var nTr = this.parentNode;
-      var i = $.inArray( nTr, anOpenBorrowing );
-
-      if (i === -1) {
-        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
-	fnFormatDetails(oTable_borrowing, nTr);
-        anOpenBorrowing.push( nTr );
-      }
-      else {
-
-	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
-        var rOpen = $(nTr).next('[detail*="conversation"]');
-	if (rOpen.length != 0) {
-          // conversation is open, user is closing it.
-          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
-          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
-            oTable_borrowing.fnClose( nTr );
-            anOpenBorrowing.splice( i, 1 );
-          } );
-        }
-      }
-    } );
-
-});
-
 </script>
 
 <div id="content">  
@@ -120,5 +21,8 @@ $('document').ready(function(){
     <div id="mylistDiv"></div>
   </div>
 </div><!--div id content-->
+
+<!-- passed in on template load, used in .js -->
+<div id="pid" style="display:none"><TMPL_VAR name="pid"></div> 
 
 <TMPL_INCLUDE NAME="footer.tmpl">

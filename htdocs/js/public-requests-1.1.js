@@ -18,38 +18,96 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-function build_table_orig( data ) {
-    for (var i=0;i<data.active.length;i++) {
-	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
-	delete data.active[i].declined_id;
-	data.active[i].action="";
-	var ai = oTable_borrowing.fnAddData( data.active[i], false );
+$('document').ready(function(){
+    var anOpenBorrowing = [];
+    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
-	if (data.active[i].status == 'Declined') {
-	    var n = oTable_borrowing.fnSettings().aoData[ ai[0] ].nTr;
-	    /* n is now the TR that you added - so it can be modified */
-	    var oData = oTable_borrowing.fnGetData( n );
-	    n.setAttribute('id', 'declined'+declinedID);
-	    
-	    var divActions = document.createElement("div");
-	    divActions.id = 'divActions'+declinedID;
-	    
-	    var b1 = document.createElement("input");
-	    b1.type = "button";
-	    b1.value = "Delete";
-	    b1.onclick = make_seenit_handler( declinedID );
-	    divActions.appendChild(b1);
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "cid", "bVisible": false },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "status" },
+            { "mDataProp": "details" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "action" }
+        ]
 
-	    $(n).find('td:last').append( divActions );
+    });
 
-	} else {
-	}
-    }
-    oTable_borrowing.fnDraw();
+//    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, oid: <TMPL_VAR name="oid">},
+    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: $("#pid").text(), oid: $("#oid").text() },
+            function(data){
+                build_table(data);
 
-    $("#waitDiv").hide();
-    $("#mylistDiv").show();
-}
+                oTable_borrowing = $('#datatable_borrowing').dataTable({
+                 "bJQueryUI": true,
+                 "sPaginationType": "full_numbers",
+                 "bInfo": true,
+      	         "bSort": true,
+                 "searching": false,
+	         "sDom": '<"H"r>t<"F"ip>',
+                 "columnDefs": [{
+                   "targets": [0,3],
+                   "visible": false
+                 }]
+               });
+
+           })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function(data) {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+            // The following is necessary in order to resize the datatable with the
+            // hidden 'cid' column (which is necessary for the detail drill-down):
+            $('#datatable_borrowing').width("100%");
+	});
+
+
+
+//    $('#datatable_borrowing td.control').live( 'click', function () {        // deprecated in jquery 1.7
+//    $(document).on("click", "#datatable_borrowing td.control", function() {  // suggested replacement
+    $("#datatable_borrowing").on("click", "td.control", function() {           // reduce bubble-up
+
+      var nTr = this.parentNode;
+      var i = $.inArray( nTr, anOpenBorrowing );
+
+      if (i === -1) {
+        $('img', this).attr( 'src', sImageUrl+"details_close.png" );
+	fnFormatDetails(oTable_borrowing, nTr);
+        anOpenBorrowing.push( nTr );
+      }
+      else {
+
+	// If we're here, there is either a 'conversation' tr or an 'overrides' tr open
+        var rOpen = $(nTr).next('[detail*="conversation"]');
+	if (rOpen.length != 0) {
+          // conversation is open, user is closing it.
+          $('img', this).attr( 'src', sImageUrl+"details_open.png" );
+          $('div.innerDetails', $(nTr).next()[0]).slideUp( function () {
+            oTable_borrowing.fnClose( nTr );
+            anOpenBorrowing.splice( i, 1 );
+          } );
+        }
+      }
+    } );
+
+});
 
 function build_table( data ) {
     var myTable = document.createElement("table");
