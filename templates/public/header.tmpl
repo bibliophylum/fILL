@@ -41,6 +41,8 @@
   $('document').ready(function(){
 
     i18n_load();
+    i18n_language_changer();
+
     setFontSizeFromCookies();
 
     $('#incrFont').click(function () {
@@ -76,12 +78,12 @@
         $.removeCookie("fILL-language", { path: '/' });
         window.location.href="?authen_logout=1";
     });
-
+<!--
     $( "#language" ).selectmenu({
         change: i18n_select_change,
         width : 150
     });
-
+-->
     if (typeof $.cookie('fILL-language') != 'undefined') {
         var lang = $.cookie('fILL-language');
         //console.debug('cookie: '+lang+', setting selector and triggering event');

@@ -127,3 +127,20 @@ function i18n_select_change( event, ui ) {
     }
 }
 
+//------------------------------------------------------------------------
+function i18n_language_changer() {
+    var options = [];
+
+    // Clear the options first   
+    $("#language option").each(function(index, option) {
+        $(option).remove();
+    });
+    options.push("<option lang='en' value='English'>English</option>");
+    options.push("<option lang='fr' value='Français'>Français</option>");
+
+    $('#language').append(options.join("")).selectmenu({
+        change: i18n_select_change,
+        width : 150
+    });
+    $('#language').selectmenu('refresh');
+}
