@@ -74,11 +74,11 @@ $('document').ready(function(){
 <div id="content">
       <h1>My Account</h1>
       <table id="fill-table" class="fill-table-pub">
-        <tr><th scope="row">Name</th><td><TMPL_VAR name="name"></td></tr>
-        <tr><th scope="row">Username</th><td><TMPL_VAR name="username"></td></tr>
-        <tr><th scope="row">Home library</th><td><TMPL_VAR name="library"></td></tr>
-        <tr><th scope="row">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
-        <tr><th scope="row">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
+        <tr><th scope="row" id="th-name">Name</th><td><TMPL_VAR name="name"></td></tr>
+        <tr><th scope="row" id="th-username">Username</th><td><TMPL_VAR name="username"></td></tr>
+        <tr><th scope="row" id="th-home-library">Home library</th><td><TMPL_VAR name="library"></td></tr>
+        <tr><th scope="row" id="th-account-status">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
+        <tr><th scope="row" id="th-patron-id">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
       </table>
  
     <a id="showChangePassButton" href="#" class="button-left public-style" role="button">Change password</a>
@@ -105,5 +105,8 @@ $('document').ready(function(){
       </form>
     </div><!-- divChangePass -->
 </div><!-- content -->
+
+<!-- just to test i18n, temporarily... corresponding entry in PostgreSQL -->
+<div id="DC-testing" style="display:none"></div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

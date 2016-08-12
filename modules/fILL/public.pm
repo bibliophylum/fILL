@@ -159,11 +159,15 @@ sub myaccount_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
+    my $lang = $self->determine_language_to_use();
+
     my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
     my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $oid, $pid );
 
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
-    $template->param( pagetitle => "fILL patron account",
+    $template->param( lang => $lang,
+		      pagetitle => "fILL patron account",
+		      template => 'public/myaccount.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -235,8 +239,12 @@ sub help_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
+    my $lang = $self->determine_language_to_use();
+
     my $template = $self->load_tmpl('public/help.tmpl');	
-    $template->param( pagetitle => "Help fILL",
+    $template->param( lang => $lang,
+		      pagetitle => "Help fILL",
+		      template => 'public/help.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
