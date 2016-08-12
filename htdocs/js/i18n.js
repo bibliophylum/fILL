@@ -73,7 +73,8 @@ function i18n_load() {
 	.error(function(data) {
 	    alert('Error loading ['+parms.lang+'] language data for ['+parms.page+'] template.');
         })
-	.complete(function() { 
+	.complete(function() {
+	    i18n_language_changer(); // make sure the language-changer uses correct langs
         });
 }
 
@@ -142,5 +143,8 @@ function i18n_language_changer() {
         change: i18n_select_change,
         width : 150
     });
+    var language = i18n_code2language( document.documentElement.lang );
+    $("#language").val( language );
+    
     $('#language').selectmenu('refresh');
 }
