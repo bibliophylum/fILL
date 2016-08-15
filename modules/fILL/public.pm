@@ -55,46 +55,6 @@ sub setup {
 
 #--------------------------------------------------------------------------------
 #
-# A requested language (from the url, language=??) overrides a preferred-
-# language cookie (and changes to cookie to match).
-# Default to English if no requested/preferred language.
-#
-sub determine_language_to_use {
-    my $self = shift;
-    my $q = $self->query;
-
-    my $requestedLanguage;
-    my $parmLanguage = $q->param("language");
-    if (($parmLanguage) && ($parmLanguage =~ /^(en|fr)$/)) {
-	$requestedLanguage = $parmLanguage;
-    }
-    
-    my $preferredLanguage;
-    my $cookieLanguage = $q->cookie('fILL-language');
-    if (($cookieLanguage) && ($cookieLanguage =~ /^(en|fr)$/)) {
-	$preferredLanguage = $cookieLanguage;
-    }
-
-    my $lang = $requestedLanguage || $preferredLanguage || "en";
-
-    # set cookie client-side
-    if ($requestedLanguage) {
-	$self->header_props(
-	    -cookie  =>  $q->cookie(
-		 -expires =>  '+1y',
-		 -name    =>  'fILL-language',
-		 -path    =>  '/',
-		 -value   =>  $lang
-	    ),
-	    );
-    }
-    
-    return $lang;
-}
-
-
-#--------------------------------------------------------------------------------
-#
 #
 sub test_process {
     my $self = shift;

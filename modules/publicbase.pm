@@ -524,12 +524,13 @@ sub login_foo {
 	};
     }
 
+    my $lang = $self->determine_language_to_use();
 
     my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
     $template->param( 
-	lang => 'en',
+	lang => $lang,
 	pagetitle => 'fILL public login',
 	template => 'public/login.tmpl',
 	login_text => $loginText_href->{"login_text"},
@@ -578,6 +579,45 @@ sub print_parsed_response {
 	    $self->log->debug( "[" . $href->{$key} . "]\n" ); 
 	}
     }
+}
+
+#--------------------------------------------------------------------------------
+#
+# A requested language (from the url, language=??) overrides a preferred-
+# language cookie (and changes to cookie to match).
+# Default to English if no requested/preferred language.
+#
+sub determine_language_to_use {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $requestedLanguage;
+    my $parmLanguage = $q->param("language");
+    if (($parmLanguage) && ($parmLanguage =~ /^(en|fr)$/)) {
+	$requestedLanguage = $parmLanguage;
+    }
+    
+    my $preferredLanguage;
+    my $cookieLanguage = $q->cookie('fILL-language');
+    if (($cookieLanguage) && ($cookieLanguage =~ /^(en|fr)$/)) {
+	$preferredLanguage = $cookieLanguage;
+    }
+
+    my $lang = $requestedLanguage || $preferredLanguage || "en";
+
+    # set cookie client-side
+    if ($requestedLanguage) {
+	$self->header_props(
+	    -cookie  =>  $q->cookie(
+		 -expires =>  '+1y',
+		 -name    =>  'fILL-language',
+		 -path    =>  '/',
+		 -value   =>  $lang
+	    ),
+	    );
+    }
+    
+    return $lang;
 }
 
 
