@@ -359,31 +359,16 @@ sub error {
 #
 #
 sub update_login_date {
-    # The application object
     my $self = shift;
-
-    #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
     my ($pid, $oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
-    #$self->log->debug("update login date, pid [$pid], oid [$oid], library [$library], is_enabled [$is_enabled]\n");
-
     my $rows_affected;
-#    if ($self->session->param('fILL-card')) {
-#	# this is an externally-authenticated patron
-#	#$self->log->debug("update login date for externally-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
-#	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
-#					undef,
-#					$oid,
-#					$self->session->param('fILL-card'),
-#	    );
-#    } else {
-	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE pid=?",
-					undef,
-					$pid,
-	    );
-#    }
-    #$self->log->debug("finished update login date, rows affected: $rows_affected\n");
+    $rows_affected = $self->dbh->do(
+	"UPDATE patrons SET last_login=NOW() WHERE pid=?",
+	undef,
+	$pid,
+	);
 }
 
 #--------------------------------------------------------------------------------
@@ -544,7 +529,9 @@ sub login_foo {
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
     $template->param( 
+	lang => 'en',
 	pagetitle => 'fILL public login',
+	template => 'public/login.tmpl',
 	login_text => $loginText_href->{"login_text"},
 	barcode_label_text => $loginText_href->{"barcode_label_text"},
 	pin_label_text => $loginText_href->{"pin_label_text"},
@@ -552,23 +539,6 @@ sub login_foo {
 	);
     return $template->output;
 }
-
-#--------------------------------------------------------------------------------
-#
-#
-#sub login_process {
-#    my $self = shift;
-#    my $template = $self->load_tmpl(	    
-#	                      'login.tmpl',
-#			      cache => 0,
-#			     );	
-#    $template->param( pagetitle => 'Log in to fILL',
-#	);
-#
-#    # Parse the template
-#    my $html_output = $template->output;
-#    return $html_output;
-#}
 
 #---------------------------------------------------------------
 # for debugging...

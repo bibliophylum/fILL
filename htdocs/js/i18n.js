@@ -49,21 +49,25 @@ function i18n_load() {
 	page = page+'/'+rm+'.tmpl';
     }
 
+    // the public-header-functions attempt to refresh the #language selectmenu
+    // may happen *before* the .getJSON for i18n.cgi completes, so we need to
+    // pre-setup the element as a jQuery UI selectmenu:
+    $("#language").selectmenu({
+        change: i18n_select_change,
+        width : 150
+    });
+    
     var language = document.documentElement.lang;
     var parms = {
 	"page": page,
 	"lang": language
     }
-    //alert('Loading language ['+language+'] for ['+page+']');
+
     $.getJSON('/cgi-bin/i18n.cgi', parms,
               function(data){
-		  //alert('Language data loading');
-		  // automagically parsed from json; don't need to do this:
-		  //var languageData = jQuery.parseJSON( data.i18n.js_lang_data );
 		  var languageData = data.i18n.js_lang_data;
 		  for (var elementID in languageData) {
 		      if (languageData.hasOwnProperty(elementID)) {
-			  //alert(elementID+':'+languageData[elementID]);
 			  $("#"+elementID).text( languageData[elementID] );
 		      }
 		  }

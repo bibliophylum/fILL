@@ -133,13 +133,17 @@ sub search_process {
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
+    my $lang = $self->determine_language_to_use();
+
     my $template;
     if ($is_enabled) {
 	$template = $self->load_tmpl('public/search.tmpl');
     } else {
 	$template = $self->load_tmpl('public/not-enabled.tmpl');
     }
-    $template->param( pagetitle => "fILL Public Search",
+    $template->param( lang => $lang,
+		      pagetitle => "fILL Public Search",
+		      template => 'public/search.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
