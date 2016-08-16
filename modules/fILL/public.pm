@@ -43,7 +43,6 @@ sub setup {
     $self->run_modes(
 	'test_form'                => 'test_process',
 	'search_form'              => 'search_process',
-	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
@@ -286,17 +285,6 @@ sub contact_process {
 		      logo_credit => $logoCredit
 #		      pid => $pid
 	);
-    return $template->output;
-}
-
-
-#--------------------------------------------------------------------------------
-#
-# DEPRECATED: Patron self-registration
-#
-sub registration_process {
-    my $self = shift;
-    my $template = $self->load_tmpl('public/registration.tmpl');
     return $template->output;
 }
 
