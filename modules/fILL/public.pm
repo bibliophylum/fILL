@@ -89,10 +89,9 @@ sub search_process {
     # pull the form's parameter named "query", so we can stuff it into the search template
     # (so the search page can automatically do the search)
     my $query = $q->param("query") || '';
-    $self->log->debug( "search_process parm:\n" . Dumper($query) );
+    #$self->log->debug( "search_process parm:\n" . Dumper($query) );
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
-
     my $lang = $self->determine_language_to_use();
 
     my $template;
@@ -122,7 +121,6 @@ sub myaccount_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
-
     my $lang = $self->determine_language_to_use();
 
     my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
@@ -152,7 +150,6 @@ sub current_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
-
     my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/current.tmpl');	
@@ -202,7 +199,6 @@ sub help_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
-
     my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/help.tmpl');	
@@ -226,9 +222,12 @@ sub faq_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/faq.tmpl');	
-    $template->param( pagetitle => "FAQ fILL",
+    $template->param( lang => $lang,
+		      pagetitle => "FAQ fILL",
+		      template => 'public/faq.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -247,6 +246,7 @@ sub contact_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $hr_lib = $self->dbh->selectrow_hashref(
 	"select org_name, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, symbol from org where oid=?",
@@ -265,7 +265,9 @@ sub contact_process {
     $self->log->debug( "contact logo:\n" . Dumper($hr_lib) . "\npath: $logoPath\nalt: $logoAltText\ncredit: $logoCredit\n" );
     
     my $template = $self->load_tmpl('public/contact.tmpl');	
-    $template->param( pagetitle => "Contact",
+    $template->param( lang => $lang,
+		      pagetitle => "Contact",
+		      template => 'public/contact.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -290,7 +292,7 @@ sub contact_process {
 
 #--------------------------------------------------------------------------------
 #
-# Patron self-registration
+# DEPRECATED: Patron self-registration
 #
 sub registration_process {
     my $self = shift;
