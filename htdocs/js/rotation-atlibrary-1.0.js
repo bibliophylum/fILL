@@ -18,6 +18,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+$('document').ready(function(){
+
+    set_secondary_tab("menu_rotations_current");
+    
+    $.getJSON('/cgi-bin/get-rotations-current.cgi', {oid: $("#oid").text()},
+	      function(data){
+		  build_table(data); 
+		  
+		  $('#at-my-library').DataTable({
+		      "jQueryUI": true,
+		      "pagingType": "full_numbers",
+		      "info": true,
+		      "ordering": true,
+		      "dom": '<"H"Bfr>t<"F"ip>',
+		      buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+		      "columnDefs": [ {
+			  "targets": [0],
+			  "visible": false
+		      } ]
+		  });
+	      });
+});    
+
+
+function set_primary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+}
+
+function set_secondary_tab(tab_id) {
+    document.getElementById(tab_id).className='current_tab';
+}
+
 function build_table( data ) {
     var myTable = document.createElement("table");
     myTable.setAttribute("id","at-my-library");
