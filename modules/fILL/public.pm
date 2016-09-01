@@ -94,14 +94,17 @@ sub search_process {
     my $lang = $self->determine_language_to_use();
 
     my $template;
+    my $templateFile;
     if ($is_enabled) {
-	$template = $self->load_tmpl('public/search.tmpl');
+	$templateFile = 'public/search.tmpl';
     } else {
-	$template = $self->load_tmpl('public/not-enabled.tmpl');
+	$templateFile = 'public/not-enabled.tmpl';
+	#$templateFile = 'public/login.tmpl';
     }
+    $template = $self->load_tmpl( $templateFile );
     $template->param( lang => $lang,
 		      pagetitle => "fILL Public Search",
-		      template => 'public/search.tmpl',
+		      template => $templateFile,
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,

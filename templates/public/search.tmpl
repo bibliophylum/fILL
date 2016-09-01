@@ -35,11 +35,11 @@
 
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
-<script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
 <script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
 
 <script type="text/javascript" src="/js/pz2.js"></script>
-<script type="text/javascript" src="/js/fILL_client-public-1.12.js"></script>
+<script type="text/javascript" src="/js/fILL_client-public-1.13.js"></script>
 <!--
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
 -->
@@ -86,6 +86,7 @@ $('document').ready(function(){
         $("#search-submit-button").click();
     });
 */
+
     $("#countdown").TimeCircles( { start: false,
                                    time: { Days: { show: false },
                                            Hours: { show: false },
@@ -306,10 +307,19 @@ $('document').ready(function(){
       <div id="stat"></div>
     </div>
     <div id="countdown-finished" style="display:none"></div>
-    <div id="libraries-finished" style="display:none"></div>
+    <div id="libraries-finished" style="display:none"><p><span id="all-libraries-finished"></span> <span id="finish-time"></span> <span id="time-units"></span></div>
   </div>
   <div id="leftcontent"></div>
-  <div id="termlist"></div>
+  <div id="termlist">
+    <br><hr/>
+    <p id="refinery">Refine search by:</p>
+    <hr/>
+    <p id="subject-heading" class="termtitle"></p>
+    <div id="subject-list"></div>
+    <hr/>
+    <p id="author-heading" class="termtitle"></p>
+    <div id="author-list"></div>
+  </div>
 </div>
 
 </div><!--div id content-->

@@ -5,28 +5,28 @@
 </script>
 
 <div id="content">
-	<div id="main-info-left" class="tone-box" role="main">
-	<h1>Contact</h1>
-	    <p>If you require additional help requesting an item through fILL please visit or contact your local public library.</p>
-			<h2><TMPL_VAR name="library"></h2>
-			<p>Phone: <TMPL_VAR name="phone"></p>
-			<p>Email: <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
-			<TMPL_IF name="website">
-			  <p>Open <span style="text-decoration: underline;"><a href='<TMPL_VAR name="website">' target="_blank"><TMPL_VAR name="library"> web site</a></span> in a new page.</p>
-			</TMPL_IF>
-			<p>Address:<br/>
-			<TMPL_VAR name="mailing_address_line1"><br/>
-			<TMPL_VAR name="mailing_address_line2"><br/>
-<!--			<TMPL_VAR name="mailing_address_line3"><br/> -->
-			<TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code">
-		</p>
-	</div>
-
-	<div id="aside-img-right" role="complementary">
-	  <img src="<TMPL_VAR name='logo_path'>" alt="<TMPL_VAR name='logo_alt_text'>" />
-	  <p class="note">Image care of <TMPL_VAR name="logo_credit"></p>
-	</div>
-
+  <div id="main-info-left" class="tone-box" role="main">
+    <h1 id="heading1">Contact</h1>
+    <p id="help-message">If you require additional help requesting an item through fILL please visit or contact your local public library.</p>
+    <h2><TMPL_VAR name="library"></h2>
+    <p><span id="phone">Phone:</span> <TMPL_VAR name="phone"></p>
+    <p><span id="email">Email:</span> <a href='mailto:<TMPL_VAR name="email_address">'><TMPL_VAR name="email_address"></a></p>
+    <TMPL_IF name="website">
+      <p><span id="open">Open the</span> <span style="text-decoration: underline;"><a href='<TMPL_VAR name="website">' target="_blank"><TMPL_VAR name="library"><span id="web-site"> web site</span> <span id="new-page">in a new page.</span></a></span></p>
+    </TMPL_IF>
+    <p><span id="address">Address:</span><br/>
+      <TMPL_VAR name="mailing_address_line1"><br/>
+      <TMPL_VAR name="mailing_address_line2"><br/>
+      <!-- <TMPL_VAR name="mailing_address_line3"><br/> -->
+      <TMPL_VAR name="city">, <TMPL_VAR name="province"> <TMPL_VAR name="post_code">
+    </p>
+  </div>
+  
+  <div id="aside-img-right" role="complementary">
+    <img src="<TMPL_VAR name='logo_path'>" alt="<TMPL_VAR name='logo_alt_text'>" />
+    <p class="note">Image care of <TMPL_VAR name="logo_credit"></p>
+  </div>
+  
 </div><!--div id content-->
 
 <TMPL_INCLUDE NAME="footer.tmpl">

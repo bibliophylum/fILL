@@ -8,102 +8,18 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-function toggleChangePassDiv() {
-  $("#divChangePass").toggle();
-  $("#showChangePassButton").toggle();
-  return false;
-}
-
-function change_password() {
-  var $myForm=$("#changePassword_form");
-  $.getJSON('/cgi-bin/change-patron-password.cgi', $myForm.serialize(),
-            function(data){
-//                alert('...');
-            })
-      .success(function( data ) {
-          if (data.success) {
-              alert('Your password has been changed.');
-          } else {
-              alert('Your password could not be changed.\nPlease contact your library.');
-          }
-          $("#pass").val("");
-          $("#newpass").val("");
-          $("#newpass2").val("");
-          toggleChangePassDiv();
-      })
-      .error(function( data ) {
-          alert('Error changing password.');
-      })
-      .complete(function() {
-      });
-}
-
-$('document').ready(function(){
-
-    if ($.cookie("fILL-authentication") === "external") {
-      $("#showChangePassButton").hide();
-    }
-
-    $("#changePassword_form").submit(function( event ) {
-      if ( $("#newpass").val() === $("#newpass2").val() ) {
-          change_password();
-      } else {
-          alert("Retyped password doesn't match original new password.");
-          $("#newpass").val("");
-          $("#newpass2").val("");
-          $("#newpass").focus();
-      }
-      event.preventDefault();
-    });
-
-    $("#showChangePassButton").click(function( event ) {
-      toggleChangePassDiv();
-    });
-
-    $("#cancel").click(function( event ) {
-      $("#divChangePass").toggle();
-      $("#showChangePassButton").toggle();
-      event.preventDefault();
-    });  
-
-});
-
 </script>
 
 <div id="clear"></div>
 <div id="content">
-      <h1>My Account</h1>
+      <h1 id="heading1">My Account</h1>
       <table id="fill-table" class="fill-table-pub">
         <tr><th scope="row" id="th-name">Name</th><td><TMPL_VAR name="name"></td></tr>
         <tr><th scope="row" id="th-username">Username</th><td><TMPL_VAR name="username"></td></tr>
         <tr><th scope="row" id="th-home-library">Home library</th><td><TMPL_VAR name="library"></td></tr>
         <tr><th scope="row" id="th-account-status">Account status</th><td><TMPL_VAR name="is_enabled"></td></tr>
-        <tr><th scope="row" id="th-patron-id">Patron ID number</th><td id="pid"><TMPL_VAR name="pid"></td></tr>
+        <tr><th scope="row" id="th-patron-id">Patron ID number</th><td><TMPL_VAR name="pid"></td></tr>
       </table>
- 
-    <a id="showChangePassButton" href="#" class="button-left public-style" role="button">Change password</a>
-
-    <div id="divChangePass">
-      <form id="changePassword_form" name="changePassword" action="#" method="post">
-        <table>
-  	<tr>
-  	  <td>Current password:</td>
-  	  <td><input type="password" name="pass" id="pass"></td>
-  	</tr>
-  	<tr>
-  	  <td>New password:</td>
-  	  <td><input type="password" name="newpass" id="newpass"></td>
-  	</tr>
-  	<tr>
-  	  <td>Re-type new password:</td>
-  	  <td><input type="password" name="newpass2" id="newpass2"></td>
-  	</tr>
-        </table>
-        <input type="hidden" name="pid" value=<TMPL_VAR name="pid">>
-        <input id="changePassword" type="submit" value="Change" class="public-style">
-        <input id="cancel" type="button" value="Cancel" class="public-style">
-      </form>
-    </div><!-- divChangePass -->
 </div><!-- content -->
 
 <!-- just to test i18n, temporarily... corresponding entry in PostgreSQL -->

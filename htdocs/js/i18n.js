@@ -68,8 +68,18 @@ function i18n_load() {
 		  var languageData = data.i18n.js_lang_data;
 		  for (var elementID in languageData) {
 		      if (languageData.hasOwnProperty(elementID)) {
-			  $("#"+elementID).text( languageData[elementID] );
+			  if (languageData[elementID].hasOwnProperty('constant')) {
+			      $("#"+elementID).text( languageData[elementID].constant );
+			  } else if (languageData[elementID].hasOwnProperty('initial')) {
+			      $("#"+elementID).text( languageData[elementID].initial );
+			  }
 		      }
+		  }
+		  // some pages need ongoing access to the translation data.  They need
+		  // to declare the global variable i18n_data, and set it's value to
+		  // something (e.g. 'placeholder').
+		  if (typeof i18n_data !== 'undefined') {
+		      i18n_data = languageData;
 		  }
               })
 	.success(function(data) {

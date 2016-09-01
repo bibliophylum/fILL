@@ -42,6 +42,10 @@ var useELMcover = 0;  // Manitoba-specific
 var isSearching = 0;
 var completionStatus = {};
 
+// i18n.js will check if this is defined, and if so, will save the translation results
+// here so we can access them dynamcially:
+var i18n_data = 'placeholder';
+
 //
 // pz2.js event handlers:
 //
@@ -134,16 +138,14 @@ function my_onstat(data) {
 	    stat.innerHTML += '</div></div><br />';
 	}else{
 	    stat.innerHTML = '';
-	    //debug("Search Complete");
 	    isSearching = 0;
 	    $(".disabled-while-searching").removeClass("disabled-while-searching");
-	    $("#result-instructions").text("Click on a title for more information.");
+	    $("#result-instructions").text( i18n_data['result-instructions']['after search'] );  //"Click on a title for more information.";
 	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
 
 	    $("#countdown").TimeCircles().stop();
-	    $("#status-header").text("Search complete.");
-	    $("#libraries-finished").empty();
-	    $("#libraries-finished").append("<p>All libraries responded to your search within "+Math.min(45,Math.round( 60 - $("#countdown").TimeCircles().getTime() ))+" seconds.</p>");
+	    $("#status-header").text( i18n_data['status-header']['search finished'] ); // "Search complete."
+	    $("#finish-time").text(Math.min(45,Math.round( 60 - $("#countdown").TimeCircles().getTime() )));
 	    $("#status-note").hide();
             $("#libraries-finished").show();
             $("#countdown-div").hide();
@@ -171,6 +173,27 @@ function my_onstat(data) {
 
 
 function my_onterm(data) {
+    var subjectTerms = [];
+    for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
+        subjectTerms.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
+              + data.subject[i].freq + ')</span><br/>');
+    }
+     
+    var authorTerms = [];
+    for (var i = 0; i < data.author.length && i < AuthorMax; i++ ) {
+        authorTerms.push('<a href="#" onclick="limitQuery(\'au\', this.firstChild.nodeValue);return false;">' 
+                            + data.author[i].name 
+                            + ' </a><span> (' 
+                            + data.author[i].freq 
+                            + ')</span><br/>');
+    }
+    var subjlist = document.getElementById("subject-list");
+    replaceHtml(subjlist, subjectTerms.join(''));
+    var authlist = document.getElementById("author-list");
+    replaceHtml(authlist, authorTerms.join(''));
+}
+/* OLD VERSION:
+function my_onterm(data) {
     var termlists = [];
     termlists.push('<br><hr/><b>Refine search by:</b>');
     termlists.push('<hr/><div class="termtitle">Subjects</div>');
@@ -187,18 +210,10 @@ function my_onterm(data) {
                             + data.author[i].freq 
                             + ')</span><br/>');
     }
-    /*
-    termlists.push('<hr/><div class="termtitle">.::Sources</div>');
-    for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
-        termlists.push('<a href="#" target_id='+data.xtargets[i].id
-            + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
-        + ' </a><span> (' + data.xtargets[i].freq + ')</span><br/>');
-    }
-    */
     var termlist = document.getElementById("termlist");
     replaceHtml(termlist, termlists.join(''));
 }
-
+*/
 function my_onrecord(data) {
     // FIXME: record is async!!
     clearTimeout(my_paz.recordTimer);
@@ -270,7 +285,7 @@ function onFormSubmitEventHandler()
 {
     resetPage();
     loadSelect();
-    $("#result-instructions").text("You will be able to click on the titles when the search is done.");
+    $("#result-instructions").text( i18n_data['result-instructions']['during search'] ); // "You will be able to click on the titles when the search is done."
     $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
     triggerSearch();
     submitted = true;
@@ -309,7 +324,7 @@ function triggerSearch ()
     $("#countdown-div").show();
     $("#count-or-percent-div").show();
     $("#percent-div").show();
-    $("#status-header").text("Searching all libraries");
+    $("#status-header").text( i18n_data[ 'status-header' ][ 'constant' ]); // "Searching all libraries
     $("#status-note").show();
     
     var query = document.search.query.value;
