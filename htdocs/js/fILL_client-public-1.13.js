@@ -59,9 +59,10 @@ function my_onshow(data) {
     // move it out
     var pager = document.getElementById("pager");
     pager.innerHTML = "";
-    pager.innerHTML +='<hr/><div style="float: right">Displaying: ' 
-                    + (data.start + 1) + ' to ' + (data.start + data.num) +
-                     ' of ' + data.merged + '</div>';
+    pager.innerHTML +='<hr/><div style="float: right">'
+	+i18n_data['displaying']['constant'] + ' ' + (data.start + 1) + ' '
+	+i18n_data['displaying-to']['constant'] + ' ' + (data.start + data.num)	+ ' '
+	+i18n_data['displaying-of']['constant'] + ' ' + data.merged+'</div>';
     drawPager(pager);
 
     var $newResults = $('<div/>', { 'id': "results" });
@@ -145,7 +146,7 @@ function my_onstat(data) {
 
 	    $("#countdown").TimeCircles().stop();
 	    $("#status-header").text( i18n_data['status-header']['search finished'] ); // "Search complete."
-	    $("#finish-time").text(Math.min(45,Math.round( 60 - $("#countdown").TimeCircles().getTime() )));
+	    $("#finish-time").text(Math.min(30,Math.round( 60 - $("#countdown").TimeCircles().getTime() )));
 	    $("#status-note").hide();
             $("#libraries-finished").show();
             $("#countdown-div").hide();
@@ -319,6 +320,8 @@ function resetPage()
 function triggerSearch ()
 {
     isSearching = 1;
+    $("#statusbox").show();
+    $("#termlist").show();
     $("#countdown-finished").hide();
     $("#libraries-finished").hide();
     $("#countdown-div").show();
@@ -389,10 +392,10 @@ function drawPager (pagerDiv)
         ? firstClkbl + 2*onsides
         : pages;
 
-    var prev = '<span id="prev">&#60;&#60; Prev</span><b> | </b>';
+    var prev = '<span id="prev">&#60;&#60; '+i18n_data['pager-prev']['constant']+'</span><b> | </b>';
     if (curPage > 1)
         var prev = '<a href="#" id="prev" onclick="pagerPrev();">'
-        +'&#60;&#60; Prev</a><b> | </b>';
+        +'&#60;&#60; '+i18n_data['pager-prev']['constant']+'</a><b> | </b>';
 
     var middle = '';
     for(var i = firstClkbl; i <= lastClkbl; i++) {
@@ -404,10 +407,10 @@ function drawPager (pagerDiv)
             + numLabel + ' </a>';
     }
     
-    var next = '<b> | </b><span id="next">Next &#62;&#62;</span>';
+    var next = '<b> | </b><span id="next">'+i18n_data['pager-next']['constant']+' &#62;&#62;</span>';
     if (pages - curPage > 0)
     var next = '<b> | </b><a href="#" id="next" onclick="pagerNext()">'
-        +'Next &#62;&#62;</a>';
+        +i18n_data['pager-next']['constant']+' &#62;&#62;</a>';
 
     predots = '';
     if (firstClkbl > 1)

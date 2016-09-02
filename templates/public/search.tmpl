@@ -136,7 +136,7 @@ $('document').ready(function(){
 
     <div id="header-left">
       <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"/></a></div>
-      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
+      <div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
     </div>
     
     <div id="header-right">
@@ -297,10 +297,11 @@ $('document').ready(function(){
 
 <div id="aside" class="tone-box" role="complementary">
   <div id="image"></div>
-  <div><h1 id="status-header">Searching all libraries</h1>
+  <div id="statusbox" style="display: none">
+    <h1 id="status-header">Searching all libraries</h1>
     <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
     <div id="countdown-div"><h2 id="progress-header">Finishing in:</h2>
-      <div id="countdown" data-timer="45" style="width:100%"></div>
+      <div id="countdown" data-timer="30" style="width:100%"></div>
     </div>
     <div id="count-or-percent-div"><h2 id="alternative-marker">...or...</h2></div>
     <div id="percent-div"><h2 id="percentage-header">% of libraries:</h2>
@@ -310,7 +311,7 @@ $('document').ready(function(){
     <div id="libraries-finished" style="display:none"><p><span id="all-libraries-finished"></span> <span id="finish-time"></span> <span id="time-units"></span></div>
   </div>
   <div id="leftcontent"></div>
-  <div id="termlist">
+  <div id="termlist" style="display: none">
     <br><hr/>
     <p id="refinery">Refine search by:</p>
     <hr/>

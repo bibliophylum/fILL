@@ -16,7 +16,19 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','en','js_lang_data','time-units',null,'seconds.'),
 ('public/search.tmpl','en','js_lang_data','refinery',null,'Refine search by:'),
 ('public/search.tmpl','en','js_lang_data','subject-heading',null,'Subjects'),
-('public/search.tmpl','en','js_lang_data','author-heading',null,'Authors');
+('public/search.tmpl','en','js_lang_data','author-heading',null,'Authors'),
+('public/search.tmpl','en','js_lang_data','sort-label',null,'Sort by'),
+('public/search.tmpl','en','js_lang_data','sort-relevance',null,'relevance'),
+('public/search.tmpl','en','js_lang_data','sort-title',null,'title'),
+('public/search.tmpl','en','js_lang_data','sort-newest',null,'newest'),
+('public/search.tmpl','en','js_lang_data','sort-oldest',null,'oldest'),
+('public/search.tmpl','en','js_lang_data','show-label',null,'and show'),
+('public/search.tmpl','en','js_lang_data','per-page',null,'per page.'),
+('public/search.tmpl','en','js_lang_data','displaying',null,'Displaying'),
+('public/search.tmpl','en','js_lang_data','displaying-to',null,'to'),
+('public/search.tmpl','en','js_lang_data','displaying-of',null,'of'),
+('public/search.tmpl','en','js_lang_data','pager-prev',null,'Prev'),
+('public/search.tmpl','en','js_lang_data','pager-next',null,'Next');
 
 
 insert into i18n (page,lang,category,id,stage,text) values
@@ -35,5 +47,17 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','fr','js_lang_data','time-units',null,'secondes.'),
 ('public/search.tmpl','fr','js_lang_data','refinery',null,'Préciser la recherche par'),
 ('public/search.tmpl','fr','js_lang_data','subject-heading',null,'sujets'),
-('public/search.tmpl','fr','js_lang_data','author-heading',null,'auteurs');
+('public/search.tmpl','fr','js_lang_data','author-heading',null,'auteurs'),
+('public/search.tmpl','fr','js_lang_data','sort-label',null,'Trier par'),
+('public/search.tmpl','fr','js_lang_data','sort-relevance',null,'pertinence'),
+('public/search.tmpl','fr','js_lang_data','sort-title',null,'titre'),
+('public/search.tmpl','fr','js_lang_data','sort-newest',null,'plus récent'),
+('public/search.tmpl','fr','js_lang_data','sort-oldest',null,'plus vieux'),
+('public/search.tmpl','fr','js_lang_data','show-label',null,'et montrer'),
+('public/search.tmpl','fr','js_lang_data','per-page',null,'articles par page.'),
+('public/search.tmpl','fr','js_lang_data','displaying',null,'Affichage de'),
+('public/search.tmpl','fr','js_lang_data','displaying-to',null,'à'),
+('public/search.tmpl','fr','js_lang_data','displaying-of',null,'de'),
+('public/search.tmpl','fr','js_lang_data','pager-prev',null,'Préc.'),
+('public/search.tmpl','fr','js_lang_data','pager-next',null,'Suivant');
 
