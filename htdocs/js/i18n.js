@@ -81,8 +81,17 @@ function i18n_load() {
 		  if (typeof i18n_data !== 'undefined') {
 		      i18n_data = languageData;
 		  }
-              })
+
+		  // similarly, if a page contains DataTable()s which have translations
+		  // for column headings.  They need to declare the global variable
+		  // i18n_tables, and set it's value to something (e.g. 'placeholder').
+		  if (typeof i18n_tables !== 'undefined') {
+		      i18n_tables = data.i18n.tabledef;
+		  }
+
+	      })
 	.success(function(data) {
+	    //i18n_table_column_headings();
         })
 	.error(function(data) {
 	    alert('Error loading ['+parms.lang+'] language data for ['+parms.page+'] template.');
@@ -100,6 +109,53 @@ function i18n_load() {
 // using the square bracket notation.
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects#Objects_and_properties
 
+
+//------------------------------------------------------------------------
+function i18n_table_column_headings(tableId) {
+    // pages with DataTables must have i18n_data defined; it will get the translation
+    // data assigned to it so that it can be accessed here
+
+    if (typeof i18n_tables !== 'undefined') {                  // do we want DataTables?
+	var $tbl = $(tableId);
+	if ( $.fn.DataTable.isDataTable( $tbl ) ) {            // is it a DataTable()?
+	    var keyPrefix = $tbl.attr('id')+'-col-';           // only want to look at
+	    for (var key in i18n_tables) {                     //   this table's i18n
+		if (i18n_tables.hasOwnProperty(key)) {
+		    if (key.indexOf(keyPrefix) !== -1) {
+			var c = parseInt( key.slice(keyPrefix.length) );   // get col#
+			$($tbl.DataTable().column(c).header()).text( i18n_tables[key] );
+		    }
+		}
+	    }
+	}
+    }
+}
+
+//------------------------------------------------------------------------
+// This would have to happen after ALL DataTables on the page have
+// FINISHED initializing....
+//------------------------------------------------------------------------
+function i18n_all_table_column_headings() {
+    // pages with DataTables must have i18n_data defined; it will get the translation
+    // data assigned to it so that it can be accessed here
+
+    if (typeof i18n_tables !== 'undefined') {                  // do we want DataTables?
+	$("table").each( function(){                           // check each table on page
+	    if ( $.fn.DataTable.isDataTable( $(this) ) ) {     // is it a DataTable()?
+		var keyPrefix = this.id+'-col-';               // only want to look at
+		for (var key in i18n_tables) {                 //   this table's i18n
+		    if (i18n_tables.hasOwnProperty(key)) {
+			if (key.indexOf(keyPrefix) !== -1) {
+			    var c = parseInt( key.slice(keyPrefix.length) );   // get col#
+			    var tbl = $(this).DataTable();
+			    $(tbl.column(c).header()).text( i18n_tables[key] );
+			}
+		    }
+		}
+	    }
+	});
+    }
+}
 
 //------------------------------------------------------------------------
 function i18n_code2language( lang ) {

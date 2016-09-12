@@ -81,7 +81,6 @@ $('document').ready(function(){
     if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
 	$("#filldev").show();
     }
-
 });
 
 //----------------------------------------------------------------------------

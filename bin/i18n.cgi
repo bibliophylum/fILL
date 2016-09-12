@@ -47,10 +47,14 @@ my $i18n = $dbh->selectall_arrayref(
 my %data_perl;
 if (@$i18n) { 
     foreach my $line (@$i18n) {
-	if (!defined $line->{stage}) {
-	    $data_perl{ $line->{category} }{ $line->{id} }{ 'constant' } = $line->{text};
+	if ($line->{category} eq 'js_lang_data') {
+	    if (!defined $line->{stage}) {
+		$data_perl{ $line->{category} }{ $line->{id} }{'constant'} = $line->{text};
+	    } else {
+		$data_perl{ $line->{category} }{ $line->{id} }{ $line->{stage} } = $line->{text};
+	    }
 	} else {
-	    $data_perl{ $line->{category} }{ $line->{id} }{ $line->{stage} } = $line->{text};
+	    $data_perl{ $line->{category} }{ $line->{id} } = $line->{text};
 	}
     }
     $retval = 1;

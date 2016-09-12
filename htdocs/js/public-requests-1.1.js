@@ -18,6 +18,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// i18n.js will check if this is defined, and if so, will save the table column headings
+// translation results here so we can access them dynamcially:
+var i18n_tables = 'placeholder';
+
+
 $('document').ready(function(){
     var anOpenBorrowing = [];
     var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
@@ -45,9 +51,9 @@ $('document').ready(function(){
         ]
 
     });
-
-//    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: <TMPL_VAR name="pid">, oid: <TMPL_VAR name="oid">},
-    $.getJSON('/cgi-bin/get-patron-requests.cgi', {pid: $("#pid").text(), oid: $("#oid").text() },
+    
+    $.getJSON('/cgi-bin/get-patron-requests.cgi',
+	      {pid: $("#pid").text(), oid: $("#oid").text() },
               function(data){
                   build_table(data);
 		  
@@ -63,6 +69,10 @@ $('document').ready(function(){
 			      "targets": [0,3],
 			      "visible": false
 			  }],
+			  "initComplete": function(settings, json) {
+			      i18n_table_column_headings('#datatable_borrowing');
+			      //alert( 'DataTables has finished its initialisation.' );
+			  },
 			  "language": {
 			      "url": '/localisation/DataTables/fr_FR.json'
 			  }
@@ -78,7 +88,10 @@ $('document').ready(function(){
 			  "columnDefs": [{
 			      "targets": [0,3],
 			      "visible": false
-			  }]
+			  }],
+			  "initComplete": function(settings, json) {
+			      i18n_table_column_headings('#datatable_borrowing');
+			  },
 		      });
 		  }
               })
