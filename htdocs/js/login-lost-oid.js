@@ -19,6 +19,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// i18n.js will check if this is defined, and if so, will save the translation results
+// here so we can access them dynamcially:
+var i18n_data = 'placeholder';
+
 $('document').ready(function(){
 
     $("#search").hide();
@@ -39,7 +43,7 @@ $('document').ready(function(){
         $("#home-library").show();
     }
     if (! $.cookie("fILL-oid")) {
-        $.getJSON('/cgi-bin/get-map-regions.cgi', 
+        $.getJSON('/cgi-bin/get-map-regions.cgi', {lang: document.documentElement.lang },
             function(data){
               choose_library(data);
         });
@@ -97,8 +101,8 @@ $('document').ready(function(){
 
 //----------------------------------------------------------------------------------
 function choose_library( data ) {
-    $("#region").empty();
-    $("#region").append("<p>Which region of Manitoba do you live in?</p><br/>");
+//    $("#region").empty();
+//    $("#region").append("<p>"+i18n_data['choose-region']['constant']+"</p><br/>");
     for (var i=0;i<data.regions.length;i++) {
 	$('<button/>', { "id": "region_"+data.regions[i][0],
 			 "type": "button",
@@ -107,11 +111,12 @@ function choose_library( data ) {
 			 click: function() { get_libraries( this ); }
 		       }).appendTo($("#region"));
     }
+    $("#region").show();
 }
 
 //----------------------------------------------------------------------------------
 function get_libraries( but ) {
-    $.getJSON('/cgi-bin/get-libraries-in-region.cgi', { region: but.innerHTML }, 
+    $.getJSON('/cgi-bin/get-libraries-in-region.cgi', { region: but.innerHTML, lang: document.documentElement.lang }, 
             function(data){
 		$("#region").hide();
 		$("#selectedRegion").text( but.innerHTML );
@@ -131,8 +136,8 @@ function get_libraries( but ) {
 
 //----------------------------------------------------------------------------------
 function build_libraries_div( data ) {
-    $("#libraries").empty();
-    $("#libraries").append("<p>Where is your home library?</p><br/>");
+//    $("#libraries").empty();
+//    $("#libraries").append("<p id="choose-town">Where is your home library?</p><br/>");
     for (var i=0;i<data.inregion.length;i++) {
 	$('<button/>', { "id": "oid_"+data.inregion[i][0],
 			 "type": "button",

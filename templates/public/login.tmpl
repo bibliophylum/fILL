@@ -25,8 +25,16 @@
 	<a id="startOver" href="?"><u>Start over</u></a>
       </div>
 
-      <div id="region"></div>
-      <div id="libraries"></div>
+      <div id="region" style="display:none">
+	<p id="choose-region">
+	  Which region of Manitoba do you live in?
+	</p>
+      </div>
+      <div id="libraries" style="display:none">
+	<p id="choose-town">
+	  Where is your home library?
+	</p>
+      </div>
 
       <div id="home-library" style="display:none">
 	<table>
@@ -90,12 +98,6 @@
       
 
     <div class="login-footer">
-<!-- No need for signup if everyone authenticates via their library ILS...
-      <div id="signup" style="display:none">
-	<p><strong>Don&rsquo;t have an account?</strong></p>
-	<a href="?rm=registration_form" type="button" role="button" id="fill-button" class="public-style">Sign up now</a>
-      </div>
--->
       <p id="cannot-remember">If you cannot remember your user name or password, please contact your local public library.</p>
 
     </div> <!--div class login-footer -->
