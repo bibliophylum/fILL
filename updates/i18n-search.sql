@@ -28,7 +28,27 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','en','js_lang_data','displaying-to',null,'to'),
 ('public/search.tmpl','en','js_lang_data','displaying-of',null,'of'),
 ('public/search.tmpl','en','js_lang_data','pager-prev',null,'Prev'),
-('public/search.tmpl','en','js_lang_data','pager-next',null,'Next');
+('public/search.tmpl','en','js_lang_data','pager-next',null,'Next'),
+('public/search.tmpl','en','js_lang_data','show-locations',null,'Show location details...'),
+('public/search.tmpl','en','js_lang_data','hide-locations',null,'Hide location details...'),
+('public/search.tmpl','en','js_lang_data','request-button',null,'Click to request'),
+('public/search.tmpl','en','js_lang_data','details-title',null,'Title'),
+('public/search.tmpl','en','js_lang_data','details-pubdate',null,'Publication date'),
+('public/search.tmpl','en','js_lang_data','details-author',null,'Author'),
+('public/search.tmpl','en','js_lang_data','details-format',null,'Format'),
+('public/search.tmpl','en','js_lang_data','details-num-locations',null,'Locations'),
+('public/search.tmpl','en','js_lang_data','details-series',null,'Series'),
+('public/search.tmpl','en','js_lang_data','details-subject',null,'Subject'),
+('public/search.tmpl','en','js_lang_data','details-location',null,'Location'),
+('public/search.tmpl','en','js_lang_data','details-at-sublocation',null,'...at'),
+('public/search.tmpl','en','js_lang_data','details-holding',null,'Holding'),
+('public/search.tmpl','en','js_lang_data','details-no-holdings',null,'No holdings information'),
+('public/search.tmpl','en','js_lang_data','requested-heading',null,'Your request has been placed.'),
+('public/search.tmpl','en','js_lang_data','cancel-button',null,'Click to cancel this request'),
+('public/search.tmpl','en','js_lang_data','requesting-user',null,'Requesting user'),
+('public/search.tmpl','en','js_lang_data','msg-librarian-will-request',null,'Your librarian will see if another Manitoba public library is able to lend this title to'),
+('public/search.tmpl','en','js_lang_data','msg-at-this-time',null,'at this time');
+
 
 
 insert into i18n (page,lang,category,id,stage,text) values
@@ -59,5 +79,23 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','fr','js_lang_data','displaying-to',null,'à'),
 ('public/search.tmpl','fr','js_lang_data','displaying-of',null,'de'),
 ('public/search.tmpl','fr','js_lang_data','pager-prev',null,'Préc.'),
-('public/search.tmpl','fr','js_lang_data','pager-next',null,'Suivant');
-
+('public/search.tmpl','fr','js_lang_data','pager-next',null,'Suivant'),
+('public/search.tmpl','fr','js_lang_data','show-locations',null,'Montrer les détails du lieu...'),
+('public/search.tmpl','fr','js_lang_data','hide-locations',null,'Cacher les détails sur l’emplacement…'),
+('public/search.tmpl','fr','js_lang_data','request-button',null,'Cliquer pour demander'),
+('public/search.tmpl','fr','js_lang_data','details-title',null,'Titre'),
+('public/search.tmpl','fr','js_lang_data','details-pubdate',null,'Date de publication'),
+('public/search.tmpl','fr','js_lang_data','details-author',null,'Auteur'),
+('public/search.tmpl','fr','js_lang_data','details-format',null,'Format'),
+('public/search.tmpl','fr','js_lang_data','details-num-locations',null,'Emplacements'),
+('public/search.tmpl','fr','js_lang_data','details-series',null,'Série'),
+('public/search.tmpl','fr','js_lang_data','details-subject',null,'Sujet'),
+('public/search.tmpl','fr','js_lang_data','details-location',null,'Emplacement'),
+('public/search.tmpl','fr','js_lang_data','details-at-sublocation',null,'... à'),
+('public/search.tmpl','fr','js_lang_data','details-holding',null,'Mention de fonds'),
+('public/search.tmpl','fr','js_lang_data','details-no-holdings',null,'aucune information sur la copie'),
+('public/search.tmpl','fr','js_lang_data','requested-heading',null,'Votre demande a été soumise.'),
+('public/search.tmpl','fr','js_lang_data','cancel-button',null,'Cliquez pour annuler cette demande.'),
+('public/search.tmpl','fr','js_lang_data','requesting-user',null,'Usager demandeur'),
+('public/search.tmpl','fr','js_lang_data','msg-librarian-will-request',null,'Votre bibliothécaire vérifiera si une autre bibliothèque publique du Manitoba est en mesure de prêter ce titre à'),
+('public/search.tmpl','fr','js_lang_data','msg-at-this-time',null,'à ce moment.');
