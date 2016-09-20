@@ -101,8 +101,8 @@ $SQL = "select
   '-1' as lender,
   (select text from i18n where page='public/current.tmpl' and i18n.lang=? and i18n.category='status' and i18n.stage='status' and i18n.id=patron_requests_declined.status) as status,
   (case when reason='wish-list' then i18n.text||' '||message
-        when reason='held-locally' then 'held-locally'||' '||message 
-        when reason='blocked' then 'blocked'||' '||message
+        when reason='held-locally' then i18n.text||' '||message 
+        when reason='blocked' then i18n.text||' '||message
         when reason='on-order' then i18n.text||' '||message
         when reason='other' then i18n.text||' '||message
         else reason||'. '||message
