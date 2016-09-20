@@ -53,7 +53,10 @@ $('document').ready(function(){
     });
     
     $.getJSON('/cgi-bin/get-patron-requests.cgi',
-	      {pid: $("#pid").text(), oid: $("#oid").text() },
+	      {pid: $("#pid").text(),
+	       oid: $("#oid").text(),
+	       lang: document.documentElement.lang
+	      },
               function(data){
                   build_table(data);
 		  

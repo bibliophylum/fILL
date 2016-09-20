@@ -6,15 +6,16 @@ use DBI;
 use JSON;
 
 my $query = new CGI;
-my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
-if (($session->is_expired) || ($session->is_empty)) {
-    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
-    exit;
-}
+#my $session = CGI::Session->load(undef, $query, {Directory=>"/tmp"});
+#if (($session->is_expired) || ($session->is_empty)) {
+#    print "Content-Type:application/json\n\n" . to_json( { success => 0, message => 'invalid session' } );
+#    exit;
+#}
 my $pid = $query->param('pid');
 my $oid = $query->param('oid');
 my $library = $query->param('library');
 my $is_enabled = $query->param('is_enabled');
+my $lang = $query->param('lang') || 'en';
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -27,28 +28,22 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
+# get i18n translations for statuses
+#my @keys = qw( id stage );
+#my $href_i18n = $dbh->selectall_hashref("select id,stage,text from i18n where page='public/current.tmpl' and lang=? and category='status'", \@keys, undef, $lang );
+
 # sql to get this patron's current borrowing
 my $SQL="select 
   c.chain_id as cid,
   g.title, 
   g.author, 
   (case when (ra.msg_to=?) then o1.org_name else o2.org_name end) as lender, 
-  (case when ra.status='ILL-Request' then 'Your library has requested it.'
-        when ra.status like 'ILL-Answer|Will-Supply%' then 'The lender will lend it.'
-        when ra.status like 'ILL-Answer|Hold-Placed%' then 'The lender has placed a hold for you. They expect to have it for you by '||ra.message 
-        when ra.status like 'ILL-Answer|Unfilled%' then 'The lender cannot lend it.  Your library will try another lender if possible.'
-        when ra.status='Shipped' then 'The lender has shipped it to your library.'
-        when ra.status='Received' then 'Your library has received it from the lender, and should be contacting you soon.'
-        when ra.status='Returned' then 'Your library has returned it to the lender.'
-        when ra.status='Checked-in' then 'The lender has received the returned book.'
-        when ra.status='Cancelled' then 'Your library has cancelled the request to that lender.  They may try again with a different lender.'
-        when ra.status like 'ILL-Answer|Locations-provided%' then 'The lender is forwarding your request to one of its branches.'
-        when ra.status='Renew' then 'Your library has asked the lender for a renewal of the loan, and is waiting for a reply.'
-        when ra.status='Renew-Answer|No-renewal' then 'The lender cannot give you a renewal on the loan.  They need it back.'
-        when ra.status='Renew-Answer|Ok' then 'The lender has given you a renewal on the loan.  The item is now '||ra.message
-        else ra.status
-  end) as status,
-  'Loan requests have been made to '||count(s.request_id)||' of '||max(s.sequence_number)||' libraries.' as details, 
+  (case when ra.message is null then i18n.text
+        when ra.status like 'ILL-Answer|Hold-Placed%' then i18n.text||ra.message
+	when ra.status like 'Renew-Answer|Ok' then i18n.text||ra.message
+        else i18n.text
+	end) as status,
+  (select text from i18n where page='public/current.tmpl' and lang=? and category='status' and id='Loan-requests to')||' '||count(s.request_id)||' '||(select text from i18n where page='public/current.tmpl' and lang=? and category='status' and id='Loan-requests of')||' '||max(s.sequence_number)||' '||(select text from i18n where page='public/current.tmpl' and lang=? and category='status' and id='Loan-requests libraries') as details,
   date_trunc('second',ra.ts) as ts,
   -1 as declined_id 
 from requests_active ra
@@ -59,15 +54,18 @@ from requests_active ra
   left join org o2 on (o2.oid=ra.msg_to) 
   left join patrons p on (p.home_library_id=g.requester and p.card=g.patron_barcode)
   left join sources s on (s.group_id=g.group_id) 
+  left join i18n on (i18n.id like ra.status||'%') 
 where 
   g.patron_barcode=(select card from patrons where pid=?)
   and g.requester=?
-  and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id)
-group by g.title, g.author, ts, ra.status, ra.message, c.chain_id, ra.msg_to, o1.org_name, o2.org_name 
+  and ra.ts=(select max(ts) from requests_active ra2 left join request r2 on r2.id=ra2.request_id left join request_chain rc2 on rc2.chain_id=r2.chain_id where r2.chain_id=c.chain_id) 
+  and i18n.page='public/current.tmpl' and i18n.lang=? and i18n.category='status'  
+group by g.title, g.author, ts, ra.status, ra.message, c.chain_id, ra.msg_to, o1.org_name, o2.org_name, i18n.text 
 order by ra.ts desc
 ";
 # There will be one row per request in the chain
-my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid, $oid );
+my $aref_borr = $dbh->selectall_arrayref($SQL, { Slice => {} }, 
+					 $oid, $lang, $lang, $lang, $pid, $oid, $lang );
 
 # Get patron requests that the library hasn't handled yet:
 $SQL = "select 
@@ -75,8 +73,8 @@ $SQL = "select
   title,
   author,
   '-1' as lender,
-  'New request' as status,
-  'Your librarian has not yet seen this request.' as details,
+(select text from i18n where page='public/current.tmpl' and category='status' and lang=? and id='New request' and stage='status') as status,
+  (select text from i18n where page='public/current.tmpl' and category='status' and lang=? and id='New request' and stage='detail') as details,
   date_trunc('second',ts) as ts,
   -1 as declined_id
 from
@@ -86,40 +84,12 @@ where
   and pid=?
 order by ts desc";
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lang, $lang, $oid, $pid );
 
 # add to aref_borr:
 foreach my $href (@$aref) {
     push @$aref_borr, $href;
 }
-
-
-
-#
-# "Wish list" items are now considered 'declined':
-#
-# Get patron requests that the library has moved to acquisitions:
-#$SQL = "select 
-#  '-1' as cid,
-#  title,
-#  author,
-#  '-1' as lender,
-#  'Wish list' as status,
-#  'Your librarian is considering this for purchase.' as details,
-#  date_trunc('second',ts) as ts,
-#  -1 as declined_id 
-#from
-#  acquisitions
-#where 
-#  oid=?
-#  and pid=?
-#order by ts desc";
-#
-#$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
-## add to aref_borr:
-#foreach my $href (@$aref) {
-#    push @$aref_borr, $href;
-#}
 
 
 
@@ -129,25 +99,25 @@ $SQL = "select
   title,
   author,
   '-1' as lender,
-  (case when reason='Your librarian is considering this for purchase.' then 'Wish list'
-        else 'Declined'
-   end) as status,
-  (case when reason='held-locally' then 'Your library has this locally. '||message
-        when reason='blocked' then 'There is a problem with your library account. '||message
-        when reason='on-order' then 'Your library is purchasing this title. '||message 
-        when reason='other' then 'Reason given: '||message
+  (select text from i18n where page='public/current.tmpl' and i18n.lang=? and i18n.category='status' and i18n.stage='status' and i18n.id=patron_requests_declined.status) as status,
+  (case when reason='wish-list' then i18n.text||' '||message
+        when reason='held-locally' then 'held-locally'||' '||message 
+        when reason='blocked' then 'blocked'||' '||message
+        when reason='on-order' then i18n.text||' '||message
+        when reason='other' then i18n.text||' '||message
         else reason||'. '||message
   end) as details,
   date_trunc('second',ts) as ts,
   prid as declined_id
 from
-  patron_requests_declined
+  patron_requests_declined left join i18n on (i18n.id=reason) 
 where 
   oid=?
   and pid=?
+  and i18n.page='public/current.tmpl' and i18n.lang=?and i18n.category='status' and i18n.stage='detail' 
 order by ts desc";
 
-$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $oid, $pid );
+$aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lang, $oid, $pid, $lang );
 # add to aref_borr:
 foreach my $href (@$aref) {
     push @$aref_borr, $href;

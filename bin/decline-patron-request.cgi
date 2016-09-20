@@ -13,6 +13,7 @@ if (($session->is_expired) || ($session->is_empty)) {
 }
 my $prid = $query->param('prid');
 my $oid = $query->param('oid');
+my $status = $query->param('status') || 'declined';
 my $reason = $query->param('reason');
 my $message = $query->param('message');
 
@@ -30,8 +31,8 @@ $dbh->do("SET TIMEZONE='America/Winnipeg'");
 my $SQL = "delete from patron_request_sources where prid=?";
 my $rv = $dbh->do($SQL, undef, $prid );
 
-$SQL = "insert into patron_requests_declined (prid, title, author, pid, oid, medium, reason, message) select prid, title, author, pid, oid, medium, ?, ? from patron_request where prid=? and oid=?";
-my $rows = $dbh->do($SQL, undef, $reason, $message, $prid, $oid );
+$SQL = "insert into patron_requests_declined (prid, title, author, pid, oid, medium, status, reason, message) select prid, title, author, pid, oid, medium, ?, ?, ? from patron_request where prid=? and oid=?";
+my $rows = $dbh->do($SQL, undef, $status, $reason, $message, $prid, $oid );
 
 $SQL = "delete from patron_request where prid=? and oid=?";
 $rows = $dbh->do($SQL, undef, $prid, $oid );

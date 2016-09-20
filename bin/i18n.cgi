@@ -53,7 +53,9 @@ if (@$i18n) {
 	    } else {
 		$data_perl{ $line->{category} }{ $line->{id} }{ $line->{stage} } = $line->{text};
 	    }
-	} else {
+	} elsif ($line->{category} eq 'status') { 
+	    next; # only used by cgi scripts
+	} else {  # "specials" like template params (tparm) or tabledef
 	    $data_perl{ $line->{category} }{ $line->{id} } = $line->{text};
 	}
     }
