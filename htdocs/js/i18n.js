@@ -188,7 +188,11 @@ function i18n_select_change( event, ui ) {
 	    url = url.replace(re, 'language='+newLang);
 	} else {
 	    //console.debug('No language in URL');
-	    url+='&language='+newLang
+	    if (url.indexOf('?') >= 0) { // existing parms
+		url+='&language='+newLang;
+	    } else {                    // no other parms
+		url+='?language='+newLang;
+	    }
 	}
 	//console.debug('New URL: '+url+'\n----------------------');
 	// As an HTTP redirect:
