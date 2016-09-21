@@ -17,7 +17,7 @@
   <form action="/cgi-bin/public.cgi" method="post" name="loginform" id="loginform">
     <fieldset name="login">
 
-      <legend>Login</legend>
+      <legend id="login-legend">Login</legend>
 
       <div id="breadcrumbs" style="display:none">
 	<p id="selectedRegion" style="display:inline"></p>
@@ -91,8 +91,8 @@
 
     <div id="sign-in" style="display:none">
       <fieldset>
-	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton">
-<!--	<input type="checkbox" value="1" name="authen_rememberuser" tabindex="3" id="authen_rememberuserfield"><span>Remember User Name</span><br> -->
+<!--	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton"> -->
+	<button id="authen_loginbutton" type="submit" class="button-left public-style" form="loginform" tabindex="4">Sign in</button>
       </fieldset>
     </div>
       
