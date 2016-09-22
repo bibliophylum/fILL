@@ -21,6 +21,7 @@
 package publicbase;
 use strict;
 use base 'CGI::Application';
+use utf8;
 use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
 use CGI::Application::Plugin::Session;
 use CGI::Application::Plugin::Authentication;
@@ -45,6 +46,9 @@ use String::Random;
 
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
 
+# Setup for UTF-8 mode.
+binmode STDOUT, ":utf8:";
+$ENV{'PERL_UNICODE'}=1;
 
 #--------------------------------------------------------------------------------
 #
@@ -62,6 +66,10 @@ sub cgiapp_init {
 		       }
     );
 
+    $self->dbh->{pg_enable_utf8} = -1;  # *every* string coming back from Pg has 
+                                        # utf-8 flag set (db encoding is UTF-8)
+
+    $self->dbh->do("SET client_encoding = 'UTF8'");
     $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
 
     # Configure the LogDispatch session
@@ -501,30 +509,49 @@ sub get_patron_and_library {
 sub login_foo {
     my $self = shift;
 
+    my $lang = $self->determine_language_to_use();
+    my $login_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/login.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
+    
     my $loginText_href;
-# Hmm.  User not logged in yet, so no session params...
-#    my $oid = $self->session->param('fILL-oid');
-# How about cookies?
+
+    # Hmm.  User not logged in yet, so no session params...
+    #    my $oid = $self->session->param('fILL-oid');
+    # How about cookies?
     my $oid = $self->query->cookie('fILL-oid');
     if ($oid) {
+	my $libname_href = $self->dbh->selectrow_hashref("select org_name from org where oid=?", undef, $oid);
+	
 	# is this a SIP2 library?
 	my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from org where oid=?", undef, $oid);
 
 	if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
+	    #	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
 	    
+	    $loginText_href = {
+		"login_text" => $login_i18n_href->{'login-text-barcode-and-pin-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-barcode-and-pin-end'}->{'text'},
+		"barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
+		"pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
+	    };
+	
 	} else {
-	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
+#	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
+
+	    $loginText_href = {
+		"login_text" => $login_i18n_href->{'login-text-username-and-password-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-username-and-password-end'}->{'text'},
+		"barcode_label_text" => $login_i18n_href->{'username-label'}->{'text'},
+		"pin_label_text" => $login_i18n_href->{'password-label'}->{'text'}
+	    };
+
 	}
     } else {
+	# There should always be a cookie - the process of selecting your library sets it.
+	# So this should never happen:
 	$loginText_href = { 
-	    "login_text" => "Log in using your library barcode and PIN",
-	    "barcode_label_text" => "Library card number",
-	    "pin_label_text" => "PIN number"
+	    "login_text" => $login_i18n_href->{'login-text-barcode-and-pin-start'}->{'text'} . " " . $login_i18n_href->{'login-text-barcode-and-pin-end'}->{'text'},
+	    "barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
+	    "pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
 	};
     }
-
-    my $lang = $self->determine_language_to_use();
 
     my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
