@@ -39,7 +39,7 @@ $dbh->do("SET client_encoding = 'UTF8'");
 
 my $retval = 0;
 my $i18n = $dbh->selectall_arrayref(
-    "select category,id,stage,text from i18n where page=? and lang=?",
+    "select category,id,change,which,stage,text from i18n where page=? and lang=?",
     { Slice => {} },
     $page, $lang
     );
@@ -48,11 +48,15 @@ my %data_perl;
 if (@$i18n) { 
     foreach my $line (@$i18n) {
 	if ($line->{category} eq 'js_lang_data') {
-	    if (!defined $line->{stage}) {
-		$data_perl{ $line->{category} }{ $line->{id} }{'constant'} = $line->{text};
-	    } else {
-		$data_perl{ $line->{category} }{ $line->{id} }{ $line->{stage} } = $line->{text};
-	    }
+	    if (!defined $line->{stage}) { $line->{stage} = 'constant'; }
+	    if (!defined $line->{which}) { $line->{which} = 'default'; }
+	    
+	    $data_perl{ $line->{category} }{ $line->{id} }{ $line->{stage} } = {
+		"change" => $line->{change},
+		"which" => $line->{which},
+		"translation" => $line->{text}
+	    };
+	
 	} elsif ($line->{category} eq 'status') { 
 	    next; # only used by cgi scripts
 	} else {  # "specials" like template params (tparm) or tabledef
@@ -64,12 +68,20 @@ if (@$i18n) {
 
 # Now get common header / footer translations
 my $common = $dbh->selectall_arrayref(
-    "select category,id,text from i18n where page='public' and lang=? and category='header'",
+    "select category,id,change,which,stage,text from i18n where page='public' and lang=? and category='header'",
     { Slice => {} },
     $lang
     );
 foreach my $line (@$common) {
-    $data_perl{ "js_lang_data" }{ $line->{id} }{ 'constant' } = $line->{text};
+    if (!defined $line->{stage}) { $line->{stage} = 'constant'; }
+    if (!defined $line->{which}) { $line->{which} = 'default'; }
+
+    $data_perl{ 'js_lang_data' }{ $line->{id} }{ $line->{stage} } = {
+	"change" => $line->{change},
+	"which" => $line->{which},
+	"translation" => $line->{text}
+    };
+
 }
 
 $dbh->disconnect;

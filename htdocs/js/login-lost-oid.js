@@ -21,7 +21,7 @@
 
 // i18n.js will check if this is defined, and if so, will save the translation results
 // here so we can access them dynamcially:
-var i18n_data = 'placeholder';
+var i18n_data = 'data goes here';
 
 $('document').ready(function(){
 

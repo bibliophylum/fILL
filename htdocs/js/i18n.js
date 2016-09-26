@@ -68,23 +68,50 @@ function i18n_load() {
 		  var languageData = data.i18n.js_lang_data;
 		  for (var elementID in languageData) {
 		      if (languageData.hasOwnProperty(elementID)) {
+			  var stage = null;
+			  var whatToChange = null;
+			  
 			  if (languageData[elementID].hasOwnProperty('constant')) {
-			      $("#"+elementID).text( languageData[elementID].constant );
+			      stage = 'constant';
+			      whatToChange = languageData[elementID]['constant'].change;
 			  } else if (languageData[elementID].hasOwnProperty('initial')) {
-			      $("#"+elementID).text( languageData[elementID].initial );
+			      stage = 'initial';
+			      whatToChange = languageData[elementID]['initial'].change;
 			  }
+
+			  if (whatToChange) {
+			      if (whatToChange === 'text') {
+				  $('#'+elementID).text(
+				      languageData[elementID][stage].translation
+				  );
+				  
+			      } else if (whatToChange === 'attr') {
+				  $('#'+elementID).attr(
+				      languageData[elementID][stage].which,
+				      languageData[elementID][stage].translation
+				  );
+
+			      } else if (whatToChange === 'prop') {
+				  $('#'+elementID).prop(
+				      languageData[elementID][stage].which,
+				      languageData[elementID][stage].translation
+				  );
+
+			      }
+			  }
+
 		      }
 		  }
 		  // some pages need ongoing access to the translation data.  They need
 		  // to declare the global variable i18n_data, and set it's value to
-		  // something (e.g. 'placeholder').
+		  // something (e.g. 'data goes here').
 		  if (typeof i18n_data !== 'undefined') {
 		      i18n_data = languageData;
 		  }
 
 		  // similarly, if a page contains DataTable()s which have translations
 		  // for column headings.  They need to declare the global variable
-		  // i18n_tables, and set it's value to something (e.g. 'placeholder').
+		  // i18n_tables, and set it's value to something (e.g. 'data goes here').
 		  if (typeof i18n_tables !== 'undefined') {
 		      i18n_tables = data.i18n.tabledef;
 		  }

@@ -5,12 +5,17 @@
 -- category determines whether this is something that can be a template parameter (tparm),
 --   or needs to be handled by jquery mucking with the DOM (js_lang_data)
 -- id is the hash key / element ID
+-- change is text/attr/prop
+-- which - which attr/prop to change; null if change is 'text'
+-- stage - if text changes (e.g. after button click)... see note at bottom
 -- text is the translated text
 create table i18n (
   page varchar(100) not null,
   lang varchar(10) not null,
   category varchar(100),
   id varchar(100) not null,
+  change varchar(20) default 'text',
+  which varchar(100),
   stage varchar(100),
   text varchar(4096) not null
 );

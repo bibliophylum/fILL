@@ -44,7 +44,7 @@ var completionStatus = {};
 
 // i18n.js will check if this is defined, and if so, will save the translation results
 // here so we can access them dynamcially:
-var i18n_data = 'placeholder';
+var i18n_data = 'data goes here';
 
 //
 // pz2.js event handlers:
@@ -60,9 +60,9 @@ function my_onshow(data) {
     var pager = document.getElementById("pager");
     pager.innerHTML = "";
     pager.innerHTML +='<hr/><div style="float: right">'
-	+i18n_data['displaying']['constant'] + ' ' + (data.start + 1) + ' '
-	+i18n_data['displaying-to']['constant'] + ' ' + (data.start + data.num)	+ ' '
-	+i18n_data['displaying-of']['constant'] + ' ' + data.merged+'</div>';
+	+i18n_data['displaying']['constant']['translation'] + ' ' + (data.start + 1) + ' '
+	+i18n_data['displaying-to']['constant']['translation'] + ' ' + (data.start + data.num)	+ ' '
+	+i18n_data['displaying-of']['constant']['translation'] + ' ' + data.merged+'</div>';
     drawPager(pager);
 
     var $newResults = $('<div/>', { 'id': "results" });
@@ -141,11 +141,11 @@ function my_onstat(data) {
 	    stat.innerHTML = '';
 	    isSearching = 0;
 	    $(".disabled-while-searching").removeClass("disabled-while-searching");
-	    $("#result-instructions").text( i18n_data['result-instructions']['after search'] );  //"Click on a title for more information.";
+	    $("#result-instructions").text( i18n_data['result-instructions']['after search']['translation'] );  //"Click on a title for more information.";
 	    $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
 
 	    $("#countdown").TimeCircles().stop();
-	    $("#status-header").text( i18n_data['status-header']['search finished'] ); // "Search complete."
+	    $("#status-header").text( i18n_data['status-header']['search finished']['translation'] ); // "Search complete."
 	    $("#finish-time").text(Math.min(30,Math.round( 60 - $("#countdown").TimeCircles().getTime() )));
 	    $("#status-note").hide();
             $("#libraries-finished").show();
@@ -286,7 +286,7 @@ function onFormSubmitEventHandler()
 {
     resetPage();
     loadSelect();
-    $("#result-instructions").text( i18n_data['result-instructions']['during search'] ); // "You will be able to click on the titles when the search is done."
+    $("#result-instructions").text( i18n_data['result-instructions']['during search']['translation'] ); // "You will be able to click on the titles when the search is done."
     $("#result-instructions").stop(true,true).effect("highlight", {}, 2000);
     triggerSearch();
     submitted = true;
@@ -327,7 +327,7 @@ function triggerSearch ()
     $("#countdown-div").show();
     $("#count-or-percent-div").show();
     $("#percent-div").show();
-    $("#status-header").text( i18n_data[ 'status-header' ][ 'constant' ]); // "Searching all libraries
+    $("#status-header").text( i18n_data[ 'status-header' ][ 'initial' ]['translation']); // "Searching all libraries
     $("#status-note").show();
     
     var query = document.search.query.value;
@@ -392,10 +392,10 @@ function drawPager (pagerDiv)
         ? firstClkbl + 2*onsides
         : pages;
 
-    var prev = '<span id="prev">&#60;&#60; '+i18n_data['pager-prev']['constant']+'</span><b> | </b>';
+    var prev = '<span id="prev">&#60;&#60; '+i18n_data['pager-prev']['constant']['translation']+'</span><b> | </b>';
     if (curPage > 1)
         var prev = '<a href="#" id="prev" onclick="pagerPrev();">'
-        +'&#60;&#60; '+i18n_data['pager-prev']['constant']+'</a><b> | </b>';
+        +'&#60;&#60; '+i18n_data['pager-prev']['constant']['translation']+'</a><b> | </b>';
 
     var middle = '';
     for(var i = firstClkbl; i <= lastClkbl; i++) {
@@ -407,10 +407,10 @@ function drawPager (pagerDiv)
             + numLabel + ' </a>';
     }
     
-    var next = '<b> | </b><span id="next">'+i18n_data['pager-next']['constant']+' &#62;&#62;</span>';
+    var next = '<b> | </b><span id="next">'+i18n_data['pager-next']['constant']['translation']+' &#62;&#62;</span>';
     if (pages - curPage > 0)
     var next = '<b> | </b><a href="#" id="next" onclick="pagerNext()">'
-        +i18n_data['pager-next']['constant']+' &#62;&#62;</a>';
+        +i18n_data['pager-next']['constant']['translation']+' &#62;&#62;</a>';
 
     predots = '';
     if (firstClkbl > 1)
@@ -544,7 +544,7 @@ function primaryDetails(data) {
     if (data["md-title"] != undefined) {
         title = data["md-title"].toString();
 	title = title.replace(/["']/g, "");
-        primary += '<tr><td><b>'+i18n_data['details-title']['constant']+'</b></td><td><b>:</b> '+title;
+        primary += '<tr><td><b>'+i18n_data['details-title']['constant']['translation']+'</b></td><td><b>:</b> '+title;
   	if (data["md-title-remainder"] !== undefined) {
 	    primary += ' : <span>' + data["md-title-remainder"] + ' </span>';
 	}
@@ -554,9 +554,9 @@ function primaryDetails(data) {
  	primary += '</td></tr>';
     }
     if (data["md-date"] != undefined)
-        primary += '<tr><td><b>'+i18n_data['details-pubdate']['constant']+'</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
+        primary += '<tr><td><b>'+i18n_data['details-pubdate']['constant']['translation']+'</b></td><td><b>:</b> ' + data["md-date"] + '</td></tr>';
     if (data["md-author"] != undefined) {
-        primary += '<tr><td><b>'+i18n_data['details-author']['constant']+'</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
+        primary += '<tr><td><b>'+i18n_data['details-author']['constant']['translation']+'</b></td><td><b>:</b> ' + data["md-author"] + '</td></tr>';
     }
     useELMcover = 0;  // reset
     if (data["location"][0]["md-electronic-url"] != undefined) {
@@ -573,10 +573,10 @@ function primaryDetails(data) {
     var len=data["location"].length;
     if (len > 0) {
 	if ((data["location"][0]["md-medium"] != undefined)) {
-	    primary += '<tr><td><b>'+i18n_data['details-format']['constant']+'</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][0]["md-medium"] + '</font></b></td></tr>';
+	    primary += '<tr><td><b>'+i18n_data['details-format']['constant']['translation']+'</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][0]["md-medium"] + '</font></b></td></tr>';
 	}
     }
-    primary += '<tr><td><b>'+i18n_data['details-num-locations']['constant']+'</b></td><td><b>:</b> ' + len + '</td></tr>';
+    primary += '<tr><td><b>'+i18n_data['details-num-locations']['constant']['translation']+'</b></td><td><b>:</b> ' + len + '</td></tr>';
     primary += '</table>';
     return primary;
 }
@@ -589,20 +589,20 @@ function secondaryDetails(data) {
 
 	secondary += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
 	if (data["location"][i]["md-medium"] != undefined) {
-	    secondary += '<tr><td><b>'+i18n_data['details-format']['constant']+'</b></td><td><b>:</b> <b>' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
+	    secondary += '<tr><td><b>'+i18n_data['details-format']['constant']['translation']+'</b></td><td><b>:</b> <b>' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	    if (data["location"][i]["md-medium"] == "electronicresource")
 		isElectronicResource = true;
 	}
 	if (data["location"][i]["md-series-title"] != undefined)
-	    secondary += '<tr><td><b>'+i18n_data['details-series']['constant']+'</b></td><td><b>:</b> ' + data["location"][i]["md-series-title"] + '</td></tr>';
+	    secondary += '<tr><td><b>'+i18n_data['details-series']['constant']['translation']+'</b></td><td><b>:</b> ' + data["location"][i]["md-series-title"] + '</td></tr>';
 	if (data["location"][i]["md-subject"] != undefined)
-            secondary += '<tr><td><b>'+i18n_data['details-subject']['constant']+'</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
+            secondary += '<tr><td><b>'+i18n_data['details-subject']['constant']['translation']+'</b></td><td><b>:</b> ' + data["location"][i]["md-subject"] + '</td></tr>';
 	if (data["location"][i]["@name"] != undefined)
-            secondary += '<tr><td><b>'+i18n_data['details-location']['constant']+'</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
+            secondary += '<tr><td><b>'+i18n_data['details-location']['constant']['translation']+'</b></td><td><b>:</b> ' + data["location"][i]["@name"] + " (" +data["location"][i]["@id"] + ")" + '</td></tr>';
 
 	if (data["location"][i]["md-locallocation"] != undefined) {
 	    for (var lloc = 0; lloc < data["location"][i]["md-locallocation"].length; lloc++) {
-		secondary += '<tr><td><b>'+i18n_data['details-at-sublocation']['constant']+'</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"][lloc];
+		secondary += '<tr><td><b>'+i18n_data['details-at-sublocation']['constant']['translation']+'</b></td><td><b>:</b> ' + data["location"][i]["md-locallocation"][lloc];
 		if (data["location"][i]["md-localcallno"] != undefined) {
 		    secondary += ' (' + data["location"][i]["md-localcallno"][lloc] + ')';
 		} else if (data["location"][i]["md-callnumber"] != undefined) {
@@ -613,9 +613,9 @@ function secondaryDetails(data) {
 		secondary += '</td></tr>';
 	    }
 	} else if (data["location"][i]["md-holding"] != undefined) {
-	    secondary += '<tr><td><b>'+i18n_data['details-holding']['constant']+'</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
+	    secondary += '<tr><td><b>'+i18n_data['details-holding']['constant']['translation']+'</b></td><td><b>:</b> ' + data["location"][i]["md-holding"]  + '</td></tr>';
 	} else {
-	    secondary += '<tr><td><b>'+i18n_data['details-holding']['constant']+'</b></td><td><b>:</b> '+i18n_data['details-no-holdings']['constant']+'</td></tr>';
+	    secondary += '<tr><td><b>'+i18n_data['details-holding']['constant']['translation']+'</b></td><td><b>:</b> '+i18n_data['details-no-holdings']['constant']['translation']+'</td></tr>';
 	}
 	
     }
@@ -682,7 +682,7 @@ function buildRequestForm(data) {
 	    requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
 	}
     } else {
-	requestForm += '<input type="submit" class="public-style" value="'+i18n_data['request-button']['constant']+'">';
+	requestForm += '<input type="submit" class="public-style" value="'+i18n_data['request-button']['constant']['translation']+'">';
     }
     requestForm += '</form></div>';
 
@@ -711,7 +711,7 @@ function renderDetails(data, marker)
 				 "href": "javascript:void(0)",
 				 "onclick": "toggleLocationDetails()"
 			       });
-    $showLocDet.append(i18n_data['show-locations']['constant']); //"Show location details"
+    $showLocDet.append(i18n_data['show-locations']['constant']['translation']); //"Show location details"
     $detDiv.append( $showLocDet );
 
     var $hideLocDet = $('<a>', { "id": "hideLocDet",
@@ -719,7 +719,7 @@ function renderDetails(data, marker)
 				 "href": "javascript:void(0)",
 				 "onclick": "toggleLocationDetails()"
 			       });
-    $hideLocDet.append(i18n_data['hide-locations']['constant']); //"Hide location details"
+    $hideLocDet.append(i18n_data['hide-locations']['constant']['translation']); //"Hide location details"
     $detDiv.append( $hideLocDet );
 
     $detDiv.append( secondaryDetails(data) );
@@ -750,22 +750,22 @@ function request() {
 	.success(function( data ) {
 //	    alert('success');
 	    $("#confirmed").empty();
-	    $("#confirmed").append('<h2>'+i18n_data['requested-heading']['constant']+'</h2>');
+	    $("#confirmed").append('<h2>'+i18n_data['requested-heading']['constant']['translation']+'</h2>');
 	    
 	    var $cancelForm = $('<form>', { "id": "cancel_form", 
 					    "action": "",
 					    "method": "post"
 					  });
 	    $cancelForm.append('<input type="hidden" name="prid" value="'+data.prid+'">');
-	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="'+i18n_data['cancel-button']['constant']+'">');
+	    $cancelForm.append('<input type="submit" class="butlink" style="height:50px; min-width:150px; font-weight:bold" value="'+i18n_data['cancel-button']['constant']['translation']+'">');
 	    $("#confirmed").append( $cancelForm );
 
 	    var $table = $('<table>').appendTo($("#confirmed"));
-	    $table.append('<tr><td>'+i18n_data['requesting-user']['constant']+'</td><td>:'+data.user+'</td></tr>');
-	    $table.append('<tr><td>'+i18n_data['details-title']['constant']+'</td><td>:'+data.title+'</td></tr>');
-	    $table.append('<tr><td>'+i18n_data['details-author']['constant']+'</td><td>:'+data.author+'</td></tr>');
-	    $table.append('<tr><td>'+i18n_data['details-format']['constant']+'</td><td>:<font style="background-color: yellow;">'+data.medium+'</font></td></tr>');
-	    $("#confirmed").append('<p>'+i18n_data['msg-librarian-will-request']['constant']+' '+data.library+' '+i18n_data['msg-at-this-time']['constant']+'.</p>');
+	    $table.append('<tr><td>'+i18n_data['requesting-user']['constant']['translation']+'</td><td>:'+data.user+'</td></tr>');
+	    $table.append('<tr><td>'+i18n_data['details-title']['constant']['translation']+'</td><td>:'+data.title+'</td></tr>');
+	    $table.append('<tr><td>'+i18n_data['details-author']['constant']['translation']+'</td><td>:'+data.author+'</td></tr>');
+	    $table.append('<tr><td>'+i18n_data['details-format']['constant']['translation']+'</td><td>:<font style="background-color: yellow;">'+data.medium+'</font></td></tr>');
+	    $("#confirmed").append('<p>'+i18n_data['msg-librarian-will-request']['constant']['translation']+' '+data.library+' '+i18n_data['msg-at-this-time']['constant']['translation']+'.</p>');
 
 
 	    // handle the form submission:
