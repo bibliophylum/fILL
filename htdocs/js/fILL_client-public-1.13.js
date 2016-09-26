@@ -132,7 +132,7 @@ function my_onstat(data) {
     if(stat != null){
 	completionStatus = {clients: data.clients, active: data.activeclients };
 	if(data.activeclients != 0){
-	    stat.innerHTML = '<div style="text-align:left;">Responses from<br />'+(data.clients - data.activeclients)+' of '+data.clients+' libraries.</div>';
+	    stat.innerHTML = '<div style="text-align:left;">'+i18n_data['responses-from']['constant']['translation']+'<br />'+(data.clients - data.activeclients)+' '+i18n_data['responses-from-of']['constant']['translation']+' '+data.clients+' '+i18n_data['responses-from-libraries']['constant']['translation']+'.</div>';
 	    stat.innerHTML += '<div id="progress_empty" style="">'; //Further styles for progress_empty in css
 	    stat.innerHTML += '<div id="progress_filler" style="width:'+(((data.clients - data.activeclients) / data.clients)*130)+'px;"/>';//Further styles for progress filler in css
 	    //stat.innerHTML += '<div id="stopper" style=""><input id="stopIt" type="button" value="Stop!" onClick="javascript:stopTheSearch(); return false;" class="library-style" />';
