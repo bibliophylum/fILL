@@ -97,9 +97,13 @@ $('document').ready(function(){
                                                 if (total == 0) {
                                                   $("#countdown").TimeCircles().stop();
                                                   var stoppedAt = stopTheSearch("Timer done");
-            	                                  $("#status-header").text("Search complete.");
+                                                  $("#status-header").text("Search complete.");
+/*
                                                   $("#countdown-finished").empty();
                                                   $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+*/
+                                                  $("#countdown-finished-count").text( stoppedAt.finished );
+                                                  $("#countdown-finished-total").text( stoppedAt.finished + stoppedAt.waiting );
  	                                          $("#status-note").hide();
                                                   $("#countdown-finished").show();
                                                   $("#countdown-div").hide();
@@ -307,7 +311,9 @@ $('document').ready(function(){
     <div id="percent-div"><h2 id="percentage-header">% of libraries:</h2>
       <div id="stat"></div>
     </div>
-    <div id="countdown-finished" style="display:none"></div>
+    <div id="countdown-finished" style="display:none">
+      <p><span id="countdown-finished-count"></span> <span id="countdown-finished-of"></span> <span id="countdown-finished-total"></span> <span id="countdown-finished-responded-msg"></span>.</p>
+    </div>
     <div id="libraries-finished" style="display:none"><p><span id="all-libraries-finished"></span> <span id="finish-time"></span> <span id="time-units"></span></div>
   </div>
   <div id="leftcontent"></div>

@@ -12,7 +12,7 @@ insert into i18n (page,lang,category,id,change,which,stage,text) values
 ('public','en','header','menu_contact','text',null,null,'Contact'),
 ('public','en','header','menu_test','text',null,null,'Test'),
 ('public','en','header','query','attr','placeholder',null,'Search'),
-('public','en','header','search-button','prop','value',null,'Go');
+('public','en','header','search-submit-button','prop','value',null,'Go');
 
 insert into i18n (page,lang,category,id,change,which,stage,text) values
 ('public','fr','header','tagline-p','text',null,null,'Relier les bibliothèques, servir les usagers.'),
@@ -26,4 +26,4 @@ insert into i18n (page,lang,category,id,change,which,stage,text) values
 ('public','fr','header','menu_contact','text',null,null,'Contact'),
 ('public','fr','header','menu_test','text',null,null,'Tester'),
 ('public','fr','header','query','attr','placeholder',null,'Chercher'),
-('public','fr','header','search-button','prop','value',null,'Aller');
+('public','fr','header','search-submit-button','prop','value',null,'Aller');

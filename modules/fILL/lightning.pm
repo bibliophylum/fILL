@@ -305,15 +305,23 @@ sub request_process {
 
     # ...end of atomic
 
+#    $self->log->debug( 'sources:\n' . Dumper(@sources));
+
     # re-consolidate MW/MDA locations - they handle ILL for all branches centrally
     @sources = $self->_consolidate_locations( \@sources );
+
+#    $self->log->debug( 'consolidated sources:\n' . Dumper(@sources));
 
     # remove duplicates for a given library/location (they may have multiple holdings)
     my %seen = ();
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 
+#    $self->log->debug( 'unique sources:\n' . Dumper(@unique_sources));
+
     my @sorted_sources = $self->_sort_sources_by_region_and_NBLC( $oid, \@unique_sources );
 
+#    $self->log->debug( 'sorted sources:\n' . Dumper(@sorted_sources));
+    
     # remove garbage sources
     my $index = 0; 
     while ($index <= $#sorted_sources ) { 
@@ -324,7 +332,8 @@ sub request_process {
 	    $index++; 
 	} 
     }
-
+#    $self->log->debug( 'cleaned sources:\n' . Dumper(@sources));
+    
     # create the sources list for this request
     my $sequence = 1;
     my $SQL = "INSERT INTO sources (sequence_number, oid, call_number, group_id, tried) VALUES (?,?,?,?,?)";
