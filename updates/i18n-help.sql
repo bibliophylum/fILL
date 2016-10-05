@@ -34,7 +34,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/help.tmpl','fr','tparm','lang',null,'fr'),
 ('public/help.tmpl','fr','tparm','pagetitle',null,'FAQ'),
 ('public/help.tmpl','fr','js_lang_data','help-header',null,'Tutoriel de recherche'),
-('public/help.tmpl','fr','js_lang_data','how-to-search',null,'Comment chercher et demander des articles en prévision d’un prêt interbibliothèques'),
+('public/help.tmpl','fr','js_lang_data','how-to-search',null,'Comment chercher et demander des articles en prévision d’un prêt entre bibliothèques'),
 ('public/help.tmpl','fr','js_lang_data','step-1',null,'Étape 1 – Où effectuer la recherche?'),
 ('public/help.tmpl','fr','js_lang_data','step-1a',null,'Effectuez une recherche à partir de l’un ou l’autre des onglets se trouvant dans le site Web de fILL.'),
 ('public/help.tmpl','fr','js_lang_data','step-2',null,'Étape 2 – Comment effectuer une recherche?'),

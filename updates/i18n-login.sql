@@ -38,7 +38,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/login.tmpl','fr','js_lang_data','image-attribution',null,'Image offerte par '),
 ('public/login.tmpl','fr','js_lang_data','menu_login',null,'Bienvenue'),
 ('public/login.tmpl','fr','js_lang_data','menu_new',null,'Vous êtes nouveau à fILL?'),
-('public/login.tmpl','fr','js_lang_data','welcome-text',null,'Bienvenue au système de prêts interbibliothèques des bibliothèques publiques du Manitoba'),
+('public/login.tmpl','fr','js_lang_data','welcome-text',null,'Bienvenue au système de prêts entre bibliothèques des bibliothèques publiques du Manitoba'),
 ('public/login.tmpl','fr','js_lang_data','cannot-remember',null,'Si vous ne vous rappelez pas de votre nom d’utilisateur ou de votre mot de passe, communiquez avec votre bibliothèque publique locale.'),
 ('public/login.tmpl','fr','js_lang_data','choose-region',null,'Quelle région du Manitoba habitez-vous?'),
 ('public/login.tmpl','fr','js_lang_data','choose-town',null,'Où se trouve votre bibliothèque habituelle?'),

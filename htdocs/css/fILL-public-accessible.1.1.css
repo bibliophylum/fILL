@@ -75,13 +75,13 @@ img
 h1 {
 	margin-bottom: .5em;
 	font-size: 1.5em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 }
 
 h2 {
 	margin-bottom: .5em;
 	font-size: 1.3em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 }
 
 h3 {
@@ -454,7 +454,7 @@ input[type=submit]
     border-radius: 5px;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
 }
 
 input[type=submit]:hover
@@ -464,7 +464,7 @@ input[type=submit]:hover
     border-radius: 5px;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
 }
 
 input[type=button]
@@ -474,7 +474,7 @@ input[type=button]
     border-radius: 5px;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
 }
 
 input[type=button]:hover
@@ -484,7 +484,7 @@ input[type=button]:hover
     border-radius: 5px;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
 }
 
 input[type=submit]:focus
@@ -494,7 +494,7 @@ input[type=submit]:focus
     border-radius: 5px;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
 }
 
 
@@ -516,7 +516,7 @@ input[type=text]:focus, input[type=password]:focus
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
     border: 0;
     background-color: #183935;
 }
@@ -525,7 +525,7 @@ input[type=text]:focus, input[type=password]:focus
     padding: .3em 1em;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
     border: 0;
 }
 
@@ -536,7 +536,7 @@ input[type=text]:focus, input[type=password]:focus
     color: #fff;
     font-size: 1.4em;
     width: auto;
-    text-transform:capitalize;
+    /* text-transform:capitalize; */
     border: 0;
     border-radius:5px;
 }
@@ -556,7 +556,7 @@ input[type=text]:focus, input[type=password]:focus
 	border: 1px solid inherit;
 	margin: .5em;
 	font-size: 1.4em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 	cursor: pointer;
     border-radius:5px;
 }
@@ -588,7 +588,7 @@ button {
 	padding: .3em;
 	margin: 10px;
 	font-size: 1.4em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 	cursor: pointer;
 }
 
@@ -599,7 +599,7 @@ button {
 	margin: .5em;
 	padding: .3em;
 	font-size: 1.4em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 	cursor: pointer;
 	border-radius:5px;
 }
@@ -622,7 +622,7 @@ button {
 	padding: .3em;
 	margin: 10px;
 	font-size: 1.4em;
-	text-transform: capitalize;
+	/* text-transform: capitalize; */
 	cursor: pointer;
 }
 
