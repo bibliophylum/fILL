@@ -1,7 +1,8 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_rotations_admin.tmpl">
 
-<script type="text/javascript" src="/js/rotation-reports-1.1.js"></script>
+<script type="text/javascript" src="/js/moment.min.js"></script>
+<script type="text/javascript" src="/js/rotation-item-circ-counts-1.0.js"></script>
 
 <script type="text/javascript">
 
@@ -9,40 +10,18 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-  set_secondary_tab("menu_rotations_report_item_circ_counts");
-
-  $.getJSON('/cgi-bin/get-rotations-item-circ-counts.cgi', {oid: <TMPL_VAR name="oid">},
-        function(data){
-            build_item_circ_counts_table(data);
-        })
-	.success(function() {
-        })
-	.error(function() {
-        })
-	.complete(function() { 
-            oTable = $('#item-circ-counts-table').dataTable({
-                "bJQueryUI": true,
-                "sPaginationType": "full_numbers",
-                "bInfo": true,
-                "bSort": true,
-                "sDom": '<"H"Tfr>t<"F"ip>',
-                "iDisplayLength": 50,
-                "bLengthChange": true,
-                // TableTools requires Flash version 10...
-                "oTableTools": {
-                    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-                }
-          });
-      });
-});
 
 </script>
 
 
 
 <div id="center" role="main">
+  <div id="dateRangeDiv">
+    <form>
+	From <input id="startdate" type="text" class="history-date"> to <input id="enddate" type="text" class="history-date">
+        <input id="dateButton" type="button" class="library-style" value="Fetch requests">
+    </form>
+  </div>
 
     <div id="waitDiv">
       Loading... <img src="/wait.gif" alt="loading indicator">
@@ -50,7 +29,26 @@ $('document').ready(function(){
 
     <div id="myDiv">
       <h3>Circs by Item and Library.</h3>
-      <div id="mylistDiv"></div>
+      <div id="mylistDiv">
+	<table id="item-circ-counts-table" class="row-border">
+	  <thead>
+	    <tr>
+	      <th>library</th>
+	      <th>symbol</th>
+	      <th>ts_start</th>
+	      <th>ts_end</th>
+	      <th>title</th>
+	      <th>callno</th>
+	      <th>barcode</th>
+	      <th>circs</th>
+	    </tr>
+	  </thead>
+	  <tbody></tbody>
+	  <tfoot>
+	    <tr><td colspan="8"> </td></tr>
+	  </tfoot>
+	</table>
+      </div>      
     </div>
 
   <div id="instructions" class="tone-box">

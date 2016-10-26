@@ -12,6 +12,8 @@ if (($session->is_expired) || ($session->is_empty)) {
     exit;
 }
 my $oid = $query->param('oid');
+my $dStart = $query->param('start');
+my $dEnd = $query->param('end');
 
 my $SQL="select
  o.org_name as library,
@@ -26,6 +28,9 @@ from
  rotations r
  inner join rotations_stats s on s.barcode=r.barcode
  left join org o on o.oid=s.oid 
+where 
+ s.ts_start >= ?
+ and s.ts_end <= ? 
 group by
  o.org_name,
  o.symbol,
@@ -55,7 +60,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} } );
+my $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $dStart, $dEnd );
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { rotations_item_circ_counts => $aref } );
