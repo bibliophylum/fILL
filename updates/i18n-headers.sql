@@ -22,7 +22,7 @@ insert into i18n (page,lang,category,id,change,which,stage,text) values
 ('public','fr','header','menu_current','text',null,null,'Emprunts actuels'),
 ('public','fr','header','menu_about','text',null,null,'Au sujet de fILL'),
 ('public','fr','header','menu_help','text',null,null,'Aide'),
-('public','fr','header','menu_faq','text',null,null,'Questions fréquentes'),
+('public','fr','header','menu_faq','text',null,null,'FAQ'),
 ('public','fr','header','menu_contact','text',null,null,'Contact'),
 ('public','fr','header','menu_test','text',null,null,'Tester'),
 ('public','fr','header','query','attr','placeholder',null,'Chercher'),
