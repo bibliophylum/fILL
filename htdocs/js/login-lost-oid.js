@@ -28,7 +28,7 @@ $('document').ready(function(){
     $("#search").hide();
     $(".inline-items").children().hide();
     $(".inline-items").append('<li><a id="menu_login" class="current_tab" href="/cgi-bin/public.cgi">Welcome</a></li>');
-    $(".inline-items").append('<li><a id="menu_new" href="/new.html">New to fILL?</a></li>');
+    $(".inline-items").append('<li><a id="menu_new" href="/cgi-bin/public.cgi?rm=new_form">New to fILL?</a></li>');
     $("#menu_login").show();
     $("#menu_new").show();
 

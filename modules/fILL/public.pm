@@ -49,6 +49,7 @@ sub setup {
 	'help_form'                => 'help_process',	
 	'faq_form'		   => 'faq_process',
 	'contact_form'             => 'contact_process',
+	'new_form'                 => 'new_process',
 	);
 }
 
@@ -288,6 +289,30 @@ sub contact_process {
 		      logo_credit => $logoCredit
 #		      pid => $pid
 	);
+    return $template->output;
+}
+
+#--------------------------------------------------------------------------------
+#
+#
+sub new_process {
+    my $self = shift;
+    my $q = $self->query;
+
+#    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
+
+    my $template;
+    $template = $self->load_tmpl('public/new.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => "New to fILL",
+		      template => 'public/new.tmpl',
+#		      username => $self->authen->username,
+#		      barcode => $self->session->param("fILL-card"),
+#		      oid => $oid,
+#		      library => $library,
+	);
+
     return $template->output;
 }
 

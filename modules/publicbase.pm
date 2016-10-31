@@ -107,8 +107,8 @@ sub cgiapp_init {
 	LOGIN_SESSION_TIMEOUT => '30m',
 	);
     #publicbase->authen->protected_runmodes(':all');
-    # protect everything but the self-registration form:
-    $self->authen->protected_runmodes(qr/^(?!registration_)/);
+    # protect everything but the "New to fILL?" page
+    $self->authen->protected_runmodes(qr/^(?!new_form)/);
 
 
     # Configure authorization
