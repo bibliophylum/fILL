@@ -386,13 +386,23 @@ sub show_logged_out_process {
     # The application object
     my $self = shift;
 
+    # *every* string coming back from Pg has utf-8 flag set
+    $self->dbh->{pg_enable_utf8} = -1;  # (db encoding is UTF-8)
+    $self->dbh->do("SET client_encoding = 'UTF8'");
+
+    my $lang = $self->determine_language_to_use();
+    my $logout_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/logged_out.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
+    
     my $template = $self->load_tmpl(	    
 	'public/logged_out.tmpl',
 	cache => 1,
 	);
     $template->param( pagetitle => 'fILL Logged Out',
-		      username => "Logged out. ",
+		      username => '',
 		      barcode => '',
+		      logged_out_header => $logout_i18n_href->{"logged-out-header"}->{'text'},
+		      thanks => $logout_i18n_href->{"thanks"}->{'text'},
+		      login_button_text => $logout_i18n_href->{"login-button-text"}->{'text'},
 		      sessionid => $self->session->id(),
 	);
 

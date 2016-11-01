@@ -18,16 +18,16 @@ $('document').ready(function(){
 
 <div class="clear">
 
-	<div id="content">
-		<h1>Logged out</h1>
-	<p style="display:none">Logged in as [<TMPL_VAR NAME="username">]</p>
-	<p style="display:none">Session id [<TMPL_VAR NAME="sessionid">]</p>
-	<p>Thanks for using fILL!</p>
-		<form METHOD=POST ACTION="">
-		     <input TYPE="hidden" NAME="rm" VALUE="search_form">
-		     <input type="submit" name="submit" value="Log in" class="public-style" />
-		</form>
-	</div>
+  <div id="content">
+    <h1 id="logged-out-header"><TMPL_VAR name="logged_out_header"></h1>
+    <p style="display:none">Logged in as [<TMPL_VAR NAME="username">]</p>
+    <p style="display:none">Session id [<TMPL_VAR NAME="sessionid">]</p>
+    <p id="thanks"><TMPL_VAR name="thanks"></p>
+    <form METHOD=POST ACTION="">
+      <input TYPE="hidden" NAME="rm" VALUE="search_form">
+      <input type="submit" name="submit" value="<TMPL_VAR NAME='login_button_text'>" class="public-style" />
+    </form>
+  </div>
 </div>
 
 <TMPL_INCLUDE NAME="footer.tmpl">
