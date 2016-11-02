@@ -21,7 +21,8 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/login.tmpl','en','js_lang_data','startOver',null,'Start over'),
 ('public/login.tmpl','en','js_lang_data','login-legend',null,'Login'),
 ('public/login.tmpl','en','js_lang_data','home-lib-text',null,'Home library location:'),
-('public/login.tmpl','en','js_lang_data','authen_loginbutton',null,'Sign in')
+('public/login.tmpl','en','js_lang_data','authen_loginbutton',null,'Sign in'),
+('public/login.tmpl','en','js_lang_data','authenticating',null,'Authenticating...')
 ;
 
 insert into i18n (page,lang,category,id,stage,text) values
@@ -45,6 +46,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/login.tmpl','fr','js_lang_data','startOver',null,'Recommencez'),
 ('public/login.tmpl','fr','js_lang_data','login-legend',null,'Connexion'),
 ('public/login.tmpl','fr','js_lang_data','home-lib-text',null,'Lieu de la bibliothèque habituelle:'),
-('public/login.tmpl','fr','js_lang_data','authen_loginbutton',null,'Ouverture de session')
+('public/login.tmpl','fr','js_lang_data','authen_loginbutton',null,'Ouverture de session'),
+('public/login.tmpl','fr','js_lang_data','authenticating',null,'Authentifier...')
 ;
 
