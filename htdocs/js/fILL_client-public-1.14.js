@@ -106,7 +106,12 @@ function my_onshow(data) {
 	    });
 	    // can't be done in coverImage - have to wait until container appended to div
 	    if (useELMcover) {
-		$("#cover").attr("src","/img/fill-cover-elm.png");
+		var lang = 'en';
+		if (document.documentElement.lang == 'fr') {
+		    lang = 'fr';
+		}
+		$("#cover").attr("src","/img/"+lang+"/fill-cover-elm.png");
+		    
 	    }
 	}
 	$newResults.append( $recDiv );
@@ -243,7 +248,11 @@ function my_onrecord(data) {
 
     // can't be done in coverImage - have to wait until container appended to div
     if (useELMcover) {
-	$("#cover").attr("src","/img/fill-cover-elm.png");
+	var lang = 'en';
+	if (document.documentElement.lang == 'fr') {
+	    lang = 'fr';
+	}
+	$("#cover").attr("src","/img/"+lang+"/fill-cover-elm.png");
     }
 }
 
@@ -517,12 +526,20 @@ function replaceHtml(el, html) {
 };
 
 function ImgError(source){
-	source.src = "/img/fill-cover.png";
-	source.onerror = "";
-	return true;
+    var lang = 'en';
+    if (document.documentElement.lang == 'fr') {
+	lang = 'fr';
+    }
+    source.src = "/img/"+lang+"/fill-cover.png";
+    source.onerror = "";
+    return true;
 }
 
 function coverImage(lccn,isbn) {
+    var lang = 'en';
+    if (document.documentElement.lang == 'fr') {
+	lang = 'fr';
+    }
     var cover = '<td>';
     if ((isbn != undefined) || (lccn != undefined)) {
 	if (lccn != undefined) {
@@ -531,7 +548,7 @@ function coverImage(lccn,isbn) {
 	    cover += '<img id="cover" src="https://covers.openlibrary.org/b/ISBN/' + isbn[0] + '-M.jpg?default=false" onerror="ImgError(this)">';
 	}
     } else {
-	cover += '<img id="cover" src="/img/fill-cover.png">';
+	cover += '<img id="cover" src="/img/'+lang+'/fill-cover.png">';
     }
     cover += '</td>';
     return cover;
