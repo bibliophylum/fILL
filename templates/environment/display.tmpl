@@ -5,6 +5,11 @@
 
   <table class="fill-table table-width-lib">
     <tr>
+      <td>Your web browser</td>
+      <td><TMPL_VAR NAME="http_user_agent"></td>
+    </tr>
+      
+    <tr>
       <td>ENV variable</td>
       <td>Value</td>
     </tr>
@@ -17,6 +22,6 @@
     </TMPL_LOOP>
 
   </table>
-</container>
+</content>
 
 <TMPL_INCLUDE NAME="footer.tmpl">

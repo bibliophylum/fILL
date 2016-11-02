@@ -447,13 +447,14 @@ sub environment_process {
 
     my $template = $self->load_tmpl('public/environment.tmpl');
     my @loop;
-    foreach my $key (keys %ENV) {
+    foreach my $key (sort keys %ENV) {
 	my %row = ( name => $key,
 		    value => $ENV{$key},
 	    );
 	push(@loop, \%row);
     }
     $template->param(pagetitle => 'fILL Environment',
+		     http_user_agent => $ENV{'HTTP_USER_AGENT'},
 		     env_variable_loop => \@loop);
     return $template->output;
 }
