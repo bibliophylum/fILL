@@ -582,7 +582,7 @@ function primaryDetails(data) {
 	// (using the same URL), so it makes sense to show the first one here.
 	// Patrons will be asked to log in to Overdrive when they attempt to borrow.
 	if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
-            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</td></tr>';
+            primary += '<tr><td><b>eLibraries Manitoba</b></td><td><b>:</b> <a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + i18n_data['find-this-title']['constant']['translation'] + '</a>' + '</td></tr>'; // Find this title on eLibraries Manitoba...
 	    useELMcover = 1;
 	}
     }
@@ -689,14 +689,14 @@ function buildRequestForm(data) {
 	    // (using the same URL), so it makes sense to show the first one here.
 	    // Patrons will be asked to log in to Overdrive when they attempt to borrow.
 	    if (url.toLowerCase().indexOf('elm.lib.overdrive.com') >= 0) {
-		requestForm += '<p><strong>Your library may provide access to this electronic resource through eLibraries Manitoba.</strong></p>';
-		requestForm += '<p><a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">' + 'Find this title on eLibraries Manitoba...' + '</a>' + '</p>';
+		requestForm += '<p><strong>'+i18n_data['your-library-may']['constant']['translation']+'</strong></p>'; // Your library may provide access to this electronic resource through eLibraries Manitoba.
+		requestForm += '<p><a href="' + data["location"][0]["md-electronic-url"] + '" target="_blank" style="text-decoration:underline">'+i18n_data['find-this-title']['constant']['translation']+'</a>' + '</p>'; // Find this title on eLibraries Manitoba...
 
 	    } else {
-		requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+		requestForm += '<p><strong>'+i18n_data['electronic-resource']['constant']['translation']+'</strong></p>'; // This is an electronic resource.  Please contact your library to see if it is available to you.
 	    }
 	} else {
-	    requestForm += '<p><strong>This is an electronic resource.  Please contact your library to see if it is available to you.</strong></p>';
+	    requestForm += '<p><strong>'+i18n_data['electronic-resource']['constant']['translation']+'</strong></p>'; // This is an electronic resource.  Please contact your library to see if it is available to you.
 	}
     } else {
 	requestForm += '<input type="submit" class="public-style" value="'+i18n_data['request-button']['constant']['translation']+'">';

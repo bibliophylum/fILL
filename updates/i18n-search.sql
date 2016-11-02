@@ -52,7 +52,11 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','en','js_lang_data','cancel-button',null,'Click to cancel this request'),
 ('public/search.tmpl','en','js_lang_data','requesting-user',null,'Requesting user'),
 ('public/search.tmpl','en','js_lang_data','msg-librarian-will-request',null,'Your librarian will see if another Manitoba public library is able to lend this title to'),
-('public/search.tmpl','en','js_lang_data','msg-at-this-time',null,'at this time');
+('public/search.tmpl','en','js_lang_data','msg-at-this-time',null,'at this time'),
+('public/search.tmpl','en','js_lang_data','your-library-may',null,'Your library may provide access to this electronic resource through eLibraries Manitoba.'),
+('public/search.tmpl','en','js_lang_data','electronic-resource',null,'This is an electronic resource.  Please contact your library to see if it is available to you.'),
+('public/search.tmpl','en','js_lang_data','find-this-title',null,'Find this title on eLibraries Manitoba...')
+;
 
 
 
@@ -108,4 +112,8 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/search.tmpl','fr','js_lang_data','cancel-button',null,'Cliquez pour annuler cette demande.'),
 ('public/search.tmpl','fr','js_lang_data','requesting-user',null,'Usager demandeur'),
 ('public/search.tmpl','fr','js_lang_data','msg-librarian-will-request',null,'Votre bibliothécaire vérifiera si une autre bibliothèque publique du Manitoba est en mesure de prêter ce titre à'),
-('public/search.tmpl','fr','js_lang_data','msg-at-this-time',null,'à ce moment.');
+('public/search.tmpl','fr','js_lang_data','msg-at-this-time',null,'à ce moment.'),
+('public/search.tmpl','fr','js_lang_data','your-library-may',null,'Votre bibliothèque pourrait fournir l’accès à cette ressource électronique par eLibraries Manitoba.'),
+('public/search.tmpl','fr','js_lang_data','electronic-resource',null,'Ceci est une ressource électronique. Veuillez contacter votre bibliothèque pour savoir vous y avez accès.'),
+('public/search.tmpl','fr','js_lang_data','find-this-title',null,'Trouvez ce titre sur eLibraries Manitoba ...')
+;
