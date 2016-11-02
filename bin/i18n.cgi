@@ -68,7 +68,7 @@ if (@$i18n) {
 
 # Now get common header / footer translations
 my $common = $dbh->selectall_arrayref(
-    "select category,id,change,which,stage,text from i18n where page='public' and lang=? and category='header'",
+    "select category,id,change,which,stage,text from i18n where page='public' and lang=? and (category='header' or category='footer')",
     { Slice => {} },
     $lang
     );
