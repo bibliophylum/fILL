@@ -31,7 +31,7 @@ my $retval = 0;
 my $retmsg = "";
 
 my $SQL = "select count(request_id) from requests_active where request_id=? and ((msg_to=? and status like 'ILL-Answer|Hold-Placed%') or (msg_to=? and status like 'ILL-Answer|Locations-provided%') or (msg_to=? and status like 'ILL-Answer|Will-Supply%') or (msg_from=? and message='Trying next source')) and request_id not in (select request_id from requests_active where request_id=? and status like 'ILL-Answer|Unfilled%')";
-my $lenderUpdated = $dbh->selectrow_array($SQL,undef,$reqid,$oid,$oid,$oid,$oid);
+my $lenderUpdated = $dbh->selectrow_array($SQL,undef,$reqid,$oid,$oid,$oid,$oid,$reqid);
 #print STDERR Dumper($lenderUpdated);
 
 if ((defined $lenderUpdated) && ($lenderUpdated != 0)) {
