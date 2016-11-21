@@ -65,6 +65,32 @@ my %SPRUCE_TO_MAPLIN = (
     'Bibliotheque Pere Champagne Library'      => 'MNDP',  # Pere Champagne
     'Louise Public Library'                    => 'MPM',   # Pilot Mound
     'Bibliotheque Ste-Anne Library'            => 'MSA',   # Ste Anne
+    'Parkland Regional'                        => 'MDA',   # Parkland
+    'Dauphin Public'                           => 'MDA',
+    'Parkland'                                 => 'MDA',
+    'Archive Headquarters'                     => 'MDA',
+    'Headquarters'                             => 'MDA',
+    'Birch River'                              => 'MDA',
+    'Birtle'                                   => 'MDA',
+    'Bowsman'                                  => 'MDA',
+    'Erickson'                                 => 'MDA',
+    'Eriksdale'                                => 'MDA',
+    'Foxwarren'                                => 'MDA',
+    'Gilbert Plains'                           => 'MDA',
+    'Gladstone'                                => 'MDA',
+    'Hamiota'                                  => 'MDA',
+    'Langruth'                                 => 'MDA',
+    'McCreary'                                 => 'MDA',
+    'Minitonas'                                => 'MDA',
+    'Ochre River'                              => 'MDA',
+    'Roblin'                                   => 'MDA',
+    'Rossburn'                                 => 'MDA',
+    'Shoal Lake'                               => 'MDA',
+    'Siglunes'                                 => 'MDA',
+    'St. Lazare'                               => 'MDA',
+    'Ste. Rose'                                => 'MDA',
+    'Strathclair'                              => 'MDA',
+    'Winnipegosis'                             => 'MDA',
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -927,11 +953,11 @@ sub _isolate_and_normalize_source_callnos {
 		    # so force it to MBW and let MBW forward to branches.
 		    $src{'symbol'} = 'MBW' if (not defined $src{'symbol'});
 
-		} elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
-		    # all Parkland requests go to MDA
-		    $src{'symbol'} = 'MDA';
-                    # This is handled in _consolidate_locations()....
-		    #$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
+#		} elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
+#		    # all Parkland requests go to MDA
+#		    $src{'symbol'} = 'MDA';
+#                    # This is handled in _consolidate_locations()....
+#		    #$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
 
 		} elsif ($sources{$num}{'symbol'} eq 'ALLARD') {
 		    # all Allard requests go to MSTG

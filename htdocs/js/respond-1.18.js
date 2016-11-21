@@ -403,7 +403,7 @@ function forward( requestId, retargets ) {
 		    msg_to: msg_to,  // sending TO whoever original was FROM
 		    oid: $("#oid").text(),
 		    status: "ILL-Answer|Locations-provided|responder-specific",
-		    message: "forwarded to our branch "+retargets[targetIndex].name
+		    message: "forwarded to our branch "+retargets[targetIndex].org_name
 		}
 	    } else {
 		return null;
