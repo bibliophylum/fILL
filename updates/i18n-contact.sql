@@ -16,7 +16,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/contact.tmpl','fr','tparm','lang',null,'fr'),
 ('public/contact.tmpl','fr','tparm','pagetitle',null,'fILL/My account'),
 ('public/contact.tmpl','fr','js_lang_data','heading1',null,'Contact'),
-('public/contact.tmpl','fr','js_lang_data','help-message',null,'Si vous devez obtenir une aide additionnelle pour demander un article au moyen de fILL, communiquez avec votre bibliothèque publique locale ou visitez-la.'),
+('public/contact.tmpl','fr','js_lang_data','help-message',null,'Si vous nécessitez de l’aide additionnelle pour demander un article au moyen de fILL, communiquez avec votre bibliothèque publique locale par téléphone, courriel ou en vous-y rendant.'),
 ('public/contact.tmpl','fr','js_lang_data','phone',null,'Téléphone :'),
 ('public/contact.tmpl','fr','js_lang_data','email',null,'Courriel :'),
 ('public/contact.tmpl','fr','js_lang_data','open',null,'Ouvrez le site Web de'),

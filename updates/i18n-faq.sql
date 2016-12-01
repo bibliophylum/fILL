@@ -38,7 +38,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 ('public/faq.tmpl','fr','js_lang_data','q-how-many',null,'Combien d’articles puis-je demander?'),
 ('public/faq.tmpl','fr','js_lang_data','a-how-many',null,'Le nombre maximal d’articles que vous pouvez emprunter en une seule fois est établi par la politique locale de votre bibliothèque.'),
 ('public/faq.tmpl','fr','js_lang_data','q-on-loan',null,'Que se passe-t-il si l’article que je souhaite est déjà prêté?'),
-('public/faq.tmpl','fr','js_lang_data','a-on-loan',null,'Votre bibliothèque locale peut demander qu’on retienne l’article. Lorsque l’article est retourné, la demande de prêt entre bibliothèques est traitée.'),
+('public/faq.tmpl','fr','js_lang_data','a-on-loan',null,'Votre bibliothèque locale peut demander qu’on retienne l’article. Lorsque l’article sera retourné, la demande de prêt entre bibliothèques sera traitée.'),
 ('public/faq.tmpl','fr','js_lang_data','q-late',null,'Est-ce que je paie des frais de retard à ma bibliothèque publique locale ou à la bibliothèque de prêt?'),
-('public/faq.tmpl','fr','js_lang_data','a-late',null,'Si votre article est retourné en retard, vous payez des frais de retard à votre bibliothèque publique locale. Les usagers des bibliothèques doivent toujours tenter de retourner les articles empruntés à la date limite pour assurer que le service offert aux autres usagers n’est pas interrompu.');
+('public/faq.tmpl','fr','js_lang_data','a-late',null,'Si votre article est retourné en retard, vous payez des frais de retard à votre bibliothèque publique locale. Les usagers des bibliothèques doivent toujours tenter de retourner les articles empruntés à la date limite pour assurer que le service offert aux autres usagers ne soit pas interrompu.');
 

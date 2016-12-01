@@ -14,7 +14,7 @@ insert into i18n (page,lang,category,id,stage,text) values
 
 insert into i18n (page,lang,category,id,stage,text) values
 ('public/current.tmpl','fr','tparm','lang',null,'fr'),
-('public/current.tmpl','fr','tparm','pagetitle',null,'Emprunts actuels'),
+('public/current.tmpl','fr','tparm','pagetitle',null,'Mes emprunts'),
 ('public/current.tmpl','fr','tabledef','datatable_borrowing-col-0',null,'cid'),
 ('public/current.tmpl','fr','tabledef','datatable_borrowing-col-1',null,'Titre'),
 ('public/current.tmpl','fr','tabledef','datatable_borrowing-col-2',null,'Auteur'),
