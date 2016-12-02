@@ -825,7 +825,6 @@ sub _turn_request_parms_into_sources_hash {
 #    foreach my $num (sort keys %sources) {
 #	$self->log->debug("request_process sources $num hash:\n " . Dumper($sources{$num}));
 #    }
-
     return %sources;
 }
 
