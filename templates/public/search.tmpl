@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<TMPL_IF name="lang">
+  <html lang=<TMPL_VAR name="lang">>
+<TMPL_ELSE>
+  <html lang="en">
+</TMPL_IF>
  
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
   <title><TMPL_VAR name="pagetitle"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!--[if lt IE 9]>
   <script>
@@ -22,6 +26,7 @@
 <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
 <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
+
 <!-- This is the new DataTables, with all of the required extensions built in
      See https://datatables.net/download/ for info on building these files.
   -->
@@ -29,60 +34,17 @@
 <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
 <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
+<script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
 
 <script type="text/javascript" src="/js/pz2.js"></script>
-<script type="text/javascript" src="/js/fILL_client-public-1.12.js"></script>
+<script type="text/javascript" src="/js/fILL_client-public-1.14.js"></script>
 <!--
 <script type="text/javascript" src="/plugins/ContentFlow/contentflow.js"></script>
 -->
 <script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
 <link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
-
-<script type="text/javascript">
-
-  function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
- function increaseFontSize() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) + 1
-        });
-    });
- }
- function decreaseFontSize() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        $(this).css({
-            'font-size': parseFloat($(this).css('font-size')) - 1
-        });
-    });
-  } 
- function resetFontSizeToDefault() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
-            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
-        }
-    });
-    location.reload();
-  } 
- function setFontSizeFromCookies() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
-            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
-            $(this).css({
-                'font-size': fs + "px"
-            });
-        }
-  });
-  
-  } 
-
-</script>
 
 <!-- Google analytics -->
 <script>
@@ -103,10 +65,8 @@
 </script>
 
 <script type="text/javascript">
-  $('document').ready(function(){
-
-    setFontSizeFromCookies();
-
+$('document').ready(function(){
+  
     $("#image").append("");
 
     $("#query").focus();
@@ -126,32 +86,6 @@
         $("#search-submit-button").click();
     });
 */
-    $('#incrFont').click(function () {
-        ga('send', 'event', 'Font-size', 'increase');
-        increaseFontSize();
-    });
-    $('#decrFont').click(function () {
-        ga('send', 'event', 'Font-size', 'decrease');
-        decreaseFontSize();
-    });
-    $('#resetFont').click(function () {
-        ga('send', 'event', 'Font-size', 'reset');
-        resetFontSizeToDefault();
-    });
-
-    if (! $.cookie("fILL-oid")) {
-        $.cookie("fILL-oid", $("#oid").text(), { expires: 365, path: '/' });
-        //$.cookie("fILL-location", xxx, { expires: 365, path: '/' });
-    }
-
-    $("#clearCookies").on("click",function(e){
-        e.preventDefault();
-        $.removeCookie("fILL-oid", { path: '/' });
-        $.removeCookie("fILL-location", { path: '/' });
-        $.removeCookie("fILL-barcode", { path: '/' });
-        $.removeCookie("fILL-authentication", { path: '/' });
-        window.location.href="?authen_logout=1";
-    });
 
     $("#countdown").TimeCircles( { start: false,
                                    time: { Days: { show: false },
@@ -163,9 +97,13 @@
                                                 if (total == 0) {
                                                   $("#countdown").TimeCircles().stop();
                                                   var stoppedAt = stopTheSearch("Timer done");
-            	                                  $("#status-header").text("Search complete.");
+                                                  $("#status-header").text("Search complete.");
+/*
                                                   $("#countdown-finished").empty();
                                                   $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 45 seconds.</p>");
+*/
+                                                  $("#countdown-finished-count").text( stoppedAt.finished );
+                                                  $("#countdown-finished-total").text( stoppedAt.finished + stoppedAt.waiting );
  	                                          $("#status-note").hide();
                                                   $("#countdown-finished").show();
                                                   $("#countdown-div").hide();
@@ -174,14 +112,7 @@
                                                 }
                                               }, type="visible");
 
-    if (window.location.hostname == 'rigel.gotdns.org') {
-	$("#localdev").show();
-    }
-    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
-	$("#filldev").show();
-    }
-
-  });
+});
 </script>
 
  </head>
@@ -209,33 +140,54 @@
 
     <div id="header-left">
       <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"/></a></div>
-      <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
+      <div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
     </div>
-
+    
     <div id="header-right">
-      <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+
+      <div class="header-control-bar" id="upper-right">
+	<div id="language-selector">
+	  <!-- <label for="language">Language</label> -->
+	  <select name="language" id="language">
+	    <option lang="en" selected="selected">English</option>
+	    <option lang="fr">Français</option>
+	  </select>
+	</div>
+	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+      </div> <!-- header, upper-right set of controls -->
+      <div class="header-break"></div>
+      
+      <div class="header-control-bar" id="lower-right">
+	<input id="incrFont" class="public-style" type="button" value="+A" />
+	<input id="resetFont" class="public-style" type="button" value="A" />
+	<input id="decrFont" class="public-style" type="button" value="-A" />
+      </div> <!-- header, lower-right set of controls -->
+      <div class="header-break"></div>
+      
       <div id="patron-info">
-    <!-- The id="username" div is necessary: the username gets extracted (in 
-         fILL_client-public-x.y.js), and passed to the code that allows the patron 
-         to make an ILL request (we need to know who is making the request :-)
-         It doesn't have to be *here*, but it has to be somewhere....
-      -->
-          <div id="username"><TMPL_VAR name="username"></div>
-          <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
-
-	  <input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
-          <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
-          <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
-      </div>
+	<!-- The id="username" div is necessary: the username gets extracted (in 
+	     fILL_client-public-x.y.js), and passed to the code that allows the patron 
+	     to make an ILL request (we need to know who is making the request :-)
+	     It doesn't have to be *here*, but it has to be somewhere....
+	  -->
+	<div id="username"><TMPL_VAR name="username"></div>
+	<p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
+	<div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
+	<div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
+	<TMPL_IF name="template">
+	  <div id="template" style="display:none"><TMPL_VAR name="template"></div>
+	</TMPL_IF>
+      </div> <!-- patron-info -->
+      <div class="header-break"></div>
+      
     </div>
-
   </header>
   
   <!--***************ARIA MARKER 'NAVIGATION'***************-->
   <nav role="navigation" id="pub-nav-primary">
     <ul class="inline-items">
       <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
-      <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
+      <!-- <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li> --> <!-- Unused, now that all authentication is against remote systems -->
       <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
       <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
       <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
@@ -311,22 +263,21 @@
 
       <div id="ranking" style="clear:left; display:none">
        <form name="select">
-        <label for="sort">Sort by</label>
+        <label for="sort" id="sort-label">Sort by</label>
         <select name="sort" id="sort">
-         <option value="relevance" selected="selected">relevance</option>
-         <option value="title:1">title</option>
-         <option value="date:0">newest</option>
-         <option value="date:1">oldest</option>
+         <option id="sort-relevance" value="relevance" selected="selected">relevance</option>
+         <option id="sort-title" value="title:1">title</option>
+         <option id="sort-newest" value="date:0">newest</option>
+         <option id="sort-oldest" value="date:1">oldest</option>
         </select>
-        and 
-	<label for="perpage">show</label>
+	<label for="perpage" id="show-label">and show</label>
         <select name="perpage" id="perpage">
          <option value="10">10</option>
          <option value="20" selected="selected">20</option>
          <option value="30">30</option>
          <option value="50">50</option>
         </select>
-        per page.
+        <span id="per-page">per page.</span>
        </form>
       </div>
 
@@ -350,20 +301,32 @@
 
 <div id="aside" class="tone-box" role="complementary">
   <div id="image"></div>
-  <div><h1 id="status-header">Searching all libraries</h1>
+  <div id="statusbox" style="display: none">
+    <h1 id="status-header">Searching all libraries</h1>
     <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
-    <div id="countdown-div"><h2>Finishing in:</h2>
-      <div id="countdown" data-timer="45" style="width:100%"></div>
+    <div id="countdown-div"><h2 id="progress-header">Finishing in:</h2>
+      <div id="countdown" data-timer="30" style="width:100%"></div>
     </div>
-    <div id="count-or-percent-div"><h2>...or...</h2></div>
-    <div id="percent-div"><h2>% of libraries:</h2>
+    <div id="count-or-percent-div"><h2 id="alternative-marker">...or...</h2></div>
+    <div id="percent-div"><h2 id="percentage-header">% of libraries:</h2>
       <div id="stat"></div>
     </div>
-    <div id="countdown-finished" style="display:none"></div>
-    <div id="libraries-finished" style="display:none"></div>
+    <div id="countdown-finished" style="display:none">
+      <p><span id="countdown-finished-count"></span> <span id="countdown-finished-of"></span> <span id="countdown-finished-total"></span> <span id="countdown-finished-responded-msg"></span>.</p>
+    </div>
+    <div id="libraries-finished" style="display:none"><p><span id="all-libraries-finished"></span> <span id="finish-time"></span> <span id="time-units"></span></div>
   </div>
   <div id="leftcontent"></div>
-  <div id="termlist"></div>
+  <div id="termlist" style="display: none">
+    <br><hr/>
+    <p id="refinery">Refine search by:</p>
+    <hr/>
+    <p id="subject-heading" class="termtitle"></p>
+    <div id="subject-list"></div>
+    <hr/>
+    <p id="author-heading" class="termtitle"></p>
+    <div id="author-list"></div>
+  </div>
 </div>
 
 </div><!--div id content-->

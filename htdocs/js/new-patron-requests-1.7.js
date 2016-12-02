@@ -374,7 +374,8 @@ function addToAcq( requestId ) {
 	    var parms = {
 		"prid": requestId,
 		"oid": $("#oid").text(),
-		"reason": 'Your librarian is considering this for purchase.',
+		"status": 'wish-list',
+		"reason": '',  // Your librarian is considering this for purchase.
 		"message": ''
 	    }
 	    $.getJSON('/cgi-bin/decline-patron-request.cgi', parms,

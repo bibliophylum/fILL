@@ -18,38 +18,100 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-function build_table_orig( data ) {
-    for (var i=0;i<data.active.length;i++) {
-	var declinedID = data.active[i].declined_id;  // for declined requests will be prid
-	delete data.active[i].declined_id;
-	data.active[i].action="";
-	var ai = oTable_borrowing.fnAddData( data.active[i], false );
 
-	if (data.active[i].status == 'Declined') {
-	    var n = oTable_borrowing.fnSettings().aoData[ ai[0] ].nTr;
-	    /* n is now the TR that you added - so it can be modified */
-	    var oData = oTable_borrowing.fnGetData( n );
-	    n.setAttribute('id', 'declined'+declinedID);
-	    
-	    var divActions = document.createElement("div");
-	    divActions.id = 'divActions'+declinedID;
-	    
-	    var b1 = document.createElement("input");
-	    b1.type = "button";
-	    b1.value = "Delete";
-	    b1.onclick = make_seenit_handler( declinedID );
-	    divActions.appendChild(b1);
+// i18n.js will check if this is defined, and if so, will save the table column headings
+// translation results here so we can access them dynamcially:
+var i18n_tables = 'placeholder';
 
-	    $(n).find('td:last').append( divActions );
 
-	} else {
-	}
-    }
-    oTable_borrowing.fnDraw();
+$('document').ready(function(){
+    var anOpenBorrowing = [];
+    var sImageUrl = "/plugins/DataTables-1.8.2/examples/examples_support/";
 
-    $("#waitDiv").hide();
-    $("#mylistDiv").show();
-}
+    oTable_borrowing = $('#datatable_borrowing').dataTable({
+       "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "bInfo": true,
+      	"bSort": true,
+        "searching": false,
+	"sDom": '<"H"r>t<"F"ip>',
+        "aoColumns": [
+            {
+               "mDataProp": null,
+               "sClass": "control center",
+               "sDefaultContent": '<img src="'+sImageUrl+'details_open.png'+'">'
+            },
+            { "mDataProp": "cid", "bVisible": false },
+            { "mDataProp": "title" },
+            { "mDataProp": "author" },
+            { "mDataProp": "status" },
+            { "mDataProp": "details" },
+            { "mDataProp": "ts" },
+            { "mDataProp": "action" }
+        ]
+
+    });
+    
+    $.getJSON('/cgi-bin/get-patron-requests.cgi',
+	      {pid: $("#pid").text(),
+	       oid: $("#oid").text(),
+	       lang: document.documentElement.lang
+	      },
+              function(data){
+                  build_table(data);
+		  
+		  if (document.documentElement.lang === 'fr') {
+                      oTable_borrowing = $('#datatable_borrowing').dataTable({
+			  "bJQueryUI": true,
+			  "sPaginationType": "full_numbers",
+			  "bInfo": true,
+      			  "bSort": true,
+			  "searching": false,
+			  "sDom": '<"H"r>t<"F"ip>',
+			  "columnDefs": [{
+			      "targets": [0,3],
+			      "visible": false
+			  }],
+			  "initComplete": function(settings, json) {
+			      i18n_table_column_headings('#datatable_borrowing');
+			      //alert( 'DataTables has finished its initialisation.' );
+			  },
+			  "language": {
+			      "url": '/localisation/DataTables/fr_FR.json'
+			  }
+		      });
+		  } else {
+                      oTable_borrowing = $('#datatable_borrowing').dataTable({
+			  "bJQueryUI": true,
+			  "sPaginationType": "full_numbers",
+			  "bInfo": true,
+      			  "bSort": true,
+			  "searching": false,
+			  "sDom": '<"H"r>t<"F"ip>',
+			  "columnDefs": [{
+			      "targets": [0,3],
+			      "visible": false
+			  }],
+			  "initComplete": function(settings, json) {
+			      i18n_table_column_headings('#datatable_borrowing');
+			  },
+		      });
+		  }
+              })
+	.success(function() {
+	    //alert('success');
+	})
+	.error(function(data) {
+	    alert('error');
+	})
+	.complete(function() {
+            //alert('ajax complete');
+            // The following is necessary in order to resize the datatable with the
+            // hidden 'cid' column (which is necessary for the detail drill-down):
+            $('#datatable_borrowing').width("100%");
+	});
+
+});
 
 function build_table( data ) {
     var myTable = document.createElement("table");
@@ -120,45 +182,6 @@ function build_table( data ) {
     
     $("#waitDiv").hide();
     $("#mylistDiv").show();
-}
-
-function fnFormatDetails( oTable, nTr )
-{
-    var oData = oTable.fnGetData( nTr );
-    $.getJSON('/cgi-bin/get-current-request-details.cgi', { "cid": oData.cid },
-	      function(data){
-		  //alert('first success');
-	      })
-	.success(function() {
-	    //alert('success');
-	})
-	.error(function() {
-	    alert('error');
-	})
-	.complete(function(jqXHRObject) {
-	    var data = $.parseJSON(jqXHRObject.responseText)
-	    var sOut;
-	    var numDetails = data.request_details.length; 
-	    sOut = '<div class="innerDetails">'+
-		'<table id="gradient-style" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-		'<thead><th>Request ID</th><th>Timestamp</th><th>Msg from</th><th>Msg to</th><th>Status</th><th>Extra information</th></thead>';
-	    for (var i = 0; i < numDetails; i++) {
-		var detRow = '<tr>'+
-		    '<td>'+data.request_details[i].request_id+'</td>'+
-		    '<td>'+data.request_details[i].ts+'</td>'+
-		    '<td>'+data.request_details[i].from+'</td>'+
-		    '<td>'+data.request_details[i].to+'</td>'+
-		    '<td>'+data.request_details[i].status+'</td>'+
-		    '<td>'+data.request_details[i].message+'</td>'+
-		    '</tr>';
-		sOut=sOut+detRow;
-	    }
-	    sOut = sOut+'</table>'+'</div>';
-            var nDetailsRow = oTable.fnOpen( nTr, sOut, 'details' );
-	    $(nDetailsRow).attr('detail','conversation');
-            $('div.innerDetails', nDetailsRow).slideDown();
-
-	});
 }
 
 function make_seenit_handler( declinedID ) {

@@ -15,6 +15,7 @@ sudo rm -rf /opt/fILL/bin
 sudo rm -rf /opt/fILL/devdocs
 sudo rm -rf /opt/fILL/externals
 sudo rm -rf /opt/fILL/htdocs
+sudo rm -rf /opt/fILL/localisation
 sudo rm -rf /opt/fILL/modules
 sudo rm -rf /opt/fILL/pazpar2
 sudo rm -rf /opt/fILL/restricted_docs
@@ -69,6 +70,7 @@ cp -R bin /opt/fILL/bin
 cp -R devdocs /opt/fILL/devdocs
 cp -R externals /opt/fILL/externals
 cp -R htdocs /opt/fILL/htdocs
+cp -R localisation /opt/fILL/localisation
 cp -R modules /opt/fILL/modules
 cp -R pazpar2 /opt/fILL/pazpar2
 cp -R restricted_docs /opt/fILL/restricted_docs
@@ -125,8 +127,8 @@ sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.
 # dump XML to logfile with -d option: (only for debugging!)
 #sudo /usr/sbin/pazpar2 -d -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
-echo Restarting reporter daemon
-sudo /opt/fILL/services/fILLreporter.pl
+#echo Restarting reporter daemon
+#sudo /opt/fILL/services/fILLreporter.pl
 
 #echo Enabling site...
 #sudo a2ensite fILL.conf

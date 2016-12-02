@@ -10,47 +10,12 @@ $.ajaxSetup ({
   cache: false  
 });  
 
-$('document').ready(function(){
-
-  function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  set_secondary_tab("menu_rotations_current");
-
-  $.getJSON('/cgi-bin/get-rotations-current.cgi', {oid: <TMPL_VAR name="oid">},
-     function(data){
-       build_table(data); 
-
-       oTable = $('#at-my-library').dataTable({
-         "bJQueryUI": true,
-         "sPaginationType": "full_numbers",
-         "bInfo": true,
-         "bSort": true,
-         "sDom": '<"H"Tfr>t<"F"ip>',
-         "iDisplayLength": 25,
-         "bLengthChange": true,
-         "oTableTools": {
-           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-         },
-         "columnDefs": [{
-           "targets": 0,
-           "visible": false
-         }]
-       });
-   });
-});
-
 </script>
 
 
 <div id="center" role="main">
 
-    <div id="waitDiv"><br/>      Generating barcode images... <img src="/wait.gif" alt="loading indicator">
+    <div id="waitDiv"><br/>      Generating barcode images... <img src="/img/wait.gif" alt="loading indicator">
     </div>
 
     <div id="myDiv">

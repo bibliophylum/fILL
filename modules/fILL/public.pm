@@ -1,7 +1,7 @@
 #    fILL - Free/Open-Source Interlibrary Loan management system
 #    Copyright (C) 2012  Government of Manitoba
 #
-#    lightning.pm is part of fILL.
+#    public.pm is part of fILL.
 #
 #    fILL is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,47 +29,8 @@ use Encode;
 use Text::Unidecode;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
-
-my %SPRUCE_TO_MAPLIN = (
-    'MWPL' => 'MWPL',
-    'MAOW' => 'MAOW',        # Altona
-    'MMIOW' => 'MMIOW',      # Miami
-    'MMOW' => 'MMOW',        # Morden
-    'MWOW' => 'MWOW',        # Winkler
-    'MBOM' => 'MBOM',        # Boissevain
-    'MANITOU' => 'MMA',
-    'STEROSE' => 'MSTR',
-    'AB' => 'MWP',
-    'MWP' => 'MWP',
-    'MSTOS' => 'MSTOS',      # Stonewall
-    'MTSIR' => 'MTSIR',      # Teulon
-    'MMCA' => 'MMCA',        # McAuley
-    'MVE' => 'MVE',          # Virden
-    'ME' => 'ME',            # Elkhorn
-    'MS' => 'MS',            # Somerset
-    'MSOG' => 'MSOG',        # Glenwood and Souris
-    'MDB' => 'MDB',          # Bren Del Win
-    'MPLP' => 'MPLP',        # Portage
-    'MSSC' => 'MSSC',        # Shilo
-    'MEC' => 'MEC',
-    'MNH' => 'MNH',
-    'MSRH' => 'UCN',         # University College of the North
-    'MTK' => 'MTK',          #   libraries and campuses
-    'MTPK' => 'MTPK',
-    'MWMW' => 'UCN',
-    'MRD' => 'MRD',          # Russell
-    'MBI' => 'MBI',          # Binscarth
-    'MSCL' => 'MSCL',        # St.Claude
-    'MNDP' => 'MNDP',        # Pere Champagne
-    );
-
-my %WESTERN_MB_TO_MAPLIN = (
-    'Brandon Public Library' => 'MBW',
-    'Neepawa Public Library' => 'MNW',
-    'Carberry / North Cypress Library' => 'MCNC',
-    'Glenboro / South Cypress Library' => 'MGW',
-    'Hartney / Cameron Library' => 'MHW',
-    );
+use JSON;
+use CGI::Cookie;
 
 #--------------------------------------------------------------------------------
 # Define our runmodes
@@ -80,32 +41,39 @@ sub setup {
     $self->error_mode('error');
     $self->mode_param('rm');
     $self->run_modes(
-	'test_form' => 'test_process',
+	'test_form'                => 'test_process',
 	'search_form'              => 'search_process',
-	'registration_form'        => 'registration_process',
 	'myaccount_form'           => 'myaccount_process',
 	'current_form'             => 'current_process',
 	'about_form'               => 'about_process',
 	'help_form'                => 'help_process',	
 	'faq_form'		   => 'faq_process',
 	'contact_form'             => 'contact_process',
+	'new_form'                 => 'new_process',
 	);
 }
 
+#--------------------------------------------------------------------------------
+#
+#
 sub test_process {
     my $self = shift;
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template;
-    $template = $self->load_tmpl('public/test.tmpl');
-    $template->param( pagetitle => "fILL test",
+    $template = $self->load_tmpl('public/test2.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => "fILL test",
+		      template => 'public/test.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
 		      library => $library,
 	);
+
     return $template->output;
 }
 
@@ -121,17 +89,23 @@ sub search_process {
     # pull the form's parameter named "query", so we can stuff it into the search template
     # (so the search page can automatically do the search)
     my $query = $q->param("query") || '';
-    $self->log->debug( "search_process parm:\n" . Dumper($query) );
+    #$self->log->debug( "search_process parm:\n" . Dumper($query) );
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template;
+    my $templateFile;
     if ($is_enabled) {
-	$template = $self->load_tmpl('public/search.tmpl');
+	$templateFile = 'public/search.tmpl';
     } else {
-	$template = $self->load_tmpl('public/not-enabled.tmpl');
+	$templateFile = 'public/not-enabled.tmpl';
+	#$templateFile = 'public/login.tmpl';
     }
-    $template->param( pagetitle => "fILL Public Search",
+    $template = $self->load_tmpl( $templateFile );
+    $template->param( lang => $lang,
+		      pagetitle => "fILL Public Search",
+		      template => $templateFile,
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -150,12 +124,15 @@ sub myaccount_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $SQL = "select pid, name, card, username, is_enabled from patrons where home_library_id=? and pid=?";
     my $href = $self->dbh->selectrow_hashref( $SQL, { Slice => {} }, $oid, $pid );
 
     my $template = $self->load_tmpl('public/myaccount.tmpl');	
-    $template->param( pagetitle => "fILL patron account",
+    $template->param( lang => $lang,
+		      pagetitle => "fILL patron account",
+		      template => 'public/myaccount.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -176,9 +153,12 @@ sub current_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/current.tmpl');	
-    $template->param( pagetitle => "Current interlibrary loans",
+    $template->param( lang => $lang,
+		      pagetitle => "Current interlibrary loans",
+		      template => 'public/current.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -198,15 +178,19 @@ sub about_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
-    my $template = $self->load_tmpl('public/about.tmpl');	
-    $template->param( pagetitle => "About fILL",
+    my $template;
+    $template = $self->load_tmpl('public/about.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => 'About fILL',
+		      template => 'public/about.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
 		      library => $library,
-#		      pid => $pid
 	);
+
     return $template->output;
 }
 
@@ -218,9 +202,12 @@ sub help_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/help.tmpl');	
-    $template->param( pagetitle => "Help fILL",
+    $template->param( lang => $lang,
+		      pagetitle => "Help fILL",
+		      template => 'public/help.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -238,9 +225,12 @@ sub faq_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $template = $self->load_tmpl('public/faq.tmpl');	
-    $template->param( pagetitle => "FAQ fILL",
+    $template->param( lang => $lang,
+		      pagetitle => "FAQ fILL",
+		      template => 'public/faq.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -259,6 +249,7 @@ sub contact_process {
     my $q = $self->query;
 
     my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
 
     my $hr_lib = $self->dbh->selectrow_hashref(
 	"select org_name, email_address, website, mailing_address_line1, mailing_address_line2, mailing_address_line3, city, province, post_code, phone, symbol from org where oid=?",
@@ -277,7 +268,9 @@ sub contact_process {
     $self->log->debug( "contact logo:\n" . Dumper($hr_lib) . "\npath: $logoPath\nalt: $logoAltText\ncredit: $logoCredit\n" );
     
     my $template = $self->load_tmpl('public/contact.tmpl');	
-    $template->param( pagetitle => "Contact",
+    $template->param( lang => $lang,
+		      pagetitle => "Contact",
+		      template => 'public/contact.tmpl',
 		      username => $self->authen->username,
 		      barcode => $self->session->param("fILL-card"),
 		      oid => $oid,
@@ -299,14 +292,27 @@ sub contact_process {
     return $template->output;
 }
 
-
 #--------------------------------------------------------------------------------
 #
-# Patron self-registration
 #
-sub registration_process {
+sub new_process {
     my $self = shift;
-    my $template = $self->load_tmpl('public/registration.tmpl');
+    my $q = $self->query;
+
+#    my ($pid,$oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
+    my $lang = $self->determine_language_to_use();
+
+    my $template;
+    $template = $self->load_tmpl('public/new.tmpl');
+    $template->param( lang => $lang,
+		      pagetitle => "New to fILL",
+		      template => 'public/new.tmpl',
+#		      username => $self->authen->username,
+#		      barcode => $self->session->param("fILL-card"),
+#		      oid => $oid,
+#		      library => $library,
+	);
+
     return $template->output;
 }
 

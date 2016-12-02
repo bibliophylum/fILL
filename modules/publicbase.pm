@@ -21,6 +21,7 @@
 package publicbase;
 use strict;
 use base 'CGI::Application';
+use utf8;
 use CGI::Application::Plugin::DBH (qw/dbh_config dbh/);
 use CGI::Application::Plugin::Session;
 use CGI::Application::Plugin::Authentication;
@@ -45,6 +46,9 @@ use String::Random;
 
 #{SHA}||encode(digest('mvbb','sha1'),'base64')
 
+# Setup for UTF-8 mode.
+binmode STDOUT, ":utf8:";
+$ENV{'PERL_UNICODE'}=1;
 
 #--------------------------------------------------------------------------------
 #
@@ -62,6 +66,10 @@ sub cgiapp_init {
 		       }
     );
 
+    $self->dbh->{pg_enable_utf8} = -1;  # *every* string coming back from Pg has 
+                                        # utf-8 flag set (db encoding is UTF-8)
+
+    $self->dbh->do("SET client_encoding = 'UTF8'");
     $self->dbh->do("SET TIMEZONE='America/Winnipeg'");
 
     # Configure the LogDispatch session
@@ -99,8 +107,8 @@ sub cgiapp_init {
 	LOGIN_SESSION_TIMEOUT => '30m',
 	);
     #publicbase->authen->protected_runmodes(':all');
-    # protect everything but the self-registration form:
-    $self->authen->protected_runmodes(qr/^(?!registration_)/);
+    # protect everything but the "New to fILL?" page
+    $self->authen->protected_runmodes(qr/^(?!new_form)/);
 
 
     # Configure authorization
@@ -359,31 +367,16 @@ sub error {
 #
 #
 sub update_login_date {
-    # The application object
     my $self = shift;
-
-    #$self->log->debug("update login date, about to call get_patron_and_library\n");
 
     my ($pid, $oid,$library,$is_enabled) = $self->get_patron_and_library();  # do error checking!
 
-    #$self->log->debug("update login date, pid [$pid], oid [$oid], library [$library], is_enabled [$is_enabled]\n");
-
     my $rows_affected;
-#    if ($self->session->param('fILL-card')) {
-#	# this is an externally-authenticated patron
-#	#$self->log->debug("update login date for externally-autheticated patron [" . $self->session->param('fILL-card') . "]\n");
-#	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE home_library_id=? and card=?",
-#					undef,
-#					$oid,
-#					$self->session->param('fILL-card'),
-#	    );
-#    } else {
-	$rows_affected = $self->dbh->do("UPDATE patrons SET last_login=NOW() WHERE pid=?",
-					undef,
-					$pid,
-	    );
-#    }
-    #$self->log->debug("finished update login date, rows affected: $rows_affected\n");
+    $rows_affected = $self->dbh->do(
+	"UPDATE patrons SET last_login=NOW() WHERE pid=?",
+	undef,
+	$pid,
+	);
 }
 
 #--------------------------------------------------------------------------------
@@ -393,13 +386,23 @@ sub show_logged_out_process {
     # The application object
     my $self = shift;
 
+    # *every* string coming back from Pg has utf-8 flag set
+    $self->dbh->{pg_enable_utf8} = -1;  # (db encoding is UTF-8)
+    $self->dbh->do("SET client_encoding = 'UTF8'");
+
+    my $lang = $self->determine_language_to_use();
+    my $logout_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/logged_out.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
+    
     my $template = $self->load_tmpl(	    
 	'public/logged_out.tmpl',
 	cache => 1,
 	);
     $template->param( pagetitle => 'fILL Logged Out',
-		      username => "Logged out. ",
+		      username => '',
 		      barcode => '',
+		      logged_out_header => $logout_i18n_href->{"logged-out-header"}->{'text'},
+		      thanks => $logout_i18n_href->{"thanks"}->{'text'},
+		      login_button_text => $logout_i18n_href->{"login-button-text"}->{'text'},
 		      sessionid => $self->session->id(),
 	);
 
@@ -444,13 +447,14 @@ sub environment_process {
 
     my $template = $self->load_tmpl('public/environment.tmpl');
     my @loop;
-    foreach my $key (keys %ENV) {
+    foreach my $key (sort keys %ENV) {
 	my %row = ( name => $key,
 		    value => $ENV{$key},
 	    );
 	push(@loop, \%row);
     }
     $template->param(pagetitle => 'fILL Environment',
+		     http_user_agent => $ENV{'HTTP_USER_AGENT'},
 		     env_variable_loop => \@loop);
     return $template->output;
 }
@@ -516,35 +520,57 @@ sub get_patron_and_library {
 sub login_foo {
     my $self = shift;
 
+    my $lang = $self->determine_language_to_use();
+    my $login_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/login.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
+    
     my $loginText_href;
-# Hmm.  User not logged in yet, so no session params...
-#    my $oid = $self->session->param('fILL-oid');
-# How about cookies?
+
+    # Hmm.  User not logged in yet, so no session params...
+    #    my $oid = $self->session->param('fILL-oid');
+    # How about cookies?
     my $oid = $self->query->cookie('fILL-oid');
     if ($oid) {
+	my $libname_href = $self->dbh->selectrow_hashref("select org_name from org where oid=?", undef, $oid);
+	
 	# is this a SIP2 library?
 	my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from org where oid=?", undef, $oid);
 
 	if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
+	    #	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
 	    
+	    $loginText_href = {
+		"login_text" => $login_i18n_href->{'login-text-barcode-and-pin-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-barcode-and-pin-end'}->{'text'},
+		"barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
+		"pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
+	    };
+	
 	} else {
-	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
+#	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
+
+	    $loginText_href = {
+		"login_text" => $login_i18n_href->{'login-text-username-and-password-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-username-and-password-end'}->{'text'},
+		"barcode_label_text" => $login_i18n_href->{'username-label'}->{'text'},
+		"pin_label_text" => $login_i18n_href->{'password-label'}->{'text'}
+	    };
+
 	}
     } else {
+	# There should always be a cookie - the process of selecting your library sets it.
+	# So this should never happen:
 	$loginText_href = { 
-	    "login_text" => "Log in using your library barcode and PIN",
-	    "barcode_label_text" => "Library card number",
-	    "pin_label_text" => "PIN number"
+	    "login_text" => $login_i18n_href->{'login-text-barcode-and-pin-start'}->{'text'} . " " . $login_i18n_href->{'login-text-barcode-and-pin-end'}->{'text'},
+	    "barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
+	    "pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
 	};
     }
-
 
     my $screenmessage = $self->session->param('fILL-auth-screenmessage');
     $self->session_delete; # toast any old session info
     my $template = $self->load_tmpl('public/login.tmpl');
     $template->param( 
+	lang => $lang,
 	pagetitle => 'fILL public login',
+	template => 'public/login.tmpl',
 	login_text => $loginText_href->{"login_text"},
 	barcode_label_text => $loginText_href->{"barcode_label_text"},
 	pin_label_text => $loginText_href->{"pin_label_text"},
@@ -552,23 +578,6 @@ sub login_foo {
 	);
     return $template->output;
 }
-
-#--------------------------------------------------------------------------------
-#
-#
-#sub login_process {
-#    my $self = shift;
-#    my $template = $self->load_tmpl(	    
-#	                      'login.tmpl',
-#			      cache => 0,
-#			     );	
-#    $template->param( pagetitle => 'Log in to fILL',
-#	);
-#
-#    # Parse the template
-#    my $html_output = $template->output;
-#    return $html_output;
-#}
 
 #---------------------------------------------------------------
 # for debugging...
@@ -608,6 +617,45 @@ sub print_parsed_response {
 	    $self->log->debug( "[" . $href->{$key} . "]\n" ); 
 	}
     }
+}
+
+#--------------------------------------------------------------------------------
+#
+# A requested language (from the url, language=??) overrides a preferred-
+# language cookie (and changes to cookie to match).
+# Default to English if no requested/preferred language.
+#
+sub determine_language_to_use {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $requestedLanguage;
+    my $parmLanguage = $q->param("language");
+    if (($parmLanguage) && ($parmLanguage =~ /^(en|fr)$/)) {
+	$requestedLanguage = $parmLanguage;
+    }
+    
+    my $preferredLanguage;
+    my $cookieLanguage = $q->cookie('fILL-language');
+    if (($cookieLanguage) && ($cookieLanguage =~ /^(en|fr)$/)) {
+	$preferredLanguage = $cookieLanguage;
+    }
+
+    my $lang = $requestedLanguage || $preferredLanguage || "en";
+
+    # set cookie client-side
+    if ($requestedLanguage) {
+	$self->header_props(
+	    -cookie  =>  $q->cookie(
+		 -expires =>  '+1y',
+		 -name    =>  'fILL-language',
+		 -path    =>  '/',
+		 -value   =>  $lang
+	    ),
+	    );
+    }
+    
+    return $lang;
 }
 
 

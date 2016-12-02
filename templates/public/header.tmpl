@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><title><TMPL_VAR name="pagetitle"></title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<TMPL_IF name="lang">
+  <html lang=<TMPL_VAR name="lang">>
+<TMPL_ELSE>
+  <html lang="en">
+</TMPL_IF>
+      
+<head>
+  <title><TMPL_VAR name="pagetitle"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--[if lt IE 9]>
+  <!--[if lt IE 9]>
   <script>
     var e = ("abbr,article,aside,audio,canvas,datalist,details," +
       "figure,footer,header,main,mark,menu,meter,nav,output," +
@@ -13,131 +19,36 @@
       document.createElement(e[i]);
     }
   </script>
-<![endif]-->
+  <![endif]-->
 
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
-<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
-<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
-<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
 
-<!-- This is the new DataTables, with all of the required extensions built in
+  <!-- This is the new DataTables, with all of the required extensions built in
      See https://datatables.net/download/ for info on building these files.
   -->
-<link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
-<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+  <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
 
-<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
+  <script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
 
-<script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
+  <!-- Google analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<script type="text/javascript">
-$('document').ready(function(){
+    ga('create', 'UA-21021258-3', 'auto');
+    ga('send', 'pageview');
 
-    setFontSizeFromCookies();
-
-    $('#incrFont').click(function () {
-        increaseFontSize();
-    });
-    $('#decrFont').click(function () {
-        decreaseFontSize();
-    });
-    $('#resetFont').click(function () {
-        resetFontSizeToDefault();
-    });
-
-    $("#startOver").on("click",function(e){
-        e.preventDefault();
-        $.removeCookie("fILL-oid", { path: '/' });
-        $.removeCookie("fILL-location", { path: '/' });
-        $.removeCookie("fILL-barcode", { path: '/' });
-        $.removeCookie("fILL-authentication", { path: '/' });
-        $("#breadcrumbs").hide();
-        $("#extAuth").hide();
-        $("#fILLAuth").hide();
-        $("#sign-in").hide();
-        $(".login-footer").append("<p>Starting over...</p>");
-        window.location.href="/cgi-bin/public.cgi";
-    });
-    $("#clearCookies").on("click",function(e){
-        e.preventDefault();
-        $.removeCookie("fILL-oid", { path: '/' });
-        $.removeCookie("fILL-location", { path: '/' });
-        $.removeCookie("fILL-barcode", { path: '/' });
-        $.removeCookie("fILL-authentication", { path: '/' });
-        window.location.href="?authen_logout=1";
-    });
-
-    if (window.location.hostname == 'rigel.gotdns.org') {
-	$("#localdev").show();
-    }
-    if (window.location.hostname == 'fill-dev.mb.libraries.coop') {
-	$("#filldev").show();
-    }
-
-});
-</script>
-
-<script type="text/javascript">
-
-  function set_primary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
-  function set_secondary_tab(tab_id) {
-    document.getElementById(tab_id).className='current_tab';
-  }
-
- function increaseFontSize() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        var fs = parseFloat($(this).css('font-size')) + 1;  // gets converted to px
-        $(this).css({
-            'font-size': fs + "px"
-        });
-        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
-    });
- }
- function decreaseFontSize() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        var fs = parseFloat($(this).css('font-size')) - 1;
-        $(this).css({
-            'font-size': fs + "px"
-        });
-        $.cookie('fILL-fontsize-'+$(this)[0].tagName, fs, { expires: 365, path: '/' });
-    });
-  } 
- function resetFontSizeToDefault() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
-            $.removeCookie('fILL-fontsize-'+$(this)[0].tagName, { expires: 365, path: '/' });
-        }
-    });
-    location.reload();
-  } 
- function setFontSizeFromCookies() {
-    $('body').find('div, h1, h2, h3, p, td').each(function () {
-        if (typeof $.cookie('fILL-fontsize-'+$(this)[0].tagName) != 'undefined') {
-            var fs = $.cookie('fILL-fontsize-'+$(this)[0].tagName);
-            $(this).css({
-                'font-size': fs + "px"
-            });
-        }
-    });
-  } 
-
-</script>
-
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-21021258-3', 'auto');
-  ga('send', 'pageview');
-
-</script>
+  </script>
 
 </head>
 <body class="example_alt_pagination">
@@ -153,23 +64,46 @@ $('document').ready(function(){
 
   <div id="header-left">
     <div id="fill-logo"><a href="/"><img src="/img/fill-logo.png" alt="fill"></a></div>
-    <div id="fill-tagline"><p>connecting libraries, serving patrons.</p></div>
+    <div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
   </div>
 
   <div id="header-right">
-    <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+
+    <div class="header-control-bar" id="upper-right">
+      <div id="language-selector">
+	<!-- <label for="language">Language</label> -->
+	<select name="language" id="language">
+	  <option lang="en" selected="selected">English</option>
+	  <option lang="fr">Français</option>
+	</select>
+      </div>
+      <div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div>
+    </div> <!-- header, upper-right set of controls -->
+    <div class="header-break"></div>
+    
+    <div class="header-control-bar" id="lower-right">
+      <input id="incrFont" class="public-style" type="button" value="+A" />
+      <input id="resetFont" class="public-style" type="button" value="A" />
+      <input id="decrFont" class="public-style" type="button" value="-A" />
+    </div> <!-- header, lower-right set of controls -->
+    <div class="header-break"></div>
+
     <div id="patron-info">
-  <!-- The id="username" div is necessary: the username gets extracted (in 
-       fILL_client-public-x.y.js), and passed to the code that allows the patron 
-       to make an ILL request (we need to know who is making the request :-)
-       It doesn't have to be *here*, but it has to be somewhere....
-    -->
-        <div id="username"><TMPL_VAR name="username"></div>
-        <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
-        <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
-        <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
-	<input id="incrFont" class="public-style" type="button" value="+A" /><input id="resetFont" class="public-style" type="button" value="A" /><input id="decrFont" class="public-style" type="button" value="-A" />
-    </div>
+      <!-- The id="username" div is necessary: the username gets extracted (in 
+	   fILL_client-public-x.y.js), and passed to the code that allows the patron 
+	   to make an ILL request (we need to know who is making the request :-)
+	   It doesn't have to be *here*, but it has to be somewhere....
+	-->
+      <div id="username"><TMPL_VAR name="username"></div>
+      <p><a href="/cgi-bin/public.cgi?rm=contact_form"><strong><TMPL_VAR name="library"></strong></a></p>
+      <div id="oid" style="display:none"><TMPL_VAR name="oid"></div>
+      <div id="barcode" style="display:none"><TMPL_VAR name="barcode"></div>
+      <TMPL_IF name="template">
+	<div id="template" style="display:none"><TMPL_VAR name="template"></div>
+      </TMPL_IF>
+    </div> <!-- patron-info -->
+    <div class="header-break"></div>
+
   </div>
 
 </header>
@@ -178,12 +112,14 @@ $('document').ready(function(){
 <nav role="navigation" id="pub-nav-primary">
   <ul class="inline-items">
     <li><a id="menu_search" href="/cgi-bin/public.cgi?rm=search_form">Home</a></li>
-    <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li>
+    <!-- <li><a id="menu_myaccount" href="/cgi-bin/public.cgi?rm=myaccount_form">My Account</a></li> --> <!-- Unused, now that all authentication is against remote systems -->
     <li><a id="menu_current" href="/cgi-bin/public.cgi?rm=current_form">Current Borrowing</a></li>
     <li><a id="menu_about" href="/cgi-bin/public.cgi?rm=about_form">About</a></li>
     <li><a id="menu_help" href="/cgi-bin/public.cgi?rm=help_form">Help</a></li>
     <li><a id="menu_faq" href="/cgi-bin/public.cgi?rm=faq_form">FAQ</a></li>
     <li><a id="menu_contact" href="/cgi-bin/public.cgi?rm=contact_form">Contact</a></li>
+
+    <!-- <li><a id="menu_test" href="/cgi-bin/public.cgi?rm=test_form">Test</a></li> -->
   </ul>
 </nav>
 
@@ -195,7 +131,7 @@ $('document').ready(function(){
 	search_process to feed the *real* search page -->
       <input id="query" type="text" name="query" placeholder="Search" value="<TMPL_VAR name='query'>">
       <input id="rm" type="hidden" name="rm" value="search_form">
-      <input type="submit" value="Go" class="public-style">
+      <input id="search-submit-button" type="submit" value="Go" class="public-style">
     </form>
   </div>
 </div> <!-- search-container -->
