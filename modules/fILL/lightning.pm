@@ -62,9 +62,12 @@ my %SPRUCE_TO_MAPLIN = (
     'Russell Library'                          => 'MRD',   # MRUS Russell
     'Binscarth Library'                        => 'MBI',   # MRUS Binscarth
     'Bibliotheque St. Claude Library'          => 'MSCL',  # St.Claude
+    'Bibliothèque St. Claude Library'          => 'MSCL',  #  note the accent
     'Bibliotheque Pere Champagne Library'      => 'MNDP',  # Pere Champagne
+    'Bibliothèque Pere Champagne Library'      => 'MNDP',  #  note the accent
     'Louise Public Library'                    => 'MPM',   # Pilot Mound
     'Bibliotheque Ste-Anne Library'            => 'MSA',   # Ste Anne
+    'Bibliothèque Ste-Anne Library'            => 'MSA',   #  note the accent
     'Parkland Regional'                        => 'MDA',   # Parkland
     'Dauphin Public'                           => 'MDA',
     'Parkland'                                 => 'MDA',
@@ -300,6 +303,7 @@ sub request_process {
     my $q = $self->query;
 
     my %sources = $self->_turn_request_parms_into_sources_hash( $q );
+    $self->log->debug( 'after _turn_request_parms:\n' . Dumper(\%sources));
 
     my ($title,$author,$medium,$isbn,$pubdate) = $self->_normalize_request_data(
 	$q->param('title') || '--',
@@ -310,6 +314,7 @@ sub request_process {
 	);
 
     my @sources = $self->_isolate_and_normalize_source_callnos( \%sources );
+    $self->log->debug( 'after _isolate_and_normalize:\n' . Dumper(\%sources));
 
     # Get this user's (requester's) library id
     my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -339,6 +344,7 @@ sub request_process {
 
     # re-consolidate MW/MDA locations - they handle ILL for all branches centrally
     @sources = $self->_consolidate_locations( \@sources );
+    $self->log->debug( 'after _consolidate_locatios:\n' . Dumper(\%sources));
 
 #    $self->log->debug( 'consolidated sources:\n' . Dumper(@sources));
 
@@ -362,7 +368,7 @@ sub request_process {
 	    $index++; 
 	} 
     }
-#    $self->log->debug( 'cleaned sources:\n' . Dumper(@sources));
+    $self->log->debug( 'cleaned sources:\n' . Dumper(\@sources));
     
     # create the sources list for this request
     my $sequence = 1;
