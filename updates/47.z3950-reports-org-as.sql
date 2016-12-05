@@ -16,15 +16,15 @@ update org set z3950_location = 'AB' where symbol = 'MWP';   -- Legislative Libr
 update org set z3950_location = 'MWP' where symbol = 'MWP';   -- Legislative Library
 update org set z3950_location = 'Stonewall Library' where symbol = 'MSTOS'; -- SIRL Stonewall
 update org set z3950_location = 'Teulon Library' where symbol = 'MTSIR'; -- SIRL Teulon
-update org set z3950_location = 'McAuley Branch - Border Regional Library' => 'MMCA';  -- MB McAuley
+update org set z3950_location = 'McAuley Branch - Border Regional Library' = 'MMCA';  -- MB McAuley
 update org set z3950_location = 'Main Branch - Border Regional Library' where symbol = 'MVE';   -- MB Virden
-update org set z3950_location = 'Elkhorn Branch - Border Regional Library' => 'ME';    -- MB Elkhorn
+update org set z3950_location = 'Elkhorn Branch - Border Regional Library' = 'ME';    -- MB Elkhorn
 update org set z3950_location = 'Somerset Library' where symbol = 'MS';    -- Somerset
 update org set z3950_location = 'Glenwood and Souris Regional Library' where symbol = 'MSOG';  -- Glenwood and Souris
 update org set z3950_location = 'Bren Del Win Centennial Library' where symbol = 'MDB';   -- Bren Del Win
 update org set z3950_location = 'Portage la Prairie Regional Library' where symbol = 'MPLP';  -- Portage
 update org set z3950_location = 'Shilo Community Library' where symbol = 'MSSC';  -- Shilo
-update org set z3950_location = 'Chemawawin Public Library at Easterville' => 'MEC';   -- UCN Chemawawin
+update org set z3950_location = 'Chemawawin Public Library at Easterville' = 'MEC';   -- UCN Chemawawin
 update org set z3950_location = 'UCN/Norway House Public Library' where symbol = 'MNH';   -- UCN Norway House
 update org set z3950_location = 'UCN Health at Swan River' where symbol = 'UCN';   -- UCN Health at Swan River
 update org set z3950_location = 'Thompson Campus Library' where symbol = 'MTK';   -- UCN Thompson
@@ -34,10 +34,10 @@ update org set z3950_location = 'UCN/Pukatawagan Public Library' where symbol = 
 update org set z3950_location = 'UCN Health at Swan River' where symbol = 'MSRH';  -- UCN Health
 update org set z3950_location = 'Russell Library' where symbol = 'MRD';   -- MRUS Russell
 update org set z3950_location = 'Binscarth Library' where symbol = 'MBI';   -- MRUS Binscarth
-update org set z3950_location = 'Bibliotheque St. Claude Library' where symbol = 'MSCL';  -- St.Claude
-update org set z3950_location = 'Bibliotheque Pere Champagne Library' where symbol = 'MNDP';  -- Pere Champagne
+update org set z3950_location = 'Bibliothèque St. Claude Library' where symbol = 'MSCL';  -- St.Claude
+update org set z3950_location = 'Bibliothèque Pere Champagne Library' where symbol = 'MNDP';  -- Pere Champagne
 update org set z3950_location = 'Louise Public Library' where symbol = 'MPM';   -- Pilot Mound
-update org set z3950_location = 'Bibliotheque Ste-Anne Library' where symbol = 'MSA';   -- Ste Anne
+update org set z3950_location = 'Bibliothèque Ste-Anne Library' where symbol = 'MSA';   -- Ste Anne
 update org set z3950_location = 'Parkland Regional' where symbol = 'MDPRS';   -- Parkland
 update org set z3950_location = 'Dauphin Public' where symbol = 'MDA';
 update org set z3950_location = 'Parkland' where symbol = 'MDP';
