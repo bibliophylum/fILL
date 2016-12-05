@@ -30,7 +30,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
 #my $aref = $dbh->selectall_arrayref("select symbol from spruce_closed_list", { Slice => {} });
-my $aref = $dbh->selectall_arrayref("select z3950_location from org o left join spruce_closed_list scl on o.symbol = scl.symbol", { Slice => {} });
+my $aref = $dbh->selectall_arrayref("select z3950_location from spruce_closed_list scl left join org o on o.symbol = scl.symbol", { Slice => {} });
 $dbh->disconnect;
 
 print "Content-Type:application/json\n\n" . to_json( { closed => $aref } );
