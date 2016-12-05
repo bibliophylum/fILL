@@ -16,15 +16,15 @@ update org set z3950_location = 'AB' where symbol = 'MWP';   -- Legislative Libr
 update org set z3950_location = 'MWP' where symbol = 'MWP';   -- Legislative Library
 update org set z3950_location = 'Stonewall Library' where symbol = 'MSTOS'; -- SIRL Stonewall
 update org set z3950_location = 'Teulon Library' where symbol = 'MTSIR'; -- SIRL Teulon
-update org set z3950_location = 'McAuley Branch - Border Regional Library' = 'MMCA';  -- MB McAuley
+update org set z3950_location = 'McAuley Branch - Border Regional Library' where symbol = 'MMCA';  -- MB McAuley
 update org set z3950_location = 'Main Branch - Border Regional Library' where symbol = 'MVE';   -- MB Virden
-update org set z3950_location = 'Elkhorn Branch - Border Regional Library' = 'ME';    -- MB Elkhorn
+update org set z3950_location = 'Elkhorn Branch - Border Regional Library' where symbol = 'ME';    -- MB Elkhorn
 update org set z3950_location = 'Somerset Library' where symbol = 'MS';    -- Somerset
 update org set z3950_location = 'Glenwood and Souris Regional Library' where symbol = 'MSOG';  -- Glenwood and Souris
 update org set z3950_location = 'Bren Del Win Centennial Library' where symbol = 'MDB';   -- Bren Del Win
 update org set z3950_location = 'Portage la Prairie Regional Library' where symbol = 'MPLP';  -- Portage
 update org set z3950_location = 'Shilo Community Library' where symbol = 'MSSC';  -- Shilo
-update org set z3950_location = 'Chemawawin Public Library at Easterville' = 'MEC';   -- UCN Chemawawin
+update org set z3950_location = 'Chemawawin Public Library at Easterville' where symbol = 'MEC';   -- UCN Chemawawin
 update org set z3950_location = 'UCN/Norway House Public Library' where symbol = 'MNH';   -- UCN Norway House
 update org set z3950_location = 'UCN Health at Swan River' where symbol = 'UCN';   -- UCN Health at Swan River
 update org set z3950_location = 'Thompson Campus Library' where symbol = 'MTK';   -- UCN Thompson
