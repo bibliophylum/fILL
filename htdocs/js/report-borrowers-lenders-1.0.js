@@ -84,9 +84,7 @@ function create_table() {
 		"dom": '<"H"Tfr>t<"F"ip>',
 		"pageLength": 25,
 		"lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-		"tableTools": {
-		    "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-		},
+		buttons: [ 'copy', 'excel', 'pdf', 'print' ],
 		"order": [[0,"asc"],[1,"asc"]],
 		"autoWidth": true,
 		"scrollX": false, 
