@@ -15,12 +15,10 @@ $('document').ready(function(){
         "pagingType": "full_numbers",
         "info": true,
       	"ordering": true,
-	"dom": '<"H"Tfr>t<"F"ip>',
+	"dom": '<"H"Bfr>t<"F"ip>',
         "pageLength": 12,
         "lengthMenu": [[12, 24, 48, -1], [12, 24, 48, "All"]],
-	"tableTools": {
-          "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-	},
+	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
         "order": [[0,"asc"],[1,"asc"]],
         "autoWidth": true,
         "scrollX": true, 
