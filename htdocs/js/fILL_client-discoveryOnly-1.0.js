@@ -91,7 +91,9 @@ function my_onshow(data) {
 	}
 
         if (hit.recid == curDetRecId) {
-	     $recDiv.append( renderDetails(curDetRecData) );
+	    $recDiv.append( renderDetails(curDetRecData) );
+
+	    // also in my_onrecord
 	    if (clipboard) {  clipboard.destroy(); }
 	    clipboard = new Clipboard(".clipbtn", {
 		target: function(trigger) {
@@ -220,6 +222,26 @@ function my_onrecord(data) {
     // convert the DOM elm returned from getElementById into a jQuery object,
     // and append the detail div jQuery object returned from renderDetails.
     $(recordDiv).append( $detDiv );
+
+    // also in my_onshow
+    if (clipboard) {  clipboard.destroy(); }
+    clipboard = new Clipboard(".clipbtn", {
+	target: function(trigger) {
+	    return trigger.parentNode; // will be the .details div
+	}
+    });
+    clipboard.on('success', function(e) {
+	//alert("clipboard success!");
+	//console.log(e);
+	e.clearSelection();
+	$(".clipbtn").html('Copied.');
+    });
+    clipboard.on('error', function(e) {
+	alert("Seem to have a problem copying to the clipboard.\nYou can do it manually by holding down\nthe [CTRL] key, hitting the [c] key, and then releasing both.");
+	//console.log(e);
+    });
+    $(".clipbtn").html('Copy to clipboard...').show();
+
 
     // handle the form submission:
     $("#request_form").submit(function( event ) {
