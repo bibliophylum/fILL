@@ -40,6 +40,7 @@ var AuthorMax = 10;
 var useELMcover = 0;  // Manitoba-specific
 var isSearching = 0;
 var completionStatus = {};
+var clipboard = null;
 
 // i18n.js will check if this is defined, and if so, will save the translation results
 // here so we can access them dynamcially:
@@ -90,7 +91,25 @@ function my_onshow(data) {
 	}
 
         if (hit.recid == curDetRecId) {
-	    $recDiv.append( renderDetails(curDetRecData) );
+	     $recDiv.append( renderDetails(curDetRecData) );
+	    if (clipboard) {  clipboard.destroy(); }
+	    clipboard = new Clipboard(".clipbtn", {
+		target: function(trigger) {
+		    return trigger.parentNode; // will be the .details div
+		}
+	    });
+	    clipboard.on('success', function(e) {
+		//alert("clipboard success!");
+		//console.log(e);
+		e.clearSelection();
+		$(".clipbtn").html('Copied.');
+	    });
+	    clipboard.on('error', function(e) {
+		alert("Seem to have a problem copying to the clipboard.\nYou can do it manually by holding down\nthe [CTRL] key, hitting the [c] key, and then releasing both.");
+		//console.log(e);
+	    });
+
+	    
 	    // handle the form submission:
 	    $("#request_form").submit(function( event ) {
 		if ($.cookie("fILL-authentication") === "fILL") {
@@ -116,6 +135,7 @@ function my_onshow(data) {
 	$newResults.append( $recDiv );
     }
     $("#results").replaceWith( $newResults );
+    $(".clipbtn").html('Copy to clipboard...').show();
 }
 
 
@@ -679,6 +699,9 @@ function renderDetails(data, marker)
     var $detDiv = $('<div>', { "class": "details",
 			       "id": "det_"+data.recid
 			     });
+
+    // copy to clipboard button:
+    $detDiv.append('<button class="clipbtn" style="display:none;">Preparing to copy.</button>'); // text gets changed and button gets shown in on_show()
     
     var $table = $('<table></table>', { "id" : "detTable" } ).appendTo( $detDiv );
     var $tr = $('<tr></tr>').appendTo( $table );
@@ -721,6 +744,7 @@ function toggleLocationDetails() {
     $('#showLocDet').toggle();
     $('#hideLocDet').toggle();
     $('.secondary_info').toggle();
+    $(".clipbtn").html('Copy to clipboard...'); // display has changed, user may want to re-copy
     return false;
 }
 
