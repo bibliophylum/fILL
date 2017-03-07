@@ -211,7 +211,7 @@ sub externallyAuthenticate {
     } elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
 	$self->session->param(
 	    'fILL-auth-screenmessage',
-	    "Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>You will have to contact your library and have them make the requests for you."
+	    "Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>When you find a title that you would like to borrow, contact your library and they will request it for you."
 	    );
 	$pname = undef;
 	
@@ -554,7 +554,7 @@ sub login_foo {
 	    $flagShowLogin = 0;
 	    $self->session->param(
 		'fILL-auth-screenmessage',
-		"Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>You will have to contact your library and have them make the requests for you."
+		"Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>When you find a title that you would like to borrow, contact your library and they will request it for you."
 		);
 	
 	} else {
