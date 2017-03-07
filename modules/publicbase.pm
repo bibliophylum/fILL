@@ -211,7 +211,7 @@ sub externallyAuthenticate {
     } elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
 	$self->session->param(
 	    'fILL-auth-screenmessage',
-	    "Your library does not support SIP2 authentication.<br/><br/>At the bottom of this screen, click on the <strong>'Discovery-only'</strong> link to search fILL; you will need to email your requests to your library."
+	    "Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>You will have to contact your library and have them make the requests for you."
 	    );
 	$pname = undef;
 	
@@ -529,6 +529,7 @@ sub login_foo {
     my $login_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/login.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
     
     my $loginText_href;
+    my $flagShowLogin = 1;
 
     # Hmm.  User not logged in yet, so no session params...
     #    my $oid = $self->session->param('fILL-oid');
@@ -548,6 +549,13 @@ sub login_foo {
 		"barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
 		"pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
 	    };
+
+	} elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
+	    $flagShowLogin = 0;
+	    $self->session->param(
+		'fILL-auth-screenmessage',
+		"Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery-only' at the bottom of this page).<br/><br/>You will have to contact your library and have them make the requests for you."
+		);
 	
 	} else {
 #	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
@@ -580,6 +588,7 @@ sub login_foo {
 	barcode_label_text => $loginText_href->{"barcode_label_text"},
 	pin_label_text => $loginText_href->{"pin_label_text"},
 	screenmessage => $screenmessage,
+	flag_show_login => $flagShowLogin,
 	);
     return $template->output;
 }
