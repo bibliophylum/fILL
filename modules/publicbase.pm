@@ -205,11 +205,16 @@ sub externallyAuthenticate {
     # is this a SIP2 library?
     my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, org_name from org where oid=?", undef, $oid);
 
-    #$self->log->debug( "externallyAuthenticate: $barcode, $pin, $oid\n" );
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	#$self->log->debug( "externallyAuthenticate using sip2\n" );
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $oid);
 
+    } elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Your library does not support SIP2 authentication.<br/><br/>At the bottom of this screen, click on the <strong>'Discovery-only'</strong> link to search fILL; you will need to email your requests to your library."
+	    );
+	$pname = undef;
+	
     } else {
 	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $oid, 
 	    $lib_href->{patron_authentication_method});
