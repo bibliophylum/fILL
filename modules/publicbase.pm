@@ -205,11 +205,16 @@ sub externallyAuthenticate {
     # is this a SIP2 library?
     my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method, org_name from org where oid=?", undef, $oid);
 
-    #$self->log->debug( "externallyAuthenticate: $barcode, $pin, $oid\n" );
     if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	#$self->log->debug( "externallyAuthenticate using sip2\n" );
 	$pname = $self->checkSip2($username, $password, $barcode, $pin, $oid);
 
+    } elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
+	$self->session->param(
+	    'fILL-auth-screenmessage',
+	    "Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery' at the bottom of this page).<br/><br/>When you find a title that you would like to borrow, contact your library and they can request it for you."
+	    );
+	$pname = undef;
+	
     } else {
 	$pname = $self->checkNonSip2($username, $password, $barcode, $pin, $oid, 
 	    $lib_href->{patron_authentication_method});
@@ -524,6 +529,7 @@ sub login_foo {
     my $login_i18n_href = $self->dbh->selectall_hashref("select id,text from i18n where page='public/login.tmpl' and lang=? and category='tparm'", 'id', undef, $lang);
     
     my $loginText_href;
+    my $flagShowLogin = 1;
 
     # Hmm.  User not logged in yet, so no session params...
     #    my $oid = $self->session->param('fILL-oid');
@@ -543,6 +549,13 @@ sub login_foo {
 		"barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
 		"pin_label_text" => $login_i18n_href->{'PIN-label'}->{'text'}
 	    };
+
+	} elsif ($lib_href->{patron_authentication_method} eq 'BROKENFollettDestiny') {
+	    $flagShowLogin = 0;
+	    $self->session->param(
+		'fILL-auth-screenmessage',
+		"Your library's software has changed, preventing fILL from signing you in.<br/><br/>You can still use fILL to search by following <span style='text-decoration: underline;'><a href='/cgi-bin/discovery-only.cgi'>this link</a></span> (or clicking 'Discovery' at the bottom of this page).<br/><br/>When you find a title that you would like to borrow, contact your library and they can request it for you."
+		);
 	
 	} else {
 #	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
@@ -575,6 +588,7 @@ sub login_foo {
 	barcode_label_text => $loginText_href->{"barcode_label_text"},
 	pin_label_text => $loginText_href->{"pin_label_text"},
 	screenmessage => $screenmessage,
+	flag_show_login => $flagShowLogin,
 	);
     return $template->output;
 }

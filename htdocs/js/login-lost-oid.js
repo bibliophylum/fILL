@@ -93,6 +93,7 @@ $('document').ready(function(){
     });
 
     $("#nav2").append(' | </span><a href="/cgi-bin/admin.cgi">Admin</a><span style="color:#aabdba;">');
+    $("#nav2").append(' | </span><a href="/cgi-bin/discovery-only.cgi">Discovery</a>');
     $("#nav2").append(' | </span><a href="/cgi-bin/lightning.cgi">Library Staff</a>');
 
 });

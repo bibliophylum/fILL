@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<TMPL_IF name="lang">
+  <html lang=<TMPL_VAR name="lang">>
+<TMPL_ELSE>
+  <html lang="en">
+</TMPL_IF>
+ 
+<head>
+  <title><TMPL_VAR name="pagetitle"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--[if lt IE 9]>
+  <script>
+    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+      "figure,footer,header,main,mark,menu,meter,nav,output," +
+      "progress,section,time,video").split(',');
+    for (var i = 0; i < e.length; i++) {
+      document.createElement(e[i]);
+    }
+  </script>
+<![endif]-->
+
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
+<link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+<link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
+
+
+<!-- This is the new DataTables, with all of the required extensions built in
+     See https://datatables.net/download/ for info on building these files.
+  -->
+<link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+<script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/js/menu-counters-1.2.js"></script>
+<script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
+<script type="text/javascript" src="/plugins/clipboard.js-master/dist/clipboard.js"></script>
+
+<script type="text/javascript" src="/js/pz2.js"></script>
+<script type="text/javascript" src="/js/fILL_client-discoveryOnly-1.0.js"></script>
+<script type="text/javascript" src="/plugins/TimeCircles/inc/TimeCircles.js"></script>
+<link rel="stylesheet" href="/plugins/TimeCircles/inc/TimeCircles.css"> 
+
+<script type="text/javascript">
+  function searchHelp(e) {
+    alert("Search help\n\nfILL does a general keyword search by default.\n\nAdvanced searching\n\nSpecific title:  \tti=\"The case for mars\"\nSpecific author:\tau=\"Zubrin, Robert\"\nSpecific subject:\tsu=\"mars planet\"\nSeries:\tseries=\"fear street\"\n\nYou can combine these using the connectors AND, OR, NOT:\n\n\tau=\"david drake\" and au=\"eric flint\"\n\n\tti=\"cooking\" and su=\"solar\"\n\n\tti=\"cooking\" not su=\"microwave\"");
+  }
+</script>
+
+<script type="text/javascript">
+$('document').ready(function(){
+  
+    $("#image").append("");
+    $("#query").focus();
+    $("#countdown").TimeCircles( { start: false,
+                                   time: { Days: { show: false },
+                                           Hours: { show: false },
+                                           Minutes: { show: false }
+                                         }
+                                 }
+                                ).addListener(function(unit, value, total) {
+                                                if (total == 0) {
+                                                  $("#countdown").TimeCircles().stop();
+                                                  var stoppedAt = stopTheSearch("Timer done");
+                                                  $("#status-header").text("Search complete.");
+/*
+                                                  $("#countdown-finished").empty();
+                                                  $("#countdown-finished").append("<p>"+stoppedAt.finished+" of "+(stoppedAt.finished + stoppedAt.waiting)+" libraries responded to your search in 30 seconds.</p>");
+*/
+                                                  $("#countdown-finished-count").text( stoppedAt.finished );
+                                                  $("#countdown-finished-total").text( stoppedAt.finished + stoppedAt.waiting );
+ 	                                          $("#status-note").hide();
+                                                  $("#countdown-finished").show();
+                                                  $("#countdown-div").hide();
+                                                  $("#count-or-percent-div").hide();
+                                                  $("#percent-div").hide();
+                                                }
+                                              }, type="visible");
+
+});
+</script>
+
+ </head>
+ 
+ <body onload="domReady();">
+
+  <div id="noscript">
+    <noscript>
+	<p>Your browser does not support or allow execution of scripts required by this site to work properly.</p>
+	<p>If you run Internet Explorer 6+ or FireFox 2.0+ and see this message ensure the JavaScript is enabled in your browser.</p>
+	<p>If you run Internet Explorer 7 add the site to the Trusted Sites group.</p>
+	<p>Finally, check your personal firewall settings.</p>
+    </noscript>
+  </div>
+
+<!-- from header.tmpl -->
+
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
+<div id="container"><!--closes in footer.tmp-->
+
+  <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
+  <header role="banner">
+
+    <div id="header-left">
+      <div id="fill-logo"><a href="/"><img src="/img/fill-discovery-logo.png" alt="fill"/></a>Discovery</div>
+      <div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
+    </div>
+    
+    <div id="header-right">
+
+      <div class="header-control-bar" id="upper-right">
+	<div id="language-selector">
+	  <!-- <label for="language">Language</label> -->
+	  <select name="language" id="language">
+	    <option lang="en" selected="selected">English</option>
+	    <option lang="fr">Français</option>
+	  </select>
+	</div>
+<!--	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div> -->
+      </div> <!-- header, upper-right set of controls -->
+      <div class="header-break"></div>
+      
+      <div class="header-control-bar" id="lower-right">
+	<input id="incrFont" class="public-style" type="button" value="+A" />
+	<input id="resetFont" class="public-style" type="button" value="A" />
+	<input id="decrFont" class="public-style" type="button" value="-A" />
+      </div> <!-- header, lower-right set of controls -->
+      <div class="header-break"></div>
+      
+      <TMPL_IF name="template">
+	<div id="template" style="display:none"><TMPL_VAR name="template"></div>
+      </TMPL_IF>
+
+    </div>
+  </header>
+  
+  <!--***************ARIA MARKER 'NAVIGATION'***************-->
+  <nav role="navigation" id="pub-nav-primary">
+    <ul class="inline-items">
+      <li><a id="menu_search" href="/cgi-bin/discovery-only.cgi">Discovery</a></li>
+      <li><a id="menu_about" href="/cgi-bin/discovery-only.cgi?rm=about_form">About fILL</a></li>
+    </ul>
+  </nav>
+
+
+<!--***************ARIA MARKER 'SEARCH'***************-->
+<div id="search-container">
+  <div id="search" role="search">
+    <form id="searchForm" name="search">
+      <input id="query" type="text" placeholder="Search" value="<TMPL_VAR name='query'>"/>
+      <!-- The id of the submit button is used in fILL_client-discoveryOnly-x.y.js in the
+	   domReady() function to automatically do the search, if the user had 
+	   filled in the search box from a different page.
+
+	   If you change the id here, change it in fILL_client-discoveryOnly too,
+	   or the automatic search won't fire.
+	-->
+      <input id="search-submit-button" type="submit" value="Go" class="public-style"/>
+    </form>
+  </div>
+</div> <!-- search-container -->
+
+<!--***************ARIA MARKER 'MAIN'***************-->
+<div id="content">
+
+<main id="main" class="tone-box" role="main">
+
+<!-- Begin content -->
+
+
+<!-- end header.tmpl -->
+
+<script type="text/javascript">
+  set_primary_tab("menu_search");
+</script>
+
+
+  <div id="switchmenu" style="display: none">
+   <a href="#" onclick="switchView('recordview')">Record Browser</a>
+   <span> | </span>
+   <a href="#" onclick="switchView('targetview')">Target Info</a>
+  </div>
+ 
+  <div id="recordview">
+ 
+    <div id="ranking" style="clear:left; display:none">
+      <form name="select">
+        <label for="sort" id="sort-label">Sort by</label>
+        <select name="sort" id="sort">
+          <option id="sort-relevance" value="relevance" selected="selected">relevance</option>
+          <option id="sort-title" value="title:1">title</option>
+          <option id="sort-newest" value="date:0">newest</option>
+          <option id="sort-oldest" value="date:1">oldest</option>
+        </select>
+	<label for="perpage" id="show-label">and show</label>
+        <select name="perpage" id="perpage">
+          <option value="10">10</option>
+          <option value="20" selected="selected">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+        <span id="per-page">per page.</span>
+      </form>
+    </div>
+
+    <div id="pager"></div>
+    <div id="navi"></div>
+    <p id="result-instructions">Enter some keywords to begin searching.</p>
+    <div id="results"></div>
+  </div>
+  
+  <div id="targetview" style="display: none">
+    <div id="bytarget">
+      No information available yet.
+    </div>
+  </div>
+  
+
+<!-- End content -->
+</main>
+
+<!--***************ARIA MARKER 'COMPLEMENTARY'***************-->
+
+<div id="aside" class="tone-box" role="complementary">
+  <div id="image"></div>
+  <div id="statusbox" style="display: none">
+    <h1 id="status-header">Searching all libraries</h1>
+    <div id="status-note">Your search will finish when either the timer runs out, or all libraries have responded.</div>
+    <div id="countdown-div"><h2 id="progress-header">Finishing in:</h2>
+      <div id="countdown" data-timer="30" style="width:100%"></div>
+    </div>
+    <div id="count-or-percent-div"><h2 id="alternative-marker">...or...</h2></div>
+    <div id="percent-div"><h2 id="percentage-header">% of libraries:</h2>
+      <div id="stat"></div>
+    </div>
+    <div id="countdown-finished" style="display:none">
+      <p><span id="countdown-finished-count"></span> <span id="countdown-finished-of"></span> <span id="countdown-finished-total"></span> <span id="countdown-finished-responded-msg"></span>.</p>
+    </div>
+    <div id="libraries-finished" style="display:none"><p><span id="all-libraries-finished"></span> <span id="finish-time"></span> <span id="time-units"></span></div>
+  </div>
+  <div id="leftcontent"></div>
+  <div id="termlist" style="display: none">
+    <br><hr/>
+    <p id="refinery">Refine search by:</p>
+    <hr/>
+    <p id="subject-heading" class="termtitle"></p>
+    <div id="subject-list"></div>
+    <hr/>
+    <p id="author-heading" class="termtitle"></p>
+    <div id="author-list"></div>
+  </div>
+</div>
+
+</div><!--div id content-->
+
+<TMPL_INCLUDE NAME="footer.tmpl">
+

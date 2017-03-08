@@ -52,54 +52,58 @@
 	</div>
       </TMPL_IF>
 
-      <div id="extAuth" style="display:none">
-	<!-- <p>Log in using your library barcode and PIN</p> -->
-	<p id="login_text"><TMPL_VAR name="login_text"></p>
-        <div id="chooseLibrary" style="display:none">
-	  <div id="region">
+      <TMPL_IF name="flag_show_login">
+	<div id="extAuth" style="display:none">
+	  <!-- <p>Log in using your library barcode and PIN</p> -->
+	  <p id="login_text"><TMPL_VAR name="login_text"></p>
+          <div id="chooseLibrary" style="display:none">
+	    <div id="region">
+	    </div>
+          </div>
+	  
+	  <fieldset name="login">
+	    <!--	  <label for="authen_barcode">Library card number</label> -->
+	    <label for="authen_barcode"><TMPL_VAR name="barcode_label_text"></label>
+	    <input type="text" value="" size="15" name="authen_barcode" tabindex="1" id="authen_barcode"><br>
+	    <!--          <label for="authen_pin">PIN number</label> -->
+            <label for="authen_pin"><TMPL_VAR name="pin_label_text"></label>
+            <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
+          </fieldset>
+	  
+	  <div id="waitDiv" style="display:none">
+            <span id="authenticating">Authenticating... </span><img src="/img/wait.gif" alt="loading indicator">
 	  </div>
-        </div>
-
-	<fieldset name="login">
-<!--	  <label for="authen_barcode">Library card number</label> -->
-	  <label for="authen_barcode"><TMPL_VAR name="barcode_label_text"></label>
-	  <input type="text" value="" size="15" name="authen_barcode" tabindex="1" id="authen_barcode"><br>
-<!--          <label for="authen_pin">PIN number</label> -->
-          <label for="authen_pin"><TMPL_VAR name="pin_label_text"></label>
-          <input type="password" size="15" name="authen_pin" tabindex="2" id="authen_pin"><br>
-        </fieldset>
+	  
+	</div> <!-- div id extAuth -->
 	
-      <div id="waitDiv" style="display:none">
-        <span id="authenticating">Authenticating... </span><img src="/img/wait.gif" alt="loading indicator">
-      </div>
-
-      </div> <!-- div id extAuth -->
-
-      <div id="fILLAuth" style="display:none">
-	<!-- Soon, there won't be any of these.... -->
-<!--	<p>Log in using your fILL username and password</p> -->
-	<p><TMPL_VAR name="login_text"></p>
-<!--        <label for="authen_username">User Name</label> -->
-        <label for="authen_username"><TMPL_VAR name="barcode_label_text"></label>
-        <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
-<!--        <label for="authen_password">Password</label> -->
-        <label for="authen_password"><TMPL_VAR name="pin_label_text"></label>
-        <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
-      </div> <!-- div id fILLAuth -->
-
+	<div id="fILLAuth" style="display:none">
+	  <!-- Soon, there won't be any of these.... -->
+	  <!--	<p>Log in using your fILL username and password</p> -->
+	  <p><TMPL_VAR name="login_text"></p>
+	  <!--        <label for="authen_username">User Name</label> -->
+          <label for="authen_username"><TMPL_VAR name="barcode_label_text"></label>
+          <input type="text" value="" autocapitalize="off" name="authen_username" tabindex="1" id="authen_loginfield" /><br>
+	  <!--        <label for="authen_password">Password</label> -->
+          <label for="authen_password"><TMPL_VAR name="pin_label_text"></label>
+          <input type="password" name="authen_password" tabindex="2" id="authen_passwordfield" /><br>
+	</div> <!-- div id fILLAuth -->
+      </TMPL_IF><!-- flag_show_login -->	
     </fieldset>
 
     <div id="sign-in" style="display:none">
       <fieldset>
-<!--	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton"> -->
-	<button id="authen_loginbutton" type="submit" class="button-left public-style" form="loginform" tabindex="4">Sign in</button>
+	<TMPL_IF name="flag_show_login">
+	  <!--	<input type="submit" class="button-left public-style" value="Sign In" name="authen_loginbutton" tabindex="4" id="authen_loginbutton"> -->
+	  <button id="authen_loginbutton" type="submit" class="button-left public-style" form="loginform" tabindex="4">Sign in</button>
+	</TMPL_IF>
       </fieldset>
     </div>
       
 
     <div class="login-footer">
-      <p id="cannot-remember">If you cannot remember your user name or password, please contact your local public library.</p>
-
+      <TMPL_IF name="flag_show_login">
+	<p id="cannot-remember">If you cannot remember your user name or password, please contact your local public library.</p>
+      </TMPL_IF>
     </div> <!--div class login-footer -->
     <input type="hidden" value="/cgi-bin/public.cgi?rm=search_form;submit=Log%20in" name="destination">
     <input type="hidden" name="authen_oid" id="authen_oid" value="">

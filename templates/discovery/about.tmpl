@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<TMPL_IF name="lang">
+  <html lang=<TMPL_VAR name="lang">>
+<TMPL_ELSE>
+  <html lang="en">
+</TMPL_IF>
+ 
+<head>
+  <title><TMPL_VAR name="pagetitle"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+<!--[if lt IE 9]>
+  <script>
+    var e = ("abbr,article,aside,audio,canvas,datalist,details," +
+      "figure,footer,header,main,mark,menu,meter,nav,output," +
+      "progress,section,time,video").split(',');
+    for (var i = 0; i < e.length; i++) {
+      document.createElement(e[i]);
+    }
+  </script>
+<![endif]-->
+
+  <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
+  <link id="csstheme" type="text/css" rel="stylesheet" href="/css/themes-public-default.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
+  
+  <!-- This is the new DataTables, with all of the required extensions built in
+       See https://datatables.net/download/ for info on building these files.
+    -->
+  <link rel="stylesheet" type="text/css" href="/plugins/DataTables/datatables.min.css"/>
+  <script type="text/javascript" src="/plugins/DataTables/datatables.min.js"></script>
+  
+  <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/i18n.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="/js/public-header-functions-1.0.js"></script>
+  
+</head>
+ 
+<body>
+
+  <div id="noscript">
+    <noscript>
+      <p>Your browser does not support or allow execution of scripts required by this site to work properly.</p>
+      <p>If you run Internet Explorer 6+ or FireFox 2.0+ and see this message ensure the JavaScript is enabled in your browser.</p>
+      <p>If you run Internet Explorer 7 add the site to the Trusted Sites group.</p>
+      <p>Finally, check your personal firewall settings.</p>
+    </noscript>
+  </div>
+  
+  <!-- from header.tmpl -->
+
+  <div id="filldev"  style="display: none; background-color: #F62817; color: #FFFFFF">fILL development server</div>
+  <div id="localdev" style="display: none; background-color: #6CC417; color: #FFFFFF">fILL LOCAL development server</div>
+  
+  <div id="container">
+    
+    <!--***************ARIA MARKER 'BANNER'-search.tmpl-***************-->
+    <header role="banner">
+      
+      <div id="header-left">
+	<div id="fill-logo"><a href="/"><img src="/img/fill-discovery-logo.png" alt="fill"/></a>Discovery</div>
+	<div id="fill-tagline"><p id="tagline-p">connecting libraries, serving patrons.</p></div>
+      </div>
+      
+      <div id="header-right">
+	
+	<div class="header-control-bar" id="upper-right">
+	  <div id="language-selector">
+	    <!-- <label for="language">Language</label> -->
+	    <select name="language" id="language">
+	      <option lang="en" selected="selected">English</option>
+	      <option lang="fr">Français</option>
+	    </select>
+	  </div>
+	  <!--	<div id="logout-button"><a href="?authen_logout=1" role="button" id="fill-button" class="public-style">log out</a></div> -->
+	</div> <!-- header, upper-right set of controls -->
+	<div class="header-break"></div>
+	
+	<div class="header-control-bar" id="lower-right">
+	  <input id="incrFont" class="public-style" type="button" value="+A" />
+	  <input id="resetFont" class="public-style" type="button" value="A" />
+	  <input id="decrFont" class="public-style" type="button" value="-A" />
+	</div> <!-- header, lower-right set of controls -->
+	<div class="header-break"></div>
+	
+	<TMPL_IF name="template">
+	  <div id="template" style="display:none"><TMPL_VAR name="template"></div>
+	</TMPL_IF>
+
+      </div>
+    </header>
+    
+    <!--***************ARIA MARKER 'NAVIGATION'***************-->
+    <nav role="navigation" id="pub-nav-primary">
+      <ul class="inline-items">
+	<li><a id="menu_search" href="/cgi-bin/discovery-only.cgi">Discovery</a></li>
+	<li><a id="menu_about" href="/cgi-bin/discovery-only.cgi?rm=about_form">About fILL</a></li>
+      </ul>
+    </nav>
+
+    
+    <!--***************ARIA MARKER 'MAIN'***************-->
+    <div id="content">
+      
+      <main id="main" class="tone-box" role="main">
+	<script type="text/javascript">
+	  set_primary_tab("menu_about");
+	</script>
+	
+	<div id="main-info-right" role="main">
+	  <h1 id="about-heading">About</h1>
+	  <p id="about-p1">fILL is the interlibrary loan management system for all Manitoba public libraries. It connects your local library to the millions of items available in Manitoba&rsquo;s libraries.</p>
+	  <p id="about-p2">You are currently in the discovery-only fILL site.  This will let you search all of the public libraries in Manitoba, but does not let you make any interlibrary loan requests.</p>
+	  <p id="about-p3">If you are a patron of a Manitoba public library, and your library supports SIP2 authentication, you can log in to fILL by clicking on the orange "fILL" logo in the upper left corner of the page.  Logging in will enable you to easily ask your library to request titles you have discovered.</p>
+	  <h3 id="about-privacy">Privacy</h3>
+	  <p id="about-privacy-p1">fILL does not keep a record of your search history nor  does it keep a record of request transactions after borrowed items are returned. Logging into your account is necessary in order for your library to validate the request; some non-identifying data may be retained for statistical purposes.</p>
+	</div><!--main-info-right-->
+	
+	<div id="aside-img-left" role="complementary">
+	  <img src='/img/fill-about.jpg' alt="Brown haired girl with a pony tail, reading a book in the park"/>
+	  <p class="note"><span id="image-attribution">Image care of</span> <a href="https://www.flickr.com/photos/swanksalot/2715407049/">Seth Anderson</a></p>
+	</div>
+	
+    </div><!--div id content-->
+    
+    <!-- End content -->
+    <footer role="contentinfo">
+      <div id="nav2">
+	<a id="envDisplay" href="/cgi-bin/public.cgi?rm=environment_form">ENV display</a><span style="color:#aabdba;"> | </span><a id="clearCookies" href="?">DEBUG: clear cookies</a>
+      </div>
+    </footer>
+    
+    <div id="bison-container">
+      <a href="http://www.gov.mb.ca/chc/"><img class="bison" alt="Manitoba Bison Logo" title="Coordinated by the Public Library Service Branch of the Government of Manitoba Tourism, Culture, Heritage and Consumer Protection" src="/img/manitoba.gif"/></a>
+    </div>
+    
+  </div><!--div id container-->
+  
+</body>
+</html>
