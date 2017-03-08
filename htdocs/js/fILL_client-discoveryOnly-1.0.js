@@ -726,7 +726,7 @@ function renderDetails(data, marker)
 
     // copy to clipboard button:
     // button text gets changed and button gets shown in on_show()
-    $detDiv.append('<table><tr><td><button class="clipbtn" style="display:none;">Preparing to copy.</button></td><td>After copying, email your library and ask them for an interlibrary loan. Paste this information into into the email.</td></tr></table>'); 
+    $detDiv.append('<table><tr><td><button class="clipbtn" style="display:none;">Preparing to copy.</button></td><td>After copying, email your library and ask them for an interlibrary loan. Paste this information into the email.</td></tr></table>'); 
     
     var $table = $('<table></table>', { "id" : "detTable" } ).appendTo( $detDiv );
     var $tr = $('<tr></tr>').appendTo( $table );
