@@ -97,7 +97,8 @@ function my_onshow(data) {
 	    if (clipboard) {  clipboard.destroy(); }
 	    clipboard = new Clipboard(".clipbtn", {
 		target: function(trigger) {
-		    return trigger.parentNode; // will be the .details div
+		    var $copyDiv = $(trigger).parent().closest('div');
+		    return $copyDiv[0];
 		}
 	    });
 	    clipboard.on('success', function(e) {
@@ -227,7 +228,8 @@ function my_onrecord(data) {
     if (clipboard) {  clipboard.destroy(); }
     clipboard = new Clipboard(".clipbtn", {
 	target: function(trigger) {
-	    return trigger.parentNode; // will be the .details div
+	    var $copyDiv = $(trigger).parent().closest('div');
+	    return $copyDiv[0];
 	}
     });
     clipboard.on('success', function(e) {
@@ -723,7 +725,8 @@ function renderDetails(data, marker)
 			     });
 
     // copy to clipboard button:
-    $detDiv.append('<button class="clipbtn" style="display:none;">Preparing to copy.</button>'); // text gets changed and button gets shown in on_show()
+    // button text gets changed and button gets shown in on_show()
+    $detDiv.append('<table><tr><td><button class="clipbtn" style="display:none;">Preparing to copy.</button></td><td>After copying, email your library and ask them for an interlibrary loan. Paste this information into into the email.</td></tr></table>'); 
     
     var $table = $('<table></table>', { "id" : "detTable" } ).appendTo( $detDiv );
     var $tr = $('<tr></tr>').appendTo( $table );
