@@ -72,7 +72,7 @@ cp -R externals /opt/fILL/externals
 cp -R htdocs /opt/fILL/htdocs
 cp -R localisation /opt/fILL/localisation
 cp -R modules /opt/fILL/modules
-cp -R pazpar2 /opt/fILL/pazpar2
+#cp -R pazpar2 /opt/fILL/pazpar2  # instead, run /opt/fILL/externals/write-pazpar-files-and-restart.sh
 cp -R restricted_docs /opt/fILL/restricted_docs
 cp -R selenium /opt/fILL/selenium
 cp -R services /opt/fILL/services
@@ -81,6 +81,25 @@ cp -R testing /opt/fILL/testing
 cp -R updates /opt/fILL/updates
 
 sudo chgrp -R devel /opt/fILL/*
+
+echo Making pazpar2 directories
+sudo mkdir /opt/fILL/pazpar2
+sudo mkdir /opt/fILL/pazpar2/settings-available
+sudo mkdir /opt/fILL/pazpar2/settings
+sudo mkdir /opt/fILL/pazpar2/tmp
+sudo chown david /opt/fILL/pazpar2
+sudo chgrp david /opt/fILL/pazpar2
+
+echo Allowing web server to write to pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings
+sudo chgrp www-data /opt/fILL/pazpar2/settings-available
+sudo chgrp www-data /opt/fILL/pazpar2/tmp
+
+echo Creating pazpar2 files and restarting pazpar2
+cp pazpar2/*.xml /opt/fILL/pazpar2/
+cp pazpar2/*.xsl /opt/fILL/pazpar2/
+(sudo /opt/fILL/externals/write-pazpar-files-and-restart.sh)
+echo done
 
 #echo Allowing write to message logs...
 #sudo chmod ugo+w /opt/fILL/logs/graphing.log
@@ -91,41 +110,13 @@ sudo chgrp -R devel /opt/fILL/*
 #sudo chmod ugo+w /opt/fILL/logs/telnet.log
 
 echo Allowing web server to write to htdocs/tmp
+sudo mkdir /opt/fILL/htdocs/tmp
+sudo chown david /opt/fILL/htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp
 sudo chmod g+w /opt/fILL/htdocs/tmp
 
-echo Allowing web server to write to pazpar2/settings
-sudo chgrp www-data /opt/fILL/pazpar2/settings
-sudo chgrp www-data /opt/fILL/pazpar2/settings-available
-sudo chgrp www-data /opt/fILL/pazpar2/tmp
-
 #echo Creating symlink to apache sites-available
 #sudo ln -s /opt/fILL/conf/fILL.conf /etc/apache2/sites-available/fILL.conf
-
-echo Stopping pazpar2 daemon
-sudo kill `cat /var/run/pazpar2.pid`
-echo Removing old pazpar2 settings
-sudo rm /etc/pazpar2/settings/*
-echo Copying pazpar2 settings
-sudo cp /opt/fILL/pazpar2/settings/* /etc/pazpar2/settings
-echo Updating pazpar2 services
-sudo unlink /etc/pazpar2/services-enabled/fILL.xml
-sudo cp /opt/fILL/pazpar2/fILL.xml /etc/pazpar2/services-available/fILL.xml
-sudo ln -s /etc/pazpar2/services-available/fILL.xml /etc/pazpar2/services-enabled/fILL.xml
-echo Updating pazpar2 xslt
-#sudo cp /opt/fILL/pazpar2/fILL.xsl /etc/pazpar2/fILL.xsl
-sudo cp /opt/fILL/pazpar2/marc21.xsl /etc/pazpar2/marc21.xsl
-sudo cp /opt/fILL/pazpar2/horizon-opac.xsl /etc/pazpar2/horizon-opac.xsl
-sudo cp /opt/fILL/pazpar2/wmrl.xsl /etc/pazpar2/wmrl.xsl
-echo Clearing pazpar2 log
-sudo unlink /opt/fILL/logs/pazpar2.log
-sudo rm /var/log/pazpar2.log
-sudo touch /var/log/pazpar2.log
-sudo ln -s /var/log/pazpar2.log /opt/fILL/logs/pazpar2.log
-echo Restarting pazpar2 daemon
-sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
-# dump XML to logfile with -d option: (only for debugging!)
-#sudo /usr/sbin/pazpar2 -d -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 
 #echo Restarting reporter daemon
 #sudo /opt/fILL/services/fILLreporter.pl

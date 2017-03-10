@@ -299,6 +299,19 @@ function triggerSearch ()
     if ($('#advanced_search').is(':visible')) { toggleAdvanced(); }
     document.search.query.value = query;  // update query so user can see it
     $("#countdown").TimeCircles().restart();
+
+    if ((curFilter) && (curFilter.includes("pz:id"))) {
+	// leave it as-is
+    } else {
+	var filt = $("#targetfilter option:selected").val();
+	var filtArr = filt.split(/\s+/);
+	curFilter = 'libtype=';
+	for (var i = 0, len = filtArr.length; i < len; i++) {
+	    curFilter += filtArr[i];
+	    if (i<(len-1)) { curFilter += '|'; }
+	}
+    }
+    
     my_paz.search(document.search.query.value, recPerPage, curSort, curFilter);
 }
 

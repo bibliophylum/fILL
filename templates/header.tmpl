@@ -286,7 +286,11 @@ $('document').ready(function(){
 	    <input id="button" type="submit" value="Search" class="library-style" />
 	    <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
 	    <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
-	    
+	    <select name="targetfilter" id="targetfilter">
+	      <option selected="selected" value="public">Public libraries</option>
+	      <option value="public academic">Public and academic libraries</option>
+	      <option value="academic">Academic libraries</option>
+	    </select>
 	    <div id="advanced_search" style="display: none">
 	      <div class="tone-box">
 		

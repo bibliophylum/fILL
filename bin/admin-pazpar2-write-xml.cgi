@@ -43,7 +43,7 @@ my $retval = 1;
 foreach my $sym (@$servers_aref) {
     #print STDERR "server: $sym->[0]\n";
 
-    my $z = $dbh->selectrow_hashref("select o.oid,o.symbol,o.org_name,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series,z.enabled,z.special_processing from library_z3950 z left join org o on z.oid=o.oid where o.symbol=? order by o.org_name", undef, $sym->[0] );
+    my $z = $dbh->selectrow_hashref("select o.oid,o.symbol,o.org_name,z.server_address,z.server_port,z.database_name,z.libtype,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series,z.enabled,z.special_processing from library_z3950 z left join org o on z.oid=o.oid where o.symbol=? order by o.org_name", undef, $sym->[0] );
 #    print STDERR Dumper($z) . "\n";
 
     if (defined $z) {
@@ -58,6 +58,9 @@ foreach my $sym (@$servers_aref) {
 	} else {
 	    $s .= '  <set name="pz:allow" value="0"/>' . "\n";
 	}
+
+	# To let fILL limit search to eg. public or academic libraries
+	$s .= '  <set name="libtype" value="' . $z->{libtype} . "\"/>\n";
 	
 	if ($z->{special_processing}) {
 	    # Deep juju ahead!
