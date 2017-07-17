@@ -30,70 +30,64 @@ use Text::Unidecode;
 use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
-my %SPRUCE_TO_MAPLIN = (
-    'Manitoba PLS'                             => 'MWPL',
-    'Altona Library'                           => 'MAOW',  # SCRL Altona
-    'Miami Library'                            => 'MMIOW', # SCRL Miami
-    'Morden Library'                           => 'MMOW',  # SCRL Morden
-    'Winkler Library'                          => 'MWOW',  # SCRL Winkler
-    'Boissevain-Morton Library'                => 'MBOM',  # Boissevain
-    'Manitou Regional Library'                 => 'MMA',   # Manitou
-    'Ste Rose Library'                         => 'MSTR',  # Ste. Rose
-    'AB'                                       => 'MWP',   # Legislative Library
-    'MWP'                                      => 'MWP',   # Legislative Library
-    'Stonewall Library'                        => 'MSTOS', # SIRL Stonewall
-    'Teulon Library'                           => 'MTSIR', # SIRL Teulon
-    'McAuley Branch - Border Regional Library' => 'MMCA',  # MB McAuley
-    'Main Branch - Border Regional Library'    => 'MVE',   # MB Virden
-    'Elkhorn Branch - Border Regional Library' => 'ME',    # MB Elkhorn
-    'Somerset Library'                         => 'MS',    # Somerset
-    'Glenwood and Souris Regional Library'     => 'MSOG',  # Glenwood and Souris
-    'Bren Del Win Centennial Library'          => 'MDB',   # Bren Del Win
-    'Portage la Prairie Regional Library'      => 'MPLP',  # Portage
-    'Shilo Community Library'                  => 'MSSC',  # Shilo
-    'Chemawawin Public Library at Easterville' => 'MEC',   # UCN Chemawawin
-    'UCN/Norway House Public Library'          => 'MNH',   # UCN Norway House
-    'UCN Health at Swan River'                 => 'UCN',   # UCN Health at Swan River
-    'Thompson Campus Library'                  => 'MTK',   # UCN Thompson
-    'The Pas Campus Library'                   => 'MTPK',  # UCN The Pas
-    'UCN Midwifery in Winnipeg'                => 'UCN',   # UCN Midwifery
-    'UCN/Pukatawagan Public Library'           => 'MPPL',  # UCN Pukatawagan
-    'UCN Health at Swan River'                 => 'MSRH',  # UCN Health
-    'Russell Library'                          => 'MRD',   # MRUS Russell
-    'Binscarth Library'                        => 'MBI',   # MRUS Binscarth
-    'Bibliotheque St. Claude Library'          => 'MSCL',  # St.Claude
-    'Bibliothèque St. Claude Library'          => 'MSCL',  #  note the accent
-    'Bibliotheque Pere Champagne Library'      => 'MNDP',  # Pere Champagne
-    'Bibliothèque Pere Champagne Library'      => 'MNDP',  #  note the accent
-    'Louise Public Library'                    => 'MPM',   # Pilot Mound
-    'Bibliotheque Ste-Anne Library'            => 'MSA',   # Ste Anne
-    'Bibliothèque Ste-Anne Library'            => 'MSA',   #  note the accent
-    'Parkland Regional'                        => 'MDA',   # Parkland
-    'Dauphin Public'                           => 'MDA',
-    'Parkland'                                 => 'MDA',
-    'Archive Headquarters'                     => 'MDA',
-    'Headquarters'                             => 'MDA',
-    'Birch River'                              => 'MDA',
-    'Birtle'                                   => 'MDA',
-    'Bowsman'                                  => 'MDA',
-    'Erickson'                                 => 'MDA',
-    'Eriksdale'                                => 'MDA',
-    'Foxwarren'                                => 'MDA',
-    'Gilbert Plains'                           => 'MDA',
-    'Gladstone'                                => 'MDA',
-    'Hamiota'                                  => 'MDA',
-    'Langruth'                                 => 'MDA',
-    'McCreary'                                 => 'MDA',
-    'Minitonas'                                => 'MDA',
-    'Ochre River'                              => 'MDA',
-    'Roblin'                                   => 'MDA',
-    'Rossburn'                                 => 'MDA',
-    'Shoal Lake'                               => 'MDA',
-    'Siglunes'                                 => 'MDA',
-    'St. Lazare'                               => 'MDA',
-    'Ste. Rose'                                => 'MDA',
-    'Strathclair'                              => 'MDA',
-    'Winnipegosis'                             => 'MDA',
+my %SPRUCE_NAMES = (
+    'MWPL'     => 'Manitoba PLS',
+    'MAOW'     => 'South Central Regional - Altona',
+    'MMIOW'    => 'South Central Regional - Miami',
+    'MMOW'     => 'South Central Regional - Morden',
+    'MWOW'     => 'South Central Regional - Winkler',
+    'ME'       => 'Border Regional - Elkhorn',
+    'MMCA'     => 'Border Regional - McAuley',
+    'MVE'      => 'Border Regional - Virden',
+    'MBOM'     => 'Boissevain-Morton Library and Archives',
+    'MDB'      => 'Bren Del Win Centennial',
+    'MAS'      => 'Parkland Regional - Siglunes',
+    'MBO'      => 'Parkland Regional - Bowsman',
+    'MBR'      => 'Parkland Regional - Birtle',
+    'MBRD'     => 'Parkland Regional - Birch River',
+    'MDA'      => 'Parkland Regional - Dauphin',
+    'MDBAHQ'   => 'Parkland Regional - Archives-Headquarters',
+    'MDHQ'     => 'Parkland Regional - Headquarters',
+    'MDP'      => 'Parkland Regional - Parkland',
+    'MEDL'     => 'Parkland Regional - Erickson',
+    'MEL'      => 'Parkland Regional - Eriksdale',
+    'MFO'      => 'Parkland Regional - Foxwarren',
+    'MGD'      => 'Parkland Regional - Gladstone',
+    'MGG'      => 'Parkland Regional - Grandview',
+    'MGP'      => 'Parkland Regional - Gilbert Plains',
+    'MHC'      => 'Parkland Regional - Hamiota',
+    'MLL'      => 'Parkland Regional - Langruth',
+    'MMD'      => 'Parkland Regional - McCreary',
+    'MMM'      => 'Parkland Regional - Minitonas',
+    'MOR'      => 'Parkland Regional - Ochre River',
+    'MRO'      => 'Parkland Regional - Rossburn',
+    'MRR'      => 'Parkland Regional - Roblin',
+    'MSLC'     => 'Parkland Regional - Shoal Lake',
+    'MSS'      => 'Parkland Regional - Strathclair',
+    'MSTL'     => 'Parkland Regional - St. Lazare',
+    'MSTR'     => 'Parkland Regional - Ste. Rose',
+    'MWWI'     => 'Parkland Regional - Winnipegosis',
+    'MNDP'     => 'Lorne Library Services - Pere Champagne',
+    'MS'       => 'Lorne Library Services - Somerset',
+    'MMA'      => 'Manitou Regional',
+    'MPLP'     => 'Portage la Prairie Regional',
+    'MPM'      => 'Louise Public',
+    'MBI'      => 'Russell and District Regional - Binscarth',
+    'MRD'      => 'Russell and District Regional - Russell',
+    'MSA'      => 'Bibliotheque Ste-Anne',
+    'MSCL'     => 'Bibliotheque St. Claude',
+    'MSOG'     => 'Glenwood and Souris Regional',
+    'MSSC'     => 'Shilo Community Library',
+    'MEC'      => 'UCN Chemawawin',
+    'MNH'      => 'UCN Norway House',
+    'MPPL'     => 'UCN Pukatawagan',
+    'MSRH'     => 'UCN Health at Swan River',
+    'MTK'      => 'UCN Thompson Campus',
+    'MTPK'     => 'UCN The Pas Campus',
+    'MWMW'     => 'UCN Midwifery Winnipeg',
+    'MSTOS'    => 'South Interlake Regional - Stonewall',
+    'MSTOS-BKM' => 'South Interlake Regional - Bookmobile',
+    'MTSIR'    => 'South Interlake Regional - Teulon',
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -238,7 +232,7 @@ sub complete_the_request_process {
 	}
     }
 
-    $self->log->debug("trying_aref:\n" . Dumper($trying_aref));
+#    $self->log->debug("trying_aref:\n" . Dumper($trying_aref));
 
     my $template = $self->load_tmpl('search/request_placed.tmpl');	
     $template->param( pagetitle => "fILL Request has been placed",
@@ -303,7 +297,7 @@ sub request_process {
     my $q = $self->query;
 
     my %sources = $self->_turn_request_parms_into_sources_hash( $q );
-    #$self->log->debug( 'after _turn_request_parms:\n' . Dumper(\%sources));
+#    $self->log->debug( 'after _turn_request_parms:\n' . Dumper(\%sources));
 
     my ($title,$author,$medium,$isbn,$pubdate) = $self->_normalize_request_data(
 	$q->param('title') || '--',
@@ -314,7 +308,7 @@ sub request_process {
 	);
 
     my @sources = $self->_isolate_and_normalize_source_callnos( \%sources );
-    #$self->log->debug( 'after _isolate_and_normalize:\n' . Dumper(\%sources));
+#    $self->log->debug( 'after _isolate_and_normalize:\n' . Dumper(\%sources));
 
     # Get this user's (requester's) library id
     my ($oid,$library,$symbol) = get_library_from_username($self, $self->authen->username);  # do error checking!
@@ -336,6 +330,7 @@ sub request_process {
 	$isbn,
 	$pubdate,
 	);
+	
     my $group_id = $self->dbh->last_insert_id(undef,undef,undef,undef,{sequence=>'request_group_seq'});
 
     # ...end of atomic
@@ -345,17 +340,17 @@ sub request_process {
     # re-consolidate MW/MDA locations - they handle ILL for all branches centrally
     @sources = $self->_consolidate_locations( \@sources );
 
-#    $self->log->debug( 'consolidated sources:\n' . Dumper(@sources));
+    $self->log->debug( 'consolidated sources:\n' . Dumper(@sources));
 
     # remove duplicates for a given library/location (they may have multiple holdings)
     my %seen = ();
     my @unique_sources = grep { ! $seen{ $_->{'symbol'}}++ } @sources;
 
-#    $self->log->debug( 'unique sources:\n' . Dumper(@unique_sources));
+    $self->log->debug( 'unique sources:\n' . Dumper(@unique_sources));
 
     my @sorted_sources = $self->_sort_sources_by_region_and_NBLC( $oid, \@unique_sources );
 
-#    $self->log->debug( 'sorted sources:\n' . Dumper(@sorted_sources));
+    #$self->log->debug( 'sorted sources:\n' . Dumper(@sorted_sources));
     
     # remove garbage sources
     my $index = 0; 
@@ -818,11 +813,8 @@ sub is_spruce_library {
     my $symbol = shift;
 
     my $found = 0;
-    foreach my $key (keys %SPRUCE_TO_MAPLIN) {
-	if ($SPRUCE_TO_MAPLIN{$key} eq uc($symbol)) {
-	    $found = 1;
-	    last;
-	}
+    if (exists $SPRUCE_NAMES{ uc($symbol) }) {
+	$found = 1;
     }
     return $found;
 }
@@ -953,24 +945,33 @@ sub _isolate_and_normalize_source_callnos {
 		# really need to generalize this....
 		# SEE ALSO bin/make-patron-request.cgi
 		if ($sources{$num}{'symbol'} eq 'SPRUCE') {
-		    $src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		    # The 2017 Evergreen update reverted the z39.50 server to
+		    # returning symbols instead of library names, so the
+		    # following line is no longer needed:
+		    #$src{'symbol'} = $SPRUCE_TO_MAPLIN{ $loc };
+		    # ...instead, do this:
+
+#		    $self->log->debug("  in isolate: " . Dumper($sources{$num}) . "\n");
+		    
+		    $src{'symbol'} = $loc;
+
+		    # all Parkland requests go to MDA:
+		    if ((exists $SPRUCE_NAMES{ $loc })
+			&& ($SPRUCE_NAMES{$loc} =~ /Parkland Regional/)) {
+			$src{'symbol'} = 'MDA';
+			$src{'holding'} = $sources{$num}{'holding'};
+		    };
+		    $src{'location'} = $SPRUCE_NAMES{ $sources{$num}{'symbol'} };
 		    $src{'is_spruce'} = 1;
 
 		} elsif ($sources{$num}{'symbol'} eq 'MW') {
 		    # leave as-is... requests to all MW branches go to MW
 
-#		} elsif ($sources{$num}{'symbol'} eq 'MBW') {
 		} elsif ($sources{$num}{'symbol'} eq 'WMRL') {
 		    $src{'symbol'} = $WESTERN_MB_TO_MAPLIN{ $loc };
 		    # sometime the horizon zserver does not return local holdings info...
 		    # so force it to MBW and let MBW forward to branches.
 		    $src{'symbol'} = 'MBW' if (not defined $src{'symbol'});
-
-#		} elsif ($sources{$num}{'symbol'} eq 'PARKLAND') {
-#		    # all Parkland requests go to MDA
-#		    $src{'symbol'} = 'MDA';
-#                    # This is handled in _consolidate_locations()....
-#		    #$loc_callno{ $loc } = $loc . " [" . $loc_callno{ $loc } . "]";
 
 		} elsif ($sources{$num}{'symbol'} eq 'ALLARD') {
 		    # all Allard requests go to MSTG
@@ -987,8 +988,8 @@ sub _isolate_and_normalize_source_callnos {
 		} else {
 		    $src{'symbol'} = $sources{$num}{'symbol'};
 		}
-		$src{'location'} = $loc;
-		$src{'holding'} = '---';
+		$src{'location'} = $loc unless ($src{'location'});
+		$src{'holding'} = '---' unless ($src{'holding'});
 		$src{'callnumber'} = $loc_callno{ $loc };
 		push @sources, \%src;
 	    }
@@ -1023,8 +1024,10 @@ sub _consolidate_locations {
 	    splice @sources, $index, 1; 
 	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
 
-	} elsif ( $value eq "MDA" ) {
-	    if ($sources[$index]{location} =~ /^Dauphin/ ) {
+    	} elsif ( $value eq "MDA" ) {
+	    if ($sources[$index]{location} =~ /Dauphin/ ) {
+#	} elsif ((exists $SPRUCE_NAMES{ $value }) && ($SPRUCE_NAMES{ $value } =~ /Parkland Regional/)) {
+#	    if ($SPRUCE_NAMES{ $value } =~ /Dauphin/) {
 		$primary{$value} = "" unless $primary{$value};
 		$primary{$value} = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
 	    } else {
@@ -1042,7 +1045,7 @@ sub _consolidate_locations {
     foreach my $key ("MW","MDA") {
 	if (($cn{$key}) || ($primary{$key})) {
 	    $cn{$key} = $primary{$key} . $cn{$key};  # callnumber is a limited length; make sure the primary branch is first.
-	    push @sources, { 'symbol' => $key, 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn{$key} };
+	    push @sources, { 'symbol' => $key, 'holding' => '===', 'location' => 'xxxx', 'callnumber' => $cn{$key}, 'is_spruce' => ($key eq 'MDA') ? 1 : 0 };
 	}
     }
 
