@@ -50,7 +50,18 @@ foreach my $sym (@$servers_aref) {
     
 	my $s = "";
 	$s .= "<!-- " . $z->{org_name} . " -->\n";
-	$s .= "<settings target=\"" . $z->{server_address} . ":" . $z->{server_port} . "/" . $z->{database_name} . "\">\n";
+	if (($z->{server_port}) && ($z->{database_name})) {
+	    $s .= "<settings target=\"" . $z->{server_address} . ":" . $z->{server_port} . "/" . $z->{database_name} . "\">\n";
+	} else {
+	    # This is an SRU server.  There is no database name or port
+	    # If the SRU URL has a port, it's specified as part of the server address instead of separately in the server_port
+	    $s .= "<settings target=\"" . $z->{server_address} . "\">\n";
+	    # Not needed (yaz can figure this out), but I'm leaving it as a visual indication in the .xml file
+	    $s .= "<!-- SRU 1.1 GET -->\n";
+	    $s .= "<!--  <set name=\"pz:sru\" value=\"get\"/>\n";
+	    $s .= "<set name=\"pz:sru_version\" value=\"1.1\"/>\n";
+	    $s .= "-->\n";  
+	}		
 	$s .= '  <set name="pz:name" value="' . $z->{org_name} . "\"/>\n";
 	$s .= '  <set name="symbol" value="' . $z->{symbol} . "\"/>\n";
 	if ($z->{enabled}) {
