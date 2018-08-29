@@ -33,6 +33,7 @@ while(readdir $dh) {
 	$files{ $basename }{"marcfile"} = "$basename.mrc";
 	if (-e "$uploads_dir/$basename.items") {
 	    $files{ $basename }{"itemfile"} = "$basename.items";
+	    $files{ $basename }{"itemlog"} = "$basename.items.log";
 	} else {
 	    $files{ $basename }{"itemfile"} = undef;
 	}
@@ -48,6 +49,7 @@ foreach my $bn (keys %files) {
 	load_records_to_rotation_manager( \%{ $files{$bn} } );
 	move( $files{ $bn }{"marcfile"}, "$archive_dir/" . $files{ $bn }{"marcfile"} );
 	move( $files{ $bn }{"itemfile"}, "$archive_dir/" . $files{ $bn }{"itemfile"} );
+	move( $files{ $bn }{"itemlog"}, "$archive_dir/" . $files{ $bn }{"itemlog"} ); # debugging....
 	move( $files{ $bn }{"clean"}, "$archive_dir/" . $files{ $bn }{"clean"} );
     }
 }
@@ -64,9 +66,13 @@ sub add_copies_to_marc {
     my $data = Text::CSV::Slurp->load(file => $f->{"itemfile"});
     my %items;
     foreach my $href (@$data) {
-	$items{ $href->{TCN} } = $href;
+	$items{ $href->{"Record ID"} } = $href;                  # DAVID: changed this from TCN to "Record ID" as per Evergreen 3.x copy bucket export.  2018.08.27
+	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/^\s+//; # hmm... csv file's barcode field is oddly padded with leading and trailing spaces.
+	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/\s+$//; #  Clean those up.
     }
-    #print Dumper($items);
+    open(ITEMOUTLOG,">",$f->{"itemlog"});
+    print ITEMOUTLOG Dumper(%items);
+    close(ITEMOUTLOG);
 
     # first get the count of records in the file
     $f->{"records_in_file"} = CountRecs( $f->{"marcfile"} );
@@ -85,30 +91,31 @@ sub add_copies_to_marc {
     my $cnt = 1;
     while ($marc = $batch->next() ) {
 	#print "\r            \r" . $cnt++;
+
+	my $recid = $marc->field('901')->subfield('a');
 	
 	# Clean up the record.
-	my @f852 = $marc->field( '852' );
-	foreach my $fld (@f852) {
+	my @f997 = $marc->field( '997' );
+	foreach my $fld (@f997) {
 	    $marc->delete_field( $fld );
 	}
 	my @f949 = $marc->field( '949' );
 	foreach my $fld (@f949) {
 	    $marc->delete_field( $fld );
 	}    
-	my @f997 = $marc->field( '997' );
-	foreach my $fld (@f997) {
-	    $marc->delete_field( $fld );  #toast 997
+	my @f852 = $marc->field( '852' );
+	foreach my $fld (@f852) {
+	    if ( $fld->subfield('p') eq $items{ $recid }->{"Barcode"} ){
+		# add holding
+		my $f949 = MARC::Field->new('949', ' ', ' ',
+					    'b' => $items{ $recid }->{"Barcode"},
+					    'd' => $items{ $recid }->{"Call Number"},
+					    'm' => $items{ $recid }->{"Location"},
+		    );
+		$marc->insert_fields_ordered( $f949 );
+	    }
+	    $marc->delete_field( $fld );
 	}
-	
-	# add holding
-	my $f901 = $marc->field( '901' );
-	my $TCN = $f901->subfield('a');
-	my $f949 = MARC::Field->new('949', ' ', ' ',
-				    'b' => $items{ $TCN }->{"Barcode"},
-				    'd' => $items{ $TCN }->{"Call Number"},
-				    'm' => $items{ $TCN }->{"Location"},
-	    );
-	$marc->insert_fields_ordered( $f949 );
 	
 	print MARCOUTF $marc->as_usmarc();
 	
