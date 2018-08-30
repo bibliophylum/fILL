@@ -3,6 +3,7 @@ use warnings;
 use strict;
 use Cwd;
 use 5.012; # so readdir assigns to $_ in a lone while test
+use utf8;
 use MARC::Batch;
 use MARC::File;
 use MARC::File::USMARC;
@@ -70,7 +71,7 @@ sub add_copies_to_marc {
 	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/^\s+//; # hmm... csv file's barcode field is oddly padded with leading and trailing spaces.
 	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/\s+$//; #  Clean those up.
     }
-    open(ITEMOUTLOG,">",$f->{"itemlog"});
+    open(ITEMOUTLOG,">",$f->{"itemlog"}) or die "Can't open " . $f->{"itemlog"} . " item log for output: $!";
     print ITEMOUTLOG Dumper(%items);
     close(ITEMOUTLOG);
 
@@ -83,7 +84,7 @@ sub add_copies_to_marc {
     $batch->warnings_off();
 
     $f->{"clean"} = sprintf("%s.clean",$f->{"basename"});
-    open(MARCOUTF,">",$f->{"clean"});
+    open(MARCOUTF,">",$f->{"clean"}) or die "Can't open " . $f->{"clean"} . " clean MARC for output: $!";
     binmode(MARCOUTF, ":utf8");
     my $marc;
     
@@ -92,8 +93,6 @@ sub add_copies_to_marc {
     while ($marc = $batch->next() ) {
 	#print "\r            \r" . $cnt++;
 
-	my $recid = $marc->field('901')->subfield('a');
-	
 	# Clean up the record.
 	my @f997 = $marc->field( '997' );
 	foreach my $fld (@f997) {
@@ -105,18 +104,18 @@ sub add_copies_to_marc {
 	}    
 	my @f852 = $marc->field( '852' );
 	foreach my $fld (@f852) {
-	    if ( $fld->subfield('p') eq $items{ $recid }->{"Barcode"} ){
-		# add holding
-		my $f949 = MARC::Field->new('949', ' ', ' ',
-					    'b' => $items{ $recid }->{"Barcode"},
-					    'd' => $items{ $recid }->{"Call Number"},
-					    'm' => $items{ $recid }->{"Location"},
-		    );
-		$marc->insert_fields_ordered( $f949 );
-	    }
 	    $marc->delete_field( $fld );
 	}
 	
+	# add holding
+	my $recid = $marc->field('901')->subfield('a');
+	my $f949 = MARC::Field->new('949', ' ', ' ',
+				    'b' => $items{ $recid }->{"Barcode"},
+				    'd' => $items{ $recid }->{"Call Number"},
+				    'm' => $items{ $recid }->{"Location"},
+	    );
+	$marc->insert_fields_ordered( $f949 );
+
 	print MARCOUTF $marc->as_usmarc();
 	
 	# Get the report info
@@ -190,7 +189,12 @@ sub load_records_to_rotation_manager {
 	    $sth->bind_param(3, $rec{"author"});
 	    $sth->bind_param(4, $rec{"callno"});
 	    $sth->bind_param(5, $oid);
-	    $sth->bind_param(6, $marc->as_usmarc(), { pg_type => DBD::Pg::PG_BYTEA });
+	    my $usmarc = $marc->as_usmarc();
+	    $sth->bind_param(
+		6, 
+		utf8::is_utf8($usmarc) ? Encode::encode_utf8($usmarc) : $usmarc, 
+		{ pg_type => DBD::Pg::PG_BYTEA }
+		);
 	    $sth->bind_param(7, $rec{"barcode"});
 	    my $rv = $sth->execute();
 
