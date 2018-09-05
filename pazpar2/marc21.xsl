@@ -19,6 +19,7 @@
   <xsl:template match="marc:record">
     <xsl:variable name="title_medium" select="marc:datafield[@tag='245']/marc:subfield[@code='h']"/>
     <xsl:variable name="rda_carrier" select="marc:datafield[@tag='338']/marc:subfield[@code='a']"/>
+    <xsl:variable name="rda_carrier_b" select="marc:datafield[@tag='338']/marc:subfield[@code='b']"/>
     <xsl:variable name="digital_file_characteristics" select="marc:datafield[@tag='347']/marc:subfield[@code='b']"/>
     <xsl:variable name="journal_title" select="marc:datafield[@tag='773']/marc:subfield[@code='t']"/>
     <xsl:variable name="electronic_location_url" select="marc:datafield[@tag='856']/marc:subfield[@code='u']"/>
@@ -45,6 +46,67 @@
 	  </xsl:choose>
 	</xsl:when>
 
+	<xsl:when test="$rda_carrier_b"> <!-- DC: Apollo (eg Rainy River) doesn't use 338$a, just 338$b.... -->
+	  <xsl:choose>
+	    <xsl:when test="$rda_carrier_b='sg'"><xsl:text>audio cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='se'"><xsl:text>audio cylinder</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='sd'"><xsl:text>audio disc</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='si'"><xsl:text>sound track reel</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='sq'"><xsl:text>audio roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='sw'"><xsl:text>audio wire roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ss'"><xsl:text>audiocassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='st'"><xsl:text>audiotape roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='sz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ck'"><xsl:text>aperture card</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='cb'"><xsl:text>computer chip cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='cd'"><xsl:text>computer disc</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ce'"><xsl:text>computer disc cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ca'"><xsl:text>computer tape cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='cf'"><xsl:text>computer tape cassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ch'"><xsl:text>computer tape reel</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='cr'"><xsl:text>online resource</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='cz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ha'"><xsl:text>aperture card</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='he'"><xsl:text>microfiche</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hf'"><xsl:text>microfiche cassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hb'"><xsl:text>microfilm cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hc'"><xsl:text>microfilm cassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hd'"><xsl:text>microfilm reel</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hj'"><xsl:text>microfilm roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hh'"><xsl:text>microfilm slip</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hg'"><xsl:text>microopaque</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='hz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='pp'"><xsl:text>microscope slide</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='pz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='mc'"><xsl:text>film cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='mf'"><xsl:text>film cassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='mr'"><xsl:text>film reel</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='mo'"><xsl:text>film roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='gd'"><xsl:text>filmslip</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='gf'"><xsl:text>filmstrip</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='gc'"><xsl:text>filmstrip cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='gt'"><xsl:text>overhead transparency</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='gs'"><xsl:text>slide</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='mz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='eh'"><xsl:text>sereograph card</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='es'"><xsl:text>sereograph disc</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='ez'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='no'"><xsl:text>card</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='nn'"><xsl:text>flipchart</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='na'"><xsl:text>roll</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='nb'"><xsl:text>sheet</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='nc'"><xsl:text>book</xsl:text></xsl:when> <!-- 'volume', set to 'book' -->
+	    <xsl:when test="$rda_carrier_b='nr'"><xsl:text>object</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='nz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='vc'"><xsl:text>video cartridge</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='vf'"><xsl:text>videocassette</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='vd'"><xsl:text>videodisc</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='vr'"><xsl:text>videotape reel</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='vz'"><xsl:text>other</xsl:text></xsl:when>
+	    <xsl:when test="$rda_carrier_b='zu'"><xsl:text>unspecified</xsl:text></xsl:when>
+	  </xsl:choose>
+	</xsl:when>
+	
 	<xsl:when test="$title_medium">
 	  <xsl:value-of select="translate($title_medium, ' []/', '')"/>
 	</xsl:when>
