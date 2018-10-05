@@ -10,19 +10,14 @@ $.ajaxSetup ({
 
 $('document').ready(function(){
 
-    var oTable = $('#datatable_contacts').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "bInfo": true,
-      	"bSort": true,
-	"sDom": '<"H"Tfr>t<"F"ip>',
-        "iDisplayLength": 10,
-        "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        "tableTools": {
-           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-        },
-        "bAutoWidth": false
-    });
+  $('#datatable_contacts').DataTable({
+    "jQueryUI": true,
+    "pagingType": "full_numbers",
+    "info": true,
+    "ordering": true,
+    "dom": '<"H"Bfr>t<"F"ip>',
+      buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+    });      
 
 });
 
