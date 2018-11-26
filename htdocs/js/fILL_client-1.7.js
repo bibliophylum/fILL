@@ -24,6 +24,10 @@ my_paz = new pz2( { "onshow": my_onshow,
 	 	    "usesessions" : usesessions,
                     "showResponseType": showResponseType,
                     "onrecord": my_onrecord } );
+
+// DC: See https://github.com/subugoe/pazpar2-js-client ... this isn't working (yet, below)
+//termLists = {"xtargets":{"maxFetch":"50","minDisplay":"1"},"medium":{"maxFetch":"12","minDisplay":"1"},"language":{"maxFetch":"5","minDisplay":"1"},"filterDate":{"maxFetch":"10","minDisplay":"5"}};
+
 // some state vars
 var curPage = 1;
 var recPerPage = 20;
@@ -33,9 +37,6 @@ var curDetRecData = null;
 var curSort = 'relevance';
 var curFilter = null;
 var submitted = false;
-var SourceMax = 25;
-var SubjectMax = 10;
-var AuthorMax = 10;
 var isSearching = 0;
 var completionStatus = {};
 
@@ -163,13 +164,13 @@ function my_onterm(data) {
     var termlists = [];
     termlists.push('<br><hr/><b>Refine search:</b>');
     termlists.push('<hr/><div class="termtitle">Subjects</div>');
-    for (var i = 0; i < data.subject.length && i < SubjectMax; i++ ) {
+    for (var i = 0; i < data.subject.length; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'su\', this.firstChild.nodeValue);return false;">' + data.subject[i].name + '</a><span>  (' 
               + data.subject[i].freq + ')</span><br/>');
     }
      
     termlists.push('<hr/><div class="termtitle">Authors</div>');
-    for (var i = 0; i < data.author.length && i < AuthorMax; i++ ) {
+    for (var i = 0; i < data.author.length; i++ ) {
         termlists.push('<a href="#" onclick="limitQuery(\'au\', this.firstChild.nodeValue);return false;">' 
                             + data.author[i].name 
                             + ' </a><span> (' 
@@ -177,8 +178,8 @@ function my_onterm(data) {
                             + ')</span><br/>');
     }
 
-    termlists.push('<hr/><div class="termtitle">Sources</div>');
-    for (var i = 0; i < data.xtargets.length && i < SourceMax; i++ ) {
+    termlists.push('<hr/><div class="termtitle">Top Sources</div>');
+    for (var i = 0; i < data.xtargets.length; i++ ) {
         termlists.push('<a href="#" target_id='+data.xtargets[i].id
             + ' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue);return false;">' + data.xtargets[i].name 
         + ' </a><span> (' + data.xtargets[i].freq + ')</span><br/>');
@@ -202,15 +203,18 @@ function my_onrecord(data) {
 
 function my_onbytarget(data) {
     var targetDiv = document.getElementById("bytarget");
-    var table ='<table><thead><tr><td>Target ID</td><td>Hits</td><td>Diags</td>'
+    var table ='<table><thead><tr><td>Name</td><td>Target ID</td><td>Hits</td><td>Diags</td>'
         +'<td>Records</td><td>State</td></tr></thead><tbody>';
     
     for (var i = 0; i < data.length; i++ ) {
-        table += "<tr><td>" + data[i].id +
-            "</td><td>" + data[i].hits +
-            "</td><td>" + data[i].diagnostic +
-            "</td><td>" + data[i].records +
-            "</td><td>" + data[i].state + "</td></tr>";
+        table += "<tr>" +
+	    "<td>" + '<a href="#" target_id='+data[i].id+' onclick="limitTarget(this.getAttribute(\'target_id\'), this.firstChild.nodeValue); return false;">' + data[i].name + '</a>' + "</td>" +
+	    "<td>" + data[i].id + "</td>" +
+            "<td>" + data[i].hits + "</td>" +
+            "<td>" + data[i].diagnostic + "</td>" +
+            "<td>" + data[i].records + "</td>" +
+            "<td>" + data[i].state + "</td>" +
+	    "</tr>";
     }
 
     table += '</tbody></table>';
@@ -258,6 +262,7 @@ function resetPage()
 
 function triggerSearch ()
 {
+    $("#results").empty();  // clear the previous search (if any)
     isSearching = 1;
     $("#search-status").show();
     $("#countdown-finished").hide();
@@ -324,6 +329,7 @@ function limitTarget (id, name)
         + name + '</a>';
     navi.innerHTML += '<hr/>';
     curFilter = 'pz:id=' + id;
+    switchView("recordview");  // in case limitTarget call comes from targetview
     resetPage();
     loadSelect();
     triggerSearch();
