@@ -141,6 +141,26 @@ eval {
 	print "requests_history deleted for request_id $rid\n";
     }
 
+    
+    # move the sources_history to sources, using new group_id
+    $dbh->do( "insert into sources (request_id, sequence_number, oid, call_number, group_id, tried) (select request_id, sequence_number, oid, call_number, ?, tried from sources_history where request_id=?)",
+	      undef,
+	      $gcr[0],
+	      $rid
+	);
+    if ($verbose) {
+	print "sources_history inserted into sources with the new group_id\n";
+    }
+    
+    $dbh->do( "delete from sources_history where request_id=?",
+	      undef,
+	      $rid
+	);
+    if ($verbose) {
+	print "sources_history deleted for request_id $rid\n";
+    }
+
+    
     # delete the request_closed entry
     $dbh->do( "delete from request_closed where id=?",
 	      undef,
@@ -184,6 +204,17 @@ eval {
 	}
     }
 
+
+    # remove the 'checked-in' status on the active request, if any
+    $dbh->do( "delete from requests_active where request_id=? and status='Checked-in'",
+	      undef,
+	      $rid
+	);
+    if ($verbose) {
+	print "delete the 'checked-in' status on the active request, if any\n";
+    }
+
+    
     $dbh->commit;  # commit the changes if we get this far
 };
 if ($@) {
