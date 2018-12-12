@@ -1,0 +1,41 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_training.tmpl">
+
+<script type="text/javascript">
+set_secondary_tab("menu_training_documents");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+<!--
+$('document').ready(function(){
+
+  $('#datatable_training_docs').DataTable({
+    "jQueryUI": true,
+    "pagingType": "full_numbers",
+    "info": true,
+    "ordering": true,
+    "dom": '<"H"Bfr>t<"F"ip>',
+      buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+    });      
+
+});
+-->
+</script>
+
+
+<div id="center" role="main">
+
+  <p>Click on any of the training documents below to download the PDF file.</p>
+    <ul>
+      <li><a href="/cgi-bin/training.cgi?rm=send_pdf&amp;doc=fILL_-_Librarians_Guide_-_2016_June.pdf">fILL Librarian's Guide</a></li>
+      <li><a href="/cgi-bin/training.cgi?rm=send_pdf&amp;doc=How_to_handle_patron_requests.pdf">How to handle patron requests</a></li>
+      <li><a href="/cgi-bin/training.cgi?rm=send_pdf&amp;doc=fILL_brochure.pdf">Manitoba Libraries Conference 2012 fILL brochure (3-fold)</a></li>
+      <li><a href="/cgi-bin/training.cgi?rm=send_pdf&amp;doc=Rotations_Manager_guide.pdf">Rotations Manager guide</a></li>
+      <li><a href="/cgi-bin/training.cgi?rm=send_pdf&amp;doc=WPL_literacy_collection.pdf">WPL literacy/ESL collections guide</a></li>
+    </ul>
+  
+</div><!-- center -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

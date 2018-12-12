@@ -1,0 +1,56 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_training.tmpl">
+
+<script type="text/javascript">
+set_secondary_tab("menu_training_videos");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+$(document).ready(function() {
+  var videoID = 'videoplayer';
+  var sourceID = 'mp4video';
+ 
+  $('#videolink01').click(function(event) {
+    $('#'+videoID).get(0).pause();
+    $('#'+sourceID).attr('src', '/training_videos/fILL_training_-_Borrowing.mp4');
+    $('#noHTML5_link').text("link to the fILL training - Borrowing video");
+    $('#noHTML5_link').attr('href',"/training_videos/fILL_training_-_Borrowing.mp4");
+    $('#'+videoID).get(0).load();
+     //$('#'+videoID).attr('poster', newposter); //Change video poster
+    $('#'+videoID).get(0).play();
+  });
+
+  $('#videolink02').click(function(event) {
+    $('#'+videoID).get(0).pause();
+    $('#noHTML5_link').text("link to the fILL training - Lending video");
+    $('#noHTML5_link').attr('href',"/training_videos/fILL_training_-_Lending.mp4");
+    $('#'+sourceID).attr('src', '/training_videos/fILL_training_-_Lending.mp4');
+    $('#'+videoID).get(0).load();
+     //$('#'+videoID).attr('poster', newposter); //Change video poster
+    $('#'+videoID).get(0).play();
+  });
+});
+</script>
+
+<div id="center" role="main">
+  
+  <div id="main-left" style="overflow-y: scroll; height:600px;">    <!-- video selector -->
+    <p>Click on the video, below, to begin playing.</p>
+    
+    <p><a href="#" id="videolink01">Borrowing: Using fILL to request interlibrary loans<img src="/training_videos/borrowing_thumbnail.png" /></a></p>
+    <p><a href="#" id="videolink02">Lending: Responding to interlibrary loan requests from other libraries<img src="/training_videos/lending_thumbnail.png" /></a></p>
+  </div> <!-- main-left -->
+
+  
+  <div id="main-right"> <!-- video player -->
+    <video id="videoplayer" controls height=600 width=900>
+      <source id="mp4video" src="/training_videos/fILL_training_-_Borrowing.mp4" type="video/mp4" />
+      <p>Your browser doesn't support HTML5 video. Here is a <a id="noHTML5_link" href="/training_videos/fILL_training_-_Borrowing.mp4">link to the fILL training - Borrowing video</a> instead.</p>
+    </video>
+  </div> <!-- main-right -->
+  
+</div> <!-- center -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

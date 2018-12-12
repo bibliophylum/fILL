@@ -1,0 +1,38 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_training.tmpl">
+
+<script type="text/javascript">
+set_secondary_tab("menu_training_training");
+
+$.ajaxSetup ({  
+  cache: false  
+});  
+
+<!--
+$('document').ready(function(){
+
+  $('#datatable_contacts').DataTable({
+    "jQueryUI": true,
+    "pagingType": "full_numbers",
+    "info": true,
+    "ordering": true,
+    "dom": '<"H"Bfr>t<"F"ip>',
+      buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+    });      
+
+});
+-->
+</script>
+
+
+<div id="center" role="main">
+
+  <p>Whether you are new to fILL and interlibrary loans, or just want to brush up on how the system works, you've come to the right place!.</p>
+  <p>There are two tabs here: Documents and Videos.</p>
+  <p>The main reference is the fILL Librarian's Guide, found in the Documents tab.</p>
+  <p>If you're new to fILL, take a look at the videos about borrowing and lending; they'll walk you through the basics.</p>
+  <p>We'll be adding new training materials over time.  If you have any topics you'd like to see, let us know!</p>
+  
+</div><!-- center -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">
