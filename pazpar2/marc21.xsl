@@ -28,7 +28,7 @@
     <xsl:variable name="medium">
       <xsl:choose>
 	<!-- DC: prefer RDA digital file characteristics, then RDA carrier, then GMD, then default to 'book' -->
-	<xsl:when test="$rda_carrier">
+	<xsl:when test="$rda_carrier and not($rda_carrier = 'unspecified')">
 	  <xsl:choose>
 	    <xsl:when test="$rda_carrier='volume'">
 	      <xsl:text>book</xsl:text>
