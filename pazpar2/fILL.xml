@@ -30,7 +30,7 @@
   <!-- we try to keep same order as in marc21.xsl -->
   <metadata name="id" brief="yes"/>
   <metadata name="lccn" merge="unique"/>
-  <metadata name="isbn"/>
+  <metadata name="isbn" merge="unique" mergekey="required"/>
   <metadata name="issn"/>
   <metadata name="tech-rep-nr"/>
   <metadata name="author" brief="yes" termlist="yes" merge="unique" 
