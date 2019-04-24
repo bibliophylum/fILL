@@ -1,4 +1,4 @@
 Need to install package libnet-ssh2-perl using apt-get (dependency for jQuery::File::Upload)
 Need to install package perlmagick using apt-get (dependency for jQuery::File::Upload)
-Need to install jQuery::File::Upload from CPAN (no kubuntu package available) (for server-side upload handler)
-
+# There's now a package!  ###Need to install jQuery::File::Upload from CPAN (no kubuntu package available) (for server-side upload handler)
+Need to install package libjs-jquery-file-upload
