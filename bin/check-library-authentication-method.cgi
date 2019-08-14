@@ -24,9 +24,11 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
     ) or die $DBI::errstr;
 
 my $lib_href = $dbh->selectrow_hashref(
-    "select oid, patron_authentication_method from org where city=?", 
+#    "select oid, patron_authentication_method from org where city=?", 
+    "select oid, patron_authentication_method from org where org_name=?", 
     { Slice => {} }, 
-    $query->param('city')
+#    $query->param('city')
+    $query->param('org_name')
     );
 
 if ($lib_href) {

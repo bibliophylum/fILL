@@ -143,7 +143,7 @@ function build_libraries_div( data ) {
 	$('<button/>', { "id": "oid_"+data.inregion[i][0],
 			 "type": "button",
 			 "class": "button-left",
-			 "text": data.inregion[i][1],
+			 "text": data.inregion[i][2],  // org_name, not city
 			 click: function() { set_cookies( this ); }
 		       }).appendTo($("#libraries"));
     }
@@ -154,7 +154,8 @@ function build_libraries_div( data ) {
 function set_cookies( but ) {
     $("#libraries").hide();
     $("#selectedLibrary").text( but.innerHTML );
-    $.getJSON('/cgi-bin/check-library-authentication-method.cgi', { city: but.innerHTML }, 
+//    $.getJSON('/cgi-bin/check-library-authentication-method.cgi', { city: but.innerHTML }, 
+    $.getJSON('/cgi-bin/check-library-authentication-method.cgi', { org_name: but.innerHTML }, 
             function(data){
 		if (data.ea.enabled === 1) {
 		    $.cookie("fILL-authentication", 
