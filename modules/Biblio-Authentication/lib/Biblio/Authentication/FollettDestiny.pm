@@ -4,7 +4,7 @@ use parent 'Biblio::Authentication';
 
 =head1 NAME
 
-Biblio::Authentication::L4U - check if patron credentials authorize against L4U library PAC
+Biblio::Authentication::FollettDestiny - check if patron credentials authorize against Follett Destiny library PAC
 
 =head1 VERSION
 
