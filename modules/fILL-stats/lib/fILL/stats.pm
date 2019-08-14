@@ -27,8 +27,6 @@ package fILL::stats;
 use strict;
 use warnings;
 use DBI;
-#use fILL::charts;
-#use Data::Dumper;
 
 =head1 NAME
 
@@ -36,11 +34,11 @@ fILL::stats - The great new fILL::stats!
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -148,6 +146,9 @@ sub get_borrowing_requests_made {
     my $self = shift;
     my %stats;
 
+    $stats{books_requested}{total} = 0;
+    $stats{requests_made} = 0;
+    
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
 	my $src_tbl = ($tbl eq 'active') ? "sources" : "sources_history";
@@ -181,12 +182,12 @@ sub get_borrowing_requests_made {
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{books_requested}{total} = 0 unless (exists $stats{books_requested}{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{books_requested}{total} = 0 unless (exists $stats{books_requested}{total});
 	    $stats{books_requested}{total} += $row->{books_requested};
 	    $stats{books_requested}{type}{$row->{type}} = 0 unless (exists $stats{books_requested}{type}{$row->{type}});
 	    $stats{books_requested}{type}{$row->{type}} += $row->{books_requested};
-	    $stats{requests_made} = 0 unless (exists $stats{requests_made});
+#	    $stats{requests_made} = 0 unless (exists $stats{requests_made});
 	    $stats{requests_made} += $row->{requests_made};
 	}
     }
@@ -198,6 +199,8 @@ sub get_borrowing_requests_made {
 sub get_borrowing_received_types {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -232,7 +235,7 @@ sub get_borrowing_received_types {
 
 	foreach my $row (@$aryref) {
 #	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{items_count};
 	    $stats{type}{$row->{type}} = 0 unless (exists $stats{type}{$row->{type}});
 	    $stats{type}{$row->{type}} += $row->{items_count};
@@ -254,6 +257,8 @@ sub get_borrowing_responses_unfilled {
     #
     # This statistic counts the total number of 'unfilled' responses to all
     # (request_id) requests within the time frame.
+
+    $stats{total} = 0;
     
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -277,7 +282,7 @@ sub get_borrowing_responses_unfilled {
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
 	    #       $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{responded_unfilled};
 	}
     }
@@ -289,6 +294,8 @@ sub get_borrowing_responses_unfilled {
 sub get_borrowing_requests_unfilled {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     #-- need to count only the requests where NO response was "filled"....
     #-- active requests may still (eventually) be filled, so don't count active
@@ -332,8 +339,8 @@ sub get_borrowing_requests_unfilled {
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 
 	foreach my $row (@$aryref) {
-	    #	$stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+#	    #	$stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{items_count};
 	    $stats{type}{$row->{type}} = 0 unless (exists $stats{type}{$row->{type}});
 	    $stats{type}{$row->{type}} += $row->{items_count};
@@ -347,6 +354,8 @@ sub get_borrowing_requests_unfilled {
 sub get_borrowing_lender_shipped {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -369,8 +378,8 @@ sub get_borrowing_lender_shipped {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL , { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{shipped};
 	}
     }
@@ -382,6 +391,8 @@ sub get_borrowing_lender_shipped {
 sub get_borrowing_we_cancelled {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     # To calculate the # of requests that we cancelled before receiving a reply:
     # 1. Find the requests we initiated in that time frame (status = 'ILL-Request')
@@ -411,8 +422,8 @@ sub get_borrowing_we_cancelled {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{oid}, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{we_cancelled};
 	}
     }
@@ -425,6 +436,8 @@ sub get_lending_requests_to_lend {
     my $self = shift;
     my %stats;
 
+    $stats{total} = 0;
+    
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
 #	my $src_tbl = ($tbl eq 'active') ? "sources" : "sources_history";
@@ -446,8 +459,8 @@ sub get_lending_requests_to_lend {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{requests_to_lend};
 	}
     }
@@ -458,6 +471,8 @@ sub get_lending_requests_to_lend {
 sub get_lending_could_not_fill {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -481,7 +496,7 @@ sub get_lending_could_not_fill {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-	    $stats{total} = 0 unless (exists $stats{total});
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{status_count};
 	    $row->{status} =~ s/ILL-Answer\|Unfilled\|//;
 	    $stats{status}{ $row->{status} } = 0 unless (exists $stats{status}{ $row->{status} });
@@ -495,6 +510,8 @@ sub get_lending_could_not_fill {
 sub get_lending_shipped {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -518,7 +535,7 @@ sub get_lending_shipped {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-	    $stats{total} = 0 unless (exists $stats{total});
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{shipped};
 	}
     }
@@ -530,6 +547,8 @@ sub get_lending_forward_to_branch {
     my $self = shift;
     my %stats;
 
+    $stats{total} = 0;
+    
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
 #	my $src_tbl = ($tbl eq 'active') ? "sources" : "sources_history";
@@ -551,8 +570,8 @@ sub get_lending_forward_to_branch {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{forward_to_branch};
 	}
     }
@@ -563,6 +582,8 @@ sub get_lending_forward_to_branch {
 sub get_lending_borrower_cancelled {
     my $self = shift;
     my %stats;
+
+    $stats{total} = 0;
 
     foreach my $tbl (qw/active history/) {
 	my $req_tbl = ($tbl eq 'active') ? "request" : "request_closed";
@@ -590,8 +611,8 @@ sub get_lending_borrower_cancelled {
 
 	my $aryref = $self->{dbh}->selectall_arrayref($SQL, { Slice => {} }, $self->{param}{oid}, $self->{param}{year}, $self->{param}{month});
 	foreach my $row (@$aryref) {
-#	    $stats{month} = $row->{month};
-	    $stats{total} = 0 unless (exists $stats{total});
+##	    $stats{month} = $row->{month};
+#	    $stats{total} = 0 unless (exists $stats{total});
 	    $stats{total} += $row->{borrower_cancelled};
 	}
     }

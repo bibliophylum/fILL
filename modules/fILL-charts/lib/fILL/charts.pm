@@ -427,7 +427,7 @@ sub _create_big_pie {
 sub _create_legend {
     my $self = shift;
 
-    my $imgHeight = scalar( @{$self->{data}[0]} ) * 20;
+    my $imgHeight = scalar( @{$self->{data}[0]} ) * 20 || 20;
     $self->{work}->{legend} = new GD::Image(250,$imgHeight);
     $self->{work}->{legend}->colorAllocate(255,255,255);
     $self->{work}->{legend}->rectangle(0,0,249,$imgHeight-1,$self->{work}->{legend}->colorAllocate(0,0,0));
@@ -438,6 +438,9 @@ sub _create_legend {
     my $x2 = 18;
     my $y2 = 18;
     my $max = scalar( @{$self->{data}[0]} );
+
+#    $DB::single=2; # Perl debugger directive
+
     for (my $cn = 0; $cn < $max; $cn++) {
 	# turn html hex colour ("#XXYYZZ") into RGB:
 	my @rgb = map $_, unpack 'C*', pack 'H*', substr $self->{colours}[$cn],1;
@@ -473,16 +476,18 @@ sub _calculate_percentages {
 
     # get total number of requests
     my $total = 0;
-    foreach my $c (@{$self->{data}[1]}) {
+    foreach my $c (@{$self->{data}[1]}) {    # {data}[1] is data
 	$total += $c;
     }
-    my $max = scalar( @{$self->{data}[0]} );
+    my $max = scalar( @{$self->{data}[0]} ); # {data}[0] is labels
     if ($total > 0) {
 	for (my $i = 0; $i < $max; $i++) {
 	    my $percent = sprintf("%.0f%%", ($self->{data}[1][$i] / $total) * 100);
 	    push @{ $self->{legendText} }, $self->{data}[0][$i] . ": " . $self->{data}[1][$i] . " ($percent)";
 	    $self->{data}[0][$i] = $percent;
 	}
+    } else {
+	push @{ $self->{legendText} }, "No data";
     }
 }
 
