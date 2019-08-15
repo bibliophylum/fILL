@@ -63,6 +63,7 @@ $('document').ready(function(){
 	    "oid": $("#oid").text(),
 	    "email_address": $("#email_address").val(),
 	    "website": $("#website").val(),
+	    "phone": $("#phone").val(),
 	};
 	$.getJSON('/cgi-bin/update-library-settings-contact.cgi', parms,
 		  function(data){

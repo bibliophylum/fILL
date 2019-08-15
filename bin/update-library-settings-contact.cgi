@@ -21,6 +21,7 @@ my $dr = $session->dataref();
 my $oid = $query->param('oid');
 my $email_address = $query->param('email_address');
 my $website = $query->param('website');
+my $phone = $query->param('phone');
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 		       "mapapp",
@@ -33,8 +34,8 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update org set email_address=?, website=? where oid=?"; 
-my $retval = $dbh->do( $SQL, undef, $email_address, $website, $oid );
+my $SQL = "update org set email_address=?, website=?, phone=? where oid=?"; 
+my $retval = $dbh->do( $SQL, undef, $email_address, $website, $phone, $oid );
 
 $dbh->disconnect;
 
