@@ -541,9 +541,7 @@ sub login_foo {
 	# is this a SIP2 library?
 	my $lib_href = $self->dbh->selectrow_hashref("select patron_authentication_method from org where oid=?", undef, $oid);
 
-	if ($lib_href->{patron_authentication_method} eq 'sip2') {
-	    #	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_sip2 where oid=?", undef, $oid);
-	    
+	if (($lib_href->{patron_authentication_method} eq 'sip2') || ($lib_href->{patron_authentication_method} eq 'L4U_API')) {
 	    $loginText_href = {
 		"login_text" => $login_i18n_href->{'login-text-barcode-and-pin-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-barcode-and-pin-end'}->{'text'},
 		"barcode_label_text" => $login_i18n_href->{'barcode-label'}->{'text'},
@@ -558,8 +556,6 @@ sub login_foo {
 		);
 	
 	} else {
-#	    $loginText_href = $self->dbh->selectrow_hashref("select login_text, barcode_label_text, pin_label_text from library_nonsip2 where oid=?", undef, $oid);
-
 	    $loginText_href = {
 		"login_text" => $login_i18n_href->{'login-text-username-and-password-start'}->{'text'} . " " . $libname_href->{'org_name'} . " " . $login_i18n_href->{'login-text-username-and-password-end'}->{'text'},
 		"barcode_label_text" => $login_i18n_href->{'username-label'}->{'text'},
