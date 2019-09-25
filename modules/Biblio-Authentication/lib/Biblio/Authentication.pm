@@ -4,6 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 use WWW::Mechanize;
+use WWW::Mechanize::Chrome;  # needed for is_visible() in L4U_5_3
 use HTML::TreeBuilder 5 -weak;
 
 =head1 NAME

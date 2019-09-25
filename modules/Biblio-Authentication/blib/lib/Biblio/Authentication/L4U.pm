@@ -77,10 +77,14 @@ sub verifyPatron {
 
     my $mech = WWW::Mechanize->new( autocheck => 1 );
     $mech->add_header( 'User-agent' => $self->{userAgent} );    
-    
+
     $mech->get( $self->{url} );
+    
     if ($mech->success()) {
 	my $loginLink = $mech->find_link( class => "LoginTab" );
+	if (!defined $loginLink) {
+	    $loginLink = $mech->find_link( class => "button login" ); # L4U v5.1
+	}
 	if ($loginLink) {
 	    $mech->follow_link( url => $loginLink->url() );
 	    my $resp = $mech->submit_form(
@@ -88,8 +92,8 @@ sub verifyPatron {
 		fields    => { web_ClientCode  => $barcode, web_ClientPIN => $pin},
 		button    => 'Login'
 		);
-#	    print STDERR "Form submitted.  Response:\n";
-#	    print STDERR "\tcode: " . $resp->status_line . "\n";
+	    #print STDERR "Form submitted.  Response:\n";
+	    #print STDERR "\tcode: " . $resp->status_line . "\n";
 	    my $tree = HTML::TreeBuilder->new_from_content( $mech->content() );
 	    my $e = $tree->look_down(_tag => 'div', id => 'ClientCard');
 	    if ($e) {
@@ -105,6 +109,9 @@ sub verifyPatron {
 
 		# play nice and logout
 		my $logoutLink = $mech->find_link( class => "LogoutTab" );
+		if (!defined $logoutLink) {
+		    $logoutLink = $mech->find_link( class => "logout" ); # L4U v5.1
+		}
 		if ($logoutLink) {
 		    $mech->follow_link( url => $logoutLink->url() );
 		    my $reallyLogoutLink = $mech->find_link( text => 'Yes, Logout and delete my session' );

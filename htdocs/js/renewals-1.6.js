@@ -119,9 +119,10 @@ $('document').ready(function(){
     
     $.getJSON('/cgi-bin/get-renewals-list.cgi', {oid: $("#oid").text()},
               function(data){
+		  update_tabs_with_counts(data);
                   build_table(data);
-		$("#waitDiv").hide();
-		$("#tabs").show();
+		  $("#waitDiv").hide();
+		  $("#tabs").show();
               })
 	.success(function() {
         })
@@ -135,6 +136,22 @@ $('document').ready(function(){
     });
 
 });
+
+function update_tabs_with_counts( data ) {
+    var tmpArr = data.renewals.filter(function(item){
+	return item.status === 'Renew-Answer Ok';
+    });
+    var countRenewed = tmpArr.length;
+    var tabRenewed = $('#tabs ul:first li:eq(2) a');
+    tabRenewed.html( tabRenewed.html() + ' <span class="circle">'+countRenewed+'</span>' );
+    
+    tmpArr = data.renewals.filter(function(item){
+	return item.status === 'Renew-Answer No-renewal';
+    });
+    var countNotRenewed = tmpArr.length;
+    var tabNotRenewed = $('#tabs ul:first li:eq(3) a');
+    tabNotRenewed.html( tabNotRenewed.html() + ' <span class="circle">'+countNotRenewed+'</span>' );
+}
 
 function build_table( data ) {
     var tAsk     = $('#renewals-table-ask').DataTable();

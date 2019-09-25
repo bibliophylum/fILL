@@ -79,10 +79,14 @@ $SQL = "select count(r.id) as pending from requests_active ra left join request 
 my @pending = $dbh->selectrow_array($SQL, undef, $oid );
 @pending[0] = 0 unless (@pending);
 
-$SQL = "select count(r.id) as renewals from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_to=? and ra.status='Renew-Answer|No-renewal' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned')";
+$SQL = "select count(r.id) as renewals_nok from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_to=? and ra.status='Renew-Answer|No-renewal' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned')";
 my @cannot_renew = $dbh->selectrow_array($SQL, undef, $oid, $oid );
 @cannot_renew[0] = 0 unless (@cannot_renew);
 
+$SQL = "select count(r.id) as renewals_ok from request r left join requests_active ra on (r.id = ra.request_id) left join sources s on (s.request_id = ra.request_id and s.oid = ra.msg_to) left join org o on ra.msg_from = o.oid where ra.msg_to=? and ra.status='Renew-Answer|Ok' and ra.request_id not in (select request_id from requests_active where msg_from=? and status='Returned')";
+my @renew_ok = $dbh->selectrow_array($SQL, undef, $oid, $oid );
+@renew_ok[0] = 0 unless (@renew_ok);
+
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0], lost => $lost[0], pending => $pending[0], cannot_renew => $cannot_renew[0] } } );
+print "Content-Type:application/json\n\n" . to_json( { counts => {unfilled => $unfilled[0], holds => $holds[0], overdue => $overdue[0], renewalRequests => $renews[0], waiting => $waiting[0], on_hold => $on_hold[0], on_hold_cancel => $on_hold_cancel[0], shipping => $shipping[0], patron_requests => $patron_requests[0], lost => $lost[0], pending => $pending[0], renew_ok => $renew_ok[0], cannot_renew => $cannot_renew[0] } } );

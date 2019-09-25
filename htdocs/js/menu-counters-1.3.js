@@ -89,10 +89,10 @@ function update_menu_counters( oid ) {
                     pending[0].innerHTML = 'Pending: <span class="circle">'+data.counts.pending+'</span>';
 		}
             };
-            if (data.counts.cannot_renew > 0) {
-		var cannotRenew = $('#menu_borrow_renewals a');
-		if (cannotRenew.length > 0) {
-                    cannotRenew[0].innerHTML = 'Renewals: <span class="circle">'+data.counts.cannot_renew+'</span>';
+	    if ((data.counts.cannot_renew > 0) || (data.counts.renew_ok > 0)) {
+		var renewals = $('#menu_borrow_renewals a');
+		if (renewals.length > 0) {
+		    renewals[0].innerHTML = 'Renewals: <span class="circle">'+data.counts.renew_ok+'/<strong>'+data.counts.cannot_renew+'</strong></span>';
 		}
             };
     });
