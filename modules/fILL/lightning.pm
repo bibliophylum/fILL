@@ -955,12 +955,13 @@ sub _isolate_and_normalize_source_callnos {
 		    
 		    $src{'symbol'} = $loc;
 
-		    # all Parkland requests go to MDA:
-		    if ((exists $SPRUCE_NAMES{ $loc })
-			&& ($SPRUCE_NAMES{$loc} =~ /Parkland Regional/)) {
-			$src{'symbol'} = 'MDA';
-			$src{'holding'} = $sources{$num}{'holding'};
-		    };
+# DC 2019-10-23 parkland now goes to individual branches rather than HQ		    
+#		    # all Parkland requests go to MDA:
+#		    if ((exists $SPRUCE_NAMES{ $loc })
+#			&& ($SPRUCE_NAMES{$loc} =~ /Parkland Regional/)) {
+#			$src{'symbol'} = 'MDA';
+#			$src{'holding'} = $sources{$num}{'holding'};
+#		    };
 		    $src{'location'} = $SPRUCE_NAMES{ $sources{$num}{'symbol'} };
 		    $src{'is_spruce'} = 1;
 
@@ -1024,18 +1025,19 @@ sub _consolidate_locations {
 	    splice @sources, $index, 1; 
 	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
 
-    	} elsif ( $value eq "MDA" ) {
-	    if ($sources[$index]{location} =~ /Dauphin/ ) {
-#	} elsif ((exists $SPRUCE_NAMES{ $value }) && ($SPRUCE_NAMES{ $value } =~ /Parkland Regional/)) {
-#	    if ($SPRUCE_NAMES{ $value } =~ /Dauphin/) {
-		$primary{$value} = "" unless $primary{$value};
-		$primary{$value} = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
-	    } else {
-		$cn{$value} = "" unless $cn{$value};
-		$cn{$value} = $cn{$value} . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
-	    }
-	    splice @sources, $index, 1; 
-	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
+# DC 2019-10-23 Parkland now goes to individual branches instead of handling at HQ	    
+#    	} elsif ( $value eq "MDA" ) {
+#	    if ($sources[$index]{location} =~ /Dauphin/ ) {
+##	} elsif ((exists $SPRUCE_NAMES{ $value }) && ($SPRUCE_NAMES{ $value } =~ /Parkland Regional/)) {
+##	    if ($SPRUCE_NAMES{ $value } =~ /Dauphin/) {
+#		$primary{$value} = "" unless $primary{$value};
+#		$primary{$value} = $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+#	    } else {
+#		$cn{$value} = "" unless $cn{$value};
+#		$cn{$value} = $cn{$value} . $sources[$index]{location} . ' ' . $sources[$index]{callnumber} . "<br/>";
+#	    }
+#	    splice @sources, $index, 1; 
+#	    $self->log->debug("      saved to primary/callno, source [$index] removed\n");
 
 	} else { 
 	    $index++; 
