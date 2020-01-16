@@ -67,9 +67,9 @@ sub add_copies_to_marc {
     my $data = Text::CSV::Slurp->load(file => $f->{"itemfile"});
     my %items;
     foreach my $href (@$data) {
-	$items{ $href->{"Record ID"} } = $href;                  # DAVID: changed this from TCN to "Record ID" as per Evergreen 3.x copy bucket export.  2018.08.27
-	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/^\s+//; # hmm... csv file's barcode field is oddly padded with leading and trailing spaces.
-	$items{ $href->{"Record ID"} }->{"Barcode"} =~ s/\s+$//; #  Clean those up.
+	$items{ $href->{"TCN"} } = $href;                  # DAVID: changed this back to TCN from "Record ID" as per new Evergreen 3.x copy bucket export.  2020.01.16
+	$items{ $href->{"TCN"} }->{"Barcode"} =~ s/^\s+//; # hmm... csv file's barcode field is oddly padded with leading and trailing spaces.
+	$items{ $href->{"TCN"} }->{"Barcode"} =~ s/\s+$//; #  Clean those up.
     }
     open(ITEMOUTLOG,">",$f->{"itemlog"}) or die "Can't open " . $f->{"itemlog"} . " item log for output: $!";
     print ITEMOUTLOG Dumper(%items);
