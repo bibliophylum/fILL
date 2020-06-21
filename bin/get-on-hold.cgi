@@ -23,6 +23,7 @@ my $SQL="select
   date_trunc('second',ra.ts) as ts, 
   o.symbol as from, 
   o.org_name as library, 
+  o.opt_in, 
   ra.msg_to,
   ra.message as date_expected, 
   (select count(request_id) from requests_active where request_id=r.id and status='Cancel') as cancel,

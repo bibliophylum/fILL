@@ -29,6 +29,9 @@ $('document').ready(function(){
 	"ordering": true,
 	"dom": '<"H"Bfr>t<"F"ip>',
 	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
+	'createdRow': function(row, data, dataIndex) {  // longer title column
+	    $('td:eq(2)', row).css('min-width', '200px');
+	},
 	"initComplete": function() {
             // this handles a bug(?) in this version of datatables;
             // hidden columns caused the table width to be set to 100px, not 100%
@@ -81,6 +84,10 @@ function build_table( data ) {
 //	$(rowNode).attr("id",'req'+data.pullList[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(4)").attr("title",data.pullList[i].library);
+	if (data.pullList[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(4)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(4)").attr("title",data.pullList[i].library+" is not open for ILL");
+	}
     }
 }
 

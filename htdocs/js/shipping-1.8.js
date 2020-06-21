@@ -110,6 +110,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.shipping[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.shipping[i].library);
+	if (data.shipping[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(0)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(0)").attr("title",data.shipping[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":eq(5)").replaceWith( dd );
 	$(rowNode).children(":eq(5)").addClass('due-date');
 	$(rowNode).children(":last").append( divResponses );
@@ -126,29 +130,34 @@ function create_action_buttons( data, i ) {
     var requestId = data.shipping[i].id;
     var divResponses = document.createElement("div");
     divResponses.id = 'divResponses'+requestId;
-    
-    var $label = $("<label />").text('CP tracking:');
-    var $cp = $("<input />").attr({'type':'text',
-				   'size':16,
-				   'maxlength':16,
-				   'style':'font-size:90%',
-				  });
-    $cp.prop('id','cp'+data.shipping[i].id);
-    // make_trackingnumber_handler creates and returns the 
-    // function to be called on blur event...
-    $cp.blur( make_trackingnumber_handler( data.shipping[i].id ));
-    $cp.appendTo( $label );
-    divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
-    
-    var b1 = document.createElement("input");
-    b1.type = "button";
-    b1.id = "ship"+requestId;
-    b1.value = "Sent - mark item as shipped.";
-    // class ship-it-button is used in function set_default_due_date()
-    b1.className = "action-button ship-it-button";
-    b1.style.fontSize = "150%";
-    b1.onclick = make_shipit_handler( requestId );
-    divResponses.appendChild(b1);
+
+    if (data.shipping[i].opt_in == true) {  // available for ILL
+	var $label = $("<label />").text('CP tracking:');
+	var $cp = $("<input />").attr({'type':'text',
+				       'size':16,
+				       'maxlength':16,
+				       'style':'font-size:90%',
+				      });
+	$cp.prop('id','cp'+data.shipping[i].id);
+	// make_trackingnumber_handler creates and returns the 
+	// function to be called on blur event...
+	$cp.blur( make_trackingnumber_handler( data.shipping[i].id ));
+	$cp.appendTo( $label );
+	divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.id = "ship"+requestId;
+	b1.value = "Sent - mark item as shipped.";
+	// class ship-it-button is used in function set_default_due_date()
+	b1.className = "action-button ship-it-button";
+	b1.style.fontSize = "150%";
+	b1.onclick = make_shipit_handler( requestId );
+	divResponses.appendChild(b1);
+    } else {
+	var $noILL = $("<p>"+data.shipping[i].library+" is not open for ILL.</p>");
+	divResponses.appendChild( $noILL[0] );
+    }
     
     var b2 = document.createElement("input");
     b2.type = "button";

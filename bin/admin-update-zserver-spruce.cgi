@@ -39,7 +39,9 @@ eval {
     # insert new
     my @closed = $q->param("closed");
     foreach my $oid (@closed) {
-	$retval = $dbh->do("insert into spruce_closed_list (symbol) select symbol from org where oid=?",undef,$oid);
+	#$retval = $dbh->do("insert into spruce_closed_list (symbol) select symbol from org where oid=?",undef,$oid);
+	# Sitka's library symbol may not match ours... Sitka's symbol will be in z3950_location
+	$retval = $dbh->do("insert into spruce_closed_list (symbol) select z3950_location from org where oid=?",undef,$oid);
     }
     $dbh->commit;   # commit the changes if we get this far
 };

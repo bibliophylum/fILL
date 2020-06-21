@@ -96,6 +96,11 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.receiving[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(3)").attr("title",data.receiving[i].library);
+	if (data.receiving[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(3)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(3)").attr("title",data.receiving[i].library+" is not open for ILL");
+	}
+
 	$(rowNode).children(":last").append( divResponses );
 
 	borrowerNotes_insertChild( t, rowNode,

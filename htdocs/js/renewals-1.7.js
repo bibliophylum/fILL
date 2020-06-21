@@ -166,11 +166,13 @@ function build_table( data ) {
 	var libsym;
 	var libname;
 	var libid;
+	var opt_in;
 	var t;
 	if (data.renewals[i].status.search(/Renew-Answer/) != -1) {
             libsym = data.renewals[i].from;
 	    libname = data.renewals[i].from_library;
             libid = data.renewals[i].msg_from;
+	    opt_in = data.renewals[i].from_opt_in;
 	    if (data.renewals[i].status.search(/Ok/) != -1) {
 		t = tOk;
 	    } else {
@@ -180,6 +182,7 @@ function build_table( data ) {
             libsym =  data.renewals[i].to;
 	    libname = data.renewals[i].to_library;
             libid = data.renewals[i].msg_to;
+	    opt_in = data.renewals[i].to_opt_in;
 	    if (data.renewals[i].status.search(/Received/) != -1) {
 		t = tAsk;
 	    } else {
@@ -206,6 +209,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.renewals[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(4)").attr("title",libname);
+	if (opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(4)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(4)").attr("title",libname+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	borrowerNotes_insertChild( t, rowNode,
@@ -221,22 +228,30 @@ function create_action_buttons( data, i ) {
     var requestId = data.renewals[i].id;
     divResponses.id = 'divResponses'+requestId;
     
-    if (data.renewals[i].status == 'Received') {
-	var b1 = document.createElement("input");
-	b1.type = "button";
-	b1.value = "Ask for renewal";
-	b1.className = "action-button";
-	b1.onclick = make_renewals_handler( requestId );
-	divResponses.appendChild(b1);
-    } else if (data.renewals[i].status == 'Renew') {
-	var b1 = document.createElement("input");
-	b1.type = "button";
-	b1.value = "Cancel renewal request";
-	b1.className = "action-button";
-	b1.onclick = make_cancel_handler( requestId );
-	divResponses.appendChild(b1);
+    if (data.renewals[i].to_opt_in == true) { // available for ILL
+	if (data.renewals[i].status == 'Received') {
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Ask for renewal";
+	    b1.className = "action-button";
+	    b1.onclick = make_renewals_handler( requestId );
+	    divResponses.appendChild(b1);
+	} else if (data.renewals[i].status == 'Renew') {
+	    var b1 = document.createElement("input");
+	    b1.type = "button";
+	    b1.value = "Cancel renewal request";
+	    b1.className = "action-button";
+	    b1.onclick = make_cancel_handler( requestId );
+	    divResponses.appendChild(b1);
+	}
+    } else {
+	if ((data.renewals[i].status == 'Received')
+	    || (data.renewals[i].status == 'Renew')) {
+	
+	    var $noILL = $("<p>"+data.renewals[i].to_library+" is not open for ILL.</p>");
+	    divResponses.appendChild( $noILL[0] );
+	}
     }
-    
     return divResponses;
 }
 

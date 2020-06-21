@@ -17,6 +17,10 @@ if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only w
     }
 }
 my $oid = $query->param('oid');
+if (! defined $oid || $oid == '') {
+    print "Content-Type:application/json\n\n" . to_json( { opt_in => JSON::false } );
+    exit;
+}
 
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
@@ -29,7 +33,16 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $aref = $dbh->selectall_arrayref("select symbol as z3950_location from spruce_closed_list", { Slice => {} });
+my $aref = $dbh->selectrow_arrayref("select opt_in from org where oid=?", { Slice => {} }, $oid);
 $dbh->disconnect;
 
-print "Content-Type:application/json\n\n" . to_json( { closed => $aref } );
+if (!defined $aref) {
+    print "Content-Type:application/json\n\n" . to_json( { opt_in => JSON::false } );
+    exit;
+}
+
+if ($aref->[0]) {
+    print "Content-Type:application/json\n\n" . to_json( { opt_in => JSON::true } );
+} else {
+    print "Content-Type:application/json\n\n" . to_json( { opt_in => JSON::false } );
+}

@@ -26,6 +26,7 @@ $('document').ready(function(){
         "info": true,
         "ordering": true,
 	"order": [[3,"asc"]],
+	"bSortClasses": false,
         "dom": '<"H"Bfr>t<"F"ip>',
 	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
         "columnDefs": [ {
@@ -85,6 +86,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.overdue[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.overdue[i].library);
+	if (data.overdue[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(0)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(0)").attr("title",data.overdue[i].library+" is not open for ILL");
+	}
 	//$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,

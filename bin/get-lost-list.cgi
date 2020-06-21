@@ -24,6 +24,7 @@ my $SQL = "select
   ra.msg_from, 
   o.symbol as from, 
   o.org_name as library, 
+  o.opt_in, 
   o.mailing_address_line1,
   o.mailing_address_line2,
   o.mailing_address_line3,

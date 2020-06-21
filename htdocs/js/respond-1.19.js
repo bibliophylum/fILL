@@ -97,6 +97,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.unhandledRequests[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.unhandledRequests[i].library);
+	if (data.unhandledRequests[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(0)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(0)").attr("title",data.unhandledRequests[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,
@@ -112,38 +116,50 @@ function create_action_buttons( data, i ) {
     var requestId = data.unhandledRequests[i].id;
     divResponses.id = 'divResponses'+requestId;
     
-    var b1 = document.createElement("input");
-    b1.type = "button";
-    b1.value = "Will-supply";
-    b1.className = "action-button";
-    b1.onclick = make_shipit_handler( requestId );
-    divResponses.appendChild(b1);
-    
-    if (data.canForwardToSiblings) {
-	var b2 = document.createElement("input");
-	b2.type = "button";
-	b2.value = "Forward to branch";
-	b2.className = "action-button";
-	b2.onclick = make_forward_handler( requestId, data.retargets );
-	divResponses.appendChild(b2);
+    if (data.unhandledRequests[i].opt_in == true) {  // available for ILL
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Will-supply";
+	b1.className = "action-button";
+	b1.onclick = make_shipit_handler( requestId );
+	divResponses.appendChild(b1);
+	
+	if (data.canForwardToSiblings) {
+	    var b2 = document.createElement("input");
+	    b2.type = "button";
+	    b2.value = "Forward to branch";
+	    b2.className = "action-button";
+	    b2.onclick = make_forward_handler( requestId, data.retargets );
+	    divResponses.appendChild(b2);
+	}
+	
+	var b3 = document.createElement("input");
+	b3.type = "button";
+	b3.value = "Unfilled";
+	b3.className = "action-button";
+	b3.onclick = make_unfilled_handler( requestId );
+	divResponses.appendChild(b3);
+	
+	if (data.unhandledRequests[i].place_on_hold != "no") {
+	    var b4 = document.createElement("input");
+	    b4.type = "button";
+	    b4.value = "Hold placed";
+	    b4.className = "action-button";
+	    b4.onclick = make_hold_placed_handler( requestId );
+	    divResponses.appendChild(b4);
+	}
+    } else {
+	// The requesting library is not open for ILL.  This library can
+	// still respond with "unfilled".
+	var $noILL = $("<p>"+data.unhandledRequests[i].library+" is not open for ILL.</p>");
+	divResponses.appendChild( $noILL[0] );
+	var b3 = document.createElement("input");
+	b3.type = "button";
+	b3.value = "Unfilled";
+	b3.className = "action-button";
+	b3.onclick = make_unfilled_handler( requestId );
+	divResponses.appendChild(b3);
     }
-    
-    var b3 = document.createElement("input");
-    b3.type = "button";
-    b3.value = "Unfilled";
-    b3.className = "action-button";
-    b3.onclick = make_unfilled_handler( requestId );
-    divResponses.appendChild(b3);
-    
-    if (data.unhandledRequests[i].place_on_hold != "no") {
-	var b4 = document.createElement("input");
-	b4.type = "button";
-	b4.value = "Hold placed";
-	b4.className = "action-button";
-	b4.onclick = make_hold_placed_handler( requestId );
-	divResponses.appendChild(b4);
-    }
-
     return divResponses;
 }
 

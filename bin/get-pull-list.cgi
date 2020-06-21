@@ -29,6 +29,7 @@ my $SQL="select
   date_trunc('second',ra.ts) as ts, 
   o.symbol as from, 
   o.org_name as library, 
+  o.opt_in, 
   s.call_number,
   g.pubdate  
 from requests_active ra

@@ -26,6 +26,7 @@ my $SQL = "select
   ra.msg_from, 
   o.symbol as from, 
   o.org_name as library, 
+  o.opt_in, 
   replace(ra.status,'|',' ') as status, 
   ra.message, 
   (select count(*) from sources s where g.group_id=s.group_id and tried=true) as tried, 

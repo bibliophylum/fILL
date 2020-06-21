@@ -84,6 +84,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.on_hold[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.on_hold[i].library);
+	if (data.on_hold[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(0)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(0)").attr("title",data.on_hold[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	lenderNotes_insertChild( t, rowNode,
@@ -106,12 +110,18 @@ function create_action_buttons( data, i ) {
 	b1.value = "Cancelled by borrower";
 	b1.className = "action-button-highlighted";
 	b1.onclick = make_cancelled_handler( requestId );
+	divResponses.appendChild(b1);
     } else {
-	b1.value = "Ready to ship";
-	b1.className = "action-button";
-	b1.onclick = make_shipper_handler( requestId );
+	if (data.on_hold[i].opt_in == true) {  // available for ILL
+	    b1.value = "Ready to ship";
+	    b1.className = "action-button";
+	    b1.onclick = make_shipper_handler( requestId );
+	    divResponses.appendChild(b1);
+	} else {
+	    var $noILL = $("<p>"+data.on_hold[i].library+" is not open for ILL.</p>");
+	    divResponses.appendChild( $noILL[0] );
+	}
     }
-    divResponses.appendChild(b1);
     
     if (data.on_hold[i].cancel != 1) {
 	var b2 = document.createElement("input");

@@ -1,9 +1,9 @@
-// pending.js
+// unfilled.js
 /*
     fILL - Free/Open-Source Interlibrary Loan management system
     Copyright (C) 2012  Government of Manitoba
 
-    pending.js is a part of fILL.
+    unfilled.js is a part of fILL.
 
     fILL is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 */
 $('document').ready(function(){
 
-    $('#pending-table').DataTable({
+    $('#unfilled-table').DataTable({
         "jQueryUI": true,
         "pagingType": "full_numbers",
         "info": true,
@@ -28,67 +28,86 @@ $('document').ready(function(){
         "dom": '<"H"Bfr>t<"F"ip>',
 	buttons: [ 'copy', 'excel', 'pdf', 'print' ],
         "columnDefs": [ {
-            "targets": [0,1,2,9],
+            "targets": [0,1,2],
             "visible": false
-        } ],
-        "initComplete": function() {
+        },
+                      ],
+        "initComplete": function(settings, json) {
             // this handles a bug(?) in this version of datatables;
-            // hidden columns caused the table width to be set to 100px, not 100%
-            $("#pending-table").css("width","100%");
+            // hidden columns caused the table width to be set to 100px, not 100% 
+            $("#unfilled-table").css("width","100%");	    
 
-	    $("#pending-table").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+	    $("#unfilled-table").DataTable().page.len( parseInt($("#table_rows_per_page").text(),10));
+
+//	    while( checkOverflow( $("#myListDiv")[0] ) ) {
+//                decreaseTableFontSize();
+//            }
         }
+	
     });
 
-  $.getJSON('/cgi-bin/get-pending-list.cgi', {oid: $("#oid").text()},
-	    function(data){
-		build_table(data); 
-		$("#waitDiv").hide();
-		$("#mylistDiv").show();
-            })
+    $.getJSON('/cgi-bin/get-unfilled-list.cgi', {oid: $("#oid").text()},
+              function(data){
+                  build_table(data); 
+		  $("#waitDiv").hide();
+		  $("#mylistDiv").show();
+              })
 	.success(function() {
         })
 	.error(function() {
         })
 	.complete(function() { 
-	});
+        });
     
-  $(function() {
-    update_menu_counters( $("#oid").text() );
-  });
+    $(function() {
+        $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+    
+    $(function() {
+        update_menu_counters( $("#oid").text() );
+    });
 
 });
 
 function build_table( data ) {
-    var t = $('#pending-table').DataTable();
+    var t = $('#unfilled-table').DataTable();
     
-    for (var i=0;i<data.noresponse.length;i++) {
+    for (var i=0;i<data.unfilled.length;i++) {
 
 	var divResponses = create_action_buttons( data, i );
 
+	//	var statusWithWhitespace = data.unfilled[i].status;
+	//	statusWithWhitespace = statusWithWhitespace.replace(/\|/g,' ');
+	//        statusWithWhitespace;
+
 	// this should match the fields in the template
 	var rdata = [
-            data.noresponse[i].gid,
-            data.noresponse[i].cid,
-            data.noresponse[i].id,
-            data.noresponse[i].title,
-            data.noresponse[i].author,
-            data.noresponse[i].patron_barcode,
-            data.noresponse[i].ts,
-            data.noresponse[i].age,
-            data.noresponse[i].to,
-            data.noresponse[i].status,
-            data.noresponse[i].tried+' of '+data.noresponse[i].sources,
+            data.unfilled[i].gid,
+            data.unfilled[i].cid,
+            data.unfilled[i].id,
+            data.unfilled[i].title,
+            data.unfilled[i].author,
+            data.unfilled[i].patron_barcode,
+            data.unfilled[i].ts,
+            data.unfilled[i].from,
+            data.unfilled[i].status,
+            data.unfilled[i].message,
+            data.unfilled[i].pubdate,
+            data.unfilled[i].tried+' of '+data.unfilled[i].sources,
 	    ""
 	];
 	var rowNode = t.row.add( rdata ).draw().node();
-	$(rowNode).attr("id",'req'+data.noresponse[i].id);
+	$(rowNode).attr("id",'req'+data.unfilled[i].id);
 	// the :eq selector looks at *visible* nodes....
-	$(rowNode).children(":eq(5)").attr("title",data.noresponse[i].library);
+	$(rowNode).children(":eq(4)").attr("title",data.unfilled[i].library);
+	if (data.unfilled[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(4)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(4)").attr("title",data.unfilled[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	borrowerNotes_insertChild( t, rowNode,
-				   data.noresponse[i].borrower_internal_note,
+				   data.unfilled[i].borrower_internal_note,
 				   "datatable-detail"
 				 );
     }
@@ -97,27 +116,18 @@ function build_table( data ) {
 
 function create_action_buttons( data, i ) {
     var divResponses = document.createElement("div");
-    var requestId = data.noresponse[i].id;
-    divResponses.id = 'divResponses'+data.noresponse[i].id;
+    var requestId = data.unfilled[i].id;
+    divResponses.id = 'divResponses'+requestId;
     
     var b1 = document.createElement("input");
     b1.type = "button";
     b1.value = "Try next lender";
     b1.className = "action-button";
-    if (+data.noresponse[i].tried >= +data.noresponse[i].sources) {
-	b1.value = "No other lenders";
+    if (+data.unfilled[i].tried >= +data.unfilled[i].sources) {
+	b1.value = "No further sources";
 	b1.disabled = "disabled";
     }
-    if (+data.noresponse[i].age < 3) {
-	// if the request was made less than 3 days ago, disable the
-	// try-next-lender button. Note that this only affects the *first*
-	// source in the (sorted) sources list; after this, the request will
-	// be in the "unfilled" list instead of this "pending" list.
-	b1.value = "Waiting "+(3 - +data.noresponse[i].age)+( 3 - +data.noresponse[i].age == 1 ? " day" : " days");
-	b1.disabled = "disabled";
-    }
-    var chainId = data.noresponse[i].cid;
-    b1.onclick = make_trynextlender_handler( requestId, chainId );
+    b1.onclick = make_trynextlender_handler( requestId );
     divResponses.appendChild(b1);
     
     var b1 = document.createElement("input");
@@ -127,19 +137,25 @@ function create_action_buttons( data, i ) {
     b1.onclick = make_cancel_handler( requestId );
     divResponses.appendChild(b1);
     
+    var b1 = document.createElement("input");
+    b1.type = "button";
+    b1.value = "Add to wish list";
+    b1.className = "action-button";
+    b1.onclick = make_acq_handler( requestId );
+    divResponses.appendChild(b1);
+    
     return divResponses;
 }
-    
 
 // Explanation of why we need a function to create the buttons' onclick handlers:
 // http://www.webdeveloper.com/forum/archive/index.php/t-100584.html
 // Short answer: scoping and closures
 
-function make_trynextlender_handler( requestId, chainId ) {
-    return function() { try_next_lender( requestId, chainId ) };
+function make_trynextlender_handler( requestId ) {
+    return function() { try_next_lender( requestId ) };
 }
 
-function try_next_lender( requestId, chainId ) {
+function try_next_lender( requestId ) {
     var myRow=$("#req"+requestId);
     var parms = {
 	reqid: requestId,
@@ -157,7 +173,7 @@ function try_next_lender( requestId, chainId ) {
 	})
 	.complete(function() {
 	    // toast any child nodes (eg borrower internal notes)
-	    var t = $("#pending-table").DataTable();
+	    var t = $("#unfilled-table").DataTable();
 	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
@@ -193,9 +209,38 @@ function cancel( requestId ) {
 	})
 	.complete(function() {
 	    // toast any child nodes (eg borrower internal notes)
-	    var t = $("#pending-table").DataTable();
+	    var t = $("#unfilled-table").DataTable();
 	    t.row("#req"+requestId).child.remove();
 	    // slideUp doesn't work for <tr>
 	    $("#req"+requestId).fadeOut(400, function() { $(this).remove(); }); // toast the row
 	});
 }
+
+
+function make_acq_handler( requestId ) {
+    return function() { addToAcq( requestId ) };
+}
+
+function addToAcq( requestId ) {
+    var myRow=$("#req"+requestId);
+    var parms = {
+	rid: requestId,
+	oid: $("#oid").text(),
+    }
+    $.getJSON('/cgi-bin/add-request-to-acquisitions.cgi', parms,
+	      function(data){
+//		  alert('change request status: '+data+'\n'+parms[0].status);
+	      })
+	.success(function() {
+	    //alert('success');
+	    cancel( requestId );
+	})
+	.error(function() {
+	    alert('error');
+	})
+	.complete(function() {
+	    // row will get removed in cancel(), if add to acq is successful.
+	});
+}
+
+

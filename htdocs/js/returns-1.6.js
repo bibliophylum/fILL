@@ -85,6 +85,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.returns[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(3)").attr("title",data.returns[i].library);
+	if (data.returns[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(3)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(3)").attr("title",data.returns[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	borrowerNotes_insertChild( t, rowNode,
@@ -97,29 +101,33 @@ function build_table( data ) {
 
 function create_action_buttons( data, i ) {
     var divResponses = document.createElement("div");
-    var requestId = data.returns[i].id;
-    divResponses.id = 'divResponses'+requestId;
-
-    var $label = $("<label />").text('CP tracking:');
-    var $cp = $("<input />").attr({'type':'text',
-				   'size':16,
-				   'maxlength':16,
-				   'style':'font-size:90%',
-				  });
-    $cp.prop('id','cp'+data.returns[i].id);
-    // make_trackingnumber_handler creates and returns the 
-    // function to be called on blur event...
-    $cp.blur( make_trackingnumber_handler( data.returns[i].id ));
-    $cp.appendTo( $label );
-    divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
-    
-    var b1 = document.createElement("input");
-    b1.type = "button";
-    b1.value = "Return";
-    b1.className = "action-button";
-    b1.onclick = make_returns_handler( data.returns[i].id );
-    divResponses.appendChild(b1);
-    
+    if (data.returns[i].opt_in == true) {  // available for ILL
+	var requestId = data.returns[i].id;
+	divResponses.id = 'divResponses'+requestId;
+	
+	var $label = $("<label />").text('CP tracking:');
+	var $cp = $("<input />").attr({'type':'text',
+				       'size':16,
+				       'maxlength':16,
+				       'style':'font-size:90%',
+				      });
+	$cp.prop('id','cp'+data.returns[i].id);
+	// make_trackingnumber_handler creates and returns the 
+	// function to be called on blur event...
+	$cp.blur( make_trackingnumber_handler( data.returns[i].id ));
+	$cp.appendTo( $label );
+	divResponses.appendChild( $label[0] );  // [0] converts jQuery var into DOM
+	
+	var b1 = document.createElement("input");
+	b1.type = "button";
+	b1.value = "Return";
+	b1.className = "action-button";
+	b1.onclick = make_returns_handler( data.returns[i].id );
+	divResponses.appendChild(b1);
+    } else {
+	var $noILL = $("<p>"+data.returns[i].library+" is not open for ILL.</p>");
+	divResponses.appendChild( $noILL[0] );
+    }
     return divResponses;
 }
 

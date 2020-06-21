@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-accessible.1.1.css"/>
-  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.0.css"/>
+  <link type="text/css" rel="stylesheet" href="/css/fILL-library-accessible.1.1.css"/>
   <link type="text/css" rel="stylesheet" href="/css/fILL-public-datatables.1.0.css"/>
   <link type="text/css" rel="stylesheet" href="/css/fILL-media.1.0.css"/> 
 
@@ -80,6 +80,31 @@ $('document').ready(function(){
         });
 
     update_menu_counters( <TMPL_VAR name="oid"> );
+
+    if (typeof window.ILLStatus === 'undefined') {
+	$.getJSON('/cgi-bin/has-opted-in.cgi', 
+		  {oid: <TMPL_VAR name="oid"> },
+		  function(data){
+		      window.ILLStatus = data;
+		  })
+            .success(function() {
+		if (window.ILLStatus.opt_in === false) {
+		    $("#optin_msg").show();
+		}
+            })
+            .error(function() {
+            })
+            .complete(function() { 
+            });
+//    } else {
+//	if (window.ILLStatus.opt_in === true) {
+//	    alert("Opted in");
+//	} else {
+//	    alert("NOT opted in");
+//	    $("#optin_msg").show();
+//	}
+    }
+
 
     $('#theme1').click(function () {
         $("#csstheme").attr("href", "/css/themes-library-colors.css");
@@ -286,7 +311,9 @@ $('document').ready(function(){
 	    <input id="button" type="submit" value="Search" class="library-style" />
 	    <input id="help" type="submit" value="?" onclick="javascript:searchHelp(this); return false;" class="library-style" />
 	    <input id="advanced-btn" type="button" value="Advanced" onClick="javascript:toggleAdvanced(); return false;" class="library-style" />
-	    
+
+	    <span id="optin_msg" style="display:none">Opt in to enable requesting.</span>
+
 	    <div id="advanced_search" style="display: none">
 	      <div class="tone-box">
 		

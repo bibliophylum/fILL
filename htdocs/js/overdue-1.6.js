@@ -81,6 +81,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.overdue[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(2)").attr("title",data.overdue[i].library);
+	if (data.overdue[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(2)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(2)").attr("title",data.overdue[i].library+" is not open for ILL");
+	}
 
 	borrowerNotes_insertChild( t, rowNode,
 				   data.overdue[i].borrower_internal_note,

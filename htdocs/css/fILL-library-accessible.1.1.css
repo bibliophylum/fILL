@@ -1,0 +1,447 @@
+/**This is to test changes to the library side, any new classes or IDs etc will be added in a special section below**/
+
+/***---Start of new library client side CSS---**/
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 100%;  /* permits better scaling (all other font sizes in em) */
+}
+
+#container
+{
+  margin: 0 auto;
+  padding: 0em .5em;
+  width: 85%;
+  height: auto;
+  clear: both;  /* start fresh with floatiness within the container */
+  -webkit-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  -moz-box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+  box-shadow: -7px 0px 10px 0px #b3b3b3, 7px 0px 10px 0px #b3b3b3;
+}
+
+#login-container {
+  width: 60%;
+  margin: auto;
+}
+
+#header.header-library {
+}
+
+#main-left {
+	width: 28%;
+	padding: 1em;
+	float: left;
+	display: inline;
+	margin-bottom: 1em;
+}
+
+#main-right {
+	width: 70%;
+	padding: 1em;
+	float: right;
+	display: inline;
+	margin-bottom: 1em;
+}
+
+#lib-nav-primary
+{
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0em;
+  font-size: 1.4em;
+}
+
+#lib-nav-primary #menu_borrow, #lib-nav-primary #menu_lend {
+  font-weight: bold;
+}
+
+#lib-nav-primary ul
+{
+  margin-top: .5em;
+  padding: 0px;
+}
+
+/* #lib-navigation link states */
+#lib-nav-primary li a:link {
+  text-decoration: none;
+}
+
+#lib-nav-primary li a:visited {
+}
+#lib-nav-primary li a:hover { 
+}
+#lib-nav-primary li a:active {
+}
+#lib-nav-primary li a:focus { 
+}
+#lib-nav-primary li a.current_tab {
+}
+
+
+#csssubmenu 
+{
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0em;
+  font-size: 1em;
+}
+
+#csssubmenu ul
+{
+  margin-top: .5em;
+  padding: 0px;
+}
+
+#csssubmenu ul li
+{
+  list-style-type: none;
+  display: inline;
+}
+
+#csssubmenu li a
+{
+  margin: 0em .4em;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  display: block;
+  float: left;
+  padding: .2em .5em;
+  text-decoration: none;
+}
+
+/* #lib-Navigation link states */
+/* unvisted link */
+#csssubmenu li a:link {
+  text-decoration: none;
+}
+/* visited link */
+#csssubmenu li a:visited {
+}
+/* mouse over link */
+#csssubmenu li a:hover { 
+}
+/*selected link */
+#csssubmenu li a:active {
+}
+
+/* focus over link */
+#csssubmenu li a:focus { 
+}
+
+#csssubmenu li.current_tab a
+{
+}
+
+#instructions {
+    margin: 1em;
+    display: block;
+    padding: 1.25em; 
+}
+
+/* Circle has been created to highlight alerts */
+
+.alert-box {
+  background: #FFFF66;
+  border-bottom: 3px solid  #b3b3b3;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: .5em;
+  margin-bottom: .5em;
+  color: #000;
+}
+
+.alert-box a:link { color: #000; }
+.alert-box a:visited { color: #000; }
+.alert-box a:hover { color: #505050; }
+.alert-box a:active { color: #000; }
+.alert-box a:focus { color: #000; }
+
+.circle {
+  font-size: .8em;
+  font-family: sans-serif;
+  padding: .2em;
+  margin: .2em;
+  -moz-border-radius: 0px;
+    -webkit-border-radius: .5em;
+  border-radius: .5em;
+  padding: 0px 4px;
+}
+
+#center {
+  width: 100%;
+  margin: 1em auto;
+  display: inline-block;
+  clear: left;
+}
+
+.table-width-lib {
+  width: 90%;
+}
+
+#history {
+  display:inline; 
+  margin:1em;
+}
+
+html body.example_alt_pagination div#container div#center div.tone-box form input#startdate.history-date,
+html body.example_alt_pagination div#container div#center div.tone-box form input#enddate.history-date{
+    width: 8em;
+}
+
+.community {
+  color: #183935;
+  background-color: #f3f3f3;
+}
+
+/*-- specific to make_request.tmp --*/
+#toptwo {
+    width: 100%;
+    float: left;
+}
+
+#midleft {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+}
+
+#midright {
+    width: 50%;
+    padding: 1em;
+    float: left;
+    margin-bottom: 1em;
+}
+
+#midfooter {
+    width: 100%;
+    padding: 1em;
+    clear: both;
+    margin-bottom: 1em;
+}
+
+/* advanced search */
+.two-column {
+    float: left;
+    width: 50%;
+}
+#advanced_search label {
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+}
+#advanced_search input {
+  display: inline-block;
+}
+
+/* action button styles for data table buttons */
+input[type="button"].action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"].action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+input[type="button"]:hover.action-button-highlighted {
+    margin: .3em;
+    padding: .3em .6em;
+    font-size: .8em;
+    width: auto;
+    border: 0;
+    border-radius:5px;
+}
+
+/* theme-chooser buttons - colours are specified here because
+   they won't change regardless of current theme. Should be a
+   'preview' of what the chosen theme will be. */
+input[type="button"].theme-chooser1 {
+    background-color: #0f4072;
+    color: #fff;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser1 {
+    background-color: #678AAE;
+    color: #fff;
+    font-size: 1em;
+}
+
+input[type="button"].theme-chooser2 {
+    background-color: #fff;
+    color: #000;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser2 {
+
+    background-color: #505050;
+    color: #000;
+    font-size: 1em;
+}
+
+input[type="button"].theme-chooser3 {
+    background-color: #000;
+    color: #fff;
+    font-size: 1em;
+}
+input[type="button"]:hover.theme-chooser3 {
+    background-color: #505050;
+    color: #fff;
+    font-size: 1em;
+}
+
+/* small buttons */
+input[type="button"].small-function-button {
+    font-size: 1em;
+}
+input[type="button"]:hover.small-function-button {
+    font-size: 1em;
+}
+
+/* advanced search */
+#advanced_search table.center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border: 1px solid #b3b3b3;
+}
+
+#instructions input[type="text"]
+{
+  width: 50%;
+}
+
+#zserver {
+  background-color: #e3e3e3;
+  margin: ;
+  padding: ;
+  width: ;
+}
+
+.zstatus {
+  border: 1px solid #b3b3b3;
+  background: #d3d3d3;
+  padding: .7em .5em;
+  font-size: 1em;
+  font-style: bold;
+  margin: .5em 0em;
+  height: 3em;
+}
+
+zyes, zno {
+  width: auto;
+  float: right;
+  padding: .5em;
+}
+
+.zyes {
+  width: 30%;
+  color: #000;
+  background-color: #adff2f;
+  border: 1px solid green;
+  padding: .3em;
+  float: right;
+}
+
+.zno {
+  width: 30%;
+  color: #000;
+  background-color: #ff6262;
+  border: 1px solid #660000;
+  padding: .3em;
+  float: right;
+}
+
+/* Library account settings */
+.balanced-fields label, .balanced-fields input {
+  /* display:inline-block; */ /* label beside textbox */
+  display:block;   /* label above textbox */
+}
+
+.balanced-fields label {
+  width:300px; 
+}
+
+.balanced-fields-column-left {
+    width: 48%;
+    padding: 1em;
+    float: left;
+    display: inline;
+    margin-bottom: 1em;
+}
+
+.balanced-fields-clear {
+    clear: both;
+}
+
+.scrollStyle {
+    overflow-x:auto;
+}
+
+/* For a narrow-width datatable, pull the search box to the left */
+.pull-left {
+    float:left!important;
+}
+
+/* internal notes - lender */
+.datatable-detail {
+    background-color: #D1D0CE;
+    padding: 0 !important;
+}
+
+.lender-note, .borrower-note, .npr-note {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.lender-note-empty, .borrower-note-empty, npr-note-empty {
+    font-style: italic;
+    font-weight: lighter;
+}
+
+/* Welcome page at-a-glance styles */
+table.at-a-glance-table {
+    background: #fff none repeat scroll 0 0;
+    border-collapse: collapse;
+    font-family: "Lucida Sans Unicode","Lucida Grande",sans-serif;
+    margin: 20px;
+    text-align: left;
+    width: 95%;
+}
+
+a.at-a-glance-link {
+    text-decoration: underline;
+}
+
+/* Datatables cell (symbol) indicator for libraries which haven't opted in to ILL restart */
+td.ill-status-no {
+    background-color: #FB975A;
+    color: black;
+}
+
+/***---End of new library client side CSS--**/
+
+

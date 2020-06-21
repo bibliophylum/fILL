@@ -27,9 +27,11 @@ my $SQL = "select
   ra.msg_from,
   ra.msg_to,
   o.symbol as to,
-  o.org_name as to_library,
+  o.org_name as to_library, 
+  o.opt_in as to_opt_in, 
   o2.symbol as from,
-  o2.org_name as from_library,
+  o2.org_name as from_library, 
+  o2.opt_in as from_opt_in, 
   replace(ra.status,'|',' ') as status, 
   ra.message, 
   n.note as borrower_internal_note 

@@ -26,12 +26,14 @@ my $SQL="select
   g.author, 
   o.symbol as borrower_symbol, 
   o.org_name as library, 
+  o.opt_in, 
   ra.msg_to, 
   date_trunc('second',ra2.ts) as ts, 
   ra2.status,
   substring(ra.message from 'due (.*)') as due_date,
   o.email_address,
-  o2.org_name as lending_library,
+  o2.org_name as lending_library, 
+  o2.opt_in as lend_opt_in, 
   n.note as lender_internal_note   
 from requests_active ra
   left join request r on r.id=ra.request_id

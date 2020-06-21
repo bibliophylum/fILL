@@ -89,7 +89,11 @@ function build_table( data ) {
 	var rowNode = t.row.add( rdata ).draw().node();
 	$(rowNode).attr("id",'req'+data.holds[i].id);
 	// the :eq selector looks at *visible* nodes....
-	$(rowNode).children(":eq(5)").attr("title",data.holds[i].library);
+	$(rowNode).children(":eq(4)").attr("title",data.holds[i].library);
+	if (data.holds[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(4)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(4)").attr("title",data.holds[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":last").append( divResponses );
 
 	borrowerNotes_insertChild( t, rowNode,

@@ -26,6 +26,7 @@ my $SQL="select
   g.author, 
   o.symbol as from, 
   o.org_name as library, 
+  o.opt_in, 
   ra.msg_from, 
   date_trunc('second',ra.ts) as ts, 
   substring(message from 'due (.*)') as due_date, 

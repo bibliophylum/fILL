@@ -31,63 +31,7 @@ use Data::Dumper;
 #use Fcntl qw(LOCK_EX LOCK_NB);
 
 my %SPRUCE_NAMES = (
-    'MWPL'     => 'Manitoba PLS',
-    'MAOW'     => 'South Central Regional - Altona',
-    'MMIOW'    => 'South Central Regional - Miami',
-    'MMOW'     => 'South Central Regional - Morden',
-    'MWOW'     => 'South Central Regional - Winkler',
-    'ME'       => 'Border Regional - Elkhorn',
-    'MMCA'     => 'Border Regional - McAuley',
-    'MVE'      => 'Border Regional - Virden',
-    'MBOM'     => 'Boissevain-Morton Library and Archives',
-    'MDB'      => 'Bren Del Win Centennial',
-    'MAS'      => 'Parkland Regional - Siglunes',
-    'MBO'      => 'Parkland Regional - Bowsman',
-    'MBR'      => 'Parkland Regional - Birtle',
-    'MBRD'     => 'Parkland Regional - Birch River',
-    'MDA'      => 'Parkland Regional - Dauphin',
-    'MDBAHQ'   => 'Parkland Regional - Archives-Headquarters',
-    'MDHQ'     => 'Parkland Regional - Headquarters',
-    'MDP'      => 'Parkland Regional - Parkland',
-    'MEDL'     => 'Parkland Regional - Erickson',
-    'MEL'      => 'Parkland Regional - Eriksdale',
-    'MFO'      => 'Parkland Regional - Foxwarren',
-    'MGD'      => 'Parkland Regional - Gladstone',
-    'MGG'      => 'Parkland Regional - Grandview',
-    'MGP'      => 'Parkland Regional - Gilbert Plains',
-    'MHC'      => 'Parkland Regional - Hamiota',
-    'MLL'      => 'Parkland Regional - Langruth',
-    'MMD'      => 'Parkland Regional - McCreary',
-    'MMM'      => 'Parkland Regional - Minitonas',
-    'MOR'      => 'Parkland Regional - Ochre River',
-    'MRO'      => 'Parkland Regional - Rossburn',
-    'MRR'      => 'Parkland Regional - Roblin',
-    'MSLC'     => 'Parkland Regional - Shoal Lake',
-    'MSS'      => 'Parkland Regional - Strathclair',
-    'MSTL'     => 'Parkland Regional - St. Lazare',
-    'MSTR'     => 'Parkland Regional - Ste. Rose',
-    'MWWI'     => 'Parkland Regional - Winnipegosis',
-    'MNDP'     => 'Lorne Library Services - Pere Champagne',
-    'MS'       => 'Lorne Library Services - Somerset',
-    'MMA'      => 'Manitou Regional',
-    'MPLP'     => 'Portage la Prairie Regional',
-    'MPM'      => 'Louise Public',
-    'MBI'      => 'Russell and District Regional - Binscarth',
-    'MRD'      => 'Russell and District Regional - Russell',
-    'MSA'      => 'Bibliotheque Ste-Anne',
-    'MSCL'     => 'Bibliotheque St. Claude',
-    'MSOG'     => 'Glenwood and Souris Regional',
-    'MSSC'     => 'Shilo Community Library',
-    'MEC'      => 'UCN Chemawawin',
-    'MNH'      => 'UCN Norway House',
-    'MPPL'     => 'UCN Pukatawagan',
-    'MSRH'     => 'UCN Health at Swan River',
-    'MTK'      => 'UCN Thompson Campus',
-    'MTPK'     => 'UCN The Pas Campus',
-    'MWMW'     => 'UCN Midwifery Winnipeg',
-    'MSTOS'    => 'South Interlake Regional - Stonewall',
-    'MSTOS-BKM' => 'South Interlake Regional - Bookmobile',
-    'MTSIR'    => 'South Interlake Regional - Teulon',
+    'SPRUCE' => 'Spruce Libraries Cooperative'
     );
 
 my %WESTERN_MB_TO_MAPLIN = (
@@ -131,6 +75,27 @@ sub setup {
 	'lost'                     => 'lost_process',
 	'lend_overdue'             => 'lend_overdue_process',
 	);
+
+    # set up Spruce names
+    my $SQL = "WITH RECURSIVE members AS (
+    SELECT oid, member_id
+    FROM org_members
+    WHERE oid = 139
+    UNION
+       SELECT om.oid, om.member_id
+       FROM org_members om
+       INNER JOIN members m ON m.member_id = om.oid
+    ) SELECT
+       o.symbol,o.z3950_location,o.org_name,me.oid,me.member_id
+    FROM
+       members me left join org o on o.oid=me.member_id;
+    ";
+    my $spruce_members = $self->dbh->selectall_arrayref(
+	$SQL, { Slice => {} }
+	);
+    foreach my $sm ( @$spruce_members ) {
+	$SPRUCE_NAMES{ uc($sm->{z3950_location}) } = $sm->{org_name};
+    }
 }
 
 #--------------------------------------------------------------------------------

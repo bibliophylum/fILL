@@ -1,0 +1,51 @@
+
+Allow searching (only those libraries in pazpar2/settings-enabled will be searched).
+Disable requesting unless the logged-in library has opted in.
+Disable functions (e.g. 'return') to libraries that have not opted in.
+
+Logged-in library's OID is in header, $(oid)
+"Click to request" button is in fILL-client-1.8.js, line 602
+searchForm is in templates/header.tmpl, line 283
+
+Code to skip closed Spruce libraries is in fILL-client-1.8.js, line 533
+     and lightning.tmpl, line 45
+     and bin/get-Spruce-closed.cgi
+This could do double duty in the context of opt-in... but that might be confusing.
+
+
+So...
+Need:
+Ok	1. "opted-in" field in org
+Ok	2. cgi-bin/has-opted-in.cgi (pass OID, return boolean)
+Ok	3. Disable "Click to request" button unless opted-in
+Ok	4. Message by "Search" re: requesting not available, unless opted-in
+Ok	5. Message on home re: opt-in
+	6. Have all relevent actions check for opt-in status of targets
+Ok	   pending
+Ok	   unfilled
+Ok	   holds placed
+Ok	   receiving
+Ok	   renewals
+Ok	   returns
+Ok	   overdue (borrowing)
+	   --------
+Ok	   pull list
+Ok	   respond
+Ok	   on hold
+Ok	   shipping
+Ok	   renewal requests
+Ok	   lost
+Ok	   check-ins
+Ok	   overdue (lending)
+	   -------
+	   Current borrowing/lending?
+	   
+	7. Verify skipping closed Spruce libraries / set all Spruce libs to closed.
+	8. Set pazpar2/settings-enabled for opted-in libraries.
+
+Nice to have:
+        1. "opted-in" status board (thought: split into Spruce / non-Spruce....)
+	   Can use reports > contacts....
+
+
+header.tmpl calls bin/has-opted-in.cgi, stores result in window.ILLStatus.opt_in (true or false)

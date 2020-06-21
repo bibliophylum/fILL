@@ -109,6 +109,10 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.renewRequests[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(0)").attr("title",data.renewRequests[i].library);
+	if (data.renewRequests[i].opt_in == false) { // have not opted in for ILL
+	    $(rowNode).children(":eq(0)").addClass("ill-status-no");
+	    $(rowNode).children(":eq(0)").attr("title",data.renewRequests[i].library+" is not open for ILL");
+	}
 	$(rowNode).children(":eq(6)").replaceWith( dd );
 	$(rowNode).children(":eq(6)").addClass('due-date');
 	$(rowNode).children(":last").append( divResponses );
@@ -127,6 +131,13 @@ function create_action_buttons( data, i ) {
     var divResponses = document.createElement("div");
     divResponses.id = 'divResponses'+requestId;
 
+    if (data.renewRequests[i].opt_in == false) {  // NOT available for ILL
+	var $noILL = $("<p>"+data.renewRequests[i].library+" is not open for ILL.</p>");
+	divResponses.appendChild( $noILL[0] );
+    }
+    // these actions are available whether or not the originator is open for ILL
+    // (if they're closed, they may not look at the response for a while...)
+    
     var b1 = document.createElement("input");
     b1.type = "button";
     b1.id = "renew"+requestId;
