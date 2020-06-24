@@ -85,7 +85,9 @@ function build_table( data ) {
 	$(rowNode).attr("id",'req'+data.returns[i].id);
 	// the :eq selector looks at *visible* nodes....
 	$(rowNode).children(":eq(3)").attr("title",data.returns[i].library);
-	if (data.returns[i].opt_in == false) { // have not opted in for ILL
+	if ((data.returns[i].opt_in == true) || (data.returns[i].opt_in_returns_only == true)) {
+	    // either restarted ILL, or are willing to accept returns
+	} else {
 	    $(rowNode).children(":eq(3)").addClass("ill-status-no");
 	    $(rowNode).children(":eq(3)").attr("title",data.returns[i].library+" is not open for ILL");
 	}
@@ -101,9 +103,15 @@ function build_table( data ) {
 
 function create_action_buttons( data, i ) {
     var divResponses = document.createElement("div");
-    if (data.returns[i].opt_in == true) {  // available for ILL
+    if ((data.returns[i].opt_in == true) || (data.returns[i].opt_in_returns_only == true)) {
+	// available for ILL, or are willing to accept returns
 	var requestId = data.returns[i].id;
 	divResponses.id = 'divResponses'+requestId;
+
+	if ((data.returns[i].opt_in == false) && (data.returns[i].opt_in_returns_only == true)) {
+	    var $retOnly = $("<p>"+data.returns[i].library+" is not open for ILL, but will accept returns.</p>");
+	    divResponses.appendChild( $retOnly[0] );
+	}
 	
 	var $label = $("<label />").text('CP tracking:');
 	var $cp = $("<input />").attr({'type':'text',

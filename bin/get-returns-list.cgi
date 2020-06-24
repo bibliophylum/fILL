@@ -23,7 +23,8 @@ my $SQL="select
   date_trunc('second',ra.ts) as ts, 
   o.symbol as to, 
   o.org_name as library, 
-  o.opt_in,
+  o.opt_in, 
+  o.opt_in_returns_only, 
   ra.msg_to, 
   n.note as borrower_internal_note 
 from requests_active ra

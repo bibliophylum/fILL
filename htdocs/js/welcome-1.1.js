@@ -36,7 +36,45 @@ $('document').ready(function() {
 	e.preventDefault();
 	window.location = "/cgi-bin/myaccount.cgi?rm=myaccount_test_zserver_form";
     });
+
+    $("#opt-in-returns-only").on("change", function(e){
+        var parms = {
+            "oid": $("#oid").text(),
+            "opt_in_returns_only": $('#opt-in-returns-only').prop('checked'),
+	    };
+        $.getJSON('/cgi-bin/update-library-opt-in-returns-only.cgi', parms,
+                  function(data){
+                      //alert(data);
+                  })
+            .success(function() {
+                //alert('success');
+                $("#contactButton").hide();
+            })
+            .error(function() {
+                alert('error');
+            })
+            .complete(function() {
+                //alert('ajax complete');
+            });
+    });
     
+    $(function() {    
+	$.getJSON('/cgi-bin/has-opted-in-returns-only.cgi', {'oid': $("#oid").text()},
+		  function(data){
+		      $('#opt-in-returns-only').prop('checked', data.opt_in_returns_only);
+		  })
+	    .done(function() {
+		//alert('success!\n'+data);
+	    })
+	    .fail(function() {
+		//alert('error testing zServer!');
+	    })
+	    .always(function() {
+		//alert('ajax complete');
+//		$("#waitDiv").hide();
+	    });
+    });
+
     $(function() {
 	$.getJSON('/cgi-bin/get-menu-counts.cgi', {'oid': $("#oid").text()},
 		  function(data) {
