@@ -26,7 +26,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $z3950_href = $dbh->selectrow_hashref("select o.oid,o.symbol,o.org_name,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from library_z3950 z left join org o on z.oid=o.oid where o.oid=? order by o.org_name", undef, $query->param('oid') );
+my $z3950_href = $dbh->selectrow_hashref("select o.oid,o.symbol,o.org_name,z.enabled,z.server_address,z.server_port,z.database_name,z.request_syntax,z.elements,z.nativesyntax,z.xslt,z.index_keyword,z.index_author,z.index_title,z.index_subject,z.index_isbn,z.index_issn,z.index_date,z.index_series from library_z3950 z left join org o on z.oid=o.oid where o.oid=? order by o.org_name", undef, scalar $query->param('oid') );
 
 my $SQL = "update library_z3950 set server_address=?,server_port=?,database_name=?,request_syntax=?,elements=?,nativesyntax=?,xslt=?,index_keyword=?,index_author=?,index_title=?,index_subject=?,index_isbn=?,index_issn=?,index_date=?,index_series=?,enabled=? where oid=?";
 

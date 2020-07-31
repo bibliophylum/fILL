@@ -37,7 +37,8 @@ eval {
     $dbh->do("delete from spruce_closed_list");
 
     # insert new
-    my @closed = $q->param("closed");
+#    my @closed = $q->param("closed");
+    my @closed = $q->multi_param("closed");
     foreach my $oid (@closed) {
 	#$retval = $dbh->do("insert into spruce_closed_list (symbol) select symbol from org where oid=?",undef,$oid);
 	# Sitka's library symbol may not match ours... Sitka's symbol will be in z3950_location

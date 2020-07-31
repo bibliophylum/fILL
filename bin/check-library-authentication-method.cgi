@@ -28,7 +28,7 @@ my $lib_href = $dbh->selectrow_hashref(
     "select oid, patron_authentication_method from org where org_name=?", 
     { Slice => {} }, 
 #    $query->param('city')
-    $query->param('org_name')
+    scalar $query->param('org_name')
     );
 
 if ($lib_href) {

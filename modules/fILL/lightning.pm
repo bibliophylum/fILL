@@ -265,11 +265,11 @@ sub request_process {
 #    $self->log->debug( 'after _turn_request_parms:\n' . Dumper(\%sources));
 
     my ($title,$author,$medium,$isbn,$pubdate) = $self->_normalize_request_data(
-	$q->param('title') || '--',
-	$q->param('author') || '--',
-	$q->param('medium_0'), # fILL-client.js groups by medium, so all sources' mediums should be the same.
-	$q->param('isbn') || '--',
-	$q->param('pubdate') || '--'
+	scalar $q->param('title') || '--',
+	scalar $q->param('author') || '--',
+	scalar $q->param('medium_0'), # fILL-client.js groups by medium, so all sources' mediums should be the same.
+	scalar $q->param('isbn') || '--',
+	scalar $q->param('pubdate') || '--'
 	);
 
     my @sources = $self->_isolate_and_normalize_source_callnos( \%sources );
