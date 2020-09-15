@@ -39,6 +39,9 @@ $('document').ready(function(){
     $("#contact_information_fieldset input").on("change",function(){
 	$("#contactButton").show();
     });
+    $("#library_status_fieldset input").on("change",function(){
+	$("#statusButton").show();
+    });
     $("#mailing_information_fieldset input").on("change",function(){
 	$("#mailingButton").show();
     });
@@ -72,6 +75,28 @@ $('document').ready(function(){
 	    .success(function() {
 		//alert('success');
 		$("#contactButton").hide();
+	    })
+	    .error(function() {
+		alert('error');
+	    })
+	    .complete(function() {
+		//alert('ajax complete');
+	    });
+    });
+
+
+    $("#statusButton").on("click", function() {
+	var parms = {
+	    "oid": $("#oid").text(),
+	    "lib_status": $("#lib_status").val(),
+	};
+	$.getJSON('/cgi-bin/update-library-settings-status.cgi', parms,
+		  function(data){
+		      //alert(data);
+		  })
+	    .success(function() {
+		//alert('success');
+		$("#statusButton").hide();
 	    })
 	    .error(function() {
 		alert('error');

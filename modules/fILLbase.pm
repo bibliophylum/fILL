@@ -165,7 +165,7 @@ sub welcome_process {
     # The application object
     my $self = shift;
 
-    my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
+    my ($oid,$symbol,$library,$status) = get_library_from_username($self, $self->authen->username);  # do error checking!
 
     my $rows_affected = $self->dbh->do("UPDATE org SET last_login=NOW() WHERE oid=?",
 				       undef,
@@ -186,6 +186,7 @@ sub welcome_process {
 		      oid => $oid,
 		      library => $library,
 		      libsym => $symbol,   # needed for z39.50 connectivity check
+		      status => $status,
 	);
 
     # Parse the template
@@ -287,12 +288,12 @@ sub get_library_from_username {
     my $username = shift;
     # Get this user's library id
     my $hr_id = $self->dbh->selectrow_hashref(
-	"select o.oid, o.symbol, o.org_name from users u left join org o on (u.oid = o.oid) where u.username=?",
+	"select o.oid, o.symbol, o.org_name, o.status from users u left join org o on (u.oid = o.oid) where u.username=?",
 	undef,
 	$username
 	);
     $self->log->debug( Dumper( $hr_id ) );
-    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name});
+    return ($hr_id->{oid}, $hr_id->{symbol}, $hr_id->{org_name}, $hr_id->{status});
 }
 
 

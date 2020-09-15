@@ -193,6 +193,8 @@ nav li a
 }
 
 .lighter-box {
+    background: #ffffc6;
+    border-bottom: 3px solid #b3b3b3;
 }
 
 .covers {

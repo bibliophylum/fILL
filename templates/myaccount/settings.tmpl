@@ -1,7 +1,7 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <TMPL_INCLUDE NAME="submenu_myaccount.tmpl">
 
-<script type="text/javascript" src="/js/account-settings-1.3.js"></script>
+<script type="text/javascript" src="/js/account-settings-1.4.js"></script>
 
 <script type="text/javascript">
   <!--
@@ -15,11 +15,12 @@
 
     <div id="tabs">
       <ul>
-	<li><a href="#tabs-1">Contact information</a></li>
-	<li><a href="#tabs-2">ILL mailing address</a></li>
-	<li><a href="#tabs-3">z39.50 server</a></li>
-	<li><a href="#tabs-4">Test patron</a></li>
-	<li><a href="#tabs-5">Other settings</a></li>
+	<li><a href="#tabs-1">Contact info</a></li>
+	<li><a href="#tabs-2">Status</a></li>
+	<li><a href="#tabs-3">Mailing address</a></li>
+	<li><a href="#tabs-4">z39.50 server</a></li>
+	<li><a href="#tabs-5">Test patron</a></li>
+	<li><a href="#tabs-6">Other settings</a></li>
       </ul>
       
       <div id="tabs-1">
@@ -49,6 +50,29 @@
       </div>
 	  
       <div id="tabs-2">
+	<form id="library_status" onSubmit="return false;">
+	  <fieldset id="library_status_fieldset" class="balanced-fields">
+
+	    <input type="hidden" name="oid" value="<TMPL_VAR name=oid>" />
+	    <div>
+	      <p>
+		If you want to let other libraries know something about the status of your library (e.g. "Closed until September 2nd"),
+		enter it here.  This text will show up on the Home page and in the Contacts list under Reports.
+	      </p>
+	      <label for="lib_status">Library's status:</label>
+	      <textarea id="lib_status" name="lib_status" rows="3" cols="40">
+		<TMPL_VAR name=status>
+	      </textarea>
+	      <p>Enter or change the text of your status note and click the "Save changes" button.</p>
+	      <p>To remove your status note, delete all of the text and click the "Save changes" button.<p>
+	    </div>
+
+	  </fieldset>
+          <input id="statusButton" type="button" class="library-style" value="Save changes">
+	</form>
+      </div>
+	  
+      <div id="tabs-3">
 	<form id="mailing_information" onSubmit="return false;">
 	  <fieldset id="mailing_information_fieldset" class="balanced-fields">
 	    <hr/>
@@ -83,7 +107,7 @@
 	</form>
       </div>
       
-      <div id="tabs-3">
+      <div id="tabs-4">
 	<TMPL_IF name="zserver_controlled_by_parent">
 	  <p>Your z39.50 server is managed by your parent organization, <TMPL_VAR name="zserver_parent_orgname"> (<TMPL_VAR name="zserver_parent_symbol">).</p>
 	  <p>The zServer managed by <TMPL_VAR name="zserver_parent_orgname"> is shared with:</p>
@@ -136,7 +160,7 @@
 	</TMPL_UNLESS>
       </div>
       
-      <div id="tabs-4">
+      <div id="tabs-5">
 	<div style="width: 45%; float: left; margin: 20px">
 	  <form id="my_test_patron" onSubmit="return false;">
 	    <p>If you have created a "testing" patron in your ILS, you can enter that patron's login information here.</p>
@@ -210,7 +234,7 @@
 
       </div>
       
-      <div id="tabs-5">
+      <div id="tabs-6">
 	<form id="otherForm">
 	  <h3>Do you want to enable "lender-internal" notes?</h3>
 	  <p>These are notes that you, as a lender, can attach to incomming requests.  The notes are only visible to you.</p>

@@ -36,7 +36,7 @@ sub setup {
 	'myaccount_library_barcodes_form' => 'myaccount_library_barcodes_process',
 	'myaccount_test_zserver_form'     => 'myaccount_test_zserver_process',
 	'myaccount_acquisitions_form'     => 'myaccount_acquisitions_process',
-	'myaccount_patrons_form'          => 'myaccount_patrons_process',	
+	'myaccount_patrons_form'          => 'myaccount_patrons_process',
 	);
 }
 
@@ -50,7 +50,7 @@ sub myaccount_settings_process {
     my $q = $self->query;
 
     my ($oid,$symbol,$library) = get_library_from_username($self, $self->authen->username);  # do error checking!
-    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.phone, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, o.lender_internal_notes_enabled, o.borrower_internal_notes_enabled, o.rows_per_page, z.server_address, z.server_port, z.database_name, z.enabled, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
+    my $SQL = "SELECT o.oid, o.symbol, o.email_address, o.website, o.phone, o.org_name, o.mailing_address_line1, o.city, o.province, o.post_code, o.slips_with_barcodes, o.centralized_ill, o.patron_authentication_method, o.lender_internal_notes_enabled, o.borrower_internal_notes_enabled, o.rows_per_page, o.status, z.server_address, z.server_port, z.database_name, z.enabled, tp.barcode, tp.pin, tp.last_tested, tp.test_result FROM org o left join library_z3950 z on z.oid=o.oid left join library_test_patron tp on tp.oid = o.oid WHERE o.oid=?";
     my $href = $self->dbh->selectrow_hashref($SQL,{},$oid);
 
     my $zServer_controlled_by_parent = 0;
@@ -88,6 +88,7 @@ sub myaccount_settings_process {
 		     city          => $href->{city},
 		     province      => $href->{province},
 		     post_code     => $href->{post_code},
+		     status        => $href->{status},
 		     zserver_controlled_by_parent => $zServer_controlled_by_parent,
 		     zserver_parent_orgname => $parent_href->{org_name} || ' ',
 		     zserver_parent_symbol => $parent_href->{symbol} || ' ',
@@ -187,6 +188,7 @@ sub myaccount_patrons_process {
     return $template->output;
     
 }
+
 
 #------------------------------------------------------------------------------------
 sub get_library_from_username {
