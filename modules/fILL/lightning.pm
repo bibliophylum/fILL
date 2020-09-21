@@ -1034,7 +1034,7 @@ sub _sort_sources_by_region_and_NBLC {
     my %sameReg = map { $_->[0] => 1 } @$same_regional;
 
     # net borrower/lender count (loaned - borrowed) based on all currently active requests
-    $SQL = "select o.oid, o.symbol, sum(CASE WHEN status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN status='Received' THEN 1 ELSE 0 END) as net from org o left outer join requests_active ra on ra.msg_from=o.oid group by o.oid, o.symbol order by o.symbol";
+    $SQL = "select o.oid, o.symbol, sum(CASE WHEN ra.status = 'Shipped' THEN 1 ELSE 0 END) - sum(CASE WHEN ra.status='Received' THEN 1 ELSE 0 END) as net from org o left outer join requests_active ra on ra.msg_from=o.oid group by o.oid, o.symbol order by o.symbol";
     my $nblc_href = $self->dbh->selectall_hashref($SQL,'symbol');
 
     my $untracked_href = $self->dbh->selectall_hashref("select oid, borrowed, loaned from libraries_untracked_ill",'oid');
