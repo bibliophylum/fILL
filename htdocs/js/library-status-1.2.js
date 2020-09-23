@@ -35,7 +35,7 @@ $('document').ready(function() {
 	    { "data": "oid", "visible": false },    
 	    { "data": "symbol", "width": "15%" },    
 	    { "data": "library", "width": "25%" },    
-	    { "data": "status" }
+	    { "data": "lib_status" }
 	],	
 	"tableTools": {
           "sSwfPath": "/plugins/DataTables-1.10.2/extensions/TableTools/swf/copy_csv_xls_pdf.swf"

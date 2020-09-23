@@ -16,7 +16,7 @@ if (($ENV{GATEWAY_INTERFACE}) && ($ENV{GATEWAY_INTERFACE} =~ /CGI/)) {  # only w
 }
 
 # sql to get requests which have not yet been responded to
-my $SQL = "select  oid, symbol, org_name as library, status from org where status is not null order by library;";
+my $SQL = "select  oid, symbol, org_name as library, lib_status from org where lib_status is not null order by library;";
 my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
                        "mapapp",
                        "maplin3db",

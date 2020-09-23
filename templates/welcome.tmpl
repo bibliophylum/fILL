@@ -1,6 +1,6 @@
 <TMPL_INCLUDE NAME="header.tmpl">
 <script type="text/javascript" src="/js/welcome-1.1.js"></script>
-<script type="text/javascript" src="/js/library-status-1.1.js"></script>
+<script type="text/javascript" src="/js/library-status-1.2.js"></script>
 
 <div id="center" role="main">
 
@@ -19,9 +19,9 @@
 
     <div id="lib-status">
       <p>My library's current status message:</p>
-      <TMPL_IF NAME="status">
+      <TMPL_IF NAME="lib_status">
 	<div id="lib_status" class="lighter-box">
-	  <TMPL_VAR NAME="status">
+	  <TMPL_VAR NAME="lib_status">
 	</div>
 	<TMPL_ELSE>
 	  <div id="lib_nostatus">

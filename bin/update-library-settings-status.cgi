@@ -34,7 +34,7 @@ my $dbh = DBI->connect("dbi:Pg:database=maplin;host=localhost;port=5432",
 
 $dbh->do("SET TIMEZONE='America/Winnipeg'");
 
-my $SQL = "update org set status=? where oid=?"; 
+my $SQL = "update org set lib_status=? where oid=?"; 
 my $retval = $dbh->do( $SQL, undef, $lib_status, $oid );
 
 $dbh->disconnect;
