@@ -25,6 +25,7 @@
     <xsl:variable name="electronic_location_url" select="marc:datafield[@tag='856']/marc:subfield[@code='u']"/>
     <xsl:variable name="fulltext_a" select="marc:datafield[@tag='900']/marc:subfield[@code='a']"/>
     <xsl:variable name="fulltext_b" select="marc:datafield[@tag='900']/marc:subfield[@code='b']"/>
+    <xsl:variable name="destiny_material_type" select="marc:datafield[@tag='926']/marc:subfield[@code='a']"/>
     <xsl:variable name="medium">
       <xsl:choose>
 	<!-- DC: prefer RDA digital file characteristics, then RDA carrier, then GMD, then default to 'book' -->
@@ -121,6 +122,15 @@
 	<xsl:when test="$journal_title">
 	  <xsl:text>article</xsl:text>
 	</xsl:when>
+
+	<xsl:when test="$destiny_material_type='Destiny Material Type'">
+	  <xsl:choose>
+	    <xsl:when test="contains($electronic_location_url,'overdrive')">
+	      <xsl:text>electronicresource</xsl:text>
+	    </xsl:when>
+	  </xsl:choose>
+	</xsl:when>
+	
 	<xsl:otherwise>
 	  <xsl:text>book</xsl:text>
 	</xsl:otherwise>

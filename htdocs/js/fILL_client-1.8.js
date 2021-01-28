@@ -561,6 +561,7 @@ function renderDetails(data, marker)
 	}
 
 	details += '<tr><td>&nbsp;</td><td><hr/></td><td>&nbsp;</td></tr>';
+
 	if (data["location"][i]["md-medium"] != undefined) {
 	    details += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	    if (data["location"][i]["md-medium"] == "electronicresource")
