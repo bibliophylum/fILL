@@ -26,6 +26,28 @@
     <xsl:variable name="fulltext_a" select="marc:datafield[@tag='900']/marc:subfield[@code='a']"/>
     <xsl:variable name="fulltext_b" select="marc:datafield[@tag='900']/marc:subfield[@code='b']"/>
     <xsl:variable name="destiny_material_type" select="marc:datafield[@tag='926']/marc:subfield[@code='a']"/>
+    <xsl:variable name="cela_restricted" select="marc:datafield[@tag='506']/marc:subfield[@code='a']"/>
+    <xsl:variable name="is_cela_record">
+      <xsl:choose>
+	<!-- DC: CELA records will have a 506$a = "For the exclusive use of persons with a print disability." (or French equivalent)
+	     and a 020$q = "(CELA)" (or French equivalent) -->
+	<xsl:when test="contains(marc:datafield[@tag='506']/marc:subfield[@code='a'],'For the exclusive use of persons with a print disability.')">
+	  <xsl:choose>
+	    <xsl:when test="marc:datafield[@tag='506']/marc:subfield[@code='a']='(CELA)'">
+	      <xsl:text>CELA</xsl:text>
+	    </xsl:when>
+	  </xsl:choose>
+	</xsl:when>
+	<xsl:when test="contains(marc:datafield[@tag='506']/marc:subfield[@code='a'],'usage exclusif des personnes incapables de lire')">
+	  <xsl:choose>
+	    <xsl:when test="marc:datafield[@tag='506']/marc:subfield[@code='a']='(CAÉB)'">
+	      <xsl:text>CELA</xsl:text>
+	    </xsl:when>
+	  </xsl:choose>
+	</xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+      
     <xsl:variable name="medium">
       <xsl:choose>
 	<!-- DC: prefer RDA digital file characteristics, then RDA carrier, then GMD, then default to 'book' -->
@@ -129,6 +151,10 @@
 	      <xsl:text>electronicresource</xsl:text>
 	    </xsl:when>
 	  </xsl:choose>
+	</xsl:when>
+	
+	<xsl:when test="$is_cela_record">
+	  <xsl:text>CELA resource</xsl:text>
 	</xsl:when>
 	
 	<xsl:otherwise>
@@ -313,6 +339,12 @@
         </pz:metadata>
       </xsl:for-each>
       
+      <xsl:for-each select="marc:datafield[@tag='506']">
+        <pz:metadata type="cela-notice">
+	  <xsl:value-of select="marc:subfield[@code='q']"/>
+	</pz:metadata>
+      </xsl:for-each>
+
       <xsl:for-each select="marc:datafield[@tag='600' or @tag='610' or @tag='611' or @tag='630' or @tag='648' or @tag='650' or @tag='651' or @tag='653' or @tag='654' or @tag='655' or @tag='656' or @tag='657' or @tag='658' or @tag='662' or @tag='69X']">
         <pz:metadata type="subject">
 	  <xsl:value-of select="marc:subfield[@code='a']"/>

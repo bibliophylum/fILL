@@ -18,4 +18,6 @@ sudo touch /var/log/pazpar2.log
 sudo ln -s /var/log/pazpar2.log /opt/fILL/logs/pazpar2.log
 echo Restarting pazpar2 daemon
 sudo /usr/sbin/pazpar2 -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
+# The "-d" will dump the xml records into the log file:
+#sudo /usr/sbin/pazpar2 -d -D -u nobody -p /var/run/pazpar2.pid -l /var/log/pazpar2.log -f /etc/pazpar2/server.xml
 

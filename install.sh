@@ -9,24 +9,43 @@ sudo kill `cat /tmp/fILLreporter.pid`
 #echo Unlinking fILL configuration...
 #sudo unlink /etc/apache2/sites-available/fILL.conf
 
-echo Removing existing /opt/fILL...
-# want to preserve conf, logs, report-output
-sudo rm -rf /opt/fILL/bin
-sudo rm -rf /opt/fILL/devdocs
-sudo rm -rf /opt/fILL/externals
-sudo rm -rf /opt/fILL/htdocs
-sudo rm -rf /opt/fILL/localisation
-sudo rm -rf /opt/fILL/modules
-sudo rm -rf /opt/fILL/pazpar2
-sudo rm -rf /opt/fILL/restricted_docs
-sudo rm -rf /opt/fILL/selenium
-sudo rm -rf /opt/fILL/services
-sudo rm -rf /opt/fILL/templates
-sudo rm -rf /opt/fILL/testing
-sudo rm -rf /opt/fILL/updates
+echo Creating /opt/fILL directories if needed...
+if [ ! -d "/opt/fILL" ]; then
+    echo "  mkdir /opt/fILL/"
+    sudo mkdir /opt/fILL
 
-#echo Creating new /opt/fILL...
-#sudo mkdir /opt/fILL
+    FILLDIRS="bin brm_loaded brm_uploads conf devdocs externals htdocs ill_loaded ill_uploads localisation logs modules pazpar2 restricted_docs report-output selenium services templates testing updates"
+    for fd in $FILLDIRS
+    do
+	echo "  mkdir /opt/fILL/$fd"
+	sudo mkdir /opt/fILL/$fd
+    done
+
+    sudo chown -R david:devel /opt/fILL
+    sudo chgrp -R www-data /opt/fILL/brm_loaded
+    sudo chgrp -R www-data /opt/fILL/brm_uploads
+    sudo chgrp -R www-data /opt/fILL/ill_loaded
+    sudo chgrp -R www-data /opt/fILL/ill_uploads
+    sudo chgrp -R www-data /opt/fILL/logs
+    sudo chgrp -R www-data /opt/fILL/report-output
+
+else
+    echo Removing existing /opt/fILL directories...
+    # want to preserve conf, logs, report-output
+    sudo rm -rf /opt/fILL/bin
+    sudo rm -rf /opt/fILL/devdocs
+    sudo rm -rf /opt/fILL/externals
+    sudo rm -rf /opt/fILL/htdocs
+    sudo rm -rf /opt/fILL/localisation
+    sudo rm -rf /opt/fILL/modules
+    sudo rm -rf /opt/fILL/pazpar2
+    sudo rm -rf /opt/fILL/restricted_docs
+    sudo rm -rf /opt/fILL/selenium
+    sudo rm -rf /opt/fILL/services
+    sudo rm -rf /opt/fILL/templates
+    sudo rm -rf /opt/fILL/testing
+    sudo rm -rf /opt/fILL/updates
+fi
 
 echo Building Perl modules...
 topdir=$(pwd)
@@ -80,15 +99,25 @@ cp -R templates /opt/fILL/templates
 cp -R testing /opt/fILL/testing
 cp -R updates /opt/fILL/updates
 
+# first time only:
+#cp -R conf /opt/fILL/conf
+#cp -R logs /opt/fILL/logs
+
 sudo chgrp -R devel /opt/fILL/*
 
-#echo Allowing write to message logs...
+echo Allowing write to message logs...
 #sudo chmod ugo+w /opt/fILL/logs/graphing.log
 #sudo chmod ugo+w /opt/fILL/logs/messages.log
 #sudo chmod ugo+w /opt/fILL/logs/messages_public.log
 #sudo chmod ugo+w /opt/fILL/logs/z3950.log
 #sudo chmod ugo+w /opt/fILL/logs/fILLreporter.log
 #sudo chmod ugo+w /opt/fILL/logs/telnet.log
+sudo chgrp www-data /opt/fILL/logs/graphing.log
+sudo chgrp www-data /opt/fILL/logs/messages.log
+sudo chgrp www-data /opt/fILL/logs/messages_public.log
+sudo chgrp www-data /opt/fILL/logs/z3950.log
+sudo chgrp www-data /opt/fILL/logs/fILLreporter.log
+sudo chgrp www-data /opt/fILL/logs/telnet.log
 
 echo Allowing web server to write to htdocs/tmp
 sudo chgrp www-data /opt/fILL/htdocs/tmp

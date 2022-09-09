@@ -489,6 +489,7 @@ function replaceHtml(el, html) {
 function renderDetails(data, marker)
 {
     var isElectronicResource = false;
+    var isCELAResource = false;
     var details_and_form = '<div class="details" id="det_'+data.recid+'">'; 
     var details = '<table>';    
 
@@ -566,6 +567,8 @@ function renderDetails(data, marker)
 	    details += '<tr><td><b>Format</b></td><td><b>:</b> <b><font style="background-color: yellow;">' + data["location"][i]["md-medium"] + '</font></b></td></tr>';
 	    if (data["location"][i]["md-medium"] == "electronicresource")
 		isElectronicResource = true;
+	    if (data["location"][i]["md-medium"] == "CELA resource")
+		isCELAResource = true;
 	}
 	if (data["location"][i]["md-series-title"] != undefined)
 	    details += '<tr><td><b>Series</b></td><td><b>:</b> ' + data["location"][i]["md-series-title"] + '</td></tr>';
@@ -631,6 +634,8 @@ function renderDetails(data, marker)
 
     if (isElectronicResource) {
 	requestForm += '<p><strong>This electronic resource is not requestable through ILL.</strong></p>';
+    } else if (isCELAResource) {
+	requestForm += '<p><strong>This CELA resource is not requestable through ILL.</strong></p>';
     } else {
 	if ((window.ILLStatus.opt_in === true) && (cntTotalLocations > 0)){
 	    requestForm += '<input type="submit" class="library-style" value="Click To Request">';

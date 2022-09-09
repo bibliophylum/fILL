@@ -57,7 +57,8 @@ sub new {
     $self->{debugmsg}     = "DEBUG LOG:\n";
    
     # Private variables for building messages
-    $self->{AO} = 'BibliophylumSIP';
+    #$self->{AO} = 'BibliophylumSIP';
+    $self->{AO} = 'mwpl';
     $self->{AN} = 'SIPCHK';
    
     # Private variable to hold socket connection
@@ -725,6 +726,7 @@ sub get_message {
     my $sock = $self->{socket};
     
     $self->_debugmsg('SIP2: Sending SIP2 request...');
+    $self->_debugmsg("SIP2: sending [$message]");
     my $sentSize = $sock->send($message);
     $sock->flush;
 
@@ -746,7 +748,7 @@ sub get_message {
     if ($self->_check_crc($result)) {
 	# reset the retry counter on successful send
 	$self->{retry}=0;
-	$self->_debugmsg("SIP2: Message from ACS passed CRC check");
+	#$self->_debugmsg("SIP2: Message from ACS passed CRC check");
     } else {
 	# CRC check failed, request a resend
 	$self->{retry}++;
@@ -854,7 +856,7 @@ sub _crc {
     
     my $crc = ($sum & 0xFFFF) * -1;
     
-    $self->_debugmsg("SIP2: _crc [" . substr(sprintf ("%4X", $crc), -4, 4) . "]");
+    #$self->_debugmsg("SIP2: _crc [" . substr(sprintf ("%4X", $crc), -4, 4) . "]");
 
     # 2008.03.15 - Fixed a bug that allowed the checksum to be larger then 4 digits
     return substr(sprintf ("%4X", $crc), -4, 4);
@@ -888,7 +890,7 @@ sub _check_crc {
     my $self = shift;
     my $message = shift;
 
-    $self->_debugmsg("SIP2: _check_crc [$message]\n");
+    #$self->_debugmsg("SIP2: _check_crc [$message]\n");
 
     # test the recieved message's CRC by generating our own CRC from the message
     #$test = preg_split('/(.{4})$/',trim($message),2,PREG_SPLIT_DELIM_CAPTURE);
@@ -900,10 +902,10 @@ sub _check_crc {
     #    my $test0 = substr($s,-4);
     #    my $test1 = substr($s,0,-4);
 
-    $self->_debugmsg("SIP2: _check_crc [$test0] [$test1]");
+    #$self->_debugmsg("SIP2: _check_crc [$test0] [$test1]");
 
-    $self->_debugmsg("SIP2: src crc [$test1], gen crc [" . $self->_crc($test0) . "]\n");
-    $self->_debugmsg( $self->hdump( $test0 ) );
+    #$self->_debugmsg("SIP2: src crc [$test1], gen crc [" . $self->_crc($test0) . "]\n");
+    #$self->_debugmsg( $self->hdump( $test0 ) );
     
     if ($self->_crc($test0) eq $test1) {
 	return 1;
@@ -944,6 +946,11 @@ sub _addVarOption {
 	# skipped
 	$self->_debugmsg( "SIP2: Skipping optional field {$field}");
     } else {
+	## testing a theory about SirsiDynix SIP2 server...
+	#if ($self->{noFixed} == 0) {
+	#    # SD seems to need a delimiter after fixed fields...?
+	#    $self->{msgBuild} .= $self->{fldTerminator};
+	#}
 	$self->{noFixed}  = 1; # no more fixed for this message
 	$self->{msgBuild} .= $field . substr($value, 0, 255) . $self->{fldTerminator};
     }
@@ -966,6 +973,8 @@ sub _returnMessage {
     }
     $self->{msgBuild} .= $self->{msgTerminator};
     
+    #$self->_debugmsg("msgBuild: " . $self->{msgBuild} . "\n");
+
     return $self->{msgBuild};
 }
 
