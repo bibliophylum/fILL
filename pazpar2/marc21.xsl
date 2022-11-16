@@ -437,6 +437,11 @@
 	  <pz:metadata type="holding-mstp-location">
 	    <xsl:value-of select="marc:subfield[@code='b']"/>
 	  </pz:metadata>
+	  <!-- Other joint school-public Destiny systems will be the same -->
+	  <!-- This is more general, and should replace holding-mstp-location -->
+	  <pz:metadata type="holding-destiny-location">
+	    <xsl:value-of select="marc:subfield[@code='b']"/>
+	  </pz:metadata>
 	</xsl:if>
       </xsl:for-each>
 
