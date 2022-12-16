@@ -153,7 +153,7 @@
 	  </xsl:choose>
 	</xsl:when>
 	
-	<xsl:when test="$is_cela_record">
+	<xsl:when test="$is_cela_record='CELA'">
 	  <xsl:text>CELA resource</xsl:text>
 	</xsl:when>
 	
