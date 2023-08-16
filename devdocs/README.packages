@@ -1,3 +1,26 @@
+In Ubuntu Jammy:
+Install libcgi-application-basic-plugin-bundle-perl (list of included packages: https://packages.ubuntu.com/uk/jammy/perl/libcgi-application-basic-plugin-bundle-perl)
+:
+sudo apt-get install libcgi-application-basic-plugin-bundle-perl 2>&1 |tee packages-libcgi-basic.log
+
+Install libcgi-application-extra-plugin-bundle-perl (https://packages.ubuntu.com/uk/jammy/perl/libcgi-application-extra-plugin-bundle-perl):
+sudo apt-get install libcgi-application-extra-plugin-bundle-perl 2>&1 |tee packages-libcgi-extra.log
+
+libtest-taint-perl
+
+Also need libpng and magemagick:
+sudo apt install libpng 2>&1 |tee packages-libpng.log
+sudo apt install imagemagick 2>&1 |tee packages-imagemagick.log
+
+Need to find or build libcgi-application-plugin-authentication-perl and libcolor-calc-perl....
+sudo apt-get install liblocal-lib-perl 2>&1 |tee packages-liblocal-lib-perl.log
+echo 'eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)"' >>~/.bashrc
+
+sudo apt install cpanminus 2>&1 |tee packages-cpanminus.log
+cpanm -i CGI::Application::Plugin::Authentication 2>&1 |tee packages-cgi-app-plug-authentication.log
+cpanm -i Color::Calc 2>&1 |tee packages-cpan-color-calc.log
+
+
 Required debian/ubuntu packages:
 
 build-essential
@@ -44,7 +67,7 @@ See also README.pazpar2 for information on installing IndexData's pazpar2 packag
 
 All at once:
 
-sudo apt-get install build-essential libdbi-perl libdbd-pg-perl libhtml-template-perl libmarc-perl libcolor-calc-perl libapache-htpasswd-perl libapache-htgroup-perl libcgi-application-perl libcgi-session-perl libcgi-application-plugin-dbh-perl libcgi-application-plugin-session-perl libcgi-application-plugin-authentication-perl libcgi-application-plugin-authorization-perl libclone-perl libnet-z3950-zoom-perl libdatetime-perl libgd-gd2-perl libgd-graph-perl libgd-barcode-perl libjson-perl libnet-server-perl libnet-telnet-perl libnet-ssh2-perl libgetopt-long-descriptive-perl libdigest-sha-perl libjs-jquery libjs-jquery-ui libtext-unidecode-perl libdata-guid-perl libwww-mechanize-perl libstring-random-perl libpdf-api2-perl libxml-libxml-perl libswitch-perl libjs-jquery-file-upload libtext-csv-perl libimage-magick-perl
+sudo apt-get install build-essential libdbi-perl libdbd-pg-perl libhtml-template-perl libmarc-perl libapache-htpasswd-perl libapache-htgroup-perl libcgi-application-perl libcgi-session-perl libcgi-application-plugin-dbh-perl libcgi-application-plugin-session-perl libcgi-application-plugin-authorization-perl libclone-perl libnet-z3950-zoom-perl libdatetime-perl libgd-gd2-perl libgd-graph-perl libgd-barcode-perl libjson-perl libnet-server-perl libnet-telnet-perl libnet-ssh2-perl libgetopt-long-descriptive-perl libdigest-sha-perl libjs-jquery libjs-jquery-ui libtext-unidecode-perl libdata-guid-perl libwww-mechanize-perl libstring-random-perl libpdf-api2-perl libxml-libxml-perl libswitch-perl libjs-jquery-file-upload libtext-csv-perl libimage-magick-perl
 
 See README.pazpar2 for instructions on installing the pazpar2 libraries.
 

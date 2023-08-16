@@ -7,3 +7,26 @@ Add this to the /opt/conf/fILL.conf <VirtualHost *:442> section:
 
 $ sudo a2enmod rewrite
 $ sudo service apache2 restart
+
+
+To check the apache user's environment:
+$ sudo -u www-data env
+
+To run a cgi script as the apache user:
+$ sudo -u www-data /opt/fILL/bin/public.cgi
+
+If you have local::lib installed, you'll need to override some stuff to put these in the correct directories:
+
+$ export PERL_MM_OPT=""
+$ export PERL_MB_OPT=""
+$ export PERL5LIB=/opt/fILL/modules
+$ cd /home/david.christensen/prj/fILL/modules/Biblio-SIP2-Client
+$ perl Makefile.PL
+$ make
+$ make test
+$ sudo make install
+$ cd /home/david.christensen/prj/fILL/modules/Biblio-Authentication
+$ perl Makefile.PL
+$ make
+$ make test
+$ sudo make install

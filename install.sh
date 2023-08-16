@@ -108,13 +108,13 @@ sudo chgrp -R devel /opt/fILL/*
 echo Allowing write to message logs...
 #sudo chmod ugo+w /opt/fILL/logs/graphing.log
 #sudo chmod ugo+w /opt/fILL/logs/messages.log
-#sudo chmod ugo+w /opt/fILL/logs/messages_public.log
+#sudo chmod ugo+w /opt/fILL/logs/messages-public.log
 #sudo chmod ugo+w /opt/fILL/logs/z3950.log
 #sudo chmod ugo+w /opt/fILL/logs/fILLreporter.log
 #sudo chmod ugo+w /opt/fILL/logs/telnet.log
 sudo chgrp www-data /opt/fILL/logs/graphing.log
 sudo chgrp www-data /opt/fILL/logs/messages.log
-sudo chgrp www-data /opt/fILL/logs/messages_public.log
+sudo chgrp www-data /opt/fILL/logs/messages-public.log
 sudo chgrp www-data /opt/fILL/logs/z3950.log
 sudo chgrp www-data /opt/fILL/logs/fILLreporter.log
 sudo chgrp www-data /opt/fILL/logs/telnet.log

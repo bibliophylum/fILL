@@ -21,30 +21,34 @@ Ubuntu 11.04 \n \l
 $ grep CODENAME /etc/lsb-release
 DISTRIB_CODENAME=natty
 
-Ubuntu users can add the following two lines in /etc/apt/sources.list
-and use Ubuntus own package management tools apt-get, aptitude, etc.
-Replace intrepid with your version of Ubuntu. Use 
-  grep CODENAME /etc/lsb-release
-to determine your Ubuntu release.
+# For Ubuntu jammy 22.04 or later proceed as follows:
 
-deb http://ftp.indexdata.dk/ubuntu intrepid main
-deb-src http://ftp.indexdata.dk/ubuntu intrepid main
+/etc/apt/sources.lists.d/indexdata.list should have the following content:
 
-These packages are signed with a key you can install as follows:
- wget http://ftp.indexdata.dk/debian/indexdata.asc
- sudo apt-key add indexdata.asc
+    deb [signed-by=/usr/share/keyrings/indexdata.gpg] https://ftp.indexdata.com/ubuntu jammy main
+    deb-src [signed-by=/usr/share/keyrings/indexdata.gpg] https://ftp.indexdata.com/ubuntu jammy main
+
+Get indexdata.gpg key:
+
+    sudo wget -O /usr/share/keyrings/indexdata.gpg \
+        https://ftp.indexdata.com/debian/indexdata.gpg
 
 Don't forget to "sudo apt-get update" after altering /etc/apt/sources.list!
 
-Then use your system's package management to install:
-pazpar2
-pazpar2-apache2 <-- this doesn't seem to exist any more...
-pazpar2-doc
-pazpar2-js
-pazpar2-jsdemo
-pazpar2-test1
+sudo apt-get install libyaz5 2>&1 |tee packages-indexdata-libyaz5
+sudo apt-get install yaz 2>&1 |tee packages-indexdata-yaz.log
+sudo apt-get install yaz-illclient 2>&1 |tee packages-indexdata-yaz-illclient.log
 
-All in one:  sudo apt-get install pazpar2 pazpar2-doc pazpar2-js pazpar2-jsdemo pazpar2-test1
+pazpar2 doesn't exist (yet) in jammy... so we need to add focal to indexdata.list:
+    deb [signed-by=/usr/share/keyrings/indexdata.gpg] https://ftp.indexdata.com/ubuntu focal main
+    deb-src [signed-by=/usr/share/keyrings/indexdata.gpg] https://ftp.indexdata.com/ubuntu focal main
+
+sudo apt-get update
+sudo apt-get install pazpar2 pazpar2-doc pazpar2-js pazpar2-jsdemo pazpar2-test1 2>&1 |tee packages-pazpar2.log
+
+*** this installs apache, too ***
+
+
 
 Important!  Now go to /etc/pazpar2/services-enabled, and (as root) unlink default.xml
 (or else you'll have problems starting the pazpar2 service later....)
