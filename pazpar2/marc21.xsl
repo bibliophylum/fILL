@@ -265,7 +265,8 @@
 
       <xsl:for-each select="marc:datafield[@tag='245']">
         <pz:metadata type="title">
-          <xsl:value-of select="marc:subfield[@code='a']"/>
+<!--          <xsl:value-of select="marc:subfield[@code='a']"/> -->
+          <xsl:value-of select="concat(marc:subfield[@code='a'], marc:subfield[@code='b'])"/>
         </pz:metadata>
         <pz:metadata type="title-remainder">
           <xsl:value-of select="marc:subfield[@code='b']"/>
