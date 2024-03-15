@@ -77,9 +77,10 @@ function my_onshow(data) {
 		      +'" onclick="showDetails(this.id);return false;"><b>' 
 		      + hit["md-title"] +' </b></a>');
 	}
-	if (hit["md-title-remainder"] !== undefined) {
-	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
-	}
+// md-title-remainder is now folded into md-title
+//	if (hit["md-title-remainder"] !== undefined) {
+//	    html.push('<span>' + hit["md-title-remainder"] + ' </span>');
+//	}
 	if (hit["md-title-responsibility"] !== undefined) {
     	    html.push('<span>'+hit["md-title-responsibility"]+'</span>');
       	}
@@ -510,12 +511,13 @@ function renderDetails(data, marker)
         title = data["md-title"].toString();
 	title = title.replace(/["']/g, "");
         details += '<tr><td><b>Title</b></td><td><b>:</b> '+title;
-  	if (data["md-title-remainder"] !== undefined) {
-	    details += ' : <span>' + data["md-title-remainder"] + ' </span>';
-	    requestForm += '<input type="hidden" name="title" value="' + title + ': ' + data["md-title-remainder"] + '">';
-  	} else {
+// md-title-remainder is now folded into md-title
+//  	if (data["md-title-remainder"] !== undefined) {
+//	    details += ' : <span>' + data["md-title-remainder"] + ' </span>';
+//	    requestForm += '<input type="hidden" name="title" value="' + title + ': ' + data["md-title-remainder"] + '">';
+//  	} else {
 	    requestForm += '<input type="hidden" name="title" value="' + title + '">';
-	}
+//	}
   	if (data["md-title-responsibility"] !== undefined) {
 	    details += ' <span>'+ data["md-title-responsibility"] +'</span>';
   	}
