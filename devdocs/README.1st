@@ -1,0 +1,39 @@
+Setting up a new fILL system
+
+These notes assume you are setting up on some version of Ubuntu.
+
+1. Do whatever you need to do to set up SSH access to the server.
+
+2. You'll probably want to install emacs (or your editor of choice)
+   $ sudo apt-get install emacs
+
+3. Install packages and libraries
+   See devdocs/README.packages
+
+   Check which Ubuntu version you are using:
+   $ lsb_release -a
+   Distributor ID:	Ubuntu
+   Description:		Ubuntu 24.04 LTS
+   Release:		24.04
+   Codename:		noble
+
+4. Pazpar2
+   If there isn't a package yet for IndexData's pazpar2, see devdocs/README.pazpar2 to set up IndexData as a source.
+   If there isn't an IndexData source for your Ubuntu version, find the latest Ubuntu version that IndexData does have.  At the time of writing, "focal" was the most recent IndexData release.
+
+5. Setting up PostgreSQL database
+   See devdocs/README.postgres
+   This assumes that you are migrating an existing fILL system.  If you are creating one from scratch, there is an empty (i.e. table structures only, without data) file you can use in the final step
+   ...or there will be, once I create it.  You can also run each of the numbered .sql files, in order, from the updates/ directory.
+
+6. Apache2 web server
+   Install apache2 and verify that you can get to the apache2 default page with a browser.
+   Enable any mods you need (e.g. ssl, cgi, ...)
+
+7. Clone the fILL repository
+   See devdocs/README.git
+   See devdocs/README.dev-environment (replace 'david' with your username)
+
+8. Run the install.sh shell script to create the /opt/fILL directories, build local Perl modules, etc.
+   NOTE: You will need to make some minor changes to the fILL.conf (/opt/fILL/conf/fILL.conf) file to use your server name / alias, SSL settings, etc.
+
