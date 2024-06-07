@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings FATAL => 'all';
 use WWW::Mechanize;
-use WWW::Mechanize::Chrome;  # needed for is_visible() in L4U_5_3
+#use WWW::Mechanize::Chrome;  # needed for is_visible() in L4U_5_3
 use HTML::TreeBuilder 5 -weak;
 
 =head1 NAME
@@ -26,31 +26,41 @@ Don't use this class itself; use (or create) a class specific to the ILS you're 
 
 Derived classes use whatever is appropriate to handle the authentication (e.g. SIP2, RESTful API, screen-scrape using WWW::Mechanize, etc)
 
-For example:
-
-Check if patron credentials authorize against L4U library PAC.
-
-    use Biblio::Authentication::L4U;
-
-    my $authenticator = Biblio::Authentication::L4U->new(
-        'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
-    );
-    my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
-
 There is a dummy authenticator available, Biblio::Authentication::Dummy, which can be used for testing your code that requires authetication.
     my $authenticator = Biblio::Authentication::Dummy();
     my $authorized_href = $authenticator->verifyPatron( $barcode, $pin );
 The dummy authenticator always returns a positive (i.e. patron is authenticated) result.
 
+Example:
+
+Check if patron credentials authorize against SIP2 library PAC.
+
+    use Biblio::Authentication::SIP2;
+
+    my $SIP2 = Biblio::Authentication::SIP2->new(
+        'host' => 'aaa.bbb.ccc.ddd',
+        'port' => '2112',
+        'terminator' => "\r",  # only if non-standard terminator
+        'sip_server_login' => 'xxxxxx',   # if sip server requires login befor allowing auth
+        'sip_server_password' => 'sekrit',
+        'validate_using_info' => 1   # if sip server uses patron info rather than patron status
+    );
+    my $authorized_href = $SIP2->verifyPatron( $barcode, $pin );
+
+All of the heavy lifting is done by the Biblio::SIP2::Client module.
+
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-my $L4U = Biblio::Authentication::L4U->new(
-    'url' => "http://aaa.bbb.ccc.ddd/4dcgi/gen_2002/Lang=Def",
-);
+my %Insignia_SIP2 = ( 
+    host => "aaa.bbb.ccc.ddd",
+    port => 2135,
+    msgTerminator => "\r",
+    validate_using_info => 1,
+    );
 
-'url' is the URL to the library's public catalogue.
+my $SIP2 = Biblio::Authentication::SIP2->new( \%Insignia_SIP2 );
 
 =cut
 
