@@ -7,3 +7,7 @@ Cron jobs that need to be run as root (i.e. "sudo crontab -e" to set up):
 2. Once/day (at midnight), restart pazpar regardless
    crontab entry:
    0 0 * * * /opt/fILL/externals/pazpar-restart.sh >/dev/null 2>&1
+
+3. Once/day (at midnight), clear old patrons (i.e. no active requests, and haven't logged in in the last month)
+   crontab entry:
+   0 0 * * * /opt/fILL/externals/clear-old-patrons.pl >/dev/null 2>&1

@@ -1,1 +1,13 @@
-First attempt at working with git....
+Get the fILL source code
+
+On your local machine, create a projects directory:
+$ mkdir prj
+$ cd prj
+
+Point a web browser to https://github.com/bibliophylum/fILL
+Click the "<> code" button
+Copy the https URL (e.g. "https://github.com/bibliophylum/fILL.git") to the clipboard
+Clone the repo:
+$ git clone https://github.com/bibliophylum/fILL.git
+
+
