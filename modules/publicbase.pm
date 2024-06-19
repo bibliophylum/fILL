@@ -35,11 +35,8 @@ use JSON;
 use Biblio::Authentication::SIP2;
 use Biblio::Authentication::Biblionet;
 use Biblio::Authentication::FollettDestiny;
-use Biblio::Authentication::L4U;
-use Biblio::Authentication::L4U_API;
 use Biblio::Authentication::TLC;
 use Biblio::Authentication::Dummy;   # for testing
-use Biblio::Authentication::TempNorthNorfolk;   # Dummy clone
 use String::Random;
 #use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 #use Capture::Tiny ':all';
