@@ -38,4 +38,8 @@ postgres@saiph:~$ psql <xxxx.dump
 
 
 
+Restoring from a pg_dump:
+Move the .dump to /var/lib/postgresql
+As postgres user:
+$ psql maplin <fill-backup-xxxx.dump
 
