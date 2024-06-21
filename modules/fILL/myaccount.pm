@@ -66,6 +66,12 @@ sub myaccount_settings_process {
 	}
     }
 
+    my $libuser_href = $self->dbh->selectrow_hashref(
+	"select uid from users where oid=? and username=?",
+	{},
+	$oid, $self->authen->username
+	);
+    
     my $logoPath = "/img/fill-contact.jpg";
     my $logoAltText = "Child sitting on the floor of a book store, engrossed in reading";
     my $logoCredit = '<a href="https://www.flickr.com/photos/48439369@N00/2100913578">Tim Pierce</a>';
@@ -79,6 +85,7 @@ sub myaccount_settings_process {
     $template->param(pagetitle     => "fILL MyAccount Settings",
 		     username      => $self->authen->username,
 		     oid           => $oid,
+		     uid           => $libuser_href->{uid},
 		     symbol        => $symbol,
 		     library       => $href->{org_name},
 		     email_address => $href->{email_address},

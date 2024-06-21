@@ -21,6 +21,7 @@
 	<li><a href="#tabs-4">z39.50 server</a></li>
 	<li><a href="#tabs-5">Test patron</a></li>
 	<li><a href="#tabs-6">Other settings</a></li>
+	<li><a href="#tabs-7">Change password</a></li>
       </ul>
       
       <div id="tabs-1">
@@ -286,7 +287,33 @@
 	  <input id="otherButton" type="button" class="library-style" value="Save changes">
 	</form>
       </div>
-	
+
+      <div id="tabs-7">
+	<form id="library_user" onSubmit="return false;">
+	  <fieldset id="library_user_fieldset" class="balanced-fields">
+
+	    <input type="hidden" name="oid" value="<TMPL_VAR name=oid>" /> <!-- not used: pulled from header -->
+	    <input type="hidden" id="uid" name="uid" value="<TMPL_VAR name=uid>" />
+	    <div>
+	      <p>
+		Change your fILL login password
+	      </p>
+	      <label for="lib_username">Username:</label>
+	      <input type="hidden" id="lib_username" name="lib_username" value="<TMPL_VAR name=username>" readonly="readonly"/>
+	      <span><TMPL_VAR NAME="username"></span>
+	      <label for="lib_current_pw">Current password:</label>
+	      <input type="password" id="lib_current_pw" name="lib_current_pw" />
+	      <label for="lib_new_pw">New password:</label>
+	      <input type="text" id="lib_new_pw" name="lib_new_pw" />
+	      <label for="lib_new_pw2">Re-enter new password:</label>
+	      <input type="text" id="lib_new_pw2" name="lib_new_pw2" />
+	    </div>
+
+	  </fieldset>
+          <input id="libuserButton" type="button" class="library-style" value="Save changes">
+	</form>
+      </div>
+	  
     </div><!-- tabs -->
     
   </div><!-- main-info-left -->

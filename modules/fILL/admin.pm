@@ -40,6 +40,7 @@ sub setup {
 	'zserver_settings'     => 'zserver_settings_process',
 	'zserver_spruce'       => 'zserver_spruce_process',
 	'public_featured'      => 'public_featured_process',
+	'library_pw'           => 'library_pw_process',
 	);
 }
 
@@ -182,5 +183,22 @@ sub public_featured_process {
     $template->param( pagetitle => "Admin - Public - Featured" );
     return $template->output;
 }
+
+#--------------------------------------------------------------------------------
+#
+#
+sub library_pw_process {
+    my $self = shift;
+    my $q = $self->query;
+
+    my $libraries_aref = $self->dbh->selectall_arrayref("select o.org_name, u.uid, u.username, u.oid from users u left join org o on o.oid=u.oid order by o.org_name", { Slice => {} } );
+
+    my $template = $self->load_tmpl('admin/library.tmpl');	
+    $template->param( pagetitle => "Library staff accounts",
+		      library_user_list => $libraries_aref
+	);
+    return $template->output;
+}
+
 
 1; # so the 'require' or 'use' succeeds

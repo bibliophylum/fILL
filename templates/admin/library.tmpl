@@ -1,0 +1,60 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_INCLUDE NAME="submenu_library.tmpl">
+
+<script type="text/javascript" src="/plugins/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/js/admin-library-1.0.js"></script>
+
+<script type="text/javascript">
+  set_secondary_tab("menu_library_pw");
+</script>
+
+
+<div id="center" role="main">
+  <div id="main-left">
+    <!-- <div id="scrolling-table"> -->
+      <table id="libraries" class="row-border">
+	<thead>
+	  <tr><th>Library</th><th>OID</th><th>Staff account</th><th>Action</th></tr>
+	</thead>
+	<tbody>
+	  <TMPL_LOOP name="library_user_list">
+	    <tr id='<TMPL_VAR NAME="uid">'>
+	      <td><TMPL_VAR NAME="org_name"></td>
+	      <td><TMPL_VAR NAME="oid"></td>
+	      <td><TMPL_VAR NAME="username"></td>
+	      <td><input type="button" class="action-button" value="Change"/></td>
+	    </tr>
+	  </TMPL_LOOP>
+	</tbody>
+      </table>
+    <!-- </div> -->
+  </div>
+
+  <div id="main-right">
+
+    <div id="initialMessage">
+      <p>Change a library's staff account password by clicking on the "Change" button in the list to the left.</p>
+    </div>
+
+    <div id="waitDiv" style="display:none">
+      Loading... <img src="/img/wait.gif" alt="loading indicator">
+    </div>
+
+    <form id="editUser" action="" method="post">
+
+      <div id="library-user-edit" style="display:none">
+	<label>Library: <strong><span id="library-name"></span></strong></label><br/>
+	<label>Staff account: <strong><span id="library-user"></span></strong></label><br/>
+	<label>New password: <input id="new-pw" name="new-pw"></label><br/>
+	<input id="editUID" type="hidden" name="editUID"/>
+      </div>
+
+      <div id="form-buttons">
+	<input id="save-btn" type="button" class="library-style" value="Update" />
+      </div>
+      
+    </form>
+  </div><!-- main-right -->
+
+</div><!--div id center-->
+<TMPL_INCLUDE NAME="footer.tmpl">

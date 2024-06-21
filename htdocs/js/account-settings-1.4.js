@@ -27,6 +27,7 @@ $('document').ready(function(){
     $("#myTestPatronButton").hide();
     $("#waitDiv").hide();
     $("#otherButton").hide();
+    $("#libuserButton").hide();
 
     $("#tabs").tabs();
     $("#tabs").show();
@@ -59,6 +60,9 @@ $('document').ready(function(){
     });
     $("#otherForm input").on("change",function(){
 	$("#otherButton").show();
+    });
+    $("#library_user_fieldset input").on("change",function(){
+	$("#libuserButton").show();
     });
 
     $("#contactButton").on("click", function() {
@@ -240,6 +244,43 @@ $('document').ready(function(){
 	    .complete(function() {
 		//alert('ajax complete');
 	    });
+    });
+
+    
+    $("#libuserButton").on("click", function() {
+	var parms = {
+	    "oid": $("#oid").text(), // from header
+	    "uid": $("#uid").val(),
+	    "lib_username": $('#lib_username').val(),
+	    "lib_current_pw": $('#lib_current_pw').val(),
+	    "lib_new_pw": $('#lib_new_pw').val(),
+	    "lib_new_pw2": $('#lib_new_pw2').val(),
+	    
+	};
+	// confirm pw = pw2....
+	if (parms["lib_new_pw"] === parms["lib_new_pw2"]) {
+	    $.getJSON('/cgi-bin/update-library-settings-user.cgi', parms,
+		      function(data){
+			  console.log(data);
+			  if (data.success == 0) {
+			      alert('Update failed: '+data.error_message);
+			  } else {
+			      alert('Password updated.');
+			  }
+		      })
+		.success(function() {
+		    $("#libuserButton").hide();
+		})
+		.error(function() {
+		    alert('error');
+		})
+		.complete(function() {
+		    //alert('ajax complete');
+		});
+	} else {
+	    // pw2 doesn't match pw
+	    alert('The new password and the re-typed new password do not match.');
+	}
     });
 });
 
