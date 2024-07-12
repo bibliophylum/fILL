@@ -114,7 +114,7 @@ from
 where 
   oid=?
   and pid=?
-  and i18n.page='public/current.tmpl' and i18n.lang=?and i18n.category='status' and i18n.stage='detail' 
+  and i18n.page='public/current.tmpl' and i18n.lang=? and i18n.category='status' and i18n.stage='detail' 
 order by ts desc";
 
 $aref = $dbh->selectall_arrayref($SQL, { Slice => {} }, $lang, $oid, $pid, $lang );
